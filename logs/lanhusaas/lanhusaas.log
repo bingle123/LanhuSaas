@@ -1,0 +1,686 @@
+ERROR [2018-11-23 16:35:25] /share/LanhuSaas/framework/account/http.py 50 _http_request 5557 140408893277952 
+ 	 login http request error! type: GET, url: paas.bk.com/login/accounts/is_login/, data: {'bk_token': '6pOapM2KqiihuC6rGLWuelJJvuFetjDckdfbLpCb-lY'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 324, in request
+    prep = self.prepare_request(req)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 265, in prepare_request
+    hooks=merge_setting(request.hooks, self.hooks),
+  File "/usr/lib/python2.7/site-packages/requests/models.py", line 283, in prepare
+    self.prepare_url(url, params)
+  File "/usr/lib/python2.7/site-packages/requests/models.py", line 327, in prepare_url
+    raise MissingSchema("Invalid URL %r: No schema supplied" % url)
+MissingSchema: Invalid URL u'paas.bk.com/login/accounts/is_login/': No schema supplied
+INFO [2018-11-23 16:35:25] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 5557 140408893277952 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:14:43] /share/LanhuSaas/framework/account/http.py 50 _http_request 6122 140390158362368 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': '6pOapM2KqiihuC6rGLWuelJJvuFetjDckdfbLpCb-lY'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=6pOapM2KqiihuC6rGLWuelJJvuFetjDckdfbLpCb-lY (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:14:43] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6122 140390158362368 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:14:44] /share/LanhuSaas/framework/account/http.py 50 _http_request 6122 140390158362368 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': '6pOapM2KqiihuC6rGLWuelJJvuFetjDckdfbLpCb-lY'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=6pOapM2KqiihuC6rGLWuelJJvuFetjDckdfbLpCb-lY (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:14:44] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6122 140390158362368 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:14:59] /share/LanhuSaas/framework/account/http.py 50 _http_request 6147 139687755929344 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'O16WnLGONqKTRZqVwvvDxcaxdKB_H9Pb0VzuBaxDvyM'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=O16WnLGONqKTRZqVwvvDxcaxdKB_H9Pb0VzuBaxDvyM (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:14:59] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6147 139687755929344 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:35:29] /share/LanhuSaas/framework/account/http.py 50 _http_request 6147 139687755929344 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'YtUmQ8k9E_BxRATksBVE_QFT0XW-IunXgUJKpfzrrH0'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=YtUmQ8k9E_BxRATksBVE_QFT0XW-IunXgUJKpfzrrH0 (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:35:29] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6147 139687755929344 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:42:38] /share/LanhuSaas/framework/account/http.py 50 _http_request 6147 139687755929344 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': '1baPeYheHVH122MIycamhffbQyQ-jkpaK8675Efdlxg'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=1baPeYheHVH122MIycamhffbQyQ-jkpaK8675Efdlxg (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:42:38] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6147 139687755929344 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:42:40] /share/LanhuSaas/framework/account/http.py 50 _http_request 6147 139687735879424 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'Z-9_LLxuXLGIbBBee66ZRJFGR03ow7KFZ6-fGEPHbGM'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=Z-9_LLxuXLGIbBBee66ZRJFGR03ow7KFZ6-fGEPHbGM (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:42:40] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6147 139687735879424 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:42:43] /share/LanhuSaas/framework/account/http.py 50 _http_request 6147 139687735879424 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'q-XyKD6NOHVD7S5-aD--S5S_utPDDotze1Z1bMSLo0w'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=q-XyKD6NOHVD7S5-aD--S5S_utPDDotze1Z1bMSLo0w (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:42:43] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6147 139687735879424 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:43:00] /share/LanhuSaas/framework/account/http.py 50 _http_request 6147 139687735879424 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'QNTntHULJvY0fodAfqhpDjJQDzQvpIXfanc1zOqBWJA'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=QNTntHULJvY0fodAfqhpDjJQDzQvpIXfanc1zOqBWJA (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:43:00] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6147 139687735879424 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:43:02] /share/LanhuSaas/framework/account/http.py 50 _http_request 6147 139687735879424 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'Pb65iJ07y693ebu_jMMXe2tngPxoUbzpxugXEfwoi5I'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=Pb65iJ07y693ebu_jMMXe2tngPxoUbzpxugXEfwoi5I (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:43:02] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6147 139687735879424 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:43:03] /share/LanhuSaas/framework/account/http.py 50 _http_request 6147 139687735879424 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'AIsFVfhHOmtmCj25Ws0sSp0GLc1BhObT89DzHKT9EiY'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=AIsFVfhHOmtmCj25Ws0sSp0GLc1BhObT89DzHKT9EiY (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:43:03] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6147 139687735879424 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:43:07] /share/LanhuSaas/framework/account/http.py 50 _http_request 6147 139687735879424 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': '4_GNWt0YKJMSnvPw9Ie7_j7Nef5SHo60PuYLcodx1gw'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=4_GNWt0YKJMSnvPw9Ie7_j7Nef5SHo60PuYLcodx1gw (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:43:07] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6147 139687735879424 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:43:26] /share/LanhuSaas/framework/account/http.py 50 _http_request 6147 139687735879424 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'haLRVgfKCTwhzxuaco57b7qH4GnlKziqWB1Uf1PsEhA'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=haLRVgfKCTwhzxuaco57b7qH4GnlKziqWB1Uf1PsEhA (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:43:26] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6147 139687735879424 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:43:28] /share/LanhuSaas/framework/account/http.py 50 _http_request 6147 139687735879424 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'JMKPLp6Z1mv9xIMI4YZRX1X3fBMpJVe9nh_8lOBnGPw'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=JMKPLp6Z1mv9xIMI4YZRX1X3fBMpJVe9nh_8lOBnGPw (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:43:28] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6147 139687735879424 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:53:28] /share/LanhuSaas/framework/account/http.py 50 _http_request 6696 139897674376960 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': '95KM52A2YMI_UikMZPjQWPqulvCB72ftJqUenZwljZs'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=95KM52A2YMI_UikMZPjQWPqulvCB72ftJqUenZwljZs (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:53:28] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6696 139897674376960 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:53:31] /share/LanhuSaas/framework/account/http.py 50 _http_request 6696 139897682769664 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'HnUgGzGDdE9vb4MmrrW48JjOHmM4hKOm0ORr7FTZXcE'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=HnUgGzGDdE9vb4MmrrW48JjOHmM4hKOm0ORr7FTZXcE (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:53:31] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6696 139897682769664 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:53:33] /share/LanhuSaas/framework/account/http.py 50 _http_request 6696 139897682769664 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'z-N9DrdYTD9EP52e5sSXK2Zcf9wvaH0dJohqOIBfFk0'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=z-N9DrdYTD9EP52e5sSXK2Zcf9wvaH0dJohqOIBfFk0 (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:53:33] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6696 139897682769664 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:53:39] /share/LanhuSaas/framework/account/http.py 50 _http_request 6696 139897682769664 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'AHFO0ZWQTLDEuOah_KDEOD1zpBlezajDXMC4gThp-6U'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=AHFO0ZWQTLDEuOah_KDEOD1zpBlezajDXMC4gThp-6U (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:53:39] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6696 139897682769664 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:54:00] /share/LanhuSaas/framework/account/http.py 50 _http_request 6696 139897674376960 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': '9OGHbj5mr2Nt3drbuWf2mVCuZxOZ1mSCKxC9VRJ6p_w'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=9OGHbj5mr2Nt3drbuWf2mVCuZxOZ1mSCKxC9VRJ6p_w (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:54:00] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6696 139897674376960 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:54:01] /share/LanhuSaas/framework/account/http.py 50 _http_request 6696 139897674376960 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': '8Rk2TBOstTntzVJsQfsH0Lbx772Zfa1vMgpow7mrAwY'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=8Rk2TBOstTntzVJsQfsH0Lbx772Zfa1vMgpow7mrAwY (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:54:01] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6696 139897674376960 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:54:02] /share/LanhuSaas/framework/account/http.py 50 _http_request 6696 139897674376960 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': '8pjA0lYZ_p471K3ptoJ-ra9IlY8B0lVV9X4AMSK0qLQ'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=8pjA0lYZ_p471K3ptoJ-ra9IlY8B0lVV9X4AMSK0qLQ (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:54:02] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6696 139897674376960 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:54:36] /share/LanhuSaas/framework/account/http.py 50 _http_request 6696 139897674376960 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'T9gPgmm8KP6EQaO-BThr96xG6fkROzgn_bH-rz-LODk'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=T9gPgmm8KP6EQaO-BThr96xG6fkROzgn_bH-rz-LODk (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:54:36] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6696 139897674376960 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:54:38] /share/LanhuSaas/framework/account/http.py 50 _http_request 6696 139897674376960 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'xmzpZd7ScqFGwO4wib6VdF6BJ6bFqnSpnkoR-vsxPgY'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=xmzpZd7ScqFGwO4wib6VdF6BJ6bFqnSpnkoR-vsxPgY (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:54:38] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6696 139897674376960 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:54:40] /share/LanhuSaas/framework/account/http.py 50 _http_request 6696 139897674376960 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'YPvo-xBd3sr8Ram0pIr0xXn3JgkntSLR1f64Zmlz8Lk'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=YPvo-xBd3sr8Ram0pIr0xXn3JgkntSLR1f64Zmlz8Lk (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:54:40] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6696 139897674376960 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:57:21] /share/LanhuSaas/framework/account/http.py 50 _http_request 6797 140592715974400 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'aBLsy2KnsJbk5ZFEq1_AQPzgoPyP-H_kj2BMz3V7nj0'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=aBLsy2KnsJbk5ZFEq1_AQPzgoPyP-H_kj2BMz3V7nj0 (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:57:21] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6797 140592715974400 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 17:57:22] /share/LanhuSaas/framework/account/http.py 50 _http_request 6797 140592715974400 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': '62O8R4YmTvcJ2MOmCWuVMzc4a93p9INwA2QjuYjwI1Q'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=62O8R4YmTvcJ2MOmCWuVMzc4a93p9INwA2QjuYjwI1Q (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 17:57:22] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6797 140592715974400 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 18:16:39] /share/LanhuSaas/framework/account/http.py 50 _http_request 6797 140592715974400 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'g7F4h_Q7SlggJfrpWAriQmpK4jyK6G90jRGiOU_t9Js'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=g7F4h_Q7SlggJfrpWAriQmpK4jyK6G90jRGiOU_t9Js (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 18:16:39] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6797 140592715974400 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 18:16:41] /share/LanhuSaas/framework/account/http.py 50 _http_request 6797 140592715974400 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': '01uPvJreC7VJ9HgHLJjhdGMtkDQcCl0uzoRvdBapHHU'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=01uPvJreC7VJ9HgHLJjhdGMtkDQcCl0uzoRvdBapHHU (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 18:16:41] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6797 140592715974400 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 18:21:13] /share/LanhuSaas/framework/account/http.py 50 _http_request 6797 140592715974400 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'kinrpSkXJvGTIMW3QYqHFjHF3coi6-N8crk07z6gUH0'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=kinrpSkXJvGTIMW3QYqHFjHF3coi6-N8crk07z6gUH0 (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 18:21:13] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6797 140592715974400 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 18:21:14] /share/LanhuSaas/framework/account/http.py 50 _http_request 6797 140592715974400 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'x3PNfbx0-1Z2k-v8uVbqSW1teVMXhatuDwLZagFrWwY'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=x3PNfbx0-1Z2k-v8uVbqSW1teVMXhatuDwLZagFrWwY (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 18:21:14] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6797 140592715974400 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-23 18:21:15] /share/LanhuSaas/framework/account/http.py 50 _http_request 6797 140592715974400 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'gjxQ5I_tfacx_HY038VDEZ7V6_yamDTeNNzqzAWpbUM'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=gjxQ5I_tfacx_HY038VDEZ7V6_yamDTeNNzqzAWpbUM (Caused by <class 'socket.gaierror'>: [Errno -2] Name or service not known)
+INFO [2018-11-23 18:21:15] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 6797 140592715974400 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-26 09:40:33] /share/LanhuSaas/framework/account/http.py 50 _http_request 4588 139900235855616 
+ 	 login http request error! type: GET, url: http://paas.blueking.com:8030/login/accounts/is_login/, data: {'bk_token': 'scp1HTSzN_lO4u_Ijl1FqOh6i9FtMZvbBdkH8GH0ZVo'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.blueking.com', port=8030): Max retries exceeded with url: /login/accounts/is_login/?bk_token=scp1HTSzN_lO4u_Ijl1FqOh6i9FtMZvbBdkH8GH0ZVo (Caused by <class 'socket.error'>: [Errno 110] Connection timed out)
+INFO [2018-11-26 09:40:33] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 4588 139900235855616 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-26 09:40:54] /share/LanhuSaas/framework/account/http.py 50 _http_request 4588 139900215805696 
+ 	 login http request error! type: GET, url: http://paas.blueking.com:8030/login/accounts/is_login/, data: {'bk_token': 'scp1HTSzN_lO4u_Ijl1FqOh6i9FtMZvbBdkH8GH0ZVo'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.blueking.com', port=8030): Max retries exceeded with url: /login/accounts/is_login/?bk_token=scp1HTSzN_lO4u_Ijl1FqOh6i9FtMZvbBdkH8GH0ZVo (Caused by <class 'socket.error'>: [Errno 110] Connection timed out)
+INFO [2018-11-26 09:40:54] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 4588 139900215805696 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-26 09:40:59] /share/LanhuSaas/framework/account/http.py 50 _http_request 4588 139900207412992 
+ 	 login http request error! type: GET, url: http://paas.blueking.com:8030/login/accounts/is_login/, data: {'bk_token': 'scp1HTSzN_lO4u_Ijl1FqOh6i9FtMZvbBdkH8GH0ZVo'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.blueking.com', port=8030): Max retries exceeded with url: /login/accounts/is_login/?bk_token=scp1HTSzN_lO4u_Ijl1FqOh6i9FtMZvbBdkH8GH0ZVo (Caused by <class 'socket.error'>: [Errno 110] Connection timed out)
+INFO [2018-11-26 09:40:59] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 4588 139900207412992 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-26 09:41:29] /share/LanhuSaas/framework/account/http.py 50 _http_request 4588 139900199020288 
+ 	 login http request error! type: GET, url: http://paas.blueking.com:8030/login/accounts/is_login/, data: {'bk_token': 'scp1HTSzN_lO4u_Ijl1FqOh6i9FtMZvbBdkH8GH0ZVo'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.blueking.com', port=8030): Max retries exceeded with url: /login/accounts/is_login/?bk_token=scp1HTSzN_lO4u_Ijl1FqOh6i9FtMZvbBdkH8GH0ZVo (Caused by <class 'socket.error'>: [Errno 110] Connection timed out)
+INFO [2018-11-26 09:41:29] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 4588 139900199020288 
+ 	 验证用户登录token无效： 
+
+ERROR [2018-11-26 09:42:36] /share/LanhuSaas/framework/account/http.py 50 _http_request 4588 139899701294848 
+ 	 login http request error! type: GET, url: http://paas.blueking.com:8030/login/accounts/is_login/, data: {'bk_token': '-VkqxRuJa6TaJ4iFrf8nPqg_l8gNh98ryGDXav4Xa-g'} 
+Traceback (most recent call last):
+  File "/share/LanhuSaas/framework/account/http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 55, in get
+    return request('get', url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/api.py", line 44, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 361, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/sessions.py", line 464, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python2.7/site-packages/requests/adapters.py", line 356, in send
+    raise ConnectionError(e)
+ConnectionError: HTTPConnectionPool(host='paas.blueking.com', port=8030): Max retries exceeded with url: /login/accounts/is_login/?bk_token=-VkqxRuJa6TaJ4iFrf8nPqg_l8gNh98ryGDXav4Xa-g (Caused by <class 'socket.error'>: [Errno 110] Connection timed out)
+INFO [2018-11-26 09:42:36] /share/LanhuSaas/framework/account/accounts.py 91 verify_bk_login 4588 139899701294848 
+ 	 验证用户登录token无效： 
+
