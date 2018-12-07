@@ -3271,3 +3271,648 @@ DEBUG [2018-11-26 17:50:39] /Users/zhanglibing/Library/Python/2.7/lib/python/sit
 DEBUG [2018-11-26 17:50:39] /Users/zhanglibing/Library/Python/2.7/lib/python/site-packages/django/db/backends/utils.py 89 execute 6719 123145463341056 
  	 (0.003) UPDATE `account_bkuser` SET `password` = '', `last_login` = '2018-11-26 17:40:03', `is_superuser` = 0, `username` = 'zhanglibing', `chname` = '张礼兵', `company` = '', `qq` = '', `phone` = '11111111111', `email` = '123@qq.com', `is_staff` = 0, `date_joined` = '2018-11-26 17:40:03' WHERE `account_bkuser`.`id` = 3; args=(u'', u'2018-11-26 17:40:03', False, u'zhanglibing', u'\u5f20\u793c\u5175', '', u'', u'11111111111', u'123@qq.com', False, u'2018-11-26 17:40:03', 3) 
 
+DEBUG [2018-12-07 09:09:10] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 12292 11212 
+ 	 (0.011) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 09:09:10] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 12292 11212 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 09:09:10] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 12292 11212 
+ 	 (0.008) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 09:09:10] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 12292 11212 
+ 	 (0.013) SELECT `django_migrations`.`app`, `django_migrations`.`name` FROM `django_migrations`; args=() 
+
+DEBUG [2018-12-07 09:09:14] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 12292 12356 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 09:09:14] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 12292 12356 
+ 	 (0.003) SELECT `account_bkuser`.`id`, `account_bkuser`.`password`, `account_bkuser`.`last_login`, `account_bkuser`.`is_superuser`, `account_bkuser`.`username`, `account_bkuser`.`chname`, `account_bkuser`.`company`, `account_bkuser`.`qq`, `account_bkuser`.`phone`, `account_bkuser`.`email`, `account_bkuser`.`is_staff`, `account_bkuser`.`date_joined` FROM `account_bkuser` WHERE `account_bkuser`.`username` IS NULL; args=() 
+
+DEBUG [2018-12-07 09:09:22] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 12292 5292 
+ 	 (0.011) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 09:09:22] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 12292 5292 
+ 	 (0.007) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 09:09:22] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 12292 5292 
+ 	 (0.004) SELECT `account_bkuser`.`id`, `account_bkuser`.`password`, `account_bkuser`.`last_login`, `account_bkuser`.`is_superuser`, `account_bkuser`.`username`, `account_bkuser`.`chname`, `account_bkuser`.`company`, `account_bkuser`.`qq`, `account_bkuser`.`phone`, `account_bkuser`.`email`, `account_bkuser`.`is_staff`, `account_bkuser`.`date_joined` FROM `account_bkuser` WHERE `account_bkuser`.`username` = 'admin'; args=(u'admin',) 
+
+DEBUG [2018-12-07 09:09:22] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 12292 5292 
+ 	 (0.003) UPDATE `account_bkuser` SET `password` = '', `last_login` = '2018-11-26 17:33:58', `is_superuser` = 0, `username` = 'admin', `chname` = '工头', `company` = '', `qq` = '', `phone` = '15111433485', `email` = '524913413@qq.com', `is_staff` = 0, `date_joined` = '2018-11-26 17:33:58' WHERE `account_bkuser`.`id` = 1; args=(u'', u'2018-11-26 17:33:58', False, u'admin', u'\u5de5\u5934', '', u'', u'15111433485', u'524913413@qq.com', False, u'2018-11-26 17:33:58', 1) 
+
+DEBUG [2018-12-07 09:28:51] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 12292 12408 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 09:28:51] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 12292 12408 
+ 	 (0.004) SELECT `account_bkuser`.`id`, `account_bkuser`.`password`, `account_bkuser`.`last_login`, `account_bkuser`.`is_superuser`, `account_bkuser`.`username`, `account_bkuser`.`chname`, `account_bkuser`.`company`, `account_bkuser`.`qq`, `account_bkuser`.`phone`, `account_bkuser`.`email`, `account_bkuser`.`is_staff`, `account_bkuser`.`date_joined` FROM `account_bkuser` WHERE `account_bkuser`.`username` IS NULL; args=() 
+
+DEBUG [2018-12-07 10:29:42] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 8436 3524 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.004) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.005) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.004) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `django_migrations`.`app`, `django_migrations`.`name` FROM `django_migrations`; args=() 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\base\schema.py 102 execute 820 5496 
+ 	 ALTER TABLE `account_bkuser` ALTER COLUMN `email` SET DEFAULT %s; (params [u'']) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.009) ALTER TABLE `account_bkuser` ALTER COLUMN `email` SET DEFAULT ''; args=[u''] 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\base\schema.py 102 execute 820 5496 
+ 	 ALTER TABLE `account_bkuser` ALTER COLUMN `email` DROP DEFAULT; (params []) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.014) ALTER TABLE `account_bkuser` ALTER COLUMN `email` DROP DEFAULT; args=[] 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.004) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.004) INSERT INTO `django_migrations` (`app`, `name`, `applied`) VALUES ('account', '0003_auto_20181207_1029', '2018-12-07 10:29:52'); args=['account', u'0003_auto_20181207_1029', u'2018-12-07 10:29:52'] 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.007) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.012) SELECT `django_migrations`.`app`, `django_migrations`.`name` FROM `django_migrations`; args=() 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.005) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'permission' AND `django_content_type`.`app_label` = 'auth'); args=('permission', 'auth') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'group' AND `django_content_type`.`app_label` = 'auth'); args=('group', 'auth') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.004) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (1, 2) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(1, 2) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.005) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'auth'; args=('auth',) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.012) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'contenttype' AND `django_content_type`.`app_label` = 'contenttypes'); args=('contenttype', 'contenttypes') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (3) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(3,) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'contenttypes'; args=('contenttypes',) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.008) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'session' AND `django_content_type`.`app_label` = 'sessions'); args=('session', 'sessions') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (4) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(4,) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'sessions'; args=('sessions',) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'site' AND `django_content_type`.`app_label` = 'sites'); args=('site', 'sites') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.002) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (5) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(5,) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'sites'; args=('sites',) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.007) SELECT (1) AS `a` FROM `django_site` LIMIT 1; args=() 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.008) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'logentry' AND `django_content_type`.`app_label` = 'admin'); args=('logentry', 'admin') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.007) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (6) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(6,) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.009) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'admin'; args=('admin',) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'functioncontroller' AND `django_content_type`.`app_label` = 'app_control'); args=('functioncontroller', 'app_control') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.002) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (7) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(7,) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'app_control'; args=('app_control',) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.006) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'bkuser' AND `django_content_type`.`app_label` = 'account'); args=('bkuser', 'account') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.002) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (8) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(8,) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.005) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'account'; args=('account',) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'taskmeta' AND `django_content_type`.`app_label` = 'djcelery'); args=('taskmeta', 'djcelery') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'tasksetmeta' AND `django_content_type`.`app_label` = 'djcelery'); args=('tasksetmeta', 'djcelery') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.007) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'intervalschedule' AND `django_content_type`.`app_label` = 'djcelery'); args=('intervalschedule', 'djcelery') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'crontabschedule' AND `django_content_type`.`app_label` = 'djcelery'); args=('crontabschedule', 'djcelery') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'periodictasks' AND `django_content_type`.`app_label` = 'djcelery'); args=('periodictasks', 'djcelery') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'periodictask' AND `django_content_type`.`app_label` = 'djcelery'); args=('periodictask', 'djcelery') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'workerstate' AND `django_content_type`.`app_label` = 'djcelery'); args=('workerstate', 'djcelery') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'taskstate' AND `django_content_type`.`app_label` = 'djcelery'); args=('taskstate', 'djcelery') 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.016) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (9, 10, 11, 12, 13, 14, 15, 16) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(9, 10, 11, 12, 13, 14, 15, 16) 
+
+DEBUG [2018-12-07 10:29:52] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 820 5496 
+ 	 (0.005) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'djcelery'; args=('djcelery',) 
+
+DEBUG [2018-12-07 10:37:17] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 220 11512 
+ 	 (0.004) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.034) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.005) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.007) SELECT `django_migrations`.`app`, `django_migrations`.`name` FROM `django_migrations`; args=() 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.006) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\base\schema.py 102 execute 14584 9644 
+ 	 CREATE TABLE `shell_app_host` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `bk_biz_id` varchar(16) NOT NULL, `bk_cloud_id` varchar(16) NOT NULL, `bk_os_type` varchar(64) NOT NULL, `module_name` varchar(64) NOT NULL, `inner_ip` char(39) NOT NULL, `run_time` datetime NOT NULL, `success` bool NOT NULL); (params None) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.003) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.012) CREATE TABLE `shell_app_host` (`id` integer AUTO_INCREMENT NOT NULL PRIMARY KEY, `bk_biz_id` varchar(16) NOT NULL, `bk_cloud_id` varchar(16) NOT NULL, `bk_os_type` varchar(64) NOT NULL, `module_name` varchar(64) NOT NULL, `inner_ip` char(39) NOT NULL, `run_time` datetime NOT NULL, `success` bool NOT NULL); args=None 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.004) SELECT engine FROM information_schema.tables WHERE table_name = 'shell_app_host'; args=[u'shell_app_host'] 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.002) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.003) INSERT INTO `django_migrations` (`app`, `name`, `applied`) VALUES ('shell_app', '0001_initial', '2018-12-07 10:37:23'); args=['shell_app', u'0001_initial', u'2018-12-07 10:37:23'] 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.003) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.005) SELECT `django_migrations`.`app`, `django_migrations`.`name` FROM `django_migrations`; args=() 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'permission' AND `django_content_type`.`app_label` = 'auth'); args=('permission', 'auth') 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.006) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'group' AND `django_content_type`.`app_label` = 'auth'); args=('group', 'auth') 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.006) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (1, 2) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(1, 2) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.012) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'auth'; args=('auth',) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'contenttype' AND `django_content_type`.`app_label` = 'contenttypes'); args=('contenttype', 'contenttypes') 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.002) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (3) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(3,) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.005) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'contenttypes'; args=('contenttypes',) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'session' AND `django_content_type`.`app_label` = 'sessions'); args=('session', 'sessions') 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.003) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (4) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(4,) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'sessions'; args=('sessions',) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'site' AND `django_content_type`.`app_label` = 'sites'); args=('site', 'sites') 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.003) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (5) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(5,) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'sites'; args=('sites',) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.033) SELECT (1) AS `a` FROM `django_site` LIMIT 1; args=() 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.006) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'logentry' AND `django_content_type`.`app_label` = 'admin'); args=('logentry', 'admin') 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.008) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (6) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(6,) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.013) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'admin'; args=('admin',) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'functioncontroller' AND `django_content_type`.`app_label` = 'app_control'); args=('functioncontroller', 'app_control') 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.003) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (7) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(7,) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.005) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'app_control'; args=('app_control',) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.006) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'bkuser' AND `django_content_type`.`app_label` = 'account'); args=('bkuser', 'account') 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.002) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (8) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(8,) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'account'; args=('account',) 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.011) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'host' AND `django_content_type`.`app_label` = 'shell_app'); args=('host', 'shell_app') 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'host' AND `django_content_type`.`app_label` = 'shell_app'); args=('host', 'shell_app') 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.002) INSERT INTO `django_content_type` (`app_label`, `model`) VALUES ('shell_app', 'host'); args=['shell_app', 'host'] 
+
+DEBUG [2018-12-07 10:37:23] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.003) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (19) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(19,) 
+
+DEBUG [2018-12-07 10:37:24] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.006) INSERT INTO `auth_permission` (`name`, `content_type_id`, `codename`) VALUES ('Can add 主机信息', 19, 'add_host'), ('Can change 主机信息', 19, 'change_host'), ('Can delete 主机信息', 19, 'delete_host'); args=(u'Can add \u4e3b\u673a\u4fe1\u606f', 19, u'add_host', u'Can change \u4e3b\u673a\u4fe1\u606f', 19, u'change_host', u'Can delete \u4e3b\u673a\u4fe1\u606f', 19, u'delete_host') 
+
+DEBUG [2018-12-07 10:37:24] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.006) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'shell_app'; args=('shell_app',) 
+
+DEBUG [2018-12-07 10:37:24] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.019) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'taskmeta' AND `django_content_type`.`app_label` = 'djcelery'); args=('taskmeta', 'djcelery') 
+
+DEBUG [2018-12-07 10:37:24] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.008) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'tasksetmeta' AND `django_content_type`.`app_label` = 'djcelery'); args=('tasksetmeta', 'djcelery') 
+
+DEBUG [2018-12-07 10:37:24] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'intervalschedule' AND `django_content_type`.`app_label` = 'djcelery'); args=('intervalschedule', 'djcelery') 
+
+DEBUG [2018-12-07 10:37:24] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'crontabschedule' AND `django_content_type`.`app_label` = 'djcelery'); args=('crontabschedule', 'djcelery') 
+
+DEBUG [2018-12-07 10:37:24] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.008) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'periodictasks' AND `django_content_type`.`app_label` = 'djcelery'); args=('periodictasks', 'djcelery') 
+
+DEBUG [2018-12-07 10:37:24] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.015) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'periodictask' AND `django_content_type`.`app_label` = 'djcelery'); args=('periodictask', 'djcelery') 
+
+DEBUG [2018-12-07 10:37:24] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.006) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'workerstate' AND `django_content_type`.`app_label` = 'djcelery'); args=('workerstate', 'djcelery') 
+
+DEBUG [2018-12-07 10:37:24] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.006) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'taskstate' AND `django_content_type`.`app_label` = 'djcelery'); args=('taskstate', 'djcelery') 
+
+DEBUG [2018-12-07 10:37:24] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.003) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (9, 10, 11, 12, 13, 14, 15, 16) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(9, 10, 11, 12, 13, 14, 15, 16) 
+
+DEBUG [2018-12-07 10:37:24] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14584 9644 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'djcelery'; args=('djcelery',) 
+
+DEBUG [2018-12-07 10:43:26] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 13136 12124 
+ 	 (0.006) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.005) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.001) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.003) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.003) SELECT `django_migrations`.`app`, `django_migrations`.`name` FROM `django_migrations`; args=() 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.005) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.003) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.004) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.006) SELECT `django_migrations`.`app`, `django_migrations`.`name` FROM `django_migrations`; args=() 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.005) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'permission' AND `django_content_type`.`app_label` = 'auth'); args=('permission', 'auth') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'group' AND `django_content_type`.`app_label` = 'auth'); args=('group', 'auth') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.003) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (1, 2) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(1, 2) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'auth'; args=('auth',) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'contenttype' AND `django_content_type`.`app_label` = 'contenttypes'); args=('contenttype', 'contenttypes') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.002) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (3) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(3,) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.008) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'contenttypes'; args=('contenttypes',) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.015) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'session' AND `django_content_type`.`app_label` = 'sessions'); args=('session', 'sessions') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.002) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (4) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(4,) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.005) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'sessions'; args=('sessions',) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'site' AND `django_content_type`.`app_label` = 'sites'); args=('site', 'sites') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.003) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (5) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(5,) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'sites'; args=('sites',) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.002) SELECT (1) AS `a` FROM `django_site` LIMIT 1; args=() 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'logentry' AND `django_content_type`.`app_label` = 'admin'); args=('logentry', 'admin') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.002) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (6) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(6,) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'admin'; args=('admin',) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'functioncontroller' AND `django_content_type`.`app_label` = 'app_control'); args=('functioncontroller', 'app_control') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.004) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (7) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(7,) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'app_control'; args=('app_control',) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'bkuser' AND `django_content_type`.`app_label` = 'account'); args=('bkuser', 'account') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.002) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (8) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(8,) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'account'; args=('account',) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'host' AND `django_content_type`.`app_label` = 'shell_app'); args=('host', 'shell_app') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.007) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (19) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(19,) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.006) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'shell_app'; args=('shell_app',) 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.005) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'taskmeta' AND `django_content_type`.`app_label` = 'djcelery'); args=('taskmeta', 'djcelery') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.007) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'tasksetmeta' AND `django_content_type`.`app_label` = 'djcelery'); args=('tasksetmeta', 'djcelery') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.005) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'intervalschedule' AND `django_content_type`.`app_label` = 'djcelery'); args=('intervalschedule', 'djcelery') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'crontabschedule' AND `django_content_type`.`app_label` = 'djcelery'); args=('crontabschedule', 'djcelery') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'periodictasks' AND `django_content_type`.`app_label` = 'djcelery'); args=('periodictasks', 'djcelery') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'periodictask' AND `django_content_type`.`app_label` = 'djcelery'); args=('periodictask', 'djcelery') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'workerstate' AND `django_content_type`.`app_label` = 'djcelery'); args=('workerstate', 'djcelery') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'taskstate' AND `django_content_type`.`app_label` = 'djcelery'); args=('taskstate', 'djcelery') 
+
+DEBUG [2018-12-07 10:43:32] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.004) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (9, 10, 11, 12, 13, 14, 15, 16) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(9, 10, 11, 12, 13, 14, 15, 16) 
+
+DEBUG [2018-12-07 10:43:33] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 1784 6276 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'djcelery'; args=('djcelery',) 
+
+DEBUG [2018-12-07 10:51:39] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 4100 6156 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.004) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.006) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `django_migrations`.`app`, `django_migrations`.`name` FROM `django_migrations`; args=() 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.008) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.004) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.007) SELECT `django_migrations`.`app`, `django_migrations`.`name` FROM `django_migrations`; args=() 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'permission' AND `django_content_type`.`app_label` = 'auth'); args=('permission', 'auth') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'group' AND `django_content_type`.`app_label` = 'auth'); args=('group', 'auth') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.004) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (1, 2) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(1, 2) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.007) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'auth'; args=('auth',) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'contenttype' AND `django_content_type`.`app_label` = 'contenttypes'); args=('contenttype', 'contenttypes') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.002) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (3) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(3,) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'contenttypes'; args=('contenttypes',) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'session' AND `django_content_type`.`app_label` = 'sessions'); args=('session', 'sessions') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.004) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (4) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(4,) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.007) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'sessions'; args=('sessions',) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'site' AND `django_content_type`.`app_label` = 'sites'); args=('site', 'sites') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (5) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(5,) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'sites'; args=('sites',) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.004) SELECT (1) AS `a` FROM `django_site` LIMIT 1; args=() 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'logentry' AND `django_content_type`.`app_label` = 'admin'); args=('logentry', 'admin') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.006) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (6) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(6,) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.007) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'admin'; args=('admin',) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.005) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'functioncontroller' AND `django_content_type`.`app_label` = 'app_control'); args=('functioncontroller', 'app_control') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.010) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (7) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(7,) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'app_control'; args=('app_control',) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'bkuser' AND `django_content_type`.`app_label` = 'account'); args=('bkuser', 'account') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.009) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (8) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(8,) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'account'; args=('account',) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'host' AND `django_content_type`.`app_label` = 'shell_app'); args=('host', 'shell_app') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (19) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(19,) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'shell_app'; args=('shell_app',) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'taskmeta' AND `django_content_type`.`app_label` = 'djcelery'); args=('taskmeta', 'djcelery') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'tasksetmeta' AND `django_content_type`.`app_label` = 'djcelery'); args=('tasksetmeta', 'djcelery') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.002) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'intervalschedule' AND `django_content_type`.`app_label` = 'djcelery'); args=('intervalschedule', 'djcelery') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'crontabschedule' AND `django_content_type`.`app_label` = 'djcelery'); args=('crontabschedule', 'djcelery') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'periodictasks' AND `django_content_type`.`app_label` = 'djcelery'); args=('periodictasks', 'djcelery') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'periodictask' AND `django_content_type`.`app_label` = 'djcelery'); args=('periodictask', 'djcelery') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.004) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'workerstate' AND `django_content_type`.`app_label` = 'djcelery'); args=('workerstate', 'djcelery') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.003) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE (`django_content_type`.`model` = 'taskstate' AND `django_content_type`.`app_label` = 'djcelery'); args=('taskstate', 'djcelery') 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.008) SELECT `auth_permission`.`content_type_id`, `auth_permission`.`codename` FROM `auth_permission` INNER JOIN `django_content_type` ON ( `auth_permission`.`content_type_id` = `django_content_type`.`id` ) WHERE `auth_permission`.`content_type_id` IN (9, 10, 11, 12, 13, 14, 15, 16) ORDER BY `django_content_type`.`app_label` ASC, `django_content_type`.`model` ASC, `auth_permission`.`codename` ASC; args=(9, 10, 11, 12, 13, 14, 15, 16) 
+
+DEBUG [2018-12-07 10:51:49] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 14748 13416 
+ 	 (0.008) SELECT `django_content_type`.`id`, `django_content_type`.`app_label`, `django_content_type`.`model` FROM `django_content_type` WHERE `django_content_type`.`app_label` = 'djcelery'; args=('djcelery',) 
+
+DEBUG [2018-12-07 16:55:22] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 11460 916 
+ 	 (0.005) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 16:55:22] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 11460 916 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-07 16:55:22] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 11460 916 
+ 	 (0.010) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-07 16:55:22] C:\Users\CY\AppData\Roaming\Python\Python27\site-packages\django\db\backends\utils.py 89 execute 11460 916 
+ 	 (0.008) SELECT `django_migrations`.`app`, `django_migrations`.`name` FROM `django_migrations`; args=() 
+

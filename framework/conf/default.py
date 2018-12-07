@@ -119,6 +119,7 @@ INSTALLED_APPS = (
     'app_control',
     'account',
     'home_application',
+    'shell_app'
 )
 
 # ==============================================================================
