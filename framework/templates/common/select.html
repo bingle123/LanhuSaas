@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Bootstrap css -->
+    <link href="${STATIC_URL}assets/bootstrap-3.3.4/css/bootstrap.css" rel="stylesheet">
+    <!--蓝鲸平台APP 公用的样式文件 -->
+    <link href="${STATIC_URL}css/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="${STATIC_URL}css/jquery-ui.min.css" rel="stylesheet">
+    <link href="${STATIC_URL}css/theme.css" rel="stylesheet">
+    <link href="${STATIC_URL}css/bk_base.css" rel="stylesheet">
+    <link href="${STATIC_URL}css/bk_app_theme.css" rel="stylesheet">
+    <link href="${STATIC_URL}css/ijobs.css" rel="stylesheet">
+    <!--JQuery-->
+    <script src="${STATIC_URL}js/jquery-1.10.2.min.js"></script>
+    <!-- 这个是全局配置，如果需要在js中使用app_id和site_url,则这个javascript片段一定要保留 -->
+    <script type="text/javascript">
+          var app_id = "${APP_ID}";
+          var site_url = "${SITE_URL}";	    // app的url前缀,在ajax调用的时候，应该加上该前缀
+          var static_url = "${STATIC_URL}"; // 静态资源前缀
+    </script>
+</head>
+<body style="background: white;">
+
+<!--服务器-->
+<div class="container">
+    <div class="row">
+        <!--选择服务器-->
+        <div class="col-sm-4 p0 i18scriptLeft">
+            <button type="button" class="bk-button bk-primary showModel" data-placement="right" style="min-width: 115px">
+                <i class="glyphicon glyphicon-search"></i>&nbsp;选择服务器
+            </button>
+        </div>
+        <!--选择服务器-->
+
+        <!--选中服务器显示-->
+        <div class="col-sm-12">
+            <table class="table table-header-bg mt40 mb0 serverIpResultTable table-bordered table-hover none" style="font-size: 13px!important">
+                <thead>
+                <tr>
+                    <th style="width:180px;">子网名称</th>
+                    <th>IP/分组</th>
+                    <th>状态</th>
+                    <th class="table-header-option-th">所有操作</th>
+                </tr>
+                </thead>
+                <tbody class="displaytbody">
+
+                </tbody>
+            </table>
+        </div>
+        <!--选中服务器显示-->
+    </div>
+</div>
+<!--服务器-->
+
+<!-- Modal 弹出窗-->
+<div class="modal fade serverIpModal h1000 in ui-draggable" data-backdrop="false" data-keyboard="false" role="dialog" aria-hidden="false" style="display: none;">
+    <div class="modal-dialog w800" role="document">
+        <div class="modal-content">
+            <div class="modal-loading-wrap none" style="z-index: 9999;position: absolute;left:0;top:0;width:100%;height:100%;text-align:center;vertial-align:middle;">
+                <img src="${STATIC_URL}img/loading_2_36x36.gif" style="margin-left:-18px;position:absolute;top:50%;margin-top:-36px;">
+            </div>
+            <div class="modal-body" style="min-height:450px;">
+                <div class="nav nav-tabs serverIpListtabs w h40 pl20 text-left ui-draggable-handle">
+                    <label class="pr5 radio-inline changeIp" style="cursor: pointer;"><input type="radio" name="serverSelect" id="selectone" value="1" checked=""> 通过IP选择服务器</label>
+                    <label  class="pr5 radio-inline changeIp" style="cursor: pointer;"><input type="radio" name="serverSelect" id="selecttwo" value="2"> 配置平台</label>
+                    <label class="pr5 radio-inline changeIp" style="cursor: pointer;"><input type="radio" name="serverSelect" id="selectthree" value="3"> 手动添加</label>
+                    <label id="dynamicGroup" class="pr5 radio-inline changeIp" style="cursor: pointer;"><input type="radio" id="selectfour" name="serverSelect" value="4"> 动态分组</label>
+
+                </div>
+
+                <div class="tab-content" style="min-height:380px;position: relative;">
+                    <!-- start 通过IP选择服务器 -->
+                    <div class="ipList-tab-pane ipChoose-tab-pane w p10">
+                        <input type="search" class="form-control w filterText" placeholder="主机名按Enter进行过滤...">
+                        <span class="glyphicon glyphicon-search form-control-feedback search-feedback" style="color: #3596e0;font-size: 16px;top: 10px;right: 10px;cursor:pointer;pointer-events:auto !important;"></span>
+                        <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+                            <div class="row"><div class="col-sm-6"></div><div class="col-sm-6"></div></div><div class="row"><div class="col-sm-12"><table class="table table-header-bg mt10 w serverIp-result-table-thead table-hover serverIpTable dataTable no-footer" style="margin-bottom: -1px; font-size: 13px !important; width: 748px;" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+                            <thead>
+                            <tr role="row"><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 13px;"><input type="checkbox" class="selectedAllChecks" title="当前页"></th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 101px;">子网名称</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 198px;">操作系统</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 97px;">IP</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 80px;">状态</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 163px;">主机名</th></tr>
+                            </thead>
+                            <tbody class="osbody">
+                            <tr role="row" class="odd">
+                                <td class="1"><input value="192.168.1.201" type="checkbox" class="userChecks select_all_flag"></td>
+                                <td class="2"><span class="select_all_flag ">default area</span></td>
+                                <td class="3"><span title="linux redhat" class="select_all_flag">linux redhat</span></td>
+                                <td class="4"><span title="192.168.1.201" class="select_all_flag">192.168.1.201</span></td>
+                                <td class="5"><span class="text-success select_all_flag ">Agent正常</span></td>
+                                <td class="6"><span class="select_all_flag " title="paas-1">paas-1</span></td>
+                            </tr>
+                            <tr role="row" class="even">
+                                <td class="1"><input value="192.168.1.202" type="checkbox" class="userChecks select_all_flag"></td>
+                                <td class="2"><span class="select_all_flag ">default area</span></td>
+                                <td class="3"><span title="linux redhat" class="select_all_flag">linux redhat</span></td
+                                ><td class="4"><span title="192.168.1.202" class="select_all_flag">192.168.1.202</span></td>
+                                <td class="5"><span class="text-success select_all_flag ">Agent正常</span></td>
+                                <td class="6"><span class="select_all_flag " title="mongodb-1">mongodb-1</span></td>
+                            </tr>
+                            <tr role="row" class="odd">
+                                <td><input value="192.168.1.203" type="checkbox" class="userChecks select_all_flag"></td>
+                                <td><span class="select_all_flag ">default area</span></td>
+                                <td><span title="linux redhat" class="select_all_flag">linux redhat</span></td>
+                                <td><span title="192.168.1.203" class="select_all_flag">192.168.1.203</span></td>
+                                <td><span class="text-success select_all_flag ">Agent正常</span></td>
+                                <td><span class="select_all_flag " title="rbtnode1">rbtnode1</span></td>
+                            </tr><tr role="row" class="even">
+                                <td><input value="192.168.1.204" type="checkbox" class="userChecks select_all_flag"></td>
+                                <td><span class="select_all_flag ">default area</span></td>
+                                <td><span title="linux redhat" class="select_all_flag">linux redhat</span></td>
+                                <td><span title="192.168.1.204" class="select_all_flag">192.168.1.204</span></td>
+                                <td><span class="text-success select_all_flag ">Agent正常</span></td>
+                                <td><span class="select_all_flag " title="cicdkit-1">cicdkit-1</span></td>
+                            </tr>
+                            <tr role="row" class="odd">
+                                <td><input value="192.168.1.206" type="checkbox" class="userChecks select_all_flag"></td>
+                                <td><span class="select_all_flag ">default area</span></td>
+                                <td><span title="Windows Server 2008 R2 Standard" class="select_all_flag">Windows Server 2008 R2 Standard</span></td>
+                                <td><span title="192.168.1.206" class="select_all_flag">192.168.1.206</span></td>
+                                <td><span class="text-success select_all_flag ">Agent正常</span></td>
+                                <td><span class="select_all_flag " title="WIN-5SF2GHPL86S">WIN-5SF2GHPL86S</span></td>
+                            </tr>
+                            <tr role="row" class="even"><td><input value="192.168.1.207" type="checkbox" class="userChecks select_all_flag"></td>
+                                <td><span class="select_all_flag ">default area</span></td>
+                                <td><span title="linux redhat" class="select_all_flag">linux redhat</span></td>
+                                <td><span title="192.168.1.207" class="select_all_flag">192.168.1.207</span></td>
+                                <td><span class="text-success select_all_flag ">Agent正常</span></td>
+                                <td><span class="select_all_flag " title="zorkdata-207">zorkdata-207</span></td>
+                            </tr>
+                            <tr role="row" class="odd"><td><input value="192.168.1.208" type="checkbox" class="userChecks select_all_flag"></td>
+                                <td><span class="select_all_flag ">default area</span></td>
+                                <td><span title="linux redhat" class="select_all_flag">linux redhat</span></td>
+                                <td><span title="192.168.1.208" class="select_all_flag">192.168.1.208</span></td>
+                                <td><span class="text-success select_all_flag ">Agent正常</span></td>
+                                <td><span class="select_all_flag " title="zorkdata-208">zorkdata-208</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div></div>
+                            <div class="row"><div class="col-sm-5"><div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">第 1 页 / 共 2 页&nbsp;&nbsp;每页显示 7 条&nbsp;&nbsp;共 12 条</div></div><div class="col-sm-7"><div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate"><ul class="pagination"><li class="paginate_button previous disabled" id="DataTables_Table_0_previous"><a href="http://job.blueking.com:8030/?fastExecuteScript&amp;appId=2#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">&lt;&lt;</a></li><li class="paginate_button active"><a href="http://job.blueking.com:8030/?fastExecuteScript&amp;appId=2#" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0">1</a></li><li class="paginate_button "><a href="http://job.blueking.com:8030/?fastExecuteScript&amp;appId=2#" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0">2</a></li><li class="paginate_button next" id="DataTables_Table_0_next"><a href="http://job.blueking.com:8030/?fastExecuteScript&amp;appId=2#" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0">&gt;&gt;</a></li></ul></div></div></div></div>
+                    </div>
+                    <!-- end 通过IP选择服务器 -->
+
+                    <!-- start 配置平台 -->
+                    <div class="ipList-tab-pane configCenter-tab-pane none w p10">
+                        <div style="height: 384px; overflow: auto;text-align: left;" class="treeviewDiv">
+                            <div class="treeviewByAjax"></div>
+                        </div>
+                    </div>
+                    <!-- end 配置平台 -->
+
+                    <!-- start 手动添加 -->
+                    <div class="ipList-tab-pane manually-tab-pane none w p10">
+                        <!-- <textarea class="form-control server-ip-textarea" rows="3" placeholder="请输入IP，以“空格”或者“回车”或者“;”分隔"  style="height: 375px"></textarea> -->
+                        <div>
+                            <label class="control-label">子网名称：</label>
+                            <div class="ijobs-input plat-name-box" style="width:550px;">
+
+                            </div>
+                            <div class="plat-area-box">
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <!-- end 手动添加 -->
+
+                    <!-- start 服务器集 -->
+                    <div class="ipList-tab-pane group-tab-pane none w p10">
+                        <input type="text" class="form-control w groupfilterText" placeholder="通过名称描述进行过滤...">
+                        <table class="table table-header-bg mt10 w serverIp-result-table-thead table-hover groupTable" style="margin-bottom: -1px;font-size: 13px">
+                            <thead>
+                            <tr>
+                                <th style="width: 5%">&nbsp;</th>
+                                <th style="width: 60%">业务名称</th>
+                                <th style="width: 35%">分组名称</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <!-- end 服务器集 -->
+
+                    <!-- start cc脚本 -->
+                    <div class="ipList-tab-pane cc-tab-pane none w p10 tl">
+                        <div class="row mb10">
+                            <label class="col-sm-2 control-label">CC脚本导入<span class="red">&nbsp;*</span>：</label>
+                            <div class="col-sm-10">
+                                <select class="form-control w cc-name"></select>
+                            </div>
+                        </div>
+
+                        <div class="row mb10">
+                            <label class="col-sm-2 control-label">入口参数：</label>
+                            <div class="col-sm-10">
+                                <input class="form-control cc-param" style="float:left;max-width:531px;margin-right:5px;" maxlength="25" placeholder="请输入测试用的脚本参数，无则不填">
+                                <a href="javascript:void(0)" class="btn btn-success cc-test-btn">获取结果</a>
+                            </div>
+                        </div>
+
+                        <div class="row mb10">
+                            <label class="col-sm-2 control-label">测试结果：</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control w cc-test-rs" placeholder="请点击&#39;测试结果：&#39;按钮进行测试" style="resize: none;height:300px;"></textarea>
+                                <span style="color:red">请确保CC脚本获取结果中第一行一定要包含InnerIP或OuterIP字段，如果没有，则在作业中使用此CC脚本时会导致导入IP列表为空</span>
+                                <span class="cc-ip-count"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end cc脚本 -->
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <label class="pr10 radio-inline fl"><input type="checkbox" class="selectAll"> 全选</label>
+                <button type="button" class="bk-button bk-default fl copyIPByPage" data-clipboard-target="">复制已选IP</button>
+                <button type="button" class="bk-button bk-default fl copyAllPageIP" style="margin-left:5px;">复制全部IP</button>
+                <button type="button" class="bk-button btn-primary savebtn" style="min-width:60px;">添加</button>
+                <button type="button" class="bk-button bk-default cancelbtn" style="min-width:60px;">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal 弹出窗-->
+
+<!--点击事件脚本-->
+<script>
+    //新增服务器，打开窗口
+    $('.showModel').click(function () {
+        $('.ui-draggable').css('display', 'block');
+    });
+
+    //新增服务器取消窗口
+    $('.cancelbtn').click(function () {
+        $('.ui-draggable').css('display', 'none');
+    });
+
+    //打开配置平台
+    $('#selecttwo').click(function () {
+        $('.ipChoose-tab-pane').addClass("none");           //关闭通过IP筛选服务器
+        $('.configCenter-tab-pane').addClass("none");       //关闭通过配置平台筛选服务器
+        $('.manually-tab-pane').addClass("none");           //关闭通过手动添加
+        $('.group-tab-pane').addClass("none");              //关闭动态分组
+        $('.configCenter-tab-pane').removeClass("none");    //打开配置平台
+    });
+
+    //通过IP筛选服务器
+    $('#selectone').click(function () {
+        $('.ipChoose-tab-pane').addClass("none");           //关闭通过IP筛选服务器
+        $('.configCenter-tab-pane').addClass("none");       //关闭通过配置平台筛选服务器
+        $('.manually-tab-pane').addClass("none");           //关闭通过手动添加
+        $('.group-tab-pane').addClass("none");              //关闭动态分组
+        $('.ipChoose-tab-pane').removeClass("none");        //打开配置平台
+    });
+
+    //通过手动添加
+    $('#selectthree').click(function () {
+        $('.ipChoose-tab-pane').addClass("none");           //关闭通过IP筛选服务器
+        $('.configCenter-tab-pane').addClass("none");       //关闭通过配置平台筛选服务器
+        $('.manually-tab-pane').addClass("none");           //关闭通过手动添加
+        $('.group-tab-pane').addClass("none");              //关闭动态分组
+        $('.manually-tab-pane').removeClass("none");        //打开配置平台
+    });
+
+    //通过IP分组筛选服务器
+    $('#selectfour').click(function () {
+        $('.ipChoose-tab-pane').addClass("none");           //关闭通过IP筛选服务器
+        $('.configCenter-tab-pane').addClass("none");       //关闭通过配置平台筛选服务器
+        $('.manually-tab-pane').addClass("none");           //关闭通过手动添加
+        $('.group-tab-pane').addClass("none");              //关闭动态分组
+        $('.group-tab-pane').removeClass("none");        //打开配置平台
+    });
+    //全选与不全选
+    $('.selectAll').click(function () {
+        if($(this).is(":checked")){
+            $('.select_all_flag').prop("checked",true);
+        }else {
+            $('.select_all_flag').prop("checked", false);
+        }
+    });
+
+    //显示登记账户
+    $('#addUserBut').click(function () {
+        var display = $('#regUserDiv').css('display');  //获取是否隐藏
+        if(display == "none"){
+            $('#regUserDiv').css('display', 'block');$('#DataTables_Table_0_wrapper').css('display','block');
+        }else{
+            $('#regUserDiv').css('display', 'none');
+        }
+    });
+
+    //点击保存按钮，特效和数据转移
+    $('.savebtn').click(function () {
+        $('.serverIpResultTable').removeClass("none");
+        $('.serverIpMode-1').children("div").removeClass("none");
+        $('.btnGroup').removeClass("none");
+        $('.server-text').removeClass("none");   //移除隐藏样式
+        var ischecked = $('.serverIpTable tbody input:checked:checked');
+        for (var i = 0 ;i < ischecked.length;i++){
+            var ischeckedflag = ischecked.eq(i).parents("tr");
+            var _htmlUrl = "<td>"+"<a class='select_all_flag' href='#'>删除</a>"+"</td>";
+            ischeckedflag.append(_htmlUrl);
+            $('.displaytbody').append(ischeckedflag);
+            $('.displaytbody .1').remove();
+            $('.displaytbody .2').remove();
+            $('.displaytbody .6').remove();
+
+            /*var _htmlIPName = "<td>"+$('.serverIpTable tr td:nth-child(2)').html()+"</td>";
+            var _htmlIPGroup = "<td>"+$('.serverIpTable tr td:nth-child(3)').html()+"</td>";
+            var _htmlIPAdress = "<td>"+$('.serverIpTable tr td:nth-child(4)').html()+"</td>";
+            var _htmlOperate = "<td>"+"<a href='#'>删除</a>"+"</td>";
+            var _html =  "<tr>"+_htmlIPName+_htmlIPGroup+_htmlIPAdress+_htmlOperate+"</tr>";
+            $('.displaytbody').html(_html);*/
+        }
+
+        $('.ui-draggable').css('display', 'none');
+    });
+</script>
+
+</body>
+</html>

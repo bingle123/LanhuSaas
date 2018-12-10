@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 
 from django.shortcuts import render
@@ -5,6 +6,11 @@ from django.shortcuts import render
 
 from blueking.component.shortcuts import get_client_by_request
 from common.mymako import render_mako_context, render_json
+
+
+def showselect(request):
+    return render_mako_context(request, './common/select.html')
+
 
 def show_info(request):
     pass
