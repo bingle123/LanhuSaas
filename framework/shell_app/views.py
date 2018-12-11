@@ -29,6 +29,7 @@ def show_Host(request):
         clickPage = int(clickPage_unicode.encode("utf-8"))          # 对页码进行转码
     startPage = (clickPage - 1) * limit                             # 接口参数:数据起始页码
     print (11)
+    print("liaomingtao")
     print (22)
     print ("chenyi")
     try:
