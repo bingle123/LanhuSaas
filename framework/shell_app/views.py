@@ -28,8 +28,7 @@ def show_Host(request):
     else:
         clickPage = int(clickPage_unicode.encode("utf-8"))          # 对页码进行转码
     startPage = (clickPage - 1) * limit                             # 接口参数:数据起始页码
-    print 22
-    print 11
+    print (11)
     try:
         client = get_client_by_request(request)                     # 获取code、secret参数
         bk_token = request.COOKIES.get("bk_token")                  # 获取token参数
@@ -138,7 +137,8 @@ def modle_Tree_Host(request):
         sum = 0
         test_list = bk_tree_list[0]['child'] #取出集群数据
         dispaly_list = []
-        print (1)
+        print(1)
+        print(333)
         for i in test_list:  #循环遍历取出集群名称
             dic = {}
             dic['bk_inst_name'] = i['bk_inst_name']
