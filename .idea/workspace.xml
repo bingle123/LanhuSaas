@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="加载页面项目">
-      <change afterPath="$PROJECT_DIR$/framework/static/css/pageNav.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/static/js/jquery-3.1.1.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/static/js/pageNav.js" afterDir="false" />
+    <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="冲突提交">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/shell_app/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/shell_app/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/shell_app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/shell_app/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/templates/common/select.html" beforeDir="false" afterPath="$PROJECT_DIR$/framework/templates/common/select.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/lanhusaas/wb_mysql.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/lanhusaas/wb_mysql.log" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,11 +15,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/framework/shell_app/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="18" column="37" selection-start-line="18" selection-start-column="37" selection-end-line="18" selection-end-column="37" />
+            <state relative-caret-position="323">
+              <caret line="17" column="12" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -35,7 +28,7 @@
         <entry file="file://$PROJECT_DIR$/framework/templates/common/select.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-489">
-              <caret line="309" lean-forward="true" selection-start-line="309" selection-end-line="309" />
+              <caret line="309" selection-start-line="309" selection-end-line="309" />
               <folding>
                 <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
                 <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
@@ -64,16 +57,13 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/framework/shell_app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="337">
-              <caret line="116" column="19" selection-start-line="116" selection-start-column="4" selection-end-line="116" selection-end-column="19" />
+            <state relative-caret-position="90">
+              <caret line="29" column="44" selection-start-line="29" selection-start-column="44" selection-end-line="29" selection-end-column="44" />
               <folding>
                 <element signature="e#24#35#0" expanded="true" />
-                <element signature="e#443#4300#0" />
-                <element signature="e#1855#2191#0" />
-                <element signature="e#4137#4167#0" />
               </folding>
             </state>
           </provider>
@@ -107,8 +97,8 @@
         <option value="$PROJECT_DIR$/framework/conf/default.py" />
         <option value="$PROJECT_DIR$/framework/static/js/pageNav.js" />
         <option value="$PROJECT_DIR$/framework/templates/common/select.html" />
-        <option value="$PROJECT_DIR$/framework/shell_app/views.py" />
         <option value="$PROJECT_DIR$/framework/shell_app/urls.py" />
+        <option value="$PROJECT_DIR$/framework/shell_app/views.py" />
       </list>
     </option>
   </component>
@@ -135,6 +125,12 @@
               <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
               <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
               <item name="framework" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
+              <item name="framework" type="462c0819:PsiDirectoryNode" />
+              <item name="shell_app" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
@@ -243,22 +239,28 @@
       <option name="project" value="LOCAL" />
       <updated>1544418401661</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="冲突提交">
+      <created>1544519711896</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1544519711896</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39699000" />
+    <option name="totallyTimeSpent" value="40266000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17900302" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17900302" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.019512195" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.4504065" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.32520324" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -267,7 +269,7 @@
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="11" />
+      <window_info anchor="bottom" id="Version Control" order="11" visible="true" weight="0.44227642" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -281,7 +283,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="选择服务器---静态页面" />
-    <option name="LAST_COMMIT_MESSAGE" value="选择服务器---静态页面" />
+    <MESSAGE value="冲突提交" />
+    <option name="LAST_COMMIT_MESSAGE" value="冲突提交" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/framework/home_application/views.py">
@@ -384,23 +387,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/shell_app/views.py">
+    <entry file="file://$PROJECT_DIR$/framework/shell_app/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="337">
-          <caret line="116" column="19" selection-start-line="116" selection-start-column="4" selection-end-line="116" selection-end-column="19" />
-          <folding>
-            <element signature="e#24#35#0" expanded="true" />
-            <element signature="e#443#4300#0" />
-            <element signature="e#1855#2191#0" />
-            <element signature="e#4137#4167#0" />
-          </folding>
+        <state relative-caret-position="323">
+          <caret line="17" column="12" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/framework/templates/common/select.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-489">
-          <caret line="309" lean-forward="true" selection-start-line="309" selection-end-line="309" />
+          <caret line="309" selection-start-line="309" selection-end-line="309" />
           <folding>
             <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
             <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
@@ -428,10 +425,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/shell_app/urls.py">
+    <entry file="file://$PROJECT_DIR$/framework/shell_app/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="18" column="37" selection-start-line="18" selection-start-column="37" selection-end-line="18" selection-end-column="37" />
+        <state relative-caret-position="90">
+          <caret line="29" column="44" selection-start-line="29" selection-start-column="44" selection-end-line="29" selection-end-column="44" />
+          <folding>
+            <element signature="e#24#35#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
