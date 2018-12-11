@@ -12682,3 +12682,63 @@ DEBUG [2018-12-11 16:38:26] D:\Python27\lib\site-packages\django\db\backends\uti
 DEBUG [2018-12-11 16:38:26] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 31668 
  	 (0.002) UPDATE `account_bkuser` SET `password` = '', `last_login` = '2018-11-26 17:38:23', `is_superuser` = 1, `username` = 'zork', `chname` = 'zorkdata', `company` = '', `qq` = '', `phone` = '17777777777', `email` = 'gujunling@zork.com.cn', `is_staff` = 1, `date_joined` = '2018-11-26 17:38:23' WHERE `account_bkuser`.`id` = 2; args=(u'', u'2018-11-26 17:38:23', True, u'zork', u'zorkdata', '', u'', u'17777777777', u'gujunling@zork.com.cn', True, u'2018-11-26 17:38:23', 2) 
 
+DEBUG [2018-12-11 16:41:19] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 24728 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-11 16:41:19] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 24728 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-11 16:41:19] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 24728 
+ 	 (0.004) SELECT `account_bkuser`.`id`, `account_bkuser`.`password`, `account_bkuser`.`last_login`, `account_bkuser`.`is_superuser`, `account_bkuser`.`username`, `account_bkuser`.`chname`, `account_bkuser`.`company`, `account_bkuser`.`qq`, `account_bkuser`.`phone`, `account_bkuser`.`email`, `account_bkuser`.`is_staff`, `account_bkuser`.`date_joined` FROM `account_bkuser` WHERE `account_bkuser`.`username` = 'zork'; args=(u'zork',) 
+
+DEBUG [2018-12-11 16:41:19] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 24728 
+ 	 (0.002) UPDATE `account_bkuser` SET `password` = '', `last_login` = '2018-11-26 17:38:23', `is_superuser` = 1, `username` = 'zork', `chname` = 'zorkdata', `company` = '', `qq` = '', `phone` = '17777777777', `email` = 'gujunling@zork.com.cn', `is_staff` = 1, `date_joined` = '2018-11-26 17:38:23' WHERE `account_bkuser`.`id` = 2; args=(u'', u'2018-11-26 17:38:23', True, u'zork', u'zorkdata', '', u'', u'17777777777', u'gujunling@zork.com.cn', True, u'2018-11-26 17:38:23', 2) 
+
+DEBUG [2018-12-11 16:41:20] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 29244 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-11 16:41:20] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 29244 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-11 16:41:20] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 29244 
+ 	 (0.004) SELECT `account_bkuser`.`id`, `account_bkuser`.`password`, `account_bkuser`.`last_login`, `account_bkuser`.`is_superuser`, `account_bkuser`.`username`, `account_bkuser`.`chname`, `account_bkuser`.`company`, `account_bkuser`.`qq`, `account_bkuser`.`phone`, `account_bkuser`.`email`, `account_bkuser`.`is_staff`, `account_bkuser`.`date_joined` FROM `account_bkuser` WHERE `account_bkuser`.`username` = 'zork'; args=(u'zork',) 
+
+DEBUG [2018-12-11 16:41:21] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 29244 
+ 	 (0.003) UPDATE `account_bkuser` SET `password` = '', `last_login` = '2018-11-26 17:38:23', `is_superuser` = 1, `username` = 'zork', `chname` = 'zorkdata', `company` = '', `qq` = '', `phone` = '17777777777', `email` = 'gujunling@zork.com.cn', `is_staff` = 1, `date_joined` = '2018-11-26 17:38:23' WHERE `account_bkuser`.`id` = 2; args=(u'', u'2018-11-26 17:38:23', True, u'zork', u'zorkdata', '', u'', u'17777777777', u'gujunling@zork.com.cn', True, u'2018-11-26 17:38:23', 2) 
+
+DEBUG [2018-12-11 16:41:21] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 22224 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-11 16:41:21] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 22224 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-11 16:41:21] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 22224 
+ 	 (0.004) SELECT `account_bkuser`.`id`, `account_bkuser`.`password`, `account_bkuser`.`last_login`, `account_bkuser`.`is_superuser`, `account_bkuser`.`username`, `account_bkuser`.`chname`, `account_bkuser`.`company`, `account_bkuser`.`qq`, `account_bkuser`.`phone`, `account_bkuser`.`email`, `account_bkuser`.`is_staff`, `account_bkuser`.`date_joined` FROM `account_bkuser` WHERE `account_bkuser`.`username` = 'zork'; args=(u'zork',) 
+
+DEBUG [2018-12-11 16:41:21] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 22224 
+ 	 (0.003) UPDATE `account_bkuser` SET `password` = '', `last_login` = '2018-11-26 17:38:23', `is_superuser` = 1, `username` = 'zork', `chname` = 'zorkdata', `company` = '', `qq` = '', `phone` = '17777777777', `email` = 'gujunling@zork.com.cn', `is_staff` = 1, `date_joined` = '2018-11-26 17:38:23' WHERE `account_bkuser`.`id` = 2; args=(u'', u'2018-11-26 17:38:23', True, u'zork', u'zorkdata', '', u'', u'17777777777', u'gujunling@zork.com.cn', True, u'2018-11-26 17:38:23', 2) 
+
+DEBUG [2018-12-11 16:41:24] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 28464 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-11 16:41:24] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 28464 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-11 16:41:24] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 28464 
+ 	 (0.004) SELECT `account_bkuser`.`id`, `account_bkuser`.`password`, `account_bkuser`.`last_login`, `account_bkuser`.`is_superuser`, `account_bkuser`.`username`, `account_bkuser`.`chname`, `account_bkuser`.`company`, `account_bkuser`.`qq`, `account_bkuser`.`phone`, `account_bkuser`.`email`, `account_bkuser`.`is_staff`, `account_bkuser`.`date_joined` FROM `account_bkuser` WHERE `account_bkuser`.`username` = 'zork'; args=(u'zork',) 
+
+DEBUG [2018-12-11 16:41:24] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 15936 28464 
+ 	 (0.002) UPDATE `account_bkuser` SET `password` = '', `last_login` = '2018-11-26 17:38:23', `is_superuser` = 1, `username` = 'zork', `chname` = 'zorkdata', `company` = '', `qq` = '', `phone` = '17777777777', `email` = 'gujunling@zork.com.cn', `is_staff` = 1, `date_joined` = '2018-11-26 17:38:23' WHERE `account_bkuser`.`id` = 2; args=(u'', u'2018-11-26 17:38:23', True, u'zork', u'zorkdata', '', u'', u'17777777777', u'gujunling@zork.com.cn', True, u'2018-11-26 17:38:23', 2) 
+
+DEBUG [2018-12-11 17:11:18] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 17828 56932 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-11 17:11:18] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 17828 56932 
+ 	 (0.002) SET SQL_AUTO_IS_NULL = 0; args=None 
+
+DEBUG [2018-12-11 17:11:18] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 17828 56932 
+ 	 (0.004) SHOW FULL TABLES; args=None 
+
+DEBUG [2018-12-11 17:11:18] D:\Python27\lib\site-packages\django\db\backends\utils.py 89 execute 17828 56932 
+ 	 (0.003) SELECT `django_migrations`.`app`, `django_migrations`.`name` FROM `django_migrations`; args=() 
+
