@@ -14,11 +14,15 @@
     <link href="${STATIC_URL}css/ijobs.css" rel="stylesheet">
     <!--JQuery-->
     <script src="${STATIC_URL}js/jquery-1.10.2.min.js"></script>
+    <script src="${STATIC_URL}js/jquery-3.1.1.min.js"></script>
+    <!--分页CSS和JS-->
+    <script src="${STATIC_URL}js/pageNav.js"></script>
+    <link href="${STATIC_URL}css/pageNav.css" rel="stylesheet">
     <!-- 这个是全局配置，如果需要在js中使用app_id和site_url,则这个javascript片段一定要保留 -->
     <script type="text/javascript">
           var app_id = "${APP_ID}";
-          var site_url = "${SITE_URL}";	    // app的url前缀,在ajax调用的时候，应该加上该前缀
-          var static_url = "${STATIC_URL}"; // 静态资源前缀
+          var site_url = "${SITE_URL}";	        // app的url前缀,在ajax调用的时候，应该加上该前缀
+          var static_url = "${STATIC_URL}";     // 静态资源前缀
     </script>
 </head>
 <body style="background: white;">
@@ -82,63 +86,43 @@
                             <tr role="row"><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 13px;"><input type="checkbox" class="selectedAllChecks" title="当前页"></th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 101px;">子网名称</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 198px;">操作系统</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 97px;">IP</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 80px;">状态</th><th class="sorting_disabled" rowspan="1" colspan="1" style="width: 163px;">主机名</th></tr>
                             </thead>
                             <tbody class="osbody">
-                            <tr role="row" class="odd">
-                                <td class="1"><input value="192.168.1.201" type="checkbox" class="userChecks select_all_flag"></td>
-                                <td class="2"><span class="select_all_flag ">default area</span></td>
-                                <td class="3"><span title="linux redhat" class="select_all_flag">linux redhat</span></td>
-                                <td class="4"><span title="192.168.1.201" class="select_all_flag">192.168.1.201</span></td>
-                                <td class="5"><span class="text-success select_all_flag ">Agent正常</span></td>
-                                <td class="6"><span class="select_all_flag " title="paas-1">paas-1</span></td>
-                            </tr>
-                            <tr role="row" class="even">
-                                <td class="1"><input value="192.168.1.202" type="checkbox" class="userChecks select_all_flag"></td>
-                                <td class="2"><span class="select_all_flag ">default area</span></td>
-                                <td class="3"><span title="linux redhat" class="select_all_flag">linux redhat</span></td
-                                ><td class="4"><span title="192.168.1.202" class="select_all_flag">192.168.1.202</span></td>
-                                <td class="5"><span class="text-success select_all_flag ">Agent正常</span></td>
-                                <td class="6"><span class="select_all_flag " title="mongodb-1">mongodb-1</span></td>
-                            </tr>
-                            <tr role="row" class="odd">
-                                <td><input value="192.168.1.203" type="checkbox" class="userChecks select_all_flag"></td>
-                                <td><span class="select_all_flag ">default area</span></td>
-                                <td><span title="linux redhat" class="select_all_flag">linux redhat</span></td>
-                                <td><span title="192.168.1.203" class="select_all_flag">192.168.1.203</span></td>
-                                <td><span class="text-success select_all_flag ">Agent正常</span></td>
-                                <td><span class="select_all_flag " title="rbtnode1">rbtnode1</span></td>
-                            </tr><tr role="row" class="even">
-                                <td><input value="192.168.1.204" type="checkbox" class="userChecks select_all_flag"></td>
-                                <td><span class="select_all_flag ">default area</span></td>
-                                <td><span title="linux redhat" class="select_all_flag">linux redhat</span></td>
-                                <td><span title="192.168.1.204" class="select_all_flag">192.168.1.204</span></td>
-                                <td><span class="text-success select_all_flag ">Agent正常</span></td>
-                                <td><span class="select_all_flag " title="cicdkit-1">cicdkit-1</span></td>
-                            </tr>
-                            <tr role="row" class="odd">
-                                <td><input value="192.168.1.206" type="checkbox" class="userChecks select_all_flag"></td>
-                                <td><span class="select_all_flag ">default area</span></td>
-                                <td><span title="Windows Server 2008 R2 Standard" class="select_all_flag">Windows Server 2008 R2 Standard</span></td>
-                                <td><span title="192.168.1.206" class="select_all_flag">192.168.1.206</span></td>
-                                <td><span class="text-success select_all_flag ">Agent正常</span></td>
-                                <td><span class="select_all_flag " title="WIN-5SF2GHPL86S">WIN-5SF2GHPL86S</span></td>
-                            </tr>
-                            <tr role="row" class="even"><td><input value="192.168.1.207" type="checkbox" class="userChecks select_all_flag"></td>
-                                <td><span class="select_all_flag ">default area</span></td>
-                                <td><span title="linux redhat" class="select_all_flag">linux redhat</span></td>
-                                <td><span title="192.168.1.207" class="select_all_flag">192.168.1.207</span></td>
-                                <td><span class="text-success select_all_flag ">Agent正常</span></td>
-                                <td><span class="select_all_flag " title="zorkdata-207">zorkdata-207</span></td>
-                            </tr>
-                            <tr role="row" class="odd"><td><input value="192.168.1.208" type="checkbox" class="userChecks select_all_flag"></td>
-                                <td><span class="select_all_flag ">default area</span></td>
-                                <td><span title="linux redhat" class="select_all_flag">linux redhat</span></td>
-                                <td><span title="192.168.1.208" class="select_all_flag">192.168.1.208</span></td>
-                                <td><span class="text-success select_all_flag ">Agent正常</span></td>
-                                <td><span class="select_all_flag " title="zorkdata-208">zorkdata-208</span></td>
-                            </tr>
+
                             </tbody>
                         </table>
                         </div></div>
-                            <div class="row"><div class="col-sm-5"><div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">第 1 页 / 共 2 页&nbsp;&nbsp;每页显示 7 条&nbsp;&nbsp;共 12 条</div></div><div class="col-sm-7"><div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate"><ul class="pagination"><li class="paginate_button previous disabled" id="DataTables_Table_0_previous"><a href="http://job.blueking.com:8030/?fastExecuteScript&amp;appId=2#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">&lt;&lt;</a></li><li class="paginate_button active"><a href="http://job.blueking.com:8030/?fastExecuteScript&amp;appId=2#" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0">1</a></li><li class="paginate_button "><a href="http://job.blueking.com:8030/?fastExecuteScript&amp;appId=2#" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0">2</a></li><li class="paginate_button next" id="DataTables_Table_0_next"><a href="http://job.blueking.com:8030/?fastExecuteScript&amp;appId=2#" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0">&gt;&gt;</a></li></ul></div></div></div></div>
+                            <div class="row none">
+                                <div class="col-sm-5">
+                                    <div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">
+                                        第 1 页 / 共 2 页&nbsp;&nbsp;每页显示 7 条&nbsp;&nbsp;共 12 条
+                                    </div>
+                                </div>
+                                <div class="col-sm-7">
+                                    <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+                                        <ul class="pagination">
+                                            <li class="paginate_button previous disabled" id="DataTables_Table_0_previous">
+                                                <a href="http://job.blueking.com:8030/?fastExecuteScript&amp;appId=2#" aria-controls="DataTables_Table_0" data-dt-idx="0" tabindex="0">&lt;&lt;</a>
+                                            </li>
+                                            <li class="paginate_button active">
+                                                <a href="http://job.blueking.com:8030/?fastExecuteScript&amp;appId=2#" aria-controls="DataTables_Table_0" data-dt-idx="1" tabindex="0">1</a>
+                                            </li>
+                                            <li class="paginate_button ">
+                                                <a href="http://job.blueking.com:8030/?fastExecuteScript&amp;appId=2#" aria-controls="DataTables_Table_0" data-dt-idx="2" tabindex="0">2</a>
+                                            </li>
+                                            <li class="paginate_button next" id="DataTables_Table_0_next"><a href="http://job.blueking.com:8030/?fastExecuteScript&amp;appId=2#" aria-controls="DataTables_Table_0" data-dt-idx="3" tabindex="0">&gt;&gt;</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">
+                                        第 1 页 / 共 2 页&nbsp;&nbsp;每页显示 7 条&nbsp;&nbsp;共 12 条
+                                    </div>
+                                </div>
+                                <div aria-label="Page navigation" class="page-nav-outer" id="PageNavId"></div>
+                            </div>
+                        </div>
                     </div>
                     <!-- end 通过IP选择服务器 -->
 
@@ -224,15 +208,135 @@
 </div>
 <!-- Modal 弹出窗-->
 
+<!--表格模板-->
+
+<template id="tpl">
+    <tr role="row" class="odd">
+        <td class="1"><input value="#bk_host_innerip#" type="checkbox" class="userChecks select_all_flag"></td>
+        <td class="2"><span class="select_all_flag ">#bk_inst_name#</span></td>
+        <td class="3"><span title="linux redhat" class="select_all_flag">#bk_os_name#</span></td>
+        <td class="4"><span title="192.168.1.201" class="select_all_flag">#bk_host_innerip#</span></td>
+        <td class="5"><span class="text-success select_all_flag ">#bk_agent_alive#</span></td>
+        <td class="6"><span class="select_all_flag " title="paas-1" >#bk_host_name#</span></td>
+    </tr>
+</template>
+<!--表格模板-->
+
 <!--点击事件脚本-->
 <script>
+    //前后端数据交互通用方法
+    function renderTpl(str, cfg) {
+        var re = /(#(.+?)#)/g;
+
+        return str.replace(re, function() {
+            var val = cfg[arguments[2]]+'';
+            if(typeof val == 'undefined') {
+                val = '';
+            }
+            return val;
+        });
+    };
+
+    //表格删除数据
+    function deltable(obj){
+        var res = confirm('确认要删除吗？');
+        if(res == true)
+        {
+            $(obj).parents("tr").remove();
+        }
+    }
+
+    //页面加载
+    $(document).ready(function () {
+        $.ajax({
+            url: '${SITE_URL}test/',
+            type: 'GET',
+            dataType:  'json',
+            success:function (res) {
+                //获取数据成功
+                if (res.code == 0){
+                    var _html = '';
+                    var list = res.results;
+                    var tpl = $('#tpl').html();
+                    //alert(tpl)
+                    //alert(list.length)
+                    if (list.length == 0){
+                        alert('没有数据');
+                    }else {
+                        for (var i = 0,len = list.length;i < len;i++){
+                            var item = list[i];
+                            _html += renderTpl(tpl,item)
+                            //alert(item)
+                        }
+                    }
+                    $('.serverIpTable tbody').html(_html);
+                }
+            }
+        });
+
+    });
+
     //新增服务器，打开窗口
     $('.showModel').click(function () {
         $('.ui-draggable').css('display', 'block');
+        $('.modal-loading-wrap').removeClass("none");
+        $.ajax({
+            url: '${SITE_URL}test/',
+            type: 'GET',
+            dataType:  'json',
+            success:function (res) {
+                //获取数据成功
+                if (res.code == 0){
+                    var _html = '';
+                    var list = res.results;
+                    var tpl = $('#tpl').html();
+                    //alert(tpl)
+                    //alert(list.length)
+                    if (list.length == 0){
+                        alert('没有数据');
+                    }else {
+                        for (var i = 0,len = list.length;i < len;i++){
+                            var item = list[i];
+                            _html += renderTpl(tpl,item)
+                            //alert(item)
+                        }
+                    }
+                    $('.serverIpTable tbody').html(_html);
+                    $('.modal-loading-wrap').addClass("none");
+                }
+            }
+        });
     });
 
     //新增服务器取消窗口
     $('.cancelbtn').click(function () {
+        $('.modal-loading-wrap').removeClass("none");
+        $.ajax({
+            url: '${SITE_URL}test/',
+            type: 'GET',
+            dataType:  'json',
+            success:function (res) {
+                //获取数据成功
+                if (res.code == 0){
+                    var _html = '';
+                    var list = res.results;
+                    var tpl = $('#tpl').html();
+                    //alert(tpl)
+                    //alert(list.length)
+                    if (list.length == 0){
+                        alert('没有数据');
+                    }else {
+                        for (var i = 0,len = list.length;i < len;i++){
+                            var item = list[i];
+                            _html += renderTpl(tpl,item)
+                            //alert(item)
+                        }
+                    }
+                    $('.serverIpTable tbody').html(_html);
+                    $('.modal-loading-wrap').addClass("none");
+                }
+            }
+        });
         $('.ui-draggable').css('display', 'none');
     });
 
@@ -295,27 +399,68 @@
         $('.serverIpResultTable').removeClass("none");
         $('.serverIpMode-1').children("div").removeClass("none");
         $('.btnGroup').removeClass("none");
-        $('.server-text').removeClass("none");   //移除隐藏样式
+        $('.server-text').removeClass("none");                      //移除隐藏样式
         var ischecked = $('.serverIpTable tbody input:checked:checked');
         for (var i = 0 ;i < ischecked.length;i++){
             var ischeckedflag = ischecked.eq(i).parents("tr");
-            var _htmlUrl = "<td>"+"<a class='select_all_flag' href='#'>删除</a>"+"</td>";
+            var _htmlUrl = "<td>"+"<a class='select_all_flag' href="+"'javascript:;'"+" onclick"+"="+"deltable(this)"+">删除</a>"+"</td>";
             ischeckedflag.append(_htmlUrl);
             $('.displaytbody').append(ischeckedflag);
             $('.displaytbody .1').remove();
             $('.displaytbody .2').remove();
             $('.displaytbody .6').remove();
-
-            /*var _htmlIPName = "<td>"+$('.serverIpTable tr td:nth-child(2)').html()+"</td>";
-            var _htmlIPGroup = "<td>"+$('.serverIpTable tr td:nth-child(3)').html()+"</td>";
-            var _htmlIPAdress = "<td>"+$('.serverIpTable tr td:nth-child(4)').html()+"</td>";
-            var _htmlOperate = "<td>"+"<a href='#'>删除</a>"+"</td>";
-            var _html =  "<tr>"+_htmlIPName+_htmlIPGroup+_htmlIPAdress+_htmlOperate+"</tr>";
-            $('.displaytbody').html(_html);*/
         }
-
         $('.ui-draggable').css('display', 'none');
     });
+
+</script>
+
+<script type="text/javascript">
+    var pageNavObj = null;//用于储存分页对象
+    var pageCount = 30;
+    var perPageNum = 3;
+    pageNavObj = new PageNavCreate("PageNavId",{
+         pageCount:pageCount,
+         currentPage:1,
+         perPageNum:perPageNum,
+    });
+    pageNavObj.afterClick(pageNavCallBack);
+    function pageNavCallBack(clickPage){
+        pageNavObj = new PageNavCreate("PageNavId",{
+             pageCount:pageCount,
+             currentPage:clickPage,
+             perPageNum:perPageNum,
+        });
+        $('.modal-loading-wrap').removeClass("none");
+        $.ajax({
+            url:"${SITE_URL}test/?pageCount="+pageCount+"&clickPage="+clickPage,     ///?pageCount="+pageCount+"&perPageNum"+perPageNum
+            type:"GET",
+            dataType: "json",
+            success:function (res) {
+                //获取数据成功
+
+                if (res.code == 0){
+                    var _html = '';
+                    var list = res.results;
+                    var tpl = $('#tpl').html();
+                    //alert(tpl)
+                    //alert(list.length)
+                    if (list.length == 0){
+                        alert('没有数据');
+                    }else {
+                        for (var i = 0,len = list.length;i < len;i++){
+                            var item = list[i];
+                            _html += renderTpl(tpl,item)
+                            //alert(item)
+                        }
+                    }
+                    $('.serverIpTable tbody').html(_html);
+                }
+                $('.modal-loading-wrap').addClass("none");
+            }
+        });
+        pageNavObj.afterClick(pageNavCallBack);
+    }
 </script>
 
 </body>

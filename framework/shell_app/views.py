@@ -3,19 +3,37 @@ import json
 from django.shortcuts import render
 from blueking.component.shortcuts import get_client_by_request
 from common.mymako import render_json
+from common.mymako import render_mako_context
 from common.log import logger
+
+def showselect(request):
+    """
+    选择服务器页面
+    :param request:
+    :return: 选择服务器页面
+    """
+    return render_mako_context(request, './common/select.html')
+
+
 def show_Host(request):
-    """根据一个或者多个业务查询主机列表"""
+    """
+    主机页面展示，包含分页功能
+    :param request: clickPage:页码数
+    :return:        json
+    """
+    clickPage_unicode = request.GET.get("clickPage")                # 获取页面页码数
+    limit = 7                                                       # 定义页面长度
+    if clickPage_unicode is None or clickPage_unicode == "":        # 页码数是否为空，空时赋值为第一页
+        clickPage = 1
+    else:
+        clickPage = int(clickPage_unicode.encode("utf-8"))          # 对页码进行转码
+    startPage = (clickPage - 1) * limit                             # 接口参数:数据起始页码
     try:
-        client = get_client_by_request (request)
-        bk_token = request.COOKIES.get ("bk_token")
-        #req = json.loads (request.body)
-        #bk_biz_list = req.get("bk_biz_list")
-        client.set_bk_api_ver ('v2')
-        display_list = []
-        #if bk_biz_list:
-            #for i in bk_biz_list:
-        param={
+        client = get_client_by_request(request)                     # 获取code、secret参数
+        bk_token = request.COOKIES.get("bk_token")                  # 获取token参数
+        client.set_bk_api_ver('v2')                                 # 以v2版本调用接口
+        display_list = []                                           # 定义一个空列表
+        param = {                                                   # 以下定义search_host--查询主机接口参数
             "bk_app_code": client.app_code,
             "bk_app_secret": client.app_secret,
             "bk_token": bk_token,
@@ -43,58 +61,100 @@ def show_Host(request):
                 }
             ],
             "page": {
-                "start": 0,
-                "limit": 10,
+                "start": startPage,
+                "limit": limit,
                 "sort": "bk_host_id"
             },
             "pattern": ""
         }
-        param1 = {
+        param2 = {                                                  # 定义get_agent_status--agent状态接口参数
+            "bk_app_code": client.app_code,
+            "bk_app_secret": client.app_secret,
             "bk_token": bk_token,
-            "fields": [
-                "bk_biz_id",
-                "bk_biz_name"
-            ],
+            "bk_supplier_id": 0,
+            "hosts": [
+                {
+                    "ip": 0,
+                    "bk_cloud_id": "0"
+                }
+            ]
         }
-        res = client.cc.search_host(param)
-        res1 = client.cc.search_business(param1)
-        if res1.get('result', False):
-            bk_biz_info = res1.get('data').get('info')
-        else:
-            bk_biz_info = {}
-            logger.error(u"获取业务详情失败：%s" % res.get('message'))
-        if res.get('result', False):
+        res = client.cc.search_host(param)                          # 调用search_host接口
+        if res.get('result', False):                                # 判断调用search_host接口是否成功，成功则取数据，失败则返回错误信息
             bk_host_list = res.get('data').get('info')
         else:
             bk_host_list = []
             logger.error(u"请求主机列表失败：%s" % res.get('message'))
-        dic = {
+        for i in bk_host_list:                                      # 循环遍历接口返回的参数，取出数据保存
+            dic = {}
+            dic['bk_os_name'] = i['host']['bk_os_name']
+            dic['bk_host_name'] = i['host']['bk_host_name']
+            dic['bk_host_innerip'] = i['host']['bk_host_innerip']
+            dic['bk_inst_name'] = i['host']['bk_cloud_id'][0]['bk_inst_name']
+            param2['hosts'][0]['ip'] = dic['bk_host_innerip']
+            res2 = client.gse.get_agent_status(param2)              # 调用get_agent_status接口
+            bk_agent_info = res2['data']
+            if bk_agent_info['0:'+dic['bk_host_innerip']]['bk_agent_alive'] == 1:
+                dic['bk_agent_alive'] = u"Agent已安装"
+            else:
+                dic['bk_agent_alive'] = u"Agent未安装"
+            display_list.append(dic)                                # 把取出来的数据保存到display_list里面
+        return render_json({                                        # 返回json数据给前台
+            "result": True,
+            "message": u"成功",
+            "code": 0,
+            "results": display_list,
+        })
+    except Exception as e:
+        return render_json({
+                "result": False,
+                "message": u"失败",
+                "code": 0,
+                "results": 0
+            })
 
-        }
-        print(bk_biz_info)
 
-
-
-        print(bk_host_list)
+def modle_Tree_Host(request):
+    try:
+        client = get_client_by_request(request)  # 获取code、secret参数
+        bk_token = request.COOKIES.get("bk_token")  # 获取token参数
+        # bk_inst_name = request.get('bk_inst_name')
+        client.set_bk_api_ver('v2')  # 以v2版本调用接口
+        param = {
+            "bk_app_code": client.app_code,
+            "bk_app_secret": client.app_secret,
+            "bk_token": bk_token,
+            "bk_biz_id": 2
+            }
+        res = client.cc.search_biz_inst_topo(param)
+        if res.get('result', False):
+            #判断调用search_biz_inst_topo接口是否成功，成功则取数据，失败则返回错误信息
+            bk_tree_list = res.get('data')
+        else:
+            bk_tree_list = []
+            logger.error(u"请求主机拓扑列表失败：%s" % res.get('message'))
+        sum = 0
+        test_list = bk_tree_list[0]['child'] #取出集群数据
+        dispaly_list = []
+        for i in test_list:  #循环遍历取出集群名称
+            dic = {}
+            dic['bk_inst_name'] = i['bk_inst_name']
+            dispaly_list.append(dic)
         return render_json(
             {
                 "result": True,
-                "message": u"查询执行历史数据成功",
+                "message": u"成功",
                 "code": 0,
-                "results": bk_host_list
+                "results": dispaly_list
             }
         )
-
-
-
-
     except Exception as e:
         return render_json (
             {
-                "result": True,
-                "message": u"查询执行历史数据成功",
+                "result": False,
+                "message": u"失败",
                 "code": 0,
-                "results": 1
+                "results": 0
             }
         )
 

@@ -15,5 +15,7 @@ from django.conf.urls import patterns
 urlpatterns = patterns(
     'shell_app.views',
     (r'^$', 'showselect'),
+    (r'^test/$', 'show_Host'),
+    (r'^test2/$', 'modle_Tree_Host'),
 
 )
