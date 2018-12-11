@@ -136,6 +136,7 @@ def modle_Tree_Host(request):
         sum = 0
         test_list = bk_tree_list[0]['child'] #取出集群数据
         dispaly_list = []
+        print (1)
         for i in test_list:  #循环遍历取出集群名称
             dic = {}
             dic['bk_inst_name'] = i['bk_inst_name']
@@ -148,6 +149,7 @@ def modle_Tree_Host(request):
                 "results": dispaly_list
             }
         )
+
     except Exception as e:
         return render_json (
             {
