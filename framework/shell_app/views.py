@@ -158,7 +158,7 @@ def modle_Tree_Host(request):
         # else:
         #     bk_module_list = []
         #     logger.error(u"请求模块失败：%s" % res1.get('message'))
-        print(bk_module_list)
+        # print(bk_module_list)
         test_list = bk_tree_list[0]['child'] #取出集群数据
         dispaly_list = []
         for i in test_list:  #循环遍历取出集群名称
