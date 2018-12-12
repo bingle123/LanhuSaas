@@ -5,7 +5,7 @@ STOP_RENDERING = runtime.STOP_RENDERING
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 10
-_modified_time = 1543225103.761511
+_modified_time = 1544432068.463104
 _enable_loop = True
 _template_filename = u'/Users/zhanglibing/vagrant/django18/LanhuSaas/framework/templates/base.html'
 _template_uri = u'/base.html'
@@ -67,7 +67,15 @@ def render_body(context,**pageargs):
         __M_writer(unicode(contactus))
         __M_writer(u'"><a href="')
         __M_writer(unicode(SITE_URL))
-        __M_writer(u'contactus/"><span>\u8054\u7cfb\u6211\u4eec</span></a></li>\n                </ul>\n                <ul class="nav navbar-nav navbar-right">\n                  <a href="###" class="avatar">\n                    <img src="')
+        __M_writer(u'contactus/"><span>\u8054\u7cfb\u6211\u4eec</span></a></li>\n                  <li class="')
+        __M_writer(unicode(contactus))
+        __M_writer(u'"><a href="')
+        __M_writer(unicode(SITE_URL))
+        __M_writer(u'guotai/"><span>\u56fd\u6cf0\u541b\u5b89\u81ea\u52a8\u5316\u8fd0\u7ef4\u9879\u76ee</span></a></li>\n                  <li class="')
+        __M_writer(unicode(contactus))
+        __M_writer(u'"><a href="')
+        __M_writer(unicode(SITE_URL))
+        __M_writer(u'guotai/test"><span>\u6d4b\u8bd5</span></a></li>\n                </ul>\n                <ul class="nav navbar-nav navbar-right">\n                  <a href="###" class="avatar">\n                    <img src="')
         __M_writer(unicode(STATIC_URL))
         __M_writer(u'img/getheadimg.jpg" width="40" alt="Avatar" class="avatar-img">\n')
         if request.user.is_superuser:
@@ -168,6 +176,6 @@ def render_head(context,**pageargs):
 
 """
 __M_BEGIN_METADATA
-{"source_encoding": "utf-8", "line_map": {"133": 4, "143": 4, "16": 0, "145": 9, "146": 11, "147": 11, "148": 13, "149": 13, "150": 15, "151": 15, "152": 15, "153": 15, "154": 16, "155": 16, "156": 16, "157": 16, "158": 19, "159": 19, "160": 20, "161": 20, "162": 21, "163": 21, "37": 1, "169": 163, "42": 23, "43": 31, "44": 31, "45": 37, "58": 46, "59": 47, "60": 47, "61": 47, "62": 47, "63": 48, "64": 48, "65": 48, "66": 48, "67": 49, "68": 49, "69": 49, "70": 49, "71": 53, "72": 53, "73": 54, "74": 55, "75": 57, "76": 57, "77": 57, "78": 60, "79": 60, "84": 67, "89": 71, "90": 77, "91": 77, "92": 79, "93": 79, "94": 85, "95": 85, "96": 86, "97": 86, "98": 88, "99": 88, "100": 90, "101": 90, "102": 90, "103": 90, "104": 91, "105": 91, "144": 9, "111": 67, "122": 71}, "uri": "/base.html", "filename": "/Users/zhanglibing/vagrant/django18/LanhuSaas/framework/templates/base.html"}
+{"source_encoding": "utf-8", "line_map": {"130": 73, "171": 21, "141": 4, "16": 0, "151": 4, "152": 9, "153": 9, "154": 11, "155": 11, "156": 13, "157": 13, "158": 15, "159": 15, "160": 15, "161": 15, "162": 16, "163": 16, "164": 16, "37": 1, "166": 19, "167": 19, "168": 20, "169": 20, "42": 23, "43": 31, "44": 31, "45": 37, "177": 171, "58": 46, "59": 47, "60": 47, "61": 47, "62": 47, "63": 48, "64": 48, "65": 48, "66": 48, "67": 49, "68": 49, "69": 49, "70": 49, "71": 50, "72": 50, "73": 50, "74": 50, "75": 51, "76": 51, "77": 51, "78": 51, "79": 55, "80": 55, "81": 56, "82": 57, "83": 59, "84": 59, "85": 59, "86": 62, "87": 62, "92": 69, "165": 16, "97": 73, "98": 79, "99": 79, "100": 81, "101": 81, "102": 87, "103": 87, "104": 88, "105": 88, "106": 90, "107": 90, "108": 92, "109": 92, "110": 92, "111": 92, "112": 93, "113": 93, "119": 69, "170": 21}, "uri": "/base.html", "filename": "/Users/zhanglibing/vagrant/django18/LanhuSaas/framework/templates/base.html"}
 __M_END_METADATA
 """

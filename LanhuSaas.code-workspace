@@ -2,6 +2,12 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "/Users/zhanglibing/Downloads/zork-baseline"
+		},
+		{
+			"path": "/Users/zhanglibing/git/bk_sops"
 		}
 	]
 }
