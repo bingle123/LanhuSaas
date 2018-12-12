@@ -216,7 +216,11 @@
 <!--demo-->
 <button id="demo">demo</button>
 <div class="result">
+    <div class="tree">
+        <ul>
 
+        </ul>
+    </div>
 </div>
 <!--demo-->
 
@@ -236,53 +240,9 @@
 <!---->
 <template id="tpltree">
 <div id="tree">
-    <div>
+    <div id="resulttree">
         <ul>
-            <li class="collapsed"><input type="checkbox"><span>Node 1</span>
-                <ul>
-                    <li class="collapsed"><input type="checkbox"><span>Node 1.1</span>
-                        <ul>
-                            <li class="collapsed"><input type="checkbox"><span>Node 1.1.1</span>
-                                <ul>
-                                    <li class="collapsed"><input type="checkbox"><span>Node 1.1.1.1</span>
-                                </ul>
-                        </ul>
-                </ul>
-                <ul>
-                    <li class="collapsed"><input type="checkbox"><span>Node 1.2</span>
-                        <ul>
-                            <li class="collapsed"><input type="checkbox"><span>Node 1.2.1</span>
-                            <li class="collapsed"><input type="checkbox"><span>Node 1.2.2</span>
-                            <li class="collapsed"><input type="checkbox"><span>Node 1.2.3</span>
-                                <ul>
-                                    <li class="collapsed"><input type="checkbox"><span>Node 1.2.3.1</span>
-                                    <li class="collapsed"><input type="checkbox"><span>Node 1.2.3.2</span>
-                                </ul>
-                            <li class="collapsed"><input type="checkbox"><span>Node 1.2.4</span>
-                            <li class="collapsed"><input type="checkbox"><span>Node 1.2.5</span>
-                            <li class="collapsed"><input type="checkbox"><span>Node 1.2.6</span>
-                        </ul>
-                </ul>
-            <li class="collapsed"><input type="checkbox"><span>Node 2</span>
-                <ul>
-                    <li class="collapsed"><input type="checkbox"><span>Node 2.1</span>
-                        <ul>
-                            <li class="collapsed"><input type="checkbox"><span>Node 2.1.1</span>
-                        </ul>
-                    <li class="collapsed"><input type="checkbox"><span>Node 2.2</span>
-                        <ul>
-                            <li class="collapsed"><input type="checkbox"><span>Node 2.2.1</span>
-                            <li class="collapsed"><input type="checkbox"><span>Node 2.2.2</span>
-                            <li class="collapsed"><input type="checkbox"><span>Node 2.2.3</span>
-                                <ul>
-                                    <li class="collapsed"><input type="checkbox"><span>Node 2.2.3.1</span>
-                                    <li class="collapsed"><input type="checkbox"><span>Node 2.2.3.2</span>
-                                </ul>
-                            <li class="collapsed"><input type="checkbox"><span>Node 2.2.4</span>
-                            <li class="collapsed"><input type="checkbox"><span>Node 2.2.5</span>
-                            <li class="collapsed"><input type="checkbox"><span>Node 2.2.6</span>
-                        </ul>
-                </ul>
+
         </ul>
     </div>
 </div>
@@ -294,9 +254,6 @@
 <script>
 
     $('#demo').click(function () {
-        var _html = $('#tpltree').html();
-        $('.result').html(_html);
-        $('.treeviewByAjax').html(_html);
         $('#tree div').tree({
             onCheck: {
                 node: 'expand'
@@ -305,7 +262,42 @@
                 node: 'collapse'
             }
         });
-        alert(_html);
+        function thetree(data){
+            alert("thetree");
+        };
+        $.ajax({
+            url: '${SITE_URL}test2/',
+            type: 'GET',
+            dataType:  'json',
+            success:function (res) {
+                //获取数据成功
+                var len = res.results.length;
+                var _html = "";
+                for (var i = 0;i < len;i++){
+                    var html = "<li class="+"'collapsed'"+"><input type="+"'checkbox'"+"><span>"+res.results[i].bk_inst_name+"</span>"+"</li>";
+                    _html = _html+html;
+                    var len2 = res.results[i].child.length;
+                    for(var j = 0; j < len2;j++){
+                        var flag =
+                    }
+                    alert(len2)
+
+                }
+                alert(_html);
+                $('.result .tree ul').html(_html);
+                var html_ = $('.result').html();
+                alert(html_);
+                $('.treeviewByAjax').html(html_);
+            }
+        });
+        $('#tree div').tree({
+            onCheck: {
+                node: 'expand'
+            },
+            onUncheck: {
+                node: 'collapse'
+            }
+        });
     });
 
     //前后端数据交互通用方法
