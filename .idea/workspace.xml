@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="">
+    <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="17:47">
+      <change afterPath="$PROJECT_DIR$/framework/static/css/jquery.tree.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/framework/static/img/anchor.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/framework/static/js/jquery.tree.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/shell_app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/shell_app/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/templates/common/select.html" beforeDir="false" afterPath="$PROJECT_DIR$/framework/templates/common/select.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/lanhusaas/wb_mysql.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/lanhusaas/wb_mysql.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates_module/lanhusaas/common/select.html.py" beforeDir="false" afterPath="$PROJECT_DIR$/templates_module/lanhusaas/common/select.html.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,14 +21,38 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/framework/shell_app/views.py">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/framework/templates/common/select.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="326">
-              <caret line="31" column="12" selection-start-line="31" selection-start-column="12" selection-end-line="31" selection-end-column="12" />
+            <state relative-caret-position="260">
+              <caret line="298" column="41" selection-start-line="298" selection-start-column="41" selection-end-line="298" selection-end-column="41" />
               <folding>
-                <element signature="e#24#35#0" expanded="true" />
+                <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#template#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#div#0;n#div#0;n#template#1;n#body#0;n#html#0;n#!!top" />
+                <element signature="e#20255#20407#0#HTML" />
+                <element signature="e#13995#14866#0#HTML" />
+                <element signature="e#15432#15612#0#HTML" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/framework/static/js/jquery.tree.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3485">
+              <caret line="262" column="56" selection-start-line="262" selection-start-column="47" selection-end-line="262" selection-end-column="56" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/framework/static/css/jquery.tree.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="152">
+              <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -44,6 +72,12 @@
       <find>1</find>
       <find>2</find>
       <find>param2</find>
+      <find>anchor</find>
+      <find>anchor.</find>
+      <find>relativ</find>
+      <find>span</find>
+      <find>daredevel-tree-label</find>
+      <find>relative</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -56,15 +90,16 @@
         <option value="$PROJECT_DIR$/framework/templates/base.html" />
         <option value="$PROJECT_DIR$/framework/conf/default.py" />
         <option value="$PROJECT_DIR$/framework/static/js/pageNav.js" />
-        <option value="$PROJECT_DIR$/framework/templates/common/select.html" />
         <option value="$PROJECT_DIR$/framework/shell_app/urls.py" />
         <option value="$PROJECT_DIR$/framework/shell_app/views.py" />
+        <option value="$PROJECT_DIR$/framework/templates/common/select.html" />
+        <option value="$PROJECT_DIR$/framework/static/css/jquery.tree.css" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="537" />
-    <option name="y" value="64" />
+    <option name="x" value="-34" />
+    <option name="y" value="-8" />
     <option name="width" value="1171" />
     <option name="height" value="788" />
   </component>
@@ -73,7 +108,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -90,12 +124,6 @@
               <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
               <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
               <item name="framework" type="462c0819:PsiDirectoryNode" />
-              <item name="shell_app" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
-              <item name="framework" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -103,7 +131,7 @@
               <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
               <item name="framework" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="img" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
@@ -115,12 +143,19 @@
             <path>
               <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
               <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
+              <item name="framework" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
               <item name="templates_module" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -132,9 +167,9 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\img" />
       <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\js" />
       <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\css" />
-      <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\img" />
       <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\templates\common" />
     </key>
   </component>
@@ -191,6 +226,7 @@
       <workItem from="1544412119499" duration="3593000" />
       <workItem from="1544420406198" duration="15957000" />
       <workItem from="1544488138028" duration="19806000" />
+      <workItem from="1544574529881" duration="10259000" />
     </task>
     <task id="LOCAL-00001" summary="选择服务器---静态页面">
       <created>1544418401657</created>
@@ -220,22 +256,43 @@
       <option name="project" value="LOCAL" />
       <updated>1544521600372</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="17:47">
+      <created>1544521635376</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1544521635376</updated>
+    </task>
+    <task id="LOCAL-00006" summary="17:48">
+      <created>1544521722045</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1544521722045</updated>
+    </task>
+    <task id="LOCAL-00007" summary="17:59 liaomingtao">
+      <created>1544522405817</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1544522405817</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="39760000" />
+    <option name="totallyTimeSpent" value="51264000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17900302" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17598188" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.399137" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.0" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.32520324" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -244,7 +301,7 @@
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="11" weight="0.1495935" />
+      <window_info anchor="bottom" id="Version Control" order="11" weight="0.3203252" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -260,7 +317,10 @@
     <MESSAGE value="选择服务器---静态页面" />
     <MESSAGE value="1" />
     <MESSAGE value="17:46" />
-    <option name="LAST_COMMIT_MESSAGE" value="17:46" />
+    <MESSAGE value="17:47" />
+    <MESSAGE value="17:48" />
+    <MESSAGE value="17:59 liaomingtao" />
+    <option name="LAST_COMMIT_MESSAGE" value="17:59 liaomingtao" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/framework/home_application/views.py">
@@ -326,37 +386,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/framework/static/js/pageNav.js" />
-    <entry file="file://$PROJECT_DIR$/framework/templates/common/select.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11097">
-          <caret line="411" selection-start-line="411" selection-end-line="411" />
-          <folding>
-            <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
-            <element signature="e#5631#5637#0#HTML" expanded="true" />
-            <element signature="e#6028#6032#0#HTML" expanded="true" />
-            <element signature="e#6600#6604#0#HTML" expanded="true" />
-            <element signature="e#8061#8067#0#HTML" expanded="true" />
-            <element signature="e#11780#12135#0#HTML" />
-            <element signature="e#12161#12231#0#HTML" />
-            <element signature="e#12326#13223#0#HTML" />
-            <element signature="e#12343#13214#0#HTML" />
-            <element signature="e#13285#13344#0#HTML" />
-            <element signature="e#15057#15991#0#HTML" />
-            <element signature="e#13402#13460#0#HTML" />
-            <element signature="e#15122#16056#0#HTML" />
-            <element signature="e#13515#13881#0#HTML" />
-            <element signature="e#13939#14305#0#HTML" />
-            <element signature="e#14362#14728#0#HTML" />
-            <element signature="e#14789#15152#0#HTML" />
-            <element signature="e#15206#15389#0#HTML" />
-            <element signature="e#15445#15736#0#HTML" />
-            <element signature="e#15797#17137#0#HTML" />
-            <element signature="e#19086#20023#0#HTML" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/framework/shell_app/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="486">
@@ -366,11 +395,41 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/framework/shell_app/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="31" column="12" selection-start-line="31" selection-start-column="12" selection-end-line="31" selection-end-column="12" />
+        <state relative-caret-position="2242">
+          <caret line="118" selection-start-line="118" selection-end-line="118" />
           <folding>
             <element signature="e#24#35#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/templates/common/select.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="298" column="41" selection-start-line="298" selection-start-column="41" selection-end-line="298" selection-end-column="41" />
+          <folding>
+            <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#template#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#0;n#div#0;n#template#1;n#body#0;n#html#0;n#!!top" />
+            <element signature="e#20255#20407#0#HTML" />
+            <element signature="e#13995#14866#0#HTML" />
+            <element signature="e#15432#15612#0#HTML" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/static/js/jquery.tree.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3485">
+          <caret line="262" column="56" selection-start-line="262" selection-start-column="47" selection-end-line="262" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/static/css/jquery.tree.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
         </state>
       </provider>
     </entry>
