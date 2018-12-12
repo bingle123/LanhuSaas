@@ -130,35 +130,13 @@ def modle_Tree_Host(request):
             "bk_token": bk_token,
             "bk_biz_id": 2
             }
-        # param1 = {
-        #     "bk_app_code": client.app_code,
-        #     "bk_app_secret": client.app_secret,
-        #     "bk_token": bk_token,
-        #     "fields": [
-        #         "bk_module_name"
-        #     ],
-        #     # "condition": {
-        #     #     "bk_module_name": "test"
-        #     # },
-        #     "page": {
-        #         "start": 0,
-        #         "limit": 100
-        #     }
-        # }
         res = client.cc.search_biz_inst_topo(param)
-        # res1 = client.cc.search_module(param1)
         if res.get('result', False):
             #判断调用search_biz_inst_topo接口是否成功，成功则取数据，失败则返回错误信息
             bk_tree_list = res.get('data')
         else:
             bk_tree_list = []
             logger.error(u"请求主机拓扑列表失败：%s" % res.get('message'))
-        # if res1.get('result', False):
-        #     bk_module_list = res.get1('data')
-        # else:
-        #     bk_module_list = []
-        #     logger.error(u"请求模块失败：%s" % res1.get('message'))
-        # print(bk_module_list)
         test_list = bk_tree_list[0]['child'] #取出集群数据
         dispaly_list = []
         for i in test_list:  #循环遍历取出集群名称
@@ -191,56 +169,44 @@ def modle_Tree_Host(request):
                 "results": 0
             }
         )
-def modle_Tree_Host1(request):
-    try:
-        client = get_client_by_request (request)  # 获取code、secret参数
-        bk_token = request.COOKIES.get ("bk_token")  # 获取token参数
-        bk_inst_id = 7
-        client.set_bk_api_ver ('v2')  # 以v2版本调用接口
-        param = {
-            "bk_app_code": client.app_code,
-            "bk_app_secret": client.app_secret,
-            "bk_token": bk_token,
-            "bk_biz_id": 2
+def select_Module_Host(request):
+    # try:
+    client = get_client_by_request(request)
+    bk_token = request.COOKIES.get('bk_token')
+    client.set_bk_api_ver('v2')
+    param = {
+        "bk_app_code": client.app_code,
+        "bk_app_secret": client.app_secret,
+        "bk_token": bk_token,
+        "condition":[
+            {
+                "bk_obj_id": "host",
+                "condition": [
+                    {
+                        "field": "bk_inst_id",
+                    }
+                ]
+            }
+        ]
+    }
+    res = client.cc.search_host(param)
+    if res.get('result',False):
+        module_list = res.get('data')
+    else:
+        module_list = []
+        logger.error (u"请求module信息失败：%s" % res.get ('message'))
+    print(module_list)
+    return render_json(
+        {
+            'results':module_list
         }
-        res = client.cc.search_biz_inst_topo (param)
-        if res.get ('result', False):
-            # 判断调用search_biz_inst_topo接口是否成功，成功则取数据，失败则返回错误信息
-            bk_tree_list = res.get ('data')
-        else:
-            bk_tree_list = []
-            logger.error (u"请求主机拓扑列表失败：%s" % res.get ('message'))
-        test_list = bk_tree_list[0]['child']  # 取出集群数据
-        dispaly_list = []
-        bk_inst_list = []
-        for i in test_list:
-            if i['bk_inst_id'] == bk_inst_id:
-                bk_inst_list.append(i)
-                break
-        print(bk_inst_list)
-        for i in bk_inst_list:  # 循环遍历取出集群名称
-            dic = {}
-            dic['bk_inst_name'] = i[0]['child'][0]['bk_inst_name']
-
-            dispaly_list.append (dic)
-        return render_json (
-            {
-                "result": True,
-                "message": u"成功",
-                "code": 0,
-                "results": bk_inst_list
-            }
-        )
-
-    except Exception as e:
-        return render_json (
-            {
-                "result": False,
-                "message": u"失败",
-                "code": 0,
-                "results": 0
-            }
-        )
+    )
+    # except Exception as e:
+    #     return render_json(
+    #         {
+    #             'results':'失败'
+    #         }
+    #     )
 
 # def run_shell_host(request):
 #     client = get_client_by_request(request)
