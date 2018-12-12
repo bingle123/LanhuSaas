@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="17:47">
-      <change afterPath="$PROJECT_DIR$/framework/static/css/jquery.tree.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/static/img/anchor.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/static/js/jquery.tree.js" afterDir="false" />
+    <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="2018/12/12 15:52">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/templates/common/select.html" beforeDir="false" afterPath="$PROJECT_DIR$/framework/templates/common/select.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/lanhusaas/wb_mysql.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/lanhusaas/wb_mysql.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates_module/lanhusaas/common/select.html.py" beforeDir="false" afterPath="$PROJECT_DIR$/templates_module/lanhusaas/common/select.html.py" afterDir="false" />
     </list>
@@ -22,37 +18,38 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/framework/templates/common/select.html">
+        <entry file="file://$PROJECT_DIR$/framework/shell_app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="260">
-              <caret line="298" column="41" selection-start-line="298" selection-start-column="41" selection-end-line="298" selection-end-column="41" />
+            <state relative-caret-position="1748">
+              <caret line="192" column="9" selection-start-line="192" selection-start-column="9" selection-end-line="192" selection-end-column="9" />
               <folding>
-                <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
-                <element signature="n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" />
-                <element signature="n#template#0;n#body#0;n#html#0;n#!!top" />
-                <element signature="n#div#0;n#div#0;n#template#1;n#body#0;n#html#0;n#!!top" />
-                <element signature="e#20255#20407#0#HTML" />
-                <element signature="e#13995#14866#0#HTML" />
-                <element signature="e#15432#15612#0#HTML" />
+                <element signature="e#24#35#0" expanded="true" />
+                <element signature="e#438#4464#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/framework/static/js/jquery.tree.js">
+        <entry file="file://$PROJECT_DIR$/framework/shell_app/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3485">
-              <caret line="262" column="56" selection-start-line="262" selection-start-column="47" selection-end-line="262" selection-end-column="56" />
+            <state relative-caret-position="342">
+              <caret line="18" column="29" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/framework/static/css/jquery.tree.css">
+        <entry file="file://$PROJECT_DIR$/framework/templates/common/select.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
+            <state relative-caret-position="73">
+              <caret line="280" column="34" selection-start-line="280" selection-start-column="34" selection-end-line="280" selection-end-column="34" />
+              <folding>
+                <element signature="e#17137#17289#0#HTML" />
+                <element signature="e#18002#18154#0#HTML" />
+                <element signature="e#17745#17992#0#HTML" />
+                <element signature="e#18213#19293#0#HTML" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -76,8 +73,8 @@
       <find>anchor.</find>
       <find>relativ</find>
       <find>span</find>
-      <find>daredevel-tree-label</find>
       <find>relative</find>
+      <find>daredevel-tree-label</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -91,9 +88,9 @@
         <option value="$PROJECT_DIR$/framework/conf/default.py" />
         <option value="$PROJECT_DIR$/framework/static/js/pageNav.js" />
         <option value="$PROJECT_DIR$/framework/shell_app/urls.py" />
+        <option value="$PROJECT_DIR$/framework/static/css/jquery.tree.css" />
         <option value="$PROJECT_DIR$/framework/shell_app/views.py" />
         <option value="$PROJECT_DIR$/framework/templates/common/select.html" />
-        <option value="$PROJECT_DIR$/framework/static/css/jquery.tree.css" />
       </list>
     </option>
   </component>
@@ -124,27 +121,26 @@
               <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
               <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
               <item name="framework" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="shell_app" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
               <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
               <item name="framework" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
-              <item name="framework" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
               <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
               <item name="framework" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
+              <item name="framework" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
@@ -226,7 +222,8 @@
       <workItem from="1544412119499" duration="3593000" />
       <workItem from="1544420406198" duration="15957000" />
       <workItem from="1544488138028" duration="19806000" />
-      <workItem from="1544574529881" duration="10259000" />
+      <workItem from="1544574529881" duration="12391000" />
+      <workItem from="1544603260487" duration="6571000" />
     </task>
     <task id="LOCAL-00001" summary="选择服务器---静态页面">
       <created>1544418401657</created>
@@ -277,31 +274,53 @@
       <option name="project" value="LOCAL" />
       <updated>1544522405817</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="2018/12/12 15:52">
+      <created>1544601183834</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1544601183834</updated>
+    </task>
+    <task id="LOCAL-00009" summary="2018/12/12 18:51">
+      <created>1544611909696</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1544611909696</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="51264000" />
+    <option name="totallyTimeSpent" value="59967000" />
+  </component>
+  <component name="TodoView" selected-index="4">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17598188" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.05513595" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.0" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.6666667" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.32520324" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.20487805" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Version Control" order="11" weight="0.3203252" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="11" visible="true" weight="0.56422764" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -320,7 +339,10 @@
     <MESSAGE value="17:47" />
     <MESSAGE value="17:48" />
     <MESSAGE value="17:59 liaomingtao" />
-    <option name="LAST_COMMIT_MESSAGE" value="17:59 liaomingtao" />
+    <MESSAGE value="2018/12/12 15:51" />
+    <MESSAGE value="2018/12/12 15:52" />
+    <MESSAGE value="2018/12/12 18:51" />
+    <option name="LAST_COMMIT_MESSAGE" value="2018/12/12 18:51" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/framework/home_application/views.py">
@@ -386,39 +408,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/framework/static/js/pageNav.js" />
-    <entry file="file://$PROJECT_DIR$/framework/shell_app/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="486">
-          <caret line="18" column="29" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/shell_app/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2242">
-          <caret line="118" selection-start-line="118" selection-end-line="118" />
-          <folding>
-            <element signature="e#24#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/templates/common/select.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="260">
-          <caret line="298" column="41" selection-start-line="298" selection-start-column="41" selection-end-line="298" selection-end-column="41" />
-          <folding>
-            <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#div#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#template#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#div#0;n#div#0;n#template#1;n#body#0;n#html#0;n#!!top" />
-            <element signature="e#20255#20407#0#HTML" />
-            <element signature="e#13995#14866#0#HTML" />
-            <element signature="e#15432#15612#0#HTML" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/framework/static/js/jquery.tree.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3485">
@@ -428,8 +417,39 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/framework/static/css/jquery.tree.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
+        <state relative-caret-position="-304">
           <caret line="8" column="21" selection-start-line="8" selection-start-column="21" selection-end-line="8" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/shell_app/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1748">
+          <caret line="192" column="9" selection-start-line="192" selection-start-column="9" selection-end-line="192" selection-end-column="9" />
+          <folding>
+            <element signature="e#24#35#0" expanded="true" />
+            <element signature="e#438#4464#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/shell_app/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="18" column="29" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/templates/common/select.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="73">
+          <caret line="280" column="34" selection-start-line="280" selection-start-column="34" selection-end-line="280" selection-end-column="34" />
+          <folding>
+            <element signature="e#17137#17289#0#HTML" />
+            <element signature="e#18002#18154#0#HTML" />
+            <element signature="e#17745#17992#0#HTML" />
+            <element signature="e#18213#19293#0#HTML" />
+          </folding>
         </state>
       </provider>
     </entry>
