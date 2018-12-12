@@ -18,6 +18,11 @@
     <!--分页CSS和JS-->
     <script src="${STATIC_URL}js/pageNav.js"></script>
     <link href="${STATIC_URL}css/pageNav.css" rel="stylesheet">
+    <!--jQuery树-->
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css"/>
+    <script type="text/javascript" src="${STATIC_URL}js/jquery.tree.js"></script>
+    <link rel="stylesheet" type="text/css" href="${STATIC_URL}css/jquery.tree.css"/>
     <!-- 这个是全局配置，如果需要在js中使用app_id和site_url,则这个javascript片段一定要保留 -->
     <script type="text/javascript">
           var app_id = "${APP_ID}";
@@ -208,8 +213,14 @@
 </div>
 <!-- Modal 弹出窗-->
 
-<!--表格模板-->
+<!--demo-->
+<button id="demo">demo</button>
+<div class="result">
 
+</div>
+<!--demo-->
+
+<!--表格模板-->
 <template id="tpl">
     <tr role="row" class="odd">
         <td class="1"><input value="#bk_host_innerip#" type="checkbox" class="userChecks select_all_flag"></td>
@@ -222,8 +233,81 @@
 </template>
 <!--表格模板-->
 
+<!---->
+<template id="tpltree">
+<div id="tree">
+    <div>
+        <ul>
+            <li class="collapsed"><input type="checkbox"><span>Node 1</span>
+                <ul>
+                    <li class="collapsed"><input type="checkbox"><span>Node 1.1</span>
+                        <ul>
+                            <li class="collapsed"><input type="checkbox"><span>Node 1.1.1</span>
+                                <ul>
+                                    <li class="collapsed"><input type="checkbox"><span>Node 1.1.1.1</span>
+                                </ul>
+                        </ul>
+                </ul>
+                <ul>
+                    <li class="collapsed"><input type="checkbox"><span>Node 1.2</span>
+                        <ul>
+                            <li class="collapsed"><input type="checkbox"><span>Node 1.2.1</span>
+                            <li class="collapsed"><input type="checkbox"><span>Node 1.2.2</span>
+                            <li class="collapsed"><input type="checkbox"><span>Node 1.2.3</span>
+                                <ul>
+                                    <li class="collapsed"><input type="checkbox"><span>Node 1.2.3.1</span>
+                                    <li class="collapsed"><input type="checkbox"><span>Node 1.2.3.2</span>
+                                </ul>
+                            <li class="collapsed"><input type="checkbox"><span>Node 1.2.4</span>
+                            <li class="collapsed"><input type="checkbox"><span>Node 1.2.5</span>
+                            <li class="collapsed"><input type="checkbox"><span>Node 1.2.6</span>
+                        </ul>
+                </ul>
+            <li class="collapsed"><input type="checkbox"><span>Node 2</span>
+                <ul>
+                    <li class="collapsed"><input type="checkbox"><span>Node 2.1</span>
+                        <ul>
+                            <li class="collapsed"><input type="checkbox"><span>Node 2.1.1</span>
+                        </ul>
+                    <li class="collapsed"><input type="checkbox"><span>Node 2.2</span>
+                        <ul>
+                            <li class="collapsed"><input type="checkbox"><span>Node 2.2.1</span>
+                            <li class="collapsed"><input type="checkbox"><span>Node 2.2.2</span>
+                            <li class="collapsed"><input type="checkbox"><span>Node 2.2.3</span>
+                                <ul>
+                                    <li class="collapsed"><input type="checkbox"><span>Node 2.2.3.1</span>
+                                    <li class="collapsed"><input type="checkbox"><span>Node 2.2.3.2</span>
+                                </ul>
+                            <li class="collapsed"><input type="checkbox"><span>Node 2.2.4</span>
+                            <li class="collapsed"><input type="checkbox"><span>Node 2.2.5</span>
+                            <li class="collapsed"><input type="checkbox"><span>Node 2.2.6</span>
+                        </ul>
+                </ul>
+        </ul>
+    </div>
+</div>
+</template>
+<!---->
+
+
 <!--点击事件脚本-->
 <script>
+
+    $('#demo').click(function () {
+        var _html = $('#tpltree').html();
+        $('.result').html(_html);
+        $('.treeviewByAjax').html(_html);
+        $('#tree div').tree({
+            onCheck: {
+                node: 'expand'
+            },
+            onUncheck: {
+                node: 'collapse'
+            }
+        });
+        alert(_html);
+    });
+
     //前后端数据交互通用方法
     function renderTpl(str, cfg) {
         var re = /(#(.+?)#)/g;
@@ -271,6 +355,14 @@
                     }
                     $('.serverIpTable tbody').html(_html);
                 }
+            }
+        });
+        $('#tree div').tree({
+            onCheck: {
+                node: 'expand'
+            },
+            onUncheck: {
+                node: 'collapse'
             }
         });
 
@@ -462,6 +554,6 @@
         pageNavObj.afterClick(pageNavCallBack);
     }
 </script>
-
+</div>
 </body>
 </html>
