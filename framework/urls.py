@@ -27,7 +27,9 @@ urlpatterns = patterns(
     #国泰君安自动化运维
     url(r'^guotai/', include('guotai.urls')),
     # 在home_application(根应用)里开始开发你的应用的主要功能
-    url(r'^', include('home_application.urls')),
+    # url(r'^', include('home_application.urls')),
+    # shell_app主页
+    url(r'^', include('shell_app.urls')),
 )
 
 
