@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="2018/12/12 15:52">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/lanhusaas/wb_mysql.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/lanhusaas/wb_mysql.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates_module/lanhusaas/common/select.html.py" beforeDir="false" afterPath="$PROJECT_DIR$/templates_module/lanhusaas/common/select.html.py" afterDir="false" />
-    </list>
+    <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="2018/12/12 19:06" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,14 +38,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/framework/templates/common/select.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="73">
-              <caret line="280" column="34" selection-start-line="280" selection-start-column="34" selection-end-line="280" selection-end-column="34" />
-              <folding>
-                <element signature="e#17137#17289#0#HTML" />
-                <element signature="e#18002#18154#0#HTML" />
-                <element signature="e#17745#17992#0#HTML" />
-                <element signature="e#18213#19293#0#HTML" />
-              </folding>
+            <state relative-caret-position="358">
+              <caret line="280" column="24" selection-start-line="280" selection-start-column="24" selection-end-line="280" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -95,10 +85,13 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-34" />
+    <option name="x" value="153" />
     <option name="y" value="-8" />
     <option name="width" value="1171" />
     <option name="height" value="788" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <OptionsSetting value="false" id="Update" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -288,11 +281,18 @@
       <option name="project" value="LOCAL" />
       <updated>1544611909696</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="2018/12/12 19:06">
+      <created>1544612810953</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1544612810953</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="59967000" />
+    <option name="totallyTimeSpent" value="60263000" />
   </component>
   <component name="TodoView" selected-index="4">
     <todo-panel id="selected-file">
@@ -306,7 +306,7 @@
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.05513595" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27416918" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -319,8 +319,8 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="11" visible="true" weight="0.56422764" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" visible="true" />
+      <window_info anchor="bottom" id="Version Control" order="11" visible="true" weight="0.56422764" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -342,7 +342,8 @@
     <MESSAGE value="2018/12/12 15:51" />
     <MESSAGE value="2018/12/12 15:52" />
     <MESSAGE value="2018/12/12 18:51" />
-    <option name="LAST_COMMIT_MESSAGE" value="2018/12/12 18:51" />
+    <MESSAGE value="2018/12/12 19:06" />
+    <option name="LAST_COMMIT_MESSAGE" value="2018/12/12 19:06" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/framework/home_application/views.py">
@@ -442,14 +443,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/framework/templates/common/select.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="73">
-          <caret line="280" column="34" selection-start-line="280" selection-start-column="34" selection-end-line="280" selection-end-column="34" />
-          <folding>
-            <element signature="e#17137#17289#0#HTML" />
-            <element signature="e#18002#18154#0#HTML" />
-            <element signature="e#17745#17992#0#HTML" />
-            <element signature="e#18213#19293#0#HTML" />
-          </folding>
+        <state relative-caret-position="358">
+          <caret line="280" column="24" selection-start-line="280" selection-start-column="24" selection-end-line="280" selection-end-column="24" />
         </state>
       </provider>
     </entry>
