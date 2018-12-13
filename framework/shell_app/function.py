@@ -41,10 +41,10 @@ def show_host(request):
                         {
                             "field": "bk_biz_id",
                             "operator": "$eq",
-                            "value" : 345
+                            "value" : 2
                         }
                     ]
-                }
+                },
             ],
             "page": {
                 "start": 0,
@@ -153,78 +153,115 @@ def modle_tree_host(request):
         return return_dic
 
 def select_module_host(request):
-    # try:
-    client = get_client_by_request(request)
-    bk_token = request.COOKIES.get('bk_token')
-    client.set_bk_api_ver('v2')
-    param = {
-        "bk_app_code": client.app_code,
-        "bk_app_secret": client.app_secret,
-        "bk_token": bk_token,
-        "ip": {
-            "data": [],
-            "exact": 1,
-            "flag": "bk_host_innerip|bk_host_outerip"
-        },
-        "condition": [
-            {
-                "bk_obj_id": "host",
-                "fields": [
-                ],
-                "condition": []
+    """
+    此函数类似于show_host函数
+    :param request:
+    :return:
+    """
+    try:
+        client = get_client_by_request(request)
+        bk_token = request.COOKIES.get('bk_token')
+        client.set_bk_api_ver('v2')
+        param = {
+            "bk_app_code": client.app_code,
+            "bk_app_secret": client.app_secret,
+            "bk_token": bk_token,
+            "ip": {
+                "data": [],
+                "exact": 1,
+                "flag": "bk_host_innerip|bk_host_outerip"
             },
-            {
-                "bk_obj_id": "biz",
-                "fields": [],
-                "condition": [
-                    {
-                        "field": "bk_biz_id",
-                        "operator": "$eq",
-                        "value": 345
-                    }
-                ]
-            },
-            # {
-            #     "bk_obj_id": "set",
-            #     "fields": [],
-            #     "condition": [
-            #         {
-            #             "field": "bk_set_id",
-            #             "operator": "$eq",
-            #             "value": 7
-            #         }
-            #     ]
-            # },
-            # {
-            #     "bk_obj_id": "module",
-            #     "fields": [],
-            #     "condition": [
-            #
-            #
-            #     ]
-            # },
+            "condition": [
+                {
+                    "bk_obj_id": "host",
+                    "fields": [
+                    ],
+                    "condition": []
+                },
+                {
+                    "bk_obj_id": "biz",
+                    "fields": [],
+                    "condition": [
+                        {
+                            "field": "bk_biz_id",
+                            "operator": "$eq",
+                            "value": 2
+                        }
+                    ]
+                },
+                {
+                    "bk_obj_id": "set",
+                    "fields": [],
+                    "condition": [
+                        {
+                            "field": "bk_set_id",
+                            "operator": "$eq",
+                            "value": 7
+                        }
+                    ]
+                },
+                {
+                    "bk_obj_id": "module",
+                    "fields": [],
+                    "condition": [
+                        {
+                            "field": "bk_module_id",
+                            "operator": "$eq",
+                            "value": 34
+                        }
+                    ]
+                },
 
-        ],
-        "page": {
-            "sort": "bk_host_id"
-        },
-        "pattern": ""
-    }
-    res = client.cc.search_host(param)
-    if res.get('result',False):
-        module_list = res.get('data')
-    else:
-        module_list = []
-        logger.error (u"请求module信息失败：%s" % res.get ('message'))
-    print(module_list)
-    return render_json(
-        {
-            'results':module_list
+            ],
+            "page": {
+                "sort": "bk_host_id"
+            },
+            "pattern": ""
         }
-    )
-    # except Exception as e:
-    #     return render_json(
-    #         {
-    #             'results':'失败'
-    #         }
-    #     )
+        param2 = {  # 定义get_agent_status--agent状态接口参数
+            "bk_app_code": client.app_code,
+            "bk_app_secret": client.app_secret,
+            "bk_token": bk_token,
+            "bk_supplier_id": 0,
+            "hosts": [
+                {
+                    "ip": 0,
+                    "bk_cloud_id": "0"
+                }
+            ]
+        }
+        res = client.cc.search_host(param)
+        if res.get('result',False):
+            module_list = res.get('data')
+        else:
+            module_list = []
+            logger.error(u"请求module信息失败：%s" % res.get ('message'))
+        display_list = []
+        for_list = module_list['info']
+        x=0
+        for i in for_list:
+            dic = {}
+            dic['bk_host_name'] = i['host']['bk_host_name']
+            dic['bk_host_innerip'] = i['host']['bk_host_innerip']
+            param2['hosts'][0]['ip'] = dic['bk_host_innerip']
+            res2 = client.gse.get_agent_status(param2)                     # 调用get_agent_status接口
+            bk_agent_info = res2['data']
+            if bk_agent_info['0:' + dic['bk_host_innerip']]['bk_agent_alive'] == 1:
+                dic['bk_agent_alive'] = u"Agent已安装"
+            else:
+                dic['bk_agent_alive'] = u"Agent未安装"
+            display_list.append(dic)
+        count = module_list['count']
+        print(count)
+        return_dic= {
+            'results': display_list,
+            'count': count
+            }
+        return return_dic
+
+    except Exception as e:
+        return render_json(
+            {
+                'results':'失败'
+            }
+        )
