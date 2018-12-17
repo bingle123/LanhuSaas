@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
-import json
-from django.shortcuts import render
 from blueking.component.shortcuts import get_client_by_request
 from common.mymako import render_json
-from common.mymako import render_mako_context
 from common.log import logger
 
+
 def show_host(request):
+    """
+    取出所有主机信息
+    :param request:
+    :return:
+    """
     clickPage_unicode = request.GET.get("clickPage")                # 获取页面页码数
     limit = 7                                                       # 定义页面长度
     if clickPage_unicode is None or clickPage_unicode == "":        # 页码数是否为空，空时赋值为第一页
@@ -102,7 +105,12 @@ def show_host(request):
         return return_dic
 
 
-def modle_tree_host(request):
+def model_tree_host(request):
+    """
+    树状主机信息显示
+    :param request:
+    :return:
+    """
     try:
         client = get_client_by_request(request)  # 获取code、secret参数
         bk_token = request.COOKIES.get("bk_token")  # 获取token参数
@@ -116,14 +124,14 @@ def modle_tree_host(request):
             }
         res = client.cc.search_biz_inst_topo(param)
         if res.get('result', False):
-            #判断调用search_biz_inst_topo接口是否成功，成功则取数据，失败则返回错误信息
+            # 判断调用search_biz_inst_topo接口是否成功，成功则取数据，失败则返回错误信息
             bk_tree_list = res.get('data')
         else:
             bk_tree_list = []
             logger.error(u"请求主机拓扑列表失败：%s" % res.get('message'))
-        test_list = bk_tree_list[0]['child'] #取出集群数据
+        test_list = bk_tree_list[0]['child'] # 取出集群数据
         dispaly_list = []
-        for i in test_list:  #循环遍历取出集群名称
+        for i in test_list:  # 循环遍历取出集群名称
             dic = {}
             child_list = []
             dic['bk_inst_name'] = i['bk_inst_name']
@@ -151,6 +159,7 @@ def modle_tree_host(request):
             "results": 0
         }
         return return_dic
+
 
 def select_module_host(request):
     """

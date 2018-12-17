@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
-import json
-from django.shortcuts import render
-from blueking.component.shortcuts import get_client_by_request
 from common.mymako import render_json
 from common.mymako import render_mako_context
-from common.log import logger
-from  shell_app import function
+from shell_app import function
 
-def showselect(request):
+
+def carousel(request):
+    """
+    页面轮播效果
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './common/carousel.html')
+
+
+def show_select(request):
     """
     选择服务器页面
     :param request:
@@ -15,31 +21,33 @@ def showselect(request):
     """
     return render_mako_context(request, './common/select.html')
 
-def show_Host(request):
+
+def show_host(request):
     """
     主机页面展示，包含分页功能
     :param request: clickPage:页码数
     :return:        json
     """
-    show_host = function.show_host(request)
-    return render_json(show_host)
+    host = function.show_host(request)
+    return render_json(host)
 
 
-def modle_Tree_Host(request):
+def model_tree_host(request):
     """
     查询集群和模块
     :param request:
     :return: json
     """
-    modle_tree_host = function.modle_tree_host(request)
-    return render_json(modle_tree_host)
+    tree_host = function.model_tree_host(request)
+    return render_json(tree_host)
 
-def select_Module_Host(request):
+
+def select_module_host(request):
     """
     查询模块下面对应的主机(未完成)
     :param request:
     :return: json
     """
-    select_module_host = function.select_module_host(request)
-    return render_json (select_module_host)
+    module_host = function.select_module_host(request)
+    return render_json(module_host)
 
