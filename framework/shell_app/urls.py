@@ -15,7 +15,7 @@ from django.conf.urls import patterns
 urlpatterns = patterns(
     'shell_app.views',
     (r'^$', 'show_select'),
-    (r'^test/$', 'show_Host'),
+    (r'^test/$', 'show_host'),
     (r'^test2/$', 'model_tree_host'),
     (r'^test1/$', 'select_module_host'),
     (r'^carousel', 'carousel'),

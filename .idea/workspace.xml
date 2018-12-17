@@ -1,21 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="2018/12/12 19:17">
-      <change afterPath="$PROJECT_DIR$/framework/static/img/slide1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/static/img/slide2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/static/img/slide3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/templates/common/carousel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/LanhuSaas.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/LanhuSaas.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="2018/12/17 14:03 liaomingtao ----- 完成轮播图与修改部分代码编码规范">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/conf/default.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/conf/default.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/guotai/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/guotai/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/shell_app/function.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/shell_app/function.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/framework/shell_app/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/shell_app/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/shell_app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/shell_app/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/static/css/jquery.tree.css" beforeDir="false" afterPath="$PROJECT_DIR$/framework/static/css/jquery.tree.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates_module/lanhusaas/common/select.html.py" beforeDir="false" afterPath="$PROJECT_DIR$/templates_module/lanhusaas/common/select.html.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -40,11 +28,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/framework/shell_app/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="28" />
+            <state relative-caret-position="175">
+              <caret line="17" column="27" selection-start-line="17" selection-start-column="27" selection-end-line="17" selection-end-column="27" />
             </state>
           </provider>
         </entry>
@@ -53,7 +41,7 @@
         <entry file="file://$PROJECT_DIR$/framework/shell_app/views.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="114">
-              <caret line="50" column="35" lean-forward="true" selection-start-line="50" selection-start-column="35" selection-end-line="50" selection-end-column="35" />
+              <caret line="50" column="35" selection-start-line="50" selection-start-column="35" selection-end-line="50" selection-end-column="35" />
               <folding>
                 <element signature="e#24#61#0" expanded="true" />
                 <element signature="e#168#289#0" />
@@ -64,11 +52,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/framework/conf/default.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="123" column="13" selection-start-line="123" selection-start-column="13" selection-end-line="123" selection-end-column="13" />
+            <state relative-caret-position="87">
+              <caret line="187" lean-forward="true" selection-start-line="187" selection-end-line="187" />
             </state>
           </provider>
         </entry>
@@ -77,7 +65,7 @@
         <entry file="file://$PROJECT_DIR$/framework/shell_app/function.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-1462">
-              <caret line="164" column="7" lean-forward="true" selection-start-line="164" selection-start-column="7" selection-end-line="164" selection-end-column="7" />
+              <caret line="164" column="7" selection-start-line="164" selection-start-column="7" selection-end-line="164" selection-end-column="7" />
               <folding>
                 <element signature="e#24#86#0" expanded="true" />
               </folding>
@@ -108,6 +96,7 @@
       <find>daredevel-tree-label</find>
       <find>gif</find>
       <find>app</find>
+      <find>队列</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -124,9 +113,9 @@
         <option value="$PROJECT_DIR$/framework/guotai/models.py" />
         <option value="$PROJECT_DIR$/framework/templates/common/carousel.html" />
         <option value="$PROJECT_DIR$/framework/shell_app/function.py" />
-        <option value="$PROJECT_DIR$/framework/shell_app/urls.py" />
         <option value="$PROJECT_DIR$/framework/shell_app/views.py" />
         <option value="$PROJECT_DIR$/framework/conf/default.py" />
+        <option value="$PROJECT_DIR$/framework/shell_app/urls.py" />
       </list>
     </option>
   </component>
@@ -257,7 +246,7 @@
       <workItem from="1544769740951" duration="1011000" />
       <workItem from="1544842157044" duration="1885000" />
       <workItem from="1545008046793" duration="601000" />
-      <workItem from="1545015632280" duration="4373000" />
+      <workItem from="1545015632280" duration="4759000" />
     </task>
     <task id="LOCAL-00001" summary="选择服务器---静态页面">
       <created>1544418401657</created>
@@ -336,11 +325,18 @@
       <option name="project" value="LOCAL" />
       <updated>1544613450854</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="2018/12/17 14:03 liaomingtao ----- 完成轮播图与修改部分代码编码规范">
+      <created>1545026641168</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1545026641168</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="76494000" />
+    <option name="totallyTimeSpent" value="76880000" />
   </component>
   <component name="TodoView" selected-index="4">
     <todo-panel id="selected-file">
@@ -355,12 +351,12 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.23413897" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23413897" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.72809666" visible="true" weight="0.26504064" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.72809666" visible="true" weight="0.299187" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.32520324" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -393,7 +389,8 @@
     <MESSAGE value="2018/12/12 18:51" />
     <MESSAGE value="2018/12/12 19:06" />
     <MESSAGE value="2018/12/12 19:17" />
-    <option name="LAST_COMMIT_MESSAGE" value="2018/12/12 19:17" />
+    <MESSAGE value="2018/12/17 14:03 liaomingtao ----- 完成轮播图与修改部分代码编码规范" />
+    <option name="LAST_COMMIT_MESSAGE" value="2018/12/17 14:03 liaomingtao ----- 完成轮播图与修改部分代码编码规范" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/framework/home_application/views.py">
@@ -500,17 +497,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/shell_app/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="19" column="27" selection-start-line="19" selection-start-column="27" selection-end-line="19" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/framework/shell_app/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="114">
-          <caret line="50" column="35" lean-forward="true" selection-start-line="50" selection-start-column="35" selection-end-line="50" selection-end-column="35" />
+          <caret line="50" column="35" selection-start-line="50" selection-start-column="35" selection-end-line="50" selection-end-column="35" />
           <folding>
             <element signature="e#24#61#0" expanded="true" />
             <element signature="e#168#289#0" />
@@ -523,7 +513,7 @@
     <entry file="file://$PROJECT_DIR$/framework/shell_app/function.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1462">
-          <caret line="164" column="7" lean-forward="true" selection-start-line="164" selection-start-column="7" selection-end-line="164" selection-end-column="7" />
+          <caret line="164" column="7" selection-start-line="164" selection-start-column="7" selection-end-line="164" selection-end-column="7" />
           <folding>
             <element signature="e#24#86#0" expanded="true" />
           </folding>
@@ -532,8 +522,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/framework/conf/default.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="123" column="13" selection-start-line="123" selection-start-column="13" selection-end-line="123" selection-end-column="13" />
+        <state relative-caret-position="87">
+          <caret line="187" lean-forward="true" selection-start-line="187" selection-end-line="187" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/shell_app/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="17" column="27" selection-start-line="17" selection-start-column="27" selection-end-line="17" selection-end-column="27" />
         </state>
       </provider>
     </entry>
