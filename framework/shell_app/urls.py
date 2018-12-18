@@ -19,4 +19,6 @@ urlpatterns = patterns(
     (r'^test2/$', 'model_tree_host'),
     (r'^test1/$', 'select_module_host'),
     (r'^carousel', 'carousel'),
+    (r'^user_carousel_setting', 'user_carousel_setting'),
+    (r'^get_user_carousel_time', 'get_user_carousel_time'),
 )

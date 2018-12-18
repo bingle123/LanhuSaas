@@ -51,3 +51,22 @@ def select_module_host(request):
     module_host = function.select_module_host(request)
     return render_json(module_host)
 
+
+def user_carousel_setting(request):
+    """
+    用户设置
+    :param request:
+    :return:
+    """
+    result = function.user_carousel(request)
+    return render_json(result)
+
+
+def get_user_carousel_time(request):
+    """
+    获取用户Carousel设置轮播时间与轮播数量
+    :param request:
+    :return:
+    """
+    result = function.get_user_carousel_time(request)
+    return render_json(result)

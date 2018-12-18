@@ -2,6 +2,8 @@
 from blueking.component.shortcuts import get_client_by_request
 from common.mymako import render_json
 from common.log import logger
+from shell_app.models import UserCarouselBaseSetting
+import uuid
 
 
 def show_host(request):
@@ -274,3 +276,101 @@ def select_module_host(request):
                 'results':'失败'
             }
         )
+
+
+def get_user(request):
+    """
+    获取当前用户
+    :param request:
+    :return:
+    """
+    try:
+        client = get_client_by_request(request)  # 获取code、secret参数
+        bk_token = request.COOKIES.get("bk_token")  # 获取token参数
+        client.set_bk_api_ver('v2')  # 以v2版本调用接口
+        param = {
+            "bk_app_code": client.app_code,
+            "bk_app_secret": client.app_secret,
+            "bk_token": bk_token,
+        }
+        result = client.bk_login.get_user(param)  # 获取当前用户信息
+    except Exception, e:
+        result = {
+            "result": False,
+            "message": u"失败 %s" % e,
+            "code": 0,
+            "results": 0
+        }
+    return result
+
+
+def error_result(e):
+    """
+    失败统一JSON
+    :param e:
+    :return:
+    """
+    result = {
+        "result": False,
+        "message": u"失败 %s" % e,
+        "code": 0,
+        "results": 0
+    }
+    return result
+
+
+def user_carousel(request):
+    """
+    用户修改Carousel设置
+    :param request:
+    :return:
+    """
+    carousel_time = request.GET.get("carousel_time")                            # 轮播时间
+    carousel_number = request.GET.get("carousel_number")                        # 轮播数量
+    carousel_id = uuid.uuid1()                                                  # 轮播ID
+    try:
+        user_info = get_user(request)
+        bk_username = user_info.get('data').get('bk_username')                  # 当前用户用户名
+        temp_result = UserCarouselBaseSetting.objects.get_carousel(bk_username)
+        if temp_result.get('code') is True:                                     # 判断是否存在当前用户
+            if carousel_time is None:
+                carousel_time = '4000'
+            if carousel_number is None:
+                carousel_number = '5'
+            data = {
+                'bk_username': bk_username,
+                'carousel_time': carousel_time,
+                'carousel_number': carousel_number,
+                'carousel_id': carousel_id,
+            }
+            result = UserCarouselBaseSetting.objects.update_carousel(bk_username, data)
+        else:                                                                   # 新增用户Carousel设置
+            if carousel_time is None:
+                carousel_time = '3000'
+            if carousel_number is None:
+                carousel_number = '3'
+            data = {
+                'bk_username': bk_username,
+                'carousel_time': carousel_time,
+                'carousel_number': carousel_number,
+                'carousel_id': carousel_id,
+            }
+            result = UserCarouselBaseSetting.objects.save_carousel(data)
+    except Exception, e:
+        result = error_result(e)
+    return result
+
+
+def get_user_carousel_time(request):
+    """
+    获取Carousel设置的时间与轮播数量
+    :param request:
+    :return:
+    """
+    try:
+        user_info = get_user(request)
+        bk_username = user_info.get('data').get('bk_username')              # 当前用户用户名
+        result = UserCarouselBaseSetting.objects.get_carousel(bk_username)
+    except Exception, e:
+        result = error_result(e)
+    return result
