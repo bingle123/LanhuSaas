@@ -53,15 +53,9 @@ def show_Host(request):
                     "condition": []
                 },
                 {
-                    "bk_obj_id": "object",
+                    "bk_obj_id": "module",
                     "fields": [],
-                    "condition": [
-                        {
-                            "field": "bk_biz_id",
-                            "operator": "$eq",
-
-                        }
-                    ]
+                    "condition": [ ]
                 }
             ],
             "page": {
@@ -106,8 +100,11 @@ def show_Host(request):
         return render_json({                                        # 返回json数据给前台
             "result": True,
             "message": u"成功",
-            "code": 0,
-            "results": display_list,
+            "code": 0 ,
+            "results": {
+                "display_list":display_list,
+                "bk_host_list":bk_host_list,
+            }
         })
     except Exception as e:
         return render_json({
@@ -144,21 +141,27 @@ def modle_Tree_Host(request):
             child_list = []
             dic['bk_inst_name'] = i['bk_inst_name']
             dic['bk_inst_id'] = i['bk_inst_id']
+            dic['id'] = i['bk_inst_id']
+            dic['text'] = i['bk_inst_name']
             for child in i['child']:
                 dic1 = {}
                 dic1['child_bk_inst_name'] = child['bk_inst_name']
                 dic1['child_bk_inst_id'] = child['bk_inst_id']
+                dic1['id'] = "%d.%d" % (dic['bk_inst_id'],child['bk_inst_id'])
+                dic1['text'] = child['bk_inst_name']
+                dic1['children'] = True
                 child_list.append(dic1)
-            dic['child'] = child_list
+            dic['children'] = child_list
             dispaly_list.append(dic)
+        print(dispaly_list);
         return render_json(
             {
                 "result": True,
                 "message": u"成功",
                 "code": 0,
                 "results": dispaly_list
-            }
-        )
+            })
+
 
     except Exception as e:
         return render_json (
@@ -169,6 +172,26 @@ def modle_Tree_Host(request):
                 "results": 0
             }
         )
+
+
+def get_machine_list(request):
+    try:
+        print("herhe")
+        id = request.GET.get('id')
+        print("id=%s"%id)
+        if id == "#":
+            return modle_Tree_Host(request)
+    except Exception as e:
+        return render_json (
+            {
+                "result": False,
+                "message": u"失败",
+                "code": 0,
+                "results": 0
+            }
+        )
+
+
 def select_Module_Host(request):
     # try:
     client = get_client_by_request(request)

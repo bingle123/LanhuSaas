@@ -3,13 +3,13 @@
     position: relative;
 }
 
-.daredevel-tree li span.daredevel-tree-label {
+.daredevel-tree li span1.daredevel-tree-label {
     cursor: default;
     z-index: -1;
     margin-left: 50px;
 }
 /* collapse */
-.daredevel-tree li span.daredevel-tree-anchor {
+.daredevel-tree li span1.daredevel-tree-anchor {
     cursor: default;
     position: absolute;
     top: 1px;
@@ -17,7 +17,7 @@
 }
 
 /* dnd */
-.daredevel-tree li span.prepended {
+.daredevel-tree li span1.prepended {
     position: absolute;
     left: 0px;
     top: -5px;
@@ -26,14 +26,14 @@
     height: 10px;
     width: 100px;
     overflow: hidden;
-    background-image: url("img/anchor.gif");
+    background-image: url("/static/img/anchor.gif");
 }
 
-.daredevel-tree li span.prepended.over {
+.daredevel-tree li span1.prepended.over {
     visibility: visible;
 }
 
-.daredevel-tree li span.droppable-label {
+.daredevel-tree li span1.droppable-label {
     position: absolute;
     left: 0px;
     top: 5px;
