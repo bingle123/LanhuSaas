@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 
+
 # 国泰君安自动化运维任务模版
 class AutoOpsTaskTemplate(models.Model):
     templateName = models.CharField(max_length=100, null=False)
@@ -11,6 +12,7 @@ class AutoOpsTaskTemplate(models.Model):
     def toDic(self):
         return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
 
+
 # 国泰君安自动化运维任务
 class AutoOpsTask(models.Model):
     taskName = models.CharField(max_length=100, null=False)
@@ -20,7 +22,6 @@ class AutoOpsTask(models.Model):
     description = models.CharField(max_length=500, null=False)
     createTime = models.DateTimeField(null=False)
     createUser = models.CharField(max_length=100, null=False)
-
 
     def toDic(self):
         return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
@@ -38,6 +39,7 @@ class AutoOpsTaskTemplateStep(models.Model):
     def toDic(self):
         return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
 
+
 # 国泰君安自动化运维任务执行历史
 class AutoOpsTaskExecuteHistory(models.Model):
     task = models.ForeignKey(AutoOpsTask)
@@ -51,6 +53,7 @@ class AutoOpsTaskExecuteHistory(models.Model):
     def toDic(self):
         return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
 
+
 # 国泰君安自动化运维任务执行结果
 class AutoOpsTaskResult(models.Model):
     taskHistory = models.ForeignKey(AutoOpsTaskExecuteHistory)
@@ -62,6 +65,7 @@ class AutoOpsTaskResult(models.Model):
 
     def toDic(self):
         return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
+
 
 # 国泰君安自动化运维任务执行结果详情
 class AutoOpsTaskResultDetail(models.Model):

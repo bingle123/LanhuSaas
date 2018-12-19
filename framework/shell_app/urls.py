@@ -10,13 +10,15 @@ See the License for the specific language governing permissions and limitations 
 """
 
 from django.conf.urls import patterns
-from shell_app.views import *
+
 
 urlpatterns = patterns(
     'shell_app.views',
-    (r'^$', showselect),
-    (r'^test/$', show_Host),
-    (r'^test2/$', modle_Tree_Host),
-    (r'^get_mathine_list/$', get_machine_list),
-
+    (r'^$', 'show_select'),
+    (r'^test/$', 'show_host'),
+    (r'^test2/$', 'model_tree_host'),
+    (r'^test1/$', 'select_module_host'),
+    (r'^carousel', 'carousel'),
+    (r'^user_carousel_setting', 'user_carousel_setting'),
+    (r'^get_user_carousel_time', 'get_user_carousel_time'),
 )
