@@ -44,20 +44,19 @@
 
 	<!-- 轮播（Carousel）项目 -->
 	<div class="carousel-inner">
-		<div class="item active">
-			<!--<img src="${STATIC_URL}img/slide1.png" alt="First slide" style="margin: 0 auto">
-			<div style="text-align: center;">First slide</div>-->
+		<!--
+        <div class="item active">
+
             <iframe src="${STATIC_URL}img/slide1.png" width="100%">111</iframe>
 		</div>
 		<div class="item">
-			<!--<img src="${STATIC_URL}img/slide2.png" alt="Second slide" style="margin: 0 auto">
-			<div style="text-align: center;">Second slide</div>-->
+
             <iframe src="${SITE_URL}" width="100%" height="600px">222</iframe>
 		</div>
 		<div class="item">
 			<img src="${STATIC_URL}img/slide3.png" alt="Third slide" style="margin: 0 auto">
 			<div style="text-align: center;">Third slide</div>
-		</div>
+		</div>-->
 	</div>
 
 	<!-- 轮播（Carousel）导航 -->
@@ -85,14 +84,56 @@
 	<input type="button" class="btn slide-three" value="Slide 3">
 </div>
 
+
+<template class="temp_carousel_inner">
+    <div class="item">
+			<img src="${STATIC_URL}img/#scene_example#" alt="Third slide" style="margin: 0 auto">
+			<div style="text-align: center;">Third slide</div>
+		</div>
+</template>
+
+<template class="temp_carousel_inner2">
+    <div class="item active">
+			<img src="${STATIC_URL}img/#scene_example#" alt="Third slide" style="margin: 0 auto">
+			<div style="text-align: center;">Third slide</div>
+		</div>
+</template>
+
 <style>
 
 </style>
 
 <script>
+
+    //前后端数据交互通用方法
+    function renderTpl(str, cfg) {
+        var re = /(#(.+?)#)/g;
+
+        return str.replace(re, function() {
+            var val = cfg[arguments[2]]+'';
+            if(typeof val == 'undefined') {
+                val = '';
+            }
+            return val;
+        });
+    };
+
+    //初始化iframe
+    function init_iframe(carousel_time){
+        var window_height = $(document).height;
+        $('.carousel iframe').height(window_height);    //获取屏幕高度
+        $('.carousel iframe').attr("scrolli0ng","no");  //设置iframe无滚动条
+        $('.carousel iframe').attr("frameborder",0);    //设置iframe无边框
+        $('.carousel').carousel({
+            interval: carousel_time,
+            pause:null
+        });
+    }
+
     //窗口初始化事件
 	$(function(){
-	    $.ajax({
+	    //获取轮播时间---待废弃
+	    /***$.ajax({
             url:'${SITE_URL}get_user_carousel_time',
             type:'GET',
             dataType:'json',
@@ -106,42 +147,40 @@
                     interval: carousel_time,
                     pause:null
                 });
-                alert("时间"+carousel_time);
+                //alert("时间"+carousel_time);
+            }
+        });*/
+
+	    $.ajax({
+           url:"${SITE_URL}get_scene_by_now_time",
+            type:'GET',
+            dataType: 'json',
+            success:function (data) {
+                var result_length = data.results.length;        // 结果长度
+                var _html ="";
+                var tpl = $('.temp_carousel_inner2').html();    //获取模板代码
+                var item = data.results[0];                     //替换第一个模板
+                _html += renderTpl(tpl,item);
+                for (var i = 1;i < result_length;i++){          //遍历第二个到第n个代码
+                    var tpl = $('.temp_carousel_inner').html();
+                    var item = data.results[i];
+                    _html += renderTpl(tpl,item);               //添加第n个数据到模板
+                }
+                $('.carousel-inner').html(_html);               //添加html
+                alert($('.carousel-inner').html());
+                var carousel_time = data.results[0].carousel_time;
+                init_iframe(carousel_time);
+
             }
         });
+
 
 
 	    //alert($(document).height());
 	    //console.log($(document).height())
         //初始化轮播参数设置
 
-	    /**
-		// 初始化轮播
-		$(".start-slide").click(function(){
-			$("#myCarousel").carousel('cycle');
-		});
-		// 停止轮播
-		$(".pause-slide").click(function(){
-			$("#myCarousel").carousel('pause');
-		});
-		// 循环轮播到上一个项目
-		$(".prev-slide").click(function(){
-			$("#myCarousel").carousel('prev');
-		});
-		// 循环轮播到下一个项目
-		$(".next-slide").click(function(){
-			$("#myCarousel").carousel('next');
-		});
-		// 循环轮播到某个特定的帧
-		$(".slide-one").click(function(){
-			$("#myCarousel").carousel(0);
-		});
-		$(".slide-two").click(function(){
-			$("#myCarousel").carousel(1);
-		});
-		$(".slide-three").click(function(){
-			$("#myCarousel").carousel(2);
-		});**/
+
 
 	    //提示框参数设置，若用默认值可以省略以下面代
         toastr.options = {
@@ -186,6 +225,33 @@
         }
     });
 
+    /**
+		// 初始化轮播
+		$(".start-slide").click(function(){
+			$("#myCarousel").carousel('cycle');
+		});
+		// 停止轮播
+		$(".pause-slide").click(function(){
+			$("#myCarousel").carousel('pause');
+		});
+		// 循环轮播到上一个项目
+		$(".prev-slide").click(function(){
+			$("#myCarousel").carousel('prev');
+		});
+		// 循环轮播到下一个项目
+		$(".next-slide").click(function(){
+			$("#myCarousel").carousel('next');
+		});
+		// 循环轮播到某个特定的帧
+		$(".slide-one").click(function(){
+			$("#myCarousel").carousel(0);
+		});
+		$(".slide-two").click(function(){
+			$("#myCarousel").carousel(1);
+		});
+		$(".slide-three").click(function(){
+			$("#myCarousel").carousel(2);
+		});**/
 
 </script>
 

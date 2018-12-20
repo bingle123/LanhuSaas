@@ -21,4 +21,6 @@ urlpatterns = patterns(
     (r'^carousel', 'carousel'),
     (r'^user_carousel_setting', 'user_carousel_setting'),
     (r'^get_user_carousel_time', 'get_user_carousel_time'),
+    (r'^get_scene_by_now_time', 'get_scene_by_now_time'),
+    (r'^get_json_test', 'get_json_test'),
 )

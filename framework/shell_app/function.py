@@ -3,7 +3,15 @@ from blueking.component.shortcuts import get_client_by_request
 from common.mymako import render_json
 from common.log import logger
 from shell_app.models import UserCarouselBaseSetting
+from shell_app.models import StaffInfo
+from shell_app.models import StaffPosition
+from shell_app.models import Scene
+from shell_app.models import StaffScene
 import uuid
+import json
+import time
+import datetime
+from django.db import connection
 
 
 def show_host(request):
@@ -319,6 +327,21 @@ def error_result(e):
     return result
 
 
+def success_result(results):
+    """
+    成功统一JSON
+    :param results:
+    :return:
+    """
+    result = {
+        "result": True,
+        "message": u'成功',
+        "code": 1,
+        "results": results,
+    }
+    return result
+
+
 def user_carousel(request):
     """
     用户修改Carousel设置
@@ -373,4 +396,175 @@ def get_user_carousel_time(request):
         result = UserCarouselBaseSetting.objects.get_carousel(bk_username)
     except Exception, e:
         result = error_result(e)
+    return result
+
+
+def get_staff_info(request):
+    """
+    通过用户名获取职员信息-完成
+    :param request:
+    :return:
+    """
+    try:
+        user_info = get_user(request)
+        bk_username = user_info.get('data').get('bk_username')              # 当前用户用户名
+        result = StaffInfo.objects.get_staff_info(bk_username)
+    except Exception, e:
+        result = error_result(e)
+    return result
+
+
+def save_staff_info(request):
+    """
+    保存员工信息--待完善
+    :param request:
+    :return:
+    """
+    try:
+        user_info = get_user(request)
+        bk_username = user_info.get('data').get('bk_username')  # 当前用户用户名
+        staff_position_id = 1                                   # 假定岗位ID为1,待完善
+        temp_result = StaffInfo.objects.get_staff_info(bk_username)
+        temp_code = temp_result.get("code")
+        if temp_code is True:                                   # 判断是否存在该员工信息表
+            result = temp_result
+        else:
+            data = {
+                "bk_username": bk_username,
+                "staff_position_id": staff_position_id,
+            }
+            result = StaffInfo.objects.save_staff_info(data)
+    except Exception, e:
+        result = error_result(e)
+    return result
+
+
+def get_staff_position_by_username(request):
+    """
+    获取岗位信息--完成
+    :param request:
+    :return:
+    """
+    try:
+        user_info = get_staff_info(request)
+        staff_position_id = user_info.get("result").get("staff_position_id")
+        temp_result = StaffPosition.objects.get_staff_position_by_username(staff_position_id)
+        result = temp_result
+    except Exception, e:
+        result = error_result(e)
+    return result
+
+
+def get_scene_by_staff_position_id(request):
+    """
+    根据用户ID获取场景信息----未添加时间
+    :param request:
+    :return:
+    """
+    try:
+        staff_position = get_staff_position_by_username(request)                                      # 获取场景信息
+        staff_position_id = staff_position.get("result").get("staff_position_id")                     # 场景ID
+        str_now_time = time.strftime("%H:%M:%S", time.localtime(time.time()))
+        now_time = time.localtime(time.time())
+        # print now_time
+        # print type(now_time)
+        # print str_now_time
+        # print type(str_now_time)
+        temp_result = Scene.objects.get_scene_by_staff_position_id(staff_position_id).get("result")  # 场景信息结果
+        result = success_result(temp_result)
+        return result
+    except Exception, e:
+        result = error_result(e)
+        return result
+
+
+def get_scene_by_staff_position_id_time_order_by_scene_order_id(request):
+    """
+    根据用户ID和当前时间获取场景信息
+    :param request:json
+    :return:
+    """
+    try:
+        staff_position = get_staff_position_by_username(request)                                # 获取场景信息
+        staff_position_id = staff_position.get("result").get("staff_position_id")               # 场景ID
+        now_time = datetime.datetime.now().strftime("%H:%M:%S")                                 # 当前时间
+        temp_result = Scene.objects.get_scene_by_staff_position_id_time_order_by_scene_order_id(staff_position_id,
+                                                                                                now_time).get("result")
+        result = success_result(temp_result)
+    except Exception, e:
+        result = error_result(e)
+    return result
+
+
+def save_staff_scene(request):
+    """
+    保存用户自定义设置
+    :param request:
+    :return:
+    """
+    scene_res = get_scene_by_staff_position_id(request)
+    user_info = get_user(request)
+    bk_username = user_info.get('data').get('bk_username')              # 当前用户用户名
+    list = []
+    for i in scene_res.get("results"):
+        print i['scene_id']
+        print bk_username
+        data = {
+            "staff_scene_id": i['scene_id'],
+            "staff_scene_order_id": i['scene_order_id'],
+            "bk_username": bk_username,
+        }
+        res = StaffScene.objects.save_staff_scene(data)
+        list.append(res)
+    result = success_result(list)
+    return result
+
+
+def get_staff_scene(request):
+    """
+
+    :param request:
+    :return:
+    """
+    user_info = get_user(request)
+    bk_username = user_info.get('data').get('bk_username')  # 当前用户用户名
+    staff_position = get_staff_position_by_username(request)  # 获取场景信息
+    staff_position_id = staff_position.get("result").get("staff_position_id")
+    now_time = datetime.datetime.now().strftime("%H:%M:%S")
+    scene_res = Scene.objects.filter(staff_position_id=staff_position_id, scene_start_time__lt=now_time,
+                                     scene_stop_time__gt=now_time).order_by('scene_order_id').values()
+    scene_temp_list = []
+    scene_list = []
+    for i in scene_res:
+        i['scene_start_time'] = i['scene_start_time'].strftime("%H:%M:%S")
+        i['scene_stop_time'] = i['scene_stop_time'].strftime("%H:%M:%S")
+        scene_id = i['scene_id']
+        scene_list.append(scene_id)
+        scene_temp_list.append(i)
+    staff_scene_res = StaffScene.objects.filter(bk_username=bk_username,
+                                                staff_scene_id__in=scene_list).order_by('staff_scene_order_id').values()
+    staff_scene_list = []
+    staff_scene_temp_list = []
+    for i in staff_scene_res:
+        staff_scene_temp_list.append(i)
+        staff_scene_id = i['staff_scene_id']
+        staff_scene_list.append(staff_scene_id)
+    print staff_scene_list
+    list = []
+    result = Scene.objects.filter(scene_id=1, scene_start_time__lt=now_time,
+                                  scene_stop_time__gt=now_time).values()
+    for i in result:
+        i['scene_start_time'] = i['scene_start_time'].strftime("%H:%M:%S")
+        i['scene_stop_time'] = i['scene_stop_time'].strftime("%H:%M:%S")
+        list.append(i)
+    print type(result)
+    # for j in staff_scene_list:
+    #     result = Scene.objects.filter(scene_id__in=j, scene_start_time__lt=now_time,
+    #                                   scene_stop_time__gt=now_time).values()
+    #     result_list = []
+    #     for i in result:
+    #         i['scene_start_time'] = i['scene_start_time'].strftime("%H:%M:%S")
+    #         i['scene_stop_time'] = i['scene_stop_time'].strftime("%H:%M:%S")
+    #         result_list.append(i)
+    result = {"key": list}
     return result

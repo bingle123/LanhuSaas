@@ -70,3 +70,24 @@ def get_user_carousel_time(request):
     """
     result = function.get_user_carousel_time(request)
     return render_json(result)
+
+
+def get_scene_by_now_time(request):
+    """
+    获取场景信息
+    :param request:
+    :return:
+    """
+    result = function.get_scene_by_staff_position_id_time_order_by_scene_order_id(request)
+    return render_json(result)
+
+
+def get_json_test(request):
+    """
+    测试接口返回json专用
+    :param request:
+    :return:
+    """
+    temp_result = function.get_staff_scene(request)
+    return render_json(temp_result)
+
