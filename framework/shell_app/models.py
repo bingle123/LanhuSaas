@@ -148,7 +148,7 @@ class SceneManage(models.Manager):
         """
         获取场景信息---顺序排序
         :param staff_position_id:   职位ID
-        :param now_time:            当前时间
+        :param now_time:            时间
         :return:
         """
         try:
@@ -252,6 +252,7 @@ class StaffSceneManage(models.Manager):
                 bk_username=data.get("bk_username"),
                 staff_scene_id=data.get("staff_scene_id"),
                 staff_scene_order_id=data.get("staff_scene_order_id"),
+                staff_scene_default_time=data.get("staff_scene_default_time"),
             )
             result = {'result': True, 'message': "保存成功"}
         except Exception, e:
@@ -266,6 +267,7 @@ class StaffScene(models.Model):
     staff_scene_id = models.IntegerField(u'用户场景ID');
     staff_scene_order_id = models.IntegerField(u'用户场景排序ID')
     bk_username = models.CharField(u'职员用户名', max_length=64)
+    staff_scene_default_time = models.CharField(u'场景停留时间', max_length=64)
     objects = StaffSceneManage()
 
     def __unicode__(self):
@@ -274,3 +276,35 @@ class StaffScene(models.Model):
     class Meta:
         verbose_name = u'员工自定义设置场景信息表'
         verbose_name_plural = u'员工自定义设置场景信息表'
+
+
+class PositionSceneManage(models.Manager):
+    def get_position_scene(self, position_id):
+        """
+        通过职位ID获取对应场景ID
+        :param position_id: 职位ID
+        :return: PositionScene对象
+        """
+        try:
+            res = PositionScene.objects.filter(staff_position_id=position_id).values()
+            result_list = list(res)
+            result = {"code": True, "result": result_list, "message": u"查询成功"}
+        except Exception, e:
+            result = {"code": False, "result": None, "message": u"查询失败 %s" % e}
+        return result
+
+
+class PositionScene(models.Model):
+    """
+    StaffPosition 与 Scene 关系表  (多对多)
+    """
+    staff_position_id = models.IntegerField(u'职员岗位ID')
+    scene_id = models.IntegerField(u'场景ID')
+    objects = PositionSceneManage()
+
+    def __unicode__(self):
+        return "%d" % self.int
+
+    class Meta:
+        verbose_name = u'岗位与场景关系表'
+        verbose_name_plural = u'岗位场景关系表'

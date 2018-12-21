@@ -82,12 +82,21 @@ def get_scene_by_now_time(request):
     return render_json(result)
 
 
+def position_setting_html(request):
+    """
+    岗位设置页面
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './shell_app/position_setting.html')
+
+
 def get_json_test(request):
     """
     测试接口返回json专用
     :param request:
     :return:
     """
-    temp_result = function.get_staff_scene(request)
+    temp_result = function.get_test_json(request)
     return render_json(temp_result)
 

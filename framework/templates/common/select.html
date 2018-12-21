@@ -349,7 +349,6 @@
         //前后端数据交互通用方法
         function renderTpl(str, cfg) {
             var re = /(#(.+?)#)/g;
-
             return str.replace(re, function () {
                 var val = cfg[arguments[2]] + '';
                 if (typeof val == 'undefined') {

@@ -1,0 +1,6 @@
+ERROR [2018-12-21 08:53:37] F:\Users\DeleMing\Desktop\Lanhu\framework\shell_app\function.py 86 show_host 704 15056 
+ 	 请求主机列表失败：An exception occurred while requesting CC interface, please contact the component developer to handle it. 
+
+ERROR [2018-12-21 08:53:41] F:\Users\DeleMing\Desktop\Lanhu\framework\shell_app\function.py 86 show_host 704 15224 
+ 	 请求主机列表失败：An exception occurred while requesting CC interface, please contact the component developer to handle it. 
+

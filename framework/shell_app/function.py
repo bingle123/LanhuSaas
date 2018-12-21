@@ -7,6 +7,7 @@ from shell_app.models import StaffInfo
 from shell_app.models import StaffPosition
 from shell_app.models import Scene
 from shell_app.models import StaffScene
+from shell_app.models import PositionScene
 import uuid
 import json
 import time
@@ -321,7 +322,7 @@ def error_result(e):
     result = {
         "result": False,
         "message": u"失败 %s" % e,
-        "code": 0,
+        "code": 1,
         "results": 0
     }
     return result
@@ -336,7 +337,7 @@ def success_result(results):
     result = {
         "result": True,
         "message": u'成功',
-        "code": 1,
+        "code": 0,
         "results": results,
     }
     return result
@@ -504,7 +505,8 @@ def save_staff_scene(request):
     """
     scene_res = get_scene_by_staff_position_id(request)
     user_info = get_user(request)
-    bk_username = user_info.get('data').get('bk_username')              # 当前用户用户名
+    bk_username = user_info.get('data').get('bk_username')                                      # 当前用户用户名
+    staff_scene_default_time = 6000                                                             # 用户自定义设置默认事件
     list = []
     for i in scene_res.get("results"):
         print i['scene_id']
@@ -513,6 +515,7 @@ def save_staff_scene(request):
             "staff_scene_id": i['scene_id'],
             "staff_scene_order_id": i['scene_order_id'],
             "bk_username": bk_username,
+            "staff_scene_default_time": "staff_scene_default_time",
         }
         res = StaffScene.objects.save_staff_scene(data)
         list.append(res)
@@ -520,51 +523,221 @@ def save_staff_scene(request):
     return result
 
 
-def get_staff_scene(request):
+def get_staff_scene_test(request):
     """
-
+    获取场景 ---- 完成-----一个岗位对应多个场景
     :param request:
     :return:
     """
-    user_info = get_user(request)
-    bk_username = user_info.get('data').get('bk_username')  # 当前用户用户名
-    staff_position = get_staff_position_by_username(request)  # 获取场景信息
-    staff_position_id = staff_position.get("result").get("staff_position_id")
-    now_time = datetime.datetime.now().strftime("%H:%M:%S")
+    user_info = get_user(request)                                                   # 获取当前用户信息
+    bk_username = user_info.get('data').get('bk_username')                          # 当前用户用户名
+    staff_position = get_staff_position_by_username(request)                        # 获取场景信息
+    staff_position_id = staff_position.get("result").get("staff_position_id")       # 获取职位ID
+    now_time = datetime.datetime.now().strftime("%H:%M:%S")                         # 当前时间字符串型
+    # 根据岗位获取对应场景信息
     scene_res = Scene.objects.filter(staff_position_id=staff_position_id, scene_start_time__lt=now_time,
                                      scene_stop_time__gt=now_time).order_by('scene_order_id').values()
-    scene_temp_list = []
-    scene_list = []
-    for i in scene_res:
-        i['scene_start_time'] = i['scene_start_time'].strftime("%H:%M:%S")
-        i['scene_stop_time'] = i['scene_stop_time'].strftime("%H:%M:%S")
+    scene_list = []                                                                 # 所有符合要求的场景id
+    for i in scene_res:                                                             # 遍历结果集
         scene_id = i['scene_id']
         scene_list.append(scene_id)
-        scene_temp_list.append(i)
+    print scene_list
+    # 根据用户和场景ID遍历个人设置场景信息(根据用户设置排序)
     staff_scene_res = StaffScene.objects.filter(bk_username=bk_username,
                                                 staff_scene_id__in=scene_list).order_by('staff_scene_order_id').values()
-    staff_scene_list = []
-    staff_scene_temp_list = []
+    staff_scene_list = []                                                           # 用户设置了的并符合要求的场景ID
+    staff_scene_default_time_list = []
     for i in staff_scene_res:
-        staff_scene_temp_list.append(i)
         staff_scene_id = i['staff_scene_id']
         staff_scene_list.append(staff_scene_id)
+        staff_scene_default_time = i['staff_scene_default_time']
+        staff_scene_default_time_list.append(staff_scene_default_time)
     print staff_scene_list
-    list = []
-    result = Scene.objects.filter(scene_id=1, scene_start_time__lt=now_time,
-                                  scene_stop_time__gt=now_time).values()
-    for i in result:
+    print staff_scene_default_time_list
+    difference_list = list(set(scene_list).difference(set(staff_scene_list)))       # 用户没有设置的场景ID,将默认排在最后
+    print difference_list
+    temp = StaffScene.objects.filter(bk_username=bk_username, staff_scene_id__in=scene_list).values()
+    temp_list = []
+    for i in temp:
+        temp_list.append(i)
+    print temp_list.__len__()
+    result_list = []                                                                # 存储最后结果集
+
+    staff_scene_default_time_list_length = 0
+    for j in staff_scene_list:
+        # 将符合要求的并且用户设置了顺序的依次添加搞结果集
+        result = Scene.objects.filter(scene_id=j, scene_start_time__lt=now_time,
+                                      scene_stop_time__gt=now_time).values()
+        for i in result:
+            i['scene_start_time'] = i['scene_start_time'].strftime("%H:%M:%S")
+            i['scene_stop_time'] = i['scene_stop_time'].strftime("%H:%M:%S")
+            i['scene_default_time'] = staff_scene_default_time_list[staff_scene_default_time_list_length]
+            staff_scene_default_time_list_length = staff_scene_default_time_list_length + 1
+            result_list.append(i)
+
+    # 取出符合要求的并且用户没有自主设置的场景添
+    temp_staff_scene = Scene.objects.filter(staff_position_id=staff_position_id, scene_start_time__lt=now_time,
+                                            scene_stop_time__gt=now_time,
+                                            scene_id__in=difference_list).order_by('scene_order_id').values()
+    # 将符合要求的并且用户没有自主设置的场景添加到结果集
+    for i in temp_staff_scene:
         i['scene_start_time'] = i['scene_start_time'].strftime("%H:%M:%S")
         i['scene_stop_time'] = i['scene_stop_time'].strftime("%H:%M:%S")
-        list.append(i)
-    print type(result)
-    # for j in staff_scene_list:
-    #     result = Scene.objects.filter(scene_id__in=j, scene_start_time__lt=now_time,
-    #                                   scene_stop_time__gt=now_time).values()
-    #     result_list = []
-    #     for i in result:
-    #         i['scene_start_time'] = i['scene_start_time'].strftime("%H:%M:%S")
-    #         i['scene_stop_time'] = i['scene_stop_time'].strftime("%H:%M:%S")
-    #         result_list.append(i)
-    result = {"key": list}
+        result_list.append(i)
+    result = success_result(result_list)
     return result
+
+
+def get_staff_scene(request):
+    """
+    获取场景 ---- 完成-----多个岗位对应多个场景
+    :param request:
+    :return:
+    """
+    try:
+        staff_info = get_staff_info(request)
+        now_time = datetime.datetime.now().strftime("%H:%M:%S")                 # 当前时间字符串型
+        bk_username = staff_info.get('result').get('bk_username')               # 当前用户用户名
+        # res = PositionScene.objects.get_position_scene(staff_info.get("result").get("staff_position_id"))
+        res = PositionScene.objects.get_position_scene(2)
+        temp_list = []                                                          # 存储scene_id
+        for i in res.get("result"):
+            temp_list.append(i['scene_id'])
+        pass
+        print (u'通过岗位获取的所有岗位有的场景ID')
+        print temp_list
+        # 根据岗位获取对应场景信息
+        scene_res = Scene.objects.filter(scene_id__in=temp_list, scene_start_time__lt=now_time,
+                                         scene_stop_time__gt=now_time).order_by('scene_order_id').values()
+        scene_list = []                                                         # 所有符合要求的场景id
+        for i in scene_res:                                                     # 遍历结果集
+            scene_id = i['scene_id']
+            scene_list.append(scene_id)
+        print (u"符合要求的场景ID")
+        print scene_list
+        # 根据用户和场景ID遍历个人设置场景信息(根据用户设置排序)
+        staff_scene_res = StaffScene.objects.filter(bk_username=bk_username,
+                                                    staff_scene_id__in=scene_list).order_by(
+                                                    'staff_scene_order_id').values()
+        staff_scene_list = []                                                   # 用户设置了的并符合要求的场景ID
+        staff_scene_default_time_list = []
+        for i in staff_scene_res:
+            staff_scene_id = i['staff_scene_id']
+            staff_scene_list.append(staff_scene_id)
+            staff_scene_default_time = i['staff_scene_default_time']
+            staff_scene_default_time_list.append(staff_scene_default_time)
+        print (u'用户设置了的场景ID')
+        print staff_scene_list
+        print (u'用户自定义设置的时间')
+        print staff_scene_default_time_list
+        difference_list = list(set(scene_list).difference(set(staff_scene_list)))  # 用户没有设置的场景ID,将默认排在最后
+        print (u'用户没有设置的场景ID')
+        print difference_list
+        temp = StaffScene.objects.filter(bk_username=bk_username, staff_scene_id__in=scene_list).values()
+        temp_list = []
+        for i in temp:
+            temp_list.append(i)
+        result_list = []  # 存储最后结果集
+        staff_scene_default_time_list_length = 0
+        for j in staff_scene_list:
+            # 将符合要求的并且用户设置了顺序的依次添加搞结果集
+            result = Scene.objects.filter(scene_id=j, scene_start_time__lt=now_time,
+                                          scene_stop_time__gt=now_time).values()
+            for i in result:
+                i['scene_start_time'] = i['scene_start_time'].strftime("%H:%M:%S")
+                i['scene_stop_time'] = i['scene_stop_time'].strftime("%H:%M:%S")
+                i['scene_default_time'] = staff_scene_default_time_list[staff_scene_default_time_list_length]
+                staff_scene_default_time_list_length = staff_scene_default_time_list_length + 1
+                result_list.append(i)
+
+        # 取出符合要求的并且用户没有自主设置的场景添
+        temp_staff_scene = Scene.objects.filter(scene_start_time__lt=now_time,
+                                                scene_stop_time__gt=now_time,
+                                                scene_id__in=difference_list).order_by('scene_order_id').values()
+        # 将符合要求的并且用户没有自主设置的场景添加到结果集
+        for i in temp_staff_scene:
+            i['scene_start_time'] = i['scene_start_time'].strftime("%H:%M:%S")
+            i['scene_stop_time'] = i['scene_stop_time'].strftime("%H:%M:%S")
+            result_list.append(i)
+        result = success_result(result_list)
+    except Exception, e:
+        result = error_result(e)
+    return result
+
+
+def get_test_json(request):
+    """
+    function函数专用测试json数据
+    :param request:
+    :return: json
+    """
+    try:
+        staff_info = get_staff_info(request)
+        now_time = datetime.datetime.now().strftime("%H:%M:%S")                 # 当前时间字符串型
+        bk_username = staff_info.get('result').get('bk_username')               # 当前用户用户名
+        # res = PositionScene.objects.get_position_scene(staff_info.get("result").get("staff_position_id"))
+        res = PositionScene.objects.get_position_scene(2)
+        temp_list = []                                                          # 存储scene_id
+        for i in res.get("result"):
+            temp_list.append(i['scene_id'])
+        pass
+        print (u'通过岗位获取的所有岗位有的场景ID')
+        print temp_list
+        # 根据岗位获取对应场景信息
+        scene_res = Scene.objects.filter(scene_id__in=temp_list, scene_start_time__lt=now_time,
+                                         scene_stop_time__gt=now_time).order_by('scene_order_id').values()
+        scene_list = []                                                         # 所有符合要求的场景id
+        for i in scene_res:                                                     # 遍历结果集
+            scene_id = i['scene_id']
+            scene_list.append(scene_id)
+        print (u"符合要求的场景ID")
+        print scene_list
+        # 根据用户和场景ID遍历个人设置场景信息(根据用户设置排序)
+        staff_scene_res = StaffScene.objects.filter(bk_username=bk_username,
+                                                    staff_scene_id__in=scene_list).order_by(
+                                                    'staff_scene_order_id').values()
+        staff_scene_list = []                                                   # 用户设置了的并符合要求的场景ID
+        staff_scene_default_time_list = []
+        for i in staff_scene_res:
+            staff_scene_id = i['staff_scene_id']
+            staff_scene_list.append(staff_scene_id)
+            staff_scene_default_time = i['staff_scene_default_time']
+            staff_scene_default_time_list.append(staff_scene_default_time)
+        print (u'用户设置了的场景ID')
+        print staff_scene_list
+        print (u'用户自定义设置的时间')
+        print staff_scene_default_time_list
+        difference_list = list(set(scene_list).difference(set(staff_scene_list)))  # 用户没有设置的场景ID,将默认排在最后
+        print (u'用户没有设置的场景ID')
+        print difference_list
+        temp = StaffScene.objects.filter(bk_username=bk_username, staff_scene_id__in=scene_list).values()
+        temp_list = []
+        for i in temp:
+            temp_list.append(i)
+        result_list = []  # 存储最后结果集
+        staff_scene_default_time_list_length = 0
+        for j in staff_scene_list:
+            # 将符合要求的并且用户设置了顺序的依次添加搞结果集
+            result = Scene.objects.filter(scene_id=j, scene_start_time__lt=now_time,
+                                          scene_stop_time__gt=now_time).values()
+            for i in result:
+                i['scene_start_time'] = i['scene_start_time'].strftime("%H:%M:%S")
+                i['scene_stop_time'] = i['scene_stop_time'].strftime("%H:%M:%S")
+                i['scene_default_time'] = staff_scene_default_time_list[staff_scene_default_time_list_length]
+                staff_scene_default_time_list_length = staff_scene_default_time_list_length + 1
+                result_list.append(i)
+
+        # 取出符合要求的并且用户没有自主设置的场景添
+        temp_staff_scene = Scene.objects.filter(scene_start_time__lt=now_time,
+                                                scene_stop_time__gt=now_time,
+                                                scene_id__in=difference_list).order_by('scene_order_id').values()
+        # 将符合要求的并且用户没有自主设置的场景添加到结果集
+        for i in temp_staff_scene:
+            i['scene_start_time'] = i['scene_start_time'].strftime("%H:%M:%S")
+            i['scene_stop_time'] = i['scene_stop_time'].strftime("%H:%M:%S")
+            result_list.append(i)
+        result = success_result(result_list)
+    except Exception, e:
+        result = error_result(e)
+    return result
+
