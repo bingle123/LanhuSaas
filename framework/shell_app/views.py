@@ -2,7 +2,7 @@
 from common.mymako import render_json
 from common.mymako import render_mako_context
 from shell_app import function
-
+from django.shortcuts import render
 
 def carousel(request):
     """
@@ -100,3 +100,14 @@ def get_json_test(request):
     temp_result = function.get_test_json(request)
     return render_json(temp_result)
 
+def test(request):
+    """
+    测试
+    :param request:
+    :return:
+    """
+    if request.GET.get("data"):
+        test1 = function.test(request)
+        return render_json(test1)
+    else:
+        return render(request, 'jobtest.html')

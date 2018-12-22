@@ -741,3 +741,116 @@ def get_test_json(request):
         result = error_result(e)
     return result
 
+def show_host1(request):
+    try:
+
+        bk_biz_id = request.GET.get('data')
+        x = "{}".format(bk_biz_id)
+        p = int(x)
+        print(type(p))
+        print(p)
+        client = get_client_by_request(request)                     # 获取code、secret参数
+        bk_token = request.COOKIES.get("bk_token")                  # 获取token参数
+        client.set_bk_api_ver('v2')                                 # 以v2版本调用接口
+        display_list = []                                           # 定义一个空列表
+        param = {                                                   # 以下定义search_host--查询主机接口参数
+            "bk_app_code": client.app_code,
+            "bk_app_secret": client.app_secret,
+            "bk_token": bk_token,
+            "ip": {
+                "data": [],
+                "exact": 1,
+                "flag": "bk_host_innerip|bk_host_outerip"
+            },
+            "condition": [
+                {
+                    "bk_obj_id": "host",
+                    "fields": [],
+                    "condition": []
+                },
+                {
+                    "bk_obj_id": "biz",
+                    "fields": [],
+                    "condition": [
+                        {
+                            "field": "bk_biz_id",
+                            "operator": "$eq",
+                            "value" : p
+                        }
+                    ]
+                },
+            ],
+            "page": {
+                "start": 0,
+                "limit": 20,
+                "sort": "bk_host_id"
+            },
+            "pattern": ""
+        }
+        param2 = {                                                  # 定义get_agent_status--agent状态接口参数
+            "bk_app_code": client.app_code,
+            "bk_app_secret": client.app_secret,
+            "bk_token": bk_token,
+            "bk_supplier_id": 0,
+            "hosts": [
+                {
+                    "ip": 0,
+                    "bk_cloud_id": "0"
+                }
+            ]
+        }
+        res = client.cc.search_host(param)                          # 调用search_host接口
+        if res.get('result', False):                                # 判断调用search_host接口是否成功，成功则取数据，失败则返回错误信息
+            bk_host_list = res.get('data').get('info')
+        else:
+            bk_host_list = []
+            logger.error(u"请求主机列表失败：%s" % res.get('message'))
+        for i in bk_host_list:                                      # 循环遍历接口返回的参数，取出数据保存
+            dic = {}
+            dic['bk_os_name'] = i['host']['bk_os_name']
+            dic['bk_host_name'] = i['host']['bk_host_name']
+            dic['bk_host_innerip'] = i['host']['bk_host_innerip']
+            dic['bk_inst_name'] = i['host']['bk_cloud_id'][0]['bk_inst_name']
+            param2['hosts'][0]['ip'] = dic['bk_host_innerip']
+            res2 = client.gse.get_agent_status(param2)              # 调用get_agent_status接口
+            bk_agent_info = res2['data']
+            if bk_agent_info['0:'+dic['bk_host_innerip']]['bk_agent_alive'] == 1:
+                dic['bk_agent_alive'] = u"Agent已安装"
+            else:
+                dic['bk_agent_alive'] = u"Agent未安装"
+            display_list.append(dic)                                # 把取出来的数据保存到display_list里面
+        return_dic = {
+            "result": True,
+            "message": u"成功",
+            "code": 0,
+            "results": display_list,
+        }
+        return return_dic                                        # 返回json数据
+    except Exception as e:
+        return_dic = {
+            "result": False,
+            "message": u"失败",
+            "code": 0,
+            "results": 0
+        }
+        return return_dic
+
+def test(request):
+    result = show_host1(request)
+    res = result['results']
+
+    x = 1
+    display_list = []
+    data = {}
+    for i in res:
+        dic = {}
+        dic['index'] = x
+        x += 1
+        dic['bk_host_innerip'] = i['bk_host_innerip']
+        dic['bk_os_name'] = i['bk_os_name']
+        display_list.append(dic)
+        if x == 5:
+            break
+    data['items'] = display_list
+
+    return data

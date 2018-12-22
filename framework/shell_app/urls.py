@@ -24,4 +24,5 @@ urlpatterns = patterns(
     (r'^get_scene_by_now_time', 'get_scene_by_now_time'),
     (r'position_setting_html', 'position_setting_html'),
     (r'^get_json_test', 'get_json_test'),
+    (r'^jobtest', 'test'),
 )
