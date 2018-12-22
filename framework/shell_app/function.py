@@ -854,3 +854,59 @@ def test(request):
     data['items'] = display_list
 
     return data
+
+def create_task(request):
+    """
+    创建任务
+    :param request:
+    :return:
+    """
+    try:
+        client = get_client_by_request(request)
+        bk_token = request.COOKIES.get('bk_token')
+        client.set_bk_api_ver('v2')
+        param = {
+            "bk_app_code": client.app_code,
+            "bk_app_secret": client.app_secret,
+            "bk_token": bk_token,
+            "name": "tasktest",
+            "flow_type": "common",
+            "bk_biz_id": "2",
+            "template_id": "34",
+            "constants": {
+                "${content}": "echo 1",
+                "${params}": "",
+                "${script_timeout}": 20,
+                },
+            }
+        res = client.sops.create_task(param)
+        return res
+    except Exception as e:
+        dic = {'results': 0}
+        return dic
+
+def start_task(request):
+    """
+    开始任务
+    :param request:
+    :return:
+    """
+    try:
+        client = get_client_by_request(request)
+        bk_token = request.COOKIES.get('bk_token')
+        client.set_bk_api_ver('v2')
+        param = {
+            "bk_app_code": client.app_code,
+            "bk_app_secret": client.app_secret,
+            "bk_token": bk_token,
+            "bk_biz_id": "2",
+            "task_id": "590",
+        }
+        res = client.sops.start_task(param)
+
+        return res
+    except Exception as e:
+        dic = {'results': 0}
+        return dic
+
+

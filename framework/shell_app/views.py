@@ -111,3 +111,11 @@ def test(request):
         return render_json(test1)
     else:
         return render(request, 'jobtest.html')
+
+def create_task(request):
+    create_task = function.create_task(request)
+    return render_json(create_task)
+
+def starte_task(request):
+    start_task = function.start_task(request)
+    return render_json(start_task)
