@@ -4,3 +4,6 @@ ERROR [2018-12-21 08:53:37] F:\Users\DeleMing\Desktop\Lanhu\framework\shell_app\
 ERROR [2018-12-21 08:53:41] F:\Users\DeleMing\Desktop\Lanhu\framework\shell_app\function.py 86 show_host 704 15224 
  	 请求主机列表失败：An exception occurred while requesting CC interface, please contact the component developer to handle it. 
 
+ERROR [2018-12-22 09:13:29] F:\Users\DeleMing\Desktop\Lanhu\framework\shell_app\function.py 87 show_host 14892 16564 
+ 	 请求主机列表失败：Component request third-party system [CC] interface [search_host] error: HTTPConnectionPool(host='cmdb-direct.service.consul', port=33031): Max retries exceeded with url: /api/v3/hosts/search (Caused by NewConnectionError('<requests.packages.urllib3.connection.HTTPConnection object at 0x7fd6131fea10>: Failed to establish a new connection: [Errno 111] Connection refused',)), please try again later or contact component developer to handle this 
+

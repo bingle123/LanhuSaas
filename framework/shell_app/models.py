@@ -29,76 +29,6 @@ class Host(models.Model):
         verbose_name_plural = u'主机信息'
 
 
-class UserCarouselBaseSettingManage(models.Manager):
-    def get_carousel(self, data):
-        """
-        获取用户Carousel设置
-        :return:    json
-        """
-        try:
-            res = UserCarouselBaseSetting.objects.get(bk_username=data)
-            dict = res.__dict__
-            del dict['_state']
-            result = {"code": True, "result": dict, "message": u"查询成功"}
-
-        except Exception, e:
-            result = {"code": False, "result": None, "message": u"查询失败 %s"% e}
-        return result
-
-    def save_carousel(self, data):
-        """
-        保存用户Carousel设置
-        :param data:
-        :return:
-        """
-        try:
-            UserCarouselBaseSetting.objects.create(
-                bk_username=data.get("bk_username"),
-                carousel_time=data.get("carousel_time"),
-                carousel_number=data.get("carousel_number"),
-                carousel_id=data.get("carousel_id"),
-
-            )
-            result = {'result': True, 'message': "保存成功"}
-        except Exception, e:
-            result = {'result': False, 'message': "保存失败 %s" % e}
-        return result
-
-    def update_carousel(self, bk_username, data):
-        """
-        更新用户Carousel设置
-        :param data:
-        :return:
-        """
-        try:
-            obj = UserCarouselBaseSetting.objects.get(bk_username=bk_username)
-            obj.carousel_time = data.get("carousel_time")
-            obj.carousel_number = data.get("carousel_number")
-            obj.save()
-            result = {'result': True, 'message': "更新成功"}
-        except Exception, e:
-            result = {'result': False, 'message': "更新失败 %s" % e}
-        return result
-
-
-class UserCarouselBaseSetting(models.Model):
-    """
-    用户轮播基础设置
-    """
-    bk_username = models.CharField(u'用户名', max_length=64)
-    carousel_time = models.CharField(u'轮播时间_毫秒', max_length=256)
-    carousel_number = models.IntegerField(u'轮播数量')
-    carousel_id = models.CharField(u'轮播ID', max_length=64)
-    objects = UserCarouselBaseSettingManage()
-
-    def __unicode__(self):
-        return self.bk_username
-
-    class Meta:
-        verbose_name = u'用户轮播设置'
-        verbose_name_plural = u'用户轮播设置'
-
-
 class StaffInfoManage(models.Manager):
     """
     用户信息管理
@@ -126,9 +56,28 @@ class StaffInfoManage(models.Manager):
         return result
 
 
+class StaffInfo(models.Model):
+    """
+    职员信息表
+    """
+    bk_username = models.CharField(u'职员用户名', max_length=64)
+    staff_position_id = models.IntegerField(u'职员岗位ID')
+    objects = StaffInfoManage()
+
+    def toDic(self):
+        return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
+
+    def __unicode__(self):
+        return self.bk_username
+
+    class Meta:
+        verbose_name = u'职员信息表'
+        verbose_name_plural = u'职员信息表'
+
+
 class SceneManage(models.Manager):
     """
-    场景设置
+    场景表管理
     """
     def get_scene_by_staff_position_id(self, staff_position_id):
         """返回json数据"""
@@ -165,56 +114,6 @@ class SceneManage(models.Manager):
         return result
 
 
-class StaffPositionManage(models.Manager):
-    """
-    用户岗位管理
-    """
-    def get_staff_position_by_username(self, staff_position_id):
-        try:
-            res = StaffPosition.objects.get(staff_position_id=staff_position_id)
-            dict = res.__dict__
-            del dict['_state']
-            result = {"code": True, "result": dict, "message": u"查询成功"}
-        except Exception, e:
-            result = {"code": False, "result": None, "message": u"查询失败 %s" % e}
-        return result
-
-
-class StaffInfo(models.Model):
-    """
-    职员信息表
-    """
-    bk_username = models.CharField(u'职员用户名', max_length=64)
-    staff_position_id = models.IntegerField(u'职员岗位ID')
-    objects = StaffInfoManage()
-
-    def toDic(self):
-        return dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]])
-
-    def __unicode__(self):
-        return self.bk_username
-
-    class Meta:
-        verbose_name = u'职员信息表'
-        verbose_name_plural = u'职员信息表'
-
-
-class StaffPosition(models.Model):
-    """
-    员工岗位表
-    """
-    staff_position_id = models.IntegerField(u'职员岗位ID')
-    staff_position_name = models.CharField(u'岗位名称', max_length=64)
-    objects = StaffPositionManage()
-
-    def __unicode__(self):
-        return self.staff_position_id
-
-    class Meta:
-        verbose_name = u'员工岗位表'
-        verbose_name_plural = u'员工岗位表'
-
-
 class Scene(models.Model):
     """
     场景信息表
@@ -237,9 +136,40 @@ class Scene(models.Model):
         verbose_name_plural = u'场景信息表'
 
 
+class StaffPositionManage(models.Manager):
+    """
+    用户岗位表管理
+    """
+    def get_staff_position_by_username(self, staff_position_id):
+        try:
+            res = StaffPosition.objects.get(staff_position_id=staff_position_id)
+            dict = res.__dict__
+            del dict['_state']
+            result = {"code": True, "result": dict, "message": u"查询成功"}
+        except Exception, e:
+            result = {"code": False, "result": None, "message": u"查询失败 %s" % e}
+        return result
+
+
+class StaffPosition(models.Model):
+    """
+    员工岗位表
+    """
+    staff_position_id = models.IntegerField(u'职员岗位ID')
+    staff_position_name = models.CharField(u'岗位名称', max_length=64)
+    objects = StaffPositionManage()
+
+    def __unicode__(self):
+        return self.staff_position_id
+
+    class Meta:
+        verbose_name = u'员工岗位表'
+        verbose_name_plural = u'员工岗位表'
+
+
 class StaffSceneManage(models.Manager):
     """
-    用户自定义场景设置
+    用户自定义场景设置表管理
     """
     def save_staff_scene(self, data):
         """
@@ -262,7 +192,7 @@ class StaffSceneManage(models.Manager):
 
 class StaffScene(models.Model):
     """
-    用户自定义场景设置
+    用户自定义场景设置表
     """
     staff_scene_id = models.IntegerField(u'用户场景ID');
     staff_scene_order_id = models.IntegerField(u'用户场景排序ID')
@@ -279,6 +209,9 @@ class StaffScene(models.Model):
 
 
 class PositionSceneManage(models.Manager):
+    """
+        StaffPosition 与 Scene 关系表管理  (多对多)
+    """
     def get_position_scene(self, position_id):
         """
         通过职位ID获取对应场景ID

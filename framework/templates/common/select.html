@@ -368,31 +368,7 @@
 
         //页面加载
         $(document).ready(function () {
-            $.ajax({
-                url: '${SITE_URL}test/',
-                type: 'GET',
-                dataType: 'json',
-                success: function (res) {
-                    //获取数据成功
-                    if (res.code == 0) {
-                        var _html = '';
-                        var list = res.results;
-                        var tpl = $('#tpl').html();
-                        //alert(tpl)
-                        //alert(list.length)
-                        if (list.length == 0) {
-                            alert('没有数据');
-                        } else {
-                            for (var i = 0, len = list.length; i < len; i++) {
-                                var item = list[i];
-                                _html += renderTpl(tpl, item)
-                                //alert(item)
-                            }
-                        }
-                        $('.serverIpTable tbody').html(_html);
-                    }
-                }
-            });
+
             $('#tree div').tree({
                 onCheck: {
                     node: 'expand'
@@ -409,7 +385,7 @@
             $('.ui-draggable').css('display', 'block');
             $('.modal-loading-wrap').removeClass("none");
             $.ajax({
-                url: '${SITE_URL}test/',
+                url: '${SITE_URL}select_host/',
                 type: 'GET',
                 dataType: 'json',
                 success: function (res) {
@@ -440,7 +416,7 @@
         $('.cancelbtn').click(function () {
             $('.modal-loading-wrap').removeClass("none");
             $.ajax({
-                url: '${SITE_URL}test/',
+                url: '${SITE_URL}select_host/',
                 type: 'GET',
                 dataType: 'json',
                 success: function (res) {
@@ -563,7 +539,7 @@
             });
             $('.modal-loading-wrap').removeClass("none");
             $.ajax({
-                url: "${SITE_URL}test/?pageCount=" + pageCount + "&clickPage=" + clickPage, ///?pageCount="+pageCount+"&perPageNum"+perPageNum
+                url: "${SITE_URL}select_host/?pageCount=" + pageCount + "&clickPage=" + clickPage, ///?pageCount="+pageCount+"&perPageNum"+perPageNum
                 type: "GET",
                 dataType: "json",
                 success: function (res) {

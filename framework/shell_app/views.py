@@ -22,7 +22,16 @@ def show_select(request):
     return render_mako_context(request, './common/select.html')
 
 
-def show_host(request):
+def position_setting_html(request):
+    """
+    岗位设置页面
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './shell_app/position_setting.html')
+
+
+def select_host(request):
     """
     主机页面展示，包含分页功能
     :param request: clickPage:页码数
@@ -52,26 +61,6 @@ def select_module_host(request):
     return render_json(module_host)
 
 
-def user_carousel_setting(request):
-    """
-    用户设置
-    :param request:
-    :return:
-    """
-    result = function.user_carousel(request)
-    return render_json(result)
-
-
-def get_user_carousel_time(request):
-    """
-    获取用户Carousel设置轮播时间与轮播数量
-    :param request:
-    :return:
-    """
-    result = function.get_user_carousel_time(request)
-    return render_json(result)
-
-
 def get_scene_by_now_time(request):
     """
     获取场景信息
@@ -82,13 +71,14 @@ def get_scene_by_now_time(request):
     return render_json(result)
 
 
-def position_setting_html(request):
+def get_staff_scene(request):
     """
-    岗位设置页面
+    获取用户场景
     :param request:
     :return:
     """
-    return render_mako_context(request, './shell_app/position_setting.html')
+    result = function.get_staff_scene(request)
+    return render_json(result)
 
 
 def get_json_test(request):
@@ -97,6 +87,6 @@ def get_json_test(request):
     :param request:
     :return:
     """
-    temp_result = function.get_test_json(request)
+    temp_result = function.get_scene_by_staff_position_id_time_order_by_scene_order_id(request)
     return render_json(temp_result)
 
