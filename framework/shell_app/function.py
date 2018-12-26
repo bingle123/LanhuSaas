@@ -390,17 +390,38 @@ def get_staff_scene(request):
     return result
 
 
+def get_positions_all():
+    """
+    获取所有岗位信息
+    :return:  json--results--StaffPosition对象
+    """
+    try:
+        res = StaffPosition.objects.get_positions_all().get("result")
+        result = tools.success_result(res)
+    except Exception, e:
+        result = tools.error_result(e)
+    return result
+
+
+def get_scenes_all():
+    """
+    获取所有场景信息
+    :return:
+    """
+    try:
+        result = Scene.objects.get_scenes_all().get("result")
+    except Exception, e:
+        result = tools.error_result(e)
+    return result
+
+
 def get_test_json(request):
     """
     function函数专用测试json数据
     :param request:
     :return: json
     """
-    try:
-        result = tools.success_result(None)
-    except Exception, e:
-        result = tools.error_result(e)
-    return result
+    return get_scenes_all()
 
 
 # 以下方法暂时未用到，后面可能会用到

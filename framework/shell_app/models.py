@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+import tools
 # 临时
 import json
 import datetime
@@ -79,6 +80,19 @@ class SceneManage(models.Manager):
     """
     场景表管理
     """
+    def get_scenes_all(self):
+        try:
+            res = Scene.objects.all().values()
+            result_list = []
+            for i in res:
+                i['scene_start_time'] = i['scene_start_time'].strftime("%H:%M:%S")
+                i['scene_stop_time'] = i['scene_stop_time'].strftime("%H:%M:%S")
+                result_list.append(i)
+            result = {"code": True, "result": result_list, "message": u"查询成功" }
+        except Exception, e:
+            result = {"code": False, "result": None, "message": u"查询失败" }
+        return result
+
     def get_scene_by_staff_position_id(self, staff_position_id):
         """返回json数据"""
         try:
@@ -140,6 +154,19 @@ class StaffPositionManage(models.Manager):
     """
     用户岗位表管理
     """
+    def get_positions_all(self):
+        """
+        获取所有岗位信息
+        :return:
+        """
+        try:
+            res = StaffPosition.objects.all().values()
+            result_list = list(res)
+            result = {"code": True, "result": result_list, "message": u"查询成功"}
+        except Exception, e:
+            result = {"code": False, "result": None, "message": u"查询失败 %s" % e}
+        return result
+
     def get_staff_position_by_username(self, staff_position_id):
         try:
             res = StaffPosition.objects.get(staff_position_id=staff_position_id)

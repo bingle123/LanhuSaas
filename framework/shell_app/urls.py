@@ -22,5 +22,6 @@ urlpatterns = patterns(
     (r'^get_scene_by_now_time', 'get_scene_by_now_time'),           # 获取当前时间用户场景--暂时未使用
     (r'^get_staff_scene', 'get_staff_scene'),                       # 获取当前用户当前时间所有场景
     (r'position_setting_html', 'position_setting_html'),            # 岗位设置专用页面
+    (r'^get_positions_all', 'get_positions_all'),                   # 获取所有岗位对象
     (r'^get_json_test', 'get_json_test'),                           # json数据测试URL
 )
