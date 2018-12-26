@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 
-class unit_administration(models.Manager):
+class unit_administration(models.Model):
     """
     单元信息表
     """
