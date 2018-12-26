@@ -123,6 +123,7 @@ INSTALLED_APPS = (
     'shell_app',
     'guotai',
     'monitor',
+    'db_connection_manage',
 )
 
 # ==============================================================================
