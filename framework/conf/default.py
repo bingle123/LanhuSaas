@@ -122,6 +122,8 @@ INSTALLED_APPS = (
     'news',
     'shell_app',
     'guotai',
+    'monitor',
+    'db_connection_manage',
 )
 
 # ==============================================================================

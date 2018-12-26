@@ -36,7 +36,7 @@ def show_host(request):
                         {
                             "field": "bk_biz_id",
                             "operator": "$eq",
-                            "value" : bk_biz_id
+                            "value": bk_biz_id
                         }
                     ]
                 },
