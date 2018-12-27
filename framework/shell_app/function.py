@@ -421,7 +421,7 @@ def get_test_json(request):
     :param request:
     :return: json
     """
-    return get_scenes_all()
+    return tools.success_result(get_scenes_all())
 
 
 # 以下方法暂时未用到，后面可能会用到

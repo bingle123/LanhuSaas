@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="2018/12/26 17:55 liaomingtao ----- 场景有关接口">
-      <change afterPath="$PROJECT_DIR$/framework/static/assets/vue-2.5.21/vue.development.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/static/assets/vue-2.5.21/vue.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/templates/db_connection_manage/element.html" afterDir="false" />
+    <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="2018/12/27 10:01 liaomingtao ----- vuejs上传开发请使用开发版js，chrome安装vue-develop工具，增加elementUI框架组件">
+      <change afterPath="$PROJECT_DIR$/framework/static/assets/vue-2.5.21/vue-resource.min.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/db_connection_manage/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/db_connection_manage/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/db_connection_manage/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/db_connection_manage/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/shell_app/function.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/shell_app/function.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/templates/db_connection_manage/element.html" beforeDir="false" afterPath="$PROJECT_DIR$/framework/templates/db_connection_manage/element.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -34,20 +32,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/framework/templates/db_connection_manage/index.html">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/framework/templates/db_connection_manage/element.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
+            <state relative-caret-position="228">
+              <caret line="18" column="10" selection-start-line="18" selection-start-column="10" selection-end-line="18" selection-end-column="10" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/framework/templates/db_connection_manage/element.html">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/framework/shell_app/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="95">
-              <caret line="5" column="63" selection-start-line="5" selection-start-column="63" selection-end-line="5" selection-end-column="63" />
+            <state relative-caret-position="1824">
+              <caret line="99" column="36" selection-start-line="99" selection-start-column="36" selection-end-line="99" selection-end-column="36" />
+              <folding>
+                <element signature="e#24#61#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -64,7 +65,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>get_user</find>
       <find>temp</find>
       <find>+=</find>
       <find>renderTpl</find>
@@ -94,6 +94,7 @@
       <find>scenet</find>
       <find>scene</find>
       <find>sceneManage</find>
+      <find>AJAX</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -114,7 +115,6 @@
         <option value="$PROJECT_DIR$/framework/shell_app/tools.py" />
         <option value="$PROJECT_DIR$/framework/shell_app/urls.py" />
         <option value="$PROJECT_DIR$/framework/shell_app/views.py" />
-        <option value="$PROJECT_DIR$/framework/shell_app/function.py" />
         <option value="$PROJECT_DIR$/framework/shell_app/models.py" />
         <option value="$PROJECT_DIR$/framework/templates/common/carousel.html" />
         <option value="$PROJECT_DIR$/framework/templates/db_connection_manage/index.html" />
@@ -124,13 +124,15 @@
         <option value="$PROJECT_DIR$/framework/db_connection_manage/urls.py" />
         <option value="$PROJECT_DIR$/framework/static/assets/vue-2.5.16/vue.js" />
         <option value="$PROJECT_DIR$/framework/static/assets/vue-2.5.21/vue.development.js" />
+        <option value="$PROJECT_DIR$/framework/static/assets/vue-2.5.21/vue-resource.min.js" />
+        <option value="$PROJECT_DIR$/framework/shell_app/function.py" />
         <option value="$PROJECT_DIR$/framework/templates/db_connection_manage/element.html" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="246" />
+    <option name="y" value="-12" />
     <option name="width" value="1382" />
     <option name="height" value="744" />
   </component>
@@ -159,6 +161,12 @@
               <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
               <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
               <item name="framework" type="462c0819:PsiDirectoryNode" />
+              <item name="shell_app" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
+              <item name="framework" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -167,6 +175,14 @@
               <item name="framework" type="462c0819:PsiDirectoryNode" />
               <item name="static" type="462c0819:PsiDirectoryNode" />
               <item name="assets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
+              <item name="framework" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="jquery" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
@@ -187,7 +203,21 @@
               <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
               <item name="framework" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="common" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
+              <item name="framework" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
               <item name="db_connection_manage" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
+              <item name="framework" type="462c0819:PsiDirectoryNode" />
+              <item name="templates" type="462c0819:PsiDirectoryNode" />
+              <item name="shell_app" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -293,7 +323,9 @@
       <workItem from="1545816761454" duration="593000" />
       <workItem from="1545818089570" duration="1273000" />
       <workItem from="1545821477855" duration="109000" />
-      <workItem from="1545873566546" duration="3020000" />
+      <workItem from="1545873566546" duration="11308000" />
+      <workItem from="1545896142732" duration="909000" />
+      <workItem from="1545897483670" duration="192000" />
     </task>
     <task id="LOCAL-00001" summary="选择服务器---静态页面">
       <created>1544418401657</created>
@@ -435,11 +467,18 @@
       <option name="project" value="LOCAL" />
       <updated>1545821513629</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="2018/12/27 10:01 liaomingtao ----- vuejs上传开发请使用开发版js，chrome安装vue-develop工具，增加elementUI框架组件">
+      <created>1545876722901</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1545876722901</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="258333000" />
+    <option name="totallyTimeSpent" value="267722000" />
   </component>
   <component name="TodoView" selected-index="4">
     <todo-panel id="selected-file">
@@ -454,12 +493,12 @@
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22583081" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23187311" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4539275" visible="true" weight="0.18211383" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.4539275" visible="true" weight="0.076422766" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.31544715" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -521,7 +560,8 @@
     <MESSAGE value="2018/12/21 18::18 liaomingtao ----- 前端：增加岗位修改页面  后端:增加岗位和场景关系表，并完善了获取用户当前场景的查询" />
     <MESSAGE value="2018/12/24 17:52 liaomingtao ----- 完成轮播需求--代码规范化--封装部分公共代码--轮播的轮播时间暂时相同" />
     <MESSAGE value="2018/12/26 17:55 liaomingtao ----- 场景有关接口" />
-    <option name="LAST_COMMIT_MESSAGE" value="2018/12/26 17:55 liaomingtao ----- 场景有关接口" />
+    <MESSAGE value="2018/12/27 10:01 liaomingtao ----- vuejs上传开发请使用开发版js，chrome安装vue-develop工具，增加elementUI框架组件" />
+    <option name="LAST_COMMIT_MESSAGE" value="2018/12/27 10:01 liaomingtao ----- vuejs上传开发请使用开发版js，chrome安装vue-develop工具，增加elementUI框架组件" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
@@ -531,13 +571,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://D:/Python27/Lib/site-packages/django/db/backends/base/operations.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="309" selection-start-line="309" selection-end-line="309" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://D:/Python27/Lib/site-packages/django/db/utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="139">
@@ -633,13 +666,6 @@
     <entry file="file://$PROJECT_DIR$/framework/static/assets/font-awesome-4.7.0/css/font-awesome.css">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/templates/shell_app/position_setting.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-171">
-          <caret line="15" column="55" selection-start-line="15" selection-start-column="55" selection-end-line="15" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/logs/lanhusaas/wb_mysql.log">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -705,16 +731,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/shell_app/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="99" column="40" selection-start-line="99" selection-start-column="27" selection-end-line="99" selection-end-column="40" />
-          <folding>
-            <element signature="e#24#61#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/framework/shell_app/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="491">
@@ -751,38 +767,13 @@
     <entry file="file://$PROJECT_DIR$/framework/static/assets/jquery/jquery-1.10.2.min.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/templates/common/carousel.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="7" column="17" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/shell_app/function.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="424" selection-start-line="424" selection-end-line="424" />
-          <folding>
-            <element signature="e#24#61#0" expanded="true" />
-            <element signature="e#8929#9323#0" />
-            <element signature="e#9375#10068#0" />
-            <element signature="e#10105#13969#0" />
-            <element signature="e#14001#14274#0" />
-            <element signature="e#14303#14493#0" />
-            <element signature="e#14528#14630#0" />
-            <element signature="e#14731#15503#0" />
-            <element signature="e#15541#16397#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/framework/static/assets/antd/antd.min.js.map">
-      <provider editor-type-id="sourcemapFileViewerProvider" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="397">
           <caret line="12501" column="1" selection-start-line="12501" selection-start-column="1" selection-end-line="12501" selection-end-column="1" />
         </state>
       </provider>
+      <provider editor-type-id="sourcemapFileViewerProvider" />
     </entry>
     <entry file="file://$PROJECT_DIR$/framework/static/assets/antd/antd.min.css">
       <provider selected="true" editor-type-id="text-editor">
@@ -829,16 +820,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/static/assets/element/index.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/static/assets/element/index.css">
+    <entry file="file://$PROJECT_DIR$/framework/static/assets/element/index.js" />
+    <entry file="file://$PROJECT_DIR$/framework/static/assets/element/index.css" />
+    <entry file="file://$PROJECT_DIR$/framework/static/assets/vue-2.5.16/vue.js" />
+    <entry file="file://$PROJECT_DIR$/framework/static/assets/vue-2.5.21/vue.development.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
+        <state relative-caret-position="418">
+          <caret line="11061" column="5" selection-start-line="11061" selection-start-column="5" selection-end-line="11061" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/static/assets/vue-2.5.21/vue-resource.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="6" column="14435" lean-forward="true" selection-start-line="6" selection-start-column="14435" selection-end-line="6" selection-end-column="14435" />
           <folding>
-            <element signature="e#164060#164199#2" expanded="true" />
-            <element signature="e#166482#166621#2" expanded="true" />
-            <element signature="e#170010#170149#2" expanded="true" />
+            <element signature="n#!!doc" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -850,24 +847,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/static/assets/vue-2.5.16/vue.js">
+    <entry file="file://$PROJECT_DIR$/framework/templates/shell_app/position_setting.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="10946" column="5" selection-start-line="10946" selection-start-column="5" selection-end-line="10946" selection-end-column="5" />
+        <state relative-caret-position="-3842">
+          <caret line="15" column="55" selection-start-line="15" selection-start-column="55" selection-end-line="15" selection-end-column="55" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/static/assets/vue-2.5.21/vue.development.js">
+    <entry file="file://$PROJECT_DIR$/framework/templates/common/carousel.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="11061" column="5" selection-start-line="11061" selection-start-column="5" selection-end-line="11061" selection-end-column="5" />
+        <state relative-caret-position="208">
+          <caret line="23" column="35" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/shell_app/function.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="12">
+          <caret line="423" column="49" selection-start-line="423" selection-start-column="49" selection-end-line="423" selection-end-column="49" />
+          <folding>
+            <element signature="e#24#61#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/framework/templates/db_connection_manage/element.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="5" column="63" selection-start-line="5" selection-start-column="63" selection-end-line="5" selection-end-column="63" />
+        <state relative-caret-position="228">
+          <caret line="18" column="10" selection-start-line="18" selection-start-column="10" selection-end-line="18" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/shell_app/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1824">
+          <caret line="99" column="36" selection-start-line="99" selection-start-column="36" selection-end-line="99" selection-end-column="36" />
+          <folding>
+            <element signature="e#24#61#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
