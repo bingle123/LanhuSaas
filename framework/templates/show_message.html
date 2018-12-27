@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html>
 
 <head>
     <meta charset="utf-8" />
@@ -36,8 +35,8 @@
 <div style="height: 100%;width: 100%">
   <div class="div1">
     <div id="div2">
-        <input type="text" placeholder="请输入搜素内容">
-        <button type="button"  class="king-btn mr10  king-success"  v-on:click="greet">搜索</button>
+        <input type="text" placeholder="请输入搜素内容" v-model="content">
+        <button type="button"  class="king-btn mr10  king-success"  v-on:click="select"  >搜索</button>
         <button type="button"  class="button-add">新增</button>
     </div>
       <table class="table mb0 pr15 ranger-box2" id="table1">
@@ -68,6 +67,7 @@
   </div>
     </div>
 </body>
+
 <script type="text/javascript">
     var vm=new Vue({
         el: '#table1',
@@ -89,7 +89,14 @@
     vm.get();
     var vm1=new Vue({
         el: '#div2',
-
+        data:{
+            content:'',
+        },
+        method:{
+            select:function () {
+                console.log(123)
+            }
+        }
         }
     )
 </script>
