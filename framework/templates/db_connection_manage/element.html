@@ -126,12 +126,13 @@ window.onload = function () {
         methods:{
             get:function () {
                 this.$http.get('${SITE_URL}get_json_test').then(function (res) {
-                    console.log(res)
+                    console.log(res);
                     //this.scene = res.results
-                    this.scenes = res.body.results
+                    this.scenes = res.body.results;
 
-                    console.log(res.body.results)
+                    console.log(res.body.results);
                 })
+
             }
         }
     });

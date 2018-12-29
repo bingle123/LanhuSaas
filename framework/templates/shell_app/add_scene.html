@@ -1,0 +1,173 @@
+<html>
+<head>
+    <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 -->
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- element UI引入样式 -->
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <!--axios.min.js--vue.js的ajax支持-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+</head>
+
+<body>
+<!--场景表格-->
+<div id="sceneForm">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form-item label="场景名称" prop="name">
+            <el-input v-model="ruleForm.name"></el-input>
+        </el-form-item>
+        <el-form-item label="场景时间" required>
+            <el-col :span="11">
+                <el-form-item prop="start_time">
+                    <el-time-picker type="fixed-time" placeholder="选择开始时间" v-model="ruleForm.start_time"
+                                    style="width: 100%;"></el-time-picker>
+                </el-form-item>
+            </el-col>
+            <el-col class="line" :span="2">-</el-col>
+            <el-col :span="11">
+                <el-form-item prop="stop_time">
+                    <el-time-picker type="fixed-time" placeholder="选择结束时间" v-model="ruleForm.stop_time"
+                                    style="width: 100%;"></el-time-picker>
+                </el-form-item>
+            </el-col>
+        </el-form-item>
+        <el-form-item label="场景适用岗位" prop="position">
+            <el-select v-model="ruleForm.position" placeholder="请选择">
+                <el-option
+                        v-for="item in options"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="场景默认停留时间" prop="default_time">
+            <el-input v-model="ruleForm.default_time"></el-input>
+        </el-form-item>
+        <el-form-item label="场景实例" prop="name">
+            <el-input v-model="ruleForm.example"></el-input>
+        </el-form-item>
+        <el-form-item label="场景默认顺序" style="display: none;">
+            <el-input v-model="ruleForm.order_id"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+            <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+    </el-form>
+</div>
+
+<script>
+    //csrf验证
+    axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
+
+    let vm = new Vue({
+        el: '#sceneForm',
+        data: {
+            ruleForm: {
+                name: '场景A',
+                start_time: '19:20:10',
+                stop_time: '23:20:10',
+                position: [],
+                delivery: false,
+                default_time: 3000,
+                example: '',
+                order_id: '30',
+            },
+            options: [],
+            rules: {
+                name: [
+                    {required: true, message: '请输入活动名称', trigger: 'blur'},
+                    {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+                ],
+                start_time: [
+                    {type: 'date', required: true, message: '请选择场景开始时间', trigger: 'change'}
+                ],
+                stop_time: [
+                    {type: 'date', required: true, message: '请选择场景结束时间', trigger: 'change'}
+                ],
+                default_time: [
+                    {required: true, message: '请输入场景停留时间(单位毫秒)', trigger: 'blur'},
+                    {type: 'number', message: '场景停留时间必须为数字值', trigger: 'blur'},
+                ],
+                position:[
+                    {required: true, message: '请选择岗位', trigger: 'change'}
+                ],
+            },
+        },
+        methods: {
+            submitForm(formName) {              //提交表单
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        //alert('submit!');
+                        axios({
+                            url:'${SITE_URL}add_scene_form/',
+                            // url :'${SITE_URL}db_connection_manage/vue_add/',
+                            method:'post',
+                            data: {id:1},
+                        }).then((res) =>{
+                            alert("成功")
+                            console.log(res)
+                        }).catch((res) =>{
+                            console.log(res)
+                        });
+                    } else {
+                        this.error_message("提交异常，请检查表单信息")
+                        return false;
+                    }
+                });
+            },
+            resetForm(formName) { //重置表单
+                this.$refs[formName].resetFields();
+            },
+            //下拉框初始化
+            positionInit() {
+                axios({
+                    url: '${SITE_URL}get_positions_all',
+                    method: 'post',
+                }).then((res) => {
+                    let temp_list = [];
+                    for (let i = 0; i < res.data.results.length; i++) {
+                        const positionValue = res.data.results[i].staff_position_id;
+                        const positionName = res.data.results[i].staff_position_name;
+                        let position = {value: positionValue, label: positionName}
+                        temp_list.push(position);
+                    }
+                    console.log(temp_list);
+                    //this.success_message("获取岗位成功")
+                    this.options = temp_list;
+                }).catch((res) => {
+                    alert("获取岗位失败");
+                    console.log(res);
+                });
+            },
+            success_message(info) {
+                this.$message({
+                    showClose: true,
+                    message: info,
+                    type: 'success'
+                });
+            },
+            error_message(info) {
+                this.$message({
+                    showClose: true,
+                    message: info,
+                    type: 'error'
+                });
+            }
+        }
+    });
+
+    vm.positionInit();
+</script>
+
+</body>
+</html>
