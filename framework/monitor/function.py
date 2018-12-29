@@ -31,10 +31,10 @@ def unit_show(request):
 
 @csrf_exempt
 def select_unit(request):
-    res = request.POST.get('send_data')
+    res = request.body
     res_list = []
     res1 = "{}".format(res)
-    print(len(res1))
+    print(res1)
     if len(res1) == 0:
         res_list = unit_show(request)
     else:

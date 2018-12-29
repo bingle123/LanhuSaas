@@ -16,7 +16,7 @@ def index1(request):
 
     return render_mako_context(request, '123.html')
 
-
+@csrf_exempt
 def unit_show(request):
 
     res = function.unit_show(request)

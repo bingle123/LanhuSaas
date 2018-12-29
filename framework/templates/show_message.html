@@ -2,8 +2,6 @@
 <head>
     <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 -->
     <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
-    <!-- 生产环境版本，优化了尺寸和速度 -->
-    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
     <!-- element UI引入样式 -->
     <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
     <!-- element UI引入组件库 -->
@@ -35,7 +33,7 @@
 </head>
 
 <body>
-<div  style="height: 100%;width: 100%">
+<div id="div1" style="height: 100%;width: 100%">
   <div class="div1" id="div1">
     <div id="div2">
         <input type="text" placeholder="请输入搜素内容" v-model="content">
@@ -86,136 +84,44 @@
           <el-button type="primary" icon="el-icon-delete"></el-button>
   </el-table>
     </div>
-      </div>
-  <div class="div3" id="div4" style="display: none;">
-   <div id="app">
-      <el-row class="demo-autocomplete">
-        <el-col :span="12">
-        <div class="sub-title">字号</div>
-        <el-autocomplete class="inline-input" v-model="state1" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect"></el-autocomplete>
-        </el-col>
-          </el-row>
-      <div style="width: 200px">
-        <div>高度</div>
-       <el-input v-model="input1" placeholder="请输入高度" ></el-input>
-       <div style="width: 200px">
-        <div>宽度</div>
-
-      <el-input v-model="input2" placeholder="请输入宽度"></el-input>
-      </div>
-          <el-popover placement="top-start"  width="200" trigger="hover" content="新增一个单元。">
-            <el-button slot="reference">新增</el-button>
-          </el-popover>
-    </div>
   </div>
-
-
-  </div>
-
-    </div>
+</div>
 </body>
 
-<script type="text/javascript">
-    var vm=new Vue({
-        el: '#div5',
+<script>
+    var vm=  new Vue({
+        el: '#div1',
         data: {
             sites:[
             ],
-
         },
         methods: {
-            get:function () {
-                this.$http.get('${SITE_URL}test/').then(function (res) {
-                    vm.sites = res.body.message;
+            a() {
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}test/',
+                }).then((res) => {
+                    vm.sites = res.data.message;
                     console.log(vm.sites)
                 })
             },
-
-        }
-    });
-    vm.get();
-</script>
-<script>
-    var vm1=new Vue({
-        el: '#div2',
-        data: {
-            content: '',
-            sites:[]
-        },
-        methods: {
-            aaa:function() {
-                this.$http.post('${SITE_URL}test1/',{send_data:vm1.content},{emulateJSON:true}).then(function (res) {
-                    console.log(res);
-                    vm.sites=res.body.message;
-                    console.log(vm.sites)
+            aaa() {
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}test1/',
+                    data: this.content,
+                }).then((res)=>{
+                    vm.sites = res.data.message
+                    console.log(res)
                 })
             }
         }
-    })
+    });
+    vm.a()
+</script>
 
-</script>
-<script>
-    var Main = {
-    data() {
-      return {
-        restaurants: [],
-        state1: '',
-      };
-    },
-    methods: {
-      querySearch(queryString, cb) {
-        var restaurants = this.restaurants;
-        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-        // 调用 callback 返回建议列表的数据
-        cb(results);
-      },
-      createFilter(queryString) {
-        return (restaurant) => {
-          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-      loadAll() {
-        return [
-            { "value": 8, "address": 8 },
-            { "value": 10, "address": 10 },
-            { "value": 12, "address": 12 },
-            { "value": 14, "address": 14 },
-            { "value": 16, "address": 16 },
-            { "value": 18, "address": 18 },
-            { "value": 20, "address": 20 },
-            { "value": 22, "address": 22 },
-            { "value": 24, "address": 24 },
-            { "value": 26, "address": 26 },
-            { "value": 28, "address": 28 },
-        ];
-      },
-      handleSelect(item) {
-        console.log(item);
-      }
-    },
-    mounted() {
-      this.restaurants = this.loadAll();
-    }
-  };
-var Ctor = Vue.extend(Main);
-new Ctor().$mount('#app');
-</script>
-<script>
- var Main1 = {
-  data() {
-    return {
-      input: ''
-    }
-  }
-};
-var Ctor1 = Vue.extend(Main1);
-new Ctor1().$mount('#app')
 
-</script>-
-<script>
- function func() {
-     $("#div4").css("display",'');
- }
-</script>
+
+
 
 </html>
