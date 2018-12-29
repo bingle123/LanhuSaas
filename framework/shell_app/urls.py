@@ -23,5 +23,8 @@ urlpatterns = patterns(
     (r'^get_staff_scene', 'get_staff_scene'),                       # 获取当前用户当前时间所有场景
     (r'position_setting_html', 'position_setting_html'),            # 岗位设置专用页面
     (r'^get_positions_all', 'get_positions_all'),                   # 获取所有岗位对象
+    (r'^scene_list', 'scene_list'),                                 # 所有场景列表
+    (r'^add_scene/$', 'add_scene'),                                   # 增加场景表单HTML
+    (r'^add_scene_form/$', 'add_scene_form'),                         # 增加场景
     (r'^get_json_test', 'get_json_test'),                           # json数据测试URL
 )
