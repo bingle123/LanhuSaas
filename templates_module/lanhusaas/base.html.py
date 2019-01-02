@@ -5,7 +5,7 @@ STOP_RENDERING = runtime.STOP_RENDERING
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 10
-_modified_time = 1544432068.463104
+_modified_time = 1546416161.411515
 _enable_loop = True
 _template_filename = u'/Users/zhanglibing/vagrant/django18/LanhuSaas/framework/templates/base.html'
 _template_uri = u'/base.html'
@@ -168,7 +168,7 @@ def render_head(context,**pageargs):
         __M_writer(unicode(SITE_URL))
         __M_writer(u'";\t  // app\u7684url\u524d\u7f00,\u5728ajax\u8c03\u7528\u7684\u65f6\u5019\uff0c\u5e94\u8be5\u52a0\u4e0a\u8be5\u524d\u7f00\n\t\t\t    var static_url = "')
         __M_writer(unicode(STATIC_URL))
-        __M_writer(u'"; // \u9759\u6001\u8d44\u6e90\u524d\u7f00\n\t      </script>\n    ')
+        __M_writer(u'"; // \u9759\u6001\u8d44\u6e90\u524d\u7f00\n        </script>\n    ')
         return ''
     finally:
         context.caller_stack._pop_frame()

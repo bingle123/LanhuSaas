@@ -30,8 +30,8 @@ urlpatterns = patterns(
     # 在home_application(根应用)里开始开发你的应用的主要功能
     # url(r'^', include('home_application.urls')),
     # shell_app主页
-    # url(r'^', include('shell_app.urls')),
-    url(r'^', include('monitor.urls')),
+    url(r'^/', include('shell_app.urls')),
+    url(r'^monitor/', include('monitor.urls')),
 )
 
 

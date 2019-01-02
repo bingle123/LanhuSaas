@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-import tools
-# 临时
-import json
-import datetime
-from django.core import serializers
 # Create your models here.
 
 
