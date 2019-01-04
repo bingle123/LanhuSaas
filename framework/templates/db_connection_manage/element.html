@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+    <title></title>
     <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 -->
     <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
-	<!-- 生产环境版本，优化了尺寸和速度 -->
-	<!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
-	<!-- element UI引入样式 -->
-	<link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
-	<!-- element UI引入组件库 -->
-	<script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- element UI引入样式 -->
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+
     <!-- vue的ajax依赖-->
-    <script src="${STATIC_URL}assets/vue-2.5.21/vue-resource.min.js"></script>
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue-resource.min.js"></script>-->
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
 </head>
 <body>
@@ -19,14 +20,14 @@
 <div id="1myScene" class="myScene">
     <table>
         <thead>
-            <th>序号</th>
-            <th>场景名称</th>
-            <th>场景时间</th>
+        <th>序号</th>
+        <th>场景名称</th>
+        <th>场景时间</th>
         </thead>
         <tbody v-for="s in scenes">
-            <td >{{s.id}}</td>
-            <td >{{s.scene_name}}</td>
-            <td >{{s.scene_default_time}}</td>
+        <td>{{ s.id }}</td>
+        <td>{{ s.scene_name }}</td>
+        <td>{{ s.scene_default_time }}</td>
         </tbody>
     </table>
 </div>
@@ -34,160 +35,159 @@
 <div id="myScene" class="myScene">
     <template>
         <el-table
-        :data="scenes"
-        border
-        style="width: 100%">
+                :data="scenes"
+                border
+                style="width: 100%">
             <el-table-column
-              prop="id"
-              label="序号ID"
-              width="180">
+                    prop="id"
+                    label="序号ID"
+                    width="180">
             </el-table-column>
             <el-table-column
-              prop="scene_name"
-              label="场景名称"
-              width="180">
+                    prop="scene_name"
+                    label="场景名称"
+                    width="180">
             </el-table-column>
             <el-table-column
-              prop="scene_default_time"
-              label="场景时间">
+                    prop="scene_default_time"
+                    label="场景时间">
             </el-table-column>
         </el-table>
     </template>
 </div>
 
 
-
-
-
 <div>
     <div id="app2">
-      {{ message }}
+        {{ message }}
     </div>
     <div id="app">
         <template>
-          <div class="block">
-            <el-slider v-model="value8" show-input>
-            </el-slider>
-          </div>
+            <div class="block">
+                <el-slider v-model="value8" show-input>
+                </el-slider>
+            </div>
         </template>
     </div>
 
 </div>
 
 
-
-
 <div id="app">
     <template>
-      <div class="block">
-        <el-slider v-model="value8" show-input>
-        </el-slider>
-      </div>
+        <div class="block">
+            <el-slider v-model="value8" show-input>
+            </el-slider>
+        </div>
     </template>
 </div>
 
 <script>
-var Main = {
-    data() {
-      return {
-        value8: 0
-      }
-    }
-  }
-var Ctor = Vue.extend(Main)
-new Ctor().$mount('#app')
-</script>
-
-<script>
-var app = new Vue({
-  el: '#app2',
-  data: {
-    message: 'Hello Vue!'
-  }
-})
-</script>
-<script>
-window.onload = function () {
-    let myScene = new Vue({
-        el:'#myScene',
-        data:{
-            scene:
-                [
-                    {id:1,
-                    scene_name:"场景名称",
-                    scene_default_time:"3000毫秒",},
-                    {id:2,
-                    scene_name:"场景名称2",
-                    scene_default_time:"4000毫秒",},
-                ],
-            scenes:[]
-        },
-
-        methods:{
-            get:function () {
-                this.$http.get('${SITE_URL}get_json_test').then(function (res) {
-                    console.log(res);
-                    //this.scene = res.results
-                    this.scenes = res.body.results;
-
-                    console.log(res.body.results);
-                })
-
+    var Main = {
+        data() {
+            return {
+                value8: 0
             }
         }
-    });
-    myScene.get();
-}
+    }
+    var Ctor = Vue.extend(Main)
+    new Ctor().$mount('#app')
+</script>
+
+<script>
+    var app = new Vue({
+        el: '#app2',
+        data: {
+            message: 'Hello Vue!'
+        }
+    })
+</script>
+<script>
+    window.onload = function () {
+        let myScene = new Vue({
+            el: '#myScene',
+            data: {
+                scene:
+                    [
+                        {
+                            id: 1,
+                            scene_name: "场景名称",
+                            scene_default_time: "3000毫秒",
+                        },
+                        {
+                            id: 2,
+                            scene_name: "场景名称2",
+                            scene_default_time: "4000毫秒",
+                        },
+                    ],
+                scenes: []
+            },
+
+            methods: {
+                get: function () {
+                    this.$http.get('${SITE_URL}get_json_test').then(function (res) {
+                        console.log(res);
+                        //this.scene = res.results
+                        this.scenes = res.body.results;
+
+                        console.log(res.body.results);
+                    })
+
+                }
+            }
+        });
+        myScene.get();
+    }
 </script>
 <div id="table">
-<template>
-  <el-table
-    :data="tableData"
-    border
-    style="width: 100%">
-    <el-table-column
-      prop="date"
-      label="日期"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="姓名"
-      width="180">
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="地址">
-    </el-table-column>
-  </el-table>
-</template>
+    <template>
+        <el-table
+                :data="tableData"
+                border
+                style="width: 100%">
+            <el-table-column
+                    prop="date"
+                    label="日期"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="name"
+                    label="姓名"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="address"
+                    label="地址">
+            </el-table-column>
+        </el-table>
+    </template>
 </div>
 <script>
-  var Test = {
-    data() {
-      return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
-      }
+    var Test = {
+        data() {
+            return {
+                tableData: [{
+                    date: '2016-05-02',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1518 弄'
+                }, {
+                    date: '2016-05-04',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1517 弄'
+                }, {
+                    date: '2016-05-01',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1519 弄'
+                }, {
+                    date: '2016-05-03',
+                    name: '王小虎',
+                    address: '上海市普陀区金沙江路 1516 弄'
+                }]
+            }
+        }
     }
-  }
-  var test = Vue.extend(Test)
-  new test().$mount('#table')
+    var test = Vue.extend(Test)
+    new test().$mount('#table')
 </script>
 </body>
 </html>

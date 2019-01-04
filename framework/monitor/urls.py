@@ -17,5 +17,6 @@ urlpatterns = patterns(
     (r'^$', 'index'),                                         # 首页--服务器选择页面
     (r'^test/$', 'unit_show'),
     (r'^show_message$', 'index'),
+    (r'^test1/$', 'select_unit'),
 
 )

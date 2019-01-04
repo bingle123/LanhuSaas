@@ -1,3 +1,14 @@
+物料准备
+1、 蓝鲸智云文档中心 https://bk.tencent.com/docs/
+2、 蓝鲸社区版开发者中心资源下载 http://paas.blueking.com:8030/resource/   paas.blueking.com与蓝鲸的安装域名有关
+3、 蓝鲸社区版开发者中心新手指南 http://paas.blueking.com:8030/guide/newbie/   paas.blueking.com与蓝鲸的安装域名有关
+4、 蓝鲸平台安装指南 https://docs.bk.tencent.com/bkce_install_guide/
+5、 蓝鲸平台API接口在线查询 https://bk.tencent.com/document/bkapi
+6、 蓝鲸平台API网关开发指南 https://docs.bk.tencent.com/develop_center/esb/
+7、 标准运维接口 https://paas.bk.com/esb/api_docs/system/SOPS/  paas.bk.com与蓝鲸的安装域名有关，需安装标准运维。
+8、 Element组件 http://element-cn.eleme.io/#/zh-CN
+9、 VUE菜鸟教程 http://www.runoob.com/vue2/vue-tutorial.html
+
 蓝鲸智云应用开发模板--助力你的自动化
 这里有各种层次的应用样例，根据你的需要，选择合适的样例开始快速开发。
 

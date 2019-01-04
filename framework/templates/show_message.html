@@ -1,18 +1,25 @@
-<!DOCTYPE html>
-
+<html>
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 -->
     <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
-    <script src="${STATIC_URL}assets/vue-2.5.21/vue-resource.min.js"></script>
-    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/echarts-2.0/echarts-all.js"></script>
-    <!--蓝鲸提供的公用样式库 -->
-    <link href="${STATIC_URL}css/bk.css" rel="stylesheet">
-    <link href="${STATIC_URL}css/bootstrap.css" rel="stylesheet">
-    <script src="${STATIC_URL}js/axios.js"></script>
-
+    <!-- element UI引入样式 -->
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <!--axios.min.js--vue.js的ajax支持-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
 <style>
+    .div3{
+
+        width: 550px;
+        height: 80%;
+        background-color: yellow;
+        position: relative;
+        left: 80%;
+        top: 10px;
+    }
     .div1{
+        width: 79%;
         position:relative;
         left: 400px;
         top: 200px;
@@ -22,82 +29,99 @@
         width: 250px;
         height: 30px;
     }
-    .button-add{
-        width: 90px;
-        height: 30px;
-        position: relative;
-        left: 50%;
-    }
 </style>
 </head>
 
 <body>
-<div style="height: 100%;width: 100%">
-  <div class="div1">
+<div id="div1" style="height: 100%;width: 100%">
+  <div class="div1" id="div1">
     <div id="div2">
         <input type="text" placeholder="请输入搜素内容" v-model="content">
-        <button type="button"  class="king-btn mr10  king-success"  v-on:click="select"  >搜索</button>
-        <button type="button"  class="button-add">新增</button>
+        <el-button type="primary" icon="el-icon-search" v-on:click="aaa">搜索</el-button>
+          <el-popover placement="top-start"  width="200" trigger="hover" content="新增一个单元。">
+            <el-button slot="reference">新增</el-button>
+          </el-popover>
+
     </div>
-      <table class="table mb0 pr15 ranger-box2" id="table1">
+        <!--<table class="table mb0 pr15 ranger-box2" id="table1"  >
           <thead>
           <tr>
-              <th style="width: 70px;">#</th>
-              <th style="width: 15%;">名称</th>
-              <th style="width: 15%;">位置</th>
-              <th style="width: 15%;">日期</th>
-              <th style="width: 15%;">类型</th>
+              <th style="width: 100px;">序号</th>
+              <th style="width: 15%;">单元名称</th>
+              <th style="width: 15%;">单元类型</th>
+              <th style="width: 15%;">编辑人</th>
+              <th style="width: 15%;">编辑时间</th>
               <th>操作</th>
           </tr>
           </thead>
           <tbody>
                     <tr v-for="site in sites">
-                        <td style="width: 70px;">{{ site.id }}</td>
+                        <td style="width: 100px;">{{ site.id }}</td>
                         <td style="width: 15%;">{{ site.unit_name }}</td>
+                        <td style="width: 15%;">{{ site.unit_type }}</td>
                         <td style="width: 15%;">{{ site.editor }}</td>
                         <td style="width: 15%;">{{ site.edit_time }}</td>
-                        <td style="width: 15%;">{{ site.unit_type }}</td>
                         <td>
-                            <button class="btn btn-xs btn-warning">编辑</button>
+                            <button class="btn btn-xs btn-warning" onclick="func()">编辑</button>
                             <button class="btn btn-xs btn-danger">删除</button>
                         </td>
                     </tr>
           </tbody>
-      </table>
-  </div>
+      </table>-->
+      <div id="div5">
+      <el-table :data="sites" style="width: 100%" :default-sort="{prop: 'date', order: 'descending'}">
+    <el-table-column prop="id" label="序号" sortable width="180">
+    </el-table-column>
+    <el-table-column prop="unit_name" label="姓名" sortable width="180">
+    </el-table-column>
+    <el-table-column prop="editor" label="地址" sortable width="180">
+    </el-table-column>
+      <el-table-column prop="editor" label="地址" sortable width="180">
+    </el-table-column>
+      <el-table-column prop="editor" label="地址" sortable width="180">
+    </el-table-column>
+          <el-button type="primary" icon="el-icon-edit"></el-button>
+          <el-button type="primary" icon="el-icon-delete"></el-button>
+  </el-table>
     </div>
+  </div>
+</div>
 </body>
 
-<script type="text/javascript">
-    var vm=new Vue({
-        el: '#table1',
+<script>
+    var vm=  new Vue({
+        el: '#div1',
         data: {
             sites:[
-            ]
+            ],
         },
         methods: {
-            get:function () {
-                this.$http.get('${SITE_URL}test/').then(function (res) {
-                    console.log(res.body)
-                    vm.sites = res.body.message
+            a() {
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}test/',
+                }).then((res) => {
+                    vm.sites = res.data.message;
                     console.log(vm.sites)
                 })
             },
-
-        }
-    })
-    vm.get();
-    var vm1=new Vue({
-        el: '#div2',
-        data:{
-            content:'',
-        },
-        method:{
-            select:function () {
-                console.log(123)
+            aaa() {
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}test1/',
+                    data: this.content,
+                }).then((res)=>{
+                    vm.sites = res.data.message
+                    console.log(res)
+                })
             }
         }
-        }
-    )
+    });
+    vm.a()
 </script>
+
+
+
+
+
 </html>
