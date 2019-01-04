@@ -15,49 +15,61 @@
 <body>
 <!--场景表格-->
 <div id="sceneForm">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-        <el-form-item label="场景名称" prop="name">
-            <el-input v-model="ruleForm.name"></el-input>
-        </el-form-item>
-        <el-form-item label="场景时间" required>
-            <el-col :span="11">
-                <el-form-item prop="start_time">
-                    <el-time-picker type="fixed-time" placeholder="选择开始时间" v-model="ruleForm.start_time"
-                                    style="width: 100%;"></el-time-picker>
-                </el-form-item>
-            </el-col>
-            <el-col class="line" :span="2">-</el-col>
-            <el-col :span="11">
-                <el-form-item prop="stop_time">
-                    <el-time-picker type="fixed-time" placeholder="选择结束时间" v-model="ruleForm.stop_time"
-                                    style="width: 100%;"></el-time-picker>
-                </el-form-item>
-            </el-col>
-        </el-form-item>
-        <el-form-item label="场景适用岗位" prop="position">
-            <el-select v-model="ruleForm.position" placeholder="请选择">
-                <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item label="场景默认停留时间" prop="default_time">
-            <el-input v-model="ruleForm.default_time"></el-input>
-        </el-form-item>
-        <el-form-item label="场景实例" prop="name">
-            <el-input v-model="ruleForm.example"></el-input>
-        </el-form-item>
-        <el-form-item label="场景默认顺序" style="display: none;">
-            <el-input v-model="ruleForm.order_id"></el-input>
-        </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
-            <el-button @click="resetForm('ruleForm')">重置</el-button>
-        </el-form-item>
-    </el-form>
+    <el-button type="text" @click="dialogFormVisible = true">打开嵌套表单的 Dialog</el-button>
+
+    <!--start-dialog-->
+    <el-dialog :title="formTitle" :visible.sync="dialogFormVisible">
+        <!--start-form-->
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="场景名称" prop="name">
+                <el-input v-model="ruleForm.name"></el-input>
+            </el-form-item>
+            <el-form-item label="场景时间" required>
+                <el-col :span="11">
+                    <el-form-item prop="start_time">
+                        <el-time-picker type="fixed-time" placeholder="选择开始时间" v-model="ruleForm.start_time"
+                                        style="width: 100%;"></el-time-picker>
+                    </el-form-item>
+                </el-col>
+                <el-col class="line" :span="2">-</el-col>
+                <el-col :span="11">
+                    <el-form-item prop="stop_time">
+                        <el-time-picker type="fixed-time" placeholder="选择结束时间" v-model="ruleForm.stop_time"
+                                        style="width: 100%;"></el-time-picker>
+                    </el-form-item>
+                </el-col>
+            </el-form-item>
+            <el-form-item label="场景适用岗位" prop="position">
+                <el-select v-model="ruleForm.position" placeholder="请选择">
+                    <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="场景默认停留时间" prop="default_time">
+                <el-input v-model="ruleForm.default_time"></el-input>
+            </el-form-item>
+            <el-form-item label="场景实例" prop="name">
+                <el-input v-model="ruleForm.example"></el-input>
+            </el-form-item>
+            <el-form-item label="场景默认顺序" style="display: none;">
+                <el-input v-model="ruleForm.order_id"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+                <el-button @click="resetForm('ruleForm')">重置</el-button>
+            </el-form-item>
+        </el-form>
+        <!--end-form-->
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        </div>
+    </el-dialog>
+    <!--end-dialog-->
 </div>
 
 <script>
@@ -72,6 +84,7 @@
     let vm = new Vue({
         el: '#sceneForm',
         data: {
+            dialogFormVisible: false,
             ruleForm: {
                 name: '场景A',
                 start_time: '19:20:10',
@@ -82,6 +95,7 @@
                 example: '',
                 order_id: '30',
             },
+            formTitle:'新增场景',
             options: [],
             rules: {
                 name: [
@@ -98,7 +112,7 @@
                     {required: true, message: '请输入场景停留时间(单位毫秒)', trigger: 'blur'},
                     {type: 'number', message: '场景停留时间必须为数字值', trigger: 'blur'},
                 ],
-                position:[
+                position: [
                     {required: true, message: '请选择岗位', trigger: 'change'}
                 ],
             },
@@ -109,14 +123,14 @@
                     if (valid) {
                         //alert('submit!');
                         axios({
-                            url:'${SITE_URL}add_scene_form/',
+                            url: '${SITE_URL}add_scene_form/',
                             // url :'${SITE_URL}db_connection_manage/vue_add/',
-                            method:'post',
-                            data: {id:1},
-                        }).then((res) =>{
+                            method: 'post',
+                            data: this.ruleForm,
+                        }).then((res) => {
                             alert("成功")
                             console.log(res)
-                        }).catch((res) =>{
+                        }).catch((res) => {
                             console.log(res)
                         });
                     } else {
@@ -165,7 +179,6 @@
             }
         }
     });
-
     vm.positionInit();
 </script>
 

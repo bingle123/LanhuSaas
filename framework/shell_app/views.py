@@ -2,6 +2,7 @@
 from common.mymako import render_json
 from common.mymako import render_mako_context
 from shell_app import function
+import json
 import time
 
 
@@ -116,9 +117,14 @@ def add_scene_form(request):
     :param request:
     :return:
     """
-    print 111
-    print request.body
-    return render_json(function.get_scenes_all())
+    request_body = request.body
+    print request_body
+    if request_body is not None:
+        body_json = json.loads(request_body)
+        res = function.add_scene(body_json)
+    else:
+        res = None
+    return render_json(res)
 
 
 def get_json_test(request):
