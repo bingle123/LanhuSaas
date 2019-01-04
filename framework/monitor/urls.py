@@ -18,5 +18,7 @@ urlpatterns = patterns(
     (r'^test/$', 'unit_show'),
     (r'^show_message$', 'index'),
     (r'^test1/$', 'select_unit'),
-
+    (r'^test2/$', 'edit_unit'),
+    (r'^test3/$', 'delete_unit'),
+    (r'^123/$', 'index1'),
 )
