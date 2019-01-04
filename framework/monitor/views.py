@@ -1,3 +1,5 @@
+import json
+
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
@@ -28,7 +30,15 @@ def select_unit(request):
     res = function.select_unit(request)
     return render_json(res)
 
+@csrf_exempt
+def edit_unit(request):
 
+    function.edit_unit(request)
+    return render_json(None)
+
+@csrf_exempt
 def delete_unit(request):
-    pass
+
+    function.delete_unit(request)
+    return render_json(None)
 
