@@ -7,6 +7,7 @@ from shell_app.models import Scene
 from shell_app.models import StaffScene
 from shell_app.models import PositionScene
 from shell_app import tools
+import uuid
 import time
 import datetime
 
@@ -415,13 +416,51 @@ def get_scenes_all():
     return result
 
 
+def get_scene_by_id(id):
+    """
+    根据场景ID获取场景对象
+    :param id:
+    :return:
+    """
+    res = Scene.objects.get_scenes_by_id(id)
+    if res.get("code"):
+        result_temp = res.get("result")
+        result = tools.success_result(result_temp)
+    else:
+        result_temp = res.get("result")
+        result = tools.error_result(result_temp)
+    return result
+
+
+def add_scene(scene):
+    """
+    增加场景信息
+    :param scene:
+    :return:
+    """
+    print scene
+    temp_scene = {
+        "scene_id": uuid.uuid1(),
+        "scene_name": scene.get('name'),
+        "scene_start_time": scene.get('start_time'),
+        "scene_stop_time": scene.get('stop_time'),
+        "scene_default_time": scene.get('default_time'),
+        "scene_example": scene.get('example'),
+        "scene_order_id": scene.get('order_id'),
+        "scene_staff_position": scene.get('position'),
+    }
+    res = Scene.objects.add_scene(temp_scene)
+    return res
+
+
 def get_test_json(request):
     """
     function函数专用测试json数据
     :param request:
     :return: json
     """
-    return tools.success_result(get_scenes_all())
+
+    return None
 
 
 # 以下方法暂时未用到，后面可能会用到

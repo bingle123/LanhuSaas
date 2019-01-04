@@ -1,24 +1,21 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-import tools
-# 临时
-import json
 import datetime
-from django.core import serializers
+import tools
 # Create your models here.
 
 
 class Host(models.Model):
     """主机信息"""
-    bk_biz_name = models.CharField (u'业务', max_length=50)
-    bk_cloud_name = models.CharField (u'云区域', max_length=200)
-    bk_biz_id = models.CharField (u'业务', max_length=16)
-    bk_cloud_id = models.CharField (u'云区域', max_length=16)
-    bk_os_type = models.CharField (u'系统类型', max_length=64, default='Linux')
-    module_name = models.CharField (u'所属模块', max_length=64, blank=True, default='')
-    inner_ip = models.GenericIPAddressField (u'内网IP')
-    run_time = models.DateTimeField (u'执行时间', auto_now_add=True)
-    success = models.BooleanField(u'执行是否成功',default=False)
+    bk_biz_name = models.CharField(u'业务', max_length=50)
+    bk_cloud_name = models.CharField(u'云区域', max_length=200)
+    bk_biz_id = models.CharField(u'业务', max_length=16)
+    bk_cloud_id = models.CharField(u'云区域', max_length=16)
+    bk_os_type = models.CharField(u'系统类型', max_length=64, default='Linux')
+    module_name = models.CharField(u'所属模块', max_length=64, blank=True, default='')
+    inner_ip = models.GenericIPAddressField(u'内网IP')
+    run_time = models.DateTimeField(u'执行时间', auto_now_add=True)
+    success = models.BooleanField(u'执行是否成功', default=False)
 
     def __unicode__(self):
         return '{}.{}.{}'.format(self.inner_ip,
@@ -34,13 +31,14 @@ class StaffInfoManage(models.Manager):
     """
     用户信息管理
     """
+
     def get_staff_info(self, bk_username):
         try:
             res = StaffInfo.objects.get(bk_username=bk_username)
             # res.toDic()
             dict = res.__dict__
             del dict['_state']
-            result = {"code": True, "result": dict, "message": u"查询成功" }
+            result = {"code": True, "result": dict, "message": u"查询成功"}
         except Exception, e:
             result = {"code": False, "result": None, "message": u"查询失败 %s" % e}
         return result
@@ -80,7 +78,12 @@ class SceneManage(models.Manager):
     """
     场景表管理
     """
+
     def get_scenes_all(self):
+        """
+        获取所有场景
+        :return:
+        """
         try:
             res = Scene.objects.all().values()
             result_list = []
@@ -88,9 +91,58 @@ class SceneManage(models.Manager):
                 i['scene_start_time'] = i['scene_start_time'].strftime("%H:%M:%S")
                 i['scene_stop_time'] = i['scene_stop_time'].strftime("%H:%M:%S")
                 result_list.append(i)
-            result = {"code": True, "result": result_list, "message": u"查询成功" }
-        except Exception, e:
-            result = {"code": False, "result": None, "message": u"查询失败" }
+            result = {"code": True, "result": result_list, "message": u"查询成功"}
+        except Exception as e:
+            result = {"code": False, "result": None, "message": u"查询失败 %s" % e}
+        return result
+
+    def get_scenes_by_id(self, id):
+        """
+        通过场景ID获取场景对象
+        :param id:  场景ID
+        :return:
+        """
+        try:
+            res = Scene.objects.get(scene_id=id)
+            dict = res.__dict__
+            del dict['_state']
+            temp_list = []
+            dict['scene_start_time'] = dict['scene_start_time'].strftime("%H:%M:%S")
+            dict['scene_stop_time'] = dict['scene_stop_time'].strftime("%H:%M:%S")
+            temp_list.append(dict)
+            result = {"code": True, "result": temp_list, "message": "查询成功"}
+        except Exception as e:
+            result = {"code": False, "result": None, "message": "查询失败 %s" % e}
+        return result
+
+    def add_scene(self, scene):
+        """
+        增加场景
+        :return:
+        """
+        print 111
+        try:
+            # res = Scene.objects.create(scene)
+            print type(scene)
+            print type(scene.get('scene_start_time'))
+            print type(str(scene.get('scene_start_time')))
+            test = tools.utc_to_local(str(scene.get('scene_start_time')))
+            print (test, type(test))
+            # print datetime.datetime.strptime(str(scene.get('scene_start_time')), '%Y-%m-%dT%H:%M:%SZ')
+            # res = Scene.objects.create(
+            #     scene_id=scene.get('scene_id'),
+            #     scene_name=scene.get('scene_name'),
+            #     scene_start_time=datetime.datetime.strptime(str(scene.get('scene_start_time')), '%Y-%m-%dT%H:%M:%SZ'),
+            #     scene_stop_time=datetime.datetime.strptime(str(scene.get('scene_stop_time')), '%Y-%m-%dT%H:%M:%SZ'),
+            #     scene_default_time=scene.get('scene_default_time'),
+            #     scene_example=scene.get('scene_example'),
+            #     scene_order_id=scene.get('scene_order_id'),
+            #     scene_staff_position=scene.get('scene_staff_position'),
+            # )
+            result = {"code": True, "result": None, "message": "增加场景成功"}
+        except Exception as e:
+            print e
+            result = {"code": False, "result": None, "message": "增加场景失败 %s" % e}
         return result
 
     def get_scene_by_staff_position_id(self, staff_position_id):
@@ -132,7 +184,7 @@ class Scene(models.Model):
     """
     场景信息表
     """
-    scene_id = models.IntegerField(u'场景ID')
+    scene_id = models.CharField(u'场景ID', max_length=64)
     scene_name = models.CharField(u'场景名称', max_length=64)
     scene_example = models.CharField(u'场景实例', max_length=64)
     scene_start_time = models.TimeField(auto_now=True)
@@ -143,7 +195,7 @@ class Scene(models.Model):
     objects = SceneManage()
 
     def __unicode__(self):
-        return "%d" % self.int
+        return self.scene_id
 
     class Meta:
         verbose_name = u'场景信息表'
@@ -154,6 +206,7 @@ class StaffPositionManage(models.Manager):
     """
     用户岗位表管理
     """
+
     def get_positions_all(self):
         """
         获取所有岗位信息
@@ -198,6 +251,7 @@ class StaffSceneManage(models.Manager):
     """
     用户自定义场景设置表管理
     """
+
     def save_staff_scene(self, data):
         """
         保存用户场景设置
@@ -239,6 +293,7 @@ class PositionSceneManage(models.Manager):
     """
         StaffPosition 与 Scene 关系表管理  (多对多)
     """
+
     def get_position_scene(self, position_id):
         """
         通过职位ID获取对应场景ID
