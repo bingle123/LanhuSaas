@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>看板系统首页</title>
+    <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 ${STATIC_URL}assets/-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- element UI引入样式 -->
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <!-- vue的ajax依赖-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <!--jQuery库使用时请使用标准jQuery语法-->
+    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
+    <!--页面初始化css(Tencent)-->
+    <link href="${STATIC_URL}css/common/init.css" rel="stylesheet">
+    <!--本页面css-->
+    <link href="${STATIC_URL}css/common/main.css" rel="stylesheet">
+    <!--阿里巴巴矢量图标库--项目完成后请下载css并下载css引用的字体文件-->
+    <link href="http://at.alicdn.com/t/font_997278_ptr5bdmor4j.css" rel="stylesheet">
+    <!--以下为后台参数-->
+    <!--
+    "${SITE_URL}";	        // app的url前缀,在ajax调用的时候，应该加上该前缀
+    "${STATIC_URL}";       // 静态资源前缀
+    **/--->
+</head>
+<body>
+<!--start html-->
+<div id="index">
+    <!--start container-->
+    <el-container style="height: 100%">
+
+        <!--start left-->
+        <el-row class="tac" :style="height">
+            <el-menu :style="height" class="el-menu-vertical-demo" @open="handleOpen"
+                     @close="handleClose" :collapse="isCollapse">
+                <el-menu-item index="0" class="title_item">
+                    <i class=""></i>
+                    <li slot="title">看板项目</li>
+                </el-menu-item>
+                <el-menu-item index="1" style="height: 44px;line-height: 44px;" v-on:click="testClick('html1')">
+                    <i class="iconfont icon-zhuye"></i>
+                    <span slot="title" style="width: 200px">首页概览</span>
+                </el-menu-item>
+                <el-menu-item index="2" style="height: 44px;line-height: 44px;" v-on:click="testClick('html2')">
+                    <i class="iconfont icon-jiankong"></i>
+                    <span slot="title" style="width: 200px">监控项管理</span>
+                </el-menu-item>
+                <el-menu-item index="3" style="height: 44px;line-height: 44px;" v-on:click="testClick('html3')">
+                    <i class="iconfont icon-changjingguanli"></i>
+                    <span slot="title">场景管理</span>
+                </el-menu-item>
+
+                <el-submenu index="4">
+                    <template slot="title">
+                        <i class="iconfont icon-changjing"></i>
+                        <span class="el-submenu">场景展示</span>
+                    </template>
+                    <el-menu-item index="4-1" v-on:click="testClick('html4')">场景轮播测试</el-menu-item>
+                    <el-menu-item index="4-2" v-on:click="testClick('html5')">大屏轮播</el-menu-item>
+                </el-submenu>
+                <el-submenu index="5">
+                    <template slot="title">
+                        <i class="iconfont icon-xitong"></i>
+                        <span class="el-submenu">看板系统配置</span>
+                    </template>
+                    <el-menu-item index="5-1" v-on:click="testClick('html6')">岗位配置</el-menu-item>
+                    <el-menu-item index="5-2" v-on:click="testClick('html7')">数据库连接配置</el-menu-item>
+                    <el-menu-item index="5-3" v-on:click="testClick('html8')">交易日导入</el-menu-item>
+                    <el-menu-item index="5-4" v-on:click="testClick('html9')">网页抓取配置</el-menu-item>
+                    <el-menu-item index="5-5" v-on:click="testClick('html10')">告警配置</el-menu-item>
+                    <el-menu-item index="5-6" v-on:click="testClick('html11')">接入配置</el-menu-item>
+                </el-submenu>
+                <el-submenu index="6">
+                    <template slot="title">
+                        <i class="iconfont icon-web-icon-"></i>
+                        <span class="el-submenu">历史和报表</span>
+                    </template>
+                    <el-menu-item index="6-1" v-on:click="testClick('html12')">岗位配置</el-menu-item>
+                    <el-menu-item index="6-2" v-on:click="testClick('html13')">数据库连接配置</el-menu-item>
+                    <el-menu-item index="6-3" v-on:click="testClick('html14')">交易日导入</el-menu-item>
+                    <el-menu-item index="6-4" v-on:click="testClick('html15')">网页抓取配置</el-menu-item>
+                </el-submenu>
+
+                <div index="7" style="height: 44px;line-height: 44px; margin-top: 400px;margin-left: 20px;">
+                    <i class="el-icon-question"></i>
+                    <span slot="title"><a href="http://baidu.com">帮助</a></span>
+                </div>
+            </el-menu>
+        </el-row>
+        <!--end left-->
+
+        <!--start right-->
+        <el-container>
+            <!--start right header-->
+            <el-header class="header_item" height="62px">
+                <el-row :gutter="20">
+                    <el-col :span="6">
+                        <i class="iconfont icon-yincang" @click="changeCollapse"
+                           style="color: #555759;font-size: 30px;margin-top: 5px;"></i>
+                        <i class="iconfont icon-icon--" @click="changeCollapse"
+                           style="color: #555759;font-size: 25px;"></i>
+                        <span style="color: #555759; font-size: 16px; etter-spacing: 0.23px;">当前业务:</span>
+                        <span style="color: #555759; etter-spacing: 0.23px;">{{ business.name }}</span>
+                    </el-col>
+                    <el-col :span="6" :offset="12" style="color: #000;">
+                        <div style="float: right">
+                            <span style="color: #555759; etter-spacing: 0.23px;">当前用户：</span>
+                            <span style="color: #555759; etter-spacing: 0.23px;">{{ user.name }}</span>
+                            <el-dropdown :hide-on-click="false">
+                                <span class="el-dropdown-link">
+                                  帮助中心<i class="el-icon-caret-bottom el-icon--right"></i>
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item>黄金糕</el-dropdown-item>
+                                    <el-dropdown-item>狮子头</el-dropdown-item>
+                                    <el-dropdown-item>螺蛳粉</el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
+                    </el-col>
+                </el-row>
+            </el-header>
+            <!--end right header-->
+            <!--start right body-->
+            <el-main style="">
+                <template>
+                    <div id="app">
+                        <iframe v-if="ifArr.html1" class="ifa" scrolling=auto
+                                src="${SITE_URL}get_json_test"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.html2" class="ifa" scrolling=auto
+                                src="https://segmentfault.com/"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.html3" class="ifa" scrolling=auto
+                                src="https://www.baidu.com/"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.html4" class="ifa" scrolling=auto
+                                src="${SITE_URL}get_json_test"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.html5" class="ifa" scrolling=auto
+                                src="http://panjiachen.github.io/vue-element-admin/#/dashboard"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.html6" class="ifa" scrolling=auto
+                                src="https://segmentfault.com/"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.html7" class="ifa" scrolling=auto
+                                src="https://www.baidu.com/"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.html8" class="ifa" scrolling=auto
+                                src="${SITE_URL}get_json_test"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.html9" class="ifa" scrolling=auto
+                                src="http://panjiachen.github.io/vue-element-admin/#/dashboard"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.html10" class="ifa" scrolling=auto
+                                src="https://segmentfault.com/"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.html11" class="ifa" scrolling=auto
+                                src="https://www.baidu.com/"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.html12" class="ifa" scrolling=auto
+                                src="${SITE_URL}get_json_test"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.html13" class="ifa" scrolling=auto
+                                src="http://panjiachen.github.io/vue-element-admin/#/dashboard"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.html14" class="ifa" scrolling=auto
+                                src="https://segmentfault.com/"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.htm15" class="ifa" scrolling=auto
+                                src="https://www.baidu.com/"
+                                frameborder="0"></iframe>
+                        <iframe v-if="ifArr.htm16" class="ifa" scrolling=auto
+                                src="${SITE_URL}get_json_test"
+                                frameborder="0"></iframe>
+                    </div>
+                </template>
+            </el-main>
+            <!--end right body-->
+        </el-container>
+        <!--end right-->
+
+    </el-container>
+    <!--end container-->
+</div>
+<!--end html-->
+
+<script>
+
+    let vm = new Vue({
+        el: '#index',
+        data: {
+            isCollapse: false,  //是否折叠
+            height: {           //css
+                height: '',
+            },
+            business: {         //业务数据
+                name: "蓝鲸",
+            },
+            user: {             //用户数据
+                name: "admin",
+            },
+            /**activeName: 'first',//默认iframe选项
+             ifArr: {            //所有iframe页面，保留一个为true，其余均为false
+                first: true,
+                second: false,
+                third: false
+            }**/
+            activeName: 'html1',//默认iframe选项
+            ifArr: {//所有iframe页面，保留一个为true，其余均为false
+                html1: true,
+                html2: false,
+                html3: false,
+                html4: false,
+                html5: false,
+                html6: false,
+                html7: false,
+                html8: false,
+                html9: false,
+                html10: false,
+                html11: false,
+                html12: false,
+                html13: false,
+                html14: false,
+                html15: false,
+                html16: false,
+            }
+
+        },
+        created() {
+            //this.get_height()
+        },
+        methods: {
+            handleOpen(key, keyPath) {  //手风琴打开
+                console.log(key, keyPath);
+            },
+            handleClose(key, keyPath) { //手风琴关闭
+                console.log(key, keyPath);
+            },
+            changeCollapse() {          //更改伸缩状态
+                let res = this.isCollapse;
+                this.isCollapse = res ? false : true;
+            },
+            testClick(res) {            //更新iframe显示页面
+                let flagName = res;
+                this.ifArr[this.activeName] = false;
+                this.ifArr[flagName] = true;
+                this.activeName = res;
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

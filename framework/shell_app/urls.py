@@ -14,7 +14,8 @@ from django.conf.urls import patterns
 
 urlpatterns = patterns(
     'shell_app.views',
-    (r'^$', 'show_select'),                                         # 首页--服务器选择页面
+    (r'^show_select$', 'show_select'),                                         # 首页--服务器选择页面
+    (r'^$', 'main'),                                                # 首页
     (r'^select_host/$', 'select_host'),                             # 查询主机--分页
     (r'^test2/$', 'model_tree_host'),                               # 选择业务下的集群和模块
     (r'^select_module_host/$', 'select_module_host'),               # 查询模板下面的主机信息

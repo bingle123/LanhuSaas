@@ -6,6 +6,15 @@ import json
 import time
 
 
+def main(request):
+    """
+    管理主页
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './common/main.html')
+
+
 def add_scene(request):
     """
     增加场景表单HTML
