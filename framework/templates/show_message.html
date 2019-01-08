@@ -11,90 +11,401 @@
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
 <style>
-    .div1{
-        width: 1100px;
-        height: 1000px;
-    }
-    .div2{
-        width: 1100px;
-        height: 800px;
-        background-color: whitesmoke;
-        position: absolute;
-        top: 10px;
-        left: 10px;
-    }
     input{
         width: 250px;
         height: 30px;
     }
-    .center1{
-        width: 217px;
-        text-align:center;
+    .el-table--border th{
+        padding:5px
+
     }
+
+
 </style>
 </head>
 <body>
 <div id="app">
-  <div class="div1" >
+    <!-- div1 start-->
+    <div class="div1" style="padding: 20px 40px 0px 40px;">
+        <div>
+            <el-input placeholder="请输入内容" clearable v-model="contents" style="width:30%"></el-input>
+            <el-button type="primary" icon="el-icon-search" v-on:click="select1">搜索</el-button>
+            <el-popover placement="top-start"  width="200" trigger="hover" content="新增一个单元。" style="float:right;">
+            <el-button slot="reference" v-on:click="edit3(0)">新增</el-button>
+            </el-popover>
+        </div>
+    <div style="height: 20px"></div>
     <div>
-        <input type="text" placeholder="请输入搜素内容" v-model="contents">
-        <el-button type="primary" icon="el-icon-search" v-on:click="aaa">搜索</el-button>
-          <el-popover placement="top-start"  width="200" trigger="hover" content="新增一个单元。">
-            <el-button slot="reference">新增</el-button>
-          </el-popover>
+        <el-table :data="sites" border style="width: 100%;" header-align="center">
+            <el-table-column prop="id" label="序号" sortable ></el-table-column>
+            <el-table-column prop="unit_name" label="单元名称" sortable ></el-table-column>
+            <el-table-column prop="unit_type" label="单元类型" sortable ></el-table-column>
+            <el-table-column prop="editor" label="编辑人" sortable ></el-table-column>
+            <el-table-column prop="edit_time" label="修改时间" sortable ></el-table-column>
+            <el-table-column label="操作" >
+                <template slot-scope="scope">
+                    <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
+                    <el-button type="text" v-on:click="edit(scope.row)">编辑</el-button>
+                    <el-button type="text" v-on:click="edit2(scope.row.id)">删除</el-button>
+                    <el-tooltip :content="value1" placement="top">
+                    <el-switch v-model="value1" active-color="#13ce66" inactive-color="#ff4949" active-value="开" inactive-value="关"></el-switch>
+                    </el-tooltip>
+                </template>
+            </el-table-column>
+            </el-table>
+        <el-pagination background layout="prev, pager, next" :total="1000" style="float:right"></el-pagination>
     </div>
-    <div>
-     <el-table :data="sites" border style="width: 100%">
-    <el-table-column prop="id" label="序号" sortable width="180">
-    </el-table-column>
-    <el-table-column prop="unit_name" label="单元名称" sortable width="180">
-    </el-table-column>
-    <el-table-column prop="unit_type" label="单元类型" sortable width="180">
-    </el-table-column>
-      <el-table-column prop="editor" label="编辑人" sortable width="180">
-    </el-table-column>
-      <el-table-column prop="edit_time" label="修改时间" sortable width="180">
-    </el-table-column>
-     <el-table-column label="操作" >
-      <template slot-scope="scope">
-        <el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>
-        <el-button type="text" v-on:click="edit2(scope.row.id)">删除</el-button>
-      </template>
-    </el-table-column>
-  </el-table>
-  <el-pagination background layout="prev, pager, next" :total="1000">
-    </el-pagination>
     </div>
-  </div>
-
-<div class="div2" id="div3" >
-     <div id="unit_name" style="width: 217px;margin:10px" >
-     <div class="center1" >模板名称
-     <el-input v-model="unit_name" placeholder="请输入模板名称"></el-input>
-         </div>
- </div>
-    <div class="center1" style="margin:10px">字号</div>
-<el-autocomplete  popper-class="my-autocomplete" v-model="state3" :fetch-suggestions="querySearch" placeholder="请输入内容" @select="handleSelect">
-  <i class="el-icon-edit el-input__icon" slot="suffix" @click="handleIconClick">
-  </i>
-  <template slot-scope="{ item }">
-    <div class="name">{{ item.value }}</div>
-  </template>
-</el-autocomplete>
- <div id="height1" style="width: 217px;margin:10px">
-     <div class="center1">高</div>
-     <el-input v-model="height1" placeholder="请输入高度"></el-input>
- </div>
-
- <div id="width1" style="width: 217px;margin:10px" >
-     <div class="center1">宽</div>
-     <el-input v-model="width1" placeholder="请输入宽度" ></el-input>
- </div>
-    <div class="center1" style="margin:10px">
-        <el-button type="success" icon="el-icon-check" circle v-on:click="edit1"></el-button>
-        <el-button type="danger" icon="el-icon-delete" circle v-on:click="dddd"></el-button>
-    </div>
-</div>
+    <!-- div1 end-->
+    <!-- 对话框 start-->
+    <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%">
+        <HR align=center width=100% color=#979797 SIZE=0.5>
+        <div style="height: 30px"></div>
+        <div>
+            <span>监控单元名称</span>
+            <el-input placeholder="请输入内容" v-model="input1" style="width: 30%">
+            </el-input>
+        </div>
+        <div style="height: 30px"></div>
+        <span>
+            <el-tabs type="card" v-model="activeName2">
+                <el-tab-pane label="基本单元" name="first">
+                    <el-row>
+                        <el-col :span="12"><div class="grid-content bg-purple">
+                            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                                <el-form-item label="字号" prop="data2">
+                                    <el-select v-model="ruleForm.region1" placeholder="请选择字号">
+                                        <el-option label="8" value="8"></el-option>
+                                        <el-option label="10" value="10"></el-option>
+                                        <el-option label="12" value="12"></el-option>
+                                        <el-option label="14" value="14"></el-option>
+                                        <el-option label="16" value="16"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="高Ⅹ宽" required style="width: 96%">
+                                    <el-col :span="11">
+                                        <el-form-item prop="data1">
+                                            <el-input v-model="ruleForm.data1"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col class="line" :span="2">Ⅹ</el-col>
+                                    <el-col :span="11">
+                                        <el-form-item prop="data2">
+                                              <el-input v-model="ruleForm.data2"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="显示内容" prop="desc" style="width: 96%">
+                                    <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+                                </el-form-item>
+                                <el-form-item label="数据来源" prop="resource">
+                                    <el-radio-group v-model="radio2" @change="change1" style="padding: 14px">
+                                        <el-radio :label="3">数据库</el-radio>
+                                        <el-radio :label="6">文件</el-radio>
+                                        <el-radio :label="9">接口</el-radio>
+                                     </el-radio-group>
+                                </el-form-item>
+                                <div :style="{ display: sql1 }">
+                                    <el-form-item label="数据库连接" prop="data2">
+                                        <el-select v-model="ruleForm.region2" placeholder="请选择数据库">
+                                            <el-option label="ip1" value="8"></el-option>
+                                            <el-option label="ip2" value="10"></el-option>
+                                            <el-option label="ip3" value="12"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="采集时间段:" prop="region" style="width: 96%">
+                                        <el-col :span="11">
+                                            <el-form-item prop="date1">
+                                                <el-time-picker type="fixed-time" placeholder="选择时间" v-model="ruleForm.date1" style="width: 100%;"></el-time-picker>
+                                              </el-form-item>
+                                            </el-col>
+                                        <el-col class="line" :span="2">—</el-col>
+                                        <el-col :span="11">
+                                            <el-form-item prop="date2">
+                                                <el-time-picker type="fixed-time" placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-form-item>
+                                    <el-form-item label="采集周期" prop="desc" >
+                                        <el-input  v-model="ruleForm.desc" style="width: 96%"></el-input>秒
+                                    </el-form-item>
+                                </div>
+                                <div :style="{display:file1}">
+                                    <el-form-item label="文件" prop="region" >
+                                        <el-upload class="upload-demo" action="1" multiple :limit="3" >
+                                            <el-button size="small" type="primary">点击上传</el-button>
+                                        </el-upload>
+                                    </el-form-item>
+                                    <el-form-item label="采集时间段:" prop="region" style="width: 96%">
+                                        <el-col :span="11">
+                                            <el-form-item prop="date1">
+                                                <el-time-picker type="fixed-time" placeholder="选择时间" v-model="ruleForm.date1" style="width: 100%;"></el-time-picker>
+                                              </el-form-item>
+                                            </el-col>
+                                        <el-col class="line" :span="2">—</el-col>
+                                        <el-col :span="11">
+                                            <el-form-item prop="date2">
+                                                <el-time-picker type="fixed-time" placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-form-item>
+                                    <el-form-item label="采集周期" prop="desc" >
+                                        <el-input  v-model="ruleForm.desc" style="width: 96%"></el-input>秒
+                                    </el-form-item>
+                                </div>
+                                <div :style="{display:interface1}">
+                                    <el-form-item label="接口参数" prop="region" >
+                                        <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+                                    </el-form-item>
+                                </div>
+                            </el-form>
+                        </div></el-col>
+                        <el-col :span="12"><div class="grid-content bg-purple-light">
+                            <div style="padding: 10% 45%">
+                                <h2>预览</h2>
+                            </div>
+                        </div></el-col>
+                    </el-row>
+                </el-tab-pane>
+                <el-tab-pane label="图表单元" name="second">
+                    <el-row>
+                        <el-col :span="12"><div class="grid-content bg-purple">
+                            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                                <el-form-item label="字号" prop="data2">
+                                    <el-select v-model="ruleForm.region3" placeholder="请选择字号">
+                                        <el-option label="8" value="8"></el-option>
+                                        <el-option label="10" value="10"></el-option>
+                                        <el-option label="12" value="12"></el-option>
+                                        <el-option label="14" value="14"></el-option>
+                                        <el-option label="16" value="16"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="高Ⅹ宽" required style="width: 96%">
+                                    <el-col :span="11">
+                                        <el-form-item prop="data1">
+                                            <el-input v-model="ruleForm.data1"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col class="line" :span="2">Ⅹ</el-col>
+                                    <el-col :span="11">
+                                        <el-form-item prop="data2">
+                                              <el-input v-model="ruleForm.data2"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="图标类型" prop="data2">
+                                    <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+                                        <el-option label="折线图" value="333"></el-option>
+                                        <el-option label="柱状图" value="444"></el-option>
+                                        <el-option label="饼图" value="555"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="显示内容" prop="desc" style="width: 96%">
+                                    <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+                                </el-form-item>
+                                <el-form-item label="连接数据库" prop="data2">
+                                    <el-select v-model="ruleForm.region5" placeholder="请选择活动区域">
+                                        <el-option label="数据库1" value="888"></el-option>
+                                        <el-option label="数据库2" value="777"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="采集时间段:" prop="region" style="width: 96%">
+                                    <el-col :span="11">
+                                        <el-form-item prop="date1">
+                                            <el-time-picker type="fixed-time" placeholder="选择时间" v-model="ruleForm.date1" style="width: 100%;"></el-time-picker>
+                                          </el-form-item>
+                                        </el-col>
+                                    <el-col class="line" :span="2">—</el-col>
+                                    <el-col :span="11">
+                                        <el-form-item prop="date2">
+                                            <el-time-picker type="fixed-time" placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="采集周期" prop="desc" >
+                                    <el-input  v-model="ruleForm.desc" style="width: 96%"></el-input>秒
+                                </el-form-item>
+                            </el-form>
+                        </div></el-col>
+                        <el-col :span="12"><div class="grid-content bg-purple-light">
+                            <div style="padding: 10% 45%">
+                                <h2>预览</h2>
+                            </div>
+                        </div></el-col>
+                    </el-row>
+                </el-tab-pane>
+                <el-tab-pane label="作业单元" name="third">
+                    <el-row>
+                        <el-col :span="12"><div class="grid-content bg-purple">
+                            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                                <el-form-item label="字号" prop="data2">
+                                    <el-select v-model="ruleForm.region14" placeholder="请选择字号">
+                                        <el-option label="8" value="8"></el-option>
+                                        <el-option label="10" value="10"></el-option>
+                                        <el-option label="12" value="12"></el-option>
+                                        <el-option label="14" value="14"></el-option>
+                                        <el-option label="16" value="16"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="高Ⅹ宽" required style="width: 96%">
+                                    <el-col :span="11">
+                                        <el-form-item prop="data1">
+                                            <el-input v-model="ruleForm.data1"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col class="line" :span="2">Ⅹ</el-col>
+                                    <el-col :span="11">
+                                        <el-form-item prop="data2">
+                                              <el-input v-model="ruleForm.data2"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="显示内容" prop="desc" style="width: 96%">
+                                    <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+                                </el-form-item>
+                                <el-form-item label="作业模板" prop="data2">
+                                    <el-select v-model="ruleForm.region7" placeholder="请选择活动区域">
+                                        <el-option label="模板1" value="7"></el-option>
+                                        <el-option label="模板2" value="8"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="NODE_KEY" prop="data2">
+                                    <el-select v-model="ruleForm.region8" placeholder="请选择数据库">
+                                        <el-option label="my_key_name1" value="8"></el-option>
+                                        <el-option label="my_key_name2" value="10"></el-option>
+                                        <el-option label="my_key_name3" value="12"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="执行服务器" prop="data2">
+                                    <el-input v-model="ruleForm.desc"></el-input>
+                                </el-form-item>
+                                <el-form-item label="采集时间段:" prop="region" style="width: 96%">
+                                    <el-col :span="11">
+                                        <el-form-item prop="date1">
+                                            <el-time-picker type="fixed-time" placeholder="选择时间" v-model="ruleForm.date1" style="width: 100%;"></el-time-picker>
+                                          </el-form-item>
+                                        </el-col>
+                                    <el-col class="line" :span="2">—</el-col>
+                                    <el-col :span="11">
+                                        <el-form-item prop="date2">
+                                            <el-time-picker type="fixed-time" placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="采集周期" prop="desc" >
+                                        <el-input  v-model="ruleForm.desc" style="width: 96%"></el-input>秒
+                                    </el-form-item>
+                            </el-form>
+                        </div></el-col>
+                        <el-col :span="12"><div class="grid-content bg-purple-light">
+                            <div style="padding: 10% 45%">
+                                <h2>预览</h2>
+                            </div>
+                        </div></el-col>
+                    </el-row>
+                </el-tab-pane>
+                <el-tab-pane label="流程单元" name="fourth">
+                    <el-row>
+                        <el-col :span="12"><div class="grid-content bg-purple">
+                            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                                <el-form-item label="字号" prop="data2">
+                                    <el-select v-model="ruleForm.region13" placeholder="请选择字号">
+                                        <el-option label="8" value="8"></el-option>
+                                        <el-option label="10" value="10"></el-option>
+                                        <el-option label="12" value="12"></el-option>
+                                        <el-option label="14" value="14"></el-option>
+                                        <el-option label="16" value="16"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="高Ⅹ宽" required style="width: 96%">
+                                    <el-col :span="11">
+                                        <el-form-item prop="data1">
+                                            <el-input v-model="ruleForm.data1"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col class="line" :span="2">Ⅹ</el-col>
+                                    <el-col :span="11">
+                                        <el-form-item prop="data2">
+                                              <el-input v-model="ruleForm.data2"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="流程模板" prop="data2">
+                                    <el-select v-model="ruleForm.region9" placeholder="请选择">
+                                        <el-option label="模板1" value="7"></el-option>
+                                        <el-option label="模板2" value="8"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="参数1" prop="data2">
+                                    <el-input v-model="ruleForm.desc"></el-input>
+                                </el-form-item>
+                                <el-form-item label="参数2" prop="data2">
+                                    <el-input v-model="ruleForm.desc"></el-input>
+                                </el-form-item>
+                                <el-form-item label="调度规则" prop="region" style="width: 96%">
+                                    <el-input v-model="ruleForm.desc"></el-input>
+                                </el-form-item>
+                            </el-form>
+                        </div></el-col>
+                        <el-col :span="12"><div class="grid-content bg-purple-light">
+                            <div style="padding: 10% 45%">
+                                <h2>预览</h2>
+                            </div>
+                        </div></el-col>
+                    </el-row>
+                </el-tab-pane>
+                <el-tab-pane label="下钻单元" name="fifth">
+                    <el-row>
+                        <el-col :span="12"><div class="grid-content bg-purple">
+                            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                                <el-form-item label="字号" prop="data2">
+                                    <el-select v-model="ruleForm.region10" placeholder="请选择字号">
+                                        <el-option label="8" value="8"></el-option>
+                                        <el-option label="10" value="10"></el-option>
+                                        <el-option label="12" value="12"></el-option>
+                                        <el-option label="14" value="14"></el-option>
+                                        <el-option label="16" value="16"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="高Ⅹ宽" required style="width: 96%">
+                                    <el-col :span="11">
+                                        <el-form-item prop="data1">
+                                            <el-input v-model="ruleForm.data1"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col class="line" :span="2">Ⅹ</el-col>
+                                    <el-col :span="11">
+                                        <el-form-item prop="data2">
+                                              <el-input v-model="ruleForm.data2"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="下钻场景1" prop="data2">
+                                    <el-select v-model="ruleForm.region12" placeholder="请选择">
+                                        <el-option label="场景1" value="7"></el-option>
+                                        <el-option label="场景2" value="8"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="主流程" prop="data2">
+                                    <el-input v-model="ruleForm.desc"></el-input>
+                                </el-form-item>
+                            </el-form>
+                        </div></el-col>
+                        <el-col :span="12"><div class="grid-content bg-purple-light">
+                            <div style="padding: 10% 45%">
+                                <h2>预览</h2>
+                            </div>
+                        </div></el-col>
+                    </el-row>
+                </el-tab-pane>
+            </el-tabs>
+        </span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="centerDialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="centerDialogVisible = false">确 定</el-button>
+        </span>
+    </el-dialog>
+    <!-- 对话框 end-->
 </div>
 </body>
 
@@ -103,122 +414,183 @@
 <script>
 var vm = new Vue({
     el:'#app',
-    data:{
-        restaurants: [],
-        state3: '',
-        sites:[],
-        contents:'',
-        height1:'',
-        width1:'',
-        unit_name:'',
-        font_size:'',
-        unit_id:0,
-        message1:'',
+    data: {
+        sites: [],                                //table内容
+        contents: '',                             //搜索输入框内容
+        height1: '',
+        width1: '',
+        unit_name: '',
+        font_size: '',
+        unit_id: 0,                               //单元id
+        value1:'开',                              //开关状态
+        centerDialogVisible: false,              //弹窗状态
+        input1:'',                                //单元名称
+        radio2:'3',
+        sql1:'block',
+        file1:'none',
+        interface1:'none',
+        activeName2: 'first',
+        rules: {
+            name: [
+                { required: true, message: '请输入活动名称', trigger: 'blur' },
+                { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
+              ],
+            region: [
+                { type: 'string', required: true, message: '请选择', trigger: 'change' }
+              ],
+            data1: [
+                { type: 'number', required: true, message: '请输入', trigger: 'blur' }
+              ],
+            data2: [
+                { type: 'number', required: true, message: '请输入', trigger: 'blur' }
+              ],
+            date1: [
+            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+          ],
+            date2: [
+            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+          ],
+            type: [
+            { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+            ],
+            resource: [
+            { required: true, message: '请选择活动资源', trigger: 'change' }
+            ],
+            desc: [
+            { required: true, message: '请填写活动形式', trigger: 'blur' }
+            ]
+        },
+        ruleForm: {
+            name: '',
+            region1: '',
+            region2: '',
+            region3: '',
+            region4: '',
+            region5: '',
+            region6: '',
+            region7: '',
+            region8: '',
+            region9: '',
+            data1: '',
+            data2: '',
+            date1:'',
+            date2:'',
+            delivery: false,
+            type: [],
+            resource: '3',
+            desc: ''
+        },
     },
     methods: {
-      querySearch(queryString, cb) {
-        var restaurants = this.restaurants;
-        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-        // 调用 callback 返回建议列表的数据
-        cb(results);
+        submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+        },
+        edit2(row) {
+            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$message({
+                        type: 'success',
+                        message: '删除成功!',
+                    },
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}test3/',
+                        data: {
+                            unit_id: row
+                        }
+                    }).then((res) => {
+                        vm.a();
+                    }),);
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
+        },
+        a() {
+            axios({
+                method: 'post',
+                url: '${SITE_URL}test/',
+            }).then((res) => {
+                vm.sites = res.data.message;
 
-      },
-      createFilter(queryString) {
-        return (restaurant) => {
-          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-      loadAll() {
-        return [
-          { "value": '8'},
-          { "value": '10'},
-          { "value": '12'},
-          { "value": '14'},
-          { "value": '16'},
-          { "value": '18'},
-          { "value": '20'},
-        ];
-      },
-      handleSelect(item) {
-        this.font_size = item.value;
-      },
-      handleIconClick(ev) {
-      },
-      edit2(row) {
-          this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-              confirmButtonText: '确定',
-              cancelButtonText: '取消',
-              type: 'warning',
-              center: true
-          }).then(() => {
-              this.$message({
-                      type: 'success',
-                      message: '删除成功!',
-                  },
-                  axios({
-                      method:'post',
-                      url:'${SITE_URL}test3/',
-                      data:{
-                        unit_id:row
-                      }
-              }).then((res)=>{
-                  vm.a();
-          }),);
-          }).catch(() => {
-              this.$message({
-                  type: 'info',
-                  message: '已取消删除'
-              });
-          });
-      },
-      a() {
-        axios({
-            method: 'post',
-            url: '${SITE_URL}test/',
-        }).then((res) => {
-            vm.sites = res.data.message;
-
-        })
+            })
+        },
+        select1() {
+            axios({
+                method: 'post',
+                url: '${SITE_URL}test1/',
+                data: this.contents,
+            }).then((res) => {
+                vm.sites = res.data.message;
+            })
+        },
+        edit(row) {
+            vm.centerDialogVisible = true;
+            vm.unit_id = row.id;
+            vm.unit_name = row.unit_name;
+            vm.height = row.hight;
+            vm.font_size = row.font_size;
+            vm.wide = row.wide;
+        },
+        edit1() {
+            axios({
+                method: 'post',
+                url: '${SITE_URL}test2/',
+                data: {
+                    height: this.height1,
+                    width: this.width1,
+                    unit_name: this.unit_name,
+                    unit_id: vm.unit_id,
+                    font_size: this.font_size,
+                }
+            }).then((res) => {
+                vm.a();
+            })
+        },
+        edit3(row) {
+            vm.centerDialogVisible = true;
+            vm.unit_id = row;
+        },
+        del() {
+            vm.edit(0)
+        },
+        change1(value){
+            if(value==3){
+                vm.sql1 = 'block';
+                vm.file1 = 'none';
+                vm.interface1 = 'none';
+            }else if (value==6) {
+                vm.sql1 = 'none';
+                vm.file1 = 'block';
+                vm.interface1 = 'none';
+            }else if (value==9){
+                vm.sql1 = 'none';
+                vm.file1 = 'none';
+                vm.interface1 = 'block';
+            }
+        },
     },
-      aaa() {
-        axios({
-            method: 'post',
-            url: '${SITE_URL}test1/',
-            data: this.contents,
-        }).then((res)=>{
-            vm.sites = res.data.message;
-
-        })
-    },
-      edit(row){
-        var $div = $("#div3");
-        $div.toggle(500);
-        vm.unit_id = row;
-      },
-      edit1() {
-          axios({
-              method:'post',
-              url:'${SITE_URL}test2/',
-              data:{
-                  height:this.height1,
-                  width:this.width1,
-                  unit_name:this.unit_name,
-                  unit_id:vm.unit_id,
-                  font_size:this.font_size,
-              }}).then((res)=>{
-                  vm.a();
-          })
-    },
-      dddd(){
-          vm.edit(0)
-      },
-      },
     mounted() {
-      this.restaurants = this.loadAll();
     },
-  });
+
+});
 vm.a();
-vm.edit(0);
 </script>
 
 </html>
