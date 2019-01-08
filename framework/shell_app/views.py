@@ -15,6 +15,24 @@ def main(request):
     return render_mako_context(request, './common/main.html')
 
 
+def scene(request):
+    """
+    场景主页
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './scene/scene.html')
+
+
+def scene_carousel(request):
+    """
+    vue-场景轮播暂时页面
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './scene/scenecarousel.html')
+
+
 def add_scene(request):
     """
     增加场景表单HTML
