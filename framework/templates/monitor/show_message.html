@@ -508,7 +508,7 @@ var vm = new Vue({
                     },
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}test3/',
+                        url: '${SITE_URL}monitor/test3/',
                         data: {
                             unit_id: row
                         }
@@ -525,7 +525,7 @@ var vm = new Vue({
         a() {
             axios({
                 method: 'post',
-                url: '${SITE_URL}test/',
+                url: '${SITE_URL}monitor/test/',
             }).then((res) => {
                 vm.sites = res.data.message;
 
@@ -534,7 +534,7 @@ var vm = new Vue({
         select1() {
             axios({
                 method: 'post',
-                url: '${SITE_URL}test1/',
+                url: '${SITE_URL}monitor/test1/',
                 data: this.contents,
             }).then((res) => {
                 vm.sites = res.data.message;
@@ -551,7 +551,7 @@ var vm = new Vue({
         edit1() {
             axios({
                 method: 'post',
-                url: '${SITE_URL}test2/',
+                url: '${SITE_URL}monitor/test2/',
                 data: {
                     height: this.height1,
                     width: this.width1,
