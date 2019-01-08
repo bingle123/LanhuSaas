@@ -17,6 +17,7 @@
     }
     .el-table--border th{
         padding:5px
+
     }
 
 
@@ -30,7 +31,7 @@
             <el-input placeholder="请输入内容" clearable v-model="contents" style="width:30%"></el-input>
             <el-button type="primary" icon="el-icon-search" v-on:click="select1">搜索</el-button>
             <el-popover placement="top-start"  width="200" trigger="hover" content="新增一个单元。" style="float:right;">
-            <el-button slot="reference">新增</el-button>
+            <el-button slot="reference" v-on:click="edit3(0)">新增</el-button>
             </el-popover>
         </div>
     <div style="height: 20px"></div>
@@ -44,7 +45,7 @@
             <el-table-column label="操作" >
                 <template slot-scope="scope">
                     <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
-                    <el-button type="text" v-on:click="edit(scope.row.id)">编辑</el-button>
+                    <el-button type="text" v-on:click="edit(scope.row)">编辑</el-button>
                     <el-button type="text" v-on:click="edit2(scope.row.id)">删除</el-button>
                     <el-tooltip :content="value1" placement="top">
                     <el-switch v-model="value1" active-color="#13ce66" inactive-color="#ff4949" active-value="开" inactive-value="关"></el-switch>
@@ -67,7 +68,7 @@
         </div>
         <div style="height: 30px"></div>
         <span>
-            <el-tabs type="card">
+            <el-tabs type="card" v-model="activeName2">
                 <el-tab-pane label="基本单元" name="first">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
@@ -98,11 +99,11 @@
                                     <el-input type="textarea" v-model="ruleForm.desc"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源" prop="resource">
-                                    <el-radio-group v-model="ruleForm.resource" style="padding: 14px">
-                                        <el-radio label="数据库" @click.native.prevent="sql2"></el-radio>
-                                        <el-radio label="文件" @click.native.prevent="file2"></el-radio>
-                                        <el-radio label="接口" @click.native.prevent="interface2"></el-radio>
-                                    </el-radio-group>
+                                    <el-radio-group v-model="radio2" @change="change1" style="padding: 14px">
+                                        <el-radio :label="3">数据库</el-radio>
+                                        <el-radio :label="6">文件</el-radio>
+                                        <el-radio :label="9">接口</el-radio>
+                                     </el-radio-group>
                                 </el-form-item>
                                 <div :style="{ display: sql1 }">
                                     <el-form-item label="数据库连接" prop="data2">
@@ -192,7 +193,7 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="数据来源" prop="data2">
+                                <el-form-item label="图标类型" prop="data2">
                                     <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
                                         <el-option label="折线图" value="333"></el-option>
                                         <el-option label="柱状图" value="444"></el-option>
@@ -421,13 +422,14 @@ var vm = new Vue({
         unit_name: '',
         font_size: '',
         unit_id: 0,                               //单元id
-        value1:'开',                                //开关状态
+        value1:'开',                              //开关状态
         centerDialogVisible: false,              //弹窗状态
         input1:'',                                //单元名称
-        radio2: 3,
+        radio2:'3',
         sql1:'block',
         file1:'none',
         interface1:'none',
+        activeName2: 'first',
         rules: {
             name: [
                 { required: true, message: '请输入活动名称', trigger: 'blur' },
@@ -437,10 +439,10 @@ var vm = new Vue({
                 { type: 'string', required: true, message: '请选择', trigger: 'change' }
               ],
             data1: [
-                { type: 'number', required: true, message: '请选择数字', trigger: 'blur' }
+                { type: 'number', required: true, message: '请输入', trigger: 'blur' }
               ],
             data2: [
-                { type: 'number', required: true, message: '请选择数字', trigger: 'blur' }
+                { type: 'number', required: true, message: '请输入', trigger: 'blur' }
               ],
             date1: [
             { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
@@ -475,7 +477,7 @@ var vm = new Vue({
             date2:'',
             delivery: false,
             type: [],
-            resource: '',
+            resource: '3',
             desc: ''
         },
     },
@@ -536,12 +538,15 @@ var vm = new Vue({
                 data: this.contents,
             }).then((res) => {
                 vm.sites = res.data.message;
-
             })
         },
         edit(row) {
             vm.centerDialogVisible = true;
-            vm.unit_id = row;
+            vm.unit_id = row.id;
+            vm.unit_name = row.unit_name;
+            vm.height = row.hight;
+            vm.font_size = row.font_size;
+            vm.wide = row.wide;
         },
         edit1() {
             axios({
@@ -558,23 +563,27 @@ var vm = new Vue({
                 vm.a();
             })
         },
+        edit3(row) {
+            vm.centerDialogVisible = true;
+            vm.unit_id = row;
+        },
         del() {
             vm.edit(0)
         },
-        sql2(){
-            vm.sql1 = 'block';
-            vm.file1 = 'none';
-            vm.interface1 = 'none';
-        },
-        file2(){
-            vm.sql1 = 'none';
-            vm.file1 = 'block';
-            vm.interface1 = 'none';
-        },
-        interface2(){
-            vm.sql1 = 'none';
-            vm.file1 = 'none';
-            vm.interface1 = 'block';
+        change1(value){
+            if(value==3){
+                vm.sql1 = 'block';
+                vm.file1 = 'none';
+                vm.interface1 = 'none';
+            }else if (value==6) {
+                vm.sql1 = 'none';
+                vm.file1 = 'block';
+                vm.interface1 = 'none';
+            }else if (value==9){
+                vm.sql1 = 'none';
+                vm.file1 = 'none';
+                vm.interface1 = 'block';
+            }
         },
     },
     mounted() {
