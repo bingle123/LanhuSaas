@@ -136,26 +136,18 @@
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                              <el-time-select placeholder="起始时间" v-model="ruleForm.date1" :picker-options="{
-                                                  start: '00:00',
-                                                  step: '00:05',
-                                                  end: '24:00'
-                                                }" >
-                                              </el-time-select>
-                                          </el-form-item>
+                                            <el-time-picker v-model="ruleForm.date1"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-select placeholder="结束时间" v-model="ruleForm.date2" :picker-options="{
-                                              start: '00:00',
-                                              step: '00:05',
-                                              end: '24:00',
-                                              minTime: startTime
-                                            }">
-                                            </el-time-select>
+                                            <el-time-picker v-model="ruleForm.date2"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            </el-time-picker>
                                         </el-form-item>
                                     </el-col>
+                                </el-form-item>
                                 </el-form-item>
                                 <el-form-item label="采集周期" prop="desc" >
                                     <el-input  v-model="ruleForm.desc2" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
@@ -228,24 +220,15 @@
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                              <el-time-select placeholder="起始时间" v-model="ruleForm.date3" :picker-options="{
-                                                  start: '00:00',
-                                                  step: '00:05',
-                                                  end: '24:00'
-                                                }" >
-                                              </el-time-select>
-                                          </el-form-item>
+                                            <el-time-picker v-model="ruleForm.date3"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-select placeholder="结束时间" v-model="ruleForm.date4" :picker-options="{
-                                              start: '00:00',
-                                              step: '00:05',
-                                              end: '24:00',
-                                              minTime: startTime
-                                            }">
-                                            </el-time-select>
+                                            <el-time-picker v-model="ruleForm.date4"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            </el-time-picker>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
@@ -314,24 +297,15 @@
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                              <el-time-select placeholder="起始时间" v-model="ruleForm.date5" :picker-options="{
-                                                  start: '00:00',
-                                                  step: '00:05',
-                                                  end: '24:00'
-                                                }" >
-                                              </el-time-select>
-                                          </el-form-item>
+                                            <el-time-picker v-model="ruleForm.date5"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-select placeholder="结束时间" v-model="ruleForm.date6" :picker-options="{
-                                              start: '00:00',
-                                              step: '00:05',
-                                              end: '24:00',
-                                              minTime: startTime
-                                            }">
-                                            </el-time-select>
+                                            <el-time-picker v-model="ruleForm.date6"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            </el-time-picker>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
@@ -402,24 +376,15 @@
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                              <el-time-select placeholder="起始时间" v-model="ruleForm.date7" :picker-options="{
-                                                  start: '00:00',
-                                                  step: '00:05',
-                                                  end: '24:00'
-                                                }" >
-                                              </el-time-select>
-                                          </el-form-item>
+                                            <el-time-picker v-model="ruleForm.date7"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-select placeholder="结束时间" v-model="ruleForm.date8" :picker-options="{
-                                              start: '00:00',
-                                              step: '00:05',
-                                              end: '24:00',
-                                              minTime: startTime
-                                            }">
-                                            </el-time-select>
+                                            <el-time-picker v-model="ruleForm.date8"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            </el-time-picker>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
