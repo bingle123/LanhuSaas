@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+<meta charset="UTF-8">
+<title>Gear Slider</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+<script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+<!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+<!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+<!-- element UI引入样式 -->
+<link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+<!-- element UI引入组件库 -->
+<script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+<!-- vue的ajax依赖-->
+<script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+<!--jQuery库使用时请使用标准jQuery语法-->
+<!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
+<script src="${STATIC_URL}assets/vue-2.5.21/vue-router.js"></script>
+<!--页面初始化css(Tencent)-->
+<link href="${STATIC_URL}assets/css/init.css" rel="stylesheet">
+<!--本页面css-->
+<link href="${STATIC_URL}assets/css/main.css" rel="stylesheet">
+<!--阿里巴巴矢量图标库--项目完成后请下载css并下载css引用的字体文件-->
+<link href="http://at.alicdn.com/t/font_997278_ptr5bdmor4j.css" rel="stylesheet">
+<style>
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+html,
+/*body {
+  height: 100%;
+  min-width: 500px;
+}*/
+
+/*body {
+  background: #e8e8e8;
+  -webkit-font-smoothing: antialiased;
+}
+*/
+sup {
+  font-size: 80%;
+  vertical-align: top;
+  position: relative;
+  top: 1px;
+}
+
+.wrapper {
+  display: table;
+  margin-top: 50px;
+  width: 100%;
+  height: 100%;
+}
+
+.container {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+	float: left;
+}
+.container1 {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+	float: left;
+	margin-top: 55px;
+}
+.container2 {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+	float: left;
+	margin-top: 60px;
+}
+.container3 {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+	float: left;
+	margin-top: 65px;
+}
+.container4 {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+	float: left;
+	margin-top: 65px;
+}
+.container5 {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+	float: left;
+	margin-top: 65px;
+}
+.slider-wrapper {
+  width: 500px;
+  display: inline-block;
+  position: relative;
+  font-family: arial;
+}
+
+.ui-slider {
+  background: #efefef;
+  border: 1px solid #d2d2d2;
+  height: 20px;
+  position: relative;
+  border-radius: 100px;
+}
+
+.ui-slider-range {
+  background: #71c0ff;
+  height: 20px;
+  position: absolute;
+  border-top: 1px solid #5d99c8;
+  border-bottom: 1px solid #5d99c8;
+  transform: translateY(-1px);
+}
+.ui-slider-range:after {
+  content: '';
+  width: 100%;
+  height: 1px;
+  background: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.3;
+}
+
+.ui-slider-handle {
+  background: #555;
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  top: 50%;
+  display: block;
+  transform: translate(-50%, -50%);
+  border-radius: 100px;
+  z-index: 10;
+  background: linear-gradient(#555, #454545);
+  cursor: move;
+  /* fallback if grab cursor is unsupported */
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  box-shadow: inset -2px -2px 6px 2px rgba(0, 0, 0, 0.1);
+  transition: width 0.1s;
+}
+.ui-slider-handle:focus {
+  outline: none;
+}
+.ui-slider-handle:active {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+}
+
+.ui-state-active {
+  width: 22px;
+}
+
+.range-wrapper {
+  position: absolute;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.range {
+  background: #fff;
+  white-space: nowrap;
+  border: 1px solid #d2d2d2;
+  border-radius: 2px;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: #555;
+  width: 150px;
+  z-index: 10;
+  position: relative;
+}
+.range:after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 67px solid transparent;
+  border-right: 67px solid transparent;
+  border-top: 6px solid #d2d2d2;
+}
+
+.range-value {
+  width: 74px;
+  padding: 8px 0;
+  text-align: center;
+  display: inline-block;
+  transition: background 0.1s;
+}
+
+.range-divider {
+  width: 1px;
+  display: inline-block;
+}
+.range-divider:after {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 100%;
+  background: #d2d2d2;
+  content: '';
+}
+
+.range-alert {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background: #fff;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border: 1px solid #d2d2d2;
+  color: #0E0E0E;
+  line-height: 15px;
+  transition: right 0.2s;
+}
+.range-alert.active {
+  right: -15px;
+}
+
+.marker {
+  position: absolute;
+  top: 100%;
+  padding-top: 16px;
+  font-size: 13px;
+  color: #555;
+  letter-spacing: 0.05em;
+  transform: translateX(-50%);
+}
+.marker:after {
+  content: '';
+  width: 1px;
+  height: 8px;
+  background: #d2d2d2;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(50%);
+}
+
+.marker-0:after {
+	  display: none;
+	}
+
+	.marker-20 {
+	  left: 20%;
+	}
+
+	.marker-50 {
+	  left: 50%;
+	}
+
+	.marker-80 {
+	  left: 80%;
+	}
+
+	.marker-100 {
+	  right: 0;
+	  transform: translateX(50%);
+	}
+	.marker-100:after {
+	  display: none;
+	}
+
+
+.gear-wrapper {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  backface-visibility: hidden;
+  width: 150px;
+  height: 20px;
+  overflow: hidden;
+}
+
+.gear-large {
+  width: 40px;
+  height: 40px;
+  background: #d2d2d2;
+  border-radius: 100px;
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  transform-origin: 50% 50%;
+  transition: top 0.15s;
+}
+.gear-large:after {
+  position: absolute;
+  content: '';
+  width: 28px;
+  height: 28px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #e8e8e8;
+  border-radius: 100px;
+}
+.gear-large:nth-child(2) {
+  background: #d2d2d2;
+  left: auto;
+  right: 18px;
+}
+.gear-large:nth-child(2) .gear-tooth {
+  background: #d2d2d2;
+}
+.gear-large.active {
+  top: 4px;
+}
+
+.gear-tooth {
+  width: 22%;
+  height: 114%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transform-origin: 0 0;
+  background: #d2d2d2;
+  border-radius: 2px;
+}
+.gear-tooth:nth-child(2) {
+  transform: rotate(90deg) translate(-50%, -50%);
+}
+.gear-tooth:nth-child(3) {
+  transform: rotate(45deg) translate(-50%, -50%);
+}
+.gear-tooth:nth-child(4) {
+  transform: rotate(-45deg) translate(-50%, -50%);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="wrapper" id="wrapper">
+	<div class="container">
+		<!--图-->
+		<div style="color: #000000;float: left;">
+			<div style="height: 50px;width: 50px;background: #71c0ff;margin-left: 30px;border-radius:10px;font-size: 15px;">
+				<div style="color: #ffffff;padding-top: 13px">Task
+				</div>
+			</div>
+		</div>
+		<!--字体-->
+		<div style="font-size: 23px; float: left;color: #000000;margin-left: 20px;margin-top: 10px;">
+			清算场景1
+		</div>
+		<!--滑条-->
+		<div class="slider-wrapper" style="float: left;margin-left: 80px;width: 800px;">
+				<div id="slider-range" >
+				</div>
+			<div class="range-wrapper">
+			<div class="range">
+				<span class="range-value"><sup></sup>{{start_time}}</span>
+				<span class="range-divider">
+				</span><span class="range-value"><sup></sup>{{end_time}}</span>
+			</div>
+			<div class="range-alert">+</div>
+		</div>
+			<div class="marker marker-0"><sup>-</sup>08:00</div>
+			<div class="marker marker-20"><sup></sup>00:00</div>
+			<div class="marker marker-50"><sup></sup>12:00</div>
+			<div class="marker marker-80"><sup></sup>24:00</div>
+			<div class="marker marker-100"><sup>+</sup>08:00</div>
+		</div>
+	</div>
+	
+	
+	<!--场景2-->
+	<div class="container1">
+		<!--图-->
+		<div style="color: #000000;float: left;">
+			<div style="height: 50px;width: 50px;background: #71c0ff;margin-left: 30px;border-radius:10px;font-size: 15px;">
+				<div style="color: #ffffff;padding-top: 13px">Task
+				</div>
+			</div>
+		</div>
+		<!--字体-->
+		<div style="font-size: 23px; float: left;color: #000000;margin-left: 20px;margin-top: 10px;">
+			清算场景2
+		</div>
+		<!--滑条-->
+		<div class="slider-wrapper" style="float: left;margin-left: 80px;width: 800px;">
+				<div id="slider-range1" >
+				</div>
+			<div class="range-wrapper">
+			<div class="range">
+				<span class="range-value"><sup></sup>{{start_time}}</span>
+				<span class="range-divider">
+				</span><span class="range-value"><sup></sup>{{end_time}}</span>
+			</div>
+			<div class="range-alert">+</div>
+		</div>
+			<div class="marker marker-0"><sup>-</sup>08:00</div>
+			<div class="marker marker-20"><sup></sup>00:00</div>
+			<div class="marker marker-50"><sup></sup>12:00</div>
+			<div class="marker marker-80"><sup></sup>24:00</div>
+			<div class="marker marker-100"><sup>+</sup>08:00</div>
+		</div>
+	</div>
+	<!--||||||||||||||||||||||||-->
+	
+	<!--场景3-->
+	<div class="container2">
+		<!--图-->
+		<div style="color: #000000;float: left;">
+			<div style="height: 50px;width: 50px;background: #71c0ff;margin-left: 30px;border-radius:10px;font-size: 15px;">
+				<div style="color: #ffffff;padding-top: 13px">Task
+				</div>
+			</div>
+		</div>
+		<!--字体-->
+		<div style="font-size: 23px; float: left;color: #000000;margin-left: 20px;margin-top: 10px;">
+			清算场景3
+		</div>
+		<!--滑条-->
+		<div class="slider-wrapper" style="float: left;margin-left: 80px;width: 800px;">
+				<div id="slider-range2" >
+				</div>
+			<div class="range-wrapper">
+			<div class="range">
+				<span class="range-value"><sup></sup>{{start_time}}</span>
+				<span class="range-divider">
+				</span><span class="range-value"><sup></sup>{{end_time}}</span>
+			</div>
+			<div class="range-alert">+</div>
+		</div>
+			<div class="marker marker-0"><sup>-</sup>08:00</div>
+			<div class="marker marker-20"><sup></sup>00:00</div>
+			<div class="marker marker-50"><sup></sup>12:00</div>
+			<div class="marker marker-80"><sup></sup>24:00</div>
+			<div class="marker marker-100"><sup>+</sup>08:00</div>
+		</div>
+	</div>
+	<!--||||||||||||||||||||||||-->
+	<div class="container3">
+		<!--图-->
+		<div style="color: #000000;float: left;">
+			<div style="height: 50px;width: 50px;background: #71c0ff;margin-left: 30px;border-radius:10px;font-size: 15px;">
+				<div style="color: #ffffff;padding-top: 13px">Task
+				</div>
+			</div>
+		</div>
+		<!--字体-->
+		<div style="font-size: 23px; float: left;color: #000000;margin-left: 20px;margin-top: 10px;">
+			清算场景4
+		</div>
+		<!--滑条-->
+		<div class="slider-wrapper" style="float: left;margin-left: 80px;width: 800px;">
+				<div id="slider-range3" >
+				</div>
+			<div class="range-wrapper">
+			<div class="range">
+				<span class="range-value"><sup></sup>{{start_time}}</span>
+				<span class="range-divider">
+				</span><span class="range-value"><sup></sup>{{end_time}}</span>
+			</div>
+			<div class="range-alert">+</div>
+		</div>
+			<div class="marker marker-0"><sup>-</sup>08:00</div>
+			<div class="marker marker-20"><sup></sup>00:00</div>
+			<div class="marker marker-50"><sup></sup>12:00</div>
+			<div class="marker marker-80"><sup></sup>24:00</div>
+			<div class="marker marker-100"><sup>+</sup>08:00</div>
+		</div>
+	</div>
+	<!--||||||||||||||||||-->
+	<div class="container4">
+		<!--图-->
+		<div style="color: #000000;float: left;">
+			<div style="height: 50px;width: 50px;background: #71c0ff;margin-left: 30px;border-radius:10px;font-size: 15px;">
+				<div style="color: #ffffff;padding-top: 13px">Task
+				</div>
+			</div>
+		</div>
+		<!--字体-->
+		<div style="font-size: 23px; float: left;color: #000000;margin-left: 20px;margin-top: 10px;">
+			清算场景5
+		</div>
+		<!--滑条-->
+		<div class="slider-wrapper" style="float: left;margin-left: 80px;width: 800px;">
+				<div id="slider-range4" >
+				</div>
+			<div class="range-wrapper">
+			<div class="range">
+				<span class="range-value"><sup></sup>{{start_time}}</span>
+				<span class="range-divider">
+				</span><span class="range-value"><sup></sup>{{end_time}}</span>
+			</div>
+			<div class="range-alert">+</div>
+		</div>
+			<div class="marker marker-0"><sup>-</sup>08:00</div>
+			<div class="marker marker-20"><sup></sup>00:00</div>
+			<div class="marker marker-50"><sup></sup>12:00</div>
+			<div class="marker marker-80"><sup></sup>24:00</div>
+			<div class="marker marker-100"><sup>+</sup>08:00</div>
+		</div>
+	</div>
+	<!--|||||||||||||||||-->
+	<div class="container2">
+		<!--图-->
+		<div style="color: #000000;float: left;">
+			<div style="height: 50px;width: 50px;background: #71c0ff;margin-left: 30px;border-radius:10px;font-size: 15px;">
+				<div style="color: #ffffff;padding-top: 13px">Task
+				</div>
+			</div>
+		</div>
+		<!--字体-->
+		<div style="font-size: 23px; float: left;color: #000000;margin-left: 20px;margin-top: 10px;">
+			清算场景6
+		</div>
+		<!--滑条-->
+		<div class="slider-wrapper" style="float: left;margin-left: 80px;width: 800px;">
+				<div id="slider-range5" >
+				</div>
+			<div class="range-wrapper">
+			<div class="range">
+				<span class="range-value"><sup></sup>{{start_time}}</span>
+				<span class="range-divider">
+				</span><span class="range-value"><sup></sup>{{end_time}}</span>
+			</div>
+			<div class="range-alert">+</div>
+		</div>
+			<div class="marker marker-0"><sup>-</sup>08:00</div>
+			<div class="marker marker-20"><sup></sup>00:00</div>
+			<div class="marker marker-50"><sup></sup>12:00</div>
+			<div class="marker marker-80"><sup></sup>24:00</div>
+			<div class="marker marker-100"><sup>+</sup>08:00</div>
+		</div>
+	</div>
+	<!--|||||||||||||-->
+</div>
+
+
+
+
+<script type="">
+
+</script>
+
+
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
+
+
+<script type="">
+let vm = new Vue({
+el:'#wrapper',
+data:{
+	start_time:'8:00',
+	end_time:'16:00',
+	falg:false,
+},
+methods:{
+
+}
+});
+$(function() {
+
+// Initiate Slider
+$('#slider-range').slider({
+range: true,
+min: -1200,
+max: 1200,
+step: 5,
+values: [-240, 240]
+});
+$('#slider-range1').slider({
+range: true,
+min: -1200,
+max: 1200,
+step: 5,
+values: [-240, 240]
+});
+$('#slider-range2').slider({
+range: true,
+min: -1200,
+max: 1200,
+step: 5,
+values: [-240, 240]
+});
+$('#slider-range3').slider({
+range: true,
+min: -1200,
+max: 1200,
+step: 5,
+values: [-240, 240]
+});
+$('#slider-range4').slider({
+range: true,
+min: -1200,
+max: 1200,
+step: 5,
+values: [-240, 240]
+});
+$('#slider-range5').slider({
+range: true,
+min: -1200,
+max: 1200,
+step: 5,
+values: [-240, 240]
+});
+// Move the range wrapper into the generated divs
+$('.ui-slider-range').append($('.range-wrapper'));
+
+// Apply initial values to the range container
+/*  $('.range').html('<span class="range-value"><sup></sup>' + $('#slider-range').slider("values", 1).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span><span class="range-divider"></span><span class="range-value"><sup></sup>' + $("#slider-range").slider("values", 1).toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,") + '</span>');*/
+
+// Show the gears on press of the handles
+$('.ui-slider-handle, .ui-slider-range').on('mousedown', function() {
+$('.gear-large').addClass('active');
+});
+
+// Hide the gears when the mouse is released
+// Done on document just incase the user hovers off of the handle
+$(document).on('mouseup', function() {
+if ($('.gear-large').hasClass('active')) {
+  $('.gear-large').removeClass('active');
+}
+});
+
+// Rotate the gears
+var gearOneAngle = 0,
+gearTwoAngle = 0,
+rangeWidth = $('.ui-slider-range').css('width');
+
+$('.gear-one').css('transform', 'rotate(' + gearOneAngle + 'deg)');
+$('.gear-two').css('transform', 'rotate(' + gearTwoAngle + 'deg)');
+
+/*$('.range').html('<span class="range-value"><sup></sup>' + a + '</span><span class="range-divider"></span><span class="range-value"><sup></sup>' + b + '</span>');*/
+$('#slider-range').slider({
+slide: function(event, ui) {
+ return false;
+}
+});
+$('#slider-range1','#slider-range2','#slider-range3','#slider-range4','#slider-range5').slider({
+slide: function(event, ui) {
+ return false;
+}
+});
+});
+</script>
+
+
+
+
+</body>
+
+</html>

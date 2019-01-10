@@ -24,6 +24,10 @@ def position(request):
     return render_mako_context(request, './main/jobM.html')
 
 
+def index(request):
+    return render_mako_context(request, './main/index.html')
+
+
 def scene_set(request):
     """
 
