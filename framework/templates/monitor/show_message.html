@@ -373,7 +373,14 @@
                                 <el-form-item label="参数2" style="width: 96%">
                                     <el-input v-model="ruleForm.desc8" placeholder="请输入参数"></el-input>
                                 </el-form-item>
-                                <el-form-item label="采集时间段:" style="width: 96%">
+                                 <el-form-item label="请选择节点" prop="resource">
+                                    <el-select v-model="ruleForm.region10" placeholder="请选择模板">
+                                        <el-option label="节点1" value="7"></el-option>
+                                        <el-option label="节点2" value="8"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <div v-if="ruleForm.region10 === '7'">
+                                <el-form-item label="节点周期:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker v-model="ruleForm.date7"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
@@ -388,6 +395,24 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
+                                </div>
+                                <div v-if="ruleForm.region10 === '8'">
+                                <el-form-item label="节点周期:" style="width: 96%">
+                                    <el-col :span="11">
+                                        <el-form-item>
+                                            <el-time-picker v-model="ruleForm.date7"  placeholder="开始时间点1" format="hh:mm" value-format="hh:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
+                                        </el-col>
+                                    <el-col class="line" :span="2">—</el-col>
+                                    <el-col :span="11">
+                                        <el-form-item>
+                                            <el-time-picker v-model="ruleForm.date8"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+                                </div>
                                 <el-form-item label="采集周期" prop="desc" >
                                     <el-input  v-model="ruleForm.desc9" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
                                 </el-form-item>
@@ -402,7 +427,7 @@
                             </div>
                             <div style="padding: 0px 10%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary">采集测试</el-button>
+                                <el-button type="primary" v-on:click="time1" :disabled="disabled1">采集测试</el-button>
                                 <el-checkbox v-model="checked2" @change="change3">启动流程</el-checkbox>
                                 <div :style="{ display: liucheng }">
                                     <el-alert title="启动流程可能会对系统造成不可逆的变更，请谨慎勾选此项！" type="warning" show-icon true-label="1" false-label="0"></el-alert>
@@ -436,7 +461,10 @@ var vm = new Vue({
         width1: '',
         checked1:false,                           //作业启动选框
         checked2:false,                           //流程启动选框
+        disabled1:false,
         unit_name: '',
+        caiji1:'block',
+        caiji2:'none',
         font_size: '',
         unit_id: 0,                               //单元id
         value1:'开',                              //开关状态
@@ -495,6 +523,7 @@ var vm = new Vue({
             region7: '',
             region8: '',
             region9: '',
+            region10: '',
             data1: '',
             data2: '',
             data3: '',
@@ -644,6 +673,13 @@ var vm = new Vue({
             }else {
                 vm.liucheng = 'none';
             }
+        },
+        time1(){
+            vm.disabled1 = true;
+            setTimeout(function(){
+                vm.disabled1 = false;
+            },60000);
+
         },
     },
     mounted() {
