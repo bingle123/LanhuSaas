@@ -84,7 +84,7 @@
                     <el-menu-item index="6-4" v-on:click="testClick('html15')">网页抓取配置</el-menu-item>
                 </el-submenu>
 
-                <div index="7" style="height: 44px;line-height: 44px; margin-top: 400px;margin-left: 20px;">
+                <div index="7" style="height: 44px;line-height: 44px; margin-top: 1000px;margin-left: 20px;">
                     <i class="el-icon-question"></i>
                     <span slot="title"><a href="http://baidu.com">帮助</a></span>
                 </div>
@@ -125,12 +125,12 @@
             </el-header>
             <!--end right header-->
             <!--start right body-->
-            <el-main style="">
+            <el-main >
                 <template>
                     <div id="app">
                         <iframe v-if="ifArr.html1" class="ifa" scrolling=auto
                                 src="${STATIC_URL}img/main.png"
-                                frameborder="0"></iframe>
+                                frameborder="0" height="1000px;"></iframe>
                         <iframe v-if="ifArr.html2" class="ifa" scrolling=auto
                                 src="${SITE_URL}monitor/show_message"
                                 frameborder="0"></iframe>
