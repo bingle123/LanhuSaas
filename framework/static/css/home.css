@@ -1,0 +1,28 @@
+.route {
+		  height: 20px;
+		}
+		.card {
+		  margin-top: 20px;
+		  flex: 1;
+		  position: relative;
+		}
+		#pagetitle {
+		  font-weight: bold;
+		}
+		#hr {
+		  margin-top: 15px;
+		  margin-bottom: 15px;
+		}
+		.row {
+		  margin-bottom: 15px;
+		}
+		.pagination {
+		  position: absolute;
+		  right: 20px;
+		  bottom: 20px;
+		}
+		#button {
+		  display: block;
+		  margin: 0 auto;
+		}
+		
