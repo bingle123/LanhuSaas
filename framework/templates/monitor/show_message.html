@@ -37,8 +37,8 @@
     <div>
         <el-table :data="sites" border style="width: 100%;" header-align="center">
             <el-table-column prop="id" label="序号" sortable ></el-table-column>
-            <el-table-column prop="unit_name" label="单元名称" sortable ></el-table-column>
-            <el-table-column prop="unit_type" label="单元类型" sortable ></el-table-column>
+            <el-table-column prop="unit_name" label="监控名称" sortable ></el-table-column>
+            <el-table-column prop="unit_type" label="监控类型" sortable ></el-table-column>
             <el-table-column prop="editor" label="编辑人" sortable ></el-table-column>
             <el-table-column prop="edit_time" label="修改时间" sortable ></el-table-column>
             <el-table-column label="操作" >
@@ -571,7 +571,7 @@ var vm = new Vue({
             this.$refs[formName].resetFields();
         },
         edit2(row) {
-            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+            this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning',
