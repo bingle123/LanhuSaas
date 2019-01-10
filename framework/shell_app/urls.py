@@ -14,15 +14,11 @@ from django.conf.urls import patterns
 
 urlpatterns = patterns(
     'shell_app.views',
-    (r'^show_select$', 'show_select'),                              # 首页--服务器选择页面
+    (r'^show_select$', 'show_select'),                                         # 首页--服务器选择页面
     (r'^$', 'main'),                                                # 首页
-    (r'^scene/$', 'scene'),                                         # 场景主页
-    (r'^scene_carousel/$', 'scene_carousel'),                       # 场景轮播
-    (r'^data_base/$', 'data_base'),                                 # 数据库
-    (r'position/$', 'position'),                                    # 岗位
-    (r'^scene_set/$', 'scene_set'),                                 # 场景管理
-    (r'^calendar/$', 'calendar'),                                   # 交易日导入
-    (r'^ming/$', 'ming'),                                           # 场景编排
+    (r'^scene/$', 'scene'),                                           # 场景主页
+    (r'^scene_carousel1/$', 'scene_carousel1'),                         # 场景轮播
+    (r'^scene_carousel2/$', 'scene_carousel2'),
     (r'^select_host/$', 'select_host'),                             # 查询主机--分页
     (r'^test2/$', 'model_tree_host'),                               # 选择业务下的集群和模块
     (r'^select_module_host/$', 'select_module_host'),               # 查询模板下面的主机信息
@@ -32,7 +28,7 @@ urlpatterns = patterns(
     (r'position_setting_html', 'position_setting_html'),            # 岗位设置专用页面
     (r'^get_positions_all', 'get_positions_all'),                   # 获取所有岗位对象
     (r'^scene_list', 'scene_list'),                                 # 所有场景列表
-    (r'^add_scene/$', 'add_scene'),                                 # 增加场景表单HTML
-    (r'^add_scene_form/$', 'add_scene_form'),                       # 增加场景
+    (r'^add_scene/$', 'add_scene'),                                   # 增加场景表单HTML
+    (r'^add_scene_form/$', 'add_scene_form'),                         # 增加场景
     (r'^get_json_test', 'get_json_test'),                           # json数据测试URL
 )

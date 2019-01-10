@@ -60,13 +60,22 @@ def scene(request):
     return render_mako_context(request, './scene/scene.html')
 
 
-def scene_carousel(request):
+def scene_carousel1(request):
     """
     vue-场景轮播暂时页面
     :param request:
     :return:
     """
     return render_mako_context(request, './scene/scenecarousel.html')
+
+
+def scene_carousel2(request):
+    """
+    vue-场景轮播暂时页面
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './scene/scenecarousel1.html')
 
 
 def add_scene(request):

@@ -30,8 +30,33 @@
 <div id="main">
     <template>
         <div class="block">
-
+            <!-- 选择员工信息 strat -->
+            <div style="padding: 20px 20px 20px 20px;width: 100%;">
+            <el-form :inline="true" class="demo-form-inline">
+                <el-form-item label="岗位:">
+                    <el-select v-model="region1" placeholder="请选择岗位" @change="change1">
+                    <el-option label="岗位1" value="1"></el-option>
+                    <el-option label="岗位2" value="2"></el-option>
+                    <el-option label="岗位3" value="3"></el-option>
+                </el-select>
+                </el-form-item>
+                <el-form-item label="员工:">
+                    <el-select v-model="value8" placeholder="请选择员工">
+                    <el-option v-for="item in options" :label="item.label" :key="item.value" :value="item.value"></el-option>
+                </el-select>
+                </el-form-item>
+                <el-form-item label="起始时间:" style="width: 40%;text-align: center">
+                    <el-time-picker v-model="date1"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                    </el-time-picker>
+                    <el-time-picker v-model="date2"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                    </el-time-picker>
+                </el-form-item>
+                <el-button type="primary" style="position: absolute;right: 10%">测试</el-button>
+            </el-form>
+            </div>
+            <!-- 选择员工信息 end -->
             <!--<span class="demonstration">Click 指示器触发</span>-->
+
             <el-carousel trigger="click" :height="imgHeight">
                 <el-carousel-item v-for="item in imgList" :key="item.id">
                     <el-row>
@@ -53,17 +78,44 @@
                 {id: 2, name: '推荐', idView: '${STATIC_URL}img/slide1.png'}
             ],
             imgHeight: ''+document.documentElement.clientHeight+'px',
+            date1:'08:00',                                                                   //开始时间
+            date2:'10:00',                                                                   //结束时间
+            region1:'1',                                                                 //岗位选择
+            value8:'员工1',                                                                  //员工选择
+            options:[
+
+            ]
         },
         methods: {
-
+            change1(value){
+                if (value == 1) {
+                    vm.options = [
+                        {value: '1',label: '员工1'},
+                        {value: '2',label: '员工2'},
+                        {value: '3',label: '员工3'},
+                    ]
+                }else if (value == 2) {
+                      vm.options = [
+                        {value: '4',label: '员工4'},
+                        {value: '5',label: '员工5'},
+                        {value: '6',label: '员工6'},
+                    ]
+                }else if (value == 3) {
+                      vm.options = [
+                        {value: '7',label: '员工7'},
+                        {value: '8',label: '员工8'},
+                        {value: '9',label: '员工9'},
+                    ]
+                }
+            }
         },
         mounted() {
             //const that = this
             //这里很关键；大部分博客都是这样写的，其实也没有毛病，只不过有时候不起作用；
             window.onresize = () => {
                 return (() => {
-                    window.imgHeight = document.documentElement.clientHeight;
-                    this.imgHeight = ''+window.imgHeight+'px';
+                    window.imgHeight = document.documentElement.clientHeight-100;
+                    vm.imgHeight = ''+window.imgHeight+'px';
                 })()
             }
 
