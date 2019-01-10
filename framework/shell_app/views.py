@@ -6,6 +6,42 @@ import json
 import time
 
 
+def data_base(request):
+    """
+
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/database.html')
+
+
+def position(request):
+    """
+
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/jobM.html')
+
+
+def scene_set(request):
+    """
+
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/senceSet.html')
+
+
+def calendar(request):
+    """
+
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/Calendar.html')
+
+
 def main(request):
     """
     管理主页
@@ -85,6 +121,15 @@ def position_setting_html(request):
     :return:
     """
     return render_mako_context(request, './shell_app/position_setting.html')
+
+
+def ming(request):
+    """
+
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/ming.html')
 
 
 def select_host(request):

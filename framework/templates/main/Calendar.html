@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="${STATIC_URL}assets/vue-2.5.21/vue.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+		<link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+		<script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+		<script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="${STATIC_URL}css/Calendar.css" />
+	</head>
+
+	<body>
+		<div id="app">
+			<section class="wh_container" v-loading="loading2" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
+				<div class="wh_content_all">
+					<div class="wh_top_changge">
+						<li @click="PreMonth(myDate,false)">
+							<div class="wh_jiantou1"></div>
+						</li>
+						<li class="wh_content_li">{{dateTop}}</li>
+						<li @click="NextMonth(myDate,false)">
+							<div class="wh_jiantou2"></div>
+						</li>
+					</div>
+					<div class="wh_top_changge">
+						<div class="wh_content_item" v-for="tag in textTop">
+							<div class="wh_top_tag">
+								{{tag}}
+							</div>
+						</div>
+					</div>
+					<div class="wh_content">
+						<div class="wh_content_item" v-for="(item,index) in list" @click="clickDay(item,index)">
+							<div class="wh_item_date" v-bind:class="[{ wh_isMark: item.isMark},{wh_other_dayhide:item.otherMonth!=='nowMonth'},{wh_want_dayhide:item.dayHide},{wh_isToday:item.isToday},{wh_chose_day:item.chooseDay},setClass(item)]">
+								{{item.id}}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div>
+					<el-upload action="https://jsonplaceholder.typicode.com/posts/">
+						<el-button size="small" type="primary">点击上传</el-button>
+					</el-upload>
+				</div>
+			</section>
+			<br />
+			
+		</div>
+		<script src="${STATIC_URL}js/calendar.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+
+</html>
