@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="vue-2.5.21/vue.js" type="text/javascript" charset="utf-8"></script>
+	
+	
+	
+	<script src="vue-2.5.21/vue.development.js"></script>
+	<link href="element-2.4.11/index.css" rel="stylesheet">
+	<script src="element-2.4.11/index.js"></script>
+	<script src="vue-2.5.21/axios.min.js"></script>
+	</head>
+	<body>
+		<div class="content">
+			<div>
+			<el-form :label-position="right" label-width="120px" class="el-form">
+				<el-row type="flex" class="row-bg" justify="space-around">
+					<el-col :span="6">
+						<el-form-item label="用户名：">
+							<el-select v-model="name">
+								<el-option v-for="item in usernames" :key="item.value" :label="item.label" :value="item.value">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item label="场景名称：">
+							<el-select v-model="scene" placeholder="请选择场景名称">
+								<el-option v-for="item in scenes" :key="item.value" :label="item.label" :value="item.value">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :span="6">
+						<el-form-item label="场景停留时间：">
+							<el-input class='el-input-number--medium' placeholder="请输入停留时间" v-model.number="time" oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :span="2">
+						<el-button type="success">保存</el-button>
+					</el-col>
+				</el-row>
+			</el-form>
+			</div>
+			<br>
+			<br>
+			<div>
+				<el-form action="http://www.baidu.com/baidu" target="_blank">
+				<el-row>
+
+					<input name=tn type=hidden value=baidu>
+
+					<a href="http://www.baidu.com/"><img src="http://img.baidu.com/img/logo-80px.gif" alt="Baidu" align="bottom" border="0"></a>
+
+					<input type=text name=word size=30>
+
+					<input type="submit" value="百度搜索">
+
+				</el-row>
+
+			</el-form>
+			</div>
+		</div>
+		<script type="text/javascript">
+			new Vue({
+				el:".content",
+				data: {
+						flag: true,
+						scenes: [{
+							value: '场景1',
+							label: '场景1'
+						}, {
+							value: '场景2',
+							label: '场景2'
+						}, {
+							value: '场景3',
+							label: '场景3'
+						}, {
+							value: '场景4',
+							label: '场景4'
+						}, {
+							value: '场景5',
+							label: '场景5'
+						}],
+						usernames: [{
+							value: '用户1',
+							label: '用户1'
+						}, {
+							value: '用户2',
+							label: '用户2'
+						}, {
+							value: '用户3',
+							label: '用户3'
+						}, {
+							value: '用户4',
+							label: '用户4'
+						}, {
+							value: '用户5',
+							label: '用户5'
+						}],
+						scene: "",
+						name: "",
+				}
+			});
+		</script>
+	</body>
+
+</html>

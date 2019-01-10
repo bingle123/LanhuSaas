@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>岗位管理</title>
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- element UI引入样式 -->
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <!-- vue的ajax依赖-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <!--jQuery库使用时请使用标准jQuery语法-->
+    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue-router.js"></script>
+    <link type="text/css" href="${STATIC_URL}css/jobM.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="content">
+    <el-dialog title="新增岗位人员" :visible.sync="dialogFormVisible" width="70%">
+        <el-form :model="form">
+            <el-form-item label="" :label-width="formLabelWidth">
+                <template>
+                    <template>
+                        <el-transfer
+                        filterable
+                        :filter-method="filterMethod"
+                        filter-placeholder="请输入搜索内容"
+                        v-model="value2"
+                        :titles="['选择人员', 'Java开发']"
+                        :data="data2" >
+                        </el-transfer>
+                    </template>
+                </template>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false" type="primary">保存</el-button>
+            <el-button @click="dialogFormVisible = false">取消</el-button>
+        </div>
+    </el-dialog>
+    <el-dialog title="编辑岗位" :visible.sync="dialogFormVisible2">
+        <el-form :model="form">
+            <el-form-item label="岗位名称:" :label-width="formLabelWidth2">
+                <el-input v-model="form.jobName" value="王小虎"></el-input>
+            </el-form-item>
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible2 = false" type="primary">保存</el-button>
+            <el-button @click="dialogFormVisible2 = false">取消</el-button>
+        </div>
+    </el-dialog>
+
+    <el-dialog title="新增岗位" :visible.sync="dialogFormVisible3">
+        <el-form :model="form">
+            <el-form-item label="岗位名称:" :label-width="formLabelWidth3">
+                <el-input v-model="jobName2"></el-input>
+            </el-form-item>
+
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible3 = false" type="primary">保存</el-button>
+            <el-button @click="dialogFormVisible3 = false">取消</el-button>
+        </div>
+    </el-dialog>
+
+    <div class="header">
+        <el-breadcrumb class="route" separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item>首页</el-breadcrumb-item>
+            <el-breadcrumb-item>岗位管理</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+    <div class="body">
+        <el-card shadow="always">
+            <div>
+                <div id="pagetitle">
+                    岗位管理
+                </div>
+                <hr id="hr">
+                <el-row type="flex" justify="space-between" align="center" class="row">
+                    <el-col :span="6">
+                        <el-input v-model="value" placeholder="请输入内容"></el-input>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-button type="button" @click="dialogFormVisible3  = true">新增岗位</el-button>
+                    </el-col>
+                </el-row>
+                <el-table :data="tableData" :header-cell-style="rowClass" style="width: 100%">
+                    <el-table-column prop="jobName" label="岗位名称" style="width: 20%">
+                    </el-table-column>
+                    <el-table-column prop="jobPerson" label="岗位人员" style="width: 20%">
+                    </el-table-column>
+                    <el-table-column prop="operation" label="操作" style="width: 20%">
+                        <template slot-scope="scope">
+                            <el-button type="text" @click="dialogFormVisible = true" size="small">加人</el-button>
+                            <el-button type="text" @click="dialogFormVisible2 = true" size="small">编辑</el-button>
+                            <el-button type="text" @click="deletePosition" size="small">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div class="block" style="text-align:right">
+                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                                   :current-page="currentPage4" :page-sizes="[10, 20, 30, 40]" :page-size="100"
+                                   layout="prev, pager, next,sizes, jumper" :total="90">
+                    </el-pagination>
+                </div>
+            </div>
+        </el-card>
+    </div>
+<script type="text/javascript">
+ let vm =   new Vue({
+        el: '.content',
+        data: {
+            dialogFormVisible: false,
+            formLabelWidth: '80px',
+            dialogFormVisible2: false,
+            formLabelWidth2: '80px',
+            dialogFormVisible3: false,
+            formLabelWidth3: '80px',
+
+            form: {
+                jobName: 'Java开发',
+                jobPerson: '王小虎',
+                createPerson: '李承哲',
+                createDate: '2019-01-12'
+            },
+
+            value: '',
+            value1: '',
+            tableData: [{
+                jobName: 'Java开发',
+                jobPerson: "王小虎"
+            }, {
+                jobName: '需求',
+                jobPerson: "张焊强"
+            }, {
+                jobName: '销售',
+                jobPerson: "李明理"
+            }],
+            tableData3: [{
+                name: '王小虎'
+            }, {
+                name: '张焊强'
+            }, {
+                name: '李明理'
+            }],
+
+            checkList: ['王小虎', '张焊强', '李明理'],
+            formLabelAlign: {
+                name: '',
+                region: '',
+                type: ''
+            },
+            data2: '',
+            value2: [],
+        },
+        methods: {
+            rowClass({row, rowIndex}) {
+                console.log(rowIndex)
+                return 'background:#F7F7F7'
+            },
+            handleSizeChange(val) {
+                console.log('每页:'+val+'条')
+            },
+            handleCurrentChange(val) {
+                console.log('当前页:'+val)
+            },
+            deletePosition(){
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+            })
+            },generateData2() {
+                const data = [];
+                const cities = ['张三', '李四', '王五', '赵六', '员工a', '员工b', '员工c'];
+                const pinyin = ['zhangsan', 'ls', 'wangwu', 'zhaoliu', 'yuangonga', 'yuangongb', 'yuangongc'];
+                cities.forEach((city, index) => {
+                  data.push({
+                    label: city,
+                    key: index,
+                    pinyin: pinyin[index]
+                  });
+                });
+            this.data2 = data
+            },
+            filterMethod(query, item) {
+                return item.pinyin.indexOf(query) > -1;
+            }
+        }
+    });
+ vm.generateData2()
+</script>
+</body>
+
+</html>

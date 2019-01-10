@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>看板系统首页</title>
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
+</head>
+
+
+<body>
+<div class="content" id="main">
+
+    <el-dialog title="编辑数据" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+            <el-form-item label="连接类型:" :label-width="formLabelWidth">
+                <el-input v-model="form.type" value="王小虎"></el-input>
+            </el-form-item>
+            <el-form-item label="连接名称:" :label-width="formLabelWidth">
+                <el-input v-model="form.name"></el-input>
+            </el-form-item>
+            <el-form-item label="IP地址:" :label-width="formLabelWidth">
+                <el-input v-model="form.adreess"></el-input>
+            </el-form-item>
+            <el-form-item label="端口:" :label-width="formLabelWidth">
+                <el-input v-model="form.port"></el-input>
+            </el-form-item>
+            <el-form-item label="用户名:" :label-width="formLabelWidth">
+                <el-input v-model="form.user"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false" type="primary">保存</el-button>
+            <el-button @click="dialogFormVisible = false">取消</el-button>
+        </div>
+    </el-dialog>
+
+
+    <div class="header">
+        <el-breadcrumb class="route" separator-class="el-icon-arrow-right">
+            <el-breadcrumb-item>首页</el-breadcrumb-item>
+            <el-breadcrumb-item>SQL数据库连接管理</el-breadcrumb-item>
+        </el-breadcrumb>
+    </div>
+
+    <div class="body">
+        <el-card shadow="always">
+            <div v-if="!isAdd">
+                <div id="pagetitle">
+                    SQL数据库连接管理
+                </div>
+                <hr id="hr">
+                <el-row type="flex" justify="space-between" align="center" class="row">
+                    <el-col :span="6">
+                        <el-input v-model="value" placeholder="请输入内容"></el-input>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-button type="primary" @click="show">新增数据库连接</el-button>
+                    </el-col>
+                </el-row>
+
+                <el-table :data="tableData" :header-cell-style="rowClass" style="width: 100%">
+                    <el-table-column prop="sid" label="序号" width="80px">
+                    </el-table-column>
+                    <el-table-column prop="name" label="连接名称" style="width: 25%">
+                    </el-table-column>
+                    <el-table-column prop="conntype" label="连接类型" style="width: 25%">
+                    </el-table-column>
+                    <el-table-column prop="ip" label="IP地址" style="width: 25%">
+                    </el-table-column>
+                    <el-table-column prop="port" label="端口" style="width: 25%">
+                    </el-table-column>
+                    <el-table-column prop="user" label="用户名" style="width: 25%">
+                    </el-table-column>
+                    <el-table-column prop="operation" label="操作">
+                        <template slot-scope="scope">
+                            <el-button type="text" @click="show" size="small">编辑</el-button>
+                            <el-button type="text" @click="deleteDataBase" size="small">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div class="block" style="text-align:right">
+                    <el-pagination
+                            layout="prev, pager, next"
+                            :total="50">
+                    </el-pagination>
+                </div>
+            </div>
+            <div v-else>
+                <div id="pagetitle">
+                    新增数据库连接
+                </div>
+                <hr id="hr">
+                <el-form :label-position="right" label-width="140px" :model="formLabelAlign">
+                    <el-row type="flex" class="row-bg" justify="space-around">
+                        <el-col :span="9">
+                            <el-form-item label="连接名称：">
+                                <el-input v-model="formLabelAlign.name"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="9">
+                            <el-form-item label="数据库类型:" >
+                                    <el-select v-model="form.region" placeholder="请选择数据库类型" style="width: 350px;">
+                                        <el-option label="MySQL" value="shanghai"></el-option>
+                                        <el-option label="Oracle" value="beijing"></el-option>
+                                        <el-option label="SQLserver" value="beijing"></el-option>
+                                    </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row type="flex" class="row-bg" justify="space-around">
+                        <el-col :span="9">
+                            <el-form-item label="Ip地址：">
+                                <el-input v-model="formLabelAlign.name"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="9">
+                            <el-form-item label="端口号：">
+                                <el-input v-model="formLabelAlign.name"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row type="flex" class="row-bg" justify="space-around">
+                        <el-col :span="9">
+                            <div id="son">
+                                <el-form-item label="数据库名称：">
+                                    <el-input v-model="formLabelAlign.name"></el-input>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+                        <el-col :span="9">
+                            <div id="son">
+                                <el-form-item label="用户名：">
+                                    <el-input v-model="formLabelAlign.name"></el-input>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+
+                    </el-row>
+                    <el-row type="flex" class="row-bg" justify="space-around">
+                        <el-col :span="9">
+                            <div id="son">
+                                <el-form-item label="密码：">
+                                    <el-input v-model="formLabelAlign.name"></el-input>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+                        <el-col :span="9">
+                            <div id="son">
+                                <el-form-item label="再输一次密码：">
+                                    <el-input v-model="formLabelAlign.name"></el-input>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+
+                    </el-row>
+                </el-form>
+                <el-row type="flex" class="row-bg" justify="center">
+                    <el-col :span="18">
+                        <el-button type="info" id="button">测试连接</el-button>
+                    </el-col>
+                    <el-col :span="2">
+                        <el-button type="primary" id="button">保存</el-button>
+                    </el-col>
+                    <el-col :span="2">
+                        <el-button @click="hide" id="button">取消</el-button>
+                    </el-col>
+                </el-row>
+            </div>
+        </el-card>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    new Vue({
+        el: '#main',
+        data: {
+            dialogFormVisible: false,
+            formLabelWidth: '80px',
+            form: {
+                type: 'mysql',
+                name: 'dfs',
+                adreess: '168.5.26.2',
+                port: '8080',
+                user: 'sdf'
+            },
+            isAdd: false,
+            value: '',
+            value1: '',
+            tableData: [{
+                sid: '1',
+                name: '赵六',
+                conntype: 'ORACLE',
+                ip: '162.225.1.1',
+                port: '8088',
+                user: 'ROOT',
+                operation: '编辑 | 删除'
+            }, {
+                sid: '2',
+                name: '里斯',
+                conntype: 'MYSQL',
+                ip: '177.233.1.1',
+                port: '8082',
+                user: 'PPP',
+                operation: '编辑 | 删除'
+            }, {
+                sid: '3',
+                name: '小天',
+                conntype: 'MYSQL',
+                ip: '192.111.1.1',
+                port: '8081',
+                user: 'AMIN',
+                operation: '编辑 | 删除'
+            }, {
+                sid: '4',
+                name: '白虎',
+                conntype: 'DM',
+                ip: '192.168.0.1',
+                port: '8230',
+                user: 'USER',
+                operation: '编辑 | 删除'
+            }],
+            formLabelAlign: {
+                name: '',
+                region: '',
+                type: ''
+            }
+        },
+        methods: {
+            goto() {
+                window.location.href = 'home2.html';
+            },
+            show() {
+                this.isAdd = true
+
+            },
+            hide() {
+                this.isAdd = false
+            },
+            rowClass({row, rowIndex}) {
+                console.log(rowIndex)
+                return 'background:#F7F7F7'
+            },
+            handleSizeChange(val) {
+                console.log('每页:'+val+'条')
+            },
+            handleCurrentChange(val) {
+                console.log('当前页:'+val)
+            },deleteDataBase(){
+                this.$confirm('此操作将永久删除该数据库, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+                })
+            }
+
+        }
+    });
+</script>
+
+</body>
+</html>
+
