@@ -37,15 +37,21 @@
                 </el-col>
             </el-row>
             <el-table :data='tableData' :header-cell-style='rowclass' style="width: 100%;">
-                <el-table-column prop='num' label='序号' width='80'>
+                <el-table-column prop='id' label='序号' width='80'>
                 </el-table-column>
-                <el-table-column prop='name' label='场景名称'  style="width: 30%;">
+                <el-table-column prop='scene_name' label='场景名称'  style="width: 30%;">
                 </el-table-column>
-                <el-table-column prop='createdBy' label='创建人'  style="width: 30%;">
+                <el-table-column prop='scene_creator' label='创建人'  style="width: 30%;">
                 </el-table-column>
-                <el-table-column prop='updateTime' label='更新时间'  style="width: 30%;">
+                <el-table-column prop='scene_creator_time' label='创建时间'  style="width: 30%;">
                 </el-table-column>
                 <el-table-column prop='operation' label='操作' style="width: 30%;">
+                    <template slot-scope="scope">
+                    <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
+                    <el-button size="mini" type="text" v-on:click="edit(scope.row)">编辑</el-button>
+                    <el-button size="mini" type="text" v-on:click="edit2(scope.row.id)">删除</el-button>
+                    </el-tooltip>
+                </template>
                 </el-table-column>
             </el-table>
             <div class='block' style='text-align:right'>
@@ -120,7 +126,7 @@
 
 </div>
 <script type="text/javascript">
-    new Vue({
+    var vm=new Vue({
         el: '.content',
         data: {
             valuetest:'',
@@ -143,61 +149,7 @@
             currentPage2: 5,
             currentPage3: 5,
             currentPage4: 4,
-            tableData: [{
-                num: '1',
-                name: '集中交易场景1',
-                createdBy: 'zhaochengyuan',
-                updateTime: '2018-12-28 14:12:20',
-                operation: '编辑 | 删除'
-            }, {
-                num: '2',
-                name: '集中交易场景2',
-                createdBy: 'zhaochengyuan',
-                updateTime: '2018-12-28 14:12:20',
-                operation: '编辑 | 删除'
-            }, {
-                num: '3',
-                name: '集中交易场景2',
-                createdBy: 'zhaochengyuan',
-                updateTime: '2018-12-28 14:12:20',
-                operation: '编辑 | 删除'
-            }, {
-                num: '4',
-                name: '集中交易场景4',
-                createdBy: 'zhaochengyuan',
-                updateTime: '2018-12-28 14:12:20',
-                operation: '编辑 | 删除'
-            }, {
-                num: '5',
-                name: '集中交易场景5',
-                createdBy: 'zhaochengyuan',
-                updateTime: '2018-12-28 14:12:20',
-                operation: '编辑 | 删除'
-            }, {
-                num: '6',
-                name: '集中交易场景6',
-                createdBy: 'zhaochengyuan',
-                updateTime: '2018-12-28 14:12:20',
-                operation: '编辑 | 删除'
-            }, {
-                num: '7',
-                name: '集中交易场景7',
-                createdBy: 'zhaochengyuan',
-                updateTime: '2018-12-28 14:12:20',
-                operation: '编辑 | 删除'
-            }, {
-                num: '8',
-                name: '集中交易场景8',
-                createdBy: 'zhaochengyuan',
-                updateTime: '2018-12-28 14:12:20',
-                operation: '编辑 | 删除'
-            }, {
-                num: '9',
-                name: '集中交易场景9',
-                createdBy: 'zhaochengyuan',
-                updateTime: '2018-12-28 14:12:20',
-                operation: '编辑 | 删除'
-            }]
+            tableData: []
         },
         methods: {
             rowclass({row, rowIndex}) {
@@ -217,11 +169,20 @@
                window.location.href = '${SITE_URL}scene_set'
             }, goto() {
                 window.location.href = '${SITE_URL}ming'
+            },
+            a(){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitorScene/monitor_show/',
+                }).then(function(res) {
+                    vm.tableData = res.data.message;
+                })
             }
         },
 
 
     })
+    vm.a();
 </script>
 </body>
 </html>
