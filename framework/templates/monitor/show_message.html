@@ -67,7 +67,7 @@
         </div>
         <div style="height: 30px"></div>
         <span>
-            <el-tabs type="card" v-model="activeName2">
+            <el-tabs type="card" v-model="unit_name">
 
                 <!--基本单元 start-->
                 <el-tab-pane label="基本单元" name="first">
@@ -100,7 +100,7 @@
                                         <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000" type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
-                                    <el-radio-group v-model="basic.radio1" @change="change1" style="padding: 14px">
+                                    <el-radio-group v-model="basic.sql_file_interface" @change="change1" style="padding: 14px">
                                         <el-radio :label="3">数据库</el-radio>
                                         <el-radio :label="6">文件</el-radio>
                                         <el-radio :label="9">接口</el-radio>
@@ -258,7 +258,7 @@
                 <el-tab-pane label="作业单元" name="third">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="job" :rules="rules" ref="job" label-width="100px" class="demo-ruleForm">
+                            <el-form :model="job" ref="job" label-width="100px">
                                 <el-form-item label="字号">
                                     <el-select v-model="job.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
@@ -340,7 +340,7 @@
                 <el-tab-pane label="流程单元" name="fourth">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="flow" :rules="rules" ref="flow" label-width="100px" class="demo-ruleForm">
+                            <el-form :model="flow" ref="flow" label-width="100px">
                                 <el-form-item label="字号">
                                     <el-select v-model="flow.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
@@ -470,13 +470,13 @@ var vm = new Vue({
         interface1:'none',
         zuoye:'none',
         liucheng:'none',
-        activeName2: 'first',
+        unit_name: 'first',              //单元类型
         basic: {                            //基本单元
             font_size:'',                   //字号
             height:'',                      //高度
             wide:'',                        //宽度
             contents:'',                    //显示内容
-            radio1:'',                      //数据来源
+            sql_file_interface:'sql',          //数据来源
             sql:'',                         //连接数据库
             rules:'',                       //数据采集规则
             server:'',                      //服务器
@@ -596,13 +596,13 @@ var vm = new Vue({
         },
         edit1() {
             vm.centerDialogVisible = false;
-            if(vm.activeName2 == 'first') {
+            if(vm.unit_name == 'first') {
                 data22 = vm.basic
-            }else if (vm.activeName2 == 'second'){
+            }else if (vm.unit_name == 'second'){
                 data22 = vm.chart
-            }else if(vm.activeName2 == 'third') {
+            }else if(vm.unit_name == 'third') {
                 data22 = vm.job
-            }else if(vm.activeName2 == 'fourth'){
+            }else if(vm.unit_name == 'fourth'){
                 data22 = vm.flow
             }
             if(vm.unit_id > 0) {
@@ -632,18 +632,22 @@ var vm = new Vue({
             vm.edit(0)
         },
         change1(value){
+            console.log(vm.basic.sql_file_interface);
             if(value==3){
                 vm.sql1 = 'block';
                 vm.file1 = 'none';
                 vm.interface1 = 'none';
+                vm.basic.sql_file_interface = 'sql'
             }else if (value==6) {
                 vm.sql1 = 'none';
                 vm.file1 = 'block';
                 vm.interface1 = 'none';
+                vm.basic.sql_file_interface = 'file';
             }else if (value==9){
                 vm.sql1 = 'none';
                 vm.file1 = 'none';
                 vm.interface1 = 'block';
+                vm.basic.sql_file_interface = 'interface';
             }
         },
         change2(value){
