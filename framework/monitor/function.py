@@ -3,29 +3,14 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from models import unit_administration
 import tools
+from django.forms.models import model_to_dict
 
 
 def unit_show(request):
     unit = unit_administration.objects.all()
     res_list = []
     for i in unit:
-        dic = {
-            'id': i.id,
-            'unit_name': i.unit_name,
-            'unit_type': i.unit_type,
-            'editor': i.editor,
-            'edit_time': i.edit_time,
-            'font_size': i.font_size,
-            'hight': i.hight,
-            'wide': i.wide,
-            'content': i.content,
-            'data_source': i.data_source,
-            'time_slot': i.time_slot,
-            'time_interval': i.time_interval,
-            'template': i.template,
-            'chart_type': i.chart_type,
-            'parameter': i.parameter,
-        }
+        dic = model_to_dict(i)
         res_list.append(dic)
     return res_list
 
@@ -34,6 +19,7 @@ def select_unit(request):
     try:
         res = request.body
         res_list = []
+        unit_list=[]
         res1 = "{}".format(res)
         if len(res1) == 0:
             res_list = unit_show(request)
@@ -41,15 +27,20 @@ def select_unit(request):
             if res1.isdigit():
                 if unit_administration.objects.filter(id=int(res1)).exists():
                     unit = unit_administration.objects.filter(id=int(res1))
-            elif unit_administration.objects.filter(unit_name=res1).exists():
+                    unit_list.append(unit)
+            if unit_administration.objects.filter(unit_name=res1).exists():
                 unit = unit_administration.objects.filter(unit_name=res1)
-            elif unit_administration.objects.filter(unit_type=res1).exists():
+                unit_list.append (unit)
+            if unit_administration.objects.filter(unit_type=res1).exists():
                 unit = unit_administration.objects.filter(unit_type=res1)
-            elif unit_administration.objects.filter(editor=res1).exists():
+                unit_list.append (unit)
+            if unit_administration.objects.filter(editor=res1).exists():
                 unit = unit_administration.objects.filter(editor=res1)
-            elif unit_administration.objects.filter(edit_time=res1).exists():
+                unit_list.append (unit)
+            if unit_administration.objects.filter(edit_time=res1).exists():
                 unit = unit_administration.objects.filter(edit_time=res1)
-            for i in unit:
+                unit_list.append (unit)
+            for i in unit_list:
                 dic = {
                     'id': i.id,
                     'unit_name': i.unit_name,

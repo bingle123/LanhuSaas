@@ -73,9 +73,9 @@
                 <el-tab-pane label="基本单元" name="first">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                                <el-form-item label="字号" prop="resource">
-                                    <el-select v-model="ruleForm.basic.font_size" placeholder="请选择字号">
+                            <el-form :model="basic"  ref="basic" label-width="100px">
+                                <el-form-item label="字号">
+                                    <el-select v-model="basic.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
                                         <el-option label="12" value="12"></el-option>
@@ -83,76 +83,74 @@
                                         <el-option label="16" value="16"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="高Ⅹ宽" required style="width: 96%" prop="data1">
+                                <el-form-item label="高Ⅹ宽" style="width: 96%" >
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-input v-model="ruleForm.basic.height" placeholder="请输入高度"></el-input>
+                                            <el-input v-model="basic.height" placeholder="请输入高度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11" >
                                         <el-form-item>
-                                              <el-input v-model="ruleForm.basic.wide" placeholder="请输入宽度"></el-input>
+                                              <el-input v-model="basic.wide" placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="显示内容"  prop="desc" style="width: 96%">
-                                        <el-input v-model="ruleForm.basic.contents" placeholder="上证指数:3000  深证指数:3000" type="textarea"></el-input>
+                                <el-form-item label="显示内容"   style="width: 96%">
+                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000" type="textarea"></el-input>
                                 </el-form-item>
-                                <el-form-item label="数据来源" prop="resource">
-                                    <el-radio-group v-model="ruleForm.basic.radio1" @change="change1" style="padding: 14px">
+                                <el-form-item label="数据来源">
+                                    <el-radio-group v-model="basic.radio1" @change="change1" style="padding: 14px">
                                         <el-radio :label="3">数据库</el-radio>
                                         <el-radio :label="6">文件</el-radio>
                                         <el-radio :label="9">接口</el-radio>
                                      </el-radio-group>
                                 </el-form-item>
                                 <div :style="{ display: sql1 }">
-                                    <el-form-item label="数据库连接" prop="resource">
-                                        <el-select v-model="ruleForm.basic.sql" placeholder="请选择数据库">
-                                            <el-option label="ip1" value="8"></el-option>
-                                            <el-option label="ip2" value="10"></el-option>
-                                            <el-option label="ip3" value="12"></el-option>
+                                    <el-form-item label="数据库连接">
+                                        <el-select v-model="basic.sql" placeholder="请选择数据库">
+                                            <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="数据采集规则"  prop="desc" style="width: 96%">
-                                        <el-input v-model="ruleForm.basic.rules" placeholder="select * from tb_hq" type="textarea"></el-input>
+                                    <el-form-item label="数据采集规则" style="width: 96%">
+                                        <el-input v-model="basic.rules" placeholder="select * from tb_hq" type="textarea"></el-input>
                                     </el-form-item>
                                 </div>
 
                                 <div :style="{display:file1}">
-                                    <el-form-item label="服务器" prop="desc" >
-                                        <el-input placeholder="请输入服务器" v-model="ruleForm.basic.server" style="width: 96%"></el-input>
+                                    <el-form-item label="服务器" >
+                                        <el-input placeholder="请输入服务器" v-model="basic.server" style="width: 96%"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="文件路径" prop="desc" >
-                                        <el-input placeholder="请输入文件路径" v-model="ruleForm.basic.file" style="width: 96%"></el-input>
+                                    <el-form-item label="文件路径" >
+                                        <el-input placeholder="请输入文件路径" v-model="basic.file" style="width: 96%"></el-input>
                                     </el-form-item>
                                 </div>
                                 <div :style="{display:interface1}">
-                                    <el-form-item label="url" prop="desc" >
-                                        <el-input placeholder="请输入url" v-model="ruleForm.basic.urls" style="width: 96%"></el-input>
+                                    <el-form-item label="url" >
+                                        <el-input placeholder="请输入url" v-model="basic.urls" style="width: 96%"></el-input>
                                     </el-form-item>
-                                    <el-form-item label="接口参数" prop="desc" >
-                                        <el-input type="textarea" v-model="ruleForm.basic.param"></el-input>
+                                    <el-form-item label="接口参数" >
+                                        <el-input type="textarea" v-model="basic.param"></el-input>
                                     </el-form-item>
                                 </div>
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker v-model="ruleForm.basic.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="basic.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker v-model="ruleForm.basic.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="basic.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 </el-form-item>
-                                <el-form-item label="采集周期" prop="desc" >
-                                    <el-input  v-model="ruleForm.basic.cycle" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
+                                <el-form-item label="采集周期">
+                                    <el-input  v-model="basic.cycle" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
                                 </el-form-item>
                             </el-form>
                         </div></el-col>
@@ -178,9 +176,9 @@
                 <el-tab-pane label="图表单元" name="second">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                                <el-form-item label="字号" prop="resource">
-                                    <el-select v-model="ruleForm.chart.font_size" placeholder="请选择字号">
+                            <el-form :model="chart" ref="chart" label-width="100px">
+                                <el-form-item label="字号">
+                                    <el-select v-model="chart.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
                                         <el-option label="12" value="12"></el-option>
@@ -188,55 +186,55 @@
                                         <el-option label="16" value="16"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="高Ⅹ宽" required style="width: 96%" prop="data1">
+                                <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item >
-                                            <el-input v-model="ruleForm.chart.height" placeholder="请输入高度"></el-input>
+                                            <el-input v-model="chart.height" placeholder="请输入高度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item >
-                                              <el-input v-model="ruleForm.chart.wide" placeholder="请输入宽度"></el-input>
+                                              <el-input v-model="chart.wide" placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="图标类型" prop="resource">
-                                    <el-select v-model="ruleForm.chart.chart_type" placeholder="请选择图表类型">
-                                        <el-option label="折线图" value=333></el-option>
-                                        <el-option label="柱状图" value="444"></el-option>
-                                        <el-option label="饼图" value="555"></el-option>
+                                <el-form-item label="图标类型">
+                                    <el-select v-model="chart.chart_type" placeholder="请选择图表类型">
+                                        <el-option label="折线图" value="折线图"></el-option>
+                                        <el-option label="柱状图" value="柱状图"></el-option>
+                                        <el-option label="饼图" value="饼图"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="显示内容" prop="desc" style="width: 96%">
-                                    <el-input type="textarea" v-model="ruleForm.chart.contents" placeholder="上证指数:3000  深证指数:3000"></el-input>
+                                <el-form-item label="显示内容" style="width: 96%">
+                                    <el-input type="textarea" v-model="chart.contents" placeholder="上证指数:3000  深证指数:3000"></el-input>
                                 </el-form-item>
-                                <el-form-item label="连接数据库" prop="resource">
-                                    <el-select v-model="ruleForm.chart.sql" placeholder="请选择数据库">
-                                        <el-option label="数据库1" value="888"></el-option>
-                                        <el-option label="数据库2" value="777"></el-option>
+                                <el-form-item label="连接数据库">
+                                    <el-select v-model="chart.sql" placeholder="请选择数据库">
+                                        <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
+
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="图表采集规则"  prop="desc" style="width: 96%">
-                                    <el-input v-model="ruleForm.chart.rules" placeholder="select * from tb_hq" type="textarea"></el-input>
+                                <el-form-item label="图表采集规则" style="width: 96%">
+                                    <el-input v-model="chart.rules" placeholder="select * from tb_hq" type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker v-model="ruleForm.chart.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="chart.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker v-model="ruleForm.chart.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="chart.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="采集周期" prop="desc" >
-                                    <el-input  v-model="ruleForm.chart.cycle" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
+                                <el-form-item label="采集周期">
+                                    <el-input  v-model="chart.cycle" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
                                 </el-form-item>
                             </el-form>
                         </div></el-col>
@@ -260,9 +258,9 @@
                 <el-tab-pane label="作业单元" name="third">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                                <el-form-item label="字号" prop="resource">
-                                    <el-select v-model="ruleForm.job.font_size" placeholder="请选择字号">
+                            <el-form :model="job" :rules="rules" ref="job" label-width="100px" class="demo-ruleForm">
+                                <el-form-item label="字号">
+                                    <el-select v-model="job.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
                                         <el-option label="12" value="12"></el-option>
@@ -270,51 +268,50 @@
                                         <el-option label="16" value="16"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="高Ⅹ宽" required style="width: 96%" prop="data1">
+                                <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-input v-model="ruleForm.job.height" placeholder="请输入高度"></el-input>
+                                            <el-input v-model="job.height" placeholder="请输入高度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                              <el-input v-model="ruleForm.job.wide" placeholder="请输入宽度"></el-input>
+                                              <el-input v-model="job.wide" placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="显示内容" prop="desc" style="width: 96%">
-                                    <el-input type="textarea" v-model="ruleForm.job.contents" placeholder="上证指数:3000  深证指数:3000"></el-input>
+                                <el-form-item label="显示内容" style="width: 96%">
+                                    <el-input type="textarea" v-model="job.contents" placeholder="上证指数:3000  深证指数:3000"></el-input>
                                 </el-form-item>
-                                <el-form-item label="作业模板" prop="resource">
-                                    <el-select v-model="ruleForm.job.job_mould" placeholder="请选择作业模板">
-                                        <el-option label="模板1" value="7"></el-option>
-                                        <el-option label="模板2" value="8"></el-option>
+                                <el-form-item label="作业模板">
+                                    <el-select v-model="job.job_mould" placeholder="请选择作业模板">
+                                        <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="NODE_KEY" prop="desc" style="width: 96%">
-                                    <el-input v-model="ruleForm.job.NODE_KEY" placeholder="请输入NODE_KEY"></el-input>
+                                <el-form-item label="NODE_KEY" style="width: 96%">
+                                    <el-input v-model="job.NODE_KEY" placeholder="请输入NODE_KEY"></el-input>
                                 </el-form-item>
-                                <el-form-item label="执行服务器" prop="desc" style="width: 96%">
-                                    <el-input v-model="ruleForm.job.server" placeholder="请输入服务器地址"></el-input>
+                                <el-form-item label="执行服务器" style="width: 96%">
+                                    <el-input v-model="job.server" placeholder="请输入服务器地址"></el-input>
                                 </el-form-item>
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker v-model="ruleForm.job.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="job.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker v-model="ruleForm.job.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="job.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="采集周期" prop="desc" >
-                                    <el-input  v-model="ruleForm.job.cycle" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
+                                <el-form-item label="采集周期">
+                                    <el-input  v-model="job.cycle" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
                                 </el-form-item>
                             </el-form>
                         </div></el-col>
@@ -343,9 +340,9 @@
                 <el-tab-pane label="流程单元" name="fourth">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                                <el-form-item label="字号" prop="resource">
-                                    <el-select v-model="ruleForm.flow.font_size" placeholder="请选择字号">
+                            <el-form :model="flow" :rules="rules" ref="flow" label-width="100px" class="demo-ruleForm">
+                                <el-form-item label="字号">
+                                    <el-select v-model="flow.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
                                         <el-option label="12" value="12"></el-option>
@@ -353,73 +350,71 @@
                                         <el-option label="16" value="16"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="高Ⅹ宽" required style="width: 96%" prop="data1">
+                                <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-input v-model="ruleForm.flow.height" placeholder="请输入高度"></el-input>
+                                            <el-input v-model="flow.height" placeholder="请输入高度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                              <el-input v-model="ruleForm.flow.wide" placeholder="请输入宽度"></el-input>
+                                              <el-input v-model="flow.wide" placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="流程模板" prop="resource">
-                                    <el-select v-model="ruleForm.flow.flow_mould" placeholder="请选择模板">
-                                        <el-option label="模板1" value="7"></el-option>
-                                        <el-option label="模板2" value="8"></el-option>
+                                <el-form-item label="流程模板">
+                                    <el-select v-model="flow.flow_mould" placeholder="请选择模板">
+                                        <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="参数1" style="width: 96%">
-                                    <el-input v-model="ruleForm.flow.param1" placeholder="请输入参数"></el-input>
+                                    <el-input v-model="flow.param1" placeholder="请输入参数"></el-input>
                                 </el-form-item>
                                 <el-form-item label="参数2" style="width: 96%">
-                                    <el-input v-model="ruleForm.flow.param2" placeholder="请输入参数"></el-input>
+                                    <el-input v-model="flow.param2" placeholder="请输入参数"></el-input>
                                 </el-form-item>
-                                 <el-form-item label="请选择节点" prop="region">
-                                    <el-select v-model="ruleForm.flow.node" placeholder="请选择节点">
-                                        <el-option label="节点1" value="jiedian1"></el-option>
-                                        <el-option label="节点2" value="jiedian2"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <div v-if="ruleForm.flow.node === 'jiedian2'">
+                                   <el-form-item label="节点">
+                                        <el-select v-model="flow.node" placeholder="请选择节点">
+                                          <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
+                                        </el-select>
+                                      </el-form-item>
+                                <div v-if="flow.node === 'shanghai'">
                                 <el-form-item label="节点周期:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker v-model="ruleForm.flow.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="flow.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker v-model="ruleForm.flow.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="flow.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 </div>
-                                <div v-if="ruleForm.flow.node === 'jiedian2'">
+                                <div v-if="flow.node === 'beijing'">
                                 <el-form-item label="节点周期:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker v-model="ruleForm.flow.start_time"  placeholder="开始时间点1" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="flow.start_time"  placeholder="开始时间点1" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker v-model="ruleForm.flow.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="flow.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 </div>
-                                <el-form-item label="采集周期" prop="desc" >
-                                    <el-input  v-model="ruleForm.flow.cycle" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
+                                <el-form-item label="采集周期">
+                                    <el-input  v-model="flow.cycle" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
                                 </el-form-item>
                             </el-form>
                         </div></el-col>
@@ -461,15 +456,11 @@ var vm = new Vue({
     data: {
         sites: [],                                //table内容
         contents: '',                             //搜索输入框内容
-        height1: '',
-        width1: '',
         checked1:false,                           //作业启动选框
         checked2:false,                           //流程启动选框
         disabled1:false,
-        unit_name: '',
         caiji1:'block',
         caiji2:'none',
-        font_size: '',
         unit_id: 0,                               //单元id
         value1:'开',                              //开关状态
         centerDialogVisible: false,              //弹窗状态
@@ -480,88 +471,59 @@ var vm = new Vue({
         zuoye:'none',
         liucheng:'none',
         activeName2: 'first',
-        rules: {
-            name: [
-                { required: true, message: '请输入名称', trigger: 'blur' },
-                { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
-              ],
-            region: [
-                { required: true, message: '请选择', trigger: 'change' }
-             ],
-            data1: [
-                { type: 'number', required: true, message: '必须为数字值',trigger: 'change' }
-              ],
-            date1: [
-            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-          ],
-            date2: [
-            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-          ],
-            type: [
-            { type: 'array', required: true, message: '请选择', trigger: 'change' }
-            ],
-            resource: [
-            { required: true, message: '请选择', trigger: 'change' }
-            ],
-            desc1: [
-            { required: true, message: '请填写内容', trigger: 'blur' }
-            ],
+        basic: {                            //基本单元
+            font_size:'',                   //字号
+            height:'',                      //高度
+            wide:'',                        //宽度
+            contents:'',                    //显示内容
+            radio1:'',                      //数据来源
+            sql:'',                         //连接数据库
+            rules:'',                       //数据采集规则
+            server:'',                      //服务器
+            file:'',                        //文件路径
+            urls:'',                        //url
+            param:'',                       //接口参数
+            start_time:'',                  //开始时间
+            end_time:'',                    //结束时间
+            cycle:'',                       //采集周期
         },
-        ruleForm:
-            {
-                basic: {                            //基本单元
-                    font_size:'',                   //字号
-                    height:'',                      //高度
-                    wide:'',                        //宽度
-                    contents:'',                    //显示内容
-                    radio1:'',                      //数据来源
-                    sql:'',                         //连接数据库
-                    rules:'',                       //数据采集规则
-                    server:'',                      //服务器
-                    file:'',                        //文件路径
-                    urls:'',                        //url
-                    param:'',                       //接口参数
-                    start_time:'',                  //开始时间
-                    end_time:'',                    //结束时间
-                    cycle:'',                       //采集周期
-                },
-                chart: {                            //图表单元
-                    font_size:'',                   //字号
-                    height:'',                      //高度
-                    wide:'',                        //宽度
-                    chart_type:'',                  //图表类型
-                    contents:'',                    //显示内容
-                    sql:'',                         //连接数据库
-                    rules:'',                       //采集规则
-                    start_time:'',                  //开始时间
-                    end_time:'',                    //结束时间
-                    cycle:'',                       //采集周期
-                },
-                job: {                              //作业单元
-                    font_size:'',                   //字号
-                    height:'',                      //高度
-                    wide:'',                        //宽度
-                    contents:'',                    //显示内容
-                    job_mould:'',                   //作业模板
-                    NODE_KEY:'',                    //NODE_KEY参数
-                    server:'',                      //服务器
-                    start_time:'',                  //开始时间
-                    end_time:'',                    //结束时间
-                    cycle:'',                       //采集周期
-                },
-                flow: {                             //流程单元
-                    font_size:'',                   //字号
-                    height:'',                      //高度
-                    wide:'',                        //宽度
-                    flow_mould:'',                  //流程模板
-                    param1:'',                      //流程参数1
-                    param2:'',                      //流程参数2
-                    node:'',                        //节点
-                    start_time:'',                  //开始时间
-                    end_time:'',                    //结束时间
-                    cycle:'',                       //采集周期
-                },
-            }
+        chart: {                            //图表单元
+            font_size:'',                   //字号
+            height:'',                      //高度
+            wide:'',                        //宽度
+            chart_type:'',                  //图表类型
+            contents:'',                    //显示内容
+            sql:'',                         //连接数据库
+            rules:'',                       //采集规则
+            start_time:'',                  //开始时间
+            end_time:'',                    //结束时间
+            cycle:'',                       //采集周期
+        },
+        job: {                              //作业单元
+            font_size:'',                   //字号
+            height:'',                      //高度
+            wide:'',                        //宽度
+            contents:'',                    //显示内容
+            job_mould:'',                   //作业模板
+            NODE_KEY:'',                    //NODE_KEY参数
+            server:'',                      //服务器
+            start_time:'',                  //开始时间
+            end_time:'',                    //结束时间
+            cycle:'',                       //采集周期
+        },
+        flow: {                             //流程单元
+            font_size:'',                   //字号
+            height:'',                      //高度
+            wide:'',                        //宽度
+            flow_mould:'',                  //流程模板
+            param1:'',                      //流程参数1
+            param2:'',                      //流程参数2
+            node:'',                        //节点
+            start_time:'',                  //开始时间
+            end_time:'',                    //结束时间
+            cycle:'',                       //采集周期
+        },
+
     },
     methods: {
         submitForm(formName) {
@@ -609,6 +571,7 @@ var vm = new Vue({
                 method: 'post',
                 url: '${SITE_URL}monitor/test/',
             }).then(function(res) {
+                console.log(res);
                 vm.sites = res.data.message;
 
             })
@@ -633,17 +596,20 @@ var vm = new Vue({
         },
         edit1() {
             vm.centerDialogVisible = false;
+            if(vm.activeName2 == 'first') {
+                data22 = vm.basic
+            }else if (vm.activeName2 == 'second'){
+                data22 = vm.chart
+            }else if(vm.activeName2 == 'third') {
+                data22 = vm.job
+            }else if(vm.activeName2 == 'fourth'){
+                data22 = vm.flow
+            }
             if(vm.unit_id > 0) {
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/test2/',
-                    data: {
-                        height: this.height1,
-                        width: this.width1,
-                        unit_name: this.unit_name,
-                        unit_id: vm.unit_id,
-                        font_size: this.font_size,
-                    }
+                    data: data22,
                 }).then((res) => {
                     vm.a();
                 })
@@ -704,7 +670,7 @@ var vm = new Vue({
         rowclass({row, rowIndex}) {
             console.log(rowIndex);
             return 'background:#F7F7F7'
-        }
+        },
     },
     mounted() {
     },
