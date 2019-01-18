@@ -92,57 +92,25 @@ def delete_unit(request):
 def add_unit(request):
 
     res = json.loads(request.body)
-
-
     unit_type = res['unit_type']
     if res['unit_type'] == 'first':
         unit_type = '基本单元类型'
-        add_dic = {
-            'contents': res['data']['contents'],
-            'sql_file_interface': res['data']['sql_file_interface'],
-            'sql': res['data']['sql'],
-            'rules': res['data']['rules'],
-            'server': res['data']['server'],
-            'file': res['data']['file'],
-            'urls': res['data']['urls'],
-            'param': res['data']['param'],
-        }
+        add_dic = res['data']['basic']
     if res['unit_type'] == 'second':
         unit_type = '图表单元类型'
-        add_dic = {
-            'chart_type': res['data']['chart_type'],
-            'contents': res['data']['contents'],
-            'sql': res['data']['sql'],
-            'rules': res['data']['rules'],
-        }
+        add_dic = res['data']['chart']
     if res['unit_type'] == 'third':
         unit_type = '作业单元类型'
-        add_dic = {
-            'contents': res['data']['contents'],
-            'job_mould': res['data']['job_mould'],
-            'NODE_KEY': res['data']['NODE_KEY'],
-            'server': res['data']['server'],
-        }
-
+        add_dic = res['data']['job']
     if res['unit_type'] == 'fourth':
         unit_type = '流程单元类型'
-        add_dic = {
-            'flow_mould': res['data']['flow_mould'],
-            'param': res['data']['param1']+res['data']['param2'],
-            'node': res['data']['node'],
-        }
-    common_dic = {
-        'unit_name': res['unit_name'],
-        'unit_type': unit_type,
-        'editor': 'chenyi',
-        'font_size': res['data']['font_size'],
-        'height': res['data']['height'],
-        'wide': res['data']['wide'],
-        'cycle': res['data']['cycle'],
-        'start_time': "{}:00".format(res['data']['start_time']),
-        'end_time': "{}:00".format(res['data']['end_time']),
-        'switch': 1,
-    }
+        add_dic = res['data']['flow']
+    common_dic = res['data']['common']
+    common_dic['unit_name'] = res['unit_name']
+    common_dic['unit_type'] = unit_type
+    common_dic['editor'] = 'chenyi'
+    common_dic['switch'] = 1
+    print(common_dic)
     Common.objects.create(**common_dic)
     unit_id = Common.objects.get(unit_name=res['unit_name']).id
     add_dic['unit_id'] = unit_id
@@ -154,33 +122,18 @@ def add_unit(request):
         JobUnit.objects.create(**add_dic)
     if res['unit_type'] == 'fourth':
         FlowUnit.objects.create(**add_dic)
-    res = unit_show(request)
+    res = tools.success_result(request)
     return res
 
 
+def edit_unit(request):
 
+    res = json.loads(request.body)
+    print(res)
+    unit_type = res['unit_type']
+    if res['unit_type'] == 'first':
+        unit_type = '基本单元类型'
 
-
-
-# def edit_unit(request):
-#
-#     try:
-#         res =request.body
-#         res1 = json.loads(res)
-#         unit_id = res1['unit_id']
-#         font_size1 = res1['font_size']
-#         hight1 = res1['height']
-#         wide1 = res1['width']
-#         unit_name1=res1['unit_name']
-#         unit_administration.objects.filter(id=unit_id).update(font_size=font_size1)
-#         unit_administration.objects.filter(id=unit_id).update(hight=hight1)
-#         unit_administration.objects.filter(id=unit_id).update(wide=wide1)
-#         unit_administration.objects.filter(id=unit_id).update(unit_name=unit_name1)
-#         return None
-#     except Exception as e:
-#
-#         res2 = tools.error_result(e)
-#         return res2
 
 
 
