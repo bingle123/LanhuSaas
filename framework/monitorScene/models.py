@@ -10,9 +10,9 @@ class Scene(models.Model):
     scene_endTime = models.DateTimeField(verbose_name=u'结束时间')
     scene_positions = models.CharField(verbose_name=u'岗位', max_length=20)
     scene_creator = models.CharField(verbose_name=u'创建人', max_length=20)
-    scene_creator_time = models.DateTimeField(verbose_name=u'创建时间')
-    scene_editor = models.CharField(verbose_name=u'编辑人', max_length=20)
-    scene_editor_time = models.DateTimeField(verbose_name=u'编辑时间')
+    scene_creator_time = models.DateTimeField(verbose_name=u'创建时间',auto_now_add=True)
+    scene_editor = models.CharField(verbose_name=u'编辑人', max_length=24)
+    scene_editor_time = models.DateTimeField(verbose_name=u'编辑时间', auto_now=True)
 
 
     class Meta:
