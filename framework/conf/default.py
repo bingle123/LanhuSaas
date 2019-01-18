@@ -125,6 +125,7 @@ INSTALLED_APPS = (
     'monitor',
     'db_connection_manage',
     'monitorScene',
+    'zlx',
 )
 
 # ==============================================================================

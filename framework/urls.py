@@ -33,6 +33,7 @@ urlpatterns = patterns(
     url(r'^', include('shell_app.urls')),
     url(r'^monitor/', include('monitor.urls')),
     url(r'^monitorScene/', include('monitorScene.urls')),
+    url(r'zlx/',include('zlx.urls'))
 )
 
 
