@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from component.shortcuts import get_client_by_request
+from blueking.component.shortcuts import get_client_by_request
 import time
 import pytz
 import datetime

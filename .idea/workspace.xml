@@ -2,11 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="2019/1/4 16:38 --liaomingtao-- 主页构架完成">
+      <change afterPath="$PROJECT_DIR$/framework/zlx/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/framework/zlx/admin.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/framework/zlx/function.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/framework/zlx/migrations/0001_initial.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/framework/zlx/migrations/0002_auto_20190117_1155.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/framework/zlx/migrations/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/framework/zlx/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/framework/zlx/tests.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/framework/zlx/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/framework/zlx/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/LanhuSaas.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/LanhuSaas.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/static/css/common/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/framework/static/css/common/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/static/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/framework/static/css/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/templates/common/main.html" beforeDir="false" afterPath="$PROJECT_DIR$/framework/templates/common/main.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/lanhusaas/wb_mysql.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/lanhusaas/wb_mysql.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/conf/default.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/conf/default.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/static/js/calendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/framework/static/js/calendar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/templates/main/Calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/framework/templates/main/Calendar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/urls.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,39 +43,51 @@
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/framework/zlx/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="243">
+              <caret line="9" column="1" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
+              <folding>
+                <element signature="e#24#75#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/framework/static/js/calendar.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="107">
+              <caret line="159" column="27" selection-start-line="159" selection-start-column="27" selection-end-line="159" selection-end-column="27" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/framework/templates/main/Calendar.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="239">
+              <caret line="43" column="112" selection-start-line="43" selection-start-column="112" selection-end-line="43" selection-end-column="112" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/framework/zlx/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="135">
+              <caret line="5" column="36" lean-forward="true" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/framework/templates/common/main.html">
+        <entry file="file://$PROJECT_DIR$/framework/zlx/function.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="86" column="86" selection-start-line="86" selection-start-column="86" selection-end-line="86" selection-end-column="86" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/framework/templates/common/carousel.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2546">
-              <caret line="164" column="48" lean-forward="true" selection-start-line="164" selection-start-column="48" selection-end-line="164" selection-end-column="48" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/framework/static/css/common/main.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="95">
-              <caret line="5" column="11" lean-forward="true" selection-start-line="5" selection-start-column="11" selection-end-line="5" selection-end-column="11" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/framework/static/css/main.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="38">
-              <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="20" />
+            <state relative-caret-position="161">
+              <caret line="31" selection-start-line="31" selection-end-line="31" />
             </state>
           </provider>
         </entry>
@@ -143,18 +166,15 @@
         <option value="$PROJECT_DIR$/framework/shell_app/function.py" />
         <option value="$PROJECT_DIR$/framework/shell_app/models.py" />
         <option value="$PROJECT_DIR$/framework/shell_app/tools.py" />
-        <option value="$PROJECT_DIR$/framework/conf/default.py" />
         <option value="$PROJECT_DIR$/framework/templates/common/main2.html" />
         <option value="$PROJECT_DIR$/framework/monitor/function.py" />
         <option value="$PROJECT_DIR$/framework/templates/scene/scene.html" />
         <option value="$PROJECT_DIR$/framework/templates/scene/scenecarousel.html" />
-        <option value="$PROJECT_DIR$/framework/urls.py" />
         <option value="$PROJECT_DIR$/framework/templates/show_message.html" />
         <option value="$PROJECT_DIR$/framework/monitor/views.py" />
         <option value="$PROJECT_DIR$/framework/templates/temp/dataBase.html" />
         <option value="$PROJECT_DIR$/framework/templates/main/1.html" />
         <option value="$PROJECT_DIR$/framework/templates/main/test.html" />
-        <option value="$PROJECT_DIR$/framework/templates/main/Calendar.html" />
         <option value="$PROJECT_DIR$/framework/templates/main/ming.html" />
         <option value="$PROJECT_DIR$/framework/templates/main/database.html" />
         <option value="$PROJECT_DIR$/framework/shell_app/views.py" />
@@ -166,17 +186,23 @@
         <option value="$PROJECT_DIR$/framework/static/css/main.css" />
         <option value="$PROJECT_DIR$/framework/static/css/common/main.css" />
         <option value="$PROJECT_DIR$/framework/templates/common/main.html" />
+        <option value="$PROJECT_DIR$/framework/conf/default.py" />
+        <option value="$PROJECT_DIR$/framework/urls.py" />
+        <option value="$PROJECT_DIR$/framework/static/js/calendar.js" />
+        <option value="$PROJECT_DIR$/framework/zlx/views.py" />
+        <option value="$PROJECT_DIR$/framework/templates/main/Calendar.html" />
+        <option value="$PROJECT_DIR$/framework/zlx/function.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-20" />
-    <option name="y" value="-21" />
-    <option name="width" value="1382" />
-    <option name="height" value="745" />
+    <option name="y" value="9" />
+    <option name="width" value="1346" />
+    <option name="height" value="728" />
   </component>
   <component name="ProjectLevelVcsManager">
     <OptionsSetting value="false" id="Update" />
+    <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -187,66 +213,32 @@
         <subPane>
           <expand>
             <path>
-              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
+              <item name="LanhuSaas" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanhuSaas" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
+              <item name="LanhuSaas" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanhuSaas" type="462c0819:PsiDirectoryNode" />
               <item name="framework" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
-              <item name="framework" type="462c0819:PsiDirectoryNode" />
-              <item name="monitor" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
-              <item name="framework" type="462c0819:PsiDirectoryNode" />
-              <item name="news" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
-              <item name="framework" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
-              <item name="framework" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
-              <item name="framework" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="css" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
+              <item name="LanhuSaas" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanhuSaas" type="462c0819:PsiDirectoryNode" />
               <item name="framework" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
+              <item name="LanhuSaas" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanhuSaas" type="462c0819:PsiDirectoryNode" />
               <item name="framework" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
-              <item name="Lanhu" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Lanhu" type="462c0819:PsiDirectoryNode" />
+              <item name="LanhuSaas" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanhuSaas" type="462c0819:PsiDirectoryNode" />
               <item name="framework" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
-              <item name="monitor" type="462c0819:PsiDirectoryNode" />
+              <item name="zlx" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -264,17 +256,17 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\LanhuSaas\framework\templates\main" />
+      <recent name="E:\LanhuSaas\framework\static\js" />
+      <recent name="E:\LanhuSaas\framework" />
+      <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\js" />
+      <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\img" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\templates\monitor" />
       <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\templates" />
       <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\assets" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\js" />
-      <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\img" />
-      <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\css" />
-      <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\templates\main" />
-      <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\templates\temp" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -298,14 +290,14 @@
         <env name="PYTHONUNBUFFERED" value="1" />
         <env name="DJANGO_SETTINGS_MODULE" value="settings" />
       </envs>
-      <option name="SDK_HOME" value="D:\Python27\python.exe" />
+      <option name="SDK_HOME" value="C:\Python27\python.exe" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="launchJavascriptDebuger" value="false" />
       <option name="port" value="8000" />
-      <option name="host" value="dev.paas.blueking.com" />
+      <option name="host" value="127.0.0.1" />
       <option name="additionalOptions" value="" />
       <option name="browserUrl" value="" />
       <option name="runTestServer" value="false" />
@@ -383,6 +375,7 @@
       <workItem from="1547037936837" duration="2835000" />
       <workItem from="1547080450897" duration="13713000" />
       <workItem from="1547098278836" duration="9800000" />
+      <workItem from="1547779683361" duration="1811000" />
     </task>
     <task id="LOCAL-00001" summary="选择服务器---静态页面">
       <created>1544418401657</created>
@@ -619,7 +612,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="394830000" />
+    <option name="totallyTimeSpent" value="396641000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -631,15 +624,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17673716" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17927383" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3284553" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.44939578" visible="true" weight="0.048780486" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.44939578" visible="true" weight="0.42153847" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.43577236" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -649,7 +642,7 @@
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.62439024" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5506042" side_tool="true" weight="0.598374" />
       <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.47583082" weight="0.09268293" />
-      <window_info anchor="bottom" id="Python Console" order="12" />
+      <window_info anchor="bottom" id="Python Console" order="12" weight="0.32923076" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -696,15 +689,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/framework/common/log.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/common/pxfilter.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/common/middlewares.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/framework/common/utils.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -743,16 +727,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/conf/default.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="35" column="20" selection-start-line="35" selection-start-column="20" selection-end-line="35" selection-end-column="20" />
-          <folding>
-            <element signature="e#1002#1011#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/framework/templates/common/main2.html">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -764,13 +738,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="380">
           <caret line="20" column="21" selection-start-line="20" selection-start-column="21" selection-end-line="20" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/monitor/function.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
         </state>
       </provider>
     </entry>
@@ -822,13 +789,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/monitor/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="21" column="12" selection-start-line="21" selection-start-column="12" selection-end-line="21" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/framework/templates/temp/Calendar.html" />
     <entry file="file://$PROJECT_DIR$/framework/templates/temp/dataBase.html" />
     <entry file="file://$PROJECT_DIR$/framework/templates/main/database1.html" />
@@ -854,16 +814,6 @@
     <entry file="file://$PROJECT_DIR$/framework/templates/main/inputDemo.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/static/js/calendar.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/templates/main/Calendar.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="855">
-          <caret line="45" column="26" lean-forward="true" selection-start-line="45" selection-start-column="26" selection-end-line="45" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/framework/templates/main/ming.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="258">
@@ -877,23 +827,6 @@
           <caret line="8" column="36" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="36" />
           <folding>
             <element signature="n#style#0;n#el-select#0;n#el-form-item#0;n#el-col#1;n#el-row#0;n#el-form#0;n#div#1;n#el-card#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="31" column="16" selection-start-line="31" selection-start-column="16" selection-end-line="31" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/shell_app/function.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="462" column="14" selection-start-line="462" selection-start-column="14" selection-end-line="462" selection-end-column="14" />
-          <folding>
-            <element signature="e#24#61#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -951,27 +884,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/templates/main/senceSet.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="443">
-          <caret line="38" column="12" selection-start-line="38" selection-start-column="12" selection-end-line="49" selection-end-column="23" />
-          <folding>
-            <element signature="n#style#0;n#el-table#0;n#div#0;n#el-card#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#el-table-column#1;n#el-table#0;n#div#0;n#el-card#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#el-table-column#2;n#el-table#0;n#div#0;n#el-card#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#el-table-column#3;n#el-table#0;n#div#0;n#el-card#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#el-table-column#4;n#el-table#0;n#div#0;n#el-card#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#el-card#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#div#1;n#div#1;n#el-card#0;n#div#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="e#5935#6326#0#HTML" />
-            <element signature="e#6522#6727#0#HTML" />
-            <element signature="e#6729#6934#0#HTML" />
-            <element signature="e#6936#7141#0#HTML" />
-            <element signature="e#7143#7348#0#HTML" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/templates/main/senceSet.html" />
     <entry file="file://$PROJECT_DIR$/framework/templates/monitor/show_message.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="38">
@@ -989,31 +902,113 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/templates/common/carousel.html">
+    <entry file="file://$PROJECT_DIR$/framework/templates/common/main.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2546">
-          <caret line="164" column="48" lean-forward="true" selection-start-line="164" selection-start-column="48" selection-end-line="164" selection-end-column="48" />
+        <state relative-caret-position="378">
+          <caret line="91" column="17" lean-forward="true" selection-start-line="91" selection-start-column="17" selection-end-line="91" selection-end-column="17" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#el-menu#0;n#el-row#0;n#el-container#0;n#div#0;n#body#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/static/css/main.css">
+    <entry file="file://$PROJECT_DIR$/framework/templates/common/carousel.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="38">
-          <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="20" />
+        <state relative-caret-position="4428">
+          <caret line="164" column="48" selection-start-line="164" selection-start-column="48" selection-end-line="164" selection-end-column="48" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/framework/static/css/common/main.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="5" column="11" lean-forward="true" selection-start-line="5" selection-start-column="11" selection-end-line="5" selection-end-column="11" />
+        <state relative-caret-position="135">
+          <caret line="5" column="11" selection-start-line="5" selection-start-column="11" selection-end-line="5" selection-end-column="11" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/templates/common/main.html">
+    <entry file="file://$PROJECT_DIR$/framework/static/css/main.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="86" column="86" selection-start-line="86" selection-start-column="86" selection-end-line="86" selection-end-column="86" />
+        <state relative-caret-position="54">
+          <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/conf/default.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="127" column="10" lean-forward="true" selection-start-line="127" selection-start-column="10" selection-end-line="127" selection-end-column="10" />
+          <folding>
+            <element signature="e#1002#1011#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="158">
+          <caret line="35" column="36" lean-forward="true" selection-start-line="35" selection-start-column="36" selection-end-line="35" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/zlx/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="9" column="1" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
+          <folding>
+            <element signature="e#24#75#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/shell_app/function.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6870">
+          <caret line="460" column="7" lean-forward="true" selection-start-line="460" selection-start-column="7" selection-end-line="460" selection-end-column="7" />
+          <folding>
+            <element signature="e#24#61#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/monitor/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-324">
+          <caret line="18" column="51" lean-forward="true" selection-start-line="18" selection-start-column="51" selection-end-line="18" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/monitor/function.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2269">
+          <caret line="26" column="28" lean-forward="true" selection-start-line="26" selection-start-column="28" selection-end-line="26" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/static/js/calendar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="107">
+          <caret line="159" column="27" selection-start-line="159" selection-start-column="27" selection-end-line="159" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/templates/main/Calendar.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="239">
+          <caret line="43" column="112" selection-start-line="43" selection-start-column="112" selection-end-line="43" selection-end-column="112" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/zlx/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="5" column="36" lean-forward="true" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/zlx/function.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="31" selection-start-line="31" selection-end-line="31" />
         </state>
       </provider>
     </entry>

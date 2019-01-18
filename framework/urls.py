@@ -32,6 +32,8 @@ urlpatterns = patterns(
     # shell_app主页
     url(r'^', include('shell_app.urls')),
     url(r'^monitor/', include('monitor.urls')),
+    url(r'^monitorScene/', include('monitorScene.urls')),
+    url(r'zlx/',include('zlx.urls'))
 )
 
 

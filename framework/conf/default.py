@@ -124,6 +124,8 @@ INSTALLED_APPS = (
     'guotai',
     'monitor',
     'db_connection_manage',
+    'monitorScene',
+    'zlx',
 )
 
 # ==============================================================================

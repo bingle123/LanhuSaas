@@ -34,7 +34,7 @@ def scene_set(request):
     :param request:
     :return:
     """
-    return render_mako_context(request, './main/senceSet.html')
+    return render_mako_context(request, './monitorScene/senceSet.html')
 
 
 def calendar(request):

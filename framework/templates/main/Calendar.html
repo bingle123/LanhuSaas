@@ -8,14 +8,14 @@
 		<script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
 		<link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
 		<script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
-		<script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+		<script src="${STATIC_URL}assets/vue-2.5.21/vue-resource.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="${STATIC_URL}css/Calendar.css" />
 	</head>
 
 	<body>
 		<div id="app">
-			<section class="wh_container" v-loading="loading2" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
-				<div class="wh_content_all">
+			<section class="wh_container">
+				<div class="wh_content_all"  v-loading="loading2" element-loading-text="拼命加载中" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
 					<div class="wh_top_changge">
 						<li @click="PreMonth(myDate,false)">
 							<div class="wh_jiantou1"></div>
@@ -41,7 +41,7 @@
 					</div>
 				</div>
 				<div>
-					<el-upload action="https://jsonplaceholder.typicode.com/posts/">
+					<el-upload action="/zlx/get_file/" :on-success="upsuccess" :on-error="err" accept=".txt,.csv">
 						<el-button size="small" type="primary">点击上传</el-button>
 					</el-upload>
 				</div>
