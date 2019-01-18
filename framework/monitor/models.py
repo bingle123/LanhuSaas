@@ -9,13 +9,13 @@ class Common(models.Model):
     unit_name = models.CharField(verbose_name=u'单元名称', max_length=40, unique=True)
     unit_type = models.CharField(verbose_name=u'单元类型', max_length=20)
     editor = models.CharField(verbose_name=u'编辑人', max_length=20)
-    edit_time = models.DateTimeField(verbose_name=u'修改时间')
+    edit_time = models.DateTimeField(verbose_name=u'修改时间', auto_now=True)
     font_size = models.PositiveIntegerField(verbose_name=u'字号')
     height = models.PositiveIntegerField(verbose_name=u'高')
     wide = models.PositiveIntegerField(verbose_name=u'宽')
     switch = models.CharField(verbose_name=u'开关', max_length=10)
-    start_time = models.DateTimeField(verbose_name=u'开始时间')
-    end_time = models.DateTimeField(verbose_name=u'结束时间')
+    start_time = models.TimeField(verbose_name=u'开始时间')
+    end_time = models.TimeField(verbose_name=u'结束时间')
     cycle = models.PositiveIntegerField(verbose_name=u'采集周期')
 
 

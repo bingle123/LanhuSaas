@@ -15,10 +15,11 @@ from django.conf.urls import patterns
 urlpatterns = patterns(
     'monitor.views',
     (r'^$', 'index'),                                         # 首页--服务器选择页面
-    (r'^test/$', 'unit_show'),
+    (r'^show/$', 'unit_show'),
     (r'^show_message$', 'index'),
-    (r'^test1/$', 'select_unit'),
-    (r'^test2/$', 'edit_unit'),
-    (r'^test3/$', 'delete_unit'),
+    (r'^select/$', 'select_unit'),
+    (r'^edit/$', 'edit_unit'),
+    (r'^delete/$', 'delete_unit'),
+    (r'^add/$', 'add_unit'),
     (r'^123/$', 'index1'),
 )

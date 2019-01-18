@@ -36,13 +36,20 @@ def select_unit(request):
 @csrf_exempt
 def edit_unit(request):
 
-    function.edit_unit(request)
-    return render_json(None)
+    res = function.edit_unit(request)
+    return render_json(res)
 
 
 @csrf_exempt
 def delete_unit(request):
 
     function.delete_unit(request)
+    return render_json(None)
+
+
+@csrf_exempt
+def add_unit(request):
+
+    function.add_unit(request)
     return render_json(None)
 
