@@ -24,16 +24,20 @@ urlpatterns = patterns(
     url(r'^account/', include('account.urls')),
     # 应用功能开关控制--请勿修改
     url(r'^app_control/', include('app_control.urls')),
-    url(r'^db_connection_manage/', include('db_connection_manage.urls')),
     # 国泰君安自动化运维
     url(r'^guotai/', include('guotai.urls')),
     # 在home_application(根应用)里开始开发你的应用的主要功能
     # url(r'^', include('home_application.urls')),
     # shell_app主页
     url(r'^', include('shell_app.urls')),
+    # 监控项_APP_URL
     url(r'^monitor/', include('monitor.urls')),
+    # 数据库连接_APP_URL
+    url(r'^db_connection_manage/', include('db_connection_manage.urls')),
+    # 系统设置
+    url(r'^system_config/', include('system_config.urls')),
     url(r'^monitorScene/', include('monitorScene.urls')),
-    url(r'zlx/',include('zlx.urls'))
+    url(r'zlx/', include('zlx.urls')),
 )
 
 
