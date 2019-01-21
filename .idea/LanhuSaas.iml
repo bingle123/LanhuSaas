@@ -17,12 +17,11 @@
       <sourceFolder url="file://$MODULE_DIR$/framework/common" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/framework/blueking" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/framework/shell_app" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/framework/zlx" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/framework" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 2.7" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 2.7 (LanhuSaas)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="R User Library" level="project" />
-    <orderEntry type="library" name="R Skeletons" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />
