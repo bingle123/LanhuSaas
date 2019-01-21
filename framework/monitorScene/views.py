@@ -17,11 +17,23 @@ def index(request):
 
 @csrf_exempt
 def monitor_show(request):
-
     res = function.monitor_show(request)
     return render_json(res)
 
 @csrf_exempt
 def addSence(request):
     res=function.addSence(request)
+    return  render_json(res)
+
+@csrf_exempt
+def select_table(request):
+    res=function.select_table(request)
+    return  render_json(res)
+@csrf_exempt
+def delect(request):
+    res=function.delect(request)
+    return  render_json(res)
+@csrf_exempt
+def editSence(request):
+    res=function.editSence(request)
     return  render_json(res)

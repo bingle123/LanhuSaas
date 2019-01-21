@@ -18,4 +18,4 @@ class Scene(models.Model):
     class Meta:
         verbose_name = u'场景信息'
         verbose_name_plural = u'场景信息'
-        db_table = "monitorScene"
+        db_table = "monitor_scene"

@@ -25,6 +25,8 @@ def position(request):
 
 
 def index(request):
+
+
     return render_mako_context(request, './main/index.html')
 
 
