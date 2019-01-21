@@ -1,6 +1,6 @@
 #!usr/bin/ebv python
 # -*- coding:utf-8 -*-
-from zlx.models import *
+from MarketDay.models import *
 import os
 
 def get_holiday(req,year):

@@ -141,7 +141,7 @@ var vm = new Vue({
         },
         addarrs() {
             year=new Date().getFullYear()
-            this.$http.get('/zlx/get_holiday/'+year).then(function (res) {
+            this.$http.get('/MarketDay/get_holiday/'+year).then(function (res) {
                 console.log(res.body.message)
                 for(var i=0;i<res.body.message.length;i++){
                     this.markDate.push(res.body.message[i])

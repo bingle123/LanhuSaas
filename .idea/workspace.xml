@@ -2,22 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="2019/1/4 16:38 --liaomingtao-- 主页构架完成">
-      <change afterPath="$PROJECT_DIR$/framework/zlx/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/zlx/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/zlx/function.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/zlx/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/zlx/migrations/0002_auto_20190117_1155.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/zlx/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/zlx/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/zlx/tests.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/zlx/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/framework/zlx/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/LanhuSaas.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/LanhuSaas.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/framework/conf/default.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/conf/default.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/framework/static/js/calendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/framework/static/js/calendar.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/framework/templates/main/Calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/framework/templates/main/Calendar.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/framework/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/zlx/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/zlx/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/zlx/function.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/function.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/zlx/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/zlx/migrations/0002_auto_20190117_1155.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/migrations/0002_auto_20190117_1155.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/zlx/migrations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/migrations/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/zlx/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/zlx/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/zlx/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/zlx/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,51 +41,21 @@
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/framework/zlx/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="9" column="1" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
-              <folding>
-                <element signature="e#24#75#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
+    <leaf>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/framework/static/js/calendar.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="107">
-              <caret line="159" column="27" selection-start-line="159" selection-start-column="27" selection-end-line="159" selection-end-column="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/framework/templates/main/Calendar.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="239">
-              <caret line="43" column="112" selection-start-line="43" selection-start-column="112" selection-end-line="43" selection-end-column="112" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/framework/zlx/views.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="5" column="36" lean-forward="true" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
+            <state relative-caret-position="167">
+              <caret line="143" column="29" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="39" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/framework/zlx/function.py">
+        <entry file="file://$PROJECT_DIR$/framework/templates/main/Calendar.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="161">
-              <caret line="31" selection-start-line="31" selection-end-line="31" />
+            <state relative-caret-position="389">
+              <caret line="48" column="20" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -188,10 +156,10 @@
         <option value="$PROJECT_DIR$/framework/templates/common/main.html" />
         <option value="$PROJECT_DIR$/framework/conf/default.py" />
         <option value="$PROJECT_DIR$/framework/urls.py" />
-        <option value="$PROJECT_DIR$/framework/static/js/calendar.js" />
         <option value="$PROJECT_DIR$/framework/zlx/views.py" />
-        <option value="$PROJECT_DIR$/framework/templates/main/Calendar.html" />
         <option value="$PROJECT_DIR$/framework/zlx/function.py" />
+        <option value="$PROJECT_DIR$/framework/static/js/calendar.js" />
+        <option value="$PROJECT_DIR$/framework/templates/main/Calendar.html" />
       </list>
     </option>
   </component>
@@ -202,7 +170,6 @@
   </component>
   <component name="ProjectLevelVcsManager">
     <OptionsSetting value="false" id="Update" />
-    <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -233,12 +200,6 @@
               <item name="framework" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="LanhuSaas" type="b2602c69:ProjectViewProjectNode" />
-              <item name="LanhuSaas" type="462c0819:PsiDirectoryNode" />
-              <item name="framework" type="462c0819:PsiDirectoryNode" />
-              <item name="zlx" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -290,14 +251,14 @@
         <env name="PYTHONUNBUFFERED" value="1" />
         <env name="DJANGO_SETTINGS_MODULE" value="settings" />
       </envs>
-      <option name="SDK_HOME" value="/usr/bin/python2.7" />
+      <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="launchJavascriptDebuger" value="false" />
       <option name="port" value="8000" />
-      <option name="host" value="dev.paas.bk.com" />
+      <option name="host" value="127.0.0.1" />
       <option name="additionalOptions" value="" />
       <option name="browserUrl" value="" />
       <option name="runTestServer" value="false" />
@@ -612,7 +573,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="396641000" />
+    <option name="totallyTimeSpent" value="396758000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -627,11 +588,11 @@
     <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17927383" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17927383" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3284553" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3276923" />
       <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.44939578" visible="true" weight="0.42153847" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.43577236" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -865,13 +826,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/templates/main/jobM.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="59">
-          <caret line="170" column="13" lean-forward="true" selection-start-line="167" selection-start-column="12" selection-end-line="170" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/templates/main/jobM.html" />
     <entry file="file://$PROJECT_DIR$/framework/templates/scene/scenecarousel1.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-354">
@@ -950,7 +905,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/zlx/urls.py">
+    <entry file="file://$PROJECT_DIR$/framework/MarketDay/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="243">
           <caret line="9" column="1" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
@@ -984,31 +939,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/static/js/calendar.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="107">
-          <caret line="159" column="27" selection-start-line="159" selection-start-column="27" selection-end-line="159" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/templates/main/Calendar.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="43" column="112" selection-start-line="43" selection-start-column="112" selection-end-line="43" selection-end-column="112" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/zlx/views.py">
+    <entry file="file://$PROJECT_DIR$/framework/MarketDay/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
           <caret line="5" column="36" lean-forward="true" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/zlx/function.py">
+    <entry file="file://$PROJECT_DIR$/framework/MarketDay/function.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="161">
           <caret line="31" selection-start-line="31" selection-end-line="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/static/js/calendar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="167">
+          <caret line="143" column="29" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/templates/main/Calendar.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="389">
+          <caret line="48" column="20" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="20" />
         </state>
       </provider>
     </entry>

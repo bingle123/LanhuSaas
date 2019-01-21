@@ -41,10 +41,18 @@
 					</div>
 				</div>
 				<div>
-					<el-upload action="/zlx/get_file/" :on-success="upsuccess" :on-error="err" accept=".txt,.csv">
+					<el-upload action="/MarketDay/get_file/" :on-success="upsuccess" :on-error="err" accept=".txt,.csv">
 						<el-button size="small" type="primary">点击上传</el-button>
 					</el-upload>
 				</div>
+               <div class="date_introduce">
+                   <p>温馨提示：</p>
+                   <hr style="margin-top:10px;margin-bottom:10px">
+                   <p><i class="el-icon-date"></i><span style="color: red">红色</span>为节假日</p>
+                   <p><i class="el-icon-date"></i><span style="color: yellow">黄色</span>为当前的日期</p>
+                   <p><i class="el-icon-date"></i><span style="color: lightgreen">亮绿色</span>为您选择的日期</p>
+                   <p><i class="el-icon-date"></i>正常颜色为交易日</p>
+               </div>
 			</section>
 			<br />
 			

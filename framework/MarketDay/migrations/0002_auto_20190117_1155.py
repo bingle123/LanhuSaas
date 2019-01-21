@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('zlx', '0001_initial'),
+        ('MarketDay', '0001_initial'),
     ]
 
     operations = [
