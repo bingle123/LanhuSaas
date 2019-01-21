@@ -130,11 +130,36 @@ def edit_unit(request):
 
     res = json.loads(request.body)
     print(res)
-    unit_type = res['unit_type']
+    unit_name = res['unit_name']
+    unit_id = res['unit_id']
     if res['unit_type'] == 'first':
         unit_type = '基本单元类型'
-
-
-
-
-
+        unit = BasicUnit.objects.get(unit_id=unit_id)
+        unit_dic = res['data']['basic']
+        BasicUnit.objects.filter(unit_id=unit_id).update(**unit_dic)
+        unit.save()
+    if res['unit_type'] == 'second':
+        unit_type = '图表单元类型'
+        unit = ChartUnit.objects.get(unit_id=unit_id)
+        unit_dic = res['data']['chart']
+        ChartUnit.objects.filter(unit_id=unit_id).update(**unit_dic)
+        unit.save()
+    if res['unit_type'] == 'third':
+        unit_type = '作业单元类型'
+        unit = JobUnit.objects.get(unit_id=unit_id)
+        unit_dic = res['data']['job']
+        JobUnit.objects.filter(unit_id=unit_id).update(**unit_dic)
+        unit.save()
+    if res['unit_type'] == 'fourth':
+        unit_type = '流程单元类型'
+        unit = FlowUnit.objects.get(unit_id=unit_id)
+        unit.flow_mould = res['data']['flow']['flow_mould']
+        unit.param = res['data']['flow']['param1']+res['data']['flow']['param2']
+        unit.node = res['data']['flow']['node']
+        unit.save()
+    common = Common.objects.get(id=unit_id)
+    common_dic = res['data']['common']
+    common_dic['unit_type'] = unit_type
+    Common.objects.filter(id=unit_id).update(**common_dic)
+    common.save()
+    return None

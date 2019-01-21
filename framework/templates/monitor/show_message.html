@@ -70,7 +70,7 @@
             <el-tabs type="card" v-model="unit_type">
 
                 <!--基本单元 start-->
-                <el-tab-pane label="基本单元" name="first">
+                <el-tab-pane :disabled="disabled2" label="基本单元" name="first">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="basic"  ref="basic" label-width="100px">
@@ -100,7 +100,7 @@
                                         <el-input v-model="basic.basic.contents" placeholder="上证指数:3000  深证指数:3000" type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
-                                    <el-radio-group v-model="basic.basic.sql_file_interface" @change="change1" style="padding: 14px">
+                                    <el-radio-group v-model="sql_file_interface" @change="change1" style="padding: 14px">
                                         <el-radio :label="3">数据库</el-radio>
                                         <el-radio :label="6">文件</el-radio>
                                         <el-radio :label="9">接口</el-radio>
@@ -173,7 +173,7 @@
                 <!-- 基本单元 end-->
 
                 <!-- 图表单元 start-->
-                <el-tab-pane label="图表单元" name="second">
+                <el-tab-pane :disabled="disabled3" label="图表单元" name="second">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="chart" ref="chart" label-width="100px">
@@ -255,7 +255,7 @@
                 <!-- 图表单元 end-->
 
                 <!-- 作业单元 start-->
-                <el-tab-pane label="作业单元" name="third">
+                <el-tab-pane :disabled="disabled4" label="作业单元" name="third">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="job" ref="job" label-width="100px">
@@ -337,7 +337,7 @@
                 <!-- 作业单元 end-->
 
                 <!-- 流程单元 start-->
-                <el-tab-pane label="流程单元" name="fourth">
+                <el-tab-pane :disabled="disabled5" label="流程单元" name="fourth">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="flow" ref="flow" label-width="100px">
@@ -459,6 +459,10 @@ var vm = new Vue({
         checked1:false,                           //作业启动选框
         checked2:false,                           //流程启动选框
         disabled1:false,
+        disabled2:false,                            //基本单元
+        disabled3:false,                            //图表单元
+        disabled4:false,                            //作业单元
+        disabled5:false,                            //流程单元
         caiji1:'block',
         caiji2:'none',
         unit_id: 0,                               //单元id
@@ -468,6 +472,7 @@ var vm = new Vue({
         sql1:'block',
         file1:'none',
         interface1:'none',
+        sql_file_interface:3,
         zuoye:'none',
         liucheng:'none',
         data22:{},                              //传递新增数据
@@ -540,6 +545,74 @@ var vm = new Vue({
                 node: '',                        //节点
             }
         },
+        basic1: {                                //基本单元
+            common:{
+                font_size:'',                   //字号
+                height:'',                      //高度
+                wide:'',                        //宽度
+                start_time:'',                  //开始时间
+                end_time:'',                    //结束时间
+                cycle:'',                       //采集周期
+            },
+            basic:{
+            contents:'',                        //显示内容
+            sql_file_interface:'sql',          //数据来源
+            sql:'',                             //连接数据库
+            rules:'',                           //数据采集规则
+            server:'',                          //服务器
+            file:'',                            //文件路径
+            urls:'',                            //url
+            param:'',                           //接口参数
+            }
+        },
+        chart1: {                                //图表单元
+            common:{
+                font_size:'',                   //字号
+                height:'',                      //高度
+                wide:'',                        //宽度
+                start_time:'',                  //开始时间
+                end_time:'',                    //结束时间
+                cycle:'',                       //采集周期
+            },
+            chart:{
+            chart_type:'',                      //图表类型
+            contents:'',                        //显示内容
+            sql:'',                             //连接数据库
+            rules:'',                           //采集规则
+            }
+        },
+        job1: {                                  //作业单元
+            common:{
+                font_size:'',                   //字号
+                height:'',                      //高度
+                wide:'',                        //宽度
+                start_time:'',                  //开始时间
+                end_time:'',                    //结束时间
+                cycle:'',                       //采集周期
+            },
+            job:{
+            contents:'',                        //显示内容
+            job_mould:'',                       //作业模板
+            NODE_KEY:'',                        //NODE_KEY参数
+            server:'',                          //服务器
+            }
+        },
+        flow1: {                                   //流程单元
+            common:{
+                font_size:'',                   //字号
+                height:'',                      //高度
+                wide:'',                        //宽度
+                start_time:'',                  //开始时间
+                end_time:'',                    //结束时间
+                cycle:'',                       //采集周期
+            },
+            flow: {
+                flow_mould: '',                  //流程模板
+                param1: '',                      //流程参数1
+                param2: '',                      //流程参数2
+                node: '',                        //节点
+            }
+        }
     },
     methods: {
         submitForm(formName) {
@@ -574,7 +647,7 @@ var vm = new Vue({
                             unit_type: row.unit_type,
                         }
                     }).then((res) => {
-                        vm.a();
+                        vm.show()
                     }),);
             }).catch(() => {
                 this.$message({
@@ -588,7 +661,6 @@ var vm = new Vue({
                 method: 'post',
                 url: '${SITE_URL}monitor/show/',
             }).then(function(res) {
-                console.log(res);
                 vm.sites = res.data.message;
 
             })
@@ -607,9 +679,58 @@ var vm = new Vue({
             vm.centerDialogVisible = true;
             vm.unit_id = row.id;
             vm.unit_name = row.unit_name;
-            vm.height = row.height;
-            vm.font_size = row.font_size;
-            vm.wide = row.wide;
+            if (row.unit_type == '基本单元类型') {
+                vm.disabled2 = false;
+                vm.disabled3 = true;
+                vm.disabled4 = true;
+                vm.disabled5 = true;
+                vm.unit_type = 'first';
+                vm.basic.common.font_size = row.font_size;
+                vm.basic.common.height = row.height;
+                vm.basic.common.wide = row.wide;
+                vm.basic.common.start_time = row.start_time;
+                vm.basic.common.end_time = row.end_time;
+                vm.basic.common.cycle = row.cycle
+            }
+            if (row.unit_type == '图表单元类型') {
+                vm.disabled2 = true;
+                vm.disabled3 = false;
+                vm.disabled4 = true;
+                vm.disabled5 = true;
+                vm.unit_type = 'second';
+                vm.chart.common.font_size = row.font_size;
+                vm.chart.common.height = row.height;
+                vm.chart.common.wide = row.wide;
+                vm.chart.common.start_time = row.start_time;
+                vm.chart.common.end_time = row.end_time;
+                vm.chart.common.cycle = row.cycle
+            }
+            if (row.unit_type == '作业单元类型') {
+                vm.disabled2 = true;
+                vm.disabled3 = true;
+                vm.disabled4 = false;
+                vm.disabled5 = true;
+                vm.unit_type = 'third';
+                vm.job.common.font_size = row.font_size;
+                vm.job.common.height = row.height;
+                vm.job.common.wide = row.wide;
+                vm.job.common.start_time = row.start_time;
+                vm.job.common.end_time = row.end_time;
+                vm.job.common.cycle = row.cycle
+            }
+            if (row.unit_type == '流程单元类型') {
+                vm.disabled2 = true;
+                vm.disabled3 = true;
+                vm.disabled4 = true;
+                vm.disabled5 = false;
+                vm.unit_type = 'fourth';
+                vm.flow.common.font_size = row.font_size;
+                vm.flow.common.height = row.height;
+                vm.flow.common.wide = row.wide;
+                vm.flow.common.start_time = row.start_time;
+                vm.flow.common.end_time = row.end_time;
+                vm.flow.common.cycle = row.cycle
+            }
         },
         edit1() {
             vm.centerDialogVisible = false;
@@ -629,7 +750,8 @@ var vm = new Vue({
                     data: {
                         data:vm.data22,
                         unit_type:vm.unit_type,
-                        unit_name:vm.unit_name
+                        unit_name:vm.unit_name,
+                        unit_id:vm.unit_id,
                     }
                 }).then((res) => {
                     vm.show()
@@ -654,29 +776,38 @@ var vm = new Vue({
             }
         },
         edit3(row) {
-            vm.centerDialogVisible = true;
+            vm.disabled2 = false;
+            vm.disabled3 = false;
+            vm.disabled4 = false;
+            vm.disabled5 = false;
+            vm.unit_type = 'first';
             vm.unit_id = row;
+            console.log(vm.basic1);
+            vm.basic = vm.basic1;
+            vm.chart = vm.chart1;
+            vm.job = vm.job1;
+            vm.flow = vm.flow1;
+            vm.centerDialogVisible = true;
         },
         del() {
             vm.edit(0)
         },
         change1(value){
-            console.log(vm.basic.sql_file_interface);
             if(value==3){
                 vm.sql1 = 'block';
                 vm.file1 = 'none';
                 vm.interface1 = 'none';
-                vm.basic.sql_file_interface = 'sql'
+                vm.basic.basic.sql_file_interface = 'sql'
             }else if (value==6) {
                 vm.sql1 = 'none';
                 vm.file1 = 'block';
                 vm.interface1 = 'none';
-                vm.basic.sql_file_interface = 'file';
+                vm.basic.basic.sql_file_interface = 'file';
             }else if (value==9){
                 vm.sql1 = 'none';
                 vm.file1 = 'none';
                 vm.interface1 = 'block';
-                vm.basic.sql_file_interface = 'interface';
+                vm.basic.basic.sql_file_interface = 'interface';
             }
         },
         change2(value){
@@ -698,16 +829,15 @@ var vm = new Vue({
             setTimeout(function(){
                 vm.disabled1 = false;
             },60000);
-
         },
+
+
         rowclass({row, rowIndex}) {
-            console.log(rowIndex);
             return 'background:#F7F7F7'
         },
     },
     mounted() {
     },
-
 });
 vm.show();
 </script>
