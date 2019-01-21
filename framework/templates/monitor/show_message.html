@@ -451,395 +451,395 @@
 
 
 <script>
-var vm = new Vue({
-    el:'#app',
-    data: {
-        sites: [],                                //table内容
-        contents: '',                             //搜索输入框内容
-        checked1:false,                           //作业启动选框
-        checked2:false,                           //流程启动选框
-        disabled1:false,
-        disabled2:false,                            //基本单元
-        disabled3:false,                            //图表单元
-        disabled4:false,                            //作业单元
-        disabled5:false,                            //流程单元
-        caiji1:'block',
-        caiji2:'none',
-        unit_id: 0,                               //单元id
-        value1:'开',                              //开关状态
-        centerDialogVisible: false,              //弹窗状态
-        unit_name:'',                             //单元名称
-        sql1:'block',
-        file1:'none',
-        interface1:'none',
-        sql_file_interface:3,
-        zuoye:'none',
-        liucheng:'none',
-        data22:{},                              //传递新增数据
-        unit_type: 'first',                     //单元类型
-        basic: {                                //基本单元
-            common:{
-                font_size:'',                   //字号
-                height:'',                      //高度
-                wide:'',                        //宽度
-                start_time:'',                  //开始时间
-                end_time:'',                    //结束时间
-                cycle:'',                       //采集周期
+    var vm = new Vue({
+        el:'#app',
+        data: {
+            sites: [],                                //table内容
+            contents: '',                             //搜索输入框内容
+            checked1:false,                           //作业启动选框
+            checked2:false,                           //流程启动选框
+            disabled1:false,
+            disabled2:false,                            //基本单元
+            disabled3:false,                            //图表单元
+            disabled4:false,                            //作业单元
+            disabled5:false,                            //流程单元
+            caiji1:'block',
+            caiji2:'none',
+            unit_id: 0,                               //单元id
+            value1:'开',                              //开关状态
+            centerDialogVisible: false,              //弹窗状态
+            unit_name:'',                             //单元名称
+            sql1:'block',
+            file1:'none',
+            interface1:'none',
+            sql_file_interface:3,
+            zuoye:'none',
+            liucheng:'none',
+            data22:{},                              //传递新增数据
+            unit_type: 'first',                     //单元类型
+            basic: {                                //基本单元
+                common:{
+                    font_size:'',                   //字号
+                    height:'',                      //高度
+                    wide:'',                        //宽度
+                    start_time:'',                  //开始时间
+                    end_time:'',                    //结束时间
+                    cycle:'',                       //采集周期
+                },
+                basic:{
+                contents:'',                        //显示内容
+                sql_file_interface:'sql',          //数据来源
+                sql:'',                             //连接数据库
+                rules:'',                           //数据采集规则
+                server:'',                          //服务器
+                file:'',                            //文件路径
+                urls:'',                            //url
+                param:'',                           //接口参数
+                }
             },
-            basic:{
-            contents:'',                        //显示内容
-            sql_file_interface:'sql',          //数据来源
-            sql:'',                             //连接数据库
-            rules:'',                           //数据采集规则
-            server:'',                          //服务器
-            file:'',                            //文件路径
-            urls:'',                            //url
-            param:'',                           //接口参数
+            chart: {                                //图表单元
+                common:{
+                    font_size:'',                   //字号
+                    height:'',                      //高度
+                    wide:'',                        //宽度
+                    start_time:'',                  //开始时间
+                    end_time:'',                    //结束时间
+                    cycle:'',                       //采集周期
+                },
+                chart:{
+                chart_type:'',                      //图表类型
+                contents:'',                        //显示内容
+                sql:'',                             //连接数据库
+                rules:'',                           //采集规则
+                }
+            },
+            job: {                                  //作业单元
+                common:{
+                    font_size:'',                   //字号
+                    height:'',                      //高度
+                    wide:'',                        //宽度
+                    start_time:'',                  //开始时间
+                    end_time:'',                    //结束时间
+                    cycle:'',                       //采集周期
+                },
+                job:{
+                contents:'',                        //显示内容
+                job_mould:'',                       //作业模板
+                NODE_KEY:'',                        //NODE_KEY参数
+                server:'',                          //服务器
+                }
+            },
+            flow: {                                   //流程单元
+                common:{
+                    font_size:'',                   //字号
+                    height:'',                      //高度
+                    wide:'',                        //宽度
+                    start_time:'',                  //开始时间
+                    end_time:'',                    //结束时间
+                    cycle:'',                       //采集周期
+                },
+                flow: {
+                    flow_mould: '',                  //流程模板
+                    param1: '',                      //流程参数1
+                    param2: '',                      //流程参数2
+                    node: '',                        //节点
+                }
+            },
+            basic1: {                                //基本单元
+                common:{
+                    font_size:'',                   //字号
+                    height:'',                      //高度
+                    wide:'',                        //宽度
+                    start_time:'',                  //开始时间
+                    end_time:'',                    //结束时间
+                    cycle:'',                       //采集周期
+                },
+                basic:{
+                contents:'',                        //显示内容
+                sql_file_interface:'sql',          //数据来源
+                sql:'',                             //连接数据库
+                rules:'',                           //数据采集规则
+                server:'',                          //服务器
+                file:'',                            //文件路径
+                urls:'',                            //url
+                param:'',                           //接口参数
+                }
+            },
+            chart1: {                                //图表单元
+                common:{
+                    font_size:'',                   //字号
+                    height:'',                      //高度
+                    wide:'',                        //宽度
+                    start_time:'',                  //开始时间
+                    end_time:'',                    //结束时间
+                    cycle:'',                       //采集周期
+                },
+                chart:{
+                chart_type:'',                      //图表类型
+                contents:'',                        //显示内容
+                sql:'',                             //连接数据库
+                rules:'',                           //采集规则
+                }
+            },
+            job1: {                                  //作业单元
+                common:{
+                    font_size:'',                   //字号
+                    height:'',                      //高度
+                    wide:'',                        //宽度
+                    start_time:'',                  //开始时间
+                    end_time:'',                    //结束时间
+                    cycle:'',                       //采集周期
+                },
+                job:{
+                contents:'',                        //显示内容
+                job_mould:'',                       //作业模板
+                NODE_KEY:'',                        //NODE_KEY参数
+                server:'',                          //服务器
+                }
+            },
+            flow1: {                                   //流程单元
+                common:{
+                    font_size:'',                   //字号
+                    height:'',                      //高度
+                    wide:'',                        //宽度
+                    start_time:'',                  //开始时间
+                    end_time:'',                    //结束时间
+                    cycle:'',                       //采集周期
+                },
+                flow: {
+                    flow_mould: '',                  //流程模板
+                    param1: '',                      //流程参数1
+                    param2: '',                      //流程参数2
+                    node: '',                        //节点
+                }
             }
         },
-        chart: {                                //图表单元
-            common:{
-                font_size:'',                   //字号
-                height:'',                      //高度
-                wide:'',                        //宽度
-                start_time:'',                  //开始时间
-                end_time:'',                    //结束时间
-                cycle:'',                       //采集周期
+        methods: {
+            submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+              if (valid) {
+                alert('submit!');
+              } else {
+                console.log('error submit!!');
+                return false;
+              }
+            });
+          },
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
             },
-            chart:{
-            chart_type:'',                      //图表类型
-            contents:'',                        //显示内容
-            sql:'',                             //连接数据库
-            rules:'',                           //采集规则
-            }
-        },
-        job: {                                  //作业单元
-            common:{
-                font_size:'',                   //字号
-                height:'',                      //高度
-                wide:'',                        //宽度
-                start_time:'',                  //开始时间
-                end_time:'',                    //结束时间
-                cycle:'',                       //采集周期
+            edit2(row) {
+                this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    this.$message({
+                            type: 'success',
+                            message: '删除成功!',
+                        },
+                        axios({
+                            method: 'post',
+                            url: '${SITE_URL}monitor/delete/',
+                            data: {
+                                unit_id: row.id,
+                                unit_type: row.unit_type,
+                            }
+                        }).then((res) => {
+                            vm.show()
+                        }),);
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
-            job:{
-            contents:'',                        //显示内容
-            job_mould:'',                       //作业模板
-            NODE_KEY:'',                        //NODE_KEY参数
-            server:'',                          //服务器
-            }
-        },
-        flow: {                                   //流程单元
-            common:{
-                font_size:'',                   //字号
-                height:'',                      //高度
-                wide:'',                        //宽度
-                start_time:'',                  //开始时间
-                end_time:'',                    //结束时间
-                cycle:'',                       //采集周期
+            show() {
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor/show/',
+                }).then(function(res) {
+                    vm.sites = res.data.message;
+
+                })
             },
-            flow: {
-                flow_mould: '',                  //流程模板
-                param1: '',                      //流程参数1
-                param2: '',                      //流程参数2
-                node: '',                        //节点
-            }
-        },
-        basic1: {                                //基本单元
-            common:{
-                font_size:'',                   //字号
-                height:'',                      //高度
-                wide:'',                        //宽度
-                start_time:'',                  //开始时间
-                end_time:'',                    //结束时间
-                cycle:'',                       //采集周期
+            select1() {
+                vm.centerDialogVisible = false;
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor/select/',
+                    data: this.contents,
+                }).then((res) => {
+                    vm.sites = res.data.message;
+                })
             },
-            basic:{
-            contents:'',                        //显示内容
-            sql_file_interface:'sql',          //数据来源
-            sql:'',                             //连接数据库
-            rules:'',                           //数据采集规则
-            server:'',                          //服务器
-            file:'',                            //文件路径
-            urls:'',                            //url
-            param:'',                           //接口参数
-            }
-        },
-        chart1: {                                //图表单元
-            common:{
-                font_size:'',                   //字号
-                height:'',                      //高度
-                wide:'',                        //宽度
-                start_time:'',                  //开始时间
-                end_time:'',                    //结束时间
-                cycle:'',                       //采集周期
+            edit(row) {
+                vm.centerDialogVisible = true;
+                vm.unit_id = row.id;
+                vm.unit_name = row.unit_name;
+                if (row.unit_type == '基本单元类型') {
+                    vm.disabled2 = false;
+                    vm.disabled3 = true;
+                    vm.disabled4 = true;
+                    vm.disabled5 = true;
+                    vm.unit_type = 'first';
+                    vm.basic.common.font_size = row.font_size;
+                    vm.basic.common.height = row.height;
+                    vm.basic.common.wide = row.wide;
+                    vm.basic.common.start_time = row.start_time;
+                    vm.basic.common.end_time = row.end_time;
+                    vm.basic.common.cycle = row.cycle
+                }
+                if (row.unit_type == '图表单元类型') {
+                    vm.disabled2 = true;
+                    vm.disabled3 = false;
+                    vm.disabled4 = true;
+                    vm.disabled5 = true;
+                    vm.unit_type = 'second';
+                    vm.chart.common.font_size = row.font_size;
+                    vm.chart.common.height = row.height;
+                    vm.chart.common.wide = row.wide;
+                    vm.chart.common.start_time = row.start_time;
+                    vm.chart.common.end_time = row.end_time;
+                    vm.chart.common.cycle = row.cycle
+                }
+                if (row.unit_type == '作业单元类型') {
+                    vm.disabled2 = true;
+                    vm.disabled3 = true;
+                    vm.disabled4 = false;
+                    vm.disabled5 = true;
+                    vm.unit_type = 'third';
+                    vm.job.common.font_size = row.font_size;
+                    vm.job.common.height = row.height;
+                    vm.job.common.wide = row.wide;
+                    vm.job.common.start_time = row.start_time;
+                    vm.job.common.end_time = row.end_time;
+                    vm.job.common.cycle = row.cycle
+                }
+                if (row.unit_type == '流程单元类型') {
+                    vm.disabled2 = true;
+                    vm.disabled3 = true;
+                    vm.disabled4 = true;
+                    vm.disabled5 = false;
+                    vm.unit_type = 'fourth';
+                    vm.flow.common.font_size = row.font_size;
+                    vm.flow.common.height = row.height;
+                    vm.flow.common.wide = row.wide;
+                    vm.flow.common.start_time = row.start_time;
+                    vm.flow.common.end_time = row.end_time;
+                    vm.flow.common.cycle = row.cycle
+                }
             },
-            chart:{
-            chart_type:'',                      //图表类型
-            contents:'',                        //显示内容
-            sql:'',                             //连接数据库
-            rules:'',                           //采集规则
-            }
-        },
-        job1: {                                  //作业单元
-            common:{
-                font_size:'',                   //字号
-                height:'',                      //高度
-                wide:'',                        //宽度
-                start_time:'',                  //开始时间
-                end_time:'',                    //结束时间
-                cycle:'',                       //采集周期
-            },
-            job:{
-            contents:'',                        //显示内容
-            job_mould:'',                       //作业模板
-            NODE_KEY:'',                        //NODE_KEY参数
-            server:'',                          //服务器
-            }
-        },
-        flow1: {                                   //流程单元
-            common:{
-                font_size:'',                   //字号
-                height:'',                      //高度
-                wide:'',                        //宽度
-                start_time:'',                  //开始时间
-                end_time:'',                    //结束时间
-                cycle:'',                       //采集周期
-            },
-            flow: {
-                flow_mould: '',                  //流程模板
-                param1: '',                      //流程参数1
-                param2: '',                      //流程参数2
-                node: '',                        //节点
-            }
-        }
-    },
-    methods: {
-        submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            alert('submit!');
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      },
-        resetForm(formName) {
-            this.$refs[formName].resetFields();
-        },
-        edit2(row) {
-            this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                center: true
-            }).then(() => {
-                this.$message({
-                        type: 'success',
-                        message: '删除成功!',
-                    },
+            edit1() {
+                vm.centerDialogVisible = false;
+                if(vm.unit_type == 'first') {
+                    vm.data22 = vm.basic
+                }else if (vm.unit_type == 'second'){
+                    vm.data22 = vm.chart
+                }else if(vm.unit_type == 'third') {
+                    vm.data22 = vm.job
+                }else if(vm.unit_type == 'fourth'){
+                    vm.data22 = vm.flow
+                }
+                if(vm.unit_id > 0) {
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}monitor/delete/',
+                        url: '${SITE_URL}monitor/edit/',
                         data: {
-                            unit_id: row.id,
-                            unit_type: row.unit_type,
+                            data:vm.data22,
+                            unit_type:vm.unit_type,
+                            unit_name:vm.unit_name,
+                            unit_id:vm.unit_id,
                         }
                     }).then((res) => {
                         vm.show()
-                    }),);
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
-                });
-            });
-        },
-        show() {
-            axios({
-                method: 'post',
-                url: '${SITE_URL}monitor/show/',
-            }).then(function(res) {
-                vm.sites = res.data.message;
-
-            })
-        },
-        select1() {
-            vm.centerDialogVisible = false;
-            axios({
-                method: 'post',
-                url: '${SITE_URL}monitor/select/',
-                data: this.contents,
-            }).then((res) => {
-                vm.sites = res.data.message;
-            })
-        },
-        edit(row) {
-            vm.centerDialogVisible = true;
-            vm.unit_id = row.id;
-            vm.unit_name = row.unit_name;
-            if (row.unit_type == '基本单元类型') {
+                    }).catch((error) => {
+                        alert('修改失败！')
+                    });
+                }
+                else {
+                    axios({
+                        method:'post',
+                        url:'${SITE_URL}monitor/add/',
+                        data:{
+                            data:vm.data22,
+                            unit_type:vm.unit_type,
+                            unit_name:vm.unit_name
+                        },
+                    }).then((res) => {
+                        vm.show()
+                    }).catch((error) => {
+                        alert('保存失败！')
+                    });
+                }
+            },
+            edit3(row) {
                 vm.disabled2 = false;
-                vm.disabled3 = true;
-                vm.disabled4 = true;
-                vm.disabled5 = true;
-                vm.unit_type = 'first';
-                vm.basic.common.font_size = row.font_size;
-                vm.basic.common.height = row.height;
-                vm.basic.common.wide = row.wide;
-                vm.basic.common.start_time = row.start_time;
-                vm.basic.common.end_time = row.end_time;
-                vm.basic.common.cycle = row.cycle
-            }
-            if (row.unit_type == '图表单元类型') {
-                vm.disabled2 = true;
                 vm.disabled3 = false;
-                vm.disabled4 = true;
-                vm.disabled5 = true;
-                vm.unit_type = 'second';
-                vm.chart.common.font_size = row.font_size;
-                vm.chart.common.height = row.height;
-                vm.chart.common.wide = row.wide;
-                vm.chart.common.start_time = row.start_time;
-                vm.chart.common.end_time = row.end_time;
-                vm.chart.common.cycle = row.cycle
-            }
-            if (row.unit_type == '作业单元类型') {
-                vm.disabled2 = true;
-                vm.disabled3 = true;
                 vm.disabled4 = false;
-                vm.disabled5 = true;
-                vm.unit_type = 'third';
-                vm.job.common.font_size = row.font_size;
-                vm.job.common.height = row.height;
-                vm.job.common.wide = row.wide;
-                vm.job.common.start_time = row.start_time;
-                vm.job.common.end_time = row.end_time;
-                vm.job.common.cycle = row.cycle
-            }
-            if (row.unit_type == '流程单元类型') {
-                vm.disabled2 = true;
-                vm.disabled3 = true;
-                vm.disabled4 = true;
                 vm.disabled5 = false;
-                vm.unit_type = 'fourth';
-                vm.flow.common.font_size = row.font_size;
-                vm.flow.common.height = row.height;
-                vm.flow.common.wide = row.wide;
-                vm.flow.common.start_time = row.start_time;
-                vm.flow.common.end_time = row.end_time;
-                vm.flow.common.cycle = row.cycle
-            }
-        },
-        edit1() {
-            vm.centerDialogVisible = false;
-            if(vm.unit_type == 'first') {
-                vm.data22 = vm.basic
-            }else if (vm.unit_type == 'second'){
-                vm.data22 = vm.chart
-            }else if(vm.unit_type == 'third') {
-                vm.data22 = vm.job
-            }else if(vm.unit_type == 'fourth'){
-                vm.data22 = vm.flow
-            }
-            if(vm.unit_id > 0) {
-                axios({
-                    method: 'post',
-                    url: '${SITE_URL}monitor/edit/',
-                    data: {
-                        data:vm.data22,
-                        unit_type:vm.unit_type,
-                        unit_name:vm.unit_name,
-                        unit_id:vm.unit_id,
-                    }
-                }).then((res) => {
-                    vm.show()
-                }).catch((error) => {
-                    alert('修改失败！')
-                });
-            }
-            else {
-                axios({
-                    method:'post',
-                    url:'${SITE_URL}monitor/add/',
-                    data:{
-                        data:vm.data22,
-                        unit_type:vm.unit_type,
-                        unit_name:vm.unit_name
-                    },
-                }).then((res) => {
-                    vm.show()
-                }).catch((error) => {
-                    alert('保存失败！')
-                });
-            }
-        },
-        edit3(row) {
-            vm.disabled2 = false;
-            vm.disabled3 = false;
-            vm.disabled4 = false;
-            vm.disabled5 = false;
-            vm.unit_type = 'first';
-            vm.unit_id = row;
-            console.log(vm.basic1);
-            vm.basic = vm.basic1;
-            vm.chart = vm.chart1;
-            vm.job = vm.job1;
-            vm.flow = vm.flow1;
-            vm.centerDialogVisible = true;
-        },
-        del() {
-            vm.edit(0)
-        },
-        change1(value){
-            if(value==3){
-                vm.sql1 = 'block';
-                vm.file1 = 'none';
-                vm.interface1 = 'none';
-                vm.basic.basic.sql_file_interface = 'sql'
-            }else if (value==6) {
-                vm.sql1 = 'none';
-                vm.file1 = 'block';
-                vm.interface1 = 'none';
-                vm.basic.basic.sql_file_interface = 'file';
-            }else if (value==9){
-                vm.sql1 = 'none';
-                vm.file1 = 'none';
-                vm.interface1 = 'block';
-                vm.basic.basic.sql_file_interface = 'interface';
-            }
-        },
-        change2(value){
-            if (value==1) {
-                vm.zuoye = 'block';
-            }else {
-                vm.zuoye = 'none';
-            }
-        },
-        change3(value){
-            if (value==1) {
-                vm.liucheng = 'block';
-            }else {
-                vm.liucheng = 'none';
-            }
-        },
-        time1(){
-            vm.disabled1 = true;
-            setTimeout(function(){
-                vm.disabled1 = false;
-            },60000);
-        },
+                vm.unit_type = 'first';
+                vm.unit_id = row;
+                console.log(vm.basic1);
+                vm.basic = vm.basic1;
+                vm.chart = vm.chart1;
+                vm.job = vm.job1;
+                vm.flow = vm.flow1;
+                vm.centerDialogVisible = true;
+            },
+            del() {
+                vm.edit(0)
+            },
+            change1(value){
+                if(value==3){
+                    vm.sql1 = 'block';
+                    vm.file1 = 'none';
+                    vm.interface1 = 'none';
+                    vm.basic.basic.sql_file_interface = 'sql'
+                }else if (value==6) {
+                    vm.sql1 = 'none';
+                    vm.file1 = 'block';
+                    vm.interface1 = 'none';
+                    vm.basic.basic.sql_file_interface = 'file';
+                }else if (value==9){
+                    vm.sql1 = 'none';
+                    vm.file1 = 'none';
+                    vm.interface1 = 'block';
+                    vm.basic.basic.sql_file_interface = 'interface';
+                }
+            },
+            change2(value){
+                if (value==1) {
+                    vm.zuoye = 'block';
+                }else {
+                    vm.zuoye = 'none';
+                }
+            },
+            change3(value){
+                if (value==1) {
+                    vm.liucheng = 'block';
+                }else {
+                    vm.liucheng = 'none';
+                }
+            },
+            time1(){
+                vm.disabled1 = true;
+                setTimeout(function(){
+                    vm.disabled1 = false;
+                },60000);
+            },
 
 
-        rowclass({row, rowIndex}) {
-            return 'background:#F7F7F7'
+            rowclass({row, rowIndex}) {
+                return 'background:#F7F7F7'
+            },
         },
-    },
-    mounted() {
-    },
-});
-vm.show();
+        mounted() {
+        },
+    });
+    vm.show();
 </script>
 
 </html>
