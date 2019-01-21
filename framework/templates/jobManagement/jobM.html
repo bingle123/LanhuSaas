@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <title>岗位管理</title>
@@ -15,11 +14,9 @@
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
     <!--jQuery库使用时请使用标准jQuery语法-->
     <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
-    <script src="${STATIC_URL}assets/vue-2.5.21/vue-router.js"></script>
-    <link type="text/css" href="${STATIC_URL}css/jobM.css" rel="stylesheet">
     <style>
-        .el-table--border th{
-        padding:10px
+        .el-table--border th {
+            padding: 10px
         }
     </style>
 </head>
@@ -32,12 +29,12 @@
                 <template>
                     <template>
                         <el-transfer
-                        filterable
-                        :filter-method="filterMethod"
-                        filter-placeholder="请输入搜索内容"
-                        v-model="value2"
-                        :titles="['选择人员', 'Java开发']"
-                        :data="data2" >
+                                filterable
+                                :filter-method="filterMethod"
+                                filter-placeholder="请输入搜索内容"
+                                v-model="value2"
+                                :titles="['选择人员', 'Java开发']"
+                                :data="data2">
                         </el-transfer>
                     </template>
                 </template>
@@ -117,8 +114,9 @@
             </div>
         </el-card>
     </div>
+</div>
 <script type="text/javascript">
- let vm =   new Vue({
+    let vm = new Vue({
         el: '.content',
         data: {
             dialogFormVisible: false,
@@ -170,38 +168,37 @@
                 return 'background:#F7F7F7'
             },
             handleSizeChange(val) {
-                console.log('每页:'+val+'条')
+                console.log('每页:' + val + '条')
             },
             handleCurrentChange(val) {
-                console.log('当前页:'+val)
+                console.log('当前页:' + val)
             },
-            deletePosition(){
+            deletePosition() {
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                center: true
-            })
-            },generateData2() {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                })
+            }, generateData2() {
                 const data = [];
                 const cities = ['张三', '李四', '王五', '赵六', '员工a', '员工b', '员工c'];
                 const pinyin = ['zhangsan', 'ls', 'wangwu', 'zhaoliu', 'yuangonga', 'yuangongb', 'yuangongc'];
                 cities.forEach((city, index) => {
-                  data.push({
-                    label: city,
-                    key: index,
-                    pinyin: pinyin[index]
-                  });
+                    data.push({
+                        label: city,
+                        key: index,
+                        pinyin: pinyin[index]
+                    });
                 });
-            this.data2 = data
+                this.data2 = data
             },
             filterMethod(query, item) {
                 return item.pinyin.indexOf(query) > -1;
             }
         }
     });
- vm.generateData2()
+    vm.generateData2()
 </script>
 </body>
-
 </html>
