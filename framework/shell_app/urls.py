@@ -25,7 +25,7 @@ urlpatterns = patterns(
     (r'^calendar/$', 'calendar'),                                   # 交易日导入
     (r'^ming/$', 'ming'),                                           # 场景编排
     (r'^index/$', 'index'),                                           # 场景编排
-    (r'^select_host/$', 'select_host'),                             # 查询主机--分页
+    (r'^select_host/$', 'select_host'),                            # 查询主机--分页
     (r'^test2/$', 'model_tree_host'),                               # 选择业务下的集群和模块
     (r'^select_module_host/$', 'select_module_host'),               # 查询模板下面的主机信息
     (r'^carousel', 'carousel'),                                     # 跳转到轮播页面
