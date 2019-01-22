@@ -71,13 +71,16 @@ def add_job(request):
 def add_person(request):
     res = json.loads(request.body)
     id = res['id']
-    # re = JobInstance.objects.filter(id=id).update(Job_name=)
-    # return re
+    username = res['data'][1]['pinyin']
+    print username
+    re = JobInstance.objects.filter(id=id).update(User_name=username)
+    return re
 
 def edit_job(request):
-    res1 = json.loads(request.body)
-    id = res1['id']
-    rl = JobInstance.objects.filter(id=id).update(**res1)
+    res = json.loads(request.body)
+    id = res['id']
+    Job_name = res['Job_name']
+    rl = JobInstance.objects.filter(id=id).update(Job_name =Job_name )
     return rl
 
 

@@ -39,7 +39,8 @@
                         filter-placeholder="请输入搜索内容"
                         v-model="value2"
                         :titles="['选择人员', jobname]"
-                        :data="data2" >
+                        :data="data2"
+                        @change="change1">
                         </el-transfer>
                     </template>
                 </template>
@@ -149,11 +150,14 @@
             jobInstance:[],
             checkList: ['王小虎', '张焊强', '李明理'],
             data2: '',
-            value2: [],
+            value2:[],
         },
         methods: {
+            change1(value){
+                 vm.value2.push(this.data2[value])
+            },
             rowClass({row, rowIndex}) {
-                console.log(rowIndex)
+                console.log(rowIndex);
                 return 'background:#F7F7F7'
             },
             handleSizeChange(val) {
@@ -208,7 +212,7 @@
                 })
             },
             add_job(){
-                vm.dialogFormVisible3 = false
+                vm.dialogFormVisible3 = false;
                axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/add_job/',
@@ -217,27 +221,6 @@
                     window.location.href="${SITE_URL}jobManagement/jobM"
                 })
             },
-            add_person(row){
-                vm.dialogFormVisible = false;
-               axios({
-                    method: 'post',
-                    url: '${SITE_URL}jobManagement/add_person/',
-                    data:{
-                        data:jobName = this.jobName,
-                        id:this.id
-                    },
-                }).then((res) => {
-                    vm.show()
-                })
-            },
-            show_job(row){
-                vm.dialogFormVisible = true
-                vm.generateData2()
-                vm.jobname = row.Job_name
-                vm.id = row.id
-                vm.jobname = data2
-            },
-
             edit_jobname(row){
                 vm.dialogFormVisible2 = true
                 vm.tempid = row.id;
@@ -245,13 +228,36 @@
             },
             edit_job(){
                 vm.dialogFormVisible2 = false
-                axios.post(
-                    '${SITE_URL}jobManagement/edit_job/',
-                    this.form1,
-                ).then((res) => {
+                axios({
+                    method: "post",
+                    url: '${SITE_URL}jobManagement/edit_job/',
+                    data: {
+                        id:this.tempid,
+                        Job_name:this.tempjobname,
+                    }
+                }).then((res) => {
                     if(res.data.message != null){
                         window.location.href="${SITE_URL}jobManagement/jobM"
                     }
+                })
+            },
+            show_job(row){
+                vm.dialogFormVisible = true;
+                data = vm.generateData2();
+                vm.jobname = row.Job_name;
+                vm.id = row.id;
+            },
+            add_person(row){
+                vm.dialogFormVisible = false;
+               axios({
+                    method: 'post',
+                    url: '${SITE_URL}jobManagement/add_person/',
+                    data:{
+                        data:vm.value2,
+                        id:this.id
+                    },
+                }).then((res) => {
+                    vm.show()
                 })
             },
             generateData2() {
@@ -260,9 +266,9 @@
                 const pinyin = ['张三', '李四', '王五', '赵六', '员工a', '员工b', '员工c'];
                 people.forEach((people, index) => {
                   data.push({
-                    label: people,
-                    key: index,
-                    pinyin: pinyin[index]
+                      label: people,
+                      pinyin: pinyin[index],
+                      key: index,
                   });
                 });
             this.data2 = data
