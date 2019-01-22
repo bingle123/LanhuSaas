@@ -1,5 +1,5 @@
-<!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>岗位管理</title>
@@ -13,60 +13,63 @@
     <!-- vue的ajax依赖-->
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
     <!--jQuery库使用时请使用标准jQuery语法-->
-    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
-    <style>
-        .el-table--border th {
-            padding: 10px
-        }
-    </style>
+    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue-router.js"></script>-->
+<style>
+    input{
+        width: 250px;
+        height: 30px;
+    }
+    .el-table--border th{
+        padding:5px
+    }
+</style>
 </head>
 
 <body>
 <div class="content">
     <el-dialog title="新增岗位人员" :visible.sync="dialogFormVisible" width="70%">
         <el-form :model="form">
-            <el-form-item label="" :label-width="formLabelWidth">
+            <el-form-item label="">
                 <template>
                     <template>
                         <el-transfer
-                                filterable
-                                :filter-method="filterMethod"
-                                filter-placeholder="请输入搜索内容"
-                                v-model="value2"
-                                :titles="['选择人员', 'Java开发']"
-                                :data="data2">
+                        filterable
+                        :filter-method="filterMethod"
+                        filter-placeholder="请输入搜索内容"
+                        v-model="value2"
+                        :titles="['选择人员', jobname]"
+                        :data="data2" >
                         </el-transfer>
                     </template>
                 </template>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false" type="primary">保存</el-button>
+            <el-button @click="add_person()" type="primary">保存</el-button>
             <el-button @click="dialogFormVisible = false">取消</el-button>
         </div>
     </el-dialog>
-    <el-dialog title="编辑岗位" :visible.sync="dialogFormVisible2">
-        <el-form :model="form">
-            <el-form-item label="岗位名称:" :label-width="formLabelWidth2">
-                <el-input v-model="form.jobName" value="王小虎"></el-input>
-            </el-form-item>
 
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible2 = false" type="primary">保存</el-button>
-            <el-button @click="dialogFormVisible2 = false">取消</el-button>
+    <el-dialog title="编辑岗位" :visible.sync="dialogFormVisible2">
+        <div>
+            <span>岗位名：</span>
+            <el-input placeholder="请输入岗位名" v-model="tempjobname" style="width: 60%"></el-input>
         </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click=" edit_job()" type="primary">保存</el-button>
+            <el-button @click="dialogFormVisible2 = false">取消</el-button>
+        </span>
     </el-dialog>
 
     <el-dialog title="新增岗位" :visible.sync="dialogFormVisible3">
         <el-form :model="form">
-            <el-form-item label="岗位名称:" :label-width="formLabelWidth3">
-                <el-input v-model="jobName2"></el-input>
+            <el-form-item label="岗位名称:">
+                <el-input v-model="form.Job_name"></el-input>
             </el-form-item>
-
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible3 = false" type="primary">保存</el-button>
+            <el-button @click="add_job()" type="primary">保存</el-button>
             <el-button @click="dialogFormVisible3 = false">取消</el-button>
         </div>
     </el-dialog>
@@ -85,29 +88,34 @@
                 </div>
                 <hr id="hr">
                 <el-row type="flex" justify="space-between" align="center" class="row">
-                    <el-col :span="6">
-                        <el-input v-model="value" placeholder="请输入内容"></el-input>
+                    <el-col :span="12">
+                        <el-col :span="9">
+                            <el-input v-model="selectvalue" placeholder="请输入内容"></el-input>
+                        </el-col>
+                        <el-col :span="3">
+                            <el-button type="primary" icon="el-icon-search" v-on:click="select_job">搜索</el-button>
+                        </el-col>
                     </el-col>
                     <el-col :span="3">
-                        <el-button type="button" @click="dialogFormVisible3  = true">新增岗位</el-button>
+                        <el-button type="button" @click="dialogFormVisible3 = true">新增岗位</el-button>
                     </el-col>
                 </el-row>
-                <el-table :data="tableData" :header-cell-style="rowClass" style="width: 100%;margin-top: 20px">
-                    <el-table-column prop="jobName" label="岗位名称" style="width: 20%">
+                <el-table :data="jobInstance" :header-cell-style="rowClass" style="width: 100%;margin-top: 20px">
+                    <el-table-column prop="Job_name" label="岗位名称" style="width: 20%">
                     </el-table-column>
-                    <el-table-column prop="jobPerson" label="岗位人员" style="width: 20%">
+                    <el-table-column prop="User_name" label="岗位人员" style="width: 20%">
                     </el-table-column>
                     <el-table-column prop="operation" label="操作" style="width: 20%">
                         <template slot-scope="scope">
-                            <el-button type="text" @click="dialogFormVisible = true" size="small">加人</el-button>
-                            <el-button type="text" @click="dialogFormVisible2 = true" size="small">编辑</el-button>
-                            <el-button type="text" @click="deletePosition" size="small">删除</el-button>
+                            <el-button type="text" @click="show_job(scope.row)" size="small">加人</el-button>
+                            <el-button type="text" @click="edit_jobname(scope.row)" size="small">编辑</el-button>
+                            <el-button type="text" @click="deletePosition(scope.row.id)" size="small">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
                 <div class="block" style="text-align:right">
                     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                                   :current-page="currentPage4" :page-sizes="[10, 20, 30, 40]" :page-size="100"
+                                   :page-sizes="[10, 20, 30, 40]" :page-size="100"
                                    layout="prev, pager, next,sizes, jumper" :total="90">
                     </el-pagination>
                 </div>
@@ -116,49 +124,30 @@
     </div>
 </div>
 <script type="text/javascript">
-    let vm = new Vue({
+ let vm =  new Vue({
         el: '.content',
         data: {
             dialogFormVisible: false,
-            formLabelWidth: '80px',
             dialogFormVisible2: false,
-            formLabelWidth2: '80px',
             dialogFormVisible3: false,
-            formLabelWidth3: '80px',
-
             form: {
-                jobName: 'Java开发',
-                jobPerson: '王小虎',
-                createPerson: '李承哲',
-                createDate: '2019-01-12'
+                 Job_name:'',
             },
-
-            value: '',
+            other:{
+                User_name:'',           //员工名
+                Start_Time:'',          //创建时间
+                Status:'',              //状态
+                log:''                  //日志
+            },
+            tempjobname:'',
+            tempid:'',
+            form1:'',
+            jobname:'',
+            selectvalue: '',
             value1: '',
-            tableData: [{
-                jobName: 'Java开发',
-                jobPerson: "王小虎"
-            }, {
-                jobName: '需求',
-                jobPerson: "张焊强"
-            }, {
-                jobName: '销售',
-                jobPerson: "李明理"
-            }],
-            tableData3: [{
-                name: '王小虎'
-            }, {
-                name: '张焊强'
-            }, {
-                name: '李明理'
-            }],
-
+            value12:'',
+            jobInstance:[],
             checkList: ['王小虎', '张焊强', '李明理'],
-            formLabelAlign: {
-                name: '',
-                region: '',
-                type: ''
-            },
             data2: '',
             value2: [],
         },
@@ -168,37 +157,124 @@
                 return 'background:#F7F7F7'
             },
             handleSizeChange(val) {
-                console.log('每页:' + val + '条')
+                console.log('每页:'+val+'条')
             },
             handleCurrentChange(val) {
-                console.log('当前页:' + val)
+                console.log('当前页:'+val)
             },
-            deletePosition() {
-                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
+            show() {
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}jobManagement/job_show/',
+                }).then(function(res) {
+                    vm.jobInstance = res.data.message;
+
                 })
-            }, generateData2() {
-                const data = [];
-                const cities = ['张三', '李四', '王五', '赵六', '员工a', '员工b', '员工c'];
-                const pinyin = ['zhangsan', 'ls', 'wangwu', 'zhaoliu', 'yuangonga', 'yuangongb', 'yuangongc'];
-                cities.forEach((city, index) => {
-                    data.push({
-                        label: city,
-                        key: index,
-                        pinyin: pinyin[index]
-                    });
+            },
+            deletePosition(row){
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+            }).then(() => {
+                this.$message({
+                        type: 'success',
+                        message: '删除成功!',
+                    },
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}jobManagement/delete/',
+                        data: {
+                            id: row,
+                        }
+                    }).then((res) => {
+                        vm.show();
+                    }),);
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
                 });
-                this.data2 = data
+            });
+            },
+            select_job(){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}jobManagement/select_job/',
+                    data:this.selectvalue,
+                }).then((res) => {
+                    vm.jobInstance = res.data.message;
+                })
+            },
+            add_job(){
+                vm.dialogFormVisible3 = false
+               axios({
+                    method: 'post',
+                    url: '${SITE_URL}jobManagement/add_job/',
+                    data:this.form,
+                }).then((res) => {
+                    window.location.href="${SITE_URL}jobManagement/jobM"
+                })
+            },
+            add_person(row){
+                vm.dialogFormVisible = false;
+               axios({
+                    method: 'post',
+                    url: '${SITE_URL}jobManagement/add_person/',
+                    data:{
+                        data:jobName = this.jobName,
+                        id:this.id
+                    },
+                }).then((res) => {
+                    vm.show()
+                })
+            },
+            show_job(row){
+                vm.dialogFormVisible = true
+                vm.generateData2()
+                vm.jobname = row.Job_name
+                vm.id = row.id
+                vm.jobname = data2
+            },
+
+            edit_jobname(row){
+                vm.dialogFormVisible2 = true
+                vm.tempid = row.id;
+                vm.tempjobname = row.Job_name;
+            },
+            edit_job(){
+                vm.dialogFormVisible2 = false
+                axios.post(
+                    '${SITE_URL}jobManagement/edit_job/',
+                    this.form1,
+                ).then((res) => {
+                    if(res.data.message != null){
+                        window.location.href="${SITE_URL}jobManagement/jobM"
+                    }
+                })
+            },
+            generateData2() {
+                const data = [];
+                const people = ['张三', '李四', '王五', '赵六', '员工a', '员工b', '员工c'];
+                const pinyin = ['张三', '李四', '王五', '赵六', '员工a', '员工b', '员工c'];
+                people.forEach((people, index) => {
+                  data.push({
+                    label: people,
+                    key: index,
+                    pinyin: pinyin[index]
+                  });
+                });
+            this.data2 = data
             },
             filterMethod(query, item) {
                 return item.pinyin.indexOf(query) > -1;
             }
         }
     });
-    vm.generateData2()
+// vm.generateData2()
+ vm.show()
 </script>
 </body>
+
 </html>
