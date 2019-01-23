@@ -17,7 +17,6 @@ def positonall(request):
     res = function.job_show(request)
     return render_json(res)
 
-
 @csrf_exempt
 def select_job(request):
     res = function.select_job(request)

@@ -37,6 +37,8 @@ urlpatterns = patterns(
     # 系统设置
     url(r'^system_config/', include('system_config.urls')),
     url(r'^monitorScene/', include('monitorScene.urls')),
+    # 岗位管理
+    url(r'^jobManagement/', include('jobManagement.urls')),
     url(r'zlx/', include('zlx.urls')),
 )
 
