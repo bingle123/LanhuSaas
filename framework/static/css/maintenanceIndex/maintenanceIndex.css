@@ -1,0 +1,91 @@
+/*标题样式*/
+#maintenanceTitle{
+    width: 100%;
+    height: 40px;
+    background-color: #f7f7f7;
+}
+/*标题文字样式*/
+#maintenanceTitle span{
+    /*line-height: 50px;*/
+}
+/*饼状图div宽高设置*/
+#maintenancePie{
+    width: 100%;
+    height:395px;
+}
+/*柱状图div宽高设置*/
+#maintenanceBar{
+    width: 100%;
+    height:300px;
+}
+/*标题文字加粗*/
+.maintenanceHeader{
+    font-weight: bolder;
+}
+/*标题文字描述样式设置*/
+.maintenanceHeaderDesc{
+    font-weight: bolder;
+    font-size: 14px;
+}
+/*表格字段宽度*/
+#maintenanceTable .td{
+    width: 14.28%;
+}
+/*表格字段居中*/
+#maintenanceTable .cell{
+    text-align: center;
+    vertical-align: middle;
+}
+/*表格占据宽度设置为100%*/
+#maintenanceTable{
+    width: 100%;
+}
+/*步骤条包裹的div样式设置*/
+.maintenanceStepBarDiv{
+    height: 150px;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: 50px;
+}
+/*步骤条高度设置*/
+.maintenanceStepBar{
+    height: 50px;
+}
+/*步骤评分块包裹的div样式设置*/
+.maintenancePointDiv{
+    height: 150px;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: 50px;
+}
+/*步骤评分块样式设置*/
+.maintenancePoint{
+    width: 100%;
+    height: 50px;
+    display: inline-block;
+    line-height: 50px;
+    text-align: center;
+    background-color: #8ccf0d;
+    color: #FFF;
+}
+/*垂直步骤条样式设置*/
+.maintenanceVertical .el-step__icon{
+    width: 22px;
+    height: 22px;
+}
+.maintenanceVertical .el-step__title{
+    font-size: 12px;
+}
+/*设置垂直步骤条后的说明文字大小*/
+.maintenanceVerticalBarDesc{
+    line-height: 32px;
+    font-size: 15px;
+}
+/*设置垂直步骤条的高度*/
+.maintenanceVerticalDoneDiv,.maintenanceVerticalUnexecDiv{
+    height: 155px;
+}
+/*设置步骤条的垂直间隔与垂直步骤条的垂直间隔*/
+#maintenanceStepBarRow,#maintenanceVerticalBarRow{
+    margin-top: 20px;
+}
