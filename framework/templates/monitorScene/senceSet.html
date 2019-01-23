@@ -8,14 +8,18 @@
     <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
     <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
-    <script src='${STATIC_URL}js/jquery.min.js'></script>
-    <script src='${STATIC_URL}js/jquery-ui.js'></script>
-    <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
     <link type="text/css" href="${STATIC_URL}css/monitorScene/style.css" rel="stylesheet">
-
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/v-charts/lib/index.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
+
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/jrange/css/jquery.range.css" rel="stylesheet">
+
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/jrange/js/jquery.range-min.js"></script>
+
+
 </head>
 <body>
 
@@ -25,17 +29,22 @@
         <el-breadcrumb-item>场景管理</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card class='card' shadow='always'>
-        <div v-if="!isAdd">
+        <div v-if="isAdd == 1">
             <div id='pagetitle'>
                 场景管理
             </div>
             <hr id='hr'>
             <el-row type='flex' justify='space-between' align='center' class='row'>
-                <el-col :span='6'>
-                    <el-input v-model='valuetest' placeholder='请输入内容'></el-input>
-                </el-col>
+                <el-col :span="12">
+                        <el-col :span="9">
+                            <el-input v-model="search" placeholder="请输入内容"></el-input>
+                        </el-col>
+                        <el-col :span="3">
+                            <el-button type="primary" icon="el-icon-search" v-on:click="select_table">搜索</el-button>
+                        </el-col>
+                    </el-col>
                 <el-col :span='3'>
-                    <el-button type='primary' @click='show'>新增场景</el-button>
+                    <el-button type='primary'  @click='show'>新增场景</el-button>
                 </el-col>
             </el-row>
             <el-table :data='tableData' :header-cell-style='rowclass' style="width: 100%;">
@@ -47,11 +56,13 @@
                 </el-table-column>
                 <el-table-column prop='scene_creator_time' label='创建时间'  style="width: 30%;">
                 </el-table-column>
+                <el-table-column prop='scene_positions' label='岗位'  style="width: 30%;">
+                </el-table-column>
                 <el-table-column prop='operation' label='操作' style="width: 30%;">
                     <template slot-scope="scope">
                     <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
                     <el-button size="mini" type="text" v-on:click="edit(scope.row)">编辑</el-button>
-                    <el-button size="mini" type="text" v-on:click="edit2(scope.row.id)">删除</el-button>
+                    <el-button size="mini" type="text" v-on:click="delect(scope.row)">删除</el-button>
                     </el-tooltip>
                 </template>
                 </el-table-column>
@@ -62,8 +73,12 @@
                                layout='prev, pager, next,sizes, jumper' :total='90'>
                 </el-pagination>
             </div>
+
+
         </div>
-        <div v-else>
+
+        <!-- 新增场景页面  -->
+        <div v-if="isAdd == 2">
             <div id='pagetitle'>
                 新增场景
             </div>
@@ -77,39 +92,14 @@
                             <el-option label="三级指数" value="三级指数"></el-option>
                         </el-select>
                     </el-form-item>
-                     <el-form-item label="轮播时间">
-                    <div class="container2">
-		<!--图-->
-		<div style="color: #000000;float: left;">
-			<div style="height: 50px;width: 50px;background: #71c0ff;margin-left: 30px;border-radius:10px;font-size: 15px;">
-				<div style="color: #ffffff;padding-top: 13px">Task
-				</div>
-			</div>
-		</div>
-		<!--字体-->
-		<div style="font-size: 23px; float: left;color: #000000;margin-left: 20px;margin-top: 10px;">
-			清算场景6
-		</div>
-		<!--滑条-->
-		<div class="slider-wrapper" style="float: left;margin-left: 80px;width: 800px;">
-				<div id="slider-range5" >
-				</div>
-			<div class="range-wrapper">
-			<div class="range">
-				<span class="range-value"><sup></sup>{{start_time}}</span>
-				<span class="range-divider">
-				</span><span class="range-value"><sup></sup>{{end_time}}</span>
-			</div>
-			<div class="range-alert">+</div>
-		</div>
-			<div class="marker marker-0"><sup>-</sup>08:00</div>
-			<div class="marker marker-20"><sup></sup>00:00</div>
-			<div class="marker marker-50"><sup></sup>12:00</div>
-			<div class="marker marker-80"><sup></sup>24:00</div>
-			<div class="marker marker-100"><sup>+</sup>08:00</div>
-		</div>
-	</div>
+
+                    <el-form-item label="轮播时间" style="height: 130px" >
+                        <div class="ranger-demo mt20" id="jranger_demo">
+                        <input type="hidden" class="slider-input" value="14,63">
+
+                    </div>
                      </el-form-item>
+
                     <el-form-item label="场景适用岗位">
                         <el-select v-model="scene.scene_positions" placeholder="请选择">
                             <el-option label="java开发" value="java开发"></el-option>
@@ -121,7 +111,6 @@
                         <el-button type="info" @click="goto">场景编排</el-button>
                     </el-form-item>
                     <el-form-item>
-                        <el-card className="card" shadow="always"></el-card>
                             <el-row type="flex" justify="space-around">
                                 <el-col :span="9">
                                     <div class="grid-content bg-purple-light">
@@ -147,6 +136,66 @@
                 </el-form>
             </div>
         </div>
+
+
+        <!-- 编辑页面 -->
+        <div v-else-if="isAdd == 3">
+            <div id='pagetitle'>
+                编辑场景
+            </div>
+            <hr id="hr">
+            <div>
+                <el-form ref="form" label-width="80px">
+                    <el-form-item label="场景名称">
+                        <el-select v-model="scene_edit.scene_name" placeholder="指数显示">
+                            <el-option label="一级指数" value="一级指数"></el-option>
+                            <el-option label="二级指数" value="二级指数"></el-option>
+                            <el-option label="三级指数" value="三级指数"></el-option>
+                        </el-select>
+                    </el-form-item>
+                     <el-form-item label="轮播时间" style="height: 130px" >
+                        <div class="ranger-demo mt20" id="jranger_demo">
+                        <input type="hidden" class="slider-input" value="14,63">
+
+                    </div>
+                     </el-form-item>
+                     </el-form-item>
+                    <el-form-item label="场景适用岗位">
+                        <el-select v-model="scene_edit.scene_positions" placeholder="请选择">
+                            <el-option label="java开发" value="java开发"></el-option>
+                            <el-option label="python开发" value="python开发"></el-option>
+                            <el-option label="运营" value="运营"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="预览区">
+                        <el-button type="info" @click="goto">场景编排</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                            <el-row type="flex" justify="space-around">
+                                <el-col :span="9">
+                                    <div class="grid-content bg-purple-light">
+                                        <ve-histogram :data="chartData"></ve-histogram>
+                                    </div>
+                                </el-col>
+                                <el-col :span="9">
+                                    <div class="grid-content bg-purple">
+                                        <img src="${STATIC_URL}img/1.png"/>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </divcard>
+                    </el-form-item>
+                    <el-row type="flex" class="row-bg" justify="center">
+                        <el-col :span="2">
+                            <el-button type="primary" v-on:click="editSence" id="button">保存</el-button>
+                        </el-col>
+                        <el-col :span="2">
+                            <el-button @click="hide" id="button">取消</el-button>
+                        </el-col>
+                    </el-row>
+                </el-form>
+            </div>
+        </div>
     </el-card>
 
 </div>
@@ -158,8 +207,9 @@
             start_time: '8:00',
             end_time: '16:00',
             falg: false,
-            valuetest:'',
-            isAdd: false,
+            selectvalue:'',
+            search:'',//搜索框的值
+            isAdd: 1,
             imgUrl: './static/1.png',
             chartData: {
                 columns: ['日期', '下单用户'],
@@ -182,11 +232,19 @@
             scene: {                            //场景管理
                 scene_name: '', //场景名称
                 scene_positions:'',//岗位
+                scene_startTime:'',
+                scene_endTime:'',
+            },
+            scene_edit:{                       //编辑页面中的
+                id:'',
+                scene_name: '', //场景名称
+                scene_positions:'',//岗位
             }
         },
+
         methods: {
             rowclass({row, rowIndex}) {
-                console.log(rowIndex)
+
                 return 'background:#F7F7F7'
             },
             handleSizeChange(val) {
@@ -195,11 +253,29 @@
             handleCurrentChange(val) {
                 console.log('当前页: ' + val + '')
             },
+
             show() {
-                this.isAdd = true
+                this.isAdd = 2;
+                setTimeout(function () {
+                     vm.Time()
+                },100)
+
+
+            },
+            edit(row){
+                vm.scene_edit.id = row.id
+                vm.scene_edit.scene_name = row.scene_name
+                vm.scene_edit.scene_positions = row.scene_positions
+                this.isAdd = 3
+                setTimeout(function () {
+                    vm.Time()
+
+                }, 100)
+
             },
             hide() {
-               window.location.href = '${SITE_URL}scene_set'
+                this.isAdd = 1
+                vm.a()
             }, goto() {
                 window.location.href = '${SITE_URL}ming'
             },
@@ -212,25 +288,87 @@
                 })
             },
             addSence(){
-                console.log(vm.scene.scene_name);
-                console.log(vm.scene.scene_positions);
-                axios({
+                vm.scene.scene_endTime = $(".back-bar").children().eq(2).html()
+                 vm.scene.scene_startTime = $(".back-bar").children().eq(4).html()
+                 axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/addSence/',
+                   url: '${SITE_URL}monitorScene/addSence/',
                     data: vm.scene
-                }),then(function (res) {
-                     vm.a();
+                }).then(function(res) {
+                    window.location.href = '${SITE_URL}scene_set'
                 })
+            },
+            select_table(){
+                 vm.scene.scene_endTime = $(".back-bar").children().eq(2).html()
+                 vm.scene.scene_startTime = $(".back-bar").children().eq(4).html()
+               axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitorScene/select_table/',
+                    data: vm.search
+                }).then(function(res) {
+                    vm.tableData = res.data.message;
+                })
+            },
+            delect(row){
+                this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true,
+            }).then(() => {
+                this.$message({
+                        type: 'success',
+                        message: '删除成功!',
+                    },
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}monitorScene/delect/',
+                        data:  row.id
+
+                    }).then((res) => {
+                        vm.a();
+                    }),);
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            });
+            },
+            editSence(){
+               axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitorScene/editSence/',
+                    data: vm.scene_edit
+                }).then(function(res) {
+                    window.location.href = '${SITE_URL}scene_set'
+                })
+            },
+            Time(){
+                var to=200;
+               // a=(Math.floor(ui.values[0]/60)+12)+":"+((1200+ui.values[0])%60);
+                //b=(Math.floor(ui.values[1]/60)+12)+":"+((1200+ui.values[1])%60);
+
+
+             $('.slider-input').jRange({
+                    from: 0,
+                    to: to,
+                    step: 1,
+                    scale: ["-08:00", "00:00", "12:00", "24:00", "+08:00"],
+                    format: '%s',
+                    width: "300",
+                    showLabels: true,
+                    isRange: true
+                })
+
+
             }
-        },
 
 
+        }
     });
 
     vm.a();
-
 </script>
-
-
 </body>
 </html>
