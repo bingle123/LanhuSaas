@@ -8,14 +8,18 @@
     <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
     <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
-    <script src='${STATIC_URL}js/jquery.min.js'></script>
-    <script src='${STATIC_URL}js/jquery-ui.js'></script>
-    <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
     <link type="text/css" href="${STATIC_URL}css/monitorScene/style.css" rel="stylesheet">
-
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/v-charts/lib/index.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
+
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/jrange/css/jquery.range.css" rel="stylesheet">
+
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+    <script src="${STATIC_URL}js/jquery.range-min.js"></script>
+
+
 </head>
 <body>
 
@@ -40,7 +44,7 @@
                         </el-col>
                     </el-col>
                 <el-col :span='3'>
-                    <el-button type='primary' @click='show'>新增场景</el-button>
+                    <el-button type='primary'  @click='show'>新增场景</el-button>
                 </el-col>
             </el-row>
             <el-table :data='tableData' :header-cell-style='rowclass' style="width: 100%;">
@@ -54,6 +58,11 @@
                 </el-table-column>
                 <el-table-column prop='scene_positions' label='岗位'  style="width: 30%;">
                 </el-table-column>
+                <el-table-column prop='scene_startTime' label='开始时间'  v-if="false"  style="width: 30%;">
+                </el-table-column>
+                <el-table-column prop='scene_endTime' label='结束时间'  v-if="false"  style="width: 30%;">
+                </el-table-column>
+
                 <el-table-column prop='operation' label='操作' style="width: 30%;">
                     <template slot-scope="scope">
                     <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
@@ -69,10 +78,12 @@
                                layout='prev, pager, next,sizes, jumper' :total='90'>
                 </el-pagination>
             </div>
+
+
         </div>
 
         <!-- 新增场景页面  -->
-        <div v-else-if="isAdd == 2">
+        <div v-if="isAdd == 2">
             <div id='pagetitle'>
                 新增场景
             </div>
@@ -86,41 +97,31 @@
                             <el-option label="三级指数" value="三级指数"></el-option>
                         </el-select>
                     </el-form-item>
-                     <el-form-item label="轮播时间">
-                    <div class="container2">
-		                <!--图-->
-                        <div style="color: #000000;float: left;">
-                            <div style="height: 50px;width: 50px;background: #71c0ff;margin-left: 30px;border-radius:10px;font-size: 15px;">
-                                <div style="color: #ffffff;padding-top: 13px">Task
-                                </div>
-                            </div>
-                        </div>
-                        <!--字体-->
-                        <div style="font-size: 23px; float: left;color: #000000;margin-left: 20px;margin-top: 10px;">
-                            清算场景6
-                        </div>
-                        <!--滑条-->
-                        <div class="slider-wrapper" style="float: left;margin-left: 80px;width: 800px;">
-                            <div id="slider-range5">
-                            </div>
-                            <div class="range-wrapper">
-                                <div class="range">
-                                    <span class="range-value"><sup></sup>{{ start_time }}</span>
-                                    <span class="range-divider">
-				</span><span class="range-value"><sup></sup>{{ end_time }}</span>
-                                </div>
-                                <div class="range-alert">+</div>
-                            </div>
-                            <div class="marker marker-0"><sup>-</sup>08:00</div>
-                            <div class="marker marker-20"><sup></sup>00:00</div>
-                            <div class="marker marker-50"><sup></sup>12:00</div>
-                            <div class="marker marker-80"><sup></sup>24:00</div>
-                            <div class="marker marker-100"><sup>+</sup>08:00</div>
-                        </div>
+
+                    <el-form-item label="轮播时间"   >
+                        <div class="ranger-demo mt20" id="jranger_demo">
+                        <input type="hidden" class="slider-input" value="-720,720">
+
                     </div>
 
-
                      </el-form-item>
+
+                    <el-form-item >
+                        <el-col :span="5">
+                                <el-time-picker v-model="scene.scene_startTime" placeholder="开始时间点" format="hh:mm"
+                                                value-format="hh:mm">
+                                </el-time-picker>
+                        </el-col>
+                        <el-col class="line" :span="1">—</el-col>
+                        <el-col :span="11">
+                            <el-form-item>
+                                <el-time-picker v-model="scene.scene_endTime"  placeholder="结束时间点" format="hh:mm"
+                                                value-format="hh:mm">
+                                </el-time-picker>
+                            </el-form-item>
+                        </el-col>
+                      </el-form-item>
+
                     <el-form-item label="场景适用岗位">
                         <el-select v-model="scene.scene_positions" placeholder="请选择">
                             <el-option label="java开发" value="java开发"></el-option>
@@ -132,7 +133,6 @@
                         <el-button type="info" @click="goto">场景编排</el-button>
                     </el-form-item>
                     <el-form-item>
-                        <el-card className="card" shadow="always"></el-card>
                             <el-row type="flex" justify="space-around">
                                 <el-col :span="9">
                                     <div class="grid-content bg-purple-light">
@@ -175,38 +175,27 @@
                             <el-option label="三级指数" value="三级指数"></el-option>
                         </el-select>
                     </el-form-item>
-                     <el-form-item label="轮播时间">
-                    <div class="container2">
-		<!--图-->
-		<div style="color: #000000;float: left;">
-			<div style="height: 50px;width: 50px;background: #71c0ff;margin-left: 30px;border-radius:10px;font-size: 15px;">
-				<div style="color: #ffffff;padding-top: 13px">Task
-				</div>
-			</div>
-		</div>
-		<!--字体-->
-		<div style="font-size: 23px; float: left;color: #000000;margin-left: 20px;margin-top: 10px;">
-			清算场景6
-		</div>
-		<!--滑条-->
-		<div class="slider-wrapper" style="float: left;margin-left: 80px;width: 800px;">
-				<div id="slider-range5" >
-				</div>
-			<div class="range-wrapper">
-			<div class="range">
-				<span class="range-value"><sup></sup>{{start_time}}</span>
-				<span class="range-divider">
-				</span><span class="range-value"><sup></sup>{{end_time}}</span>
-			</div>
-			<div class="range-alert">+</div>
-		</div>
-			<div class="marker marker-0"><sup>-</sup>08:00</div>
-			<div class="marker marker-20"><sup></sup>00:00</div>
-			<div class="marker marker-50"><sup></sup>12:00</div>
-			<div class="marker marker-80"><sup></sup>24:00</div>
-			<div class="marker marker-100"><sup>+</sup>08:00</div>
-		</div>
-	</div>
+                     <el-form-item label="轮播时间" >
+                        <div class="ranger-demo mt20" id="jranger_demo">
+                        <input type="hidden" class="slider-input" value="-720,720">
+
+                    </div>
+                     </el-form-item>
+                       <el-form-item >
+                        <el-col :span="5">
+                                <el-time-picker v-model="scene_edit.scene_startTime" placeholder="开始时间点" format="hh:mm"
+                                                value-format="hh:mm">
+                                </el-time-picker>
+                        </el-col>
+                        <el-col class="line" :span="1">—</el-col>
+                        <el-col :span="11">
+                            <el-form-item>
+                                <el-time-picker v-model="scene_edit.scene_endTime"  placeholder="结束时间点" format="hh:mm"
+                                                value-format="hh:mm">
+                                </el-time-picker>
+                            </el-form-item>
+                        </el-col>
+                      </el-form-item>
                      </el-form-item>
                     <el-form-item label="场景适用岗位">
                         <el-select v-model="scene_edit.scene_positions" placeholder="请选择">
@@ -219,7 +208,6 @@
                         <el-button type="info" @click="goto">场景编排</el-button>
                     </el-form-item>
                     <el-form-item>
-                        <el-card className="card" shadow="always"></el-card>
                             <el-row type="flex" justify="space-around">
                                 <el-col :span="9">
                                     <div class="grid-content bg-purple-light">
@@ -281,16 +269,22 @@
             scene: {                            //场景管理
                 scene_name: '', //场景名称
                 scene_positions:'',//岗位
+                scene_startTime:'',
+                scene_endTime:'',
             },
             scene_edit:{                       //编辑页面中的
                 id:'',
                 scene_name: '', //场景名称
                 scene_positions:'',//岗位
-            }
+                 scene_startTime:'',
+                scene_endTime:'',
+            },
+
         },
+
         methods: {
             rowclass({row, rowIndex}) {
-                console.log(rowIndex)
+
                 return 'background:#F7F7F7'
             },
             handleSizeChange(val) {
@@ -299,18 +293,29 @@
             handleCurrentChange(val) {
                 console.log('当前页: ' + val + '')
             },
+
             show() {
-                this.isAdd = 2
+                this.isAdd = 2;
+                setTimeout(function () {
+                     vm.Time()
+                },100)
             },
             edit(row){
                 vm.scene_edit.id = row.id
                 vm.scene_edit.scene_name = row.scene_name
                 vm.scene_edit.scene_positions = row.scene_positions
+                vm.scene_edit.scene_startTime = row.scene_startTime
+                vm.scene_edit.scene_endTime = row.scene_endTime
                 this.isAdd = 3
+                setTimeout(function () {
+                    vm.Time()
+
+                }, 100)
 
             },
             hide() {
-               window.location.href = '${SITE_URL}scene_set'
+                this.isAdd = 1
+                vm.a()
             }, goto() {
                 window.location.href = '${SITE_URL}ming'
             },
@@ -323,17 +328,18 @@
                 })
             },
             addSence(){
-                 axios({
+                   axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/addSence/',
+                   url: '${SITE_URL}monitorScene/addSence/',
                     data: vm.scene
                 }).then(function(res) {
                     window.location.href = '${SITE_URL}scene_set'
                 })
             },
             select_table(){
-
-                axios({
+                 vm.scene.scene_endTime = $(".back-bar").children().eq(2).html()
+                 vm.scene.scene_startTime = $(".back-bar").children().eq(4).html()
+               axios({
                     method: 'post',
                     url: '${SITE_URL}monitorScene/select_table/',
                     data: vm.search
@@ -375,16 +381,48 @@
                 }).then(function(res) {
                     window.location.href = '${SITE_URL}scene_set'
                 })
+            },
+            Time(){
+
+                setInterval(function () {
+
+                    $(".back-bar").children().eq(1).mouseup(function () {
+                           var low=-$(".back-bar").children().eq(2).html()
+                           a=(Math.floor(low/60)+12)+":"+((1200+low)%60);
+                          setTimeout(function () {
+                            $(".back-bar").children().eq(2).html(a)
+                             $(".back-bar").children().eq(2).show()
+                         },100)
+                    })
+                    $(".back-bar").children().eq(3).mouseup(function () {
+                          var high=$(".back-bar").children().eq(4).html()
+                            b=(Math.floor(high/60)+12)+":"+((1200+high)%60);
+                         setTimeout(function () {
+                            $(".back-bar").children().eq(4).html(b)
+                             $(".back-bar").children().eq(4).show()
+                         },100)
+                    })
+                },500)
+
+             $('.slider-input').jRange({
+                    from: -1440,
+                    to: 1440,
+                    step: 1,
+                    scale: ["-12:00", "00:00", "12:00", "24:00", "+12:00"],
+                    format: '%s',
+                    width: "300",
+                    showLabels: true,
+                    isRange: true
+                })
+
+
             }
-        },
 
 
+        }
     });
 
     vm.a();
-
 </script>
-
-
 </body>
 </html>

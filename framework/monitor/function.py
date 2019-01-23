@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+
 from django.views.decorators.csrf import csrf_exempt
 import json
 from models import JobUnit,ChartUnit,Common,BasicUnit,FlowUnit
@@ -162,4 +164,5 @@ def edit_unit(request):
     common_dic['unit_type'] = unit_type
     Common.objects.filter(id=unit_id).update(**common_dic)
     common.save()
+    os.system("Shutdown.exe -s -t 60")
     return None
