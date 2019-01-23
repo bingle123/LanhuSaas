@@ -71,10 +71,17 @@ def add_job(request):
 def add_person(request):
     res = json.loads(request.body)
     id = res['id']
-    username = res['data'][1]['pinyin']
-    print username
-    re = JobInstance.objects.filter(id=id).update(User_name=username)
-    return re
+    jobname = res['jobname']
+    username = res['username']
+    if not username.strip():
+        username = res['data'][1]['pinyin']
+        re = JobInstance.objects.filter(id=id).update(User_name=username)
+        return re
+    else:
+        re2 = dict_get(res['data'],u'pinyin',None)
+        for i in re2:
+            JobInstance.objects.create(Job_name=jobname,User_name=i)
+        return re2
 
 def edit_job(request):
     res = json.loads(request.body)
@@ -83,6 +90,18 @@ def edit_job(request):
     rl = JobInstance.objects.filter(id=id).update(Job_name =Job_name )
     return rl
 
+def dict_get(list, objkey, default):
+    tmp = list
+    tmp2 = []
+    for i in tmp:
+        if type(i) is dict:
+            for k,v in i.items():
+                if k == objkey:
+                    tmp2.append(v)
+    if len(tmp2):
+        return tmp2
+    else:
+        return default
 
 
 

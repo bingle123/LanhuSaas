@@ -48,7 +48,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="add_person()" type="primary">保存</el-button>
-            <el-button @click="dialogFormVisible = false">取消</el-button>
+            <el-button @click="refresh()">取消</el-button>
         </div>
     </el-dialog>
 
@@ -59,7 +59,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click=" edit_job()" type="primary">保存</el-button>
-            <el-button @click="dialogFormVisible2 = false">取消</el-button>
+            <el-button @click="refresh()">取消</el-button>
         </span>
     </el-dialog>
 
@@ -71,7 +71,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="add_job()" type="primary">保存</el-button>
-            <el-button @click="dialogFormVisible3 = false">取消</el-button>
+            <el-button @click="refresh()">取消</el-button>
         </div>
     </el-dialog>
 
@@ -134,16 +134,11 @@
             form: {
                  Job_name:'',
             },
-            other:{
-                User_name:'',           //员工名
-                Start_Time:'',          //创建时间
-                Status:'',              //状态
-                log:''                  //日志
-            },
             tempjobname:'',
             tempid:'',
             form1:'',
             jobname:'',
+            username:'',
             selectvalue: '',
             value1: '',
             value12:'',
@@ -153,8 +148,13 @@
             value2:[],
         },
         methods: {
+            refresh(){
+                window.location.href="${SITE_URL}jobManagement/jobM"
+            },
             change1(value){
-                 vm.value2.push(this.data2[value])
+                for(var i in value){
+                    vm.value2.push(vm.data2[value[i]])
+                }
             },
             rowClass({row, rowIndex}) {
                 console.log(rowIndex);
@@ -246,6 +246,7 @@
                 data = vm.generateData2();
                 vm.jobname = row.Job_name;
                 vm.id = row.id;
+                vm.username = row.User_name;
             },
             add_person(row){
                 vm.dialogFormVisible = false;
@@ -254,7 +255,9 @@
                     url: '${SITE_URL}jobManagement/add_person/',
                     data:{
                         data:vm.value2,
-                        id:this.id
+                        id:this.id,
+                        jobname: this.jobname,
+                        username: this.username,
                     },
                 }).then((res) => {
                     vm.show()
