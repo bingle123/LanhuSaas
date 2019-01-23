@@ -40,6 +40,7 @@ urlpatterns = patterns(
     # 岗位管理
     url(r'^jobManagement/', include('jobManagement.urls')),
     url(r'zlx/', include('zlx.urls')),
+    url(r'^lcz/',include('lcz.urls')),
 )
 
 

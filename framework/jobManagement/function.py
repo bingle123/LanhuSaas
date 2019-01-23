@@ -2,7 +2,7 @@
 from django.views.decorators.csrf import csrf_exempt
 import json
 from models import JobInstance
-import tools
+from shell_app import tools
 import time
 from django.forms.models import model_to_dict
 
@@ -90,7 +90,7 @@ def edit_job(request):
     rl = JobInstance.objects.filter(id=id).update(Job_name =Job_name )
     return rl
 
-def dict_get(list, objkey, default):
+def dict_get(list, objkey, default):                    #获得列表的多个字典中对应key的value值
     tmp = list
     tmp2 = []
     for i in tmp:
@@ -103,5 +103,18 @@ def dict_get(list, objkey, default):
     else:
         return default
 
+def get_user(request):
+    """
+    获取所有用户
+    :param request:
+    :return:
+    """
+    try:
+        client = tools.interface_param(request)
+        result = client.bk_login.get_all_users({})  # 获取所有用户信息
+        temp = dict_get(result['data'],u'bk_username',None)
+    except Exception, e:
+        result = tools.error_result(e)
+    return result
 
 
