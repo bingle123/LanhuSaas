@@ -41,3 +41,8 @@ def add_person(request):
 def edit_job(request):
     r = function.edit_job(request)
     return render_json(r)
+
+@csrf_exempt
+def get_user(request):
+    r = function.get_user(request)
+    return render_json(r)
