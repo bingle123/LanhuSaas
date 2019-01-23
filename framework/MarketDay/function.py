@@ -3,8 +3,8 @@
 from MarketDay.models import *
 import os
 
-def get_holiday(req,year):
-    dates=Holiday.objects.filter(year=year).values('day')
+def get_holiday(req):
+    dates=Holiday.objects.all().values('day')
     days=[]
     for date in dates:
         days.append(date['day'])
@@ -27,9 +27,15 @@ def get_file(req):
             strall=f.read()
             strs=strall.split(',')
             for str in strs:
-                i=str.index('/')
-                year=str[:i]
-                holiday=Holiday(day=str,year=year)
+                holiday=Holiday(day=str)
                 holiday.save()
         except:
             print '文件不匹配'
+
+def delall(req):
+    flag=Holiday.objects.all().delete()
+    return flag
+
+def delone(req,date):
+    flag=Holiday.objects.get(day=date).delete()
+    return flag

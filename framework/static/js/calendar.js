@@ -51,6 +51,31 @@ var vm = new Vue({
             return obj;
         },
         clickDay: function (item, index) {
+            console.log(item)
+            if(item.isMark){
+                this.$confirm('此操作将删除当前节假日, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$http.post('/MarketDay/delone/'+item.date).then(function (resp) {
+                    this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                    });
+                    for(var i=0;i<this.markDate.length;i++){
+                        if(this.markDate[i]==item.date){
+                            this.markDate.splice(i,1)
+                        }
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            })
+            }
             if (item.otherMonth === 'nowMonth' && !item.dayHide) {
                 this.getList(this.myDate, item.date);
             }
@@ -140,69 +165,88 @@ var vm = new Vue({
             this.list = arr;
         },
         addarrs() {
-            year=new Date().getFullYear()
-            this.$http.get('/MarketDay/get_holiday/'+year).then(function (res) {
+            year = new Date().getFullYear()
+            this.$http.get('/MarketDay/get_holiday/').then(function (res) {
                 console.log(res.body.message)
-                for(var i=0;i<res.body.message.length;i++){
+                for (var i = 0; i < res.body.message.length; i++) {
                     this.markDate.push(res.body.message[i])
                 }
                 this.loadingfinsh()
             })
         },
-        upsuccess(){
+        upsuccess() {
             this.$message({
-                message:'工作日导入成功!',
-                type:'success'
+                message: '节假日导入成功!',
+                type: 'success'
             })
             window.location.reload()
         },
-        err(){
+        err() {
             this.$message({
-                message:'工作日导入失败!',
-                type:'error'
+                message: '节假日导入失败!',
+                type: 'error'
+            })
+        }, deleteallday() {
+            this.$confirm('此操作将删除所有节假日, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$http.post('/MarketDay/delall/').then(function (resp) {
+                    this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                    });
+                    window.location.reload()
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
             })
         }
-    },
-    mounted() {
-        this.addarrs();
-        this.getList(this.myDate);
-    },
-    watch: {
-        markDate: {
-            handler(val, oldVal) {
-                this.getList(this.myDate);
-            },
-            deep: true
         },
-        markDateMore: {
-            handler(val, oldVal) {
-                this.getList(this.myDate);
-            },
-            deep: true
+        mounted() {
+            this.addarrs();
+            this.getList(this.myDate);
         },
-        agoDayHide: {
-            handler(val, oldVal) {
-                this.agoDayHide = parseInt(val);
-                this.getList(this.myDate);
+        watch: {
+            markDate: {
+                handler(val, oldVal) {
+                    this.getList(this.myDate);
+                },
+                deep: true
             },
-            deep: true
-        },
-        futureDayHide: {
-            handler(val, oldVal) {
-                this.futureDayHide = parseInt(val);
-                this.getList(this.myDate);
+            markDateMore: {
+                handler(val, oldVal) {
+                    this.getList(this.myDate);
+                },
+                deep: true
             },
-            deep: true
-        },
-        sundayStart: {
-            handler(val, oldVal) {
-                this.intStart();
-                this.getList(this.myDate);
+            agoDayHide: {
+                handler(val, oldVal) {
+                    this.agoDayHide = parseInt(val);
+                    this.getList(this.myDate);
+                },
+                deep: true
             },
-            deep: true
+            futureDayHide: {
+                handler(val, oldVal) {
+                    this.futureDayHide = parseInt(val);
+                    this.getList(this.myDate);
+                },
+                deep: true
+            },
+            sundayStart: {
+                handler(val, oldVal) {
+                    this.intStart();
+                    this.getList(this.myDate);
+                },
+                deep: true
+            }
         }
-    }
-});
+    });
 
 function getDaysInOneMonth(date) {
     const year = date.getFullYear();

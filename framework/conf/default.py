@@ -19,12 +19,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 
 """
-
+from __future__ import absolute_import
 import os
 import sys
 # Import global settings to make it easier to extend settings.
 from django.conf.global_settings import *  # noqa
-
 
 # ==============================================================================
 # 应用基本信息配置 (请按照说明修改)
@@ -73,9 +72,9 @@ else:
     RUN_MODE = 'DEVELOP'
     DEBUG = True
 
-
 try:
     import pymysql
+
     pymysql.install_as_MySQLdb()
 except:
     pass
@@ -103,7 +102,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'account.middlewares.LoginMiddleware',   # 登录鉴权中间件
+    'account.middlewares.LoginMiddleware',  # 登录鉴权中间件
     'common.middlewares.CheckXssMiddleware',  # Xss攻击处理中间件
 )
 
@@ -177,7 +176,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.request',
                 'django.template.context_processors.csrf',
-                'common.context_processors.mysetting',   # 自定义模版context，可在页面中使用STATIC_URL等变量
+                'common.context_processors.mysetting',  # 自定义模版context，可在页面中使用STATIC_URL等变量
                 'django.template.context_processors.i18n',
             ],
             'debug': DEBUG
@@ -187,8 +186,8 @@ TEMPLATES = [
 # ==============================================================================
 # session and cache
 # ==============================================================================
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True       # 默认为false,为true时SESSION_COOKIE_AGE无效
-SESSION_COOKIE_PATH = SITE_URL               # NOTE 不要改动，否则，可能会改成和其他app的一样，这样会影响登录
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # 默认为false,为true时SESSION_COOKIE_AGE无效
+SESSION_COOKIE_PATH = SITE_URL  # NOTE 不要改动，否则，可能会改成和其他app的一样，这样会影响登录
 
 # ===============================================================================
 # Authentication
@@ -207,28 +206,40 @@ ADMIN_USERNAME_LIST = ['admin']
 # ===============================================================================
 # CELERY 配置
 # ===============================================================================
-if IS_USE_CELERY:
-    try:
-        import djcelery
-        INSTALLED_APPS += (
-            'djcelery',            # djcelery
-        )
-        djcelery.setup_loader()
-        CELERY_ENABLE_UTC = False
-        CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
-        if "celery" in sys.argv:
-            DEBUG = False
-        # celery 的消息队列（RabbitMQ）信息
-        BROKER_URL = os.environ.get('BK_BROKER_URL', BROKER_URL_DEV)
-        if RUN_MODE == 'DEVELOP':
-            from celery.signals import worker_process_init
+# if IS_USE_CELERY:
+#     try:
+import djcelery
+from celery.schedules import crontab
+from kombu import Queue, Exchange
 
-            @worker_process_init.connect
-            def configure_workers(*args, **kwargs):
-                import django
-                django.setup()
-    except:
-        pass
+INSTALLED_APPS += (
+    'djcelery',  # djcelery
+)
+djcelery.setup_loader()
+CELERY_ENABLE_UTC = False
+CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+# if "celery" in sys.argv:
+#     DEBUG = False
+# celery 的消息队列（RabbitMQ）信息
+# BROKER_URL = os.environ.get('BK_BROKER_URL', BROKER_URL_DEV)
+ROKER_URL = 'amqp://localhost//'  # 任何可用的redis都可以，不一定要在django server运行的主机上
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+CELERY_RESULT_BACKEND = 'amqp://localhost'  # 官网优化的地方也推荐使用c的librabbitmq
+CELERY_TASK_RESULT_EXPIRES = 1200  # celery任务执行结果的超时时间，我的任务都不需要返回结果,只需要正确执行就行
+CELERYD_CONCURRENCY = 50  # celery worker的并发数 也是命令行-c指定的数目,事实上实践发现并不是worker也多越好,保证任务不堆积,加上一定新增任务的预留就可以
+CELERYD_PREFETCH_MULTIPLIER = 4  # celery worker 每次去rabbitmq取任务的数量，我这里预取了4个慢慢执行,因为任务有长有短没有预取太多
+CELERYD_MAX_TASKS_PER_CHILD = 40
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+# if RUN_MODE == 'DEVELOP':
+#     from celery.signals import worker_process_init
+#     @worker_process_init.connect
+#     def configure_workers(*args, **kwargs):
+#         import django
+#         django.setup()
+# except:
+#     pass
 
 # ==============================================================================
 # logging
@@ -258,7 +269,8 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s [%(asctime)s] %(pathname)s %(lineno)d %(funcName)s %(process)d %(thread)d \n \t %(message)s \n',  # noqa
+            'format': '%(levelname)s [%(asctime)s] %(pathname)s %(lineno)d %(funcName)s %(process)d %(thread)d \n \t %(message)s \n',
+        # noqa
             'datefmt': '%Y-%m-%d %H:%M:%S'
         },
         'simple': {
@@ -332,3 +344,11 @@ LOGGING = {
         },
     }
 }
+
+# email-----------------------
+EMAIL_USE_SSL = True
+EMAIL_HOST = 'smtp.qq.com'  # 如果是 163 改成 smtp.163.com
+EMAIL_PORT = 465
+EMAIL_HOST_USER = '975495461@qq.com'  # 帐号
+EMAIL_HOST_PASSWORD = 'oaxklhdxakxrbfda'  # 密码
+DEFAULT_FROM_EMAIL = 'zlx<975495461@qq.com>'

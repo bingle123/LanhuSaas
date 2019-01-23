@@ -41,8 +41,10 @@
 					</div>
 				</div>
 				<div>
-					<el-upload action="/MarketDay/get_file/" :on-success="upsuccess" :on-error="err" accept=".txt,.csv">
-						<el-button size="small" type="primary">点击上传</el-button>
+                    <el-button type="danger" icon="el-icon-delete" circle @click="deleteallday"></el-button>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+                    <el-upload action="/MarketDay/get_file/" :on-success="upsuccess" :on-error="err" accept=".txt,.csv">
+                        <el-button size="small" type="primary">点击上传节假日文件</el-button>
 					</el-upload>
 				</div>
                <div class="date_introduce">

@@ -2,20 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="eba90bec-42c4-48ed-ba30-7c66b4e97cb8" name="Default" comment="2019/1/4 16:38 --liaomingtao-- 主页构架完成">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/MarketDay/function.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/function.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/MarketDay/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/MarketDay/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/MarketDay/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/framework/conf/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/conf/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/framework/conf/default.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/conf/default.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/framework/static/js/calendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/framework/static/js/calendar.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/framework/templates/main/Calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/framework/templates/main/Calendar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/zlx/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/zlx/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/zlx/function.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/function.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/zlx/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/migrations/0001_initial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/zlx/migrations/0002_auto_20190117_1155.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/migrations/0002_auto_20190117_1155.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/zlx/migrations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/migrations/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/zlx/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/zlx/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/tests.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/zlx/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/framework/zlx/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/framework/MarketDay/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,21 +36,69 @@
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/framework/static/js/calendar.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="167">
-              <caret line="143" column="29" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="39" />
+            <state relative-caret-position="180">
+              <caret line="173" column="35" lean-forward="true" selection-start-line="173" selection-start-column="35" selection-end-line="173" selection-end-column="35" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/framework/MarketDay/function.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="10" column="14" lean-forward="true" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/framework/MarketDay/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="7" column="26" lean-forward="true" selection-start-line="7" selection-start-column="26" selection-end-line="7" selection-end-column="26" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/framework/MarketDay/views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="14" column="12" lean-forward="true" selection-start-line="14" selection-start-column="12" selection-end-line="14" selection-end-column="12" />
+              <folding>
+                <element signature="e#24#59#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/framework/MarketDay/urls.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="11" column="36" lean-forward="true" selection-start-line="11" selection-start-column="36" selection-end-line="11" selection-end-column="36" />
+              <folding>
+                <element signature="e#24#75#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/framework/templates/main/Calendar.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="389">
-              <caret line="48" column="20" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="20" />
+            <state relative-caret-position="106">
+              <caret line="44" column="44" selection-start-line="44" selection-start-column="44" selection-end-line="44" selection-end-column="44" />
+              <folding>
+                <element signature="e#1813#1819#0#HTML" expanded="true" />
+                <element signature="e#1819#1825#0#HTML" expanded="true" />
+                <element signature="e#1825#1831#0#HTML" expanded="true" />
+                <element signature="e#1831#1837#0#HTML" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -65,8 +108,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -110,12 +153,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/framework/templates/base.html" />
-        <option value="$PROJECT_DIR$/framework/static/js/pageNav.js" />
-        <option value="$PROJECT_DIR$/framework/static/css/jquery.tree.css" />
-        <option value="$PROJECT_DIR$/framework/guotai/models.py" />
-        <option value="$PROJECT_DIR$/framework/templates/shell_app/position_setting.html" />
-        <option value="$PROJECT_DIR$/framework/static/assets/bootstrap-3.3.4/js/bootstrap.js" />
         <option value="$PROJECT_DIR$/framework/templates/common/select.html" />
         <option value="$PROJECT_DIR$/framework/templates/common/carousel.html" />
         <option value="$PROJECT_DIR$/framework/templates/db_connection_manage/index.html" />
@@ -154,12 +191,19 @@
         <option value="$PROJECT_DIR$/framework/static/css/main.css" />
         <option value="$PROJECT_DIR$/framework/static/css/common/main.css" />
         <option value="$PROJECT_DIR$/framework/templates/common/main.html" />
-        <option value="$PROJECT_DIR$/framework/conf/default.py" />
         <option value="$PROJECT_DIR$/framework/urls.py" />
         <option value="$PROJECT_DIR$/framework/zlx/views.py" />
         <option value="$PROJECT_DIR$/framework/zlx/function.py" />
-        <option value="$PROJECT_DIR$/framework/static/js/calendar.js" />
+        <option value="$PROJECT_DIR$/framework/conf/__init__.py" />
+        <option value="$PROJECT_DIR$/framework/conf/celery.py" />
+        <option value="$PROJECT_DIR$/framework/conf/default.py" />
+        <option value="$PROJECT_DIR$/framework/MarketDay/tasks.py" />
         <option value="$PROJECT_DIR$/framework/templates/main/Calendar.html" />
+        <option value="$PROJECT_DIR$/framework/static/js/calendar.js" />
+        <option value="$PROJECT_DIR$/framework/MarketDay/models.py" />
+        <option value="$PROJECT_DIR$/framework/MarketDay/function.py" />
+        <option value="$PROJECT_DIR$/framework/MarketDay/urls.py" />
+        <option value="$PROJECT_DIR$/framework/MarketDay/views.py" />
       </list>
     </option>
   </component>
@@ -176,6 +220,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -187,6 +232,12 @@
               <item name="LanhuSaas" type="b2602c69:ProjectViewProjectNode" />
               <item name="LanhuSaas" type="462c0819:PsiDirectoryNode" />
               <item name="framework" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="LanhuSaas" type="b2602c69:ProjectViewProjectNode" />
+              <item name="LanhuSaas" type="462c0819:PsiDirectoryNode" />
+              <item name="framework" type="462c0819:PsiDirectoryNode" />
+              <item name="MarketDay" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="LanhuSaas" type="b2602c69:ProjectViewProjectNode" />
@@ -205,7 +256,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -217,17 +267,17 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="E:\LanhuSaas\framework\templates\main" />
-      <recent name="E:\LanhuSaas\framework\static\js" />
-      <recent name="E:\LanhuSaas\framework" />
-      <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\js" />
-      <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\img" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\templates\monitor" />
       <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\templates" />
       <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\assets" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\LanhuSaas\framework\conf" />
+      <recent name="E:\LanhuSaas\framework\templates\main" />
+      <recent name="E:\LanhuSaas\framework\static\js" />
+      <recent name="E:\LanhuSaas\framework" />
+      <recent name="F:\Users\DeleMing\Desktop\Lanhu\framework\static\js" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -337,6 +387,7 @@
       <workItem from="1547080450897" duration="13713000" />
       <workItem from="1547098278836" duration="9800000" />
       <workItem from="1547779683361" duration="1811000" />
+      <workItem from="1548205140054" duration="6044000" />
     </task>
     <task id="LOCAL-00001" summary="选择服务器---静态页面">
       <created>1544418401657</created>
@@ -573,7 +624,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="396758000" />
+    <option name="totallyTimeSpent" value="402895000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -588,7 +639,7 @@
     <frame x="-8" y="-8" width="1382" height="784" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17927383" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18154311" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -600,9 +651,9 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.20487805" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="9" weight="0.62439024" />
+      <window_info anchor="bottom" id="Terminal" order="9" weight="0.4876923" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5506042" side_tool="true" weight="0.598374" />
-      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.47583082" weight="0.09268293" />
+      <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.47583082" weight="0.78615385" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.32923076" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -613,6 +664,16 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="17:47" />
@@ -650,18 +711,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/framework/common/utils.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/blueking/component/base.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/blueking/component/client.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/blueking/component/collections.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/framework/blueking/component/__init__.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -769,9 +818,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/framework/templates/main/test.html" />
-    <entry file="file://$PROJECT_DIR$/framework/static/css/Calendar.css">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/framework/templates/main/inputDemo.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -888,30 +934,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/conf/default.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="127" column="10" lean-forward="true" selection-start-line="127" selection-start-column="10" selection-end-line="127" selection-end-column="10" />
-          <folding>
-            <element signature="e#1002#1011#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/framework/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="158">
           <caret line="35" column="36" lean-forward="true" selection-start-line="35" selection-start-column="36" selection-end-line="35" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/framework/MarketDay/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="9" column="1" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
-          <folding>
-            <element signature="e#24#75#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -939,31 +965,104 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/MarketDay/views.py">
+    <entry file="file://$PROJECT_DIR$/framework/static/css/Calendar.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="5" column="36" lean-forward="true" selection-start-line="5" selection-start-column="36" selection-end-line="5" selection-end-column="36" />
+        <state relative-caret-position="323">
+          <caret line="117" column="18" lean-forward="true" selection-start-line="117" selection-start-column="18" selection-end-line="117" selection-end-column="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/MarketDay/function.py">
+    <entry file="file://$PROJECT_DIR$/framework/conf/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="31" selection-start-line="31" selection-end-line="31" />
+        <state relative-caret-position="91">
+          <caret line="11" column="37" lean-forward="true" selection-start-line="11" selection-start-column="37" selection-end-line="11" selection-end-column="37" />
+          <folding>
+            <element signature="e#694#732#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/framework/static/js/calendar.js">
+    <entry file="file://$PROJECT_DIR$/framework/conf/celery.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="143" column="29" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="39" />
+        <state relative-caret-position="540">
+          <caret line="21" column="21" lean-forward="true" selection-start-line="21" selection-start-column="21" selection-end-line="21" selection-end-column="21" />
+          <folding>
+            <element signature="e#44#82#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/conf/default.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="172">
+          <caret line="212" column="33" lean-forward="true" selection-start-line="212" selection-start-column="33" selection-end-line="212" selection-end-column="33" />
+          <folding>
+            <element signature="e#1001#1005#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/MarketDay/tasks.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="12" column="20" lean-forward="true" selection-start-line="12" selection-start-column="20" selection-end-line="12" selection-end-column="20" />
+          <folding>
+            <element signature="e#44#82#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/MarketDay/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="11" column="36" lean-forward="true" selection-start-line="11" selection-start-column="36" selection-end-line="11" selection-end-column="36" />
+          <folding>
+            <element signature="e#24#75#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/framework/templates/main/Calendar.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="48" column="20" selection-start-line="48" selection-start-column="20" selection-end-line="48" selection-end-column="20" />
+        <state relative-caret-position="106">
+          <caret line="44" column="44" selection-start-line="44" selection-start-column="44" selection-end-line="44" selection-end-column="44" />
+          <folding>
+            <element signature="e#1813#1819#0#HTML" expanded="true" />
+            <element signature="e#1819#1825#0#HTML" expanded="true" />
+            <element signature="e#1825#1831#0#HTML" expanded="true" />
+            <element signature="e#1831#1837#0#HTML" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/MarketDay/function.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="10" column="14" lean-forward="true" selection-start-line="10" selection-start-column="14" selection-end-line="10" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/static/js/calendar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="173" column="35" lean-forward="true" selection-start-line="173" selection-start-column="35" selection-end-line="173" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/MarketDay/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="7" column="26" lean-forward="true" selection-start-line="7" selection-start-column="26" selection-end-line="7" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/framework/MarketDay/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="14" column="12" lean-forward="true" selection-start-line="14" selection-start-column="12" selection-end-line="14" selection-end-column="12" />
+          <folding>
+            <element signature="e#24#59#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
