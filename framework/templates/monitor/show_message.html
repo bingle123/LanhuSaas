@@ -53,10 +53,11 @@
                 </template>
             </el-table-column>
             </el-table>
-        <el-pagination background layout="prev, pager, next" :total="1000" style="float:right"></el-pagination>
+        <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
     </div>
     </div>
     <!-- div1 end-->
+
     <!-- 对话框 start-->
     <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%">
         <HR align=center width=100% color=#979797 SIZE=0.5>
@@ -454,6 +455,8 @@
     var vm = new Vue({
         el:'#app',
         data: {
+            page_count:100,                             //总页码数
+            page:1,                                   //分页页码数
             sites: [],                                //table内容
             contents: '',                             //搜索输入框内容
             checked1:false,                           //作业启动选框
@@ -615,6 +618,10 @@
             }
         },
         methods: {
+            current_change1(value) {
+                vm.page = value
+                vm.show()
+            },
             submitForm(formName) {
             this.$refs[formName].validate((valid) => {
               if (valid) {
@@ -660,7 +667,12 @@
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/show/',
+                    data:{
+                        page:vm.page,
+                        limit:10
+                    },
                 }).then(function(res) {
+                    vm.page_count = res.data.message[0].page_count;
                     vm.sites = res.data.message;
 
                 })
@@ -830,8 +842,6 @@
                     vm.disabled1 = false;
                 },60000);
             },
-
-
             rowclass({row, rowIndex}) {
                 return 'background:#F7F7F7'
             },
