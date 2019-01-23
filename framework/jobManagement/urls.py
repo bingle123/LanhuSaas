@@ -21,4 +21,5 @@ urlpatterns = patterns(
     (r'^add_job/$', 'add_job'),                                     #增加岗位
     (r'^add_person/$', 'add_person'),                               #增加员工
     (r'^edit_job/$', 'edit_job'),                                   #编辑
+    (r'^get_user/$', 'get_user'),                                   #调接口查询所有用户
 )

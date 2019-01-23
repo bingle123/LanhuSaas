@@ -1,5 +1,7 @@
 import json
-
+import os
+import sys
+from scrapy.cmdline import execute
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
@@ -17,6 +19,9 @@ def index(request):
 def index1(request):
 
     return render_mako_context(request, '123.html')
+
+
+
 
 
 @csrf_exempt

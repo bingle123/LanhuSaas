@@ -48,7 +48,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="add_person()" type="primary">保存</el-button>
-            <el-button @click="dialogFormVisible = false">取消</el-button>
+            <el-button @click="refresh()">取消</el-button>
         </div>
     </el-dialog>
 
@@ -59,7 +59,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click=" edit_job()" type="primary">保存</el-button>
-            <el-button @click="dialogFormVisible2 = false">取消</el-button>
+            <el-button @click="refresh()">取消</el-button>
         </span>
     </el-dialog>
 
@@ -71,7 +71,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="add_job()" type="primary">保存</el-button>
-            <el-button @click="dialogFormVisible3 = false">取消</el-button>
+            <el-button @click="refresh()">取消</el-button>
         </div>
     </el-dialog>
 
@@ -134,16 +134,12 @@
             form: {
                  Job_name:'',
             },
-            other:{
-                User_name:'',           //员工名
-                Start_Time:'',          //创建时间
-                Status:'',              //状态
-                log:''                  //日志
-            },
+            users:[],
             tempjobname:'',
             tempid:'',
             form1:'',
             jobname:'',
+            username:'',
             selectvalue: '',
             value1: '',
             value12:'',
@@ -153,8 +149,13 @@
             value2:[],
         },
         methods: {
-            change1(value){
-                 vm.value2.push(this.data2[value])
+            refresh(){                                                          //跳转刷新
+                window.location.href="${SITE_URL}jobManagement/jobM"
+            },
+            change1(value){                                                     //加人获得选中数据
+                for(var i in value){
+                    vm.value2.push(vm.data2[value[i]])
+                }
             },
             rowClass({row, rowIndex}) {
                 console.log(rowIndex);
@@ -166,7 +167,7 @@
             handleCurrentChange(val) {
                 console.log('当前页:'+val)
             },
-            show() {
+            show() {                                                               //显示首页
                 axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/job_show/',
@@ -175,7 +176,7 @@
 
                 })
             },
-            deletePosition(row){
+            deletePosition(row){                                                  //删除一条记录
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
@@ -202,7 +203,7 @@
                 });
             });
             },
-            select_job(){
+            select_job(){                                           //查询
                 axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/select_job/',
@@ -211,7 +212,7 @@
                     vm.jobInstance = res.data.message;
                 })
             },
-            add_job(){
+            add_job(){                                              //增加岗位
                 vm.dialogFormVisible3 = false;
                axios({
                     method: 'post',
@@ -221,12 +222,12 @@
                     window.location.href="${SITE_URL}jobManagement/jobM"
                 })
             },
-            edit_jobname(row){
+            edit_jobname(row){                                     //显示弹框，传值到edit_job
                 vm.dialogFormVisible2 = true
                 vm.tempid = row.id;
                 vm.tempjobname = row.Job_name;
             },
-            edit_job(){
+            edit_job(){                                            //修改岗位名
                 vm.dialogFormVisible2 = false
                 axios({
                     method: "post",
@@ -241,29 +242,45 @@
                     }
                 })
             },
-            show_job(row){
+            show_job(row){                                      //显示弹框，传值到add_person
                 vm.dialogFormVisible = true;
                 data = vm.generateData2();
                 vm.jobname = row.Job_name;
                 vm.id = row.id;
+                vm.username = row.User_name;
             },
             add_person(row){
-                vm.dialogFormVisible = false;
+                vm.refresh();
                axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/add_person/',
                     data:{
                         data:vm.value2,
-                        id:this.id
+                        id:this.id,
+                        jobname: this.jobname,
+                        username: this.username,
                     },
                 }).then((res) => {
-                    vm.show()
+                    vm.show();
                 })
             },
-            generateData2() {
+            select_all_user(){                                                      //调接口查询所有用户
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}jobManagement/get_user/',
+                }).then((res) =>{
+                    console.log(res)
+                    for(var i=0;i<res.data.data.length;i++){
+                        this.users.push(res.data.data[i].bk_username)
+                    }
+
+                })
+            },
+            generateData2(){                                                       //加人的穿梭框
                 const data = [];
-                const people = ['张三', '李四', '王五', '赵六', '员工a', '员工b', '员工c'];
-                const pinyin = ['张三', '李四', '王五', '赵六', '员工a', '员工b', '员工c'];
+
+                var people= this.users;
+                const pinyin = this.users;
                 people.forEach((people, index) => {
                   data.push({
                       label: people,
@@ -271,7 +288,7 @@
                       key: index,
                   });
                 });
-            this.data2 = data
+            this.data2 = data;
             },
             filterMethod(query, item) {
                 return item.pinyin.indexOf(query) > -1;
@@ -280,6 +297,7 @@
     });
 // vm.generateData2()
  vm.show()
+ vm.select_all_user()
 </script>
 </body>
 
