@@ -33,7 +33,7 @@ def addSence(request):
    scene_name = senceModel['scene_name']
    scene_positions = senceModel['scene_positions']
    senceModel['scene_creator'] = "admin"
-    # Scene.objects.create(**senceModel)
+   Scene.objects.create(**senceModel)
    return res;
 
 def select_table(request):
