@@ -27,7 +27,8 @@ sup {
 
 .wrapper {
   display: table;
-  margin-top: 80px;
+  margin-top: 40px;
+  margin-left:50px;
   width: 100%;
   height: 100%;
 }
