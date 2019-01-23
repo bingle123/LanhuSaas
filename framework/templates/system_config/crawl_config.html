@@ -1,9 +1,351 @@
 <html>
 <head>
+    <meta charset="UTF-8">
+    <title>爬虫配置</title>
 
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- vue的ajax依赖-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <!-- element UI引入样式 -->
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script src='${STATIC_URL}js/jquery.min.js'></script>
+    <script src='${STATIC_URL}js/jquery-ui.js'></script>
+    <!--jQuery库使用时请使用标准jQuery语法-->
+    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
+    <!--页面初始化css(Tencent)-->
+    <link href="${STATIC_URL}css/init.css" rel="stylesheet">
+
+    <!--阿里巴巴矢量图标库--项目完成后请下载css并下载css引用的字体文件-->
+    <link href="http://at.alicdn.com/t/font_997278_ptr5bdmor4j.css" rel="stylesheet">
 </head>
-
 <body>
-crawl_config
+
+<div id="system_crawl_config" v-loading="loading">
+
+    <!--start 面包屑-->
+    <el-breadcrumb separator-class="el-icon-arrow-right" separator="/" style="margin: 20px;">
+        <el-breadcrumb-item><a href="/">系统配置</a></el-breadcrumb-item>
+        <el-breadcrumb-item>网页抓取配置</el-breadcrumb-item>
+        <el-breadcrumb-item v-if="showDiaLog == false">{{ message }}抓取配置</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!--end 面包屑-->
+
+    <!--start 卡片 列表页-->
+    <el-card class="box-card" style="margin: 20px;" v-if="showDiaLog == true">
+        <div slot="header" class="clearfix">
+            <el-row :gutter="20">
+                <el-col :span="16">
+                    <div class="grid-content bg-purple"><h2>网页抓取配置</h2></div>
+                </el-col>
+                <el-col :span="8">
+                    <div class="grid-content bg-purple">
+                        <el-form :inline="true" :model="crawl_search" class="demo-form-inline">
+                            <el-form-item label="爬虫名称：">
+                                <el-input v-model="crawl_search.name" placeholder="请输入爬虫名称"></el-input>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary">查询</el-button>
+                            </el-form-item>
+                            <el-button type="primary" @click="changeDiaLog">新增爬虫信息</el-button>
+                        </el-form>
+
+                    </div>
+                </el-col>
+            </el-row>
+        </div>
+        <el-table :data="crawl_table" style="width: 100%">
+            <el-table-column type="expand"
+                             label="ID"
+                             prop="id">
+                <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="总xpath:">
+                            <span>{{ props.row.total_xpath }}</span>
+                        </el-form-item>
+                        <el-form-item label="标题xpath:">
+                            <span>{{ props.row.title_xpath }}</span>
+                        </el-form-item>
+                        <el-form-item label="URL_xpath:">
+                            <span>{{ props.row.url_xpath }}</span>
+                        </el-form-item>
+                        <el-form-item label="时间xpath:">
+                            <span>{{ props.row.time_xpath }}</span>
+                        </el-form-item>
+                        <el-form-item label="关键字:">
+                            <span>{{ props.row.crawl_keyword }}</span>
+                        </el-form-item>
+                        <el-form-item label="非关键字:">
+                            <span>{{ props.row.crawl_no_keyword }}</span>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="爬虫名称"
+                    prop="crawl_name">
+            </el-table-column>
+            <el-table-column
+                    label="爬虫周期"
+                    prop="period">
+            </el-table-column>
+            <el-table-column
+                    label="创建人"
+                    prop="creator">
+            </el-table-column>
+            <el-table-column
+                    label="创建时间"
+                    prop="create_time">
+            </el-table-column>
+            <el-table-column
+                    label="修改人"
+                    prop="editor">
+            </el-table-column>
+            <el-table-column
+                    label="修改时间"
+                    prop="edit_time">
+            </el-table-column>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <el-button size="mini" type="text" v-on:click="editCrawl(scope.row.id)">编辑</el-button>
+                    <el-button size="mini" type="text" v-on:click="deleteCrawl(scope.row.id)">删除</el-button>
+                    </el-tooltip>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-card>
+    <!--end 卡片 列表页-->
+
+    <!--start 卡片 新增爬虫配置页-->
+    <el-card class="box-card" style="margin: 20px;" v-if="showDiaLog == false">
+        <div slot="header" class="clearfix">
+            <h2>{{ message }}爬虫配置</h2>
+        </div>
+        <el-form ref="form" :model="crawl_form" label-width="150px">
+            <el-row :gutter="20">
+                <el-col :span="12">
+                    <div class="grid-content bg-purple">
+                        <el-form-item label="爬虫名称：">
+                            <el-input v-model="crawl_form.crawl_name"></el-input>
+                        </el-form-item>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="grid-content bg-purple">
+                        <el-form-item label="爬虫周期：">
+                            <el-input v-model="crawl_form.period"></el-input>
+                        </el-form-item>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="grid-content bg-purple">
+                        <el-form-item label="爬虫地址(URL):">
+                            <el-input v-model="crawl_form.crawl_url"></el-input>
+                        </el-form-item>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="grid-content bg-purple">
+                        </el-form-item>
+                        <el-form-item label="关键字:">
+                            <el-input v-model="crawl_form.crawl_keyword"></el-input>
+                        </el-form-item>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="grid-content bg-purple">
+                        <el-form-item label="非关键字:">
+                            <el-input v-model="crawl_form.crawl_no_keyword"></el-input>
+                        </el-form-item>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="grid-content bg-purple">
+                        <el-form-item label="配置xpath:">
+                            <el-input v-model="crawl_form.total_xpath"></el-input>
+                        </el-form-item>
+                    </div>
+                </el-col>
+
+                <el-col :span="12">
+                    <div class="grid-content bg-purple">
+                        <el-form-item label="配置标题xpath：">
+                            <el-input v-model="crawl_form.title_xpath"></el-input>
+                        </el-form-item>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="grid-content bg-purple">
+                        <el-form-item label="配置时间xpath：">
+                            <el-input v-model="crawl_form.time_xpath"></el-input>
+                        </el-form-item>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="grid-content bg-purple">
+                        <el-form-item label="配置资源xpath：">
+                            <el-input v-model="crawl_form.url_xpath"></el-input>
+                        </el-form-item>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="grid-content bg-purple">
+                        <el-form-item>
+                            <el-button type="success" @click="addCrawl">{{ message }}爬虫配置</el-button>
+                            <el-button @click="changeDiaLog">返回</el-button>
+                        </el-form-item>
+                    </div>
+                </el-col>
+            </el-row>
+
+        </el-form>
+    </el-card>
+    <!--end 卡片 新增爬虫配置页-->
+</div>
+
+
+<script>
+    //csrf验证
+    axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
+
+    let vm = new Vue({
+        el: '#system_crawl_config',
+        data: {
+            loading: false,
+            message: "新增",
+            showDiaLog: true,
+            crawl_table: [
+                {
+                    id: '1',
+                    crawl_name: 'name',
+                    period: '20s',
+                    creator: '张三',
+                    create_time: '2019/1/1',
+                    editor: '李四',
+                    edit_time: '2019/1/1',
+                    total_xpath: '2019/1/1',
+                    title_xpath: '2019/1/1',
+                    time_xpath: '2019/1/1',
+                    url_xpath: '2019/1/1',
+                    crawl_keyword: '通知',
+                    crawl_no_keyword: '测试',
+                }, {
+                    id: '1',
+                    crawl_name: 'name',
+                    period: '20s',
+                    creator: '张三',
+                    create_time: '2019/1/1',
+                    editor: '李四',
+                    edit_time: '2019/1/1',
+                    total_xpath: '2019/1/1',
+                    title_xpath: '2019/1/1',
+                    time_xpath: '2019/1/1',
+                    url_xpath: '2019/1/1',
+                    crawl_keyword: '通知',
+                    crawl_no_keyword: '测试',
+                }, {
+                    id: '1',
+                    crawl_name: 'name',
+                    period: '20s',
+                    creator: '张三',
+                    create_time: '2019/1/1',
+                    editor: '李四',
+                    edit_time: '2019/1/1',
+                    total_xpath: '2019/1/1',
+                    title_xpath: '2019/1/1',
+                    time_xpath: '2019/1/1',
+                    url_xpath: '2019/1/1',
+                    crawl_keyword: '通知',
+                    crawl_no_keyword: '测试',
+                },
+            ],
+            crawl_search: {
+                name: ''
+            },
+            crawl_form: {
+                crawl_name: '上海证券交易所通知',
+                crawl_url: 'http://www.sse.com.cn/services/tradingservice/tradingtech/home/',
+                period: '500000',
+                crawl_keyword: '通知',
+                crawl_no_keyword: '测试',
+                total_xpath: '//div[@class="sse_list_1 js_listPage"]//dl//dd',
+                title_xpath: 'span/text()',
+                time_xpath: 'a/text()',
+                url_xpath: 'a/@href',
+            },
+            form: {
+                name: '上海交易所通知',
+                region: '',
+                date1: '',
+                date2: '',
+                delivery: false,
+                type: [],
+                resource: '',
+                desc: ''
+            },
+        },
+        methods: {
+            changeDiaLog() {//跳转爬虫配置新增页面
+                this.showDiaLog == true ? this.showDiaLog = false : this.showDiaLog = true;
+                this.loading = true;
+                this.loading = false;
+                this.message = '新增';
+            },
+            editCrawl(res) {//跳转爬虫配置编辑页面
+                this.changeDiaLog();
+                //此处应更新表单的值
+                this.message = '修改';
+            },
+            addCrawl() {
+                axios({
+                    url: '${SITE_URL}system_config/manage_crawl/',
+                    method: 'post',
+                    data: this.crawl_form,
+                }).then(function (res) {
+                    console.log(res)
+                }).catch(function (res) {
+                    console.log(res)
+                })
+            },
+            deleteCrawl(id) {
+                this.$confirm('此操作将永久删除该文爬虫配置, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    axios({
+                        url: '${SITE_URL}system_config/delete_crawl/',
+                        method: 'post',
+                        data: {id:id},
+                    }).then(()=> {
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    }).catch((res) => {
+                        this.$message({
+                            type: 'info',
+                            message: '删除失败，'+res
+                        });
+                    });
+
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            }
+        }
+    });
+</script>
 </body>
 </html>
