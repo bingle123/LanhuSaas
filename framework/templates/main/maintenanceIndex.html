@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>维护人员首页</title>
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/maintenanceIndex/maintenanceIndex.css">
+    <script type="text/javascript" src="${STATIC_URL}js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/echarts/echarts.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/echarts/macarons.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/maintenanceIndex/maintenanceIndex.js"></script>
+</head>
+<body>
+    <div id="maintenanceIndex">
+        <el-row>
+            <el-col :span="24">
+                <div id="maintenanceTitle">
+                    <span>维护人员首页</span>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="6">
+                <el-card shadow="always" class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span class="maintenanceHeader">执行情况统计</span>
+                    </div>
+                    <div id="maintenancePie"></div>
+                </el-card>
+            </el-col>
+            <el-col :span="17" :offset="1">
+                <el-card shadow="always" class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span class="maintenanceHeader">场景执行情况总览</span>
+                    </div>
+                    <el-row>
+                        <div id="maintenanceBar"></div>
+                    </el-row>
+                    <el-row>
+                        <el-table :data='maintenanceTableData' id="maintenanceTable">
+                            <el-table-column prop="sum" label="场景总数"></el-table-column>
+                            <el-table-column prop="done" label="已完成"></el-table-column>
+                            <el-table-column prop="doneRate" label="完成率"></el-table-column>
+                            <el-table-column prop="error" label="执行出错"></el-table-column>
+                            <el-table-column prop="errorRate" label="出错率"></el-table-column>
+                            <el-table-column prop="doing" label="正执行"></el-table-column>
+                            <el-table-column prop="unexec" label="待执行"></el-table-column>
+                        </el-table>
+                    </el-row>
+                </el-card>
+            </el-col>
+        </el-row>
+        <el-row id="maintenanceStepBarRow">
+            <el-col :span="13">
+                <el-card shadow="always" class="box-card">
+                    <div slot="header" class="clearfix">
+                        <span class="maintenanceHeader">正在执行场景统计</span>
+                    </div>
+                    <el-row>
+                        <el-col :span="20">
+                            <div class="maintenanceStepBarDiv">
+                                <el-steps class="maintenanceStepBar" space=100% :active="1" finish-status="success" process-status="finish">
+                                    <el-step title="节点1"></el-step>
+                                    <el-step title="节点2"></el-step>
+                                    <el-step title="节点3"></el-step>
+                                    <el-step title="节点4"></el-step>
+                                    <el-step title="节点5"></el-step>
+                                    <el-step title="节点6"></el-step>
+                                </el-steps>
+                            </div>
+                        </el-col>
+                        <el-col :span="4">
+                            <div class="maintenancePointDiv">
+                                <span class="maintenancePoint">90</span>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="20">
+                            <div class="maintenanceStepBarDiv">
+                                <el-steps class="maintenanceStepBar" space=100% :active="1" finish-status="success" process-status="finish">
+                                    <el-step title="节点1"></el-step>
+                                    <el-step title="节点2"></el-step>
+                                    <el-step title="节点3"></el-step>
+                                    <el-step title="节点4"></el-step>
+                                    <el-step title="节点5"></el-step>
+                                    <el-step title="节点6"></el-step>
+                                </el-steps>
+                            </div>
+                        </el-col>
+                        <el-col :span="4">
+                            <div class="maintenancePointDiv">
+                                <span class="maintenancePoint">90</span>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="20">
+                            <div class="maintenanceStepBarDiv">
+                                <el-steps class="maintenanceStepBar" space=100% :active="1" finish-status="success" process-status="finish">
+                                    <el-step title="节点1"></el-step>
+                                    <el-step title="节点2"></el-step>
+                                    <el-step title="节点3"></el-step>
+                                    <el-step title="节点4"></el-step>
+                                    <el-step title="节点5"></el-step>
+                                    <el-step title="节点6"></el-step>
+                                </el-steps>
+                            </div>
+                        </el-col>
+                        <el-col :span="4">
+                            <div class="maintenancePointDiv">
+                                <span class="maintenancePoint">90</span>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </el-card>
+            </el-col>
+            <el-col :span="10" :offset="1">
+                <el-row>
+                    <el-col :span="24">
+                        <el-card shadow="always" class="box-card">
+                            <div slot="header" class="clearfix">
+                                <span class="maintenanceHeader">已执行场景展示</span>
+                                <span class="maintenanceHeaderDesc">(以当前时间向前推3小时已执行场景情况列表包含执行状态)</span>
+                            </div>
+                            <el-row>
+                                <el-col :span="24">
+                                    <div class="maintenanceVerticalDoneDiv">
+                                        <el-steps class="maintenanceVertical" direction="vertical" :active="1" finish-status="success" process-status="finish">
+                                            <el-step class="maintenanceVerticalDone" title="2019-01-16 06:00:00"></el-step>
+                                            <el-step class="maintenanceVerticalDone" title="2019-01-16 07:00:00"></el-step>
+                                            <el-step class="maintenanceVerticalDone" title="2019-01-16 08:00:00"></el-step>
+                                            <el-step class="maintenanceVerticalDone" title="2019-01-16 09:00:00"></el-step>
+                                        </el-steps>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </el-card>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24" id="maintenanceVerticalBarRow">
+                        <el-card shadow="always" class="box-card">
+                            <div slot="header" class="clearfix">
+                                <span class="maintenanceHeader">待执行场景展示</span>
+                                <span class="maintenanceHeaderDesc">(以当前时间向后推3小时待执行场景列表展示)</span>
+                            </div>
+                            <el-row>
+                                <el-col :span="24">
+                                    <div class="maintenanceVerticalUnexecDiv">
+                                        <el-steps class="maintenanceVertical" direction="vertical" :active="1" finish-status="success" process-status="finish">
+                                            <el-step class="maintenanceVerticalUnexec" title="2019-01-16 10:00:00"></el-step>
+                                            <el-step class="maintenanceVerticalUnexec" title="2019-01-16 11:00:00"></el-step>
+                                            <el-step class="maintenanceVerticalUnexec" title="2019-01-16 12:00:00"></el-step>
+                                            <el-step class="maintenanceVerticalUnexec" title="2019-01-16 13:00:00"></el-step>
+                                        </el-steps>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </el-card>
+                    </el-col>
+                </el-row>
+            </el-col>
+        </el-row>
+    </div>
+</body>
+<script>
+    new Vue({
+        el: '#maintenanceIndex',
+        data: {
+            maintenanceTableData: [{
+                sum: 56,
+                done: 8,
+                doneRate: '14.29%',
+                error: 6,
+                errorRate: '10.71%',
+                doing: 10,
+                unexec: 32
+            }]
+        }
+    });
+</script>
+</html>
