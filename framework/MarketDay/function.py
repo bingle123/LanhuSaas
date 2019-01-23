@@ -39,3 +39,8 @@ def delall(req):
 def delone(req,date):
     flag=Holiday.objects.get(day=date).delete()
     return flag
+
+def addone(req,date):
+    holiday=Holiday(day=date)
+    flag=holiday.save()
+    return flag

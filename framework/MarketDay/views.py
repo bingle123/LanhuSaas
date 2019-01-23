@@ -31,6 +31,11 @@ def delone(req,date):
     flag=function.delone(req,date)
     return render_json(flag)
 
+@csrf_exempt
+def addone(req,date):
+    flag=function.addone(req,date)
+    return render_json(flag)
+
 
 
 

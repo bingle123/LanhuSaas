@@ -75,6 +75,25 @@ var vm = new Vue({
                     message: '已取消删除'
                 });
             })
+            }else{
+                this.$confirm('此操作将改日修改为节假日, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$http.post('/MarketDay/addone/'+item.date).then(function (resp) {
+                    this.$message({
+                    type: 'success',
+                    message: '添加成功!'
+                    });
+                    this.markDate.push(item.date)
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消添加'
+                });
+            })
             }
             if (item.otherMonth === 'nowMonth' && !item.dayHide) {
                 this.getList(this.myDate, item.date);

@@ -9,6 +9,7 @@ urlpatterns = patterns(
     url(r'get_file/',views.get_file),
     url(r'celerydemo/(.+)',views.send_demo),
     url(r'delall/',views.delall),
-    url(r'delone/(.+)',views.delone)
+    url(r'delone/(.+)',views.delone),
+    url(r'addone/(.+)',views.addone)
 )
 
