@@ -13,12 +13,8 @@ from django.conf.urls import patterns
 
 
 urlpatterns = patterns(
-    'jobManagement.views',
-    (r'^jobM$', 'index'),                                          # 首页--服务器选择页面
-    (r'^job_show/$', 'positonall'),                                 #显示表中所有数据
-    (r'^select_job/$', 'select_job'),                               #查询
-    (r'^delete/$', 'delete_job'),                                   #删除
-    (r'^add_job/$', 'add_job'),                                     #增加岗位
-    (r'^add_person/$', 'add_person'),                               #增加员工
-    (r'^edit_job/$', 'edit_job'),                                   #编辑
+    'system_config.views',
+    (r'^crawl_config_html$', 'crawl_config_html'),                                         # 网页抓取配置首页
+
+
 )
