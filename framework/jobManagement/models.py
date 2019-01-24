@@ -11,7 +11,7 @@ class JobInstance(models.Model):
     create_Time = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
     create_person = models.CharField(verbose_name=u'创建人', max_length=50,)
     edit_time = models.DateTimeField(verbose_name=u'修改时间', auto_now_add=True)
-    create_person = models.CharField(verbose_name=u'修改人', max_length=50, )
+    edit_person = models.CharField(verbose_name=u'修改人', max_length=50, )
 
     class Meta:
         verbose_name = u'岗位信息表'
