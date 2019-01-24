@@ -58,7 +58,7 @@ var vm = new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.$http.post('/MarketDay/delone/'+item.date).then(function (resp) {
+                this.$http.post('/market_day/delone/'+item.date).then(function (resp) {
                     this.$message({
                     type: 'success',
                     message: '删除成功!'
@@ -81,7 +81,7 @@ var vm = new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.$http.post('/MarketDay/addone/'+item.date).then(function (resp) {
+                this.$http.post('/market_day/addone/'+item.date).then(function (resp) {
                     this.$message({
                     type: 'success',
                     message: '添加成功!'
@@ -185,7 +185,7 @@ var vm = new Vue({
         },
         addarrs() {
             year = new Date().getFullYear()
-            this.$http.get('/MarketDay/get_holiday/').then(function (res) {
+            this.$http.get('/market_day/get_holiday/').then(function (res) {
                 console.log(res.body.message)
                 for (var i = 0; i < res.body.message.length; i++) {
                     this.markDate.push(res.body.message[i])
@@ -211,7 +211,7 @@ var vm = new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                this.$http.post('/MarketDay/delall/').then(function (resp) {
+                this.$http.post('/market_day/delall/').then(function (resp) {
                     this.$message({
                     type: 'success',
                     message: '删除成功!'
