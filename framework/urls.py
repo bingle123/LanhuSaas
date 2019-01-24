@@ -40,7 +40,7 @@ urlpatterns = patterns(
     # 岗位管理
     url(r'^jobManagement/', include('jobManagement.urls')),
     url(r'MarketDay/', include('MarketDay.urls')),
-    url(r'^lcz/',include('lcz.urls')),
+    url(r'^DataBaseManage/', include('DataBaseManage.urls')),
 )
 
 

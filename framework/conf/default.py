@@ -134,7 +134,8 @@ INSTALLED_APPS = (
     'monitorScene',
     'system_config',
     'MarketDay',
-    'jobManagement'
+    'jobManagement',
+    'DataBaseManage',
 )
 
 # ==============================================================================

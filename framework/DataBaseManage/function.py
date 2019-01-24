@@ -2,12 +2,14 @@
 from django.views.decorators.csrf import csrf_exempt
 import json
 import time
-from monitor import tools
 from django.forms.models import model_to_dict
-from lcz.models import *
+from DataBaseManage.models import *
+from framework.shell_app import tools
 import MySQLdb
 import cx_Oracle
 import pymssql
+import datetime
+
 
 #查询所有
 def getconn_all(request):
@@ -18,24 +20,26 @@ def getconn_all(request):
         res_list.append(dic)
     return res_list
 
-#获取数据库类型
-def getDataType(request):
-    dataType = TDataBase.objects.all()
-    res_list = []
-    for i in dataType:
-        dic = model_to_dict(i)
-        res_list.append(dic)
-    return res_list
 
 #保存
 def saveconn_all(request):
     res = json.loads(request.body)
-    re = Conn.objects.create(**res)
+    cilent = tools.interface_param(request)
+
+    user = cilent.bk_login.get_user({})
+    res['createname'] = user['data']['bk_username']
+    res['editname'] = user['data']['bk_username']
+    re = Conn(**res).save()
     return re
 
 #修改
 def eidtconnn(request):
     res = json.loads(request.body)
+    cilent = tools.interface_param(request)
+    user = cilent.bk_login.get_user({})
+
+    res['editname'] = user['data']['bk_username']
+    res['edittime'] = datetime.datetime.now()
     re1 = Conn.objects.filter(id=res['id']).update(**res)
     return re1
 
