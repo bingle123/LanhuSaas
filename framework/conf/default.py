@@ -132,8 +132,8 @@ INSTALLED_APPS = (
     'monitor',
     'db_connection_manage',
     'monitorScene',
-    'zlx',
     'system_config',
+    'MarketDay',
 )
 
 # ==============================================================================

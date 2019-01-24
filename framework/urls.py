@@ -39,7 +39,7 @@ urlpatterns = patterns(
     url(r'^monitorScene/', include('monitorScene.urls')),
     # 岗位管理
     url(r'^jobManagement/', include('jobManagement.urls')),
-    url(r'zlx/', include('zlx.urls')),
+    url(r'MarketDay/', include('MarketDay.urls')),
     url(r'^lcz/',include('lcz.urls')),
 )
 
