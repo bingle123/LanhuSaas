@@ -13,11 +13,11 @@ def job_show(request):
     for i in job:
         dic = {
             'id': i.id,
-            'Job_name': i.Job_name,
-            'User_name': i.User_name,
-            'Start_Time': str(i.Start_Time),
-            'Status': i.Status,
-            'log':i.log,
+            'job_name': i.job_name,
+            'create_time': str(i.create_time),
+            'create_person': i.create_person,
+            'edit_time': str(i.edit_time),
+            'edit_person':i.edit_person,
         }
         res_list.append(dic)
     return res_list
