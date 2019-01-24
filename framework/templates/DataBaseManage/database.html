@@ -85,10 +85,9 @@
                         <el-col :span="9">
                             <el-form-item label="数据库类型:" prop="type">
                                     <el-select v-model="addconn.type" placeholder="请选择数据库类型" style="width: 250px;">
-                                        <el-option v-for="i in dataType"
-                                                   :label="i.name"
-                                                   :value="i.name">
-                                        </el-option>
+                                        <el-option label="MySQL" value="MySQL"></el-option>
+                                        <el-option label="Oracle" value="Oracle"></el-option>
+                                        <el-option label="SQL Server" value="SQL Server"></el-option>
                                     </el-select>
                             </el-form-item>
                         </el-col>
@@ -162,7 +161,7 @@
                         <el-col :span="9">
                             <el-form-item label="数据库类型:" prop="type">
                                     <el-select v-model="editDataBase.type" placeholder="请选择数据库类型" style="width: 250px;">
-                                        <el-option label="mysql" value="MySQL"></el-option>
+                                        <el-option label="MySQL" value="MySQL"></el-option>
                                         <el-option label="Oracle" value="Oracle"></el-option>
                                         <el-option label="SQL Server" value="SQL Server"></el-option>
                                     </el-select>
@@ -283,7 +282,8 @@
             },
 
             hide() {
-                return window.location.href="${SITE_URL}lcz/data_base/"
+                this.isAdd=1
+                ve.conn()
             },
 
             rowClass({row, rowIndex}) {
@@ -292,21 +292,13 @@
             //查询所有
             conn(){
               axios.post(
-                  '${SITE_URL}lcz/getall/',
+                  '${SITE_URL}DataBaseManage/getall/',
                   ).then(function (response) {
                       console.log(response.data.message)
                   ve.tableData = response.data.message
               })
             },
 
-            //查询数据库类型
-            getDataType(){
-              axios.post(
-                  '${SITE_URL}lcz/getDataType/',
-                  ).then(function (response) {
-                    ve.dataType = response.data.message
-              })
-            },
 
 
             //保存
@@ -317,10 +309,10 @@
                         return false;
                     }else {
                         axios.post(
-                        '${SITE_URL}lcz/saveconn/',this.addconn
+                        '${SITE_URL}DataBaseManage/saveconn/',this.addconn
                     ).then(function (res) {
                         if(res.data.message == 0){
-                            window.location.href="${SITE_URL}lcz/data_base/"
+                            ve.hide()
                         }
                     });
                     }
@@ -341,10 +333,11 @@
                         alert('验证不通过');
                         return false;
                     }else {
-                        axios.post('${SITE_URL}lcz/editconn/',this.editDataBase)
+                        axios.post('${SITE_URL}DataBaseManage/editconn/',this.editDataBase)
                     .then((res)=>{
                         if(res.data.message != null){
-                            window.location.href="${SITE_URL}lcz/data_base/"
+                            this.isAdd = 1
+                            ve.conn()
                         }
                     })
                     }
@@ -365,7 +358,7 @@
                         message: '删除成功!',
                     },
                     axios.post(
-                   '${SITE_URL}lcz/deleteconn/'+id+'/'
+                   '${SITE_URL}DataBaseManage/deleteconn/'+id+'/'
                ).then((res) => {
                    if(res.data.message==0){
                        this.$message('删除成功')
@@ -390,7 +383,7 @@
                         alert('验证不通过');
                         return false;
                     }else {
-                        axios.post('${SITE_URL}lcz/testConn/',this.addconn)
+                        axios.post('${SITE_URL}DataBaseManage/testConn/',this.addconn)
                             .then((res)=>{
                         if(res.data.message == 1){
                              alert("数据库连接成功")
@@ -410,7 +403,7 @@
                         alert('验证不通过');
                         return false;
                     }else {
-                        axios.post('${SITE_URL}lcz/testConn/',this.editDataBase)
+                        axios.post('${SITE_URL}DataBaseManage/testConn/',this.editDataBase)
                             .then((res)=>{
                         if(res.data.message == 1){
                              alert("数据库连接成功")
@@ -425,7 +418,6 @@
         }
     });
     ve.conn()
-    ve.getDataType()
 </script>
 
 </body>
