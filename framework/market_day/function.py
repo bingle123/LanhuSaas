@@ -26,7 +26,7 @@ def get_file(req):
             sheet=workbook.sheet_by_index(0)
             for i in range(1,sheet.nrows):
                 day = str(sheet.row_values(i)[0])
-                d = day[0:4] + u'/' + day[4:6] + u'/' + day[6:8]
+                d = day[0:4] + u'/' + str(int(day[4:6])) + u'/' + str(int(day[6:8]))
                 flag=int(sheet.row_values(i)[1])
                 holiday=Holiday(day=d,flag=flag)
                 holiday.save()
@@ -38,10 +38,12 @@ def delall(req):
     return flag
 
 def delone(req,date):
-    flag=Holiday.objects.get(day=date).delete()
+    print date
+    print Holiday.objects.filter(day=date)
+    flag=Holiday.objects.filter(day=date).update(flag=1)
+    print flag
     return flag
 
 def addone(req,date):
-    holiday=Holiday(day=date)
-    flag=holiday.save()
+    flag = Holiday.objects.filter(day=date).update(flag=0)
     return flag
