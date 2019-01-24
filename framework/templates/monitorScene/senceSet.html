@@ -298,6 +298,7 @@
                 this.isAdd = 2;
                 setTimeout(function () {
                      vm.Time()
+                     vm.sen_position()
                 },100)
             },
             edit(row){
@@ -416,6 +417,14 @@
                 })
 
 
+            },
+            sen_position(){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitorScene/position/'
+                }).then(function(res) {
+                    window.location.href = '${SITE_URL}scene_set'
+                })
             }
 
 

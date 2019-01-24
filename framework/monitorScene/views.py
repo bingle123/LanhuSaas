@@ -37,3 +37,7 @@ def delect(request):
 def editSence(request):
     res=function.editSence(request)
     return  render_json(res)
+@csrf_exempt
+def position(request):
+    res=function.position(request)
+    return  render_json(res)
