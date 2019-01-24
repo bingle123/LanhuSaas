@@ -2,7 +2,7 @@
 
 from django.shortcuts import render
 from shell_app.function import render_json
-from MarketDay import function
+from market_day import function
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_page
