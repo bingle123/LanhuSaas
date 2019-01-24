@@ -23,7 +23,7 @@ def monitor_show(request):
 @csrf_exempt
 def addSence(request):
     res=function.addSence(request)
-    return  render_json(res)
+    return render_json(res)
 
 @csrf_exempt
 def select_table(request):

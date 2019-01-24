@@ -1,14 +1,21 @@
 # -*- coding: utf-8 -*-
-from django.views.decorators.csrf import csrf_exempt
+from __future__ import division
 import json
+import math
 from models import JobUnit,ChartUnit,Common,BasicUnit,FlowUnit
 import tools
-import time
-from django.forms.models import model_to_dict
+
 
 
 def unit_show(request):
-    unit = Common.objects.all()
+    res = json.loads(request.body)
+    limit = res['limit']
+    page = res['page']
+    start_page = limit*page-9
+    unit = Common.objects.all()[start_page-1:start_page+9]
+    unit2 = Common.objects.all().values('id')
+    page_count = math.ceil(len(unit2)/10)
+    print page_count
     res_list = []
     for i in unit:
         dic = {
@@ -24,8 +31,10 @@ def unit_show(request):
             'start_time': str(i.start_time),
             'end_time': str(i.end_time),
             'cycle': i.cycle,
+            'page_count': page_count,
         }
         res_list.append(dic)
+
     return res_list
 
 
@@ -162,4 +171,5 @@ def edit_unit(request):
     common_dic['unit_type'] = unit_type
     Common.objects.filter(id=unit_id).update(**common_dic)
     common.save()
+
     return None
