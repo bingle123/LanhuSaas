@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.views.decorators.csrf import csrf_exempt
-from django.forms.models import model_to_dict
 import json
 from models import Scene
-import tools
+from jobManagement.models import JobInstance
 
 @csrf_exempt
 def monitor_show(request):
@@ -69,3 +68,21 @@ def editSence(request):
     Scene.objects.filter(id=model['id']).update(**model)
     scene = Scene.objects.get(id=model['id'])
     scene.save()
+
+def position(request):
+    print "zxczxc"
+    job=JobInstance.objects.all()
+    print job['Job_name']
+    res_list = []
+    for i in job:
+        dic = {
+            'id': i.id,
+            'Job_name': i.Job_name,
+            'create_time': str(i.create_time),
+            'create_person': i.create_person,
+            'edit_time': str(i.edit_time),
+            'edit_person':i.edit_person,
+        }
+        print dic['Job_name']
+        res_list.append(dic)
+    return res_list
