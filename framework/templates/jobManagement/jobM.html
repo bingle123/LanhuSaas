@@ -48,7 +48,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="add_person()" type="primary">保存</el-button>
-            <el-button @click="refresh()">取消</el-button>
+            <el-button @click="dialogFormVisible = false">取消</el-button>
         </div>
     </el-dialog>
 
@@ -59,7 +59,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click=" edit_job()" type="primary">保存</el-button>
-            <el-button @click="refresh()">取消</el-button>
+            <el-button @click="dialogFormVisible2 = false">取消</el-button>
         </span>
     </el-dialog>
 
@@ -71,7 +71,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="add_job()" type="primary">保存</el-button>
-            <el-button @click="refresh()">取消</el-button>
+            <el-button @click="dialogFormVisible3 = false">取消</el-button>
         </div>
     </el-dialog>
 
@@ -149,9 +149,6 @@
             value2:[],
         },
         methods: {
-            refresh(){                                                          //跳转刷新
-                window.location.href="${SITE_URL}jobManagement/jobM"
-            },
             change1(value){                                                     //加人获得选中数据
                 for(var i in value){
                     vm.value2.push(vm.data2[value[i]])
@@ -173,7 +170,6 @@
                     url: '${SITE_URL}jobManagement/job_show/',
                 }).then(function(res) {
                     vm.jobInstance = res.data.message;
-
                 })
             },
             deletePosition(row){                                                  //删除一条记录
@@ -269,16 +265,13 @@
                     method: 'post',
                     url: '${SITE_URL}jobManagement/get_user/',
                 }).then((res) =>{
-                    console.log(res)
                     for(var i=0;i<res.data.data.length;i++){
                         this.users.push(res.data.data[i].bk_username)
                     }
-
                 })
             },
             generateData2(){                                                       //加人的穿梭框
                 const data = [];
-
                 var people= this.users;
                 const pinyin = this.users;
                 people.forEach((people, index) => {
