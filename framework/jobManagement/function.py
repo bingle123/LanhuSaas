@@ -16,7 +16,6 @@ def show(request):
         for y in users:
             if x.id == y.user_pos:
                 tmp.append(y.user_name+' ')
-        print tmp
         dic = {
             'id':x.id,
             'user_name': tmp,
@@ -31,7 +30,7 @@ def select_job(request):
         res_list = []
         res1 = "{}".format(res)
         if len(res1) == 0:
-            res_list = job_show(request)
+            res_list = show(request)
         else:
             if res1.isdigit():
                 if JobInstance.objects.filter(id=int(res1)).exists():
@@ -112,9 +111,28 @@ def get_user(request):
     try:
         client = tools.interface_param(request)
         result = client.bk_login.get_all_users({})                  # 获取所有用户信息
-        temp = dict_get(result['data'],u'bk_username',None)
+
     except Exception, e:
         result = tools.error_result(e)
     return result
+
+def filter_user(request):
+    """
+    筛选用户
+    :param request:
+    :return:
+    """
+    filter_list = get_user(request)
+    temp = dict_get(filter_list['data'], u'bk_username', None)
+    users = Localuser.objects.all()
+    tmp = []
+    for j in users:
+        for i in range(len(temp)):
+                if temp[i] == j.user_name:
+                    if j.user_pos == None:
+                        tmp.append(temp[i])
+    return tmp
+
+
 
 

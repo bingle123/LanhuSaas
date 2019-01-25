@@ -15,11 +15,11 @@ from django.conf.urls import patterns
 urlpatterns = patterns(
     'jobManagement.views',
     (r'^jobM$', 'index'),                                          # 首页--服务器选择页面
-    (r'^show/$', 'show'),                                 #显示数据
+    (r'^show/$', 'show'),                                           #显示数据
     (r'^select_job/$', 'select_job'),                               #查询
     (r'^delete/$', 'delete_job'),                                   #删除
     (r'^add_job/$', 'add_job'),                                     #增加岗位
     (r'^add_person/$', 'add_person'),                               #增加员工
     (r'^edit_job/$', 'edit_job'),                                   #编辑
-    (r'^get_user/$', 'get_user'),                                   #调接口查询所有用户
+    (r'^get_user/$', 'filter_user'),                                   #调接口查询所有用户,并筛选
 )
