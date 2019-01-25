@@ -20,6 +20,6 @@ urlpatterns = patterns(
     (r'^select_table/$', 'select_table'),
     (r'^delect/$', 'delect'),
     (r'^editSence/$', 'editSence'),
-    (r'^position/$', 'position'),
+    (r'^pos_name/$', 'pos_name'),
 
 )

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <meta charset="utf-8">
     <title>title</title>
 
@@ -56,7 +57,7 @@
                 </el-table-column>
                 <el-table-column prop='scene_creator_time' label='创建时间'  style="width: 30%;">
                 </el-table-column>
-                <el-table-column prop='scene_positions' label='岗位'  style="width: 30%;">
+                <el-table-column prop='pos_name' label='岗位'  style="width: 30%;">
                 </el-table-column>
                 <el-table-column prop='scene_startTime' label='开始时间'  v-if="false"  style="width: 30%;">
                 </el-table-column>
@@ -91,11 +92,7 @@
             <div>
                 <el-form ref="form" label-width="80px">
                     <el-form-item label="场景名称">
-                        <el-select v-model="scene.scene_name" placeholder="指数显示">
-                            <el-option label="一级指数" value="一级指数"></el-option>
-                            <el-option label="二级指数" value="二级指数"></el-option>
-                            <el-option label="三级指数" value="三级指数"></el-option>
-                        </el-select>
+                       <el-input placeholder="请输入场景名称" v-model="scene.scene_name" style="width: 30%"></el-input>
                     </el-form-item>
 
                     <el-form-item label="轮播时间"   >
@@ -123,10 +120,8 @@
                       </el-form-item>
 
                     <el-form-item label="场景适用岗位">
-                        <el-select v-model="scene.scene_positions" placeholder="请选择">
-                            <el-option label="java开发" value="java开发"></el-option>
-                            <el-option label="python开发" value="python开发"></el-option>
-                            <el-option label="运营" value="运营"></el-option>
+                        <el-select  placeholder="请选择" v-model="pos_name" >
+                            <el-option v-for="item in pos" :label="item.pos_name" :value="item.pos_name"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="预览区">
@@ -266,9 +261,10 @@
             currentPage3: 5,
             currentPage4: 4,
             tableData: [],
+            pos:[],//岗位
+            pos_name:'',
             scene: {                            //场景管理
                 scene_name: '', //场景名称
-                scene_positions:'',//岗位
                 scene_startTime:'',
                 scene_endTime:'',
             },
@@ -296,9 +292,10 @@
 
             show() {
                 this.isAdd = 2;
+                vm.sen_position()
                 setTimeout(function () {
                      vm.Time()
-                     vm.sen_position()
+
                 },100)
             },
             edit(row){
@@ -421,9 +418,9 @@
             sen_position(){
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/position/'
+                    url: '${SITE_URL}monitorScene/pos_name/',
                 }).then(function(res) {
-                    window.location.href = '${SITE_URL}scene_set'
+                       vm.pos = res.data.message
                 })
             }
 
