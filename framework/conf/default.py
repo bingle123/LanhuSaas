@@ -248,19 +248,23 @@ if IS_USE_CELERY:
                 'schedule': timedelta(seconds=20),  # 每20s执行一次
                 'args': ('708949284@qq.com',)
             },
-            # 'task-two': {
-            #     'task': 'mycelery.tasks.mul',
-            #     'schedule': crontab(minute='*/1'),
-            #     'args': (10, 2)
-            # },
+            'task-two': {
+                'task': 'market_day.tasks.mul',
+                'schedule': crontab(minute='*/1'), #每分钟执行
+                'args': (10, 2)
+            },
         }
         CELERY_QUEUES = (
             Queue('demo', Exchange('demo'), routing_key='demo'),
-            # Queue('task_one', Exchange('task_one'), routing_key='task_one'),
-            # Queue('task_two', Exchange('task_two'), routing_key='task_two')
+            Queue('task_one', Exchange('task_one'), routing_key='task_one'),
+            Queue('task_two', Exchange('task_two'), routing_key='task_two')
         )
+        CELERY_DEFAULT_QUEUE = 'demo'
+        CELERY_DEFAULT_EXCHANGE = 'demo'
+        CELERY_DEFAULT_ROUTING_KEY = 'demo'
         CELERY_ROUTES = (
-            {'markey_day.tasks.*': {'queue': 'demo', 'routing_key': 'demo'}}
+            {'market_day.tasks.mul': {'queue': 'demo', 'routing_key': 'demo'}},
+            {'market_day.tasks.sendemail':{'queue':'task_one','routing_key':'task_one'}},
         )
         if RUN_MODE == 'DEVELOP':
             from celery.signals import worker_process_init

@@ -9,5 +9,8 @@ from time import sleep
 @task
 def sendemail(email):
     sleep(5)
-    send_mail('subject','here is message',settings.DEFAULT_FROM_EMAIL,[email],fail_silently=False)
+    send_mail('i come from china','go to you',settings.DEFAULT_FROM_EMAIL,[email],fail_silently=False)
     return 'success'
+@task
+def mul(x,y):
+    return x*y

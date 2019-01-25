@@ -1,6 +1,6 @@
 #!usr/bin/ebv python
 # -*- coding:utf-8 -*-
-from market_day.models import *
+from models import Holiday
 import os
 from xlrd import open_workbook
 
@@ -47,3 +47,4 @@ def delone(req,date):
 def addone(req,date):
     flag = Holiday.objects.filter(day=date).update(flag=0)
     return flag
+
