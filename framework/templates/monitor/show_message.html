@@ -38,8 +38,8 @@
     <div>
         <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;" border  header-align="center">
             <el-table-column prop="id" label="序号" sortable ></el-table-column>
-            <el-table-column prop="unit_name" label="监控名称" sortable ></el-table-column>
-            <el-table-column prop="unit_type" label="监控类型" sortable ></el-table-column>
+            <el-table-column prop="monitor_name" label="监控名称" sortable ></el-table-column>
+            <el-table-column prop="monitor_type" label="监控类型" sortable ></el-table-column>
             <el-table-column prop="editor" label="编辑人" sortable ></el-table-column>
             <el-table-column prop="edit_time" label="修改时间" sortable ></el-table-column>
             <el-table-column label="操作" >
@@ -48,7 +48,7 @@
                     <el-button size="mini" type="text" v-on:click="edit(scope.row)">编辑</el-button>
                     <el-button size="mini" type="text" v-on:click="edit2(scope.row)">删除</el-button>
                     <el-tooltip :content="value1" placement="top">
-                    <el-switch v-model="value1" active-color="#13ce66" inactive-color="#ff4949" active-value="开" inactive-value="关"></el-switch>
+                    <el-switch v-model="scope.status" active-color="#13ce66" inactive-color="#ff4949" active-value="1" inactive-value="0"></el-switch>
                     </el-tooltip>
                 </template>
             </el-table-column>
@@ -64,11 +64,11 @@
         <div style="height: 30px"></div>
         <div>
             <span>监控单元名称</span>
-            <el-input placeholder="请输入单元名称" v-model="unit_name" style="width: 30%"></el-input>
+            <el-input placeholder="请输入单元名称" v-model="monitor_name" style="width: 30%"></el-input>
         </div>
         <div style="height: 30px"></div>
         <span>
-            <el-tabs type="card" v-model="unit_type">
+            <el-tabs type="card" v-model="monitor_type">
 
                 <!--基本单元 start-->
                 <el-tab-pane :disabled="disabled2" label="基本单元" name="first">
@@ -76,7 +76,7 @@
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="basic"  ref="basic" label-width="100px">
                                 <el-form-item label="字号">
-                                    <el-select v-model="basic.common.font_size" placeholder="请选择字号">
+                                    <el-select v-model="basic.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
                                         <el-option label="12" value="12"></el-option>
@@ -87,18 +87,18 @@
                                 <el-form-item label="高Ⅹ宽" style="width: 96%" >
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-input v-model="basic.common.height" placeholder="请输入高度"></el-input>
+                                            <el-input v-model="basic.height" placeholder="请输入高度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11" >
                                         <el-form-item>
-                                              <el-input v-model="basic.common.wide" placeholder="请输入宽度"></el-input>
+                                              <el-input v-model="basic.width" placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="显示内容"   style="width: 96%">
-                                        <el-input v-model="basic.basic.contents" placeholder="上证指数:3000  深证指数:3000" type="textarea"></el-input>
+                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000" type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
                                     <el-radio-group v-model="sql_file_interface" @change="change1" style="padding: 14px">
@@ -109,49 +109,49 @@
                                 </el-form-item>
                                 <div :style="{ display: sql1 }">
                                     <el-form-item label="数据库连接">
-                                        <el-select v-model="basic.basic.sql" placeholder="请选择数据库">
+                                        <el-select v-model="server_url" placeholder="请选择数据库">
                                             <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item label="数据采集规则" style="width: 96%">
-                                        <el-input v-model="basic.basic.rules" placeholder="select * from tb_hq" type="textarea"></el-input>
+                                        <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq" type="textarea"></el-input>
                                     </el-form-item>
                                 </div>
 
                                 <div :style="{display:file1}">
                                     <el-form-item label="服务器" >
-                                        <el-input placeholder="请输入服务器" v-model="basic.basic.server" style="width: 96%"></el-input>
+                                        <el-input placeholder="请输入服务器" v-model="server_url" style="width: 96%"></el-input>
                                     </el-form-item>
                                     <el-form-item label="文件路径" >
-                                        <el-input placeholder="请输入文件路径" v-model="basic.basic.file" style="width: 96%"></el-input>
+                                        <el-input placeholder="请输入文件路径" v-model="file_param" style="width: 96%"></el-input>
                                     </el-form-item>
                                 </div>
                                 <div :style="{display:interface1}">
                                     <el-form-item label="url" >
-                                        <el-input placeholder="请输入url" v-model="basic.basic.urls" style="width: 96%"></el-input>
+                                        <el-input placeholder="请输入url" v-model="server_url" style="width: 96%"></el-input>
                                     </el-form-item>
                                     <el-form-item label="接口参数" >
-                                        <el-input type="textarea" v-model="basic.basic.param"></el-input>
+                                        <el-input type="textarea" v-model="file_param"></el-input>
                                     </el-form-item>
                                 </div>
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="basic.common.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="basic.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="basic.common.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="basic.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 </el-form-item>
                                 <el-form-item label="采集周期">
-                                    <el-input  v-model="basic.common.cycle" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
+                                    <el-input  v-model="basic.period" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
                                 </el-form-item>
                             </el-form>
                         </div></el-col>
@@ -179,7 +179,7 @@
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="chart" ref="chart" label-width="100px">
                                 <el-form-item label="字号">
-                                    <el-select v-model="chart.common.font_size" placeholder="请选择字号">
+                                    <el-select v-model="chart.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
                                         <el-option label="12" value="12"></el-option>
@@ -190,52 +190,52 @@
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item >
-                                            <el-input v-model="chart.common.height" placeholder="请输入高度"></el-input>
+                                            <el-input v-model="chart.height" placeholder="请输入高度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item >
-                                              <el-input v-model="chart.common.wide" placeholder="请输入宽度"></el-input>
+                                              <el-input v-model="chart.width" placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="图标类型">
-                                    <el-select v-model="chart.chart.chart_type" placeholder="请选择图表类型">
+                                    <el-select v-model="chart.gather_params" placeholder="请选择图表类型">
                                         <el-option label="折线图" value="折线图"></el-option>
                                         <el-option label="柱状图" value="柱状图"></el-option>
                                         <el-option label="饼图" value="饼图"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="显示内容" style="width: 96%">
-                                    <el-input type="textarea" v-model="chart.chart.contents" placeholder="上证指数:3000  深证指数:3000"></el-input>
+                                    <el-input type="textarea" v-model="chart.contents" placeholder="上证指数:3000  深证指数:3000"></el-input>
                                 </el-form-item>
                                 <el-form-item label="连接数据库">
-                                    <el-select v-model="chart.chart.sql" placeholder="请选择数据库">
+                                    <el-select v-model="chart.params" placeholder="请选择数据库">
                                         <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
 
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="图表采集规则" style="width: 96%">
-                                    <el-input v-model="chart.chart.rules" placeholder="select * from tb_hq" type="textarea"></el-input>
+                                    <el-input v-model="chart.gather_rule" placeholder="select * from tb_hq" type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="chart.common.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="chart.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="chart.common.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="chart.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="采集周期">
-                                    <el-input  v-model="chart.common.cycle" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
+                                    <el-input  v-model="chart.period" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
                                 </el-form-item>
                             </el-form>
                         </div></el-col>
@@ -261,7 +261,7 @@
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="job" ref="job" label-width="100px">
                                 <el-form-item label="字号">
-                                    <el-select v-model="job.common.font_size" placeholder="请选择字号">
+                                    <el-select v-model="job.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
                                         <el-option label="12" value="12"></el-option>
@@ -272,47 +272,47 @@
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-input v-model="job.common.height" placeholder="请输入高度"></el-input>
+                                            <el-input v-model="job.height" placeholder="请输入高度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                              <el-input v-model="job.common.wide" placeholder="请输入宽度"></el-input>
+                                              <el-input v-model="job.width" placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="显示内容" style="width: 96%">
-                                    <el-input type="textarea" v-model="job.job.contents" placeholder="上证指数:3000  深证指数:3000"></el-input>
+                                    <el-input type="textarea" v-model="job.contents" placeholder="上证指数:3000  深证指数:3000"></el-input>
                                 </el-form-item>
                                 <el-form-item label="作业模板">
-                                    <el-select v-model="job.job.job_mould" placeholder="请选择作业模板">
+                                    <el-select v-model="job.gather_rule" placeholder="请选择作业模板">
                                         <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="NODE_KEY" style="width: 96%">
-                                    <el-input v-model="job.job.NODE_KEY" placeholder="请输入NODE_KEY"></el-input>
+                                    <el-input v-model="job.gather_rule" placeholder="请输入NODE_KEY"></el-input>
                                 </el-form-item>
                                 <el-form-item label="执行服务器" style="width: 96%">
-                                    <el-input v-model="job.job.server" placeholder="请输入服务器地址"></el-input>
+                                    <el-input v-model="job.params" placeholder="请输入服务器地址"></el-input>
                                 </el-form-item>
-                                <el-form-item label="采集时间段:" style="width: 96%">
+                                <el-form-item label="采集时间段:" style="width: 96%">s
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="job.common.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="job.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="job.common.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="job.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="采集周期">
-                                    <el-input  v-model="job.common.cycle" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
+                                    <el-input  v-model="job.period" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
                                 </el-form-item>
                             </el-form>
                         </div></el-col>
@@ -343,7 +343,7 @@
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="flow" ref="flow" label-width="100px">
                                 <el-form-item label="字号">
-                                    <el-select v-model="flow.common.font_size" placeholder="请选择字号">
+                                    <el-select v-model="flow.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
                                         <el-option label="12" value="12"></el-option>
@@ -354,68 +354,68 @@
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-input v-model="flow.common.height" placeholder="请输入高度"></el-input>
+                                            <el-input v-model="flow.height" placeholder="请输入高度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                              <el-input v-model="flow.common.wide" placeholder="请输入宽度"></el-input>
+                                              <el-input v-model="flow.width" placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="流程模板">
-                                    <el-select v-model="flow.flow.flow_mould" placeholder="请选择模板">
+                                    <el-select v-model="flow.gather_params" placeholder="请选择模板">
                                         <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="参数1" style="width: 96%">
-                                    <el-input v-model="flow.flow.param1" placeholder="请输入参数"></el-input>
+                                    <el-input v-model="param1" placeholder="请输入参数"></el-input>
                                 </el-form-item>
                                 <el-form-item label="参数2" style="width: 96%">
-                                    <el-input v-model="flow.flow.param2" placeholder="请输入参数"></el-input>
+                                    <el-input v-model="param2" placeholder="请输入参数"></el-input>
                                 </el-form-item>
                                    <el-form-item label="节点">
-                                        <el-select v-model="flow.flow.node" placeholder="请选择节点">
+                                        <el-select v-model="flow.gather_params" placeholder="请选择节点">
                                           <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
                                         </el-select>
                                       </el-form-item>
-                                <div v-if="flow.flow.node === 'chenyi'">
+                                <div v-if="flow.gather_rule === 'chenyi'">
                                 <el-form-item label="节点周期:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="flow.common.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="flow.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="flow.common.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="flow.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 </div>
-                                <div v-if="flow.node === 'beijing'">
+                                <div v-if="flow.gather_rule === 'beijing'">
                                 <el-form-item label="节点周期:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="flow.common.start_time"  placeholder="开始时间点1" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="flow.start_time"  placeholder="开始时间点1" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="flow.common.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                            <el-time-picker style="width: 96%" v-model="flow.end_time"  placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 </div>
                                 <el-form-item label="采集周期">
-                                    <el-input  v-model="flow.common.cycle" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
+                                    <el-input  v-model="flow.period" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
                                 </el-form-item>
                             </el-form>
                         </div></el-col>
@@ -466,160 +466,151 @@
             disabled3:false,                            //图表单元
             disabled4:false,                            //作业单元
             disabled5:false,                            //流程单元
-            caiji1:'block',
-            caiji2:'none',
+            caiji1: 'block',
+            caiji2: 'none',
+            monitor_name:'',                             //单元名称
             unit_id: 0,                               //单元id
-            value1:'开',                              //开关状态
             centerDialogVisible: false,              //弹窗状态
-            unit_name:'',                             //单元名称
             sql1:'block',
             file1:'none',
             interface1:'none',
             sql_file_interface:3,
+            server_url:'',
+            file_param:'',
+            param1:'',
+            param2:'',
             zuoye:'none',
             liucheng:'none',
             data22:{},                              //传递新增数据
-            unit_type: 'first',                     //单元类型
+            monitor_type: 'first',                     //单元类型
             basic: {                                //基本单元
-                common:{
-                    font_size:'',                   //字号
-                    height:'',                      //高度
-                    wide:'',                        //宽度
-                    start_time:'',                  //开始时间
-                    end_time:'',                    //结束时间
-                    cycle:'',                       //采集周期
-                },
-                basic:{
+                monitor_name:'',                    //单元名称
+                monitor_type:'',                    //单元类型
+                font_size:'',                       //字号
+                height:'',                          //高度
+                width:'',                            //宽度
+                start_time:'',                      //开始时间
+                end_time:'',                        //结束时间
+                period:'',                          //采集周期
+                params: '',                         //监控参数
+                status:'',                          //监控状态
                 contents:'',                        //显示内容
-                sql_file_interface:'sql',          //数据来源
-                sql:'',                             //连接数据库
-                rules:'',                           //数据采集规则
-                server:'',                          //服务器
-                file:'',                            //文件路径
-                urls:'',                            //url
-                param:'',                           //接口参数
-                }
+                gather_rule:'',                     //采集规则
+                gather_params:'',                   //采集参数
+                sql:'',                              //连接数据库
             },
             chart: {                                //图表单元
-                common:{
-                    font_size:'',                   //字号
-                    height:'',                      //高度
-                    wide:'',                        //宽度
-                    start_time:'',                  //开始时间
-                    end_time:'',                    //结束时间
-                    cycle:'',                       //采集周期
-                },
-                chart:{
-                chart_type:'',                      //图表类型
+                monitor_name:'',                    //单元名称
+                monitor_type:'',                    //单元类型
+                font_size:'',                       //字号
+                height:'',                          //高度
+                width:'',                            //宽度
+                start_time:'',                      //开始时间
+                end_time:'',                        //结束时间
+                period:'',                          //采集周期
+                status:'',                          //监控状态
                 contents:'',                        //显示内容
-                sql:'',                             //连接数据库
-                rules:'',                           //采集规则
-                }
+                gather_rule:'',                     //采集规则
+                gather_params:'',                   //节点
+                params: '',                          //监控参数
             },
-            job: {                                  //作业单元
-                common:{
-                    font_size:'',                   //字号
-                    height:'',                      //高度
-                    wide:'',                        //宽度
-                    start_time:'',                  //开始时间
-                    end_time:'',                    //结束时间
-                    cycle:'',                       //采集周期
-                },
-                job:{
+            job: {                                   //作业单元
+                monitor_name:'',                    //单元名称
+                monitor_type:'',                    //单元类型
+                font_size:'',                       //字号
+                height:'',                          //高度
+                width:'',                            //宽度
+                start_time:'',                      //开始时间
+                end_time:'',                        //结束时间
+                period:'',                          //采集周期
+                status:'',                          //监控状态
                 contents:'',                        //显示内容
-                job_mould:'',                       //作业模板
-                NODE_KEY:'',                        //NODE_KEY参数
-                server:'',                          //服务器
-                }
+                gather_rule:'',                     //NODE_KEY
+                gather_params:'',                   //作业模板
+                params: '',                         //执行服务器
             },
-            flow: {                                   //流程单元
-                common:{
-                    font_size:'',                   //字号
-                    height:'',                      //高度
-                    wide:'',                        //宽度
-                    start_time:'',                  //开始时间
-                    end_time:'',                    //结束时间
-                    cycle:'',                       //采集周期
-                },
-                flow: {
-                    flow_mould: '',                  //流程模板
-                    param1: '',                      //流程参数1
-                    param2: '',                      //流程参数2
-                    node: '',                        //节点
-                }
+            flow: {                                //流程单元
+                monitor_name:'',                    //单元名称
+                monitor_type:'',                    //单元类型
+                font_size:'',                       //字号
+                height:'',                          //高度
+                width:'',                            //宽度
+                start_time:'',                      //开始时间
+                end_time:'',                        //结束时间
+                period:'',                          //采集周期
+                params: '',                         //监控参数
+                status:'',                          //监控状态
+                contents:'',                        //显示内容
+                gather_rule:'',                     //采集规则
+                gather_params:'',                   //流程模板
+                sql:'',                              //连接数据库
             },
             basic1: {                                //基本单元
-                common:{
-                    font_size:'',                   //字号
-                    height:'',                      //高度
-                    wide:'',                        //宽度
-                    start_time:'',                  //开始时间
-                    end_time:'',                    //结束时间
-                    cycle:'',                       //采集周期
-                },
-                basic:{
+                monitor_name:'',                    //单元名称
+                monitor_type:'',                    //单元类型
+                font_size:'',                       //字号
+                height:'',                          //高度
+                width:'',                            //宽度
+                start_time:'',                      //开始时间
+                end_time:'',                        //结束时间
+                period:'',                          //采集周期
+                params: '',                         //监控参数
+                status:'',                          //监控状态
                 contents:'',                        //显示内容
-                sql_file_interface:'sql',          //数据来源
-                sql:'',                             //连接数据库
-                rules:'',                           //数据采集规则
-                server:'',                          //服务器
-                file:'',                            //文件路径
-                urls:'',                            //url
-                param:'',                           //接口参数
-                }
+                gather_rule:'',                     //采集规则
+                gather_params:'',                   //采集参数
+                sql:'',                              //连接数据库
             },
             chart1: {                                //图表单元
-                common:{
-                    font_size:'',                   //字号
-                    height:'',                      //高度
-                    wide:'',                        //宽度
-                    start_time:'',                  //开始时间
-                    end_time:'',                    //结束时间
-                    cycle:'',                       //采集周期
-                },
-                chart:{
-                chart_type:'',                      //图表类型
+                monitor_name:'',                    //单元名称
+                monitor_type:'',                    //单元类型
+                font_size:'',                       //字号
+                height:'',                          //高度
+                width:'',                            //宽度
+                start_time:'',                      //开始时间
+                end_time:'',                        //结束时间
+                period:'',                          //采集周期
+                status:'',                          //监控状态
                 contents:'',                        //显示内容
-                sql:'',                             //连接数据库
-                rules:'',                           //采集规则
-                }
+                gather_rule:'',                     //采集规则
+                gather_params:'',                   //节点
+                params: '',                          //监控参数
             },
-            job1: {                                  //作业单元
-                common:{
-                    font_size:'',                   //字号
-                    height:'',                      //高度
-                    wide:'',                        //宽度
-                    start_time:'',                  //开始时间
-                    end_time:'',                    //结束时间
-                    cycle:'',                       //采集周期
-                },
-                job:{
+            job1: {                                   //作业单元
+                monitor_name:'',                    //单元名称
+                monitor_type:'',                    //单元类型
+                font_size:'',                       //字号
+                height:'',                          //高度
+                width:'',                            //宽度
+                start_time:'',                      //开始时间
+                end_time:'',                        //结束时间
+                period:'',                          //采集周期
+                status:'',                          //监控状态
                 contents:'',                        //显示内容
-                job_mould:'',                       //作业模板
-                NODE_KEY:'',                        //NODE_KEY参数
-                server:'',                          //服务器
-                }
+                gather_rule:'',                     //NODE_KEY
+                gather_params:'',                   //作业模板
+                params: '',                         //执行服务器
             },
-            flow1: {                                   //流程单元
-                common:{
-                    font_size:'',                   //字号
-                    height:'',                      //高度
-                    wide:'',                        //宽度
-                    start_time:'',                  //开始时间
-                    end_time:'',                    //结束时间
-                    cycle:'',                       //采集周期
-                },
-                flow: {
-                    flow_mould: '',                  //流程模板
-                    param1: '',                      //流程参数1
-                    param2: '',                      //流程参数2
-                    node: '',                        //节点
-                }
-            }
+            flow1: {                                //流程单元
+                monitor_name:'',                    //单元名称
+                monitor_type:'',                    //单元类型
+                font_size:'',                       //字号
+                height:'',                          //高度
+                width:'',                            //宽度
+                start_time:'',                      //开始时间
+                end_time:'',                        //结束时间
+                period:'',                          //采集周期
+                params: '',                         //监控参数
+                status:'',                          //监控状态
+                contents:'',                        //显示内容
+                gather_rule:'',                     //采集规则
+                gather_params:'',                   //流程模板
+                sql:'',                              //连接数据库
+            },
         },
         methods: {
             current_change1(value) {
-                vm.page = value
+                vm.page = value;
                 vm.show()
             },
             submitForm(formName) {
@@ -651,7 +642,7 @@
                             url: '${SITE_URL}monitor/delete/',
                             data: {
                                 unit_id: row.id,
-                                unit_type: row.unit_type,
+                                monitor_type: row.monitor_type,
                             }
                         }).then((res) => {
                             vm.show()
@@ -672,7 +663,7 @@
                         limit:10
                     },
                 }).then(function(res) {
-                    vm.page_count = res.data.message[0].page_count;
+
                     vm.sites = res.data.message;
 
                 })
@@ -690,79 +681,90 @@
             edit(row) {
                 vm.centerDialogVisible = true;
                 vm.unit_id = row.id;
-                vm.unit_name = row.unit_name;
-                if (row.unit_type == '基本单元类型') {
+                vm.monitor_name = row.monitor_name;
+                if (row.monitor_type == '基本单元类型') {
                     vm.disabled2 = false;
                     vm.disabled3 = true;
                     vm.disabled4 = true;
                     vm.disabled5 = true;
-                    vm.unit_type = 'first';
-                    vm.basic.common.font_size = row.font_size;
-                    vm.basic.common.height = row.height;
-                    vm.basic.common.wide = row.wide;
-                    vm.basic.common.start_time = row.start_time;
-                    vm.basic.common.end_time = row.end_time;
-                    vm.basic.common.cycle = row.cycle
+                    vm.monitor_type = 'first';
+                    vm.basic.font_size = row.font_size;
+                    vm.basic.height = row.height;
+                    vm.basic.width = row.width;
+                    vm.basic.start_time = row.start_time;
+                    vm.basic.end_time = row.end_time;
+                    vm.basic.period = row.period
                 }
-                if (row.unit_type == '图表单元类型') {
+                if (row.monitor_type == '图表单元类型') {
                     vm.disabled2 = true;
                     vm.disabled3 = false;
                     vm.disabled4 = true;
                     vm.disabled5 = true;
-                    vm.unit_type = 'second';
-                    vm.chart.common.font_size = row.font_size;
-                    vm.chart.common.height = row.height;
-                    vm.chart.common.wide = row.wide;
-                    vm.chart.common.start_time = row.start_time;
-                    vm.chart.common.end_time = row.end_time;
-                    vm.chart.common.cycle = row.cycle
+                    vm.monitor_type = 'second';
+                    vm.chart.font_size = row.font_size;
+                    vm.chart.height = row.height;
+                    vm.chart.width = row.width;
+                    vm.chart.start_time = row.start_time;
+                    vm.chart.end_time = row.end_time;
+                    vm.chart.period = row.period
                 }
-                if (row.unit_type == '作业单元类型') {
+                if (row.monitor_type == '作业单元类型') {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = false;
                     vm.disabled5 = true;
-                    vm.unit_type = 'third';
+                    vm.monitor_type = 'third';
                     vm.job.common.font_size = row.font_size;
                     vm.job.common.height = row.height;
-                    vm.job.common.wide = row.wide;
-                    vm.job.common.start_time = row.start_time;
-                    vm.job.common.end_time = row.end_time;
-                    vm.job.common.cycle = row.cycle
+                    vm.job.width = row.width;
+                    vm.job.start_time = row.start_time;
+                    vm.job.end_time = row.end_time;
+                    vm.job.period = row.period
                 }
-                if (row.unit_type == '流程单元类型') {
+                if (row.monitor_type == '流程单元类型') {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = true;
                     vm.disabled5 = false;
-                    vm.unit_type = 'fourth';
+                    vm.monitor_type = 'fourth';
                     vm.flow.common.font_size = row.font_size;
                     vm.flow.common.height = row.height;
-                    vm.flow.common.wide = row.wide;
-                    vm.flow.common.start_time = row.start_time;
-                    vm.flow.common.end_time = row.end_time;
-                    vm.flow.common.cycle = row.cycle
+                    vm.flow.width = row.width;
+                    vm.flow.start_time = row.start_time;
+                    vm.flow.end_time = row.end_time;
+                    vm.flow.period = row.period
                 }
             },
             edit1() {
                 vm.centerDialogVisible = false;
-                if(vm.unit_type == 'first') {
-                    vm.data22 = vm.basic
-                }else if (vm.unit_type == 'second'){
-                    vm.data22 = vm.chart
-                }else if(vm.unit_type == 'third') {
-                    vm.data22 = vm.job
-                }else if(vm.unit_type == 'fourth'){
-                    vm.data22 = vm.flow
+                if(vm.monitor_type == 'first') {
+                    vm.data22 = vm.basic;
+                    vm.basic.params = vm.server_url+','+vm.file_param;
+                    vm.basic.monitor_name = vm.monitor_name;
+                    vm.basic.monitor_type = vm.monitor_type
+                }else if (vm.monitor_type == 'second'){
+                    vm.data22 = vm.chart;
+                    vm.chart.monitor_name = vm.monitor_name;
+                    vm.chart.monitor_type = vm.monitor_type
+                }else if(vm.monitor_type == 'third') {
+                    vm.data22 = vm.job;
+                    vm.job.monitor_name = vm.monitor_name;
+                    vm.job.monitor_type = vm.monitor_type
+                }else if(vm.monitor_type == 'fourth'){
+                    vm.data22 = vm.flow;
+                    vm.flow.monitor_name = vm.monitor_name;
+                    vm.flow.monitor_type = vm.monitor_type;
+                    vm.flow.params = vm.param1+'+'+vm.param2
                 }
+
                 if(vm.unit_id > 0) {
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor/edit/',
                         data: {
                             data:vm.data22,
-                            unit_type:vm.unit_type,
-                            unit_name:vm.unit_name,
+                            monitor_type:vm.monitor_type,
+                            monitor_name:vm.monitor_name,
                             unit_id:vm.unit_id,
                         }
                     }).then((res) => {
@@ -777,8 +779,8 @@
                         url:'${SITE_URL}monitor/add/',
                         data:{
                             data:vm.data22,
-                            unit_type:vm.unit_type,
-                            unit_name:vm.unit_name
+                            monitor_type:vm.monitor_type,
+                            monitor_name:vm.monitor_name
                         },
                     }).then((res) => {
                         vm.show()
@@ -792,7 +794,7 @@
                 vm.disabled3 = false;
                 vm.disabled4 = false;
                 vm.disabled5 = false;
-                vm.unit_type = 'first';
+                vm.monitor_type = 'first';
                 vm.unit_id = row;
                 console.log(vm.basic1);
                 vm.basic = vm.basic1;
@@ -809,17 +811,26 @@
                     vm.sql1 = 'block';
                     vm.file1 = 'none';
                     vm.interface1 = 'none';
-                    vm.basic.basic.sql_file_interface = 'sql'
+                    vm.server_url='';
+                    vm.file_param='';
+                    vm.basic.gather_rule = '';
+                    vm.basic.gather_params = 'sql'
                 }else if (value==6) {
                     vm.sql1 = 'none';
                     vm.file1 = 'block';
                     vm.interface1 = 'none';
-                    vm.basic.basic.sql_file_interface = 'file';
+                    vm.server_url='';
+                    vm.file_param='';
+                    vm.basic.gather_rule = '';
+                    vm.basic.gather_params = 'file';
                 }else if (value==9){
                     vm.sql1 = 'none';
                     vm.file1 = 'none';
                     vm.interface1 = 'block';
-                    vm.basic.basic.sql_file_interface = 'interface';
+                    vm.server_url='';
+                    vm.file_param='';
+                    vm.basic.gather_rule = '';
+                    vm.basic.gather_params = 'interface';
                 }
             },
             change2(value){
