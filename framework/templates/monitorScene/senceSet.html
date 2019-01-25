@@ -56,7 +56,7 @@
                 </el-table-column>
                 <el-table-column prop='scene_creator_time' label='创建时间'  style="width: 30%;">
                 </el-table-column>
-                <el-table-column prop='scene_positions' label='岗位'  style="width: 30%;">
+                <el-table-column prop='pos_name' label='岗位'  style="width: 30%;">
                 </el-table-column>
                 <el-table-column prop='scene_startTime' label='开始时间'  v-if="false"  style="width: 30%;">
                 </el-table-column>
@@ -123,7 +123,7 @@
                       </el-form-item>
 
                     <el-form-item label="场景适用岗位">
-                        <el-select v-model="scene.scene_positions" placeholder="请选择">
+                        <el-select  placeholder="请选择">
                             <el-option label="java开发" value="java开发"></el-option>
                             <el-option label="python开发" value="python开发"></el-option>
                             <el-option label="运营" value="运营"></el-option>
@@ -268,7 +268,6 @@
             tableData: [],
             scene: {                            //场景管理
                 scene_name: '', //场景名称
-                scene_positions:'',//岗位
                 scene_startTime:'',
                 scene_endTime:'',
             },

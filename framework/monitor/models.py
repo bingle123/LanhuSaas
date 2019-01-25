@@ -20,7 +20,6 @@ class Monitor(models.Model):
     end_time = models.TimeField(verbose_name=u'结束时间')
     create_time = models.TimeField(verbose_name=u'创建时间', auto_now_add=True)
     creator = models.CharField(verbose_name=u'创建人', max_length=10)
-    create_time = models.TimeField(verbose_name=u'创建时间')
     editor = models.CharField(verbose_name=u'编辑人', max_length=10)
     edit_time = models.DateTimeField(verbose_name=u'修改时间', auto_now=True)
     status = models.PositiveIntegerField(verbose_name=u'监控状态')
@@ -31,8 +30,8 @@ class Monitor(models.Model):
         db_table = 'tb_monitor_item'
 
 
-class Job(models.Model):
-    pass
+# class Job(models.Model):
+#     pass
 
 
 
