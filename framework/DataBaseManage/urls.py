@@ -6,7 +6,7 @@ urlpatterns = patterns(
     'DataBaseManage.views',
     (r'^data_base/$', 'data_base'),
     (r'^getall/$', 'getconn'),                               #查询所有
-    (r'^getDataType/$','getDataType'),
+    # (r'^getDataType/$','getDataType'),
     (r'^saveconn/$','saveconn'),                             #保存
     (r'^editconn/','eidtconnn'),                             #编辑
     (r'^deleteconn/(.+)/$','delete_conn'),                   #删除

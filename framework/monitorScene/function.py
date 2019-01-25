@@ -22,8 +22,9 @@ def monitor_show(request):
             'scene_editor_time': str(i.scene_editor_time),
             'pos_name':''
         }
-        position = position_scene.objects.filter(position_scene_id=i.id)
+        position = position_scene.objects.filter(scene_id=i.id)
         for c in position:
+            print c.position_id
             job = JobInstance.objects.filter(id=c.position_id)
             for j in job:
                 jobs = {
@@ -77,20 +78,13 @@ def editSence(request):
     scene = Scene.objects.get(id=model['id'])
     scene.save()
 
-def position(request):
-    print "zxczxc"
+def pos_name(request):
     job=JobInstance.objects.all()
-    print job['Job_name']
     res_list = []
     for i in job:
         dic = {
             'id': i.id,
-            'Job_name': i.Job_name,
-            'create_time': str(i.create_time),
-            'create_person': i.create_person,
-            'edit_time': str(i.edit_time),
-            'edit_person':i.edit_person,
+            'pos_name': i.pos_name
         }
-        print dic['Job_name']
         res_list.append(dic)
     return res_list
