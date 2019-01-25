@@ -43,6 +43,6 @@ def edit_job(request):
     return render_json(r)
 
 @csrf_exempt
-def get_user(request):
-    r = function.get_user(request)
+def filter_user(request):
+    r = function.filter_user(request)
     return render_json(r)
