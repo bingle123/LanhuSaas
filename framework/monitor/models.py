@@ -23,6 +23,7 @@ class Monitor(models.Model):
     editor = models.CharField(verbose_name=u'编辑人', max_length=10)
     edit_time = models.DateTimeField(verbose_name=u'修改时间', auto_now=True)
     status = models.PositiveIntegerField(verbose_name=u'监控状态')
+    contents = models.CharField(verbose_name=u'显示内容',max_length=500)
 
     class Meta:
         verbose_name = u'监控项信息表'
@@ -30,8 +31,12 @@ class Monitor(models.Model):
         db_table = 'tb_monitor_item'
 
 
-# class Job(models.Model):
-#     pass
-
+class Job(models.Model):
+    job_id = models.PositiveIntegerField(verbose_name=u'作业ID')
+    instance_id = models.PositiveIntegerField(verbose_name=u'作业实列ID')
+    status = models.PositiveIntegerField(verbose_name=u'作业状态')
+    test_flag = models.PositiveIntegerField(verbose_name=u'测试表示')
+    start_time = models.DateTimeField(verbose_name=u'开始时间')
+    
 
 
