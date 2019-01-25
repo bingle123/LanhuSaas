@@ -19,9 +19,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 
 """
-
+from __future__ import absolute_import
 import os
 import sys
+from celery.schedules import crontab
+from kombu import Queue,Exchange
+from datetime import timedelta
 # Import global settings to make it easier to extend settings.
 from django.conf.global_settings import *  # noqa
 
@@ -122,7 +125,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    # OTHER 3rd Party App
     'app_control',
     'account',
     'home_application',
@@ -133,8 +135,9 @@ INSTALLED_APPS = (
     'db_connection_manage',
     'monitorScene',
     'system_config',
-    'MarketDay',
-    'jobManagement'
+    'jobManagement',
+    'market_day',
+    'DataBaseManage',
 )
 
 # ==============================================================================
@@ -223,12 +226,42 @@ if IS_USE_CELERY:
             'djcelery',            # djcelery
         )
         djcelery.setup_loader()
-        CELERY_ENABLE_UTC = False
-        CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
         if "celery" in sys.argv:
             DEBUG = False
         # celery 的消息队列（RabbitMQ）信息
         BROKER_URL = os.environ.get('BK_BROKER_URL', BROKER_URL_DEV)
+        CELERY_ENABLE_UTC = False
+        CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+        TIME_ZONE = 'Asia/Shanghai'
+        CELERY_RESULT_BACKEND = 'amqp://localhost'  # 官网优化的地方也推荐使用c的librabbitmq
+        CELERY_TASK_RESULT_EXPIRES = 1200  # celery任务执行结果的超时时间，我的任务都不需要返回结果,只需要正确执行就行
+        CELERYD_CONCURRENCY = 50  # celery worker的并发数 也是命令行-c指定的数目,事实上实践发现并不是worker也多越好,保证任务不堆积,加上一定新增任务的预留就可以
+        CELERYD_PREFETCH_MULTIPLIER = 4  # celery worker 每次去rabbitmq取任务的数量，我这里预取了4个慢慢执行,因为任务有长有短没有预取太多
+        CELERYD_MAX_TASKS_PER_CHILD = 40
+        CELERY_ACCEPT_CONTENT = ['json']
+        CELERY_TASK_SERIALIZER = 'json'
+        CELERY_RESULT_SERIALIZER = 'json'
+        CELERYBEAT_SCHEDULE = {
+            # 周期性任务
+            'task-one': {
+                'task': 'market_day.tasks.sendemail',
+                'schedule': timedelta(seconds=20),  # 每20s执行一次
+                'args': ('708949284@qq.com',)
+            },
+            # 'task-two': {
+            #     'task': 'mycelery.tasks.mul',
+            #     'schedule': crontab(minute='*/1'),
+            #     'args': (10, 2)
+            # },
+        }
+        CELERY_QUEUES = (
+            Queue('demo', Exchange('demo'), routing_key='demo'),
+            # Queue('task_one', Exchange('task_one'), routing_key='task_one'),
+            # Queue('task_two', Exchange('task_two'), routing_key='task_two')
+        )
+        CELERY_ROUTES = (
+            {'markey_day.tasks.*': {'queue': 'demo', 'routing_key': 'demo'}}
+        )
         if RUN_MODE == 'DEVELOP':
             from celery.signals import worker_process_init
 
@@ -341,3 +374,11 @@ LOGGING = {
         },
     }
 }
+
+#email--------------------
+EMAIL_USE_SSL = True
+EMAIL_HOST = 'smtp.qq.com'  # 如果是 163 改成 smtp.163.com
+EMAIL_PORT = 465
+EMAIL_HOST_USER = '975495461@qq.com' # 帐号
+EMAIL_HOST_PASSWORD = 'oaxklhdxakxrbfda'  # 密码
+DEFAULT_FROM_EMAIL = 'zlx<975495461@qq.com>'

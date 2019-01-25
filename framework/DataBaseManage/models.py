@@ -9,6 +9,7 @@ class Conn(models.Model):
     username = models.CharField(u'用户名',max_length=155)
     databasename = models.CharField(u'数据库名称',max_length=125)
     password = models.CharField(u'密码',max_length=155)
-
-class TDataBase(models.Model):
-    name = models.CharField(u'数据库名称',max_length=30)
+    createname = models.CharField(u'创建人', max_length=64)
+    createtime = models.DateTimeField(u'创建时间', auto_now_add=True)
+    editname = models.CharField(u'修改人', max_length=64)
+    edittime = models.DateTimeField(u'修改时间', auto_now=True)
