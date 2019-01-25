@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import patterns, include, url
 # Uncomment the next two lines to enable the admin:
-from MarketDay import views
+from market_day import views
 # 公共URL配置
 urlpatterns = patterns(
     '',

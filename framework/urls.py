@@ -39,8 +39,8 @@ urlpatterns = patterns(
     url(r'^monitorScene/', include('monitorScene.urls')),
     # 岗位管理
     url(r'^jobManagement/', include('jobManagement.urls')),
-    url(r'zlx/', include('zlx.urls')),
-    url(r'^lcz/',include('lcz.urls')),
+    url(r'market_day/', include('market_day.urls')),
+    url(r'^DataBaseManage/', include('DataBaseManage.urls')),
 )
 
 

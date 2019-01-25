@@ -48,7 +48,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="add_person()" type="primary">保存</el-button>
-            <el-button @click="refresh()">取消</el-button>
+            <el-button @click="dialogFormVisible = false">取消</el-button>
         </div>
     </el-dialog>
 
@@ -59,25 +59,25 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click=" edit_job()" type="primary">保存</el-button>
-            <el-button @click="refresh()">取消</el-button>
+            <el-button @click="dialogFormVisible2 = false">取消</el-button>
         </span>
     </el-dialog>
 
     <el-dialog title="新增岗位" :visible.sync="dialogFormVisible3">
         <el-form :model="form">
             <el-form-item label="岗位名称:">
-                <el-input v-model="form.Job_name"></el-input>
+                <el-input v-model="form.pos_name"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="add_job()" type="primary">保存</el-button>
-            <el-button @click="refresh()">取消</el-button>
+            <el-button @click="dialogFormVisible3 = false">取消</el-button>
         </div>
     </el-dialog>
 
     <div class="header">
         <el-breadcrumb class="route" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item>首页</el-breadcrumb-item>
+            <el-breadcrumb-item>看板系统配置</el-breadcrumb-item>
             <el-breadcrumb-item>岗位管理</el-breadcrumb-item>
         </el-breadcrumb>
     </div>
@@ -102,9 +102,9 @@
                     </el-col>
                 </el-row>
                 <el-table :data="jobInstance" :header-cell-style="rowClass" style="width: 100%;margin-top: 20px">
-                    <el-table-column prop="Job_name" label="岗位名称" style="width: 20%">
+                    <el-table-column prop="pos_name" label="岗位名称" style="width: 20%">
                     </el-table-column>
-                    <el-table-column prop="User_name" label="岗位人员" style="width: 20%">
+                    <el-table-column prop="user_name" label="岗位人员" style="width: 20%;">
                     </el-table-column>
                     <el-table-column prop="operation" label="操作" style="width: 20%">
                         <template slot-scope="scope">
@@ -132,7 +132,7 @@
             dialogFormVisible2: false,
             dialogFormVisible3: false,
             form: {
-                 Job_name:'',
+                 pos_name:'',
             },
             users:[],
             tempjobname:'',
@@ -144,14 +144,10 @@
             value1: '',
             value12:'',
             jobInstance:[],
-            checkList: ['王小虎', '张焊强', '李明理'],
             data2: '',
             value2:[],
         },
         methods: {
-            refresh(){                                                          //跳转刷新
-                window.location.href="${SITE_URL}jobManagement/jobM"
-            },
             change1(value){                                                     //加人获得选中数据
                 for(var i in value){
                     vm.value2.push(vm.data2[value[i]])
@@ -170,10 +166,10 @@
             show() {                                                               //显示首页
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}jobManagement/job_show/',
+                    url: '${SITE_URL}jobManagement/show/',
                 }).then(function(res) {
+                    console.log(res.data.message);
                     vm.jobInstance = res.data.message;
-
                 })
             },
             deletePosition(row){                                                  //删除一条记录
@@ -225,7 +221,7 @@
             edit_jobname(row){                                     //显示弹框，传值到edit_job
                 vm.dialogFormVisible2 = true
                 vm.tempid = row.id;
-                vm.tempjobname = row.Job_name;
+                vm.tempjobname = row.pos_name;
             },
             edit_job(){                                            //修改岗位名
                 vm.dialogFormVisible2 = false
@@ -234,7 +230,7 @@
                     url: '${SITE_URL}jobManagement/edit_job/',
                     data: {
                         id:this.tempid,
-                        Job_name:this.tempjobname,
+                        pos_name:this.tempjobname,
                     }
                 }).then((res) => {
                     if(res.data.message != null){
@@ -245,12 +241,11 @@
             show_job(row){                                      //显示弹框，传值到add_person
                 vm.dialogFormVisible = true;
                 data = vm.generateData2();
-                vm.jobname = row.Job_name;
+                vm.jobname = row.pos_name;
                 vm.id = row.id;
-                vm.username = row.User_name;
             },
             add_person(row){
-                vm.refresh();
+                vm.dialogFormVisible = false
                axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/add_person/',
@@ -258,7 +253,6 @@
                         data:vm.value2,
                         id:this.id,
                         jobname: this.jobname,
-                        username: this.username,
                     },
                 }).then((res) => {
                     vm.show();
@@ -269,16 +263,13 @@
                     method: 'post',
                     url: '${SITE_URL}jobManagement/get_user/',
                 }).then((res) =>{
-                    console.log(res)
                     for(var i=0;i<res.data.data.length;i++){
                         this.users.push(res.data.data[i].bk_username)
                     }
-
                 })
             },
             generateData2(){                                                       //加人的穿梭框
                 const data = [];
-
                 var people= this.users;
                 const pinyin = this.users;
                 people.forEach((people, index) => {
@@ -295,7 +286,7 @@
             }
         }
     });
-// vm.generateData2()
+
  vm.show()
  vm.select_all_user()
 </script>

@@ -1,7 +1,7 @@
 import json
 import os
 import sys
-from scrapy.cmdline import execute
+# from scrapy.cmdline import execute
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 

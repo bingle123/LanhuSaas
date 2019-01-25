@@ -8,7 +8,7 @@
 		<script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
 		<link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
 		<script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
-		<script src="${STATIC_URL}assets/vue-2.5.21/vue-resource.min.js"></script>
+		<script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="${STATIC_URL}css/Calendar.css" />
 	</head>
 
@@ -43,7 +43,7 @@
 				<div>
                     <el-button type="danger" icon="el-icon-delete" circle @click="deleteallday"></el-button>
 					&nbsp;&nbsp;&nbsp;&nbsp;
-                    <el-upload action="/MarketDay/get_file/" :on-success="upsuccess" :on-error="err" accept=".txt,.csv">
+                    <el-upload action="/market_day/get_file/" :on-success="upsuccess" :on-error="err" accept=".xlsx">
                         <el-button size="small" type="primary">点击上传节假日文件</el-button>
 					</el-upload>
 				</div>

@@ -13,8 +13,8 @@ def index(request):
     return render_mako_context(request, './jobManagement/jobM.html')
 
 @csrf_exempt
-def positonall(request):
-    res = function.job_show(request)
+def show(request):
+    res = function.show(request)
     return render_json(res)
 
 @csrf_exempt

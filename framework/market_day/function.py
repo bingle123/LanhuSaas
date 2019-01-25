@@ -1,14 +1,14 @@
 #!usr/bin/ebv python
 # -*- coding:utf-8 -*-
-from MarketDay.models import *
+from market_day.models import *
 import os
+from xlrd import open_workbook
 
 def get_holiday(req):
-    dates=Holiday.objects.all().values('day')
+    dates=Holiday.objects.filter(flag=0).values('day')
     days=[]
     for date in dates:
         days.append(date['day'])
-    print days
     return days
 
 def get_file(req):
@@ -17,17 +17,18 @@ def get_file(req):
             obj = req.FILES.get('file')
             filename = obj.name
             path = os.getcwd() + r'\\static\\dateTxt\\' + filename
-            print path
             if not os.path.exists(path):
                 with open(path, 'wb')as f:
                     for chunk in obj.chunks():
                         f.write(chunk)
                 f.close()
-            f=open(path,'r')
-            strall=f.read()
-            strs=strall.split(',')
-            for str in strs:
-                holiday=Holiday(day=str)
+            workbook=open_workbook(path)
+            sheet=workbook.sheet_by_index(0)
+            for i in range(1,sheet.nrows):
+                day = str(sheet.row_values(i)[0])
+                d = day[0:4] + u'/' + str(int(day[4:6])) + u'/' + str(int(day[6:8]))
+                flag=int(sheet.row_values(i)[1])
+                holiday=Holiday(day=d,flag=flag)
                 holiday.save()
         except:
             print '文件不匹配'
@@ -37,10 +38,12 @@ def delall(req):
     return flag
 
 def delone(req,date):
-    flag=Holiday.objects.get(day=date).delete()
+    print date
+    print Holiday.objects.filter(day=date)
+    flag=Holiday.objects.filter(day=date).update(flag=1)
+    print flag
     return flag
 
 def addone(req,date):
-    holiday=Holiday(day=date)
-    flag=holiday.save()
+    flag = Holiday.objects.filter(day=date).update(flag=0)
     return flag

@@ -3,7 +3,7 @@ from django.conf.urls import patterns
 
 
 urlpatterns = patterns(
-    'lcz.views',
+    'DataBaseManage.views',
     (r'^data_base/$', 'data_base'),
     (r'^getall/$', 'getconn'),                               #查询所有
     (r'^getDataType/$','getDataType'),
