@@ -10,6 +10,7 @@ See the License for the specific language governing permissions and limitations 
 """
 import os
 import sys
+from market_day import auto_celery
 
 if __name__ == '__main__':
     if 'celery' in sys.argv:
@@ -23,5 +24,5 @@ if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings')
 
     from django.core.management import execute_from_command_line
-
+    auto_celery.auto_celery().start()
     execute_from_command_line(sys.argv)
