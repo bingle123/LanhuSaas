@@ -7,6 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('monitorScene', '0001_initial'),
     ]
 
     operations = [
@@ -68,6 +69,24 @@ class Migration(migrations.Migration):
                 'db_table': 'tb_monitor_item',
                 'verbose_name': '\u76d1\u63a7\u9879\u4fe1\u606f\u8868',
                 'verbose_name_plural': '\u76d1\u63a7\u9879\u4fe1\u606f',
+            },
+        ),
+        migrations.CreateModel(
+            name='scene_monitor',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('x', models.PositiveIntegerField(verbose_name='x\u5750\u6807')),
+                ('y', models.PositiveIntegerField(verbose_name='y\u5750\u6807')),
+                ('scale', models.PositiveIntegerField(verbose_name='\u6bd4\u4f8b')),
+                ('score', models.PositiveIntegerField(verbose_name='\u6253\u5206')),
+                ('order', models.PositiveIntegerField(verbose_name='\u6392\u5e8f')),
+                ('item', models.ForeignKey(to='monitor.Monitor')),
+                ('pos', models.ForeignKey(to='monitorScene.Scene')),
+            ],
+            options={
+                'db_table': 'tl_scene_monitor',
+                'verbose_name': '\u573a\u666f\u76d1\u63a7\u9879',
+                'verbose_name_plural': '\u573a\u666f\u76d1\u63a7\u9879',
             },
         ),
         migrations.AddField(

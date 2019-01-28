@@ -1,0 +1,25 @@
+/*标题字体大小设置*/
+#customProcessTitle{
+    font-weight: bolder;
+}
+/*警告条样式设置*/
+#customProcessWarn{
+    height: 50px;
+}
+/*定制按钮位置设置*/
+#customProcessAddButton{
+    text-align: right;
+}
+/*表格字段宽度*/
+#customProcessTable .td{
+    width: 20%;
+}
+/*表格字段居中*/
+#customProcessTable .cell{
+    text-align: center;
+    vertical-align: middle;
+}
+/*表单按钮居中显示*/
+.customProcessFormButton{
+    text-align: center;
+}

@@ -296,7 +296,7 @@
                                 <el-form-item label="执行服务器" style="width: 96%">
                                     <el-input v-model="job.params" placeholder="请输入服务器地址"></el-input>
                                 </el-form-item>
-                                <el-form-item label="采集时间段:" style="width: 96%">s
+                                <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="job.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
@@ -380,7 +380,7 @@
                                           <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
                                         </el-select>
                                       </el-form-item>
-                                <div v-if="flow.gather_rule === 'chenyi'">
+                                <div v-if="flow.gather_rule === 'admin'">
                                 <el-form-item label="节点周期:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
@@ -397,7 +397,7 @@
                                     </el-col>
                                 </el-form-item>
                                 </div>
-                                <div v-if="flow.gather_rule === 'beijing'">
+                                <div v-if="flow.gather_rule === '1'">
                                 <el-form-item label="节点周期:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
@@ -497,7 +497,6 @@
                 contents:'',                        //显示内容
                 gather_rule:'',                     //采集规则
                 gather_params:'',                   //采集参数
-                sql:'',                              //连接数据库
             },
             chart: {                                //图表单元
                 monitor_name:'',                    //单元名称
@@ -543,7 +542,6 @@
                 contents:'',                        //显示内容
                 gather_rule:'',                     //采集规则
                 gather_params:'',                   //流程模板
-                sql:'',                              //连接数据库
             },
             basic1: {                                //基本单元
                 monitor_name:'',                    //单元名称
@@ -559,7 +557,6 @@
                 contents:'',                        //显示内容
                 gather_rule:'',                     //采集规则
                 gather_params:'',                   //采集参数
-                sql:'',                              //连接数据库
             },
             chart1: {                                //图表单元
                 monitor_name:'',                    //单元名称
@@ -605,7 +602,6 @@
                 contents:'',                        //显示内容
                 gather_rule:'',                     //采集规则
                 gather_params:'',                   //流程模板
-                sql:'',                              //连接数据库
             },
         },
         methods: {

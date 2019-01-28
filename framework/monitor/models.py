@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+
 from django.db import models
+from monitorScene.models import Scene
 
 
 class Monitor(models.Model):
@@ -7,8 +9,8 @@ class Monitor(models.Model):
     单元信息表
     """
     monitor_name = models.CharField(verbose_name=u'监控项名称', max_length=50, unique=True)
-    monitor_type = models.PositiveIntegerField(verbose_name=u'监控项类型')
-    jion_id = models.PositiveIntegerField(verbose_name=u'关联ID',unique=True)
+    monitor_type = models.CharField(verbose_name=u'监控项类型',max_length=10)
+    jion_id = models.PositiveIntegerField(verbose_name=u'关联ID', unique=True)
     gather_rule = models.CharField(verbose_name=u'采集规则', max_length=50)
     gather_params = models.CharField(verbose_name=u'采集参数', max_length=500)
     params = models.CharField(verbose_name=u'监控参数', max_length=500)
@@ -24,6 +26,10 @@ class Monitor(models.Model):
     edit_time = models.DateTimeField(verbose_name=u'修改时间', auto_now=True)
     status = models.PositiveIntegerField(verbose_name=u'监控状态')
     contents = models.CharField(verbose_name=u'显示内容',max_length=500)
+
+    def __str__(self):
+        return self.id
+
 
     class Meta:
         verbose_name = u'监控项信息表'
@@ -57,3 +63,16 @@ class Flow(models.Model):
         verbose_name_plural = u'流程实列信息'
         db_table = 'td_flow_instance'
 
+
+class scene_monitor(models.Model):
+    x = models.PositiveIntegerField(verbose_name=u'x坐标')
+    y= models.PositiveIntegerField(verbose_name=u'y坐标')
+    scale = models.PositiveIntegerField(verbose_name=u'比例')
+    score = models.PositiveIntegerField(verbose_name=u'打分')
+    order = models.PositiveIntegerField(verbose_name=u'排序')
+    item = models.ForeignKey(Monitor, on_delete=models.CASCADE)
+    pos = models.ForeignKey(Scene,on_delete=models.CASCADE)
+    class Meta:
+        verbose_name = u'场景监控项'
+        verbose_name_plural = u'场景监控项'
+        db_table = "tl_scene_monitor"
