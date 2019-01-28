@@ -35,8 +35,25 @@ class Job(models.Model):
     job_id = models.PositiveIntegerField(verbose_name=u'作业ID')
     instance_id = models.PositiveIntegerField(verbose_name=u'作业实列ID')
     status = models.PositiveIntegerField(verbose_name=u'作业状态')
-    test_flag = models.PositiveIntegerField(verbose_name=u'测试表示')
+    test_flag = models.PositiveIntegerField(verbose_name=u'测试标识')
     start_time = models.DateTimeField(verbose_name=u'开始时间')
-    
+    job_log = models.CharField(verbose_name=u'作业日志', max_length=500)
 
+    class Meta:
+        verbose_name = u'作业实列表'
+        verbose_name_plural = u'作业实列信息'
+        db_table = 'td_job_instance'
+
+
+class Flow(models.Model):
+    flow_id = models.PositiveIntegerField(verbose_name=u'作业ID')
+    instance_id = models.PositiveIntegerField(verbose_name=u'作业实列ID')
+    status = models.PositiveIntegerField(verbose_name=u'节点状态')
+    test_flag = models.PositiveIntegerField(verbose_name=u'测试标识')
+    start_time = models.DateTimeField(verbose_name=u'开始时间')
+
+    class Meta:
+        verbose_name = u'流程实列表'
+        verbose_name_plural = u'流程实列信息'
+        db_table = 'td_flow_instance'
 
