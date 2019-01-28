@@ -27,6 +27,10 @@ class Monitor(models.Model):
     status = models.PositiveIntegerField(verbose_name=u'监控状态')
     contents = models.CharField(verbose_name=u'显示内容',max_length=500)
 
+    def __str__(self):
+        return self.id
+
+
     class Meta:
         verbose_name = u'监控项信息表'
         verbose_name_plural = u'监控项信息'
@@ -66,8 +70,8 @@ class scene_monitor(models.Model):
     scale = models.PositiveIntegerField(verbose_name=u'比例')
     score = models.PositiveIntegerField(verbose_name=u'打分')
     order = models.PositiveIntegerField(verbose_name=u'排序')
-    pos = models.ForeignKey(to='Scene',to_field='id',on_delete=models.CASCADE)
-    item = models.ForeignKey(to='Monitor', to_field='id', on_delete=models.CASCADE)
+    item = models.ForeignKey(Monitor,  on_delete=models.CASCADE)
+    pos = models.ForeignKey(Scene,on_delete=models.CASCADE)
     class Meta:
         verbose_name = u'场景监控项'
         verbose_name_plural = u'场景监控项'
