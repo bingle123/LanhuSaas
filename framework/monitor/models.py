@@ -8,7 +8,7 @@ class Monitor(models.Model):
     """
     monitor_name = models.CharField(verbose_name=u'监控项名称', max_length=50, unique=True)
     monitor_type = models.PositiveIntegerField(verbose_name=u'监控项类型')
-    jion_id = models.PositiveIntegerField(verbose_name=u'关联ID')
+    jion_id = models.PositiveIntegerField(verbose_name=u'关联ID',unique=True)
     gather_rule = models.CharField(verbose_name=u'采集规则', max_length=50)
     gather_params = models.CharField(verbose_name=u'采集参数', max_length=500)
     params = models.CharField(verbose_name=u'监控参数', max_length=500)
@@ -32,7 +32,7 @@ class Monitor(models.Model):
 
 
 class Job(models.Model):
-    job_id = models.PositiveIntegerField(verbose_name=u'作业ID')
+    job_id = models.OneToOneField(to='Monitor',to_field='jion_id',on_delete=models.CASCADE)
     instance_id = models.PositiveIntegerField(verbose_name=u'作业实列ID')
     status = models.PositiveIntegerField(verbose_name=u'作业状态')
     test_flag = models.PositiveIntegerField(verbose_name=u'测试标识')
@@ -46,7 +46,7 @@ class Job(models.Model):
 
 
 class Flow(models.Model):
-    flow_id = models.PositiveIntegerField(verbose_name=u'作业ID')
+    flow_id = models.OneToOneField(to='Monitor',to_field='jion_id',on_delete=models.CASCADE)
     instance_id = models.PositiveIntegerField(verbose_name=u'作业实列ID')
     status = models.PositiveIntegerField(verbose_name=u'节点状态')
     test_flag = models.PositiveIntegerField(verbose_name=u'测试标识')
