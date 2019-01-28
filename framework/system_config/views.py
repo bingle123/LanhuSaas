@@ -3,6 +3,7 @@ from common.mymako import render_mako_context
 from common.mymako import render_json
 import json
 import crawl_template
+import function
 
 
 # Create your views here.
@@ -21,10 +22,8 @@ def manage_crawl(request):
     :param request:
     :return:
     """
-    request_body = json.loads(request.body)
-    print type(request_body)
-    print request.body
-    return render_json(None)
+    res = function.crawl_manage(request)
+    return render_json(res)
 
 
 def delete_crawl(request):
@@ -33,9 +32,8 @@ def delete_crawl(request):
     :param request:
     :return:
     """
-    request_body = json.loads(request.body)
-    print request_body
-    return render_json(None)
+    res = function.delete_crawl_config_id(request)
+    return render_json(res)
 
 
 def get_crawls(request):
@@ -44,9 +42,18 @@ def get_crawls(request):
     :param request:
     :return:
     """
-    request_body = json.loads(request.body)
-    print request_body
-    return render_json(None)
+    res = function.get_crawls_config(request)
+    return render_json(res)
+
+
+def get_crawl_by_name(request):
+    """
+    条件查询
+    :param request:
+    :return:
+    """
+    res = function.get_crawl_by_name(request)
+    return render_json(res)
 
 
 def crawl(request):
