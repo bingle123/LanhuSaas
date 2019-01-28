@@ -17,7 +17,7 @@ urlpatterns = patterns(
     (r'^crawl_config_html$', 'crawl_config_html'),                                     # 网页抓取配置首页
     (r'^manage_crawl', 'manage_crawl'),                                                # 网页爬虫配置管理包括新增和修改
     (r'^delete_crawl', 'delete_crawl'),                                                # 网页爬虫配置删除
-    # (r'^get_crawl', 'get_crawl'),                                                      # 网页爬虫配置删除
+    (r'^get_crawls', 'get_crawls'),                                                      # 网页爬虫配置删除
     (r'^crawl', 'crawl'),                                                              # 网页爬虫配置删除
 
 

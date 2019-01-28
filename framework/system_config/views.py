@@ -55,7 +55,6 @@ def crawl(request):
     :param request:
     :return:
     """
-
     url = 'http://www.sse.com.cn/services/tradingservice/tradingtech/newnotice/'
     total_xpath = '//div[@class="sse_list_1 js_listPage"]//dl//dd'
     title_xpath = 'a/text()'
