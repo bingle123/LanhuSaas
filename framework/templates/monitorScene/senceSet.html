@@ -121,7 +121,7 @@
 
                     <el-form-item label="场景适用岗位">
                         <el-select  placeholder="请选择" v-model="pos_name" >
-                            <el-option v-for="item in pos" :label="item.pos_name" :value="item.pos_name"></el-option>
+                            <el-option v-for="item in pos" :label="item.pos_name" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="预览区">
@@ -164,11 +164,7 @@
             <div>
                 <el-form ref="form" label-width="80px">
                     <el-form-item label="场景名称">
-                        <el-select v-model="scene_edit.scene_name" placeholder="指数显示">
-                            <el-option label="一级指数" value="一级指数"></el-option>
-                            <el-option label="二级指数" value="二级指数"></el-option>
-                            <el-option label="三级指数" value="三级指数"></el-option>
-                        </el-select>
+                       <el-input placeholder="请输入场景名称" v-model="scene_edit.scene_name" style="width: 30%"></el-input>
                     </el-form-item>
                      <el-form-item label="轮播时间" >
                         <div class="ranger-demo mt20" id="jranger_demo">
@@ -193,10 +189,8 @@
                       </el-form-item>
                      </el-form-item>
                     <el-form-item label="场景适用岗位">
-                        <el-select v-model="scene_edit.scene_positions" placeholder="请选择">
-                            <el-option label="java开发" value="java开发"></el-option>
-                            <el-option label="python开发" value="python开发"></el-option>
-                            <el-option label="运营" value="运营"></el-option>
+                        <el-select  placeholder="请选择" v-model="pos_name" >
+                            <el-option v-for="item in pos" :label="item.pos_name" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="预览区">
@@ -301,10 +295,11 @@
             edit(row){
                 vm.scene_edit.id = row.id
                 vm.scene_edit.scene_name = row.scene_name
-                vm.scene_edit.scene_positions = row.scene_positions
                 vm.scene_edit.scene_startTime = row.scene_startTime
                 vm.scene_edit.scene_endTime = row.scene_endTime
+                vm.pos_name =  row.pos_name
                 this.isAdd = 3
+                vm.sen_position()
                 setTimeout(function () {
                     vm.Time()
 
@@ -329,7 +324,10 @@
                    axios({
                     method: 'post',
                    url: '${SITE_URL}monitorScene/addSence/',
-                    data: vm.scene
+                    data: {
+                        data:vm.scene,
+                        pos:vm.pos_name
+                    }
                 }).then(function(res) {
                     window.location.href = '${SITE_URL}scene_set'
                 })
@@ -375,7 +373,10 @@
                axios({
                     method: 'post',
                     url: '${SITE_URL}monitorScene/editSence/',
-                    data: vm.scene_edit
+                    data: {
+                        data:vm.scene_edit,
+                        pos:vm.pos_name
+                    }
                 }).then(function(res) {
                     window.location.href = '${SITE_URL}scene_set'
                 })
