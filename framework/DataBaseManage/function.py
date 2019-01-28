@@ -9,6 +9,31 @@ import MySQLdb
 import cx_Oracle
 import pymssql
 import datetime
+from pyDes import *
+from binascii import b2a_hex,a2b_hex
+import base64
+import pyDes
+
+Key = "YjCFCmtd"
+Iv = "yJXYwjYD"
+#加密
+def encryption_str(str):
+    password = str.encode(encoding='utf-8')
+    method = pyDes.des(Key, pyDes.CBC, Iv, pad=None, padmode=pyDes.PAD_PKCS5)
+    # 执行加密码
+    k = method.encrypt(password)
+    # 转base64编码并返回
+    return base64.b64encode(k)
+
+
+#解密
+def decrypt_str(data):
+    password = data.encode(encoding='utf-8')
+    method = pyDes.des(Key, pyDes.CBC, Iv, pad=None, padmode=pyDes.PAD_PKCS5)
+    # 对base64编码解码
+    k = base64.b64decode(password)
+    # 再执行Des解密并返回
+    return method.decrypt(k)
 
 
 #查询所有
@@ -17,18 +42,24 @@ def getconn_all(request):
     res_list = []
     for i in conninfo:
         dic = model_to_dict(i)
+        password = decrypt_str(dic['password'])
+        dic['password'] = password
         res_list.append(dic)
     return res_list
+
+
 
 
 #保存
 def saveconn_all(request):
     res = json.loads(request.body)
     cilent = tools.interface_param(request)
-
     user = cilent.bk_login.get_user({})
     res['createname'] = user['data']['bk_username']
     res['editname'] = user['data']['bk_username']
+
+    password = encryption_str(res['password'])
+    res['password'] = password
     re = Conn(**res).save()
     return re
 
@@ -37,9 +68,11 @@ def eidtconnn(request):
     res = json.loads(request.body)
     cilent = tools.interface_param(request)
     user = cilent.bk_login.get_user({})
-
     res['editname'] = user['data']['bk_username']
     res['edittime'] = datetime.datetime.now()
+
+    password = encryption_str(res['password'])
+    res['password'] = password
     re1 = Conn.objects.filter(id=res['id']).update(**res)
     return re1
 
