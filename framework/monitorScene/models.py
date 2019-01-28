@@ -27,16 +27,3 @@ class position_scene(models.Model):
         verbose_name = u'岗位与场景关系表'
         verbose_name_plural = u'岗位与场景关系表'
         db_table = "tl_position_scene"
-
-
-class scene_monitor(models.Model):
-    x = models.PositiveIntegerField(verbose_name=u'x坐标')
-    y= models.PositiveIntegerField(verbose_name=u'y坐标')
-    scale = models.PositiveIntegerField(verbose_name=u'比例')
-    score = models.PositiveIntegerField(verbose_name=u'打分')
-    order = models.PositiveIntegerField(verbose_name=u'排序')
-    pos = models.ForeignKey(to='Scene',to_field='id',on_delete=models.CASCADE)
-    class Meta:
-        verbose_name = u'场景监控项'
-        verbose_name_plural = u'场景监控项'
-        db_table = "tl_scene_monitor"
