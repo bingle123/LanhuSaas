@@ -209,12 +209,12 @@
                 })
             },
             add_job(){                                              //增加岗位
-                vm.dialogFormVisible3 = false;
                axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/add_job/',
                     data:this.form,
                 }).then((res) => {
+                    vm.dialogFormVisible3 = false;
                     window.location.href="${SITE_URL}jobManagement/jobM"
                 })
             },
@@ -224,7 +224,6 @@
                 vm.tempjobname = row.pos_name;
             },
             edit_job(){                                            //修改岗位名
-                vm.dialogFormVisible2 = false
                 axios({
                     method: "post",
                     url: '${SITE_URL}jobManagement/edit_job/',
@@ -233,6 +232,7 @@
                         pos_name:this.tempjobname,
                     }
                 }).then((res) => {
+                    vm.dialogFormVisible2 = false
                     if(res.data.message != null){
                         window.location.href="${SITE_URL}jobManagement/jobM"
                     }
@@ -245,7 +245,6 @@
                 vm.id = row.id;
             },
             add_person(row){
-                vm.dialogFormVisible = false
                axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/add_person/',
@@ -255,7 +254,8 @@
                         jobname: this.jobname,
                     },
                 }).then((res) => {
-                    vm.show();
+                    vm.dialogFormVisible = false
+                    window.location.href = '${SITE_URL}position'
                 })
             },
             select_all_user(){                                                      //调接口查询所有用户
