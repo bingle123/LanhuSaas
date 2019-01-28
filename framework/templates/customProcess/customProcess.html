@@ -163,7 +163,7 @@
                                         <el-alert id="customProcessWarn" title="当前无任何过程通知" type="warning" show-icon center></el-alert>
                                     </div>
                                 </el-col>
-                                <el-col :span="4" :offset="11" style="padding-top: 50px;" v-if="customProcessStepSum > 0">
+                                <el-col :span="6" :offset="11" style="padding-top: 50px;" v-if="customProcessStepSum > 0">
                                     <div style="height: 800px;">
                                         <el-steps id="customMainProcess" direction="vertical" :active="customProcessStep" finish-status="success" process-status="finish">
                                             <el-step :title="processData.nodeName" v-for="processData in processDataList"></el-step>
