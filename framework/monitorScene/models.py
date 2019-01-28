@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 from jobManagement.models import JobInstance
-from monitor.models import Monitor
+
 
 
 class Scene(models.Model):
@@ -15,6 +15,11 @@ class Scene(models.Model):
     scene_creator_time = models.DateTimeField(verbose_name=u'创建时间',auto_now_add=True)
     scene_editor = models.CharField(verbose_name=u'编辑人', max_length=50)
     scene_editor_time = models.DateTimeField(verbose_name=u'编辑时间', auto_now=True)
+
+    def __str__(self):
+        return self.id
+    
+
     class Meta:
         verbose_name = u'场景信息'
         verbose_name_plural = u'场景信息'
@@ -28,15 +33,3 @@ class position_scene(models.Model):
         verbose_name_plural = u'岗位与场景关系表'
         db_table = "tl_position_scene"
 
-
-class scene_monitor(models.Model):
-    x = models.PositiveIntegerField(verbose_name=u'x坐标')
-    y= models.PositiveIntegerField(verbose_name=u'y坐标')
-    scale = models.PositiveIntegerField(verbose_name=u'比例')
-    score = models.PositiveIntegerField(verbose_name=u'打分')
-    order = models.PositiveIntegerField(verbose_name=u'排序')
-    pos = models.ForeignKey(to='Scene',to_field='id',on_delete=models.CASCADE)
-    class Meta:
-        verbose_name = u'场景监控项'
-        verbose_name_plural = u'场景监控项'
-        db_table = "tl_scene_monitor"

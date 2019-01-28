@@ -13,158 +13,323 @@
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/v-charts/lib/index.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
+
+    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
+    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
+    <script type="text/javascript" src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
+     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
 </head>
 <body>
 <el-container class="content">
 
-    <el-aside width="200px">
-        <el-input placeholder="请输入关键字enter搜索"
-                  prefix-icon="el-icon-search"
-                  v-model="input21">
-        </el-input>
-        <el-scrollbar style="height:100%">
-            <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick" class='el-tree'></el-tree>
-        </el-scrollbar>
-    </el-aside>
+<div id="flow1" class="clearfix workflow-box">
+    <div class="workflow-tools">
+        <div class="tools-title">
+            工具
+        </div>
+        <ul class="tools">
+            <!-- data-type 对应流程模版类型 -->
+            <li>
+                <div class="tool-title"><p>开始节点</p></div>
+                <div class="tool-list row" style="display: none">
+                    <div class="tool col-md-3 col-md-offset-1" data-type="start">
+                        <i class="bk-icon icon-star-shape" title="开始"></i>
+                        <p>数据</p>
+                    </div>
 
-    <el-main>
-        <el-card className="card" shadow="always">
-            <el-row type="flex" justify="space-around">
-                <el-col :span="9">
-                    <div class="grid-content bg-purple-light">
-                        <ve-histogram :data="chartData"></ve-histogram>
+                </div>
+            </li>
+            <li>
+                <div class="tool-title"><p>中间节点</p></div>
+                <div class="tool-list row" style="display: none">
+                    <div class="tool col-md-3" data-type="database">
+                        <i class="bk-icon icon-data" title="数据源"></i>
+                        <span>数据源</span>
                     </div>
-                </el-col>
-                <el-col :span="9">
-                    <div class="grid-content bg-purple">
-                        <img src="${STATIC_URL}img/1.png"/>
+                    <div class="tool col-md-3" data-type="dataCog">
+                        <i class="bk-icon icon-cog" title="配置"></i>
+                        <span>配置源</span>
                     </div>
-                </el-col>
-            </el-row>
-            <el-row type="flex" justify="center">
-                <el-col :span="2">
-                    <el-button type="primary" id="button">保存</el-button>
-                </el-col>
-                <el-col :span="2">
-                    <el-button @click="goto" id="button">取消</el-button>
-                </el-col>
-            </el-row>
-        </el-card>
-    </el-main>
+                    <div class="tool col-md-3" data-type="dataFilter">
+                        <i class="bk-icon icon-circle" title="过滤源asdasd"></i>
+                        <span>过滤源asdasd</span>
+                    </div>
+                    <div class="tool col-md-3" data-type="dataCog">
+                        <i class="bk-icon icon-cog" title="配置"></i>
+                        <span>配置源</span>
+                    </div>
+                    <div class="tool col-md-3" data-type="dataFilter">
+                        <i class="bk-icon icon-circle" title="过滤"></i>
+                        <span>过滤</span>
+                    </div>
+                    <div class="tool col-md-3" data-type="dataCog">
+                        <i class="bk-icon icon-cog" title="配置"></i>
+                        <span>配置</span>
+                    </div>
+                    <div class="tool col-md-3" data-type="dataFilter">
+                        <i class="bk-icon icon-circle" title="过滤"></i>
+                        <span>过滤</span>
+                    </div>
+                    <div class="tool col-md-3" data-type="dataCog">
+                        <i class="bk-icon icon-cog" title="配置"></i>
+                        <span>配置</span>
+                    </div>
+                    <div class="tool col-md-3" data-type="dataFilter">
+                        <i class="bk-icon icon-circle" title="过滤"></i>
+                        <span>过滤</span>
+                    </div>
+                    <div class="tool col-md-3" data-type="dataCog">
+                        <i class="bk-icon icon-cog" title="配置"></i>
+                        <span>配置</span>
+                    </div>
+                    <div class="page row">
+                        <span col-md-2><i class="bk-icon icon-cog" title="上一页"></i></span>
+                        <span col-md-2>1</span>
+                        <span col-md-2>2</span>
+                        <span col-md-2>...</span>
+                        <span col-md-2>100</span>
+                        <span col-md-2><i class="bk-icon icon-cog" title="下一页"></i></span>
+                    </div>
+                </div>
+
+            </li>
+            <li>
+                <div class="tool-title"><p>结束节点</p></div>
+                <div class="tool-list row" style="display: none">
+                    <div class="tool col-md-2 col-md-offset-1" data-type="start">
+                        <i class="bk-icon icon-star-shape" title="开始"></i>
+                        <p>数据</p>
+                    </div>
+
+                </div>
+            </li>
+            <li>
+                <div class="tool-title"><p>结束节点</p></div>
+                <div class="tool-list row" style="display: none">
+                    <div class="tool col-md-2 col-md-offset-1" data-type="start">
+                        <i class="bk-icon icon-star-shape" title="开始"></i>
+                        <p>数据</p>
+                    </div>
+
+                </div>
+            </li>
+            <li>
+                <div class="tool-title"><p>结束节点</p></div>
+                <div class="tool-list row" style="display: none">
+                    <div class="tool col-md-2 col-md-offset-1" data-type="start">
+                        <i class="bk-icon icon-star-shape" title="开始"></i>
+                        <p>数据</p>
+                    </div>
+
+                </div>
+            </li>
+
+
+        </ul>
+        <button id="save2">保存</button>
+        <button id="resetCanvas">清空</button>
+    </div>
+    <div class="workflow-canvas">
+        <!-- 画布模板 start -->
+        <div class="jtk-content">
+            <div class="jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan" id="canvas" style="height:370px;">
+                <!-- 流程 -->
+            </div>
+        </div>
+        <!-- 画布模板 end -->
+        <div id="text">
+            <textarea name="" id="result2"></textarea>
+        </div>
+    </div>
+
+    <!-- template 模板-->
+    <div class="jtk-delete jtk-none ">删除节点</div>
+    <div id="template" class="jtk-none">
+        <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}" data-type="start">
+            <div class="node-wrapper">
+                <div class="node-icon-start">
+                    <i class="bk-icon icon-star-shape"></i>
+                </div>
+            </div>
+        </div>
+        <div class="jtk-window jtk-node workfolw-node database-node" id="{charts}" data-type="database">
+            <div class="node-wrapper">
+                <div class="node-content">
+                    <input type="text" class="node-title" value="">
+                    <p data="数据源" class="node-desc">一级分析</p>
+                </div>
+                <div class="node-icon">
+                    <i class="bk-icon icon-data"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="jtk-window jtk-node workfolw-node cog-node" id="{charts}" data-type="dataCog">
+            <div class="node-wrapper">
+                <div class="node-content">
+                    <input type="text" class="node-title" value="">
+                    <p data="数据源" class="node-desc">实时加载</p>
+                </div>
+                <div class="node-icon">
+                    <i class="bk-icon icon-cog"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="jtk-window jtk-node workfolw-node filter-node" id="{charts}" data-type="dataFilter">
+            <div class="node-wrapper">
+                <div class="node-content">
+                    <input type="text" class="node-title" value="">
+                    <p data="数据源" class="node-desc">离线计算</p>
+                </div>
+                <div class="node-icon">
+                    <i class="bk-icon icon-circle"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </el-container>
 
 <script type="text/javascript">
-    new Vue({
-        el: '.content',
-        data: {
-            chartData: {
-                columns: ['日期', '下单用户'],
-                rows: [
-                    {'日期': '1/1', '下单用户': 1093},
-                    {'日期': '1/2', '下单用户': 3230},
-                    {'日期': '1/3', '下单用户': 2623},
-                    {'日期': '1/4', '下单用户': 1423},
-                    {'日期': '1/5', '下单用户': 3492},
-                    {'日期': '1/6', '下单用户': 4293}
+  $(function() {
+
+
+        //flow1_js_start
+        $('#flow1').dataflow({
+            el: '.tool', //流程拖动源
+            canvas: '#canvas', //画布
+            arrowWidth: 8,
+            arrowHeight: 10,
+            template: '#template',
+            id: 'ch', // 定义节点id，当页面只有一个dataflow实例是可忽略，当有多个实例时，需自定义该字段，id具有唯一性
+            onRemoveNodeAfter: function(id, line) { //删除节点回调
+                //console.log(id);
+                //console.log(line);
+            },
+            onCreateNodeAfter: function(id) { //初始化节点回调
+                //console.log(id)
+            },
+            onCreateLineAfter: function() { //创建线条后回调
+                //console.log("1111")
+            },
+            ondrawData: function() { //初始化流程后回调
+                //console.log($('.node-icon').length)
+            },
+            data: {
+                "line": [
+                    {
+                    "source": {
+                        "id": "ch1",
+                        "arrow": "Bottom"
+                    },
+                    "target": {
+                        "id": "ch3",
+                        "arrow": "Left"
+                    }
+                    },
+                    {
+                        "source": {
+                            "id": "ch2",
+                            "arrow": "Right"
+                        },
+                        "target": {
+                            "id": "ch3",
+                            "arrow": "Right"
+                        }
+                    },
+                    {
+                        "source": {
+                            "id": "ch3",
+                            "arrow": "Top"
+                        },
+                        "target": {
+                            "id": "ch2",
+                            "arrow": "Bottom"
+                        }
+                    },
+                    {
+                        "source": {
+                            "id": "ch3",
+                            "arrow": "Top"
+                        },
+                        "target": {
+                            "id": "ch2",
+                            "arrow": "Right"
+                        }
+                    },
+                    {
+                        "source": {
+                            "id": "ch3",
+                            "arrow": "Top"
+                        },
+                        "target": {
+                            "id": "ch4",
+                            "arrow": "Right"
+                        }
+                    },
+                    ],
+                "location": [
+                    {
+                        "id": "ch1",
+                        "x": 130,
+                        "y": 48,
+                        "name":"1",
+                        "type": "database"
+                    },
+                    {
+                        "id": "ch2",
+                        "x": 406,
+                        "y": 33,
+                        "name":"2",
+                        "type": "dataCog"
+                    },
+                    {
+                        "id": "ch3",
+                        "x": 406,
+                        "y": 243,
+                        "name":"3",
+                        "type": "dataCog"
+                    },
+                    {
+                        "id": "ch4",
+                        "x": 150,
+                        "y": 60,
+                        "name":"4",
+                        "type": "database"
+                    },
                 ]
-            },
-
-            data: [
-
-                {
-                    label: '基本单元',
-                    children: [{
-                        label: '指数监控',
-                        children: [{
-                            label: ''
-                        }]
-                    }, {
-                        label: '指数监控',
-                        children: [{
-                            label: ''
-                        }]
-                    }]
-
-                },
-                {
-                    label: '图标单元',
-                    children: [{
-                        label: '指数监控',
-                        children: [{
-                            label: ''
-                        }]
-                    }, {
-                        label: '指数监控',
-                        children: [{
-                            label: ''
-                        }]
-                    }]
-
-                },
-                {
-                    label: '作业单元',
-                    children: [{
-                        label: '指数监控',
-                        children: [{
-                            label: ''
-                        }]
-                    }, {
-                        label: '指数监控',
-                        children: [{
-                            label: ''
-                        }]
-                    }]
-
-                },
-                {
-                    label: '流程单元',
-                    children: [{
-                        label: '指数监控',
-                        children: [{
-                            label: ''
-                        }]
-                    }, {
-                        label: '指数监控',
-                        children: [{
-                            label: ''
-                        }]
-                    }]
-
-                }, {
-                    label: '流程单元',
-                    children: [{
-                        label: '指数监控',
-                        children: [{
-                            label: ''
-                        }]
-                    }, {
-                        label: '指数监控',
-                        children: [{
-                            label: ''
-                        }]
-                    }]
-
-                }
-
-
-            ],
-            defaultProps: {
-                children: 'children',
-                label: 'label'
             }
+        });
+        $('#save2').click(function() {
+            // 获取全部数据
+            var data= $('#flow1').data('dataflow').getAllData();
+            var name = data.location[0];
+            $('#result2').val(JSON.stringify(data));
+        });
 
-        },
-        methods: {
-            handleNodeClick(data) {
-                console.log(data);
-            },
-            goto() {
-                window.location.href = "${SITE_URL}scene_set";
-            }
-        }
+        // 清空画布
+        $('#resetCanvas').click(function() {
+            $('#flow1').data('dataflow').resetCanvas();
+        });
+        //flow1_js_end
+        // $('.node-wrapper').click(function () {
+        //
+        //     $(this).find(".node-title").attr('contenteditable','plaintext-only');
+        // })
+        //节点抽屉
+        $('.tool-title').click(function () {
+            $(this).next('.tool-list').animate({
+                height:'toggle'
+            });
+            $(this).parent().siblings().children('.tool-list').animate({
+                height:"hide"
+            });
+        });
 
-
-    })
+    });
 </script>
 </body>
 </html>
