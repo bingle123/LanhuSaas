@@ -230,8 +230,8 @@ if IS_USE_CELERY:
             DEBUG = False
         # celery 的消息队列（RabbitMQ）信息
         BROKER_URL = os.environ.get('BK_BROKER_URL', BROKER_URL_DEV)
-        CELERY_ENABLE_UTC = False
         CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
+        CELERY_ENABLE_UTC = False
         TIME_ZONE = 'Asia/Shanghai'
         CELERY_RESULT_BACKEND = 'amqp://localhost'  # 官网优化的地方也推荐使用c的librabbitmq
         CELERY_TASK_RESULT_EXPIRES = 1200  # celery任务执行结果的超时时间，我的任务都不需要返回结果,只需要正确执行就行
@@ -241,19 +241,6 @@ if IS_USE_CELERY:
         CELERY_ACCEPT_CONTENT = ['json']
         CELERY_TASK_SERIALIZER = 'json'
         CELERY_RESULT_SERIALIZER = 'json'
-        CELERYBEAT_SCHEDULE = {
-            # 周期性任务
-            'task-one': {
-                'task': 'market_day.tasks.sendemail',
-                'schedule': timedelta(seconds=20),  # 每20s执行一次
-                'args': ('708949284@qq.com',)
-            },
-            'task-two': {
-                'task': 'market_day.tasks.mul',
-                'schedule': crontab(minute='*/1'), #每分钟执行
-                'args': (10, 2)
-            },
-        }
         CELERY_QUEUES = (
             Queue('demo', Exchange('demo'), routing_key='demo'),
             Queue('task_one', Exchange('task_one'), routing_key='task_one'),
