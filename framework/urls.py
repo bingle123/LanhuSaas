@@ -41,6 +41,8 @@ urlpatterns = patterns(
     url(r'^jobManagement/', include('jobManagement.urls')),
     url(r'market_day/', include('market_day.urls')),
     url(r'^DataBaseManage/', include('DataBaseManage.urls')),
+    #定制过程通知
+    url(r'^customProcess/', include('customProcess.urls')),
 )
 
 
