@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>定制过程通知</title>
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/customProcess/customProcess.css">
+    <script type="text/javascript" src="${STATIC_URL}js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+</head>
+<body>
+    <div id="customProcess">
+        <el-dialog title="定制过程通知" :visible.sync="addDialogVisible" width="80%" center>
+            <div v-if="customProcessTableStatus == 'list'">
+                <el-row>
+                    <el-col :span="24">
+                        <div>过程通知节点列表</div>
+                        <hr>
+                    </el-col>
+                </el-row>
+                <div style="text-align: right">
+                    <el-button type="primary" size="medium" @click="customProcessAddNode()">新增过程节点</el-button>
+                </div>
+                <el-table :data="customProcessTableData" id="customProcessTable">
+                    <el-table-column prop="nodeName" label="节点名称">
+                    </el-table-column>
+                    <el-table-column prop="send_content" label="通知内容">
+                    </el-table-column>
+                    <el-table-column prop="seq" label="节点顺序">
+                    </el-table-column>
+                    <el-table-column prop="receivers" label="通知接收人">
+                    </el-table-column>
+                    <el-table-column prop="operation" label="操作">
+                        <template slot-scope="scope">
+                            <el-button type="text" size="small" @click="customProcessEditNode()">编辑</el-button>
+                            <el-button type="text" size="small" @click="customProcessDeleteNode()">删除</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-row class="customProcessFormButton">
+                    <el-button @click="addDialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="addDialogVisible = false">生 成</el-button>
+                </el-row>
+            </div>
+            <div v-if="customProcessTableStatus == 'add'">
+                <el-row>
+                    <el-col :span="24">
+                        <div>过程通知节点添加</div>
+                        <hr>
+                    </el-col>
+                </el-row>
+                <el-form label-position="right" label-width="100px">
+                    <el-row>
+                        <el-col :span="11" :offset="1">
+                            <el-form-item label="节点名称:">
+                                <el-input></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="11" :offset="1">
+                            <el-form-item label="通知内容:">
+                                <el-input></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="11" :offset="1">
+                            <el-form-item label="节点顺序:">
+                                <el-input></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="11" :offset="1">
+                            <el-form-item label="通知接收人:">
+                                <el-input></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row class="customProcessFormButton">
+                        <el-button @click="customProcessListNode()">取 消</el-button>
+                        <el-button type="primary" @click="customProcessListNode()">添 加</el-button>
+                    </el-row>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <div v-if="customProcessTableStatus == 'edit'">
+                <el-row>
+                    <el-col :span="24">
+                        <div>过程通知节点修改</div>
+                        <hr>
+                    </el-col>
+                </el-row>
+                <el-form label-position="right" label-width="100px">
+                    <el-row>
+                        <el-col :span="11" :offset="1">
+                            <el-form-item label="节点名称:">
+                                <el-input></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="11" :offset="1">
+                            <el-form-item label="通知内容:">
+                                <el-input></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="11" :offset="1">
+                            <el-form-item label="节点顺序:">
+                                <el-input></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="11" :offset="1">
+                            <el-form-item label="通知接收人:">
+                                <el-input></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row class="customProcessFormButton">
+                        <el-button @click="customProcessListNode()">取 消</el-button>
+                        <el-button type="primary" @click="customProcessListNode()">修 改</el-button>
+                    </el-row>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </el-dialog>
+        <el-dialog title="发送短信通知" :visible.sync="customProcessSendMsgDialogVisible" width="60%" :before-close="customProcessHandleClose" center>
+            <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                    通知人：<span>{{ customProcessReceivers }}</span>
+                </div>
+                通知内容：<span>{{ customProcessNoticeContent }}</span>
+            </el-card>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="customProcessSendMsgDialogVisible = false">发送短信</el-button>
+            </span>
+        </el-dialog>
+        <el-row>
+            <el-col :span="24">
+                <el-breadcrumb separator-class="el-icon-arrow-right">
+                    <el-breadcrumb-item>首页</el-breadcrumb-item>
+                    <el-breadcrumb-item>执行定制过程通知设置</el-breadcrumb-item>
+                </el-breadcrumb>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-col :span="24">
+                <el-card shadow="always" class="box-card">
+                    <el-row>
+                        <el-col :span="24">
+                            <div id="customProcessTitle">执行定制过程通知设置</div>
+                            <hr>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="24">
+                            <el-row>
+                                <el-col :span="24" style="text-align: center">
+                                    <el-button id="customProcessStartButton" type="primary" @click="customProcessBegin()" v-if="customProcessStepSum > 0">开始执行流程</el-button>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="24" v-if="customProcessStepSum == 0">
+                                    <div id="customProcessContent">
+                                        <el-alert id="customProcessWarn" title="当前无任何过程通知" type="warning" show-icon center></el-alert>
+                                    </div>
+                                </el-col>
+                                <el-col :span="4" :offset="11" style="padding-top: 50px;" v-if="customProcessStepSum > 0">
+                                    <div style="height: 800px;">
+                                        <el-steps id="customMainProcess" direction="vertical" :active="customProcessStep" finish-status="success" process-status="finish">
+                                            <el-step :title="processData.nodeName" v-for="processData in processDataList"></el-step>
+                                        </el-steps>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="24">
+                                    <div id="customProcessAddButton">
+                                        <el-button-group>
+                                            <el-button type="success" size="small" v-if="!customProcessStatus" @click="addDialogVisible = true">添加 / 修改过程通知</el-button>
+                                            <el-button type="success" size="small" v-if="customProcessStatus" @click="addDialogVisible = true" disabled>添加 / 修改过程通知</el-button>
+                                            <el-button type="danger" size="small" v-if="customProcessStepSum > 0" @click="customProcessDelete()">删除当前过程通知</el-button>
+                                            <el-button type="danger" size="small" v-if="customProcessStepSum == 0" @click="customProcessDelete()" disabled>删除当前过程通知</el-button>
+                                        </el-button-group>
+                                    </div>
+                                </el-col>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                </el-card>
+            </el-col>
+        </el-row>
+    </div>
+</body>
+<script>
+    var vue = new Vue({
+        el: '#customProcess',
+        data: {
+            addDialogVisible: false,
+            customProcessSendMsgDialogVisible: false,
+            //添加节点的table当前状态，list=列表显示,add=添加节点,edit=编辑节点
+            customProcessTableStatus: 'list',
+            //当前流程中节点所处的位置，初始化为-1即未开始流程，后续应从数据库表中读取该信息
+            customProcessStep: -1,
+            //当前流程中节点总数，后续应从数据库读取该信息,或直接计算processDataList的长度获得
+            customProcessStepSum: 6,
+            //流程是否已经开始执行，应该根据数据库中的信息来判断
+            customProcessStatus: false,
+            customProcessReceivers: '',
+            customProcessNoticeContent: '',
+            customProcessTableData: [{
+                nodeName: '节点1',
+                send_content: '通知内容1',
+                seq: '1',
+                receivers: '通知接收人1'
+            },{
+                nodeName: '节点2',
+                send_content: '通知内容2',
+                seq: '2',
+                receivers: '通知接收人2'
+            },{
+                nodeName: '节点3',
+                send_content: '通知内容3',
+                seq: '3',
+                receivers: '通知接收人3'
+            },{
+                nodeName: '节点4',
+                send_content: '通知内容4',
+                seq: '4',
+                receivers: '通知接收人4'
+            },{
+                nodeName: '节点5',
+                send_content: '通知内容5',
+                seq: '5',
+                receivers: '通知接收人5'
+            },{
+                nodeName: '节点6',
+                send_content: '通知内容6',
+                seq: '6',
+                receivers: '通知接收人6'
+            }],
+            //流程节点图使用的节点名称信息，节点信息应在后台根据nodeOrder排序后返回到此对象中
+            processDataList: [{
+                id: 1,
+                nodeName: '节点1'
+            },{
+                id: 2,
+                nodeName: '节点2'
+            },{
+                id: 3,
+                nodeName: '节点3'
+            },{
+                id: 4,
+                nodeName: '节点4'
+            },{
+                id: 5,
+                nodeName: '节点5'
+            },{
+                id: 6,
+                nodeName: '节点6'
+            }]
+        },
+        methods:{
+            //Date()对象转yyyy-MM-dd HH:mm:ss函数
+            formatDateTime: function (date) {
+                var y = date.getFullYear();
+                var m = date.getMonth() + 1;
+                m = m < 10 ? ('0' + m) : m;
+                var d = date.getDate();
+                d = d < 10 ? ('0' + d) : d;
+                var h = date.getHours();
+                h=h < 10 ? ('0' + h) : h;
+                var minute = date.getMinutes();
+                minute = minute < 10 ? ('0' + minute) : minute;
+                var seconds = date.getSeconds();
+                seconds = seconds < 10 ? ('0' + seconds) : seconds;
+                return y + '-' + m + '-' + d+' '+h+':'+minute+':'+seconds;
+            },
+            //生成当前执行节点的信息
+            generateCurrentProcessInfo: function() {
+                var customProcessExecPerson = '<div>执行人：lhAdmin</div>';
+                var customProcessExecTime = '<div>' + this.formatDateTime(new Date()) + '</div>';
+                var customProcessExecStatus = '<div id="customProcessExecStatus">执行状态：正在执行...<i class="el-icon-loading"></i></div>';
+                var customProcesses = $('#customMainProcess').children();
+                var selectedProcess = customProcesses.eq(this.customProcessStep);
+                selectedProcess.find('.el-step__description')
+                        .html(customProcessExecPerson + customProcessExecTime + customProcessExecStatus);
+                var nextButton = '<button id="customProcessNextButton" type="button" class="el-button el-button--success el-button--small" onclick="vue.customProcessNextNode()"><span>下一步</span></button>';
+                selectedProcess.find('.el-step__main').append(nextButton);
+            },
+            //执行下一个节点
+            customProcessNextNode: function() {
+                this.customProcessStep += 1;
+                var customProcessExecStatus = '执行状态：执行完毕！<i class="el-icon-check"></i>';
+                var temp = $('#customProcessExecStatus');
+                temp.html(customProcessExecStatus);
+                temp.removeAttr('id');
+                $('#customProcessNextButton').remove();
+                //如果当前已经执行到最后一个节点
+                if(this.customProcessStep == this.customProcessStepSum){
+                    $('#customProcessStartButton').removeClass('el-button--success')
+                            .addClass('el-button--info')
+                            .text('当日流程已执行完毕');
+                    this.customProcessStatus = false;
+                    this.customProcessEnd();
+                    return;
+                }
+                this.customProcessSendMessage(this.customProcessStep - 1);
+                this.generateCurrentProcessInfo();
+            },
+            //发送短信通知
+            customProcessSendMessage(nodeOrder) {
+                this.customProcessReceivers = 'LHADMIN' + this.processDataList[nodeOrder].id;
+                this.customProcessNoticeContent = '节点流程已执行完成，请进行下一步操作';
+                this.customProcessSendMsgDialogVisible = true;
+            },
+            //短信通知关闭前的确认
+            customProcessHandleClose() {
+                this.$confirm('确定不发送短信通知吗？').then(_ => {
+                    this.customProcessSendMsgDialogVisible = false;
+                }).catch(_ => {
+
+                });
+            },
+            //添加节点
+            customProcessAddNode: function() {
+                this.customProcessTableStatus = 'add';
+            },
+            //列出所有节点
+            customProcessListNode: function() {
+                this.customProcessTableStatus = 'list';
+            },
+            //修改节点信息
+            customProcessEditNode: function() {
+                this.customProcessTableStatus = 'edit';
+            },
+            //删除节点信息
+            customProcessDeleteNode: function() {
+                this.$confirm('此操作将删除该节点, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    this.$message({
+                        type: 'success',
+                        message: '删除节点成功!'
+                    });
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '取消节点删除'
+                    });
+                });
+            },
+            //流程开始
+            customProcessBegin: function(elem) {
+                this.$confirm('即将开始执行当前流程，执行过程中将无法修改节点, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    $('#customProcessStartButton').addClass('is-disabled')
+                        .attr('disabled','')
+                        .removeClass('el-button--primary')
+                        .addClass('el-button--success')
+                        .text('正在执行流程');
+                    this.customProcessStep = 0;
+                    //流程开始执行，执行标记为置为true
+                    this.customProcessStatus = true;
+                    this.generateCurrentProcessInfo();
+                    this.$message({
+                        type: 'success',
+                        message: '开始执行流程'
+                    });
+                }).catch(() => {
+                        this.$message({
+                        type: 'info',
+                        message: '取消执行操作'
+                    });
+                });
+            },
+            //流程全部执行完毕
+            customProcessEnd: function() {
+                this.$alert('流程节点已全部执行完成！', '提示', {
+                    confirmButtonText: '确定',
+                    type: 'success',
+                    center: true
+            });
+            },
+            //删除当前流程
+            customProcessDelete: function() {
+                var alertMessage = null;
+                if(!this.customProcessStatus){
+                    alertMessage = '确认删除当前过程通知吗？';
+                }else{
+                    alertMessage = '当前正在执行流程，如果选择删除，该流程将会被强制取消，继续吗？';
+                }
+                this.$confirm(alertMessage, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    //数据库删除流程操作 TODO
+                    //前端缓存数据和标记位清空
+                    this.customProcessStep = -1;
+                    this.customProcessStepSum = 0;
+                    this.customProcessStatus = false;
+                    this.customProcessTableData = [];
+                    this.processDataList = [];
+                    this.$message({
+                        type: 'success',
+                        message: '流程已被删除！'
+                    });
+                }).catch(() => {
+                        this.$message({
+                        type: 'info',
+                        message: '取消流程删除操作'
+                    });
+                });
+            }
+        }
+    });
+</script>
+</html>
