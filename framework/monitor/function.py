@@ -10,36 +10,36 @@ import tools
 def unit_show(request):
     pass
 
-#     res = json.loads(request.body)
-#     limit = res['limit']
-#     page = res['page']
-#     start_page = limit*page-9
-#     unit = Common.objects.all()[start_page-1:start_page+9]
-#     unit2 = Common.objects.all().values('id')
-#     page_count = math.ceil(len(unit2)/10)
-#     print page_count
-#     res_list = []
-#     for i in unit:
-#         dic = {
-#             'id': i.id,
-#             'unit_name': i.unit_name,
-#             'unit_type': i.unit_type,
-#             'editor': i.editor,
-#             'edit_time': str(i.edit_time),
-#             'font_size': i.font_size,
-#             'height': i.height,
-#             'wide': i.wide,
-#             'switch': i.switch,
-#             'start_time': str(i.start_time),
-#             'end_time': str(i.end_time),
-#             'cycle': i.cycle,
-#             'page_count': page_count,
-#         }
-#         res_list.append(dic)
-#
-#     return res_list
-#
-#
+    res = json.loads(request.body)
+    limit = res['limit']
+    page = res['page']
+    start_page = limit*page-9
+    unit = Monitor.objects.all()[start_page-1:start_page+9]
+    unit2 = Monitor.objects.all().values('id')
+    page_count = math.ceil(len(unit2)/10)
+    print page_count
+    res_list = []
+    for i in unit:
+        dic = {
+            'id': i.id,
+            'monitor_name': i.monitor_name,
+            'monitor_type': i.monitor_type,
+            'editor': i.editor,
+            'edit_time': str(i.edit_time),
+            'font_size': i.font_size,
+            'height': i.height,
+            'width': i.width,
+            'status': i.status,
+            'start_time': str(i.start_time),
+            'end_time': str(i.end_time),
+            'period': i.period,
+            'page_count': page_count,
+        }
+        res_list.append(dic)
+
+    return res_list
+
+
 def select_unit(request):
     pass
 #     try:
@@ -105,21 +105,20 @@ def delete_unit(request):
 def add_unit(request):
 
     res = json.loads(request.body)
-    print(res)
-    unit_type = res['monitor_type']
+    monitor_type = res['monitor_type']
     if res['monitor_type'] == 'first':
         monitor_type = '基本单元类型'
-    if res['unit_type'] == 'second':
-        unit_type = '图表单元类型'
+    if res['monitor_type'] == 'second':
+        monitor_type = '图表单元类型'
         add_dic = res['data']
-    if res['unit_type'] == 'third':
-        unit_type = '作业单元类型'
-    if res['unit_type'] == 'fourth':
-        unit_type = '流程单元类型'
+    if res['monitor_type'] == 'third':
+        monitor_type = '作业单元类型'
+    if res['monitor_type'] == 'fourth':
+        monitor_type = '流程单元类型'
     add_dic = res['data']
     add_dic['monitor_name'] = res['monitor_type']
-    add_dic['unit_type'] = unit_type
-    print(add_dic)
+    add_dic['monitor_type'] = monitor_type
+
     Monitor.objects.create(**add_dic)
     res = tools.success_result(request)
     return res
