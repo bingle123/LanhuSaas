@@ -48,7 +48,7 @@
                                 <el-input v-model="crawl_search.name" placeholder="请输入爬虫名称"></el-input>
                             </el-form-item>
                             <el-form-item>
-                                <el-button type="primary">查询</el-button>
+                                <el-button type="primary" @click="get_crawl_by_name">查询</el-button>
                             </el-form-item>
                             <el-button type="primary" @click="changeDiaLog">新增爬虫信息</el-button>
                         </el-form>
@@ -94,7 +94,7 @@
             </el-table-column>
             <el-table-column
                     label="创建人"
-                    prop="creator">
+                    prop="create_user">
             </el-table-column>
             <el-table-column
                     label="创建时间"
@@ -102,11 +102,11 @@
             </el-table-column>
             <el-table-column
                     label="修改人"
-                    prop="editor">
+                    prop="update_user">
             </el-table-column>
             <el-table-column
                     label="修改时间"
-                    prop="edit_time">
+                    prop="update_time">
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
@@ -224,72 +224,37 @@
             showDiaLog: true,
             crawl_table: [
                 {
-                    id: '1',
-                    crawl_name: 'name',
-                    period: '20s',
-                    creator: '张三',
-                    create_time: '2019/1/1',
-                    editor: '李四',
-                    edit_time: '2019/1/1',
-                    total_xpath: '2019/1/1',
-                    title_xpath: '2019/1/1',
-                    time_xpath: '2019/1/1',
-                    url_xpath: '2019/1/1',
-                    crawl_keyword: '通知',
-                    crawl_no_keyword: '测试',
-                }, {
-                    id: '1',
-                    crawl_name: 'name',
-                    period: '20s',
-                    creator: '张三',
-                    create_time: '2019/1/1',
-                    editor: '李四',
-                    edit_time: '2019/1/1',
-                    total_xpath: '2019/1/1',
-                    title_xpath: '2019/1/1',
-                    time_xpath: '2019/1/1',
-                    url_xpath: '2019/1/1',
-                    crawl_keyword: '通知',
-                    crawl_no_keyword: '测试',
-                }, {
-                    id: '1',
-                    crawl_name: 'name',
-                    period: '20s',
-                    creator: '张三',
-                    create_time: '2019/1/1',
-                    editor: '李四',
-                    edit_time: '2019/1/1',
-                    total_xpath: '2019/1/1',
-                    title_xpath: '2019/1/1',
-                    time_xpath: '2019/1/1',
-                    url_xpath: '2019/1/1',
-                    crawl_keyword: '通知',
-                    crawl_no_keyword: '测试',
-                },
+                    id: '',
+                    crawl_name: '',
+                    period: '',
+                    creator: '',
+                    create_time: '',
+                    editor: '',
+                    update_time: '',
+                    total_xpath: '',
+                    title_xpath: '',
+                    time_xpath: '',
+                    url_xpath: '',
+                    crawl_keyword: '',
+                    crawl_no_keyword: '',
+                    create_user:'',
+                    update_user:''
+                }
             ],
             crawl_search: {
                 name: ''
             },
             crawl_form: {
-                crawl_name: '上海证券交易所通知',
-                crawl_url: 'http://www.sse.com.cn/services/tradingservice/tradingtech/home/',
-                period: '500000',
-                crawl_keyword: '通知',
-                crawl_no_keyword: '测试',
-                total_xpath: '//div[@class="sse_list_1 js_listPage"]//dl//dd',
-                title_xpath: 'span/text()',
-                time_xpath: 'a/text()',
-                url_xpath: 'a/@href',
-            },
-            form: {
-                name: '上海交易所通知',
-                region: '',
-                date1: '',
-                date2: '',
-                delivery: false,
-                type: [],
-                resource: '',
-                desc: ''
+                id:'',
+                crawl_name: '',
+                crawl_url: '',
+                period: '',
+                crawl_keyword: '',
+                crawl_no_keyword: '',
+                total_xpath: '',
+                title_xpath:    '',
+                time_xpath: '',
+                url_xpath: '',
             },
         },
         methods: {
@@ -298,11 +263,26 @@
                 this.loading = true;
                 this.loading = false;
                 this.message = '新增';
+                this.crawl_form.id = '';
             },
             editCrawl(res) {//跳转爬虫配置编辑页面
                 this.changeDiaLog();
                 //此处应更新表单的值
                 this.message = '修改';
+                this.crawl_form.id=res;
+                for (let i = 0;i < this.crawl_table.length; i++){
+                    if (this.crawl_table[i].id == res){
+                        this.crawl_form.crawl_name = this.crawl_table[i].crawl_name;
+                        this.crawl_form.crawl_url = this.crawl_table[i].crawl_url;
+                        this.crawl_form.period = this.crawl_table[i].period;
+                        this.crawl_form.crawl_keyword = this.crawl_table[i].crawl_keyword;
+                        this.crawl_form.crawl_no_keyword = this.crawl_table[i].crawl_no_keyword;
+                        this.crawl_form.time_xpath = this.crawl_table[i].time_xpath;
+                        this.crawl_form.url_xpath = this.crawl_table[i].url_xpath;
+                        this.crawl_form.title_xpath = this.crawl_table[i].title_xpath;
+                        this.crawl_form.total_xpath = this.crawl_table[i].total_xpath;
+                    }
+                }
             },
             addCrawl() {
                 axios({
@@ -310,6 +290,19 @@
                     method: 'post',
                     data: this.crawl_form,
                 }).then(function (res) {
+                    if(res.data.code == 0){
+                        vm.$message({
+                           type:'success',
+                           message:res.data.results,
+                        });
+                        vm.changeDiaLog();
+                        vm.initHtml();
+                    }else {
+                        vm.$message({
+                            type:'info',
+                            message:res.data.results,
+                        })
+                    }
                     console.log(res)
                 }).catch(function (res) {
                     console.log(res)
@@ -325,11 +318,19 @@
                         url: '${SITE_URL}system_config/delete_crawl/',
                         method: 'post',
                         data: {id:id},
-                    }).then(()=> {
-                        this.$message({
-                            type: 'success',
-                            message: '删除成功!'
-                        });
+                    }).then((res)=> {
+                        if (res.data.code == 0){
+                            vm.$message({
+                                type:'success',
+                                message:res.data.results,
+                            });
+                            vm.initHtml();
+                        }else{
+                            vm.$message({
+                                type:'info',
+                                message:res.data.results,
+                            })
+                        }
                     }).catch((res) => {
                         this.$message({
                             type: 'info',
@@ -343,9 +344,55 @@
                         message: '已取消删除'
                     });
                 });
+            },
+            get_crawl_by_name(){
+                axios({
+                    url:'${SITE_URL}system_config/get_crawl_by_name/',
+                    method:'post',
+                    data:this.crawl_search.name
+                }).then((res) => {
+                    if(res.data.code == 0){
+                        vm.crawl_table = res.data.results;
+                    }else{
+                        vm.$message({
+                            type:'info',
+                            message:'查询失败',
+                        })
+                    }
+                    console.log(res)
+                }).catch((res) => {
+                    vm.$message({
+                        type: 'info',
+                        message: '查询失败'+res
+                    })
+                })
+
+            },
+            initHtml(){
+                axios({
+                    url:'${SITE_URL}system_config/get_crawls/',
+                    methods: 'post',
+                }).then((res) => {
+                    console.log(res);
+                    if (res.data.code == 0){
+                        console.log(res.data.results);
+                        vm.crawl_table = res.data.results;
+                    } else {
+                        vm.$message({
+                            type:'info',
+                            message:res.data.results,
+                        })
+                    }
+                }).catch((res) => {
+                    vm.$message({
+                        type:'info',
+                        message:'查询错误'
+                    })
+                })
             }
         }
     });
+    vm.initHtml();
 </script>
 </body>
 </html>
