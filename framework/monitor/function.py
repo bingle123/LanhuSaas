@@ -109,7 +109,6 @@ def add_unit(request):
     if res['monitor_type'] == 'fourth':
         monitor_type = '流程单元类型'
     add_dic = res['data']
-    p = res['data']['params']
     add_dic['monitor_name'] = res['monitor_name']
     add_dic['monitor_type'] = monitor_type
     add_dic['jion_id'] = 3

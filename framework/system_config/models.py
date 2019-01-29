@@ -20,11 +20,7 @@ class CrawlerConfig(models.Model):
     create_time = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)        # 新建后无法更改
     update_user = models.CharField(verbose_name=u'最后修改用户', max_length=64)
     update_time = models.DateTimeField(verbose_name=u'最后修改时间', auto_now=True)        # 跟新数据库，字段自动更新
-    receivers = models.CharField(verbose_name=u'通知人', max_length=64)                    # 通知人, 可设置多个人用逗号隔开
-
-    class Meta:
-        db_table = 'system_config_crawler'  # 数据库表名
-        get_latest_by = 'update_time'       # 排序字段
+    receivers = models.CharField(verbose_name=u'通知人', max_length=64)                 # 通知人, 可设置多个人用逗号隔开
 
 
 class CrawlContent(models.Model):
@@ -37,6 +33,3 @@ class CrawlContent(models.Model):
     url_content = models.CharField(verbose_name=u'资源内容', max_length=64)
     save_time = models.DateTimeField(verbose_name=u'保存时间', auto_now_add=True)
 
-    class Meta:
-        db_table = 'system_config_crawler'  # 数据库表名
-        get_latest_by = 'crawl_id'  # 排序字段
