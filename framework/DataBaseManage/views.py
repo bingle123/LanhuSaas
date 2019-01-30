@@ -11,6 +11,14 @@ def data_base(request):
 
     return render_mako_context(request, './DataBaseManage/database.html')
 
+
+#模糊查询
+@csrf_exempt
+def selecthor(request):
+    res = function.selecthor(request)
+    return render_json(res)
+
+
 #查询所有
 @csrf_exempt
 def getconn(request):

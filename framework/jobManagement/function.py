@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
-from django.views.decorators.csrf import csrf_exempt
+from __future__ import division
 import json
+import math
 from models import JobInstance,Localuser
 from shell_app import tools
-import time
-from django.forms.models import model_to_dict
 
 
 def show(request):
-    job = JobInstance.objects.all()
+    res = json.loads(request.body)
+    limit = res['limit']
+    page = res['page']
+    start_page = limit * page - 9
+    job = JobInstance.objects.all()[start_page - 1:start_page + 9]
+    unit2 = JobInstance.objects.all().values('id')
+    page_count = math.ceil(len(unit2) / 10)
     users = Localuser.objects.all()
     res_list = []
     for x in job:
@@ -19,7 +24,8 @@ def show(request):
         dic = {
             'id':x.id,
             'user_name': tmp,
-            'pos_name': x.pos_name
+            'pos_name': x.pos_name,
+            'page_count': page_count
         }
         res_list.append(dic)
     return res_list
@@ -39,14 +45,16 @@ def select_job(request):
                 job = JobInstance.objects.filter(pos_name=res1)
             # if JobInstance.objects.filter(User_name=res1).exists():
             #     job = JobInstance.objects.filter(User_name=res1)
-            for i in job:
+            for x in job:
+                tmp = []
+                users = Localuser.objects.filter(user_pos=x.id)
+                for y in users:
+                    if x.id == y.user_pos:
+                        tmp.append(y.user_name + ' ')
                 dic = {
-                    'id': i.id,
-                    'pos_name': i.pos_name,
-                    'create_time': str(i.create_time),
-                    'creator': i.creator,
-                    'edit_time': str(i.edit_time),
-                    'editor':i.editor,
+                    'id': x.id,
+                    'user_name': tmp,
+                    'pos_name': x.pos_name
                 }
                 res_list.append(dic)
         return res_list
@@ -139,6 +147,7 @@ def filter_user(request):
                     if j.user_pos == None:
                         tmp.append(temp[i])
     return tmp
+
 
 
 

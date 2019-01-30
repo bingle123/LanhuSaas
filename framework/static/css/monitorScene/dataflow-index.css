@@ -216,6 +216,7 @@ body {
 }
 
 .node-content {
+    line-height: 24px;
     flex: 1;
     padding-right: 30px;
 }
