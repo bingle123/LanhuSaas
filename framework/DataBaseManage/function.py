@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.views.decorators.csrf import csrf_exempt
+from __future__ import division
 import json
 import time
 from django.forms.models import model_to_dict
@@ -13,6 +13,7 @@ from pyDes import *
 from binascii import b2a_hex,a2b_hex
 import base64
 import pyDes
+import math
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
@@ -38,14 +39,42 @@ def decrypt_str(data):
 
 #查询所有
 def getconn_all(request):
-    conninfo = Conn.objects.all()
+    res = json.loads(request.body)
+    limit = res['limit']  # 5
+    page = res['page']  # 1
+    print page
+    start_page = limit * page - 4  # 开始1
+    unit2 = Conn.objects.all().values('id')  #总条数
+    page_count = math.ceil(len(unit2) / 5)
+
+    conninfo = Conn.objects.all()[start_page-1:start_page+4]
     res_list = []
     for i in conninfo:
-        dic = model_to_dict(i)
+        dic = {
+            'id': i.id,
+            'connname': i.connname,
+            'type': i.type,
+            'ip': i.ip,
+            'port': i.port,
+            'username': i.username,
+            'databasename': i.databasename,
+            'password': i.password,
+            'createname': i.createname,
+            'createtime': str(i.createtime),
+            'editname': i.editname,
+            'edittime': str(i.edittime),
+            'page_count': page_count,
+        }
         password = decrypt_str(dic['password'])
         dic['password'] = password
         res_list.append(dic)
+
     return res_list
+
+
+
+
+
 
 
 
