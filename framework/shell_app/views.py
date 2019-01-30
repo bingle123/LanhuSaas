@@ -3,6 +3,7 @@ from common.mymako import render_json
 from common.mymako import render_mako_context
 from shell_app import function
 import json
+import tools
 import time
 
 
@@ -223,4 +224,13 @@ def get_json_test(request):
     temp_result = function.get_test_json(request)
     return render_json(temp_result)
 
+
+def get_active_user(request):
+    """
+    通过蓝鲸获取当前用户
+    :param request:
+    :return:
+    """
+    res = tools.get_active_user(request)
+    return render_json(res)
 
