@@ -61,12 +61,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="block" style="text-align:right">
-                    <el-pagination
-                            layout="prev, pager, next"
-                            :total="50">
-                    </el-pagination>
-                </div>
+                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
             </div>
 
             <!--新增-->
@@ -230,6 +225,8 @@
     var ve = new Vue({
         el: '#main',
         data: {
+            page_count:200,
+            page:1, //当前页
             isAdd: 1,
             tableData: [],
             dataType:[],
@@ -277,7 +274,12 @@
 
         },
         methods: {
+            current_change1(value) {
+                ve.page = value;
+                ve.conn()
+            },
             show() {
+                this.addconn = null
                 this.isAdd = 2
             },
 
@@ -291,12 +293,18 @@
             },
             //查询所有
             conn(){
-              axios.post(
-                  '${SITE_URL}DataBaseManage/getall/',
-                  ).then(function (response) {
-                      console.log(response.data.message)
-                  ve.tableData = response.data.message
-              })
+                 axios({
+                    method: 'post',
+                    url: '${SITE_URL}DataBaseManage/getall/',
+                    data:{
+                        page:ve.page,
+                        limit:5,
+                    }
+                }).then(function(response) {
+                    ve.tableData = response.data.message
+                     console.log(response.data.message)
+                    ve.page_count = response.data.message[0].page_count;
+                })
             },
 
 
