@@ -39,14 +39,16 @@ def select_job(request):
                 job = JobInstance.objects.filter(pos_name=res1)
             # if JobInstance.objects.filter(User_name=res1).exists():
             #     job = JobInstance.objects.filter(User_name=res1)
-            for i in job:
+            for x in job:
+                tmp = []
+                users = Localuser.objects.filter(user_pos=x.id)
+                for y in users:
+                    if x.id == y.user_pos:
+                        tmp.append(y.user_name + ' ')
                 dic = {
-                    'id': i.id,
-                    'pos_name': i.pos_name,
-                    'create_time': str(i.create_time),
-                    'creator': i.creator,
-                    'edit_time': str(i.edit_time),
-                    'editor':i.editor,
+                    'id': x.id,
+                    'user_name': tmp,
+                    'pos_name': x.pos_name
                 }
                 res_list.append(dic)
         return res_list
