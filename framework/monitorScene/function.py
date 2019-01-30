@@ -55,11 +55,7 @@ def addSence(request):
 def select_table(request):
     res = request.body
     res_list = []
-    if(len(res) == 0):
-         res_list=monitor_show(request)
-         return res_list
-    else:
-        monitor =Scene.objects.filter(scene_name__contains=res)
+    monitor =Scene.objects.filter(scene_name__contains=res)
     for i in monitor:
         dic = {
             'id': i.id,

@@ -506,15 +506,20 @@
             },
 
             select_table(){
-                 vm.scene.scene_endTime = $(".back-bar").children().eq(2).html()
-                 vm.scene.scene_startTime = $(".back-bar").children().eq(4).html()
-               axios({
-                    method: 'post',
-                    url: '${SITE_URL}monitorScene/select_table/',
-                    data: vm.search
-                }).then(function(res) {
-                    vm.tableData = res.data.message;
-                })
+                if(vm.search == ""){
+                    vm.paging()
+                }else {
+                    vm.scene.scene_endTime = $(".back-bar").children().eq(2).html()
+                    vm.scene.scene_startTime = $(".back-bar").children().eq(4).html()
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}monitorScene/select_table/',
+                        data: vm.search
+                    }).then(function (res) {
+                        vm.tableData = res.data.message;
+                    })
+                }
+
             },
             delect(row){
                 this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
