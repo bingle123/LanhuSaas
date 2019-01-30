@@ -138,6 +138,7 @@ INSTALLED_APPS = (
     'jobManagement',
     'market_day',
     'DataBaseManage',
+    'customProcess',
 )
 
 # ==============================================================================
