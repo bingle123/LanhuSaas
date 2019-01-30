@@ -37,12 +37,69 @@ def decrypt_str(data):
     return method.decrypt(k)
 
 
+
+#模糊查询
+def selecthor(request):
+    try:
+
+        res = json.loads(request.body)
+        limit = res['limit']  # 5
+        page = res['page']  # 1
+        search = res['search']
+        start_page = limit * page - 4  # 开始1
+
+
+
+        res_list = []
+        res1 = search
+        print res1
+        if len(res1) == 0:
+            res_list = getconn_all(request)
+        else:
+            if res1.isdigit():
+                if Conn.objects.filter(id=int(res1)).exists():
+                    unit = Conn.objects.filter(id=int(res1))
+            if Conn.objects.filter(connname=res1).exists():
+                unit = Conn.objects.filter(connname=res1)
+            if Conn.objects.filter(type=res1).exists():
+                unit = Conn.objects.filter(type=res1)
+            if Conn.objects.filter(ip=res1).exists():
+                unit = Conn.objects.filter(ip=res1)
+            if Conn.objects.filter(port=res1).exists():
+                unit = Conn.objects.filter(port=res1)
+            if Conn.objects.filter(username=res1).exists():
+                unit = Conn.objects.filter(username=res1)
+
+            totals = unit.values('id')  # 总条数
+            page_count = math.ceil(len(totals) / 5)
+            unit2 = unit[start_page-1:start_page+4]
+            for i in unit2:
+                dic = {
+                    'id': i.id,
+                    'connname': i.connname,
+                    'type': i.type,
+                    'ip': i.ip,
+                    'port': i.port,
+                    'username': i.username,
+                    'databasename': i.databasename,
+                    'password': i.password,
+                    'createname': i.createname,
+                    'createtime': str(i.createtime),
+                    'editname': i.editname,
+                    'edittime': str(i.edittime),
+                    'page_count': page_count,
+                }
+                res_list.append(dic)
+        return res_list
+    except Exception as e:
+        return None
+
+
 #查询所有
 def getconn_all(request):
     res = json.loads(request.body)
     limit = res['limit']  # 5
     page = res['page']  # 1
-    print page
     start_page = limit * page - 4  # 开始1
     unit2 = Conn.objects.all().values('id')  #总条数
     page_count = math.ceil(len(unit2) / 5)

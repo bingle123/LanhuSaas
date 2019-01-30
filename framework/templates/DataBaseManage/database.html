@@ -33,12 +33,18 @@
                 </div>
                 <hr id="hr">
                 <el-row type="flex" justify="space-between" align="center" class="row">
-                    <el-col :span="6">
-                        <el-input value="" placeholder="请输入内容"></el-input>
+
+                    <el-col :span="12">
+                        <el-col :span="9">
+                            <el-input v-model="search" placeholder="请输入内容"></el-input>
+                        </el-col>
+                        <el-col :span="3">
+                            <el-button type="primary" icon="el-icon-search" v-on:click="select_table">搜索</el-button>
+                        </el-col>
                     </el-col>
-                    <el-col :span="3">
-                        <el-button type="primary" @click="show">新增数据库连接</el-button>
-                    </el-col>
+                <el-col :span='3'>
+                    <el-button type='primary'  @click='show'>新增数据库连接</el-button>
+                </el-col>
                 </el-row>
 
                 <el-table :data="tableData" :header-cell-style="rowClass" style="width: 100%">
@@ -215,7 +221,6 @@
                     </el-col>
                 </el-row>
             </div>
-            <!--||||||||||||||||-->
         </el-card>
     </div>
 
@@ -225,6 +230,7 @@
     var ve = new Vue({
         el: '#main',
         data: {
+            search:'',//搜索框的值
             page_count:200,
             page:1, //当前页
             isAdd: 1,
@@ -279,7 +285,6 @@
                 ve.conn()
             },
             show() {
-                this.addconn = null
                 this.isAdd = 2
             },
 
@@ -290,6 +295,23 @@
 
             rowClass({row, rowIndex}) {
                 return 'background:#F7F7F7'
+            },
+
+
+            //搜索
+            select_table() {
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}DataBaseManage/selecthor/',
+                    data: {
+                        search:this.search,
+                        page:ve.page,
+                        limit:5,
+                    }
+                }).then((res) => {
+                    ve.tableData = res.data.message;
+                    ve.page_count = res.data.message[0].page_count;
+                })
             },
             //查询所有
             conn(){
@@ -302,7 +324,6 @@
                     }
                 }).then(function(response) {
                     ve.tableData = response.data.message
-                     console.log(response.data.message)
                     ve.page_count = response.data.message[0].page_count;
                 })
             },
