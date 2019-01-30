@@ -116,12 +116,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <div class="block" style="text-align:right">
-                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                                   :page-sizes="[10, 20, 30, 40]" :page-size="100"
-                                   layout="prev, pager, next,sizes, jumper" :total="90">
-                    </el-pagination>
-                </div>
+                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
             </div>
         </el-card>
     </div>
@@ -130,6 +125,8 @@
  let vm =  new Vue({
         el: '.content',
         data: {
+            page_count:100,                             //总页码数
+            page:1,                                   //分页页码数
             dialogFormVisible: false,
             dialogFormVisible2: false,
             dialogFormVisible3: false,
@@ -176,22 +173,21 @@
                 vm.users = []
                 vm.select_all_user();
             },
-            rowClass({row, rowIndex}) {
-                return 'background:#F7F7F7'
-            },
-            handleSizeChange(val) {
-                console.log('每页:'+val+'条')
-            },
-            handleCurrentChange(val) {
-                console.log('当前页:'+val)
+            current_change1(value) {
+                vm.page = value;
+                vm.show()
             },
             show() {                                                               //显示首页
                 axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/show/',
+                    data:{
+                        page:vm.page,
+                        limit:10
+                    },
                 }).then(function(res) {
-                    console.log(res.data.message);
-                    vm.jobInstance = res.data.message;
+                     vm.jobInstance = res.data.message;
+                     vm.page_count = res.data.message[0].page_count;
                 })
             },
             deletePosition(row){                                                  //删除一条记录
@@ -225,7 +221,7 @@
                 axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/select_job/',
-                    data:this.selectvalue,
+                    data: this.selectvalue,
                 }).then((res) => {
                     vm.jobInstance = res.data.message;
                 })
@@ -313,7 +309,6 @@
                     method: 'post',
                     url: '${SITE_URL}jobManagement/get_user/',
                 }).then((res) =>{
-                    console.log(res.data)
                     for(var i=0;i<res.data.message.length;i++){
                         this.users.push(res.data.message[i])
                     }
