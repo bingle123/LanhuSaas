@@ -659,9 +659,8 @@
                         limit:10
                     },
                 }).then(function(res) {
-
                     vm.sites = res.data.message;
-
+                    vm.page_count = res.data.message[0].page_count;
                 })
             },
             select1() {
@@ -710,8 +709,8 @@
                     vm.disabled4 = false;
                     vm.disabled5 = true;
                     vm.monitor_type = 'third';
-                    vm.job.common.font_size = row.font_size;
-                    vm.job.common.height = row.height;
+                    vm.job.font_size = row.font_size;
+                    vm.job.height = row.height;
                     vm.job.width = row.width;
                     vm.job.start_time = row.start_time;
                     vm.job.end_time = row.end_time;
@@ -723,8 +722,8 @@
                     vm.disabled4 = true;
                     vm.disabled5 = false;
                     vm.monitor_type = 'fourth';
-                    vm.flow.common.font_size = row.font_size;
-                    vm.flow.common.height = row.height;
+                    vm.flow.font_size = row.font_size;
+                    vm.flow.height = row.height;
                     vm.flow.width = row.width;
                     vm.flow.start_time = row.start_time;
                     vm.flow.end_time = row.end_time;

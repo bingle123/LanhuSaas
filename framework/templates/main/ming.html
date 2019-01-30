@@ -134,6 +134,7 @@
     <div class="workflow-canvas">
         <!-- 画布模板 start -->
         <div class="jtk-content">
+            <input class="magic-desc" value="" id="canvasName">
             <div class="jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan" id="canvas" style="height:370px;">
                 <!-- 流程 -->
             </div>
@@ -306,8 +307,20 @@
         $('#save2').click(function() {
             // 获取全部数据
             var data= $('#flow1').data('dataflow').getAllData();
-            var name = data.location[0];
+            var name = $('#canvasName').val();
+            alert(name)
             $('#result2').val(JSON.stringify(data));
+            axios({
+                method:'post',
+                url:'${SITE_URL}monitorScene/add_temp/',
+                data:{
+                        dat:JSON.stringify(data),
+                        name:name,
+            }}).then((res=>{
+                if(res.data.code == 0){
+                    alert("成功")
+                }
+            }))
         });
 
         // 清空画布
