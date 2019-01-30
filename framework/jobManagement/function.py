@@ -32,9 +32,13 @@ def show(request):
 
 def select_job(request):
     try:
-        res = request.body
+        res = json.loads(request.body)
+        limit = res['limit']
+        page = res['page']
+        search = res['search']
+        start_page = limit * page - 9
+        res1 = search
         res_list = []
-        res1 = "{}".format(res)
         if len(res1) == 0:
             res_list = show(request)
         else:
@@ -43,8 +47,9 @@ def select_job(request):
                     job = JobInstance.objects.filter(id=int(res1))
             if JobInstance.objects.filter(pos_name=res1).exists():
                 job = JobInstance.objects.filter(pos_name=res1)
-            # if JobInstance.objects.filter(User_name=res1).exists():
-            #     job = JobInstance.objects.filter(User_name=res1)
+            tmp = job[start_page - 1:start_page + 9]
+            unit2 = tmp.values('id')
+            page_count = math.ceil(len(unit2) / 10)
             for x in job:
                 tmp = []
                 users = Localuser.objects.filter(user_pos=x.id)
@@ -54,7 +59,8 @@ def select_job(request):
                 dic = {
                     'id': x.id,
                     'user_name': tmp,
-                    'pos_name': x.pos_name
+                    'pos_name': x.pos_name,
+                    'page_count':page_count
                 }
                 res_list.append(dic)
         return res_list

@@ -224,9 +224,14 @@
                 axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/select_job/',
-                    data: this.search,
+                    data: {
+                        search:this.search,
+                        page:vm.page,
+                        limit:10
+                    },
                 }).then((res) => {
                     vm.jobInstance = res.data.message;
+                    vm.page_count = res.data.message[0].page_count;
                 })
             },
             add_job(formName){                                              //增加岗位
