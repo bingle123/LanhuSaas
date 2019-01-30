@@ -390,7 +390,7 @@
                 });
             },
             //添加节点信息到数据库中
-            customProcessSaveNodeInfo: function() {
+            customProcessSaveNodeInfo: function(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
                         this.$message({
