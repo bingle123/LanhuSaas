@@ -16,7 +16,7 @@ def unit_show(request):
     unit = Monitor.objects.all()[start_page-1:start_page+9]
     unit2 = Monitor.objects.all().values('id')
     page_count = math.ceil(len(unit2)/10)
-    print page_count
+    print(page_count)
     res_list = []
     for i in unit:
         dic = {
@@ -35,7 +35,10 @@ def unit_show(request):
             'page_count': page_count,
         }
         res_list.append(dic)
+    display_list = []
+    param = {
 
+    }
     return res_list
 
 
@@ -44,7 +47,6 @@ def select_unit(request):
     try:
         res = request.body
         res_list = []
-        unit_list = []
         res1 = "{}".format(res)
         if len(res1) == 0:
             res_list = unit_show(request)
@@ -107,7 +109,7 @@ def add_unit(request):
     if res['monitor_type'] == 'third':
         monitor_type = '作业单元类型'
     if res['monitor_type'] == 'fourth':
-        monitor_type = '流程单元类型'
+        monitor_type = '流程元类型'
     add_dic = res['data']
     add_dic['monitor_name'] = res['monitor_name']
     add_dic['monitor_type'] = monitor_type
@@ -120,41 +122,23 @@ def add_unit(request):
 
 
 def edit_unit(request):
-    pass
-#
-#     res = json.loads(request.body)
-#     print(res)
-#     unit_name = res['unit_name']
-#     unit_id = res['unit_id']
-#     if res['unit_type'] == 'first':
-#         unit_type = '基本单元类型'
-#         unit = BasicUnit.objects.get(unit_id=unit_id)
-#         unit_dic = res['data']['basic']
-#         BasicUnit.objects.filter(unit_id=unit_id).update(**unit_dic)
-#         unit.save()
-#     if res['unit_type'] == 'second':
-#         unit_type = '图表单元类型'
-#         unit = ChartUnit.objects.get(unit_id=unit_id)
-#         unit_dic = res['data']['chart']
-#         ChartUnit.objects.filter(unit_id=unit_id).update(**unit_dic)
-#         unit.save()
-#     if res['unit_type'] == 'third':
-#         unit_type = '作业单元类型'
-#         unit = JobUnit.objects.get(unit_id=unit_id)
-#         unit_dic = res['data']['job']
-#         JobUnit.objects.filter(unit_id=unit_id).update(**unit_dic)
-#         unit.save()
-#     if res['unit_type'] == 'fourth':
-#         unit_type = '流程单元类型'
-#         unit = FlowUnit.objects.get(unit_id=unit_id)
-#         unit.flow_mould = res['data']['flow']['flow_mould']
-#         unit.param = res['data']['flow']['param1']+res['data']['flow']['param2']
-#         unit.node = res['data']['flow']['node']
-#         unit.save()
-#     common = Common.objects.get(id=unit_id)
-#     common_dic = res['data']['common']
-#     common_dic['unit_type'] = unit_type
-#     Common.objects.filter(id=unit_id).update(**common_dic)
-#     common.save()
-#
-#     return None
+    res = json.loads (request.body)
+    monitor_type = res['monitor_type']
+    print(monitor_type)
+    if res['monitor_type'] == 'first':
+        monitor_type = '基本单元类型'
+    if res['monitor_type'] == 'second':
+        monitor_type = '图表单元类型'
+    if res['monitor_type'] == 'third':
+        monitor_type = '作业单元类型'
+    if res['monitor_type'] == 'fourth':
+        monitor_type = '流程元类型'
+    add_dic = res['data']
+    add_dic['monitor_name'] = res['monitor_name']
+    add_dic['monitor_type'] = monitor_type
+    add_dic['jion_id'] = 3
+    add_dic['status'] = 0
+    add_dic['creator'] = 'admin'
+    add_dic['editor'] = 'admin'
+    Monitor.objects.filter(monitor_name=res['monitor_name']).update(**add_dic)
+    return None
