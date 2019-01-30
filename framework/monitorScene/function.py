@@ -3,9 +3,13 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from models import Scene
 from models import position_scene
-# from models import scene_monitor
+from models import Createtmp
+import tools
+from common.mymako import render_json, render_mako_context
+# from monitorScene.models import scene_monitor
 from jobManagement.models import JobInstance
 
+@csrf_exempt
 def monitor_show(request):
     monitor = Scene.objects.all()
     res_list = []
@@ -21,34 +25,25 @@ def monitor_show(request):
             'scene_editor_time': str(i.scene_editor_time),
             'pos_name':''
         }
-        position = position_scene.objects.filter(scene=i.id)
+        position = position_scene.objects.filter(scene_id=i.id)
         for c in position:
+            print c.position_id
             job = JobInstance.objects.filter(id=c.position_id)
             for j in job:
                 jobs = {
                     "pos_name" : j.pos_name
                 }
-                dic['pos_name']=jobs["pos_name"]
+        dic['pos_name']=jobs["pos_name"]
         res_list.append(dic)
     return res_list
 
 def addSence(request):
    res = request.body
    senceModel = json.loads(res)
-   senceModel2 = {
-       "scene_name":senceModel['data']['scene_name'],
-       "scene_startTime":senceModel['data']["scene_startTime"],
-       "scene_endTime":senceModel['data']["scene_endTime"],
-       "scene_creator":"admin"
-   }
-   Scene.objects.create(**senceModel2)
-   id = Scene.objects.last()
-   senceModel3 = {
-       "scene":id,
-       "position_id":senceModel["pos"]
-   }
-   position_scene.objects.create(**senceModel3)
-   return None
+   scene_name = senceModel['scene_name']
+   senceModel['scene_creator'] = "admin"
+   Scene.objects.create(**senceModel)
+   return res;
 
 def select_table(request):
     res = request.body
@@ -69,40 +64,21 @@ def select_table(request):
             'scene_editor': i.scene_editor,
             'scene_editor_time': str(i.scene_editor_time),
         }
-        position = position_scene.objects.filter(scene=i.id)
-        for c in position:
-            job = JobInstance.objects.filter(id=c.position_id)
-            for j in job:
-                jobs = {
-                    "pos_name": j.pos_name
-                }
-                dic['pos_name'] = jobs["pos_name"]
         res_list.append(dic)
     return res_list
 
 
 def delect(request):
     Scene.objects.filter(id=request.body).delete()
-    position_scene.objects.filter(scene=request.body).delete()
+    position_scene.objects.filter(scene_id=request.body).delete()
+    # scene_monitor.objects.filter(pos_id=request.body).delete()
     return ""
 
 def editSence(request):
     model = json.loads(request.body)
-    senceModel2 = {
-        "scene_name": model['data']['scene_name'],
-        "scene_startTime": model['data']["scene_startTime"],
-        "scene_endTime": model['data']["scene_endTime"],
-        "scene_editor":"admin"
-    }
-    Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
-    scene = Scene.objects.get(id=model['data']['id'])
+    Scene.objects.filter(id=model['id']).update(**model)
+    scene = Scene.objects.get(id=model['id'])
     scene.save()
-    senceModel3 = {
-        "scene_id": model['data']['id'],
-        "position_id": model["pos"]
-    }
-    position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
-    return None
 
 def pos_name(request):
     job=JobInstance.objects.all()
@@ -114,3 +90,22 @@ def pos_name(request):
         }
         res_list.append(dic)
     return res_list
+
+
+def addtmp(request):
+    try:
+        tmp = json.loads(request.body)
+        n = tmp['name']
+        dat = tmp['dat']
+
+        t = Createtmp.objects.get(name=n)
+        if t != None:
+            t.tmpdate = dat
+            t.save()
+        else:
+            res = Createtmp.objects.create(name=n, tmpdate=dat)
+            t.save()
+        result = tools.success_result(None)
+    except Exception as e:
+        result = tools.error_result(e)
+    return result

@@ -21,5 +21,6 @@ urlpatterns = patterns(
     (r'^delect/$', 'delect'),
     (r'^editSence/$', 'editSence'),
     (r'^pos_name/$', 'pos_name'),
+    (r'^add_temp/$','add_temp'),                                    #添加模板
 
 )
