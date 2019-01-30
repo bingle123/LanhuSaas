@@ -2,9 +2,14 @@
 from shell_app.tools import success_result
 from shell_app.tools import error_result
 from models import CrawlerConfig
+from models import CrawlContent
 from django.db.models import Q
 import json
 import datetime
+from crawl_template import crawl_temp
+from django.db import transaction
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 def crawl_manage(request):
@@ -51,7 +56,8 @@ def crawl_manage(request):
                                                                    time_xpath=time_xpath,
                                                                    url_xpath=url_xpath,
                                                                    update_user=update_user,
-                                                                   receivers=receivers, update_time=datetime.datetime.now())
+                                                                   receivers=receivers,
+                                                                   update_time=datetime.datetime.now())
             return success_result('修改爬虫配置成功')
         except Exception as e:
             return error_result(e)
@@ -110,3 +116,102 @@ def delete_crawl_config_id(request):
         return success_result('删除爬虫配置信息成功')
     except Exception as e:
         return error_result('删除爬虫配置信息失败' + e)
+
+
+def start_crawl(request):
+    """
+    开始爬虫,并筛选数据(关键字和非关键字)
+    :param request:
+    :return:
+    """
+    res = get_crawls_config(request)['results']
+    result_all = []
+    result_error = []
+    for i in res:
+        id = i['id']
+        crawl_url = i['crawl_url']
+        crawl_name = i['crawl_name']
+        total_xpath = i['total_xpath']
+        title_xpath = i['title_xpath']
+        url_xpath = i['url_xpath']
+        time_xpath = i['time_xpath']
+        crawl_keyword = i['crawl_keyword']
+        crawl_no_keyword = i['crawl_no_keyword']
+        url_pre = i['url_pre']
+        # 接收人--列表
+        receivers = i['receivers'].split('@')
+        crawl_result = crawl_temp(crawl_url, total_xpath, title_xpath, time_xpath, url_xpath)
+        # 爬虫成功，且有数据
+        if crawl_result['code'] == 0 and crawl_result['results'].__len__() != 0:
+            for j in range(crawl_result['results'].__len__()):
+                # 增加爬虫配置ID
+                crawl_result['results'][j].update(crawl_id=id)
+                # 增加爬虫推送人
+                crawl_result['results'][j].update(receivers=receivers)
+                # 拼接URL
+                crawl_result['results'][j]['resource'] = url_pre + crawl_result['results'][j]['resource']
+                # 爬取内容包含关键字并且不包含非关键字的数据，并加入到结果集
+                if crawl_keyword in crawl_result['results'][j]['title'] and crawl_no_keyword not in \
+                        crawl_result['results'][j]['title']:
+                    # 增加到结果集
+                    result_all.append(crawl_result['results'][j])
+        # 爬虫成功，没有数据
+        elif crawl_result['results'].__len__() == 0:
+            message = crawl_name + u'没有获取到数据，请检查配置是否正确!'
+            result_error.append(message)
+        # 爬虫失败,返回错误信息
+        elif crawl_result['code'] != 0:
+            message = crawl_name + u'获取数据失败' + crawl_result['results']
+            result_error.append(message)
+    return {
+        "result": True,
+        "message": u'成功',
+        "code": 0,
+        "results": result_all,
+        "error_result": result_error,
+    }
+
+
+def add_crawl_message(request):
+    """
+    增加爬虫信息
+    :param request:
+    :return:
+    """
+    # 测试数据
+    temp = start_crawl(request)
+    result_all = []
+    for i in range(temp['results'].__len__()):
+        title_content = temp['results'][i]['title']
+        receivers = temp['results'][i]['receivers']
+        res = CrawlContent.objects.filter(title_content=title_content)
+        if len(res) == 0:
+            try:
+                # 事物回滚
+                with transaction.atomic():
+                    crawl_id = temp['results'][i]['crawl_id']
+                    time_content = temp['results'][i]['time']
+                    resource = temp['results'][i]['resource']
+                    CrawlContent.objects.create(crawl_id=crawl_id, time_content=time_content,
+                                                title_content=title_content, url_content=resource)
+                    result_all.append(
+                        {'time_content': time_content, 'resource': resource, 'title_content': title_content,
+                         'receivers': receivers})
+            except Exception as e:
+                return error_result(e)
+    if len(result_all) == 0:
+        result_all = u'没要需要保存的信息'
+        return error_result(result_all)
+    return success_result(result_all)
+
+
+# 发送邮件
+def send(request):
+    """
+    发送邮件测试
+    :param request:
+    :return:
+    """
+    msg = '<a href="http://www.baidu.com" target="_blank">点击激活</a>'
+    send_mail(u'测试邮件', '', settings.DEFAULT_FROM_EMAIL, [u'收件箱'], html_message = msg)
+    return success_result(u'成功')

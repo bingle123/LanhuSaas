@@ -69,3 +69,33 @@ def crawl(request):
     url_xpath = 'a/@href'
     res = crawl_template.crawl_temp(url, total_xpath, time_xpath, title_xpath, url_xpath)
     return render_json(res)
+
+
+def start_crawl(request):
+    """
+    开始爬虫
+    :param request:
+    :return:
+    """
+    res = function.start_crawl(request)
+    return render_json(res)
+
+
+def json_test(request):
+    """
+    josn测试
+    :param request:
+    :return:
+    """
+    res = function.add_crawl_message(request)
+    return render_json(res)
+
+
+def mail_send(request):
+    """
+    邮件发送
+    :param request:
+    :return:
+    """
+    res = function.send(request)
+    return render_json(res)

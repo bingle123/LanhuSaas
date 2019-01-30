@@ -27,9 +27,9 @@ def crawl_temp(url, total_xpath, title_xpath, time_xpath, url_xpath):
             # 返回etree格式HTML
             response_html = etree.HTML(res.content)
             html_list = response_html.xpath(total_xpath)
-            temp_dict = {}
             temp_list = []
             for temp in html_list:
+                temp_dict = {}
                 time = temp.xpath(time_xpath)[0]
                 title = temp.xpath(title_xpath)[0]
                 resource = temp.xpath(url_xpath)[0]
