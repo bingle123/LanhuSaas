@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from __future__ import division
 from django.views.decorators.csrf import csrf_exempt
 import json
+import math
 from models import Scene
 from models import position_scene
 # from models import scene_monitor
@@ -45,7 +47,7 @@ def addSence(request):
    id = Scene.objects.last()
    senceModel3 = {
        "scene":id,
-       "position_id":senceModel["pos"]
+       "position_id":senceModel['data']["pos_name"]
    }
    position_scene.objects.create(**senceModel3)
    return None
@@ -99,7 +101,7 @@ def editSence(request):
     scene.save()
     senceModel3 = {
         "scene_id": model['data']['id'],
-        "position_id": model["pos"]
+        "position_id": model['data']["pos_name"]
     }
     position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
     return None
@@ -111,6 +113,30 @@ def pos_name(request):
         dic = {
             'id': i.id,
             'pos_name': i.pos_name
+        }
+        res_list.append(dic)
+    return res_list
+def paging(request):
+    res = json.loads(request.body)
+    page = res['page']
+    limit = res['limit']
+    start_page = limit*page-9
+    monitor = Scene.objects.all()[start_page-1:start_page+9]
+    monitor2 = Scene.objects.all().values('id')
+    page_count = math.ceil(len(monitor2)/10)
+    res_list = []
+    for i in monitor:
+        dic = {
+            'id': i.id,
+            'scene_name': i.scene_name,
+            'scene_startTime': str(i.scene_startTime),
+            'scene_endTime': str(i.scene_endTime),
+            'scene_creator': i.scene_creator,
+            'scene_creator_time': str(i.scene_creator_time),
+            'scene_editor': i.scene_editor,
+            'scene_editor_time': str(i.scene_editor_time),
+            'pos_name': '',
+            'page_count': page_count,
         }
         res_list.append(dic)
     return res_list

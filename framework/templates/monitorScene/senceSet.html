@@ -79,10 +79,7 @@
                 </el-table-column>
             </el-table>
             <div class='block' style='text-align:right'>
-                <el-pagination @size-change='handleSizeChange' @current-change='handleCurrentChange'
-                               :current-page='currentPage4' :page-sizes='[10, 20, 30, 40]' :page-size='100'
-                               layout='prev, pager, next,sizes, jumper' :total='90'>
-                </el-pagination>
+        <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
             </div>
 
 
@@ -95,37 +92,30 @@
             </div>
             <hr id="hr">
             <div style="margin-top: 20px">
-                <el-form ref="form" label-width="80px">
-                    <el-form-item label="场景名称">
-                       <el-input placeholder="请输入场景名称" v-model="scene.scene_name" style="width: 30%"></el-input>
+                <el-form ref="scene" :model="scene" :rules="rules" label-width="80px">
+                    <el-form-item label="场景名称" prop="scene_name">
+                       <el-input placeholder="请输入场景名称"  v-model="scene.scene_name" style="width: 30%"></el-input>
                     </el-form-item>
 
                     <el-form-item label="轮播时间"   >
-                        <div class="ranger-demo mt20" id="jranger_demo">
-                        <input type="hidden" class="slider-input" value="-720,720">
-
-                    </div>
-
-                     </el-form-item>
-
-                    <el-form-item >
                         <el-col :span="5">
+                            <el-form-item prop="scene_startTime">
                                 <el-time-picker v-model="scene.scene_startTime" placeholder="开始时间点" format="hh:mm"
                                                 value-format="hh:mm">
                                 </el-time-picker>
+                            </el-form-item>
                         </el-col>
                         <el-col class="line" :span="1">—</el-col>
                         <el-col :span="11">
-                            <el-form-item>
+                            <el-form-item prop="scene_endTime">
                                 <el-time-picker v-model="scene.scene_endTime"  placeholder="结束时间点" format="hh:mm"
                                                 value-format="hh:mm">
                                 </el-time-picker>
                             </el-form-item>
                         </el-col>
-                      </el-form-item>
-
-                    <el-form-item label="场景适用岗位">
-                        <el-select  placeholder="请选择" v-model="pos_name" >
+                     </el-form-item>
+                    <el-form-item label="场景适用岗位" prop="pos_name">
+                        <el-select  placeholder="请选择" v-model="scene.pos_name" >
                             <el-option v-for="item in pos" :label="item.pos_name" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
@@ -211,7 +201,7 @@
                     </el-form-item>
                     <el-row type="flex" class="row-bg" justify="center">
                         <el-col :span="2">
-                            <el-button type="primary" v-on:click="addSence" id="button">保存</el-button>
+                            <el-button type="primary"  v-on:click="submitForm('scene')" id="button">保存</el-button>
                         </el-col>
                         <el-col :span="2">
                             <el-button @click="hide" id="button">取消</el-button>
@@ -229,34 +219,30 @@
             </div>
             <hr id="hr">
             <div style="margin-top: 20px">
-                <el-form ref="form" label-width="80px">
-                    <el-form-item label="场景名称">
+                <el-form ref="scene_edit" :model="scene_edit" :rules="rules" label-width="80px">
+                    <el-form-item label="场景名称" prop="scene_name">
                        <el-input placeholder="请输入场景名称" v-model="scene_edit.scene_name" style="width: 30%"></el-input>
                     </el-form-item>
                      <el-form-item label="轮播时间" >
-                        <div class="ranger-demo mt20" id="jranger_demo">
-                        <input type="hidden" class="slider-input" value="-720,720">
-
-                    </div>
-                     </el-form-item>
-                       <el-form-item >
-                        <el-col :span="5">
+                          <el-col :span="5">
+                            <el-form-item prop="scene_startTime">
                                 <el-time-picker v-model="scene_edit.scene_startTime" placeholder="开始时间点" format="hh:mm"
                                                 value-format="hh:mm">
                                 </el-time-picker>
+                            </el-form-item>
                         </el-col>
                         <el-col class="line" :span="1">—</el-col>
                         <el-col :span="11">
-                            <el-form-item>
+                            <el-form-item prop="scene_endTime">
                                 <el-time-picker v-model="scene_edit.scene_endTime"  placeholder="结束时间点" format="hh:mm"
                                                 value-format="hh:mm">
                                 </el-time-picker>
                             </el-form-item>
                         </el-col>
-                      </el-form-item>
                      </el-form-item>
-                    <el-form-item label="场景适用岗位">
-                        <el-select  placeholder="请选择" v-model="pos_name" >
+                     </el-form-item>
+                    <el-form-item label="场景适用岗位"  prop="pos_name">
+                        <el-select  placeholder="请选择" v-model="scene_edit.pos_name" >
                             <el-option v-for="item in pos" :label="item.pos_name" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
@@ -342,7 +328,7 @@
                     </el-form-item>
                     <el-row type="flex" class="row-bg" justify="center">
                         <el-col :span="2">
-                            <el-button type="primary" v-on:click="editSence" id="button">保存</el-button>
+                            <el-button type="primary" v-on:click="submitForm('scene_edit')" id="button">保存</el-button>
                         </el-col>
                         <el-col :span="2">
                             <el-button @click="hide" id="button">取消</el-button>
@@ -358,7 +344,10 @@
 
     var vm=new Vue({
         el: '.content',
+
         data: {
+            page_count:100,//分页总页数
+            page:1,                                   //分页页码数
             start_time: '8:00',
             end_time: '16:00',
             falg: false,
@@ -385,23 +374,89 @@
             currentPage4: 4,
             tableData: [],
             pos:[],//岗位
-            pos_name:'',
+
             scene: {                            //场景管理
                 scene_name: '', //场景名称
                 scene_startTime:'',
+                pos_name:'',
                 scene_endTime:'',
             },
             scene_edit:{                       //编辑页面中的
                 id:'',
                 scene_name: '', //场景名称
-                scene_positions:'',//岗位
+                pos_name:'',//岗位
                  scene_startTime:'',
                 scene_endTime:'',
             },
 
+            rules: {
+                scene_name: [
+                    {required: true, message: '请输入场景名称', trigger: 'blur'}
+                ],
+                pos_name:[
+                    {required: true, message: '请选择岗位', trigger: 'change'}
+                ],
+                scene_startTime:[
+                    {type: 'string', required: true, message: '请选择开始时间', trigger: 'change'}
+                ],
+                scene_endTime:[
+                     {type: 'string', required: true, message: '请选择结束时间', trigger: 'change'}
+                ]
+            }
+
         },
 
         methods: {
+
+            submitForm(formName) {
+                alert(formName)
+                this.$refs[formName].validate((valid) => {
+
+                    if (valid) {
+                        if (formName == 'scene') {
+                            axios({
+                                method: 'post',
+                                url: '${SITE_URL}monitorScene/addSence/',
+                                data: {
+                                    data: vm.scene
+                                }
+                            }).then(function (res) {
+                                window.location.href = '${SITE_URL}scene_set'
+                            })
+                        } else if (formName == 'scene_edit') {
+                            axios({
+                                method: 'post',
+                                url: '${SITE_URL}monitorScene/editSence/',
+                                data: {
+                                    data: vm.scene_edit
+                                }
+                            }).then(function (res) {
+                                window.location.href = '${SITE_URL}scene_set'
+                            })
+                        }
+                    } else {
+                        console.log('提交失败!!');
+                        return false;
+                    }
+                });
+            },
+            current_change1(value) {
+                vm.page = value;
+                vm.paging()
+            },
+            paging(){
+               axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitorScene/paging/',
+                    data:{
+                        page:vm.page,
+                        limit:10
+                    },
+                }).then(function(res) {
+                    vm.tableData = res.data.message;
+                    vm.page_count = res.data.message[0].page_count;
+                })
+            },
             rowclass({row, rowIndex}) {
 
                 return 'background:#F7F7F7'
@@ -410,9 +465,9 @@
                 console.log('每页' + val + '条')
             },
             handleCurrentChange(val) {
+
                 console.log('当前页: ' + val + '')
             },
-
             show() {
                 this.isAdd = 2;
                 vm.sen_position()
@@ -426,7 +481,7 @@
                 vm.scene_edit.scene_name = row.scene_name
                 vm.scene_edit.scene_startTime = row.scene_startTime
                 vm.scene_edit.scene_endTime = row.scene_endTime
-                vm.pos_name =  row.pos_name
+                vm.scene_edit.pos_name =  row.pos_name
                 this.isAdd = 3
                 vm.sen_position()
                 setTimeout(function () {
@@ -449,18 +504,7 @@
                     vm.tableData = res.data.message;
                 })
             },
-            addSence(){
-                   axios({
-                    method: 'post',
-                   url: '${SITE_URL}monitorScene/addSence/',
-                    data: {
-                        data:vm.scene,
-                        pos:vm.pos_name
-                    }
-                }).then(function(res) {
-                    window.location.href = '${SITE_URL}scene_set'
-                })
-            },
+
             select_table(){
                  vm.scene.scene_endTime = $(".back-bar").children().eq(2).html()
                  vm.scene.scene_startTime = $(".back-bar").children().eq(4).html()
@@ -490,6 +534,7 @@
 
                     }).then((res) => {
                         vm.a();
+                        vm.paging();
                     }),);
             }).catch(() => {
                 this.$message({
@@ -498,18 +543,7 @@
                 });
             });
             },
-            editSence(){
-               axios({
-                    method: 'post',
-                    url: '${SITE_URL}monitorScene/editSence/',
-                    data: {
-                        data:vm.scene_edit,
-                        pos:vm.pos_name
-                    }
-                }).then(function(res) {
-                    window.location.href = '${SITE_URL}scene_set'
-                })
-            },
+
             Time(){
 
                 setInterval(function () {
@@ -559,6 +593,7 @@
     });
 
     vm.a();
+    vm.paging();
 </script>
 
 <script>

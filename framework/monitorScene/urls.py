@@ -21,5 +21,7 @@ urlpatterns = patterns(
     (r'^delect/$', 'delect'),
     (r'^editSence/$', 'editSence'),
     (r'^pos_name/$', 'pos_name'),
+    (r'^paging/$', 'paging'),
+
 
 )
