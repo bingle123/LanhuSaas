@@ -10,5 +10,6 @@ urlpatterns = patterns(
     (r'^saveconn/$','saveconn'),                             #保存
     (r'^editconn/','eidtconnn'),                             #编辑
     (r'^deleteconn/(.+)/$','delete_conn'),                   #删除
-    (R'^testConn/$','testConn'),                             #测试连接
+    (r'^testConn/$','testConn'),                             #测试连接
+    (r'^selecthor/$','selecthor'),                          #模糊查询
 )
