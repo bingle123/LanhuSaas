@@ -15,4 +15,9 @@ from django.conf.urls import patterns
 urlpatterns = patterns(
     'customProcess.views',
     (r'^index$', 'show_index'),                                          # 首页
+    (r'^select_all_nodes$', 'select_all_nodes'),
+    (r'^add_node$', 'add_node'),
+    (r'^del_node', 'del_node'),
+    (r'^select_node', 'select_node'),
+    (r'^truncate_node', 'truncate_node'),
 )
