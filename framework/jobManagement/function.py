@@ -73,9 +73,16 @@ def add_job(request):
 def add_person(request):
     res = json.loads(request.body)
     id = res['id']
-    res2 = dict_get(res['data'],u'pinyin',None)
-    for i in res2:
+    res2 = dict_get(res['data2'],u'pinyin',None)
+    res3 = res['value2']
+    tmp = res2
+    for i in res3:
         Localuser.objects.filter(user_name=i).update(user_pos=id)
+        for j in res2:
+            if i == j:
+                tmp.remove(i)
+    for k in tmp:
+        Localuser.objects.filter(user_name=k).update(user_pos=None)
     return res2
 
 

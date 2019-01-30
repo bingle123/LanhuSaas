@@ -40,7 +40,7 @@
                         v-model="value2"
                         :titles="['选择人员', jobname]"
                         :data="data2"
-                        @change="change1">
+                        @change="">
                         </el-transfer>
                     </template>
                 </template>
@@ -48,7 +48,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="add_person()" type="primary">保存</el-button>
-            <el-button @click="dialogFormVisible = false">取消</el-button>
+            <el-button @click="ref()">取消</el-button>
         </div>
     </el-dialog>
 
@@ -145,16 +145,15 @@
             value12:'',
             jobInstance:[],
             data2: '',
-            value2:[],
+            value2: '',
         },
         methods: {
-            change1(value){                                                     //加人获得选中数据
-                for(var i in value){
-                    vm.value2.push(vm.data2[value[i]])
-                }
+            ref(){
+                vm.dialogFormVisible = false,
+                vm.users = []
+                vm.select_all_user();
             },
             rowClass({row, rowIndex}) {
-                console.log(rowIndex);
                 return 'background:#F7F7F7'
             },
             handleSizeChange(val) {
@@ -238,20 +237,36 @@
                     }
                 })
             },
-            show_job(row){                                      //显示弹框，传值到add_person
+            show_job(row){                                      //显示弹框和穿梭框，传值到add_person
                 vm.dialogFormVisible = true;
-                data = vm.generateData2();
                 vm.jobname = row.pos_name;
                 vm.id = row.id;
+                var x = row.user_name;
+                x.forEach((x,index)=>{
+                    vm.users.push(x)
+                })
+                const data = [];
+                var people= this.users;
+                const pinyin = this.users;
+                people.forEach((people, index) => {
+                  data.push({
+                      <!--label: people,-->
+                      pinyin: pinyin[index],
+                      key: people,
+                  });
+                });
+              this.data2 = data;
+              this.value2 = x;
             },
             add_person(row){
                axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/add_person/',
                     data:{
-                        data:vm.value2,
+                        value2:vm.value2,
                         id:this.id,
                         jobname: this.jobname,
+                        data2:vm.data2,
                     },
                 }).then((res) => {
                     vm.dialogFormVisible = false
@@ -268,19 +283,6 @@
                         this.users.push(res.data.message[i])
                     }
                 })
-            },
-            generateData2(){                                                       //加人的穿梭框
-                const data = [];
-                var people= this.users;
-                const pinyin = this.users;
-                people.forEach((people, index) => {
-                  data.push({
-                      label: people,
-                      pinyin: pinyin[index],
-                      key: index,
-                  });
-                });
-            this.data2 = data;
             },
             filterMethod(query, item) {
                 return item.pinyin.indexOf(query) > -1;
