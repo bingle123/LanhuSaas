@@ -33,3 +33,7 @@ class position_scene(models.Model):
         verbose_name_plural = u'岗位与场景关系表'
         db_table = "tl_position_scene"
 
+
+class Createtmp(models.Model):
+    name = models.CharField(u'名称',max_length=255)
+    tmpdate = models.TextField(u'数据',max_length=10000)

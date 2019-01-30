@@ -48,29 +48,31 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="add_person()" type="primary">保存</el-button>
-            <el-button @click="dialogFormVisible = false">取消</el-button>
+            <el-button @click="ref()">取消</el-button>
         </div>
     </el-dialog>
 
     <el-dialog title="编辑岗位" :visible.sync="dialogFormVisible2">
-        <div>
-            <span>岗位名：</span>
-            <el-input placeholder="请输入岗位名" v-model="tempjobname" style="width: 60%"></el-input>
-        </div>
+        <el-form  :model="form2" ref="form2" :rules="rules2" >
+            <el-form-item label="岗位名：" prop="tempjobname">
+            <el-input placeholder="请输入岗位名" v-model="form2.tempjobname" style="width: 60%"></el-input>
+            </el-form-item>
+        </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @click=" edit_job()" type="primary">保存</el-button>
+            <el-button @click=" edit_job('form2')" type="primary">保存</el-button>
             <el-button @click="dialogFormVisible2 = false">取消</el-button>
         </span>
+
     </el-dialog>
 
     <el-dialog title="新增岗位" :visible.sync="dialogFormVisible3">
-        <el-form :model="form">
-            <el-form-item label="岗位名称:">
+        <el-form :model="form" ref="form" :rules="rules">
+            <el-form-item label="岗位名称:" prop = 'pos_name'>
                 <el-input v-model="form.pos_name"></el-input>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="add_job()" type="primary">保存</el-button>
+            <el-button @click="add_job('form')" type="primary">保存</el-button>
             <el-button @click="dialogFormVisible3 = false">取消</el-button>
         </div>
     </el-dialog>
@@ -133,9 +135,30 @@
             dialogFormVisible3: false,
             form: {
                  pos_name:'',
+            },rules:{
+                 pos_name:[{
+                    required: true,
+                    message: '不能为空，请输入岗位名称',
+                    trigger: 'blur'
+                },{
+                    pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+$/,
+                    message:'请不要输入特殊字符',trigger: 'blur'
+                }]
             },
             users:[],
-            tempjobname:'',
+            form2:{
+                tempjobname:'',
+            },
+            rules2:{
+                tempjobname:[{
+                    required: true,
+                    message: '不能为空，请输入岗位名称',
+                    trigger: 'blur'
+                },{
+                    pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+$/,
+                    message:'请不要输入特殊字符',trigger: 'blur'
+                }]
+            },
             tempid:'',
             form1:'',
             jobname:'',
@@ -148,6 +171,11 @@
             value2: '',
         },
         methods: {
+            ref(){
+                vm.dialogFormVisible = false,
+                vm.users = []
+                vm.select_all_user();
+            },
             rowClass({row, rowIndex}) {
                 return 'background:#F7F7F7'
             },
@@ -202,49 +230,58 @@
                     vm.jobInstance = res.data.message;
                 })
             },
-            add_job(){                                              //增加岗位
-               axios({
-                    method: 'post',
-                    url: '${SITE_URL}jobManagement/add_job/',
-                    data:this.form,
-                }).then((res) => {
-                    vm.dialogFormVisible3 = false;
-                    window.location.href="${SITE_URL}jobManagement/jobM"
-                })
+            add_job(formName){                                              //增加岗位
+                this.$refs[formName].validate((valid) => {
+                    if (!valid) {
+                        return false;
+                    } else {
+                        axios({
+                            method: 'post',
+                            url: '${SITE_URL}jobManagement/add_job/',
+                            data: this.form,
+                        }).then((res) => {
+                            vm.dialogFormVisible3 = false;
+                            window.location.href = "${SITE_URL}jobManagement/jobM"
+                        })
+                    }
+                });
             },
             edit_jobname(row){                                     //显示弹框，传值到edit_job
                 vm.dialogFormVisible2 = true
                 vm.tempid = row.id;
-                vm.tempjobname = row.pos_name;
+                vm.form2.tempjobname = row.pos_name;
             },
-            edit_job(){                                            //修改岗位名
-                axios({
-                    method: "post",
-                    url: '${SITE_URL}jobManagement/edit_job/',
-                    data: {
-                        id:this.tempid,
-                        pos_name:this.tempjobname,
-                    }
-                }).then((res) => {
-                    vm.dialogFormVisible2 = false
-                    if(res.data.message != null){
-                        window.location.href="${SITE_URL}jobManagement/jobM"
-                    }
-                })
+            edit_job(formName){                                            //修改岗位名
+                 this.$refs[formName].validate((valid) => {
+                     if (!valid) {
+                         return false;
+                     } else {
+                         axios({
+                             method: "post",
+                             url: '${SITE_URL}jobManagement/edit_job/',
+                             data: {
+                                 id: this.tempid,
+                                 pos_name: this.form2.tempjobname,
+                             }
+                         }).then((res) => {
+                             vm.dialogFormVisible2 = false
+                             if (res.data.message != null) {
+                                 window.location.href = "${SITE_URL}jobManagement/jobM"
+                             }
+                         })
+                     }
+                 });
             },
-            show_job(row){                                      //显示弹框，传值到add_person
+            show_job(row){                                      //显示弹框和穿梭框，传值到add_person
                 vm.dialogFormVisible = true;
-               // data = vm.generateData2();
                 vm.jobname = row.pos_name;
                 vm.id = row.id;
                 var x = row.user_name;
                 x.forEach((x,index)=>{
                     vm.users.push(x)
                 })
-                console.log(vm.users)
                 const data = [];
                 var people= this.users;
-                console.log(people)
                 const pinyin = this.users;
                 people.forEach((people, index) => {
                   data.push({
@@ -281,19 +318,6 @@
                         this.users.push(res.data.message[i])
                     }
                 })
-            },
-            generateData2(){                                                       //加人的穿梭框
-                const data = [];
-                var people= this.users;
-                const pinyin = this.users;
-                people.forEach((people, index) => {
-                  data.push({
-                      label: people,
-                      pinyin: pinyin[index],
-                      key: index,
-                  });
-                });
-            this.data2 = data;
             },
             filterMethod(query, item) {
                 return item.pinyin.indexOf(query) > -1;
