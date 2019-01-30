@@ -3,6 +3,7 @@
 from models import Holiday
 import os
 from xlrd import open_workbook
+from framework.conf import default
 
 def get_holiday(req):
     dates=Holiday.objects.filter(flag=0).values('day')
@@ -48,3 +49,5 @@ def addone(req,date):
     flag = Holiday.objects.filter(day=date).update(flag=0)
     return flag
 
+def addschedules():
+    default

@@ -286,8 +286,8 @@
                                     <el-input type="textarea" v-model="job.contents" placeholder="上证指数:3000  深证指数:3000"></el-input>
                                 </el-form-item>
                                 <el-form-item label="作业模板">
-                                    <el-select v-model="job.gather_rule" placeholder="请选择作业模板">
-                                        <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
+                                    <el-select v-model="job.gather_rule"  placeholder="请选择作业模板">
+                                        <el-option v-for="i in job1" :label="i.name" :value="i.name"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="NODE_KEY" style="width: 96%">
@@ -296,7 +296,7 @@
                                 <el-form-item label="执行服务器" style="width: 96%">
                                     <el-input v-model="job.params" placeholder="请输入服务器地址"></el-input>
                                 </el-form-item>
-                                <el-form-item label="采集时间段:" style="width: 96%">s
+                                <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="job.start_time"  placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
@@ -341,7 +341,7 @@
                 <el-tab-pane :disabled="disabled5" label="流程单元" name="fourth">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="flow" ref="flow" label-width="100px">
+                            <el-form :model="flow" label-width="100px">
                                 <el-form-item label="字号">
                                     <el-select v-model="flow.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
@@ -380,7 +380,7 @@
                                           <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
                                         </el-select>
                                       </el-form-item>
-                                <div v-if="flow.gather_rule === 'chenyi'">
+                                <div v-if="flow.gather_rule === 'admin'">
                                 <el-form-item label="节点周期:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
@@ -397,7 +397,7 @@
                                     </el-col>
                                 </el-form-item>
                                 </div>
-                                <div v-if="flow.gather_rule === 'beijing'">
+                                <div v-if="flow.gather_rule === '1'">
                                 <el-form-item label="节点周期:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
@@ -452,9 +452,18 @@
 
 
 <script>
+     //csrf验证
+    axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
     var vm = new Vue({
         el:'#app',
         data: {
+            value1:'',
+            job1:[],                                      //作业模板
             page_count:100,                             //总页码数
             page:1,                                   //分页页码数
             sites: [],                                //table内容
@@ -497,7 +506,6 @@
                 contents:'',                        //显示内容
                 gather_rule:'',                     //采集规则
                 gather_params:'',                   //采集参数
-                sql:'',                              //连接数据库
             },
             chart: {                                //图表单元
                 monitor_name:'',                    //单元名称
@@ -543,7 +551,6 @@
                 contents:'',                        //显示内容
                 gather_rule:'',                     //采集规则
                 gather_params:'',                   //流程模板
-                sql:'',                              //连接数据库
             },
             basic1: {                                //基本单元
                 monitor_name:'',                    //单元名称
@@ -559,7 +566,6 @@
                 contents:'',                        //显示内容
                 gather_rule:'',                     //采集规则
                 gather_params:'',                   //采集参数
-                sql:'',                              //连接数据库
             },
             chart1: {                                //图表单元
                 monitor_name:'',                    //单元名称
@@ -605,10 +611,10 @@
                 contents:'',                        //显示内容
                 gather_rule:'',                     //采集规则
                 gather_params:'',                   //流程模板
-                sql:'',                              //连接数据库
             },
         },
         methods: {
+
             current_change1(value) {
                 vm.page = value;
                 vm.show()
@@ -637,6 +643,7 @@
                             type: 'success',
                             message: '删除成功!',
                         },
+
                         axios({
                             method: 'post',
                             url: '${SITE_URL}monitor/delete/',
@@ -663,20 +670,32 @@
                         limit:10
                     },
                 }).then(function(res) {
-
-                    vm.sites = res.data.message;
-
+                    vm.sites = res.data.results.res_list;
+                    vm.page_count = res.data.results.res_list[0].page_count;
+                    vm.job1 = res.data.results.job;
                 })
             },
             select1() {
                 vm.centerDialogVisible = false;
-                axios({
+                vm.page = 1;
+                if (vm.contents == "") {
+                    vm.show()
+                }
+                else {
+                    axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/select/',
-                    data: this.contents,
+                    data: {
+                        data: this.contents,
+                        page:vm.page,
+                        limit:10
+                    }
                 }).then((res) => {
                     vm.sites = res.data.message;
+                    vm.page_count = res.data.message[0].page_count;
                 })
+                }
+
             },
             edit(row) {
                 vm.centerDialogVisible = true;
@@ -714,8 +733,8 @@
                     vm.disabled4 = false;
                     vm.disabled5 = true;
                     vm.monitor_type = 'third';
-                    vm.job.common.font_size = row.font_size;
-                    vm.job.common.height = row.height;
+                    vm.job.font_size = row.font_size;
+                    vm.job.height = row.height;
                     vm.job.width = row.width;
                     vm.job.start_time = row.start_time;
                     vm.job.end_time = row.end_time;
@@ -727,8 +746,8 @@
                     vm.disabled4 = true;
                     vm.disabled5 = false;
                     vm.monitor_type = 'fourth';
-                    vm.flow.common.font_size = row.font_size;
-                    vm.flow.common.height = row.height;
+                    vm.flow.font_size = row.font_size;
+                    vm.flow.height = row.height;
                     vm.flow.width = row.width;
                     vm.flow.start_time = row.start_time;
                     vm.flow.end_time = row.end_time;
@@ -796,7 +815,6 @@
                 vm.disabled5 = false;
                 vm.monitor_type = 'first';
                 vm.unit_id = row;
-                console.log(vm.basic1);
                 vm.basic = vm.basic1;
                 vm.chart = vm.chart1;
                 vm.job = vm.job1;

@@ -5,7 +5,7 @@ from celery import task
 from django.core.mail import send_mail
 from django.conf import settings
 from time import sleep
-
+from celery.task import periodic_task
 @task
 def sendemail(email):
     sleep(5)
