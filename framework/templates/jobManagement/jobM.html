@@ -48,7 +48,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="add_person()" type="primary">保存</el-button>
-            <el-button @click="dialogFormVisible = false">取消</el-button>
+            <el-button @click="ref()">取消</el-button>
         </div>
     </el-dialog>
 
@@ -148,6 +148,11 @@
             value2: '',
         },
         methods: {
+            ref(){
+                vm.dialogFormVisible = false,
+                vm.users = []
+                vm.select_all_user();
+            },
             rowClass({row, rowIndex}) {
                 return 'background:#F7F7F7'
             },
@@ -232,19 +237,16 @@
                     }
                 })
             },
-            show_job(row){                                      //显示弹框，传值到add_person
+            show_job(row){                                      //显示弹框和穿梭框，传值到add_person
                 vm.dialogFormVisible = true;
-               // data = vm.generateData2();
                 vm.jobname = row.pos_name;
                 vm.id = row.id;
                 var x = row.user_name;
                 x.forEach((x,index)=>{
                     vm.users.push(x)
                 })
-                console.log(vm.users)
                 const data = [];
                 var people= this.users;
-                console.log(people)
                 const pinyin = this.users;
                 people.forEach((people, index) => {
                   data.push({
@@ -281,19 +283,6 @@
                         this.users.push(res.data.message[i])
                     }
                 })
-            },
-            generateData2(){                                                       //加人的穿梭框
-                const data = [];
-                var people= this.users;
-                const pinyin = this.users;
-                people.forEach((people, index) => {
-                  data.push({
-                      label: people,
-                      pinyin: pinyin[index],
-                      key: index,
-                  });
-                });
-            this.data2 = data;
             },
             filterMethod(query, item) {
                 return item.pinyin.indexOf(query) > -1;
