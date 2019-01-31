@@ -13,6 +13,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from market_day import celery_opt as co
 
+
 def crawl_manage(request):
     """
     爬虫信息新增与修改

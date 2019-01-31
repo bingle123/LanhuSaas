@@ -193,6 +193,20 @@
                 </el-col>
                 <el-col :span="12">
                     <div class="grid-content bg-purple">
+                        <el-form-item label="接收人：">
+                            <el-input v-model="crawl_form.receivers"></el-input>
+                        </el-form-item>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="grid-content bg-purple">
+                        <el-form-item label="静态资源前缀：">
+                            <el-input v-model="crawl_form.url_pre"></el-input>
+                        </el-form-item>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="grid-content bg-purple">
                         <el-form-item>
                             <el-button type="success" @click="addCrawl">{{ message }}爬虫配置</el-button>
                             <el-button @click="changeDiaLog">返回</el-button>
@@ -255,6 +269,8 @@
                 title_xpath:    '',
                 time_xpath: '',
                 url_xpath: '',
+                receivers:'',
+                url_pre:'',
             },
         },
         methods: {
