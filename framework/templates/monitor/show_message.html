@@ -74,8 +74,8 @@
                 <el-tab-pane :disabled="disabled2" label="基本单元" name="first">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="basic"  ref="basic" label-width="100px">
-                                <el-form-item label="字号">
+                            <el-form :model="basic"  ref="basic" :rules="rules1" label-width="100px">
+                                <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="basic.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
@@ -84,23 +84,23 @@
                                         <el-option label="16" value="16"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="高Ⅹ宽" style="width: 96%" >
+                                <el-form-item label="高Ⅹ宽" required style="width: 96%" >
                                     <el-col :span="11">
-                                        <el-form-item>
-                                            <el-input v-model="basic.height" placeholder="请输入高度"></el-input>
+                                        <el-form-item prop="height">
+                                            <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="basic.height" placeholder="请输入高度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11" >
-                                        <el-form-item>
-                                              <el-input v-model="basic.width" placeholder="请输入宽度"></el-input>
+                                        <el-form-item prop="width">
+                                              <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="basic.width" placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="显示内容"   style="width: 96%">
+                                <el-form-item label="显示内容" prop="contents"  style="width: 96%">
                                         <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000" type="textarea"></el-input>
                                 </el-form-item>
-                                <el-form-item label="数据来源">
+                                <el-form-item label="数据来源" >
                                     <el-radio-group v-model="sql_file_interface" @change="change1" style="padding: 14px">
                                         <el-radio :label="3">数据库</el-radio>
                                         <el-radio :label="6">文件</el-radio>
@@ -150,9 +150,9 @@
                                     </el-col>
                                 </el-form-item>
                                 </el-form-item>
-                                <el-form-item label="采集周期">
-                                    <el-input  v-model="basic.period" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
-                                </el-form-item>
+                                     <el-form-item label="采集周期" prop="period">
+                                            <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="basic.period" style="width: 96%" placeholder="请输入采集周期(秒)"></el-input>
+                                        </el-form-item>
                             </el-form>
                         </div></el-col>
                         <el-col :span="12"><div class="grid-content bg-purple-light">
@@ -177,8 +177,8 @@
                 <el-tab-pane :disabled="disabled3" label="图表单元" name="second">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="chart" ref="chart" label-width="100px">
-                                <el-form-item label="字号">
+                            <el-form :model="chart" :rules="rules2" ref="chart" label-width="100px">
+                                <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="chart.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
@@ -189,25 +189,25 @@
                                 </el-form-item>
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
-                                        <el-form-item >
-                                            <el-input v-model="chart.height" placeholder="请输入高度"></el-input>
-                                        </el-form-item>
+                                        <el-form-item prop="height">
+                                            <el-input  type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="chart.height" placeholder="请输入高度"></el-input>
+                                        </el-form-item >
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
-                                        <el-form-item >
-                                              <el-input v-model="chart.width" placeholder="请输入宽度"></el-input>
+                                        <el-form-item prop="width">
+                                              <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="chart.width" placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="图标类型">
+                                <el-form-item label="图标类型" prop="gather_params">
                                     <el-select v-model="chart.gather_params" placeholder="请选择图表类型">
                                         <el-option label="折线图" value="折线图"></el-option>
                                         <el-option label="柱状图" value="柱状图"></el-option>
                                         <el-option label="饼图" value="饼图"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="显示内容" style="width: 96%">
+                                <el-form-item label="显示内容" style="width: 96%" prop="contents">
                                     <el-input type="textarea" v-model="chart.contents" placeholder="上证指数:3000  深证指数:3000"></el-input>
                                 </el-form-item>
                                 <el-form-item label="连接数据库">
@@ -234,8 +234,10 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="采集周期">
-                                    <el-input  v-model="chart.period" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
+                                <el-form-item label="采集周期" prop="period">
+                                            <el-input type="number" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="chart.period" style="width: 96%"
+                                                      placeholder="请输入采集周期(秒)"></el-input>
                                 </el-form-item>
                             </el-form>
                         </div></el-col>
@@ -256,11 +258,11 @@
                 <!-- 图表单元 end-->
 
                 <!-- 作业单元 start-->
-                <el-tab-pane :disabled="disabled4" label="作业单元" name="third">
+                <el-tab-pane :disabled="disabled4"  label="作业单元" name="third">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="job" ref="job" label-width="100px">
-                                <el-form-item label="字号">
+                            <el-form :model="job" :rules="rules3" ref="job" label-width="100px">
+                                <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="job.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
@@ -271,23 +273,23 @@
                                 </el-form-item>
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
-                                        <el-form-item>
-                                            <el-input v-model="job.height" placeholder="请输入高度"></el-input>
+                                        <el-form-item prop="height">
+                                            <el-input  type="number" v-model.number="numberValidateForm.age" auto-complete="off"v-model="job.height" placeholder="请输入高度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
-                                        <el-form-item>
-                                              <el-input v-model="job.width" placeholder="请输入宽度"></el-input>
+                                        <el-form-item prop="width">
+                                              <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="job.width" placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="显示内容" style="width: 96%">
+                                <el-form-item label="显示内容" style="width: 96%" prop="contents">
                                     <el-input type="textarea" v-model="job.contents" placeholder="上证指数:3000  深证指数:3000"></el-input>
                                 </el-form-item>
-                                <el-form-item label="作业模板">
+                                <el-form-item label="作业模板" prop="gather_params">
                                     <el-select v-model="job.gather_rule"  placeholder="请选择作业模板">
-                                        <el-option v-for="i in job1" :label="i.name" :value="i.name"></el-option>
+                                        <el-option v-for="i in job2" :label="i.name" :value="i.name"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="NODE_KEY" style="width: 96%">
@@ -311,8 +313,10 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="采集周期">
-                                    <el-input  v-model="job.period" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
+                                 <el-form-item label="采集周期" prop="period">
+                                            <el-input type="number" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="job.period" style="width: 96%"
+                                                      placeholder="请输入采集周期(秒)"></el-input>
                                 </el-form-item>
                             </el-form>
                         </div></el-col>
@@ -341,8 +345,8 @@
                 <el-tab-pane :disabled="disabled5" label="流程单元" name="fourth">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="flow" label-width="100px">
-                                <el-form-item label="字号">
+                            <el-form :model="flow" :rules="rules4" ref="flow" label-width="100px">
+                                <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="flow.font_size" placeholder="请选择字号">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
@@ -353,18 +357,18 @@
                                 </el-form-item>
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
-                                        <el-form-item>
-                                            <el-input v-model="flow.height" placeholder="请输入高度"></el-input>
+                                        <el-form-item prop="height">
+                                            <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.height" placeholder="请输入高度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
-                                        <el-form-item>
-                                              <el-input v-model="flow.width" placeholder="请输入宽度"></el-input>
+                                        <el-form-item prop="width">
+                                              <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.width" placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="流程模板">
+                                <el-form-item label="流程模板" prop="gather_params">
                                     <el-select v-model="flow.gather_params" placeholder="请选择模板">
                                         <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
                                     </el-select>
@@ -414,8 +418,10 @@
                                     </el-col>
                                 </el-form-item>
                                 </div>
-                                <el-form-item label="采集周期">
-                                    <el-input  v-model="flow.period" style="width: 96%" placeholder="请输入采集周期"></el-input>秒
+                                 <el-form-item label="采集周期" prop="period">
+                                            <el-input type="number" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="flow.period" style="width: 96%"
+                                                      placeholder="请输入采集周期(秒)"></el-input>
                                 </el-form-item>
                             </el-form>
                         </div></el-col>
@@ -442,7 +448,7 @@
         </span>
         <span slot="footer" class="dialog-footer">
             <el-button @click="centerDialogVisible = false">取 消</el-button>
-            <el-button type="primary" v-on:click="edit1">保 存</el-button>
+            <el-button type="primary" v-on:click="pefFrom">保 存</el-button>
         </span>
     </el-dialog>
     <!-- 对话框 end-->
@@ -463,7 +469,7 @@
         el:'#app',
         data: {
             value1:'',
-            job1:[],                                      //作业模板
+            job2:[],                                      //作业模板
             page_count:100,                             //总页码数
             page:1,                                   //分页页码数
             sites: [],                                //table内容
@@ -507,6 +513,24 @@
                 gather_rule:'',                     //采集规则
                 gather_params:'',                   //采集参数
             },
+            rules1:{
+                font_size:[
+                    {required: true, message: '请选择字号', trigger: 'change'}
+                ],
+                height:[
+                        {required: true, message: '请输入高度', trigger: 'blur'}
+                ],
+                width:[
+                        {required: true, message: '请输入宽度', trigger: 'blur'}
+                ],
+                contents:[
+                     {required: true, message: '请输入内容', trigger: 'blur'}
+                ],
+                period:[
+                        {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
+                ],
+
+            },
             chart: {                                //图表单元
                 monitor_name:'',                    //单元名称
                 monitor_type:'',                    //单元类型
@@ -522,6 +546,26 @@
                 gather_params:'',                   //节点
                 params: '',                          //监控参数
             },
+             rules2:{
+                 font_size: [
+                     {required: true, message: '请选择字号', trigger: 'change'}
+                 ],
+                 height: [
+                     {required: true, message: '请输入高度', trigger: 'blur'}
+                 ],
+                 width: [
+                     {required: true, message: '请输入宽度', trigger: 'blur'}
+                 ],
+                 contents: [
+                     {required: true, message: '请输入内容', trigger: 'blur'}
+                 ],
+                 gather_params:[
+                     {required: true, message: '请选择图片类型', trigger: 'change'}
+                 ],
+                 period:[
+                        {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
+                ],
+             },
             job: {                                   //作业单元
                 monitor_name:'',                    //单元名称
                 monitor_type:'',                    //单元类型
@@ -537,6 +581,26 @@
                 gather_params:'',                   //作业模板
                 params: '',                         //执行服务器
             },
+             rules3:{
+                 font_size: [
+                     {required: true, message: '请选择字号', trigger: 'change'}
+                 ],
+                 height: [
+                     {required: true, message: '请输入高度', trigger: 'blur'}
+                 ],
+                 width: [
+                     {required: true, message: '请输入宽度', trigger: 'blur'}
+                 ],
+                 contents: [
+                     {required: true, message: '请输入内容', trigger: 'blur'}
+                 ],
+                 gather_params:[
+                     {required: true, message: '请选择作业模板', trigger: 'change'}
+                 ],
+                 period:[
+                        {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
+                ],
+             },
             flow: {                                //流程单元
                 monitor_name:'',                    //单元名称
                 monitor_type:'',                    //单元类型
@@ -552,6 +616,23 @@
                 gather_rule:'',                     //采集规则
                 gather_params:'',                   //流程模板
             },
+            rules4:{
+                 font_size: [
+                     {required: true, message: '请选择字号', trigger: 'change'}
+                 ],
+                 height: [
+                     {required: true, message: '请输入高度', trigger: 'blur'}
+                 ],
+                 width: [
+                     {required: true, message: '请输入宽度', trigger: 'blur'}
+                 ],
+                 gather_params:[
+                     {required: true, message: '请选择流程模板', trigger: 'change'}
+                 ],
+                period:[
+                        {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
+                ]
+             },
             basic1: {                                //基本单元
                 monitor_name:'',                    //单元名称
                 monitor_type:'',                    //单元类型
@@ -614,7 +695,21 @@
             },
         },
         methods: {
-
+            pefFrom(){
+                var basic = $('#pane-first').attr('style')
+                var chart = $('#pane-second').attr('style')
+                var job = $('#pane-third').attr('style')
+                var flow = $('#pane-fourth').attr('style')
+                if(basic == undefined || basic == ""){
+                    vm.submitForm('basic')
+                }else if(chart == undefined || chart == ""){
+                    vm.submitForm('chart')
+                }else if(job == undefined || job == ""){
+                    vm.submitForm('job')
+                }else if(flow == undefined || flow == ""){
+                    vm.submitForm('flow')
+                }
+            },
             current_change1(value) {
                 vm.page = value;
                 vm.show()
@@ -622,16 +717,14 @@
             submitForm(formName) {
             this.$refs[formName].validate((valid) => {
               if (valid) {
-                alert('submit!');
+                    vm.edit1()
               } else {
                 console.log('error submit!!');
                 return false;
               }
             });
           },
-            resetForm(formName) {
-                this.$refs[formName].resetFields();
-            },
+
             edit2(row) {
                 this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -672,7 +765,7 @@
                 }).then(function(res) {
                     vm.sites = res.data.results.res_list;
                     vm.page_count = res.data.results.res_list[0].page_count;
-                    vm.job1 = res.data.results.job;
+                    vm.job2 = res.data.results.job;
                 })
             },
             select1() {
@@ -809,6 +902,8 @@
                 }
             },
             edit3(row) {
+                setTimeout(
+                    function () {
                 vm.disabled2 = false;
                 vm.disabled3 = false;
                 vm.disabled4 = false;
@@ -819,7 +914,9 @@
                 vm.chart = vm.chart1;
                 vm.job = vm.job1;
                 vm.flow = vm.flow1;
-                vm.centerDialogVisible = true;
+                            vm.centerDialogVisible = true
+                    },1)
+
             },
             del() {
                 vm.edit(0)
@@ -880,5 +977,13 @@
     });
     vm.show();
 </script>
-
+<script>
+    setInterval(function () {
+        $('input[type=number]').keypress(function(e) {
+　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+　　　　return false;
+　　}
+});
+    },1)
+</script>
 </html>
