@@ -65,6 +65,7 @@ def crawl_temp_test(url, total_xpath, title_xpath, time_xpath, url_xpath):
     :return:
     """
     logger.info(u'begin crawl info......')
+
     # 指明phantomjs的执行路径
     driver = webdriver.PhantomJS(executable_path=r'D:\phantomjs-2.1.1-windows\bin\phantomjs.exe')
     driver.get(url)
@@ -77,8 +78,8 @@ def crawl_temp_test(url, total_xpath, title_xpath, time_xpath, url_xpath):
         # element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "loadedButton")))
         pass
     finally:
-        print(driver.page_source)
-
+        # print(driver.page_source)
+        pass
     res = requests.get(url)
     status_code = res.status_code       # 请求状态码
     if status_code == 200:
@@ -94,6 +95,8 @@ def crawl_temp_test(url, total_xpath, title_xpath, time_xpath, url_xpath):
                 time1 = temp.xpath(time_xpath)[0]
                 title = temp.xpath(title_xpath)[0]
                 resource = temp.xpath(url_xpath)[0]
+                res = change_url(resource)
+                print res
                 temp_dict['time'] = time1
                 temp_dict['title'] = title
                 temp_dict['resource'] = resource
@@ -107,6 +110,20 @@ def crawl_temp_test(url, total_xpath, title_xpath, time_xpath, url_xpath):
         return error_result("请检查你的URL,找不到URL")
     elif status_code == 500:
         return error_result("URL系统错误")
+
+
+def change_url(string):
+    """
+    去除URL的‘.’字符
+    :param string:
+    :return:
+    """
+    result = string[:1]
+    # print result
+    if result == '.':
+        return change_url(string.lstrip('.'))
+    if result == '/':
+        return string
 
 
 

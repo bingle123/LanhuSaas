@@ -69,11 +69,9 @@ def crawl(request):
     # url_xpath = 'a/@href'
     url = 'http://www.szse.cn/aboutus/trends/news/index.html'
     total_xpath = '//div[@class="article-list"]//div[@class="g-content-list"]//ul//li//div[@class="title"]'
-    title_xpath = 'a/@class'
-    # title_xpath = 'span/text()'
+    title_xpath = 'a/@title'
     time_xpath = 'span/text()'  # yes
-    # url_xpath = 'a/@title'
-    url_xpath = 'span/text()'
+    url_xpath = 'a/@href'
     res = crawl_template.crawl_temp_test(url, total_xpath, title_xpath, time_xpath, url_xpath)
     return render_json(res)
 
