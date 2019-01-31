@@ -31,6 +31,9 @@ def addone(req,date):
     flag=function.addone(req,date)
     return render_json(flag)
 
+def cedemo(req):
+    flag=function.addperdic_task()
+    return HttpResponse(flag)
 
 
 

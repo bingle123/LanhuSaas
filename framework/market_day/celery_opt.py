@@ -3,7 +3,7 @@
 from djcelery import models as celery_models
 import json
 
-def create_task(name, task, task_args, crontab_time, desc):
+def create_task_crontab(name, task, task_args, crontab_time, desc):
     """
     新增定时任务
     :param name: 定时任务名称
@@ -30,11 +30,40 @@ def create_task(name, task, task_args, crontab_time, desc):
         crontab = celery_models.CrontabSchedule.objects.create(**crontab_time)
     task.crontab = crontab  # 设置crontab
     task.enabled = True  # 开启task
-    task.kwargs = json.dumps(task_args, ensure_ascii=False)  # 传入task参数
+    task.kwargs = json.dumps(task_args, ensure_ascii=False) # 传入task参数
     task.description = desc
     task.save()
     return True
 
+def create_task_interval(name, task, task_args,interval_time, desc):
+    """
+    新增定时任务
+    :param name: 定时任务名称
+    :param task: 对应tasks里已有的task
+    :param task_args: list 参数
+    [arg1,arg2]
+    :param crontab_time: 时间配置
+    {
+        'every':10,
+        'period':'seconds'
+    }
+    :param desc: 定时任务描述
+    :return: True or False
+    """
+
+    # task任务， created是否定时创建
+    task, created = celery_models.PeriodicTask.objects.get_or_create(name=name, task=task)
+    # 获取 crontab
+    interval = celery_models.IntervalSchedule.objects.filter(**interval_time).first()
+    if interval is None:
+        # 如果没有就创建，有的话就继续复用之前的crontab
+        interval = celery_models.IntervalSchedule.objects.create(**interval_time)
+    task.interval=interval  # 设置crontab
+    task.enabled = True  # 开启task
+    task.kwargs=json.dumps(task_args, ensure_ascii=False) #将kwargs传入
+    task.description = desc
+    task.save()
+    return True
 
 def change_task_status(name, mode, crontab_time):
     """
