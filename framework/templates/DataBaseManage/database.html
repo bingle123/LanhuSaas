@@ -221,6 +221,7 @@
                     </el-col>
                 </el-row>
             </div>
+            <!--||||||||||||||||-->
         </el-card>
     </div>
 
@@ -231,7 +232,7 @@
         el: '#main',
         data: {
             search:'',//搜索框的值
-            page_count:200,
+            page_count:0,
             page:1, //当前页
             isAdd: 1,
             tableData: [],
@@ -282,8 +283,19 @@
         methods: {
             current_change1(value) {
                 ve.page = value;
-                ve.conn()
-            },
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}DataBaseManage/selecthor/',
+                    data: {
+                        search:this.search,
+                        page:ve.page,
+                        limit:5,
+                    }
+                }).then((res) => {
+                    ve.tableData = res.data.message;
+                    ve.page_count = res.data.message[0].count;
+                })
+                },
             show() {
                 this.isAdd = 2
             },
@@ -299,18 +311,19 @@
 
 
             //搜索
+
             select_table() {
                 axios({
                     method: 'post',
                     url: '${SITE_URL}DataBaseManage/selecthor/',
                     data: {
                         search:this.search,
-                        page:ve.page,
+                        page:1,
                         limit:5,
                     }
                 }).then((res) => {
                     ve.tableData = res.data.message;
-                    ve.page_count = res.data.message[0].page_count;
+                    ve.page_count = res.data.message[0].count;
                 })
             },
             //查询所有
@@ -319,12 +332,13 @@
                     method: 'post',
                     url: '${SITE_URL}DataBaseManage/getall/',
                     data:{
+                        search:this.search,
                         page:ve.page,
                         limit:5,
                     }
                 }).then(function(response) {
                     ve.tableData = response.data.message
-                    ve.page_count = response.data.message[0].page_count;
+                    ve.page_count = response.data.message[0].count;
                 })
             },
 
@@ -340,7 +354,7 @@
                         axios.post(
                         '${SITE_URL}DataBaseManage/saveconn/',this.addconn
                     ).then(function (res) {
-                        if(res.data.message == 0){
+                        if(res.data.code == 0){
                             ve.hide()
                         }
                     });
@@ -364,9 +378,8 @@
                     }else {
                         axios.post('${SITE_URL}DataBaseManage/editconn/',this.editDataBase)
                     .then((res)=>{
-                        if(res.data.message != null){
-                            this.isAdd = 1
-                            ve.conn()
+                        if(res.data.code == 0){
+                            ve.hide()
                         }
                     })
                     }
@@ -414,7 +427,7 @@
                     }else {
                         axios.post('${SITE_URL}DataBaseManage/testConn/',this.addconn)
                             .then((res)=>{
-                        if(res.data.message == 1){
+                        if(res.data.code == 0){
                              alert("数据库连接成功")
                         }else{
                             alert("数据库连接失败")
@@ -434,7 +447,7 @@
                     }else {
                         axios.post('${SITE_URL}DataBaseManage/testConn/',this.editDataBase)
                             .then((res)=>{
-                        if(res.data.message == 1){
+                        if(res.data.code == 0){
                              alert("数据库连接成功")
                         }else{
                             alert("数据库连接失败")
