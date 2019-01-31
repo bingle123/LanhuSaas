@@ -41,12 +41,11 @@ def editSence(request):
 
 @csrf_exempt
 def pos_name(request):
-    print '123'
     res=function.pos_name(request)
     return  render_json(res)
 
 
 @csrf_exempt
-def add_temp(request):
-    res = function.addtmp(request)
-    return render_json(res)
+def paging(request):
+    res=function.paging(request)
+    return  render_json(res)
