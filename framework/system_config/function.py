@@ -1,6 +1,7 @@
 # encoding:utf-8
 from shell_app.tools import success_result
 from shell_app.tools import error_result
+from shell_app.tools import get_active_user
 from models import CrawlerConfig
 from models import CrawlContent
 from django.db.models import Q
@@ -30,24 +31,25 @@ def crawl_manage(request):
     title_xpath = request_body['title_xpath']
     time_xpath = request_body['time_xpath']
     url_xpath = request_body['url_xpath']
-
-    create_user = 'zork'
-    update_user = 'zork'
+    url_pre = request_body['url_pre']
+    active_user_dict = get_active_user(request)
+    # 接收人为字符串，以@隔开
     receivers = 'zork'
-
     # 新增
     if crawl_id == '':
+        create_user = active_user_dict['data']['bk_username']
         try:
             res = CrawlerConfig.objects.create(crawl_name=crawl_name, crawl_url=crawl_url, period=period,
                                                crawl_keyword=crawl_keyword, crawl_no_keyword=crawl_no_keyword,
                                                total_xpath=total_xpath, title_xpath=title_xpath, time_xpath=time_xpath,
-                                               url_xpath=url_xpath, create_user=create_user, update_user=update_user,
-                                               receivers=receivers)
+                                               url_xpath=url_xpath, create_user=create_user, update_user=create_user,
+                                               receivers=receivers, url_pre=url_pre)
             return success_result('新增爬虫配置成功')
         except Exception as e:
             return error_result('新增爬虫配置信息失败' + e)
     # 修改
     else:
+        update_user = active_user_dict['data']['bk_username']
         try:
             print 2
             res = CrawlerConfig.objects.filter(id=crawl_id).update(crawl_name=crawl_name, crawl_url=crawl_url,
@@ -58,7 +60,7 @@ def crawl_manage(request):
                                                                    time_xpath=time_xpath,
                                                                    url_xpath=url_xpath,
                                                                    update_user=update_user,
-                                                                   receivers=receivers,
+                                                                   receivers=receivers,url_pre=url_pre,
                                                                    update_time=datetime.datetime.now())
             return success_result('修改爬虫配置成功')
         except Exception as e:

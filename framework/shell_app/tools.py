@@ -73,3 +73,14 @@ def utc_to_local(utc_time_str, utc_format='%Y-%m-%dT%H:%M:%SZ'):
     time_str = local_dt.strftime(local_format)
     print time.mktime(time.strptime(time_str, local_format))
     return int(time.mktime(time.strptime(time_str, local_format)))
+
+
+def get_active_user(request):
+    """
+    通过蓝鲸获取当前用户
+    :param request:
+    :return:            dict
+    """
+    client = interface_param(request)
+    res = client.bk_login.get_user({})
+    return res
