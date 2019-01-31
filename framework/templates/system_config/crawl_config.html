@@ -208,6 +208,7 @@
                 <el-col :span="12">
                     <div class="grid-content bg-purple">
                         <el-form-item>
+                            <el-button type="info" @click="testCrawl">测试爬虫</el-button>
                             <el-button type="success" @click="addCrawl">{{ message }}爬虫配置</el-button>
                             <el-button @click="changeDiaLog">返回</el-button>
                         </el-form-item>
@@ -261,14 +262,14 @@
             crawl_form: {
                 id:'',
                 crawl_name: '',
-                crawl_url: '',
+                crawl_url: 'http://www.szse.cn/aboutus/trends/news/index.html',
                 period: '',
                 crawl_keyword: '',
                 crawl_no_keyword: '',
-                total_xpath: '',
-                title_xpath:    '',
-                time_xpath: '',
-                url_xpath: '',
+                total_xpath: '//div[@class="article-list"]//div[@class="g-content-list"]//ul//li//div[@class="title"]',
+                title_xpath:    'a/@title',
+                time_xpath: 'span/text()',
+                url_xpath: 'a/@href',
                 receivers:'',
                 url_pre:'',
             },
@@ -403,6 +404,48 @@
                     vm.$message({
                         type:'info',
                         message:'查询错误'
+                    })
+                })
+            },testCrawl(){
+                const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+                axios({
+                    url:'${SITE_URL}system_config/crawl_test/',
+                    method: 'post',
+                    data: this.crawl_form,
+                }).then((res) =>{
+                    if (res.data.code == 0) {
+                        let info = ''
+                        for (let i = 0; i< res.data.results.length; i++){
+                            let title = res.data.results[i].title;
+                            let time = res.data.results[i].time;
+                            let url = res.data.results[i].resource;
+                            info += '<h6>'+'第'+(i+1)+'条数据'+'</h6> <span>标题：</span><span>'+title+'</span><br> <span>时间：</span>' +
+                                '<span>'+time+'</span><br> <span>链接：</span><span>'+url+'</span><br>'
+
+                        }
+                        vm.$message({
+                            type:'success',
+                            dangerouslyUseHTMLString: true,
+                            showClose: true,
+                            duration:1000,
+                            message:info,
+                        });
+                        loading.close();
+                    }else {
+                        vm.$message({
+                            type:'info',
+                            message:res.data.results,
+                        })
+                    }
+                }).catch((res) => {
+                    vm.$message({
+                        type:'info',
+                        message:'爬虫异常'+res,
                     })
                 })
             }

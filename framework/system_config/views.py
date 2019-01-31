@@ -98,6 +98,16 @@ def start_crawl(request):
     return render_json(res)
 
 
+def crawl_test(request):
+    """
+    用户爬虫测试
+    :param request:
+    :return:
+    """
+    res = function.crawl_test(request)
+    return render_json(res)
+
+
 def json_test(request):
     """
     josn测试
