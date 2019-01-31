@@ -39,30 +39,27 @@ def select_job(request):
         start_page = limit * page - 9
         res1 = search
         res_list = []
-        if len(res1) == 0:
-            res_list = show(request)
-        else:
-            if res1.isdigit():
-                if JobInstance.objects.filter(id=int(res1)).exists():
-                    job = JobInstance.objects.filter(id=int(res1))
-            if JobInstance.objects.filter(pos_name=res1).exists():
-                job = JobInstance.objects.filter(pos_name=res1)
-            tmp = job[start_page - 1:start_page + 9]
-            unit2 = tmp.values('id')
-            page_count = math.ceil(len(unit2) / 10)
-            for x in job:
-                tmp = []
-                users = Localuser.objects.filter(user_pos=x.id)
-                for y in users:
-                    if x.id == y.user_pos:
-                        tmp.append(y.user_name + ' ')
-                dic = {
-                    'id': x.id,
-                    'user_name': tmp,
-                    'pos_name': x.pos_name,
-                    'page_count':page_count
-                }
-                res_list.append(dic)
+        if res1.isdigit():
+            if JobInstance.objects.filter(id=int(res1)).exists():
+                job = JobInstance.objects.filter(id=int(res1))
+        if JobInstance.objects.filter(pos_name__contains=res1).exists():
+            job = JobInstance.objects.filter(pos_name__contains=res1)
+        tmpjob = job[start_page - 1:start_page + 9]
+        unit2 = job.values('id')
+        page_count = math.ceil(len(unit2) / 10)
+        users = Localuser.objects.all()
+        for x in tmpjob:
+            tmp = []
+            for y in users:
+                if x.id == y.user_pos:
+                    tmp.append(y.user_name + ' ')
+            dic = {
+                'id': x.id,
+                'user_name': tmp,
+                'pos_name': x.pos_name,
+                'page_count':page_count
+            }
+            res_list.append(dic)
         return res_list
     except Exception as e:
         return None
