@@ -140,6 +140,9 @@
                 },{
                     pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+$/,
                     message:'请不要输入特殊字符',trigger: 'blur'
+                },{
+                    max: 50,
+                    message: '长度必须在 50个字符',
                 }]
             },
             users:[],
@@ -154,6 +157,9 @@
                 },{
                     pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+$/,
                     message:'请不要输入特殊字符',trigger: 'blur'
+                },{
+                    max: 50,
+                    message: '长度在 50个字符',
                 }]
             },
             tempid:'',
@@ -224,9 +230,14 @@
                 axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/select_job/',
-                    data: this.search,
+                    data: {
+                        search:this.search,
+                        page:vm.page,
+                        limit:10
+                    },
                 }).then((res) => {
                     vm.jobInstance = res.data.message;
+                    vm.page_count = res.data.message[0].page_count;
                 })
             },
             add_job(formName){                                              //增加岗位

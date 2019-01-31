@@ -8,6 +8,8 @@
     <script type="text/javascript" src="${STATIC_URL}js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <!-- vue的ajax依赖-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
 </head>
 <body>
     <div id="customProcess">
@@ -23,7 +25,7 @@
                     <el-button type="primary" size="medium" @click="customProcessAddNode()">新增过程节点</el-button>
                 </div>
                 <el-table :data="customProcessTableData" id="customProcessTable">
-                    <el-table-column prop="nodeName" label="节点名称">
+                    <el-table-column prop="node_name" label="节点名称">
                     </el-table-column>
                     <el-table-column prop="send_content" label="通知内容">
                     </el-table-column>
@@ -33,14 +35,13 @@
                     </el-table-column>
                     <el-table-column prop="operation" label="操作">
                         <template slot-scope="scope">
-                            <el-button type="text" size="small" @click="customProcessEditNode()">编辑</el-button>
-                            <el-button type="text" size="small" @click="customProcessDeleteNode()">删除</el-button>
+                            <el-button type="text" size="small" @click="customProcessEditNode(scope.row.id)">编辑</el-button>
+                            <el-button type="text" size="small" @click="customProcessDeleteNode(scope.row.id)">删除</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
                 <el-row class="customProcessFormButton">
-                    <el-button @click="addDialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="addDialogVisible = false">生 成</el-button>
+                    <el-button type="primary" @click="addDialogVisible = false">关 闭</el-button>
                 </el-row>
             </div>
             <div v-if="customProcessTableStatus == 'add'">
@@ -50,34 +51,34 @@
                         <hr>
                     </el-col>
                 </el-row>
-                <el-form label-position="right" label-width="100px">
+                <el-form :rules="rules" :model="customProcessNode" ref="customProcessNode" label-position="right" label-width="100px">
                     <el-row>
                         <el-col :span="11" :offset="1">
-                            <el-form-item label="节点名称:">
-                                <el-input></el-input>
+                            <el-form-item label="节点名称:" prop="node_name">
+                                <el-input v-model="customProcessNode.node_name"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="11" :offset="1">
-                            <el-form-item label="通知内容:">
-                                <el-input></el-input>
+                            <el-form-item label="通知内容:" prop="send_content">
+                                <el-input v-model="customProcessNode.send_content"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-col :span="11" :offset="1">
-                            <el-form-item label="节点顺序:">
-                                <el-input></el-input>
+                            <el-form-item label="节点顺序:" prop="seq">
+                                <el-input v-model="customProcessNode.seq"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="11" :offset="1">
-                            <el-form-item label="通知接收人:">
-                                <el-input></el-input>
+                            <el-form-item label="通知接收人:" prop="receivers">
+                                <el-input v-model="customProcessNode.receivers"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row class="customProcessFormButton">
                         <el-button @click="customProcessListNode()">取 消</el-button>
-                        <el-button type="primary" @click="customProcessListNode()">添 加</el-button>
+                        <el-button type="primary" @click="customProcessSaveNodeInfo('customProcessNode')">添 加</el-button>
                     </el-row>
                     </el-form-item>
                 </el-form>
@@ -89,34 +90,34 @@
                         <hr>
                     </el-col>
                 </el-row>
-                <el-form label-position="right" label-width="100px">
+                <el-form :rules="rules" :model="customProcessNode" ref="customProcessNode" label-position="right" label-width="100px">
                     <el-row>
                         <el-col :span="11" :offset="1">
-                            <el-form-item label="节点名称:">
-                                <el-input></el-input>
+                            <el-form-item label="节点名称:" prop="node_name">
+                                <el-input v-model="customProcessNode.node_name"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="11" :offset="1">
-                            <el-form-item label="通知内容:">
-                                <el-input></el-input>
+                            <el-form-item label="通知内容:" prop="send_content">
+                                <el-input v-model="customProcessNode.send_content"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-col :span="11" :offset="1">
-                            <el-form-item label="节点顺序:">
-                                <el-input></el-input>
+                            <el-form-item label="节点顺序:" prop="seq">
+                                <el-input v-model="customProcessNode.seq"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="11" :offset="1">
-                            <el-form-item label="通知接收人:">
-                                <el-input></el-input>
+                            <el-form-item label="通知接收人:" prop="receivers">
+                                <el-input v-model="customProcessNode.receivers"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row class="customProcessFormButton">
                         <el-button @click="customProcessListNode()">取 消</el-button>
-                        <el-button type="primary" @click="customProcessListNode()">修 改</el-button>
+                        <el-button type="primary" @click="customProcessSaveNodeInfo('customProcessNode')">修 改</el-button>
                     </el-row>
                     </el-form-item>
                 </el-form>
@@ -166,7 +167,7 @@
                                 <el-col :span="6" :offset="11" style="padding-top: 50px;" v-if="customProcessStepSum > 0">
                                     <div style="height: 800px;">
                                         <el-steps id="customMainProcess" direction="vertical" :active="customProcessStep" finish-status="success" process-status="finish">
-                                            <el-step :title="processData.nodeName" v-for="processData in processDataList"></el-step>
+                                            <el-step :title="processData.node_name" v-for="processData in customProcessTableData"></el-step>
                                         </el-steps>
                                     </div>
                                 </el-col>
@@ -191,6 +192,13 @@
     </div>
 </body>
 <script>
+    //csrf验证
+    axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
     var vue = new Vue({
         el: '#customProcess',
         data: {
@@ -201,62 +209,37 @@
             //当前流程中节点所处的位置，初始化为-1即未开始流程，后续应从数据库表中读取该信息
             customProcessStep: -1,
             //当前流程中节点总数，后续应从数据库读取该信息,或直接计算processDataList的长度获得
-            customProcessStepSum: 6,
+            customProcessStepSum: 0,
             //流程是否已经开始执行，应该根据数据库中的信息来判断
             customProcessStatus: false,
             customProcessReceivers: '',
             customProcessNoticeContent: '',
-            customProcessTableData: [{
-                nodeName: '节点1',
-                send_content: '通知内容1',
-                seq: '1',
-                receivers: '通知接收人1'
-            },{
-                nodeName: '节点2',
-                send_content: '通知内容2',
-                seq: '2',
-                receivers: '通知接收人2'
-            },{
-                nodeName: '节点3',
-                send_content: '通知内容3',
-                seq: '3',
-                receivers: '通知接收人3'
-            },{
-                nodeName: '节点4',
-                send_content: '通知内容4',
-                seq: '4',
-                receivers: '通知接收人4'
-            },{
-                nodeName: '节点5',
-                send_content: '通知内容5',
-                seq: '5',
-                receivers: '通知接收人5'
-            },{
-                nodeName: '节点6',
-                send_content: '通知内容6',
-                seq: '6',
-                receivers: '通知接收人6'
-            }],
-            //流程节点图使用的节点名称信息，节点信息应在后台根据nodeOrder排序后返回到此对象中
-            processDataList: [{
-                id: 1,
-                nodeName: '节点1'
-            },{
-                id: 2,
-                nodeName: '节点2'
-            },{
-                id: 3,
-                nodeName: '节点3'
-            },{
-                id: 4,
-                nodeName: '节点4'
-            },{
-                id: 5,
-                nodeName: '节点5'
-            },{
-                id: 6,
-                nodeName: '节点6'
-            }]
+            customProcessNode: {
+                /*node_name: null,
+                send_content: null,
+                seq: null,
+                receivers: null*/
+            },
+            customProcessTableData: [],
+            //校验规则定义
+            rules: {
+                node_name: [
+                    { required: true, message: '请输入节点名称', trigger: 'blur' },
+                    { min: 1, max: 50, message: '节点名称长度在1~50之间', trigger: 'blur' }
+                ],
+                send_content: [
+                    { required: true, message: '请输入通知内容', trigger: 'blur' },
+                    { min: 1, max: 1000, message: '通知内容长度在1~1000之间', trigger: 'blur' }
+                ],
+                seq: [
+                    { required: true, message: '请输入节点顺序', trigger: 'blur' },
+                    { pattern: /^[1-9][0-9]{0,1}$/, message: '节点值在0~99之间', trigger: 'blur' }
+                ],
+                receivers: [
+                    { required: true, message: '请输入通知接收人', trigger: 'blur' },
+                    { min: 1, max: 1000, message: '通知接收人长度在1~1000之间', trigger: 'blur' }
+                ]
+            }
         },
         methods:{
             //Date()对象转yyyy-MM-dd HH:mm:ss函数
@@ -273,6 +256,23 @@
                 var seconds = date.getSeconds();
                 seconds = seconds < 10 ? ('0' + seconds) : seconds;
                 return y + '-' + m + '-' + d+' '+h+':'+minute+':'+seconds;
+            },
+            //弹出加载界面
+            customProcessPopupLoading: function() {
+                //返回加载标记，供外部关闭
+                return this.$loading({
+                    lock: true,
+                    text: '正在拼命加载中...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            },
+            //弹出数据加载错误的警告信息
+            customProcessPopupErrorMessage: function(msg) {
+                this.$notify.error({
+                  title: '错误',
+                  message: msg
+                });
             },
             //生成当前执行节点的信息
             generateCurrentProcessInfo: function() {
@@ -299,7 +299,6 @@
                     $('#customProcessStartButton').removeClass('el-button--success')
                             .addClass('el-button--info')
                             .text('当日流程已执行完毕');
-                    this.customProcessStatus = false;
                     this.customProcessEnd();
                     return;
                 }
@@ -308,8 +307,8 @@
             },
             //发送短信通知
             customProcessSendMessage(nodeOrder) {
-                this.customProcessReceivers = 'LHADMIN' + this.processDataList[nodeOrder].id;
-                this.customProcessNoticeContent = '节点流程已执行完成，请进行下一步操作';
+                this.customProcessReceivers = this.customProcessTableData[nodeOrder].receivers;
+                this.customProcessNoticeContent = this.customProcessTableData[nodeOrder].send_content;
                 this.customProcessSendMsgDialogVisible = true;
             },
             //短信通知关闭前的确认
@@ -320,35 +319,107 @@
 
                 });
             },
-            //添加节点
+            //切换添加节点的界面
             customProcessAddNode: function() {
                 this.customProcessTableStatus = 'add';
             },
-            //列出所有节点
+            //切换列出所有节点的界面
             customProcessListNode: function() {
+                this.customProcessNode = {};
                 this.customProcessTableStatus = 'list';
             },
-            //修改节点信息
-            customProcessEditNode: function() {
-                this.customProcessTableStatus = 'edit';
+            //切换修改节点信息的界面
+            customProcessEditNode: function(id) {
+                const loading = this.customProcessPopupLoading();
+                var url = '${SITE_URL}customProcess/select_node';
+                var editData = {};
+                editData.id = id;
+                axios({
+                    method: 'post',
+                    url: url,
+                    data: editData,
+                }).then((res) =>{
+                    loading.close();
+                    this.customProcessNode = res.data.message[0];
+                    this.customProcessTableStatus = 'edit';
+                }).catch((res) => {
+                    loading.close();
+                    var msg = '请求节点数据失败！';
+                    this.customProcessPopupErrorMessage(msg);
+                });
             },
-            //删除节点信息
-            customProcessDeleteNode: function() {
+            //从数据库中删除节点信息
+            customProcessDeleteNode: function(id) {
                 this.$confirm('此操作将删除该节点, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning',
                     center: true
                 }).then(() => {
-                    this.$message({
-                        type: 'success',
-                        message: '删除节点成功!'
+                    const loading = this.customProcessPopupLoading();
+                    var url = '${SITE_URL}customProcess/del_node';
+                    var delData = {};
+                    delData.id = id;
+                    axios({
+                        method: 'post',
+                        url: url,
+                        data: delData,
+                    }).then((res) =>{
+                        loading.close();
+                        if('ok' == res.data.message){
+                            this.customProcessSelectAllNodes();
+                            this.customProcessListNode();
+                            this.$message({
+                                type: 'success',
+                                message: '删除节点成功!'
+                            });
+                        }else{
+                            var msg = '请求删除节点数据失败！';
+                            this.customProcessPopupErrorMessage(msg);
+                        }
+                    }).catch((res) => {
+                        loading.close();
+                        var msg = '请求删除节点数据失败！';
+                        this.customProcessPopupErrorMessage(msg);
                     });
                 }).catch(() => {
                     this.$message({
                         type: 'info',
                         message: '取消节点删除'
                     });
+                });
+            },
+            //添加节点信息到数据库中
+            customProcessSaveNodeInfo: function(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (!valid) {
+                        this.$message({
+                            type: 'error',
+                            message: '请仔细检查表单项!'
+                        });
+                        return false;
+                    }else {
+                        const loading = this.customProcessPopupLoading();
+                        var url = '${SITE_URL}customProcess/add_node';
+                        axios({
+                            method: 'post',
+                            url: url,
+                            data: this.customProcessNode,
+                        }).then((res) =>{
+                            loading.close();
+                            if('ok' == res.data.message){
+                                this.customProcessSelectAllNodes();
+                                this.customProcessListNode();
+                            }else{
+                                var msg = '请求添加/修改节点数据失败！';
+                                this.customProcessPopupErrorMessage(msg);
+                            }
+                        }).catch((res) => {
+                            loading.close();
+                            var msg = '请求添加/修改节点数据失败！';
+                            this.customProcessPopupErrorMessage(msg);
+                        });
+                    }
                 });
             },
             //流程开始
@@ -401,16 +472,31 @@
                     type: 'warning',
                     center: true
                 }).then(() => {
-                    //数据库删除流程操作 TODO
-                    //前端缓存数据和标记位清空
-                    this.customProcessStep = -1;
-                    this.customProcessStepSum = 0;
-                    this.customProcessStatus = false;
-                    this.customProcessTableData = [];
-                    this.processDataList = [];
-                    this.$message({
-                        type: 'success',
-                        message: '流程已被删除！'
+                    const loading = this.customProcessPopupLoading();
+                    //数据库删除所有节点信息
+                    var url = '${SITE_URL}customProcess/truncate_node';
+                    axios({
+                        method: 'post',
+                        url: url
+                    }).then((res) =>{
+                        if('ok' == res.data.message){
+                            loading.close();
+                            //前端缓存数据和标记位清空
+                            this.customProcessStep = -1;
+                            this.customProcessStepSum = 0;
+                            this.customProcessStatus = false;
+                            this.customProcessTableData = [];
+                            this.$message({
+                                type: 'success',
+                                message: '流程已被删除！'
+                            });
+                        }else{
+                            var msg = '请求删除节点数据失败！';
+                            this.customProcessPopupErrorMessage(msg);
+                        }
+                    }).catch((res) => {
+                        var msg = '请求删除节点数据失败！';
+                        this.customProcessPopupErrorMessage(msg);
                     });
                 }).catch(() => {
                         this.$message({
@@ -418,7 +504,28 @@
                         message: '取消流程删除操作'
                     });
                 });
+            },
+            //从后台数据库获取所有节点信息
+            customProcessSelectAllNodes: function() {
+                const loading = this.customProcessPopupLoading();
+                this.customProcessTableData = null;
+                var url = '${SITE_URL}customProcess/select_all_nodes';
+                axios({
+                    method: 'post',
+                    url: url,
+                }).then((res) =>{
+                    loading.close();
+                    this.customProcessTableData = res.data.message;
+                    this.customProcessStepSum = this.customProcessTableData.length;
+                }).catch((res) => {
+                    loading.close();
+                    var msg = '节点数据信息加载错误！';
+                    this.customProcessPopupErrorMessage(msg);
+                });
             }
+        },
+        mounted(){
+            this.customProcessSelectAllNodes();
         }
     });
 </script>
