@@ -19,8 +19,9 @@ urlpatterns = patterns(
     (r'^delete_crawl', 'delete_crawl'),                                                 # 网页爬虫配置删除
     (r'^get_crawls/', 'get_crawls'),                                                    # 获取爬虫信息
     (r'^get_crawl_by_name/', 'get_crawl_by_name'),                                      # 通过crawl名字获取爬虫配置
-    (r'^crawl', 'crawl'),                                                               # 网页爬虫配置删除
+    (r'^crawl/$', 'crawl'),                                                               # 网页爬虫配置删除
     (r'^start_crawl', 'start_crawl'),                                                   # 开始爬虫
+    (r'^crawl_test/$', 'crawl_test'),                                                   # 开始爬虫
     (r'^mail_send', 'mail_send'),                                                       # 发送邮件
     (r'^json_test', 'json_test'),   # 测试专用
 

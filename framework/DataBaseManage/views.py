@@ -31,7 +31,7 @@ def getconn(request):
 @csrf_exempt
 def saveconn(request):
     re = function.saveconn_all(request)
-    return render_json(0)
+    return render_json(re)
 
 
 #修改

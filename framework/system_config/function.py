@@ -13,6 +13,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from market_day import celery_opt as co
 
+
 def crawl_manage(request):
     """
     爬虫信息新增与修改
@@ -60,7 +61,7 @@ def crawl_manage(request):
                                                                    time_xpath=time_xpath,
                                                                    url_xpath=url_xpath,
                                                                    update_user=update_user,
-                                                                   receivers=receivers,url_pre=url_pre,
+                                                                   receivers=receivers, url_pre=url_pre,
                                                                    update_time=datetime.datetime.now())
             return success_result('修改爬虫配置成功')
         except Exception as e:
@@ -132,10 +133,11 @@ def start_crawl(request):
     result_all = []
     result_error = []
     for i in res:
-        period=i['period']
-        interval={'every':period,'period':'seconds'}
-        schename=i['crawl_name']
-        co.create_task_interval(name=schename,task='market_day.tasks.crawl_task',interval_time=interval,task_args=i,desc=schename)
+        period = i['period']
+        interval = {'every': period, 'period': 'seconds'}
+        schename = i['crawl_name']
+        co.create_task_interval(name=schename, task='market_day.tasks.crawl_task', interval_time=interval, task_args=i,
+                                desc=schename)
         # id = i['id']
         # crawl_url = i['crawl_url']
         # crawl_name = i['crawl_name']
@@ -225,7 +227,7 @@ def change_to_html(content_html):
             title = i['title']
             resource = i['resource']
             time = i['time']
-            result += '<a href="'+resource+'" target="_blank">'+title+'</a>'+'<span>'+time+'<span>'+'</br>'
+            result += '<a href="' + resource + '" target="_blank">' + title + '</a>' + '<span>' + time + '<span>' + '</br>'
     elif type(content_html) is dict:
         title = content_html['title']
         resource = content_html['resource']
@@ -289,3 +291,22 @@ def mail_send(theme, content, mail_list):
     #     print u'发送邮件异常'
     #     pass
     return success_result(u'成功')
+
+
+def crawl_test(request):
+    """
+    爬虫成功测试
+    :param request:
+    :return:
+    """
+    print request.body
+    request_body = json.loads(request.body)
+    crawl_url = request_body['crawl_url']
+    total_xpath = request_body['total_xpath']
+    title_xpath = request_body['title_xpath']
+    time_xpath = request_body['time_xpath']
+    url_xpath = request_body['url_xpath']
+    result = crawl_temp(url=crawl_url, total_xpath=total_xpath, time_xpath=time_xpath, url_xpath=url_xpath,
+                        title_xpath=title_xpath)
+    print result
+    return success_result(result['results'])

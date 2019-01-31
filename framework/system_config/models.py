@@ -34,3 +34,15 @@ class CrawlContent(models.Model):
     url_content = models.CharField(verbose_name=u'资源内容', max_length=255)
     save_time = models.DateTimeField(verbose_name=u'保存时间', auto_now_add=True)
 
+
+class SendMailLog(models.Model):
+    """
+    信息发送日志表
+    """
+    link_id=models.IntegerField(verbose_name=u'关联id')
+    message_type=models.CharField(max_length=100,verbose_name=u'消息的类型',default='crawl') #默认为爬虫消息日志
+    message_title=models.CharField(max_length=200,verbose_name=u'消息的标题')
+    message_content=models.CharField(max_length=1000,verbose_name=u'消息的内容')
+    send_time=models.DateTimeField(verbose_name=u'消息发送的时间',auto_now_add=True)
+
+

@@ -80,9 +80,11 @@ def crawl(request):
     # url = 'http://www.chinaclear.cn/zdjs/gszb/center_clist.shtml'
     # total_xpath = '//div[@class="pageTabContent"]//ul//li'
     # title_xpath = 'a/@title'
+    # # time_xpath = ''  # yes
     # time_xpath = 'span/text()'  # yes
-    # url_xpath = 'a/@href'
-    res = crawl_template.crawl_temp_test(url, total_xpath, title_xpath, time_xpath, url_xpath)
+    # # url_xpath = 'a/@href'
+    # url_xpath = ''
+    res = crawl_template.crawl_temp(url, total_xpath, title_xpath, time_xpath, url_xpath)
     return render_json(res)
 
 
@@ -93,6 +95,16 @@ def start_crawl(request):
     :return:
     """
     res = function.start_crawl(request)
+    return render_json(res)
+
+
+def crawl_test(request):
+    """
+    用户爬虫测试
+    :param request:
+    :return:
+    """
+    res = function.crawl_test(request)
     return render_json(res)
 
 

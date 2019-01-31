@@ -3,6 +3,7 @@
 from djcelery import models as celery_models
 import json
 
+
 def create_task_crontab(name, task, task_args, crontab_time, desc):
     """
     新增定时任务
@@ -35,6 +36,7 @@ def create_task_crontab(name, task, task_args, crontab_time, desc):
     task.save()
     return True
 
+
 def create_task_interval(name, task, task_args,interval_time, desc):
     """
     新增定时任务
@@ -65,6 +67,7 @@ def create_task_interval(name, task, task_args,interval_time, desc):
     task.save()
     return True
 
+
 def change_task_status(name, mode, crontab_time):
     """
     任务状态切换：open or close
@@ -92,7 +95,6 @@ def change_task_status(name, mode, crontab_time):
         return True
     except celery_models.PeriodicTask.DoesNotExist:
         return False
-
 
 def disable_task(name):
     """
