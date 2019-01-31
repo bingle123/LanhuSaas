@@ -8,6 +8,7 @@ from time import sleep
 from celery.task import periodic_task
 from system_config.crawl_template import crawl_temp
 from system_config.function import *
+from  system_config.models import SendMailLog as sml
 import logging
 import datetime
 
@@ -88,5 +89,7 @@ def crawl_task(**i):
             receivers_mail = ['761494073@qq.com', 'liaomingtao@zork.com.cn']
             theme = crawl_name + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + u'的爬虫信息'
             mail_send(theme, send_content, receivers_mail)
+            sml.objects.create(link_id=id,message_title=theme,message_content=send_content)
+            logging.error(u'消息日志保存成功')
     return 'success'
 
