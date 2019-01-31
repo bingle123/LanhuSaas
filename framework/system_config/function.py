@@ -10,7 +10,7 @@ from crawl_template import crawl_temp
 from django.db import transaction
 from django.core.mail import send_mail
 from django.conf import settings
-
+from market_day import celery_opt as co
 
 def crawl_manage(request):
     """
@@ -130,6 +130,11 @@ def start_crawl(request):
     result_all = []
     result_error = []
     for i in res:
+        # period=i['period']
+        # interval={'every':period,'period':'seconds'}
+        # schename=i['crawl_name']
+        # print schename
+        # co.create_task_interval(name=schename,task='market_day.tasks.crawl_task',interval_time=interval,task_args=i,desc=schename)
         id = i['id']
         crawl_url = i['crawl_url']
         crawl_name = i['crawl_name']
@@ -142,8 +147,10 @@ def start_crawl(request):
         url_pre = i['url_pre']
         # 接收人--列表
         receivers = i['receivers'].split('@')
+        # 开始爬虫
         crawl_result = crawl_temp(crawl_url, total_xpath, title_xpath, time_xpath, url_xpath)
         # 爬虫成功，且有数据
+        print crawl_result
         if crawl_result['code'] == 0 and crawl_result['results'].__len__() != 0:
             send_result = []
             for j in range(crawl_result['results'].__len__()):
@@ -184,14 +191,14 @@ def start_crawl(request):
                 theme = crawl_name + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + u'的爬虫信息'
                 mail_send(theme, send_content, receivers_mail)
         # 爬虫成功，没有数据
-        elif crawl_result['results'].__len__() == 0:
-            # 此处应该写入错误我日志
-            message = crawl_name + u'没有获取到数据，请检查配置是否正确!'
-            result_error.append(message)
+        # elif crawl_result['results'].__len__() == 0:
+        #         #     # 此处应该写入错误我日志
+        #         #     message = crawl_name + u'没有获取到数据，请检查配置是否正确!'
+        #         #     result_error.append(message)
         # 爬虫失败,返回错误信息
-        elif crawl_result['code'] != 0:
-            message = crawl_name + u'获取数据失败' + crawl_result['results']
-            result_error.append(message)
+        # elif crawl_result['code'] != 0:
+        #     message = crawl_name + u'获取数据失败' + crawl_result['results']
+        #     result_error.append(message)
         # print result_all
         # if result_all
         # change_to_html(content_list=result_all)

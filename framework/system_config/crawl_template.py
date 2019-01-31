@@ -39,7 +39,7 @@ def crawl_temp(url, total_xpath, title_xpath, time_xpath, url_xpath):
                 temp_list.append(temp_dict)
             return success_result(temp_list)
         except Exception as e:
-            return error_result(e+'Xpath配置异常')
+            return error_result(str(e)+u'Xpath配置异常')
     elif status_code == 403:
         return error_result("你没有权限,URL拒绝访问")
     elif status_code == 404:

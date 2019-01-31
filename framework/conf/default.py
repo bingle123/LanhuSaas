@@ -231,28 +231,9 @@ if IS_USE_CELERY:
         # celery 的消息队列（RabbitMQ）信息
         BROKER_URL = os.environ.get('BK_BROKER_URL', BROKER_URL_DEV)
         CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
-        CELERY_ENABLE_UTC = False
-        TIME_ZONE = 'Asia/Shanghai'
-        CELERY_RESULT_BACKEND = 'amqp://localhost'  # 官网优化的地方也推荐使用c的librabbitmq
-        CELERY_TASK_RESULT_EXPIRES = 1200  # celery任务执行结果的超时时间，我的任务都不需要返回结果,只需要正确执行就行
-        CELERYD_CONCURRENCY = 50  # celery worker的并发数 也是命令行-c指定的数目,事实上实践发现并不是worker也多越好,保证任务不堆积,加上一定新增任务的预留就可以
-        CELERYD_PREFETCH_MULTIPLIER = 4  # celery worker 每次去rabbitmq取任务的数量，我这里预取了4个慢慢执行,因为任务有长有短没有预取太多
-        CELERYD_MAX_TASKS_PER_CHILD = 40
-        CELERY_ACCEPT_CONTENT = ['json']
+        CELERY_RESULT_BACKEND = 'amqp://'
         CELERY_TASK_SERIALIZER = 'json'
         CELERY_RESULT_SERIALIZER = 'json'
-        CELERY_QUEUES = (
-            Queue('demo', Exchange('demo'), routing_key='demo'),
-            Queue('task_one', Exchange('task_one'), routing_key='task_one'),
-            Queue('task_two', Exchange('task_two'), routing_key='task_two')
-        )
-        CELERY_DEFAULT_QUEUE = 'demo'
-        CELERY_DEFAULT_EXCHANGE = 'demo'
-        CELERY_DEFAULT_ROUTING_KEY = 'demo'
-        CELERY_ROUTES = (
-            {'market_day.tasks.mul': {'queue': 'demo', 'routing_key': 'demo'}},
-            {'market_day.tasks.sendemail':{'queue':'task_one','routing_key':'task_one'}},
-        )
         if RUN_MODE == 'DEVELOP':
             from celery.signals import worker_process_init
 
