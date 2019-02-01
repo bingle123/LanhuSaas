@@ -2,67 +2,66 @@
 from __future__ import division
 import json
 import math
-from models import JobInstance,Localuser
+from models import JobInstance, Localuser
+from django.forms.models import model_to_dict
 from shell_app import tools
+from django.db.models import Q
+from django.core.paginator import Paginator
 
 
 def show(request):
     res = json.loads(request.body)
     limit = res['limit']
     page = res['page']
-    start_page = limit * page - 9
-    job = JobInstance.objects.all()[start_page - 1:start_page + 9]
-    unit2 = JobInstance.objects.all().values('id')
-    page_count = math.ceil(len(unit2) / 10)
+    job = JobInstance.objects.all()
     users = Localuser.objects.all()
+    p = Paginator(job, limit)
+    count = p.page_range
+    pages = count[-1]
     res_list = []
-    for x in job:
+    current_page = p.page(page)
+    for x in current_page.object_list:
         tmp = []
         for y in users:
-            if x.id == y.user_pos:
-                tmp.append(y.user_name+' ')
+            if x.id == y.user_pos.id:
+                tmp.append(y.user_name + ' ')
         dic = {
-            'id':x.id,
+            'id': x.id,
             'user_name': tmp,
             'pos_name': x.pos_name,
-            'page_count': page_count
+            'page_count': pages
         }
         res_list.append(dic)
     return res_list
 
+
 def select_job(request):
-    try:
-        res = json.loads(request.body)
-        limit = res['limit']
-        page = res['page']
-        search = res['search']
-        start_page = limit * page - 9
-        res1 = search
-        res_list = []
-        if res1.isdigit():
-            if JobInstance.objects.filter(id=int(res1)).exists():
-                job = JobInstance.objects.filter(id=int(res1))
-        if JobInstance.objects.filter(pos_name__contains=res1).exists():
-            job = JobInstance.objects.filter(pos_name__contains=res1)
-        tmpjob = job[start_page - 1:start_page + 9]
-        unit2 = job.values('id')
-        page_count = math.ceil(len(unit2) / 10)
-        users = Localuser.objects.all()
-        for x in tmpjob:
-            tmp = []
-            for y in users:
-                if x.id == y.user_pos:
-                    tmp.append(y.user_name + ' ')
-            dic = {
-                'id': x.id,
-                'user_name': tmp,
-                'pos_name': x.pos_name,
-                'page_count':page_count
-            }
-            res_list.append(dic)
-        return res_list
-    except Exception as e:
-        return None
+    res = json.loads(request.body)
+    limit = res['limit']
+    page = res['page']
+    search = res['search']
+    res1 = search
+    res_list = []
+    job = JobInstance.objects.filter(Q(pos_name__contains=res1) | Q(creator__icontains=res1))
+    users = Localuser.objects.all()
+    p = Paginator(job, limit)
+    count = p.page_range
+    pages = count[-1]
+    res_list = []
+    current_page = p.page(page)
+    for x in current_page.object_list:
+        tmp = []
+        for y in users:
+            if x.id == y.user_pos:
+                tmp.append(y.user_name + ' ')
+        dic = {
+            'id': x.id,
+            'user_name': tmp,
+            'pos_name': x.pos_name,
+            'page_count': pages
+        }
+        res_list.append(dic)
+    return res_list
 
 
 def delete_job(request):
@@ -84,7 +83,7 @@ def add_job(request):
 def add_person(request):
     res = json.loads(request.body)
     id = res['id']
-    res2 = dict_get(res['data2'],u'pinyin',None)
+    res2 = dict_get(res['data2'], u'pinyin', None)
     res3 = res['value2']
     tmp = res2
     for i in res3:
@@ -101,8 +100,9 @@ def edit_job(request):
     res = json.loads(request.body)
     id = res['id']
     posname = res['pos_name']
-    rl = JobInstance.objects.filter(id=id).update(pos_name =posname )
+    rl = JobInstance.objects.filter(id=id).update(pos_name=posname)
     return rl
+
 
 def dict_get(list, objkey, default):
     """
@@ -112,13 +112,14 @@ def dict_get(list, objkey, default):
     tmp2 = []
     for i in tmp:
         if type(i) is dict:
-            for k,v in i.items():
+            for k, v in i.items():
                 if k == objkey:
                     tmp2.append(v)
     if len(tmp2):
         return tmp2
     else:
         return default
+
 
 def get_user(request):
     """
@@ -128,11 +129,12 @@ def get_user(request):
     """
     try:
         client = tools.interface_param(request)
-        result = client.bk_login.get_all_users({})                  # 获取所有用户信息
+        result = client.bk_login.get_all_users({})  # 获取所有用户信息
 
     except Exception, e:
         result = tools.error_result(e)
     return result
+
 
 def filter_user(request):
     """
@@ -146,12 +148,7 @@ def filter_user(request):
     tmp = []
     for j in users:
         for i in range(len(temp)):
-                if temp[i] == j.user_name:
-                    if j.user_pos == None:
-                        tmp.append(temp[i])
+            if temp[i] == j.user_name:
+                if j.user_pos == None:
+                    tmp.append(temp[i])
     return tmp
-
-
-
-
-

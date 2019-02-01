@@ -181,7 +181,19 @@
             },
             current_change1(value) {
                 vm.page = value;
-                vm.show()
+                 axios({
+                    method: 'post',
+                    url: '${SITE_URL}jobManagement/select_job/',
+                    data: {
+                        search:this.search,
+                        page:vm.page,
+                        limit:10
+                    },
+                }).then((res) => {
+                    console.log(res)
+                    vm.jobInstance = res.data.message;
+                    vm.page_count = res.data.message[0].page_count;
+                })
             },
             show() {                                                               //显示首页
                 axios({
@@ -192,6 +204,7 @@
                         limit:10
                     },
                 }).then(function(res) {
+                    console.log(res)
                      vm.jobInstance = res.data.message;
                      vm.page_count = res.data.message[0].page_count;
                 })
@@ -223,8 +236,9 @@
                 });
             });
             },
-            select_job(){                                           //查询
-                if(this.search  == ''){
+            select_job(){
+                vm.page_count=1//查询
+                if(this.search.trim() == ''){
                     vm.show()
                 }
                 axios({
@@ -232,7 +246,7 @@
                     url: '${SITE_URL}jobManagement/select_job/',
                     data: {
                         search:this.search,
-                        page:vm.page,
+                        page:1,
                         limit:10
                     },
                 }).then((res) => {
