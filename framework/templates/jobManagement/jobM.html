@@ -118,8 +118,11 @@
                 </el-table>
                 <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
             </div>
+
         </el-card>
+
     </div>
+    <el-tree :data="data3" :props="defaultProps"></el-tree>
 </div>
 <script type="text/javascript">
  let vm =  new Vue({
@@ -172,8 +175,22 @@
             jobInstance:[],
             data2: '',
             value2: '',
+            data3:"",
+             defaultProps: {
+              children: 'children',
+              label: 'label'
+            },
         },
         methods: {
+            get_tree(){
+                 axios({
+                    method: 'post',
+                    url: '${SITE_URL}jobManagement/get_tree/',
+                }).then(function(res) {
+                    vm.data3 = res.data.message;
+                    console.log(res.data.message)
+                })
+            },
             ref(){
                 vm.dialogFormVisible = false,
                 vm.users = []
@@ -181,6 +198,7 @@
             },
             current_change1(value) {
                 vm.page = value;
+                console.log(vm.page)
                  axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/select_job/',
@@ -195,7 +213,8 @@
                     vm.page_count = res.data.message[0].page_count;
                 })
             },
-            show() {                                                               //显示首页
+            show() {
+                console.log(vm.page)//显示首页
                 axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/show/',
@@ -237,7 +256,7 @@
             });
             },
             select_job(){
-                vm.page_count=1//查询
+                vm.page=1                                             //查询
                 if(this.search.trim() == ''){
                     vm.show()
                 }
@@ -246,7 +265,7 @@
                     url: '${SITE_URL}jobManagement/select_job/',
                     data: {
                         search:this.search,
-                        page:1,
+                        page:this.page,
                         limit:10
                     },
                 }).then((res) => {
@@ -350,6 +369,7 @@
 
  vm.show()
  vm.select_all_user()
+ vm.get_tree()
 </script>
 </body>
 

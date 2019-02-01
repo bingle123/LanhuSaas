@@ -47,12 +47,11 @@ def select_job(request):
     p = Paginator(job, limit)
     count = p.page_range
     pages = count[-1]
-    res_list = []
     current_page = p.page(page)
     for x in current_page.object_list:
         tmp = []
         for y in users:
-            if x.id == y.user_pos:
+            if x.id == y.user_pos.id:
                 tmp.append(y.user_name + ' ')
         dic = {
             'id': x.id,
@@ -152,3 +151,24 @@ def filter_user(request):
                 if j.user_pos == None:
                     tmp.append(temp[i])
     return tmp
+
+
+def get_tree(request):
+    job = JobInstance.objects.all()
+    users = Localuser.objects.all()
+    res_list = []
+    for x in job:
+        tmp = []
+        for y in users:
+            if x.id == y.user_pos_id:
+                dic1 = {
+                    'label' : y.user_name
+                }
+                tmp.append(dic1)
+        dic = {
+            'id': x.id,
+            'children': tmp,
+            'label': x.pos_name,
+        }
+        res_list.append(dic)
+    return res_list
