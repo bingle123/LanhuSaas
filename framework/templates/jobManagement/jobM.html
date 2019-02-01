@@ -15,15 +15,16 @@
     <!--jQuery库使用时请使用标准jQuery语法-->
     <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
     <script src="${STATIC_URL}assets/vue-2.5.21/vue-router.js"></script>-->
-<style>
-    input{
-        width: 250px;
-        height: 30px;
-    }
-    .el-table--border th{
-        padding:5px
-    }
-</style>
+    <style>
+        input {
+            width: 250px;
+            height: 30px;
+        }
+
+        .el-table--border th {
+            padding: 5px
+        }
+    </style>
 </head>
 
 <body>
@@ -34,13 +35,13 @@
                 <template>
                     <template>
                         <el-transfer
-                        filterable
-                        :filter-method="filterMethod"
-                        filter-placeholder="请输入搜索内容"
-                        v-model="value2"
-                        :titles="['选择人员', jobname]"
-                        :data="data2"
-                        @change="">
+                                filterable
+                                :filter-method="filterMethod"
+                                filter-placeholder="请输入搜索内容"
+                                v-model="value2"
+                                :titles="['选择人员', jobname]"
+                                :data="data2"
+                                @change="">
                         </el-transfer>
                     </template>
                 </template>
@@ -53,9 +54,9 @@
     </el-dialog>
 
     <el-dialog title="编辑岗位" :visible.sync="dialogFormVisible2">
-        <el-form  :model="form2" ref="form2" :rules="rules2" >
+        <el-form :model="form2" ref="form2" :rules="rules2">
             <el-form-item label="岗位名：" prop="tempjobname">
-            <el-input placeholder="请输入岗位名" v-model="form2.tempjobname" style="width: 60%"></el-input>
+                <el-input placeholder="请输入岗位名" v-model="form2.tempjobname" style="width: 60%"></el-input>
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -67,7 +68,7 @@
 
     <el-dialog title="新增岗位" :visible.sync="dialogFormVisible3">
         <el-form :model="form" ref="form" :rules="rules">
-            <el-form-item label="岗位名称:" prop = 'pos_name'>
+            <el-form-item label="岗位名称:" prop='pos_name'>
                 <el-input v-model="form.pos_name"></el-input>
             </el-form-item>
         </el-form>
@@ -116,96 +117,100 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
+                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                               @current-change="current_change1"></el-pagination>
             </div>
 
         </el-card>
 
     </div>
-    <el-tree :data="data3" :props="defaultProps"></el-tree>
+    <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
+    <el-tree class="filter-tree" :data="data3" :props="defaultProps" default-expand-all show-checkbox
+             :filter-node-method="filterNode" ref="tree2"></el-tree>
 </div>
 <script type="text/javascript">
- let vm =  new Vue({
+    let vm = new Vue({
         el: '.content',
         data: {
-            page_count:100,                             //总页码数
-            page:1,                                   //分页页码数
+            page_count: 100,                             //总页码数
+            page: 1,                                   //分页页码数
             dialogFormVisible: false,
             dialogFormVisible2: false,
             dialogFormVisible3: false,
             form: {
-                 pos_name:'',
-            },rules:{
-                 pos_name:[{
+                pos_name: '',
+            }, rules: {
+                pos_name: [{
                     required: true,
                     message: '不能为空，请输入岗位名称',
                     trigger: 'blur'
-                },{
+                }, {
                     pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+$/,
-                    message:'请不要输入特殊字符',trigger: 'blur'
-                },{
+                    message: '请不要输入特殊字符', trigger: 'blur'
+                }, {
                     max: 50,
                     message: '长度必须在 50个字符',
                 }]
             },
-            users:[],
-            form2:{
-                tempjobname:'',
+            users: [],
+            form2: {
+                tempjobname: '',
             },
-            rules2:{
-                tempjobname:[{
+            rules2: {
+                tempjobname: [{
                     required: true,
                     message: '不能为空，请输入岗位名称',
                     trigger: 'blur'
-                },{
+                }, {
                     pattern: /^[A-Za-z0-9\u4e00-\u9fa5]+$/,
-                    message:'请不要输入特殊字符',trigger: 'blur'
-                },{
+                    message: '请不要输入特殊字符', trigger: 'blur'
+                }, {
                     max: 50,
                     message: '长度在 50个字符',
                 }]
             },
-            tempid:'',
-            form1:'',
-            jobname:'',
-            username:'',
+            tempid: '',
+            form1: '',
+            jobname: '',
+            username: '',
             search: '',
             value1: '',
-            value12:'',
-            jobInstance:[],
+            value12: '',
+            jobInstance: [],
             data2: '',
             value2: '',
-            data3:"",
-             defaultProps: {
-              children: 'children',
-              label: 'label'
+            filterText: '',
+            data3: "",
+            defaultProps: {
+                children: 'children',
+                label: 'label'
             },
         },
         methods: {
-            get_tree(){
-                 axios({
+            get_tree() {
+                axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/get_tree/',
-                }).then(function(res) {
+                }).then(function (res) {
                     vm.data3 = res.data.message;
                     console.log(res.data.message)
                 })
             },
-            ref(){
+            ref() {
                 vm.dialogFormVisible = false,
-                vm.users = []
+                    vm.users = []
                 vm.select_all_user();
             },
             current_change1(value) {
                 vm.page = value;
                 console.log(vm.page)
-                 axios({
+                axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/select_job/',
                     data: {
-                        search:this.search,
-                        page:vm.page,
-                        limit:10
+                        search: this.search,
+                        page: vm.page,
+                        limit: 10
                     },
                 }).then((res) => {
                     console.log(res)
@@ -218,62 +223,62 @@
                 axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/show/',
-                    data:{
-                        page:vm.page,
-                        limit:10
+                    data: {
+                        page: vm.page,
+                        limit: 10
                     },
-                }).then(function(res) {
+                }).then(function (res) {
                     console.log(res)
-                     vm.jobInstance = res.data.message;
-                     vm.page_count = res.data.message[0].page_count;
+                    vm.jobInstance = res.data.message;
+                    vm.page_count = res.data.message[0].page_count;
                 })
             },
-            deletePosition(row){                                                  //删除一条记录
+            deletePosition(row) {                                                  //删除一条记录
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                center: true
-            }).then(() => {
-                this.$message({
-                        type: 'success',
-                        message: '删除成功!',
-                    },
-                    axios({
-                        method: 'post',
-                        url: '${SITE_URL}jobManagement/delete/',
-                        data: {
-                            id: row,
-                        }
-                    }).then((res) => {
-                        vm.show();
-                    }),);
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    this.$message({
+                            type: 'success',
+                            message: '删除成功!',
+                        },
+                        axios({
+                            method: 'post',
+                            url: '${SITE_URL}jobManagement/delete/',
+                            data: {
+                                id: row,
+                            }
+                        }).then((res) => {
+                            vm.show();
+                        }),);
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
                 });
-            });
             },
-            select_job(){
-                vm.page=1                                             //查询
-                if(this.search.trim() == ''){
+            select_job() {
+                vm.page = 1                                             //查询
+                if (this.search.trim() == '') {
                     vm.show()
                 }
                 axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/select_job/',
                     data: {
-                        search:this.search,
-                        page:this.page,
-                        limit:10
+                        search: this.search,
+                        page: this.page,
+                        limit: 10
                     },
                 }).then((res) => {
                     vm.jobInstance = res.data.message;
                     vm.page_count = res.data.message[0].page_count;
                 })
             },
-            add_job(formName){                                              //增加岗位
+            add_job(formName) {                                              //增加岗位
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
                         return false;
@@ -289,87 +294,96 @@
                     }
                 });
             },
-            edit_jobname(row){                                     //显示弹框，传值到edit_job
+            edit_jobname(row) {                                     //显示弹框，传值到edit_job
                 vm.dialogFormVisible2 = true
                 vm.tempid = row.id;
                 vm.form2.tempjobname = row.pos_name;
             },
-            edit_job(formName){                                            //修改岗位名
-                 this.$refs[formName].validate((valid) => {
-                     if (!valid) {
-                         return false;
-                     } else {
-                         axios({
-                             method: "post",
-                             url: '${SITE_URL}jobManagement/edit_job/',
-                             data: {
-                                 id: this.tempid,
-                                 pos_name: this.form2.tempjobname,
-                             }
-                         }).then((res) => {
-                             vm.dialogFormVisible2 = false
-                             if (res.data.message != null) {
-                                 window.location.href = "${SITE_URL}jobManagement/jobM"
-                             }
-                         })
-                     }
-                 });
+            edit_job(formName) {                                            //修改岗位名
+                this.$refs[formName].validate((valid) => {
+                    if (!valid) {
+                        return false;
+                    } else {
+                        axios({
+                            method: "post",
+                            url: '${SITE_URL}jobManagement/edit_job/',
+                            data: {
+                                id: this.tempid,
+                                pos_name: this.form2.tempjobname,
+                            }
+                        }).then((res) => {
+                            vm.dialogFormVisible2 = false
+                            if (res.data.message != null) {
+                                window.location.href = "${SITE_URL}jobManagement/jobM"
+                            }
+                        })
+                    }
+                });
             },
-            show_job(row){                                      //显示弹框和穿梭框，传值到add_person
+            show_job(row) {                                      //显示弹框和穿梭框，传值到add_person
                 vm.dialogFormVisible = true;
                 vm.jobname = row.pos_name;
                 vm.id = row.id;
                 var x = row.user_name;
-                x.forEach((x,index)=>{
+                x.forEach((x, index) => {
                     vm.users.push(x)
                 })
                 const data = [];
-                var people= this.users;
+                var people = this.users;
                 const pinyin = this.users;
                 people.forEach((people, index) => {
-                  data.push({
-                      <!--label: people,-->
-                      pinyin: pinyin[index],
-                      key: people,
-                  });
+                    data.push({
+                        <!--label: people,-->
+                        pinyin: pinyin[index],
+                        key: people,
+                    });
                 });
-              this.data2 = data;
-              this.value2 = x;
+                this.data2 = data;
+                this.value2 = x;
             },
-            add_person(row){
-               axios({
+            add_person(row) {
+                axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/add_person/',
-                    data:{
-                        value2:vm.value2,
-                        id:this.id,
+                    data: {
+                        value2: vm.value2,
+                        id: this.id,
                         jobname: this.jobname,
-                        data2:vm.data2,
+                        data2: vm.data2,
                     },
                 }).then((res) => {
                     vm.dialogFormVisible = false
                     window.location.href = '${SITE_URL}position'
                 })
             },
-            select_all_user(){                                                      //调接口查询所有用户
+            select_all_user() {                                                      //调接口查询所有用户
                 axios({
                     method: 'post',
                     url: '${SITE_URL}jobManagement/get_user/',
-                }).then((res) =>{
-                    for(var i=0;i<res.data.message.length;i++){
+                }).then((res) => {
+                    for (var i = 0; i < res.data.message.length; i++) {
                         this.users.push(res.data.message[i])
                     }
                 })
             },
             filterMethod(query, item) {
                 return item.pinyin.indexOf(query) > -1;
+            },
+            filterNode(value, data) {
+                if (!value) return true;
+                return data.label.indexOf(value) !== -1;
+            }
+        },
+        watch: {
+            filterText(val) {
+                this.$refs.tree2.filter(val);
             }
         }
     });
 
- vm.show()
- vm.select_all_user()
- vm.get_tree()
+    vm.show()
+    vm.select_all_user()
+    vm.get_tree()
 </script>
 </body>
 
