@@ -76,6 +76,7 @@ def select_table(request):
                 }
                 dic['pos_name'] = jobs["pos_name"]
         res_list.append(dic)
+        print res_list
     return res_list
 
 
@@ -95,10 +96,13 @@ def editSence(request):
     Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
     scene = Scene.objects.get(id=model['data']['id'])
     scene.save()
-    senceModel3 = {
+    job =JobInstance.objects.filter(pos_name=model['data']["pos_name"])
+    for j in job:
+        senceModel3 = {
         "scene_id": model['data']['id'],
-        "position_id": model['data']["pos_name"]
-    }
+        "position_id": j.id
+        }
+        print senceModel3
     position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
     return None
 
@@ -134,5 +138,13 @@ def paging(request):
             'pos_name': '',
             'page_count': page_count,
         }
+        position = position_scene.objects.filter(scene=i.id)
+        for c in position:
+            job = JobInstance.objects.filter(id=c.position_id)
+            for j in job:
+                jobs = {
+                    "pos_name": j.pos_name
+                }
+                dic['pos_name'] = jobs["pos_name"]
         res_list.append(dic)
     return res_list
