@@ -190,3 +190,29 @@ def get_active_user(request):
     client = tools.interface_param(request)
     res = client.bk_login.get_user({})
     return res
+
+def synchronize(request):
+    """
+        用户同步
+        """
+    res = get_user(request)
+    reslist = res['data']
+    users = Localuser.objects.all()
+    for i in reslist:
+        flag1 = 0
+        for j in users:
+            if i['bk_username'] == j.user_name:
+                Localuser.objects.filter(user_name=j.user_name).update(mobile_no=i['phone'],email=i['email'],open_id=i['wx_userid'])
+                flag1=1
+        if flag1 == 0:
+            Localuser.objects.create(user_name=i['bk_username'],user_pos_id=1,mobile_no=i['phone'], email=i['email'], open_id=i['wx_userid'])
+
+    for x in users:
+        flag2 = 0
+        for y in reslist:
+            if x.user_name == y['bk_username']:
+                flag2 = 1
+        if flag2 == 0:
+            Localuser.objects.filter(user_name=x.user_name).delete()
+
+    return  0

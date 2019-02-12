@@ -51,3 +51,8 @@ def filter_user(request):
 def get_tree(request):
     r = function.get_tree(request)
     return render_json(r)
+
+@csrf_exempt
+def synchronize(request):
+    r = function.synchronize(request)
+    return render_json(r)
