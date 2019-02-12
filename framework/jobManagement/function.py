@@ -7,13 +7,14 @@ from django.forms.models import model_to_dict
 from shell_app import tools
 from django.db.models import Q
 from django.core.paginator import Paginator
+import datetime
 
 
 def show(request):
     res = json.loads(request.body)
     limit = res['limit']
     page = res['page']
-    job = JobInstance.objects.all()
+    job = JobInstance.objects.filter(id__gt=1)
     users = Localuser.objects.all()
     p = Paginator(job, limit)
     count = p.page_range
@@ -42,7 +43,8 @@ def select_job(request):
     search = res['search']
     res1 = search
     res_list = []
-    job = JobInstance.objects.filter(Q(pos_name__contains=res1) | Q(creator__icontains=res1))
+    tmp = JobInstance.objects.filter(id__gt=1)
+    job = tmp.filter(Q(pos_name__contains=res1) | Q(creator__icontains=res1))
     users = Localuser.objects.all()
     p = Paginator(job, limit)
     count = p.page_range
@@ -75,6 +77,9 @@ def delete_job(request):
 
 def add_job(request):
     res = json.loads(request.body)
+    tmp = get_active_user(request)
+    nowPerson = tmp['data']['bk_username']
+    res['creator'] = nowPerson
     re = JobInstance.objects.create(**res)
     return re
 
@@ -91,7 +96,7 @@ def add_person(request):
             if i == j:
                 tmp.remove(i)
     for k in tmp:
-        Localuser.objects.filter(user_name=k).update(user_pos=None)
+        Localuser.objects.filter(user_name=k).update(user_pos='1')
     return res2
 
 
@@ -99,7 +104,10 @@ def edit_job(request):
     res = json.loads(request.body)
     id = res['id']
     posname = res['pos_name']
-    rl = JobInstance.objects.filter(id=id).update(pos_name=posname)
+    nowTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    tmp = get_active_user(request)
+    nowPerson = tmp['data']['bk_username']
+    rl = JobInstance.objects.filter(id=id).update(pos_name=posname,edit_time=nowTime,editor=nowPerson)
     return rl
 
 
@@ -148,7 +156,7 @@ def filter_user(request):
     for j in users:
         for i in range(len(temp)):
             if temp[i] == j.user_name:
-                if j.user_pos == None:
+                if j.user_pos_id == 1:
                     tmp.append(temp[i])
     return tmp
 
@@ -172,3 +180,39 @@ def get_tree(request):
         }
         res_list.append(dic)
     return res_list
+
+def get_active_user(request):
+    """
+    通过蓝鲸获取当前用户
+    :param request:
+    :return:            dict
+    """
+    client = tools.interface_param(request)
+    res = client.bk_login.get_user({})
+    return res
+
+def synchronize(request):
+    """
+        用户同步
+        """
+    res = get_user(request)
+    reslist = res['data']
+    users = Localuser.objects.all()
+    for i in reslist:
+        flag1 = 0
+        for j in users:
+            if i['bk_username'] == j.user_name:
+                Localuser.objects.filter(user_name=j.user_name).update(mobile_no=i['phone'],email=i['email'],open_id=i['wx_userid'])
+                flag1=1
+        if flag1 == 0:
+            Localuser.objects.create(user_name=i['bk_username'],user_pos_id=1,mobile_no=i['phone'], email=i['email'], open_id=i['wx_userid'])
+
+    for x in users:
+        flag2 = 0
+        for y in reslist:
+            if x.user_name == y['bk_username']:
+                flag2 = 1
+        if flag2 == 0:
+            Localuser.objects.filter(user_name=x.user_name).delete()
+
+    return  0
