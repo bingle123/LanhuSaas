@@ -21,6 +21,18 @@ def add_node(request):
     return render_json(status)
 
 
+def update_node_status(request):
+    node = json.loads(request.body)
+    status = function.update_node_status(node)
+    return render_json(status)
+
+
+def change_status_flag(request):
+    node = json.loads(request.body)
+    status = function.change_status_flag(node)
+    return render_json(status)
+
+
 def del_node(request):
     node_id = json.loads(request.body)
     status = function.del_node(node_id)

@@ -17,6 +17,8 @@ urlpatterns = patterns(
     (r'^index$', 'show_index'),                                          # 首页
     (r'^select_all_nodes$', 'select_all_nodes'),
     (r'^add_node$', 'add_node'),
+    (r'^update_node_status', 'update_node_status'),
+    (r'^change_status_flag', 'change_status_flag'),
     (r'^del_node', 'del_node'),
     (r'^select_node', 'select_node'),
     (r'^truncate_node', 'truncate_node'),

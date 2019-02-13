@@ -12,3 +12,13 @@ class TbCustProcess(models.Model):
 
     class Meta:
         db_table = 'tb_cust_process'
+
+
+class TdCustProcessLog(models.Model):
+    node = models.ForeignKey(TbCustProcess, on_delete=models.CASCADE, verbose_name=u"节点ID")
+    is_done = models.CharField(max_length=1, default="n", verbose_name=u"是否执行")
+    do_time = models.DateTimeField(verbose_name=u"执行时间", null=True)
+    do_person = models.CharField(max_length=50, verbose_name=u"执行人", null=True)
+
+    class Meta:
+        db_table = 'td_cust_process_log'
