@@ -403,7 +403,7 @@
                                 </el-form-item>
                                 <el-form-item label="流程模板" prop="gather_params">
                                     <el-select v-model="flow.gather_params" placeholder="请选择模板">
-                                        <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
+                                        <el-option v-for="i in flow2" :label="i.flow_name" :value="i.flow_name"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="参数1" style="width: 96%">
@@ -506,12 +506,13 @@
         el: '#app',
         data: {
             value1: '',
-            job2: [],                                      //作业模板
-            page_count: 100,                             //总页码数
-            page: 1,                                   //分页页码数
-            sites: [],                                //table内容
+            job2: [],                                   //作业模板
+            flow2: [],                                  //流程模板
+            page_count: 100,                            //总页码数
+            page: 1,                                    //分页页码数
+            sites: [],                                  //table内容
             sites1:[],
-            contents: '',                             //搜索输入框内容
+            contents: '',                               //搜索输入框内容
             checked1: false,                           //作业启动选框
             checked2: false,                           //流程启动选框
             disabled1: false,
@@ -522,8 +523,8 @@
             caiji1: 'block',
             caiji2: 'none',
             monitor_name: '',                             //单元名称
-            unit_id: 0,                               //单元id
-            centerDialogVisible: false,              //弹窗状态
+            unit_id: 0,                                   //单元id
+            centerDialogVisible: false,                  //弹窗状态
             sql1: 'block',
             file1: 'none',
             interface1: 'none',
@@ -534,22 +535,22 @@
             param2: '',
             zuoye: 'none',
             liucheng: 'none',
-            data22: {},                              //传递新增数据
+            data22: {},                                //传递新增数据
             monitor_type: 'first',                     //单元类型
-            basic: {                                //基本单元
-                monitor_name: '',                    //单元名称
-                monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
-                start_time: '',                      //开始时间
-                end_time: '',                        //结束时间
-                period: '',                          //采集周期
-                params: '',                         //监控参数
-                status: '',                          //监控状态
-                contents: '',                        //显示内容
-                gather_rule: '',                     //采集规则
-                gather_params: 'sql',                   //采集参数
+            basic: {                                   //基本单元
+                monitor_name: '',                      //单元名称
+                monitor_type: '',                      //单元类型
+                font_size: '',                         //字号
+                height: '',                            //高度
+                width: '',                             //宽度
+                start_time: '',                        //开始时间
+                end_time: '',                          //结束时间
+                period: '',                            //采集周期
+                params: '',                            //监控参数
+                status: '',                            //监控状态
+                contents: '',                          //显示内容
+                gather_rule: '',                       //采集规则
+                gather_params: 'sql',                  //采集参数
             },
             rules1: {
                 font_size: [
@@ -816,6 +817,7 @@
                     vm.sites = res.data.results.res_list;
                     vm.page_count = res.data.results.res_list[0].page_count;
                     vm.job2 = res.data.results.job;
+                    vm.flow2 = res.data.results.flow;
                 })
             },
             select1() {
@@ -901,7 +903,12 @@
                 vm.centerDialogVisible = false;
                 if (vm.monitor_type == 'first') {
                     vm.data22 = vm.basic;
-                    vm.basic.params = vm.server_url + ',' + vm.file_param;
+                    if (vm.file_param == '') {
+                        vm.basic.params = vm.server_url
+                    }
+                    else {
+                        vm.basic.params = vm.server_url + ',' + vm.file_param;
+                    }
                     vm.basic.monitor_name = vm.monitor_name;
                     vm.basic.monitor_type = vm.monitor_type
                 } else if (vm.monitor_type == 'second') {
