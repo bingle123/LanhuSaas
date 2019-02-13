@@ -21,6 +21,7 @@ def unit_show(request):
     p=Paginator(unit, limit)    #分页
     page_count = p.page_range[-1]  #总页数
     page = p.page(page)        #当前页数据
+
     res_list=[]
     for i in page.object_list:
         j=model_to_dict(i)
@@ -101,7 +102,6 @@ def add_unit(request):
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
         monitor_type = res['monitor_type']
-        print(monitor_type)
         if res['monitor_type'] == 'first':
             monitor_type = '基本单元类型'
         if res['monitor_type'] == 'second':
@@ -115,6 +115,9 @@ def add_unit(request):
         add_dic['monitor_type'] = monitor_type
         add_dic['jion_id'] = None
         add_dic['status'] = 0
+        if add_dic['gather_params'] == 'sql':
+            s1 = add_dic['params'].split(',')[0]
+            add_dic['params'] = s1
         add_dic['creator'] = user['data']['bk_username']
         add_dic['editor'] = user['data']['bk_username']
         Monitor.objects.create(**add_dic)

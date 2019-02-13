@@ -98,19 +98,15 @@
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item prop="width">
-                                              <el-input type="number" v-model.number="numberValidateForm.age"
-                                                        auto-complete="off" v-model="basic.width"
-                                                        placeholder="请输入宽度"></el-input>
+                                              <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="basic.width" placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="显示内容" prop="contents" style="width: 96%">
-                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000"
-                                                  type="textarea"></el-input>
+                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000" type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
-                                    <el-radio-group v-model="sql_file_interface" @change="change1"
-                                                    style="padding: 14px">
+                                    <el-radio-group v-model="sql_file_interface" @change="change1" style="padding: 14px">
                                         <el-radio :label="3">数据库</el-radio>
                                         <el-radio :label="6">文件</el-radio>
                                         <el-radio :label="9">接口</el-radio>
@@ -119,8 +115,7 @@
                                 <div :style="{ display: sql1 }">
                                     <el-form-item label="数据库连接">
                                         <el-select v-model="server_url" placeholder="请选择数据库">
-                                            <el-option v-for="i in sites" :label="i.label"
-                                                       :value="i.value"></el-option>
+                                            <el-option v-for="i in sites1" :label="i.label" :value="i.value"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item label="数据采集规则" style="width: 96%">
@@ -235,7 +230,7 @@
                                 </el-form-item>
                                 <el-form-item label="连接数据库">
                                     <el-select v-model="chart.params" placeholder="请选择数据库">
-                                        <el-option v-for="i in sites" :label="i.label" :value="i.value"></el-option>
+                                        <el-option v-for="i in sites1" :label="i.label" :value="i.value"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="图表采集规则" style="width: 96%">
@@ -514,13 +509,8 @@
             job2: [],                                      //作业模板
             page_count: 100,                             //总页码数
             page: 1,                                   //分页页码数
-            sites: [{
-            value: 'Shanghai',
-            label: '上海'
-          }, {
-            value: 'Beijing',
-            label: '北京'
-          }],                                //table内容
+            sites: [],                                //table内容
+            sites1:[],
             contents: '',                             //搜索输入框内容
             checked1: false,                           //作业启动选框
             checked2: false,                           //流程启动选框
@@ -559,7 +549,7 @@
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
-                gather_params: '',                   //采集参数
+                gather_params: 'sql',                   //采集参数
             },
             rules1: {
                 font_size: [
@@ -694,7 +684,7 @@
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
-                gather_params: '',                   //采集参数
+                gather_params: 'sql',                   //采集参数
             },
             chart1: {                                //图表单元
                 monitor_name: '',                    //单元名称
@@ -811,7 +801,6 @@
                         limit: 10
                     },
                 }).then(function (res) {
-                    console.log(res.data)
                     vm.sites = res.data.results.res_list;
                     vm.page_count = res.data.results.res_list[0].page_count;
                     vm.job2 = res.data.results.job;
@@ -943,7 +932,6 @@
                             monitor_name: vm.monitor_name
                         },
                     }).then((res) => {
-                        console.log(res['data']['code'])
                         if (res['data']['code'] == 1)
                             alert('保存失败！');
                         else alert('保存成功！');
@@ -1039,9 +1027,9 @@
                             j.label = res.data.results[i].connname;
                             json.push(j);
                         };
-                        this.sites = json;
+                        this.sites1 = json;
                     }
-                    console.log(this.sites)
+
                 }).catch((res) => {
                     console.log('获取数据库连接错误')
                 })
