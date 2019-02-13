@@ -116,31 +116,32 @@ def delete_unit(request):
 
 
 def add_unit(request):
-# try:
-    res = json.loads(request.body)
-    cilent = tools.interface_param (request)
-    user = cilent.bk_login.get_user({})
-    monitor_type = res['monitor_type']
-    if res['monitor_type'] == 'first':
-        monitor_type = '基本单元类型'
-    if res['monitor_type'] == 'second':
-        monitor_type = '图表单元类型'
-    if res['monitor_type'] == 'third':
-        monitor_type = '作业单元类型'
-    if res['monitor_type'] == 'fourth':
-        monitor_type = '流程元类型'
-    add_dic = res['data']
-    add_dic['monitor_name'] = res['monitor_name']
-    add_dic['monitor_type'] = monitor_type
-    add_dic['jion_id'] = None
-    add_dic['status'] = 0
-    add_dic['creator'] = user['data']['bk_username']
-    add_dic['editor'] = user['data']['bk_username']
-    print add_dic['params']
-    Monitor.objects.create(**add_dic)
-    result = tools.success_result(None)
-    # except Exception as e:
-    #     result = tools.error_result(e)
+    try:
+        res = json.loads(request.body)
+        cilent = tools.interface_param (request)
+        user = cilent.bk_login.get_user({})
+        monitor_type = res['monitor_type']
+        if res['monitor_type'] == 'first':
+            monitor_type = '基本单元类型'
+        if res['monitor_type'] == 'second':
+            monitor_type = '图表单元类型'
+        if res['monitor_type'] == 'third':
+            monitor_type = '作业单元类型'
+        if res['monitor_type'] == 'fourth':
+            monitor_type = '流程元类型'
+        add_dic = res['data']
+        add_dic['monitor_name'] = res['monitor_name']
+        add_dic['monitor_type'] = monitor_type
+        add_dic['jion_id'] = None
+        add_dic['status'] = 0
+        add_dic['creator'] = user['data']['bk_username']
+        add_dic['editor'] = user['data']['bk_username']
+        print add_dic['params']
+        print add_dic
+        Monitor.objects.create(**add_dic)
+        result = tools.success_result(None)
+    except Exception as e:
+        result = tools.error_result(e)
     return result
 
 
