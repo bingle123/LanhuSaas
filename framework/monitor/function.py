@@ -5,10 +5,13 @@ import json
 import math
 from models import *
 from monitorScene.models import Scene
+from DataBaseManage.models import Conn
+from DataBaseManage import function
 import tools
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
 from django.db.models import Q
+import pymysql as MySQLdb
 import copy
 
 
@@ -150,3 +153,18 @@ def edit_unit(request):
     except Exception as e:
         result = tools.error_result(e)
     return result
+
+
+
+def test(request):
+    res = json.loads(request.body)
+    gather_rule = res['gather_rule']
+    server_url = res['server_url']
+    sql = Conn.objects.get(id=server_url)
+    password = function.decrypt_str(sql.password)
+    db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))
+    cursor = db.cursor()
+    cursor.execute(gather_rule)
+    results = cursor.fetchall()
+    db.close()
+    return results
