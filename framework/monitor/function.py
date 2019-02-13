@@ -100,7 +100,6 @@ def add_unit(request):
         res = json.loads(request.body)
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
-
         monitor_type = res['monitor_type']
         print(monitor_type)
         if res['monitor_type'] == 'first':
