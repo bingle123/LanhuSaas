@@ -20,7 +20,6 @@ def select_all_nodes():
             dic2['do_time'] = do_time_ori.strftime('%Y-%m-%d %H:%M:%S')
         dic1['status'] = dic2
         node_list.append(dic1)
-    print node_list
     return node_list
 
 
