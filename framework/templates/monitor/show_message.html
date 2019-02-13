@@ -414,10 +414,10 @@
                                 </el-form-item>
                                    <el-form-item label="节点">
                                         <el-select v-model="flow.gather_params" placeholder="请选择节点">
-                                          <el-option v-for="i in sites" :key="sites.value" :label="i.editor" :value="i.editor"></el-option>
+                                          <el-option v-for="i in flow2" :label="i.flow_name" :value="i.flow_name"></el-option>
                                         </el-select>
                                       </el-form-item>
-                                <div v-if="flow.gather_rule === 'admin'">
+                                <div v-if="flow.gather_params === 'new20190114155906'">
                                 <el-form-item label="节点周期:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
