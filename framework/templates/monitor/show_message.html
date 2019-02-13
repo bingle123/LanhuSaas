@@ -222,7 +222,7 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="图标类型" prop="gather_params">
+                                <el-form-item label="图表类型" prop="gather_params">
                                     <el-select v-model="chart.gather_params" placeholder="请选择图表类型">
                                         <el-option label="折线图" value="折线图"></el-option>
                                         <el-option label="柱状图" value="柱状图"></el-option>
@@ -943,6 +943,10 @@
                             monitor_name: vm.monitor_name
                         },
                     }).then((res) => {
+                        console.log(res['data']['code'])
+                        if (res['data']['code'] == 1)
+                            alert('保存失败！');
+                        else alert('保存成功！');
                         vm.show()
                     }).catch((error) => {
                         alert('保存失败！')

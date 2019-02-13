@@ -40,6 +40,6 @@ def delete_unit(request):
 
 def add_unit(request):
 
-    function.add_unit(request)
-    return render_json(None)
+    res = function.add_unit(request)
+    return render_json(res)
 
