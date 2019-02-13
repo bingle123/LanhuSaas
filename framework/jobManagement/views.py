@@ -46,3 +46,13 @@ def edit_job(request):
 def filter_user(request):
     r = function.filter_user(request)
     return render_json(r)
+
+@csrf_exempt
+def get_tree(request):
+    r = function.get_tree(request)
+    return render_json(r)
+
+@csrf_exempt
+def synchronize(request):
+    r = function.synchronize(request)
+    return render_json(r)

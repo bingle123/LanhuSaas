@@ -2,70 +2,67 @@
 from __future__ import division
 import json
 import math
-from models import JobInstance,Localuser
+from models import JobInstance, Localuser
+from django.forms.models import model_to_dict
 from shell_app import tools
+from django.db.models import Q
+from django.core.paginator import Paginator
+import datetime
 
 
 def show(request):
     res = json.loads(request.body)
     limit = res['limit']
     page = res['page']
-    start_page = limit * page - 9
-    job = JobInstance.objects.all()[start_page - 1:start_page + 9]
-    unit2 = JobInstance.objects.all().values('id')
-    page_count = math.ceil(len(unit2) / 10)
+    job = JobInstance.objects.filter(id__gt=1)
     users = Localuser.objects.all()
+    p = Paginator(job, limit)
+    count = p.page_range
+    pages = count[-1]
     res_list = []
-    for x in job:
+    current_page = p.page(page)
+    for x in current_page.object_list:
         tmp = []
         for y in users:
-            if x.id == y.user_pos:
-                tmp.append(y.user_name+' ')
+            if x.id == y.user_pos.id:
+                tmp.append(y.user_name + ' ')
         dic = {
-            'id':x.id,
+            'id': x.id,
             'user_name': tmp,
             'pos_name': x.pos_name,
-            'page_count': page_count
+            'page_count': pages
         }
         res_list.append(dic)
     return res_list
 
+
 def select_job(request):
-    try:
-        res = json.loads(request.body)
-        limit = res['limit']
-        page = res['page']
-        search = res['search']
-        start_page = limit * page - 9
-        res1 = search
-        res_list = []
-        if len(res1) == 0:
-            res_list = show(request)
-        else:
-            if res1.isdigit():
-                if JobInstance.objects.filter(id=int(res1)).exists():
-                    job = JobInstance.objects.filter(id=int(res1))
-            if JobInstance.objects.filter(pos_name=res1).exists():
-                job = JobInstance.objects.filter(pos_name=res1)
-            tmp = job[start_page - 1:start_page + 9]
-            unit2 = tmp.values('id')
-            page_count = math.ceil(len(unit2) / 10)
-            for x in job:
-                tmp = []
-                users = Localuser.objects.filter(user_pos=x.id)
-                for y in users:
-                    if x.id == y.user_pos:
-                        tmp.append(y.user_name + ' ')
-                dic = {
-                    'id': x.id,
-                    'user_name': tmp,
-                    'pos_name': x.pos_name,
-                    'page_count':page_count
-                }
-                res_list.append(dic)
-        return res_list
-    except Exception as e:
-        return None
+    res = json.loads(request.body)
+    limit = res['limit']
+    page = res['page']
+    search = res['search']
+    res1 = search
+    res_list = []
+    tmp = JobInstance.objects.filter(id__gt=1)
+    job = tmp.filter(Q(pos_name__contains=res1) | Q(creator__icontains=res1))
+    users = Localuser.objects.all()
+    p = Paginator(job, limit)
+    count = p.page_range
+    pages = count[-1]
+    current_page = p.page(page)
+    for x in current_page.object_list:
+        tmp = []
+        for y in users:
+            if x.id == y.user_pos.id:
+                tmp.append(y.user_name + ' ')
+        dic = {
+            'id': x.id,
+            'user_name': tmp,
+            'pos_name': x.pos_name,
+            'page_count': pages
+        }
+        res_list.append(dic)
+    return res_list
 
 
 def delete_job(request):
@@ -80,6 +77,9 @@ def delete_job(request):
 
 def add_job(request):
     res = json.loads(request.body)
+    tmp = get_active_user(request)
+    nowPerson = tmp['data']['bk_username']
+    res['creator'] = nowPerson
     re = JobInstance.objects.create(**res)
     return re
 
@@ -87,7 +87,7 @@ def add_job(request):
 def add_person(request):
     res = json.loads(request.body)
     id = res['id']
-    res2 = dict_get(res['data2'],u'pinyin',None)
+    res2 = dict_get(res['data2'], u'pinyin', None)
     res3 = res['value2']
     tmp = res2
     for i in res3:
@@ -96,7 +96,7 @@ def add_person(request):
             if i == j:
                 tmp.remove(i)
     for k in tmp:
-        Localuser.objects.filter(user_name=k).update(user_pos=None)
+        Localuser.objects.filter(user_name=k).update(user_pos='1')
     return res2
 
 
@@ -104,8 +104,12 @@ def edit_job(request):
     res = json.loads(request.body)
     id = res['id']
     posname = res['pos_name']
-    rl = JobInstance.objects.filter(id=id).update(pos_name =posname )
+    nowTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    tmp = get_active_user(request)
+    nowPerson = tmp['data']['bk_username']
+    rl = JobInstance.objects.filter(id=id).update(pos_name=posname,edit_time=nowTime,editor=nowPerson)
     return rl
+
 
 def dict_get(list, objkey, default):
     """
@@ -115,13 +119,14 @@ def dict_get(list, objkey, default):
     tmp2 = []
     for i in tmp:
         if type(i) is dict:
-            for k,v in i.items():
+            for k, v in i.items():
                 if k == objkey:
                     tmp2.append(v)
     if len(tmp2):
         return tmp2
     else:
         return default
+
 
 def get_user(request):
     """
@@ -131,11 +136,12 @@ def get_user(request):
     """
     try:
         client = tools.interface_param(request)
-        result = client.bk_login.get_all_users({})                  # 获取所有用户信息
+        result = client.bk_login.get_all_users({})  # 获取所有用户信息
 
     except Exception, e:
         result = tools.error_result(e)
     return result
+
 
 def filter_user(request):
     """
@@ -149,12 +155,64 @@ def filter_user(request):
     tmp = []
     for j in users:
         for i in range(len(temp)):
-                if temp[i] == j.user_name:
-                    if j.user_pos == None:
-                        tmp.append(temp[i])
+            if temp[i] == j.user_name:
+                if j.user_pos_id == 1:
+                    tmp.append(temp[i])
     return tmp
 
 
+def get_tree(request):
+    job = JobInstance.objects.all()
+    users = Localuser.objects.all()
+    res_list = []
+    for x in job:
+        tmp = []
+        for y in users:
+            if x.id == y.user_pos_id:
+                dic1 = {
+                    'label' : y.user_name
+                }
+                tmp.append(dic1)
+        dic = {
+            'id': x.id,
+            'children': tmp,
+            'label': x.pos_name,
+        }
+        res_list.append(dic)
+    return res_list
 
+def get_active_user(request):
+    """
+    通过蓝鲸获取当前用户
+    :param request:
+    :return:            dict
+    """
+    client = tools.interface_param(request)
+    res = client.bk_login.get_user({})
+    return res
 
+def synchronize(request):
+    """
+        用户同步
+        """
+    res = get_user(request)
+    reslist = res['data']
+    users = Localuser.objects.all()
+    for i in reslist:
+        flag1 = 0
+        for j in users:
+            if i['bk_username'] == j.user_name:
+                Localuser.objects.filter(user_name=j.user_name).update(mobile_no=i['phone'],email=i['email'],open_id=i['wx_userid'])
+                flag1=1
+        if flag1 == 0:
+            Localuser.objects.create(user_name=i['bk_username'],user_pos_id=1,mobile_no=i['phone'], email=i['email'], open_id=i['wx_userid'])
 
+    for x in users:
+        flag2 = 0
+        for y in reslist:
+            if x.user_name == y['bk_username']:
+                flag2 = 1
+        if flag2 == 0:
+            Localuser.objects.filter(user_name=x.user_name).delete()
+
+    return  0

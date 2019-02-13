@@ -62,12 +62,29 @@ def crawl(request):
     :param request:
     :return:
     """
-    url = 'http://www.sse.com.cn/services/tradingservice/tradingtech/newnotice/'
-    total_xpath = '//div[@class="sse_list_1 js_listPage"]//dl//dd'
-    title_xpath = 'a/text()'
-    time_xpath = 'span/text()'
+    # 上交所
+    # url = 'http://www.sse.com.cn/services/tradingservice/tradingtech/newnotice/'
+    # total_xpath = '//div[@class="sse_list_1 js_listPage"]//dl//dd'
+    # title_xpath = 'a/text()'
+    # time_xpath = 'span/text()'
+    # url_xpath = 'a/@href'
+
+    # 深交所
+    url = 'http://www.szse.cn/aboutus/trends/news/index.html'
+    total_xpath = '//div[@class="article-list"]//div[@class="g-content-list"]//ul//li//div[@class="title"]'
+    title_xpath = 'a/@title'
+    time_xpath = 'span/text()'  # yes
     url_xpath = 'a/@href'
-    res = crawl_template.crawl_temp(url, total_xpath, time_xpath, title_xpath, url_xpath)
+
+    # china clear
+    # url = 'http://www.chinaclear.cn/zdjs/gszb/center_clist.shtml'
+    # total_xpath = '//div[@class="pageTabContent"]//ul//li'
+    # title_xpath = 'a/@title'
+    # # time_xpath = ''  # yes
+    # time_xpath = 'span/text()'  # yes
+    # # url_xpath = 'a/@href'
+    # url_xpath = ''
+    res = crawl_template.crawl_temp(url, total_xpath, title_xpath, time_xpath, url_xpath)
     return render_json(res)
 
 
@@ -78,6 +95,16 @@ def start_crawl(request):
     :return:
     """
     res = function.start_crawl(request)
+    return render_json(res)
+
+
+def crawl_test(request):
+    """
+    用户爬虫测试
+    :param request:
+    :return:
+    """
+    res = function.crawl_test(request)
     return render_json(res)
 
 

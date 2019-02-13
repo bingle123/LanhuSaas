@@ -35,15 +35,15 @@ from django.conf.global_settings import *  # noqa
 # 在蓝鲸智云开发者中心 -> 点击应用ID -> 基本信息 中获取 APP_ID 和 APP_TOKEN 的值
 APP_ID = 'mydjango1'
 # 长沙APP_TOKEN
-APP_TOKEN = '99d97ec5-4864-4716-a877-455a6a8cf9ef'
+# APP_TOKEN = '99d97ec5-4864-4716-a877-455a6a8cf9ef'
 # 上海APP_TOKEN
-# APP_TOKEN = 'c6369717-7906-4699-ad0d-31f5798d5cef'
+APP_TOKEN = 'c6369717-7906-4699-ad0d-31f5798d5cef'
 
 # 蓝鲸智云开发者中心的域名，形如：http://paas.bking.com#
 # 长沙
 BK_PAAS_HOST = 'http://paas.bk.com'
 # 上海
-# BK_PAAS_HOST = 'http://paas.blueking.com:8030'
+BK_PAAS_HOST = 'http://paas.blueking.com:8030'
 
 # 请求官方 API 默认版本号，可选值为："v2" 或 ""；其中，"v2"表示规范化API，""表示未规范化API
 DEFAULT_BK_API_VER = 'v2'
@@ -232,28 +232,9 @@ if IS_USE_CELERY:
         # celery 的消息队列（RabbitMQ）信息
         BROKER_URL = os.environ.get('BK_BROKER_URL', BROKER_URL_DEV)
         CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
-        CELERY_ENABLE_UTC = False
-        TIME_ZONE = 'Asia/Shanghai'
-        CELERY_RESULT_BACKEND = 'amqp://localhost'  # 官网优化的地方也推荐使用c的librabbitmq
-        CELERY_TASK_RESULT_EXPIRES = 1200  # celery任务执行结果的超时时间，我的任务都不需要返回结果,只需要正确执行就行
-        CELERYD_CONCURRENCY = 50  # celery worker的并发数 也是命令行-c指定的数目,事实上实践发现并不是worker也多越好,保证任务不堆积,加上一定新增任务的预留就可以
-        CELERYD_PREFETCH_MULTIPLIER = 4  # celery worker 每次去rabbitmq取任务的数量，我这里预取了4个慢慢执行,因为任务有长有短没有预取太多
-        CELERYD_MAX_TASKS_PER_CHILD = 40
-        CELERY_ACCEPT_CONTENT = ['json']
+        CELERY_RESULT_BACKEND = 'amqp://'
         CELERY_TASK_SERIALIZER = 'json'
         CELERY_RESULT_SERIALIZER = 'json'
-        CELERY_QUEUES = (
-            Queue('demo', Exchange('demo'), routing_key='demo'),
-            Queue('task_one', Exchange('task_one'), routing_key='task_one'),
-            Queue('task_two', Exchange('task_two'), routing_key='task_two')
-        )
-        CELERY_DEFAULT_QUEUE = 'demo'
-        CELERY_DEFAULT_EXCHANGE = 'demo'
-        CELERY_DEFAULT_ROUTING_KEY = 'demo'
-        CELERY_ROUTES = (
-            {'market_day.tasks.mul': {'queue': 'demo', 'routing_key': 'demo'}},
-            {'market_day.tasks.sendemail':{'queue':'task_one','routing_key':'task_one'}},
-        )
         if RUN_MODE == 'DEVELOP':
             from celery.signals import worker_process_init
 

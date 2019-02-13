@@ -37,4 +37,5 @@ urlpatterns = patterns(
     (r'^add_scene/$', 'add_scene'),                                   # 增加场景表单HTML
     (r'^add_scene_form/$', 'add_scene_form'),                         # 增加场景
     (r'^get_json_test', 'get_json_test'),                           # json数据测试URL
+    (r'^get_active_user/$', 'get_active_user'),                           # json数据测试URL
 )

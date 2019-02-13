@@ -14,7 +14,8 @@ from django.conf.urls import patterns
 
 urlpatterns = patterns(
     'jobManagement.views',
-    (r'^jobM$', 'index'),                                          # 首页--服务器选择页面
+    (r'^jobM/$', 'index'),                                          # 首页--服务器选择页面
+    (r'^get_tree/$', 'get_tree'),
     (r'^show/$', 'show'),                                           #显示数据
     (r'^select_job/$', 'select_job'),                               #查询
     (r'^delete/$', 'delete_job'),                                   #删除
@@ -22,4 +23,5 @@ urlpatterns = patterns(
     (r'^add_person/$', 'add_person'),                               #增加员工
     (r'^edit_job/$', 'edit_job'),                                   #编辑
     (r'^get_user/$', 'filter_user'),                                #调接口查询所有用户,并筛选
+    (r'^synchronize/$', 'synchronize'),                                #调接口查询所有用户,并筛选
 )

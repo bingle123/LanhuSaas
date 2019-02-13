@@ -138,7 +138,7 @@ def add_unit(request):
         add_dic = res['data']
         add_dic['monitor_name'] = res['monitor_name']
         add_dic['monitor_type'] = monitor_type
-        add_dic['jion_id'] = 3
+        add_dic['jion_id'] = None
         add_dic['status'] = 0
         add_dic['creator'] = 'admin'
         add_dic['editor'] = 'admin'
@@ -165,7 +165,7 @@ def edit_unit(request):
         add_dic = res['data']
         add_dic['monitor_name'] = res['monitor_name']
         add_dic['monitor_type'] = monitor_type
-        add_dic['jion_id'] = 3
+        add_dic['jion_id'] = None
         add_dic['status'] = 0
         add_dic['creator'] = 'admin'
         add_dic['editor'] = 'admin'

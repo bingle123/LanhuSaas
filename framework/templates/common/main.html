@@ -38,17 +38,17 @@
                      @close="handleClose" :collapse="isCollapse">
                 <el-menu-item index="0" class="title_item">
                     <i class=""></i>
-                    <li slot="title">看板项目</li>
+                    <li slot="title" style="font-size: 18px;">看板项目</li>
                 </el-menu-item>
-                <el-menu-item index="1" style="height: 44px;line-height: 44px;" v-on:click="testClick('html1')">
+                <el-menu-item index="1" style="line-height: 56px;font-size: 18px;" v-on:click="testClick('html1')">
                     <i class="iconfont icon-zhuye"></i>
-                    <span slot="title" style="width: 200px">首页概览</span>
+                    <span slot="title">首页概览</span>
                 </el-menu-item>
-                <el-menu-item index="2" style="height: 44px;line-height: 44px;" v-on:click="testClick('html2')">
+                <el-menu-item index="2" style="line-height: 56px;font-size: 18px;" v-on:click="testClick('html2')">
                     <i class="iconfont icon-jiankong"></i>
-                    <span slot="title" style="width: 200px">监控项管理</span>
+                    <span slot="title">监控项管理</span>
                 </el-menu-item>
-                <el-menu-item index="3" style="height: 44px;line-height: 44px;" v-on:click="testClick('html3')">
+                <el-menu-item index="3" style="line-height: 56px;font-size: 18px;" v-on:click="testClick('html3')">
                     <i class="iconfont icon-changjingguanli"></i>
                     <span slot="title">场景管理</span>
                 </el-menu-item>
@@ -56,36 +56,36 @@
                 <el-submenu index="4">
                     <template slot="title">
                         <i class="iconfont icon-changjing"></i>
-                        <span class="el-submenu">场景展示</span>
+                        <span class="el-submenu" style="font-size: 18px;line-height: 56px;">场景展示</span>
                     </template>
-                    <el-menu-item index="4-1" v-on:click="testClick('html4')">场景轮播测试</el-menu-item>
-                    <el-menu-item index="4-2" onclick="window.open(${SITE_URL}scene_carousel/)">大屏轮播</el-menu-item>
+                    <el-menu-item index="4-1" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html4')">场景轮播测试</el-menu-item>
+                    <el-menu-item index="4-2" style="font-size: 16px;line-height: 56px;" onclick="window.open(${SITE_URL}scene_carousel/)">大屏轮播</el-menu-item>
                 </el-submenu>
                 <el-submenu index="5">
                     <template slot="title">
                         <i class="iconfont icon-xitong"></i>
-                        <span class="el-submenu">看板系统配置</span>
+                        <span class="el-submenu" style="font-size: 18px;line-height: 56px;">看板系统配置</span>
                     </template>
-                    <el-menu-item index="5-1" v-on:click="testClick('html6')">岗位配置</el-menu-item>
-                    <el-menu-item index="5-2" v-on:click="testClick('html7')">数据库连接配置</el-menu-item>
-                    <el-menu-item index="5-3" v-on:click="testClick('html8')">交易日导入</el-menu-item>
-                    <el-menu-item index="5-4" v-on:click="testClick('html9')">网页抓取配置</el-menu-item>
-                    <el-menu-item index="5-7" v-on:click="testClick('html16')">定制过程通知</el-menu-item>
-                    <el-menu-item index="5-5" v-on:click="testClick('html10')">告警配置</el-menu-item>
-                    <el-menu-item index="5-6" v-on:click="testClick('html11')">接入配置</el-menu-item>
+                    <el-menu-item index="5-1" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html6')">岗位配置</el-menu-item>
+                    <el-menu-item index="5-2" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html7')">数据库连接配置</el-menu-item>
+                    <el-menu-item index="5-3" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html8')">交易日导入</el-menu-item>
+                    <el-menu-item index="5-4" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html9')">网页抓取配置</el-menu-item>
+                    <el-menu-item index="5-5" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html10')">告警配置</el-menu-item>
+                    <el-menu-item index="5-6" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html11')">接入配置</el-menu-item>
+                    <el-menu-item index="5-7" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html16')">定制过程通知</el-menu-item>
                 </el-submenu>
                 <el-submenu index="6">
                     <template slot="title">
                         <i class="iconfont icon-web-icon-"></i>
-                        <span class="el-submenu">历史和报表</span>
+                        <span class="el-submenu" style="font-size: 18px;line-height: 56px;">历史和报表</span>
                     </template>
-                    <el-menu-item index="6-1" v-on:click="testClick('html12')">岗位配置--</el-menu-item>
-                    <el-menu-item index="6-2" v-on:click="testClick('html13')">数据库连接配置--</el-menu-item>
-                    <el-menu-item index="6-3" v-on:click="testClick('html14')">交易日导入--</el-menu-item>
-                    <el-menu-item index="6-4" v-on:click="testClick('html15')">网页抓取配置--</el-menu-item>
+                    <el-menu-item index="6-1" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html12')">岗位配置--</el-menu-item>
+                    <el-menu-item index="6-2" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html13')">数据库连接配置--</el-menu-item>
+                    <el-menu-item index="6-3" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html14')">交易日导入--</el-menu-item>
+                    <el-menu-item index="6-4" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html15')">网页抓取配置--</el-menu-item>
                 </el-submenu>
 
-                <div index="7" style="height: 44px;line-height: 44px; margin-top: 1000px;margin-left: 20px;">
+                <div index="7" style="line-height: 56px; margin-top: 1000px;margin-left: 20px;">
                     <i class="el-icon-question"></i>
                     <span slot="title"><a href="http://baidu.com">帮助</a></span>
                 </div>
@@ -99,9 +99,9 @@
             <el-header class="header_item" height="62px">
                 <el-row :gutter="20">
                     <el-col :span="6">
-                        <i class="iconfont icon-yincang" @click="changeCollapse"
+                        <i class="iconfont icon-yincang" :style="display1" @click="changeCollapse"
                            style="color: #555759;font-size: 30px;margin-top: 5px;"></i>
-                        <i class="iconfont icon-icon--" @click="changeCollapse"
+                        <i class="iconfont icon-icon--" :style="display2" @click="changeCollapse"
                            style="color: #555759;font-size: 25px;"></i>
                         <span style="color: #555759; font-size: 16px; etter-spacing: 0.23px;">当前业务:</span>
                         <span style="color: #555759; etter-spacing: 0.23px;">{{business.name }}</span>
@@ -135,7 +135,7 @@
                         <iframe v-if="ifArr.html2" class="ifa" scrolling=auto
                                 src="${SITE_URL}monitor/show_message"
                                 frameborder="0"></iframe>
-                        <iframe v-if="ifArr.html3" class="ifa" scrolling=auto
+                        <iframe v-if="ifArr.html3" class="ifa" scrolling=no
                                 src="${SITE_URL}monitorScene/"
                                 frameborder="0"></iframe>
                         <iframe v-if="ifArr.html4" class="ifa" scrolling=auto
@@ -145,7 +145,7 @@
                                 src="${SITE_URL}scene_carousel/"
                                 frameborder="0"></iframe><!--大屏轮播-->
                         <iframe v-if="ifArr.html6" class="ifa" scrolling=auto
-                                src="${SITE_URL}position"
+                                src="${SITE_URL}jobManagement/jobM/"
                                 frameborder="0"></iframe>
                         <iframe v-if="ifArr.html7" class="ifa" scrolling=auto
                                 src="${SITE_URL}DataBaseManage/data_base/"
@@ -201,6 +201,12 @@
             height: {           //css
                 height: '',
             },
+            display1:{
+                display:'inline-block',
+            },
+            display2:{
+                display:'none',
+            },
             business: {         //业务数据
                 name: "蓝鲸",
             },
@@ -246,6 +252,13 @@
             },
             changeCollapse() {          //更改伸缩状态
                 let res = this.isCollapse;
+                if(res){
+                    this.display1.display='inline-block';
+                    this.display2.display='none';
+                }else {
+                    this.display1.display='none';
+                    this.display2.display='inline-block';
+                }
                 this.isCollapse = res ? false : true;
             },
             testClick(res) {            //更新iframe显示页面
