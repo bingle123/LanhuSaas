@@ -51,3 +51,14 @@ def testConn(request):
 def delete_conn(request,id):
     function.delete_conn(request,id)
     return render_json(0)
+
+
+@csrf_exempt
+def get_all_db_connection(request):
+    """
+    获取所有的数据库连接
+    :param request:
+    :return: json结果集
+    """
+    res = function.get_all_db_connection(request)
+    return render_json(res)
