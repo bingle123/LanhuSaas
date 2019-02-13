@@ -22,4 +22,5 @@ urlpatterns = patterns(
     (r'^delete/$', 'delete_unit'),
     (r'^add/$', 'add_unit'),
     (r'^123/$', 'index1'),
+    (r'^test/$', 'test'),
 )

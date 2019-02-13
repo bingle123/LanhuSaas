@@ -22,9 +22,9 @@ DATABASES = {
         'NAME': APP_ID,                        # 数据库名 (默认与APP_ID相同)
         'USER': 'root',                        # 你的数据库user
         'PASSWORD': '12345678',              # 长沙服务器,你的数据库password
-        'HOST': '192.168.1.25',              # 长沙服务器,开发的时候，使用localhost
-        # 'PASSWORD': 'zorkdata.8888',           # 上海服务器,你的数据库password
-        # 'HOST': '192.168.1.157',               # 上海服务器,开发的时候，使用localhost
+         'HOST': '192.168.1.25',              # 长沙服务器,开发的时候，使用localhost
+        #'PASSWORD': 'zorkdata.8888',           # 上海服务器,你的数据库password
+        #'HOST': '192.168.1.157',               # 上海服务器,开发的时候，使用localhost
         'PORT': '3306',                        # 默认3306
     },
 }

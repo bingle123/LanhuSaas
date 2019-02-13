@@ -252,26 +252,26 @@
                     url_xpath: '',
                     crawl_keyword: '',
                     crawl_no_keyword: '',
-                    create_user:'',
-                    update_user:''
+                    create_user: '',
+                    update_user: ''
                 }
             ],
             crawl_search: {
                 name: ''
             },
             crawl_form: {
-                id:'',
+                id: '',
                 crawl_name: '',
                 crawl_url: 'http://www.szse.cn/aboutus/trends/news/index.html',
                 period: '',
                 crawl_keyword: '',
                 crawl_no_keyword: '',
                 total_xpath: '//div[@class="article-list"]//div[@class="g-content-list"]//ul//li//div[@class="title"]',
-                title_xpath:    'a/@title',
+                title_xpath: 'a/@title',
                 time_xpath: 'span/text()',
                 url_xpath: 'a/@href',
-                receivers:'',
-                url_pre:'',
+                receivers: '',
+                url_pre: '',
             },
         },
         methods: {
@@ -286,9 +286,9 @@
                 this.changeDiaLog();
                 //此处应更新表单的值
                 this.message = '修改';
-                this.crawl_form.id=res;
-                for (let i = 0;i < this.crawl_table.length; i++){
-                    if (this.crawl_table[i].id == res){
+                this.crawl_form.id = res;
+                for (let i = 0; i < this.crawl_table.length; i++) {
+                    if (this.crawl_table[i].id == res) {
                         this.crawl_form.crawl_name = this.crawl_table[i].crawl_name;
                         this.crawl_form.crawl_url = this.crawl_table[i].crawl_url;
                         this.crawl_form.period = this.crawl_table[i].period;
@@ -307,17 +307,17 @@
                     method: 'post',
                     data: this.crawl_form,
                 }).then(function (res) {
-                    if(res.data.code == 0){
+                    if (res.data.code == 0) {
                         vm.$message({
-                           type:'success',
-                           message:res.data.results,
+                            type: 'success',
+                            message: res.data.results,
                         });
                         vm.changeDiaLog();
                         vm.initHtml();
-                    }else {
+                    } else {
                         vm.$message({
-                            type:'info',
-                            message:res.data.results,
+                            type: 'info',
+                            message: res.data.results,
                         })
                     }
                     console.log(res)
@@ -334,24 +334,24 @@
                     axios({
                         url: '${SITE_URL}system_config/delete_crawl/',
                         method: 'post',
-                        data: {id:id},
-                    }).then((res)=> {
-                        if (res.data.code == 0){
+                        data: {id: id},
+                    }).then((res) => {
+                        if (res.data.code == 0) {
                             vm.$message({
-                                type:'success',
-                                message:res.data.results,
+                                type: 'success',
+                                message: res.data.results,
                             });
                             vm.initHtml();
-                        }else{
+                        } else {
                             vm.$message({
-                                type:'info',
-                                message:res.data.results,
+                                type: 'info',
+                                message: res.data.results,
                             })
                         }
                     }).catch((res) => {
                         this.$message({
                             type: 'info',
-                            message: '删除失败，'+res
+                            message: '删除失败，' + res
                         });
                     });
 
@@ -362,90 +362,91 @@
                     });
                 });
             },
-            get_crawl_by_name(){
+            get_crawl_by_name() {
                 axios({
-                    url:'${SITE_URL}system_config/get_crawl_by_name/',
-                    method:'post',
-                    data:this.crawl_search.name
+                    url: '${SITE_URL}system_config/get_crawl_by_name/',
+                    method: 'post',
+                    data: this.crawl_search.name
                 }).then((res) => {
-                    if(res.data.code == 0){
+                    if (res.data.code == 0) {
                         vm.crawl_table = res.data.results;
-                    }else{
+                    } else {
                         vm.$message({
-                            type:'info',
-                            message:'查询失败',
+                            type: 'info',
+                            message: '查询失败',
                         })
                     }
                     console.log(res)
                 }).catch((res) => {
                     vm.$message({
                         type: 'info',
-                        message: '查询失败'+res
+                        message: '查询失败' + res
                     })
                 })
 
             },
-            initHtml(){
+            initHtml() {
                 axios({
-                    url:'${SITE_URL}system_config/get_crawls/',
+                    url: '${SITE_URL}system_config/get_crawls/',
                     methods: 'post',
                 }).then((res) => {
                     console.log(res);
-                    if (res.data.code == 0){
+                    if (res.data.code == 0) {
                         console.log(res.data.results);
                         vm.crawl_table = res.data.results;
                     } else {
                         vm.$message({
-                            type:'info',
-                            message:res.data.results,
+                            type: 'info',
+                            message: res.data.results,
                         })
                     }
                 }).catch((res) => {
                     vm.$message({
-                        type:'info',
-                        message:'查询错误'
+                        type: 'info',
+                        message: '查询错误'
                     })
                 })
-            },testCrawl(){
+            }, testCrawl() {
+                //elementUI loading动画
                 const loading = this.$loading({
-          lock: true,
-          text: 'Loading',
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        });
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
                 axios({
-                    url:'${SITE_URL}system_config/crawl_test/',
+                    url: '${SITE_URL}system_config/crawl_test/',
                     method: 'post',
                     data: this.crawl_form,
-                }).then((res) =>{
+                }).then((res) => {
                     if (res.data.code == 0) {
                         let info = ''
-                        for (let i = 0; i< res.data.results.length; i++){
+                        for (let i = 0; i < res.data.results.length; i++) {
                             let title = res.data.results[i].title;
                             let time = res.data.results[i].time;
                             let url = res.data.results[i].resource;
-                            info += '<h6>'+'第'+(i+1)+'条数据'+'</h6> <span>标题：</span><span>'+title+'</span><br> <span>时间：</span>' +
-                                '<span>'+time+'</span><br> <span>链接：</span><span>'+url+'</span><br>'
+                            info += '<h6>' + '第' + (i + 1) + '条数据' + '</h6> <span>标题：</span><span>' + title + '</span><br> <span>时间：</span>' +
+                                '<span>' + time + '</span><br> <span>链接：</span><span>' + url + '</span><br>'
 
                         }
                         vm.$message({
-                            type:'success',
+                            type: 'success',
                             dangerouslyUseHTMLString: true,
                             showClose: true,
-                            duration:1000,
-                            message:info,
+                            duration: 1000,
+                            message: info,
                         });
                         loading.close();
-                    }else {
+                    } else {
                         vm.$message({
-                            type:'info',
-                            message:res.data.results,
+                            type: 'info',
+                            message: res.data.results,
                         })
                     }
                 }).catch((res) => {
                     vm.$message({
-                        type:'info',
-                        message:'爬虫异常'+res,
+                        type: 'info',
+                        message: '爬虫异常' + res,
                     })
                 })
             }
