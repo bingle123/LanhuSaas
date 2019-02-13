@@ -37,7 +37,8 @@
     <div style="height: 20px"></div>
     <div>
         <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;" border  header-align="center">
-            <el-table-column prop="id" label="序号" sortable ></el-table-column>
+            <el-table-column type="index" label="序号" sortable width="80" ></el-table-column>
+            <el-table-column prop="id" label="id" sortable v-if="false"></el-table-column>
             <el-table-column prop="monitor_name" label="监控名称" sortable ></el-table-column>
             <el-table-column prop="monitor_type" label="监控类型" sortable ></el-table-column>
             <el-table-column prop="editor" label="编辑人" sortable ></el-table-column>
@@ -47,9 +48,7 @@
                     <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
                     <el-button size="mini" type="text" v-on:click="edit(scope.row)">编辑</el-button>
                     <el-button size="mini" type="text" v-on:click="edit2(scope.row)">删除</el-button>
-                    <el-tooltip :content="value1" placement="top">
-                    <el-switch v-model="scope.status" active-color="#13ce66" inactive-color="#ff4949" active-value="1" inactive-value="0"></el-switch>
-                    </el-tooltip>
+                    <el-switch v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949" active-value="1" inactive-value="0"></el-switch>
                 </template>
             </el-table-column>
             </el-table>
@@ -468,7 +467,7 @@
     var vm = new Vue({
         el:'#app',
         data: {
-            value1:'',
+
             job2:[],                                      //作业模板
             page_count:100,                             //总页码数
             page:1,                                   //分页页码数
@@ -853,20 +852,20 @@
                     vm.data22 = vm.basic;
                     vm.basic.params = vm.server_url+','+vm.file_param;
                     vm.basic.monitor_name = vm.monitor_name;
-                    vm.basic.monitor_type = vm.monitor_type
+                    vm.basic.monitor_type = vm.monitor_type;
                 }else if (vm.monitor_type == 'second'){
                     vm.data22 = vm.chart;
                     vm.chart.monitor_name = vm.monitor_name;
-                    vm.chart.monitor_type = vm.monitor_type
+                    vm.chart.monitor_type = vm.monitor_type;
                 }else if(vm.monitor_type == 'third') {
                     vm.data22 = vm.job;
                     vm.job.monitor_name = vm.monitor_name;
-                    vm.job.monitor_type = vm.monitor_type
+                    vm.job.monitor_type = vm.monitor_type;
                 }else if(vm.monitor_type == 'fourth'){
                     vm.data22 = vm.flow;
                     vm.flow.monitor_name = vm.monitor_name;
                     vm.flow.monitor_type = vm.monitor_type;
-                    vm.flow.params = vm.param1+'+'+vm.param2
+                    vm.flow.params = vm.param1+'+'+vm.param2;
                 }
 
                 if(vm.unit_id > 0) {
@@ -910,12 +909,8 @@
                 vm.disabled5 = false;
                 vm.monitor_type = 'first';
                 vm.unit_id = row;
-                vm.basic = vm.basic1;
-                vm.chart = vm.chart1;
-                vm.job = vm.job1;
-                vm.flow = vm.flow1;
-                            vm.centerDialogVisible = true
-                    },1)
+                vm.centerDialogVisible = true
+                    },1000)
 
             },
             del() {
