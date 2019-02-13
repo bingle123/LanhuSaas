@@ -179,7 +179,7 @@
                             </div>
                             <div style="padding: 0px 20%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary">采集测试</el-button>
+                                <el-button type="primary" v-on:click="test1()">采集测试</el-button>
                             </div>
                         </div></el-col>
                     </el-row>
@@ -733,6 +733,18 @@
             },
         },
         methods: {
+            test1(){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor/test/',
+                    data: {
+                        server_url:vm.server_url,
+                        gather_rule:vm.basic.gather_rule
+                    },
+                }).then(function (res) {
+                    console.log(res.data.message)
+                })
+            },
             pefFrom() {
                 var basic = $('#pane-first').attr('style')
                 var chart = $('#pane-second').attr('style')
