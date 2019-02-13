@@ -139,6 +139,8 @@ INSTALLED_APPS = (
     'market_day',
     'DataBaseManage',
     'customProcess',
+    'gatherData',
+    'gatherDataHistory'
 )
 
 # ==============================================================================
