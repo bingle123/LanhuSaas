@@ -23,8 +23,8 @@ DATABASES = {
         'USER': 'root',                        # 你的数据库user
         'PASSWORD': '12345678',              # 长沙服务器,你的数据库password
          'HOST': '192.168.1.25',              # 长沙服务器,开发的时候，使用localhost
-        #'PASSWORD': 'zorkdata.8888',           # 上海服务器,你的数据库password
-        #'HOST': '192.168.1.157',               # 上海服务器,开发的时候，使用localhost
+        # 'PASSWORD': 'zorkdata.8888',           # 上海服务器,你的数据库password
+        # 'HOST': '192.168.1.157',               # 上海服务器,开发的时候，使用localhost
         'PORT': '3306',                        # 默认3306
     },
 }
