@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 
+
 class Conn(models.Model):
     connname = models.CharField(u'连接名称',max_length=30)
     type = models.CharField(u'连接类型',max_length=30)

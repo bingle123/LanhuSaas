@@ -366,12 +366,18 @@
                                     <el-col :span="11">
                                         <el-form-item prop="height">
                                             <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.height" placeholder="请输入高度" @change="flow_height"></el-input>
+                                            <el-input type="number" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="flow.height"
+                                                      placeholder="请输入高度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item prop="width">
                                               <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.width" placeholder="请输入宽度" @change="flow_width"></el-input>
+                                              <el-input type="number" v-model.number="numberValidateForm.age"
+                                                        auto-complete="off" v-model="flow.width"
+                                                        placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
@@ -506,6 +512,7 @@
                             <div style="padding: 0px 10%">
                                 <div style="height: 20px"></div>
                                 <el-button type="primary" v-on:click="canvas_new" >采集测试</el-button>
+                                <el-button type="primary" v-on:click="time2" :disabled="disabled1">采集测试</el-button>
                                 <el-checkbox v-model="checked2" @change="change3">启动流程</el-checkbox>
                                 <div :style="{ display: liucheng }">
                                     <el-alert title="启动流程可能会对系统造成不可逆的变更，请谨慎勾选此项！" type="warning" show-icon true-label="1" false-label="0"></el-alert>
@@ -525,7 +532,6 @@
     <!-- 对话框 end-->
 </div>
 </body>
-
 
 
 <script>
@@ -703,81 +709,93 @@
                 period:[
                         {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
                 ]
-             },
+            },
             basic1: {                                //基本单元
-                monitor_name:'',                    //单元名称
-                monitor_type:'',                    //单元类型
-                font_size:'',                       //字号
-                height:'',                          //高度
-                width:'',                            //宽度
-                start_time:'',                      //开始时间
-                end_time:'',                        //结束时间
-                period:'',                          //采集周期
+                monitor_name: '',                    //单元名称
+                monitor_type: '',                    //单元类型
+                font_size: '',                       //字号
+                height: '',                          //高度
+                width: '',                            //宽度
+                start_time: '',                      //开始时间
+                end_time: '',                        //结束时间
+                period: '',                          //采集周期
                 params: '',                         //监控参数
-                status:'',                          //监控状态
-                contents:'',                        //显示内容
-                gather_rule:'',                     //采集规则
-                gather_params:'',                   //采集参数
+                status: '',                          //监控状态
+                contents: '',                        //显示内容
+                gather_rule: '',                     //采集规则
+                gather_params: 'sql',                   //采集参数
             },
             chart1: {                                //图表单元
-                monitor_name:'',                    //单元名称
-                monitor_type:'',                    //单元类型
-                font_size:'',                       //字号
-                height:'',                          //高度
-                width:'',                            //宽度
-                start_time:'',                      //开始时间
-                end_time:'',                        //结束时间
-                period:'',                          //采集周期
-                status:'',                          //监控状态
-                contents:'',                        //显示内容
-                gather_rule:'',                     //采集规则
-                gather_params:'',                   //节点
+                monitor_name: '',                    //单元名称
+                monitor_type: '',                    //单元类型
+                font_size: '',                       //字号
+                height: '',                          //高度
+                width: '',                            //宽度
+                start_time: '',                      //开始时间
+                end_time: '',                        //结束时间
+                period: '',                          //采集周期
+                status: '',                          //监控状态
+                contents: '',                        //显示内容
+                gather_rule: '',                     //采集规则
+                gather_params: '',                   //节点
                 params: '',                          //监控参数
             },
             job1: {                                   //作业单元
-                monitor_name:'',                    //单元名称
-                monitor_type:'',                    //单元类型
-                font_size:'',                       //字号
-                height:'',                          //高度
-                width:'',                            //宽度
-                start_time:'',                      //开始时间
-                end_time:'',                        //结束时间
-                period:'',                          //采集周期
-                status:'',                          //监控状态
-                contents:'',                        //显示内容
-                gather_rule:'',                     //NODE_KEY
-                gather_params:'',                   //作业模板
+                monitor_name: '',                    //单元名称
+                monitor_type: '',                    //单元类型
+                font_size: '',                       //字号
+                height: '',                          //高度
+                width: '',                            //宽度
+                start_time: '',                      //开始时间
+                end_time: '',                        //结束时间
+                period: '',                          //采集周期
+                status: '',                          //监控状态
+                contents: '',                        //显示内容
+                gather_rule: '',                     //NODE_KEY
+                gather_params: '',                   //作业模板
                 params: '',                         //执行服务器
             },
             flow1: {                                //流程单元
-                monitor_name:'',                    //单元名称
-                monitor_type:'',                    //单元类型
-                font_size:'',                       //字号
-                height:'',                          //高度
-                width:'',                            //宽度
-                start_time:'',                      //开始时间
-                end_time:'',                        //结束时间
-                period:'',                          //采集周期
+                monitor_name: '',                    //单元名称
+                monitor_type: '',                    //单元类型
+                font_size: '',                       //字号
+                height: '',                          //高度
+                width: '',                            //宽度
+                start_time: '',                      //开始时间
+                end_time: '',                        //结束时间
+                period: '',                          //采集周期
                 params: '',                         //监控参数
-                status:'',                          //监控状态
-                contents:'',                        //显示内容
-                gather_rule:'',                     //采集规则
-                gather_params:'',                   //流程模板
+                status: '',                          //监控状态
+                contents: '',                        //显示内容
+                gather_rule: '',                     //采集规则
+                gather_params: '',                   //流程模板
             },
         },
         methods: {
-            pefFrom(){
+            test1(){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor/test/',
+                    data: {
+                        server_url:vm.server_url,
+                        gather_rule:vm.basic.gather_rule
+                    },
+                }).then(function (res) {
+                    console.log(res.data.message)
+                })
+            },
+            pefFrom() {
                 var basic = $('#pane-first').attr('style')
                 var chart = $('#pane-second').attr('style')
                 var job = $('#pane-third').attr('style')
                 var flow = $('#pane-fourth').attr('style')
-                if(basic == undefined || basic == ""){
+                if (basic == undefined || basic == "") {
                     vm.submitForm('basic')
-                }else if(chart == undefined || chart == ""){
+                } else if (chart == undefined || chart == "") {
                     vm.submitForm('chart')
-                }else if(job == undefined || job == ""){
+                } else if (job == undefined || job == "") {
                     vm.submitForm('job')
-                }else if(flow == undefined || flow == ""){
+                } else if (flow == undefined || flow == "") {
                     vm.submitForm('flow')
                 }
             },
@@ -786,15 +804,15 @@
                 vm.show()
             },
             submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
-              if (valid) {
-                    vm.edit1()
-              } else {
-                console.log('error submit!!');
-                return false;
-              }
-            });
-          },
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        vm.edit1()
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
+            },
 
             edit2(row) {
                 this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
@@ -829,14 +847,15 @@
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/show/',
-                    data:{
-                        page:vm.page,
-                        limit:10
+                    data: {
+                        page: vm.page,
+                        limit: 10
                     },
-                }).then(function(res) {
+                }).then(function (res) {
                     vm.sites = res.data.results.res_list;
                     vm.page_count = res.data.results.res_list[0].page_count;
                     vm.job2 = res.data.results.job;
+                    vm.flow2 = res.data.results.flow;
                 })
             },
             select1() {
@@ -844,20 +863,19 @@
                 vm.page = 1;
                 if (vm.contents == "") {
                     vm.show()
-                }
-                else {
+                } else {
                     axios({
-                    method: 'post',
-                    url: '${SITE_URL}monitor/select/',
-                    data: {
-                        data: this.contents,
-                        page:vm.page,
-                        limit:10
-                    }
-                }).then((res) => {
-                    vm.sites = res.data.message;
-                    vm.page_count = res.data.message[0].page_count;
-                })
+                        method: 'post',
+                        url: '${SITE_URL}monitor/select/',
+                        data: {
+                            data: this.contents,
+                            page: vm.page,
+                            limit: 10
+                        }
+                    }).then((res) => {
+                        vm.sites = res.data.message;
+                        vm.page_count = res.data.message[0].page_count;
+                    })
                 }
 
             },
@@ -920,52 +938,59 @@
             },
             edit1() {
                 vm.centerDialogVisible = false;
-                if(vm.monitor_type == 'first') {
-                    vm.data22 = vm.basic;
-                    vm.basic.params = vm.server_url+','+vm.file_param;
+                if (vm.monitor_type == 'first') {
+                    vm.result_data = vm.basic;
+                    if (vm.file_param == '') {
+                        vm.basic.params = vm.server_url
+                    }
+                    else {
+                        vm.basic.params = vm.server_url + ',' + vm.file_param;
+                    }
                     vm.basic.monitor_name = vm.monitor_name;
                     vm.basic.monitor_type = vm.monitor_type
-                }else if (vm.monitor_type == 'second'){
-                    vm.data22 = vm.chart;
+                } else if (vm.monitor_type == 'second') {
+                    vm.result_data = vm.chart;
                     vm.chart.monitor_name = vm.monitor_name;
                     vm.chart.monitor_type = vm.monitor_type
-                }else if(vm.monitor_type == 'third') {
-                    vm.data22 = vm.job;
+                } else if (vm.monitor_type == 'third') {
+                    vm.result_data = vm.job;
                     vm.job.monitor_name = vm.monitor_name;
                     vm.job.monitor_type = vm.monitor_type
-                }else if(vm.monitor_type == 'fourth'){
-                    vm.data22 = vm.flow;
+                } else if (vm.monitor_type == 'fourth') {
+                    vm.result_data = vm.flow;
                     vm.flow.monitor_name = vm.monitor_name;
                     vm.flow.monitor_type = vm.monitor_type;
-                    vm.flow.params = vm.param1+'+'+vm.param2
+                    vm.flow.params = vm.param1 + '+' + vm.param2
                 }
 
-                if(vm.unit_id > 0) {
+                if (vm.unit_id > 0) {
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor/edit/',
                         data: {
-                            data:vm.data22,
-                            monitor_type:vm.monitor_type,
-                            monitor_name:vm.monitor_name,
-                            unit_id:vm.unit_id,
+                            data: vm.result_data,
+                            monitor_type: vm.monitor_type,
+                            monitor_name: vm.monitor_name,
+                            unit_id: vm.unit_id,
                         }
                     }).then((res) => {
                         vm.show()
                     }).catch((error) => {
                         alert('修改失败！')
                     });
-                }
-                else {
+                } else {
                     axios({
-                        method:'post',
-                        url:'${SITE_URL}monitor/add/',
-                        data:{
-                            data:vm.data22,
-                            monitor_type:vm.monitor_type,
-                            monitor_name:vm.monitor_name
+                        method: 'post',
+                        url: '${SITE_URL}monitor/add/',
+                        data: {
+                            data: vm.result_data,
+                            monitor_type: vm.monitor_type,
+                            monitor_name: vm.monitor_name
                         },
                     }).then((res) => {
+                        if (res['data']['code'] == 1)
+                            alert('保存失败！');
+                        else alert('保存成功！');
                         vm.show()
                     }).catch((error) => {
                         alert('保存失败！')
@@ -975,69 +1000,70 @@
             edit3(row) {
                 setTimeout(
                     function () {
-                vm.disabled2 = false;
-                vm.disabled3 = false;
-                vm.disabled4 = false;
-                vm.disabled5 = false;
-                vm.monitor_type = 'first';
-                vm.unit_id = row;
-                vm.basic = vm.basic1;
-                vm.chart = vm.chart1;
-                vm.job = vm.job1;
-                vm.flow = vm.flow1;
-                            vm.centerDialogVisible = true
-                    },1)
+                        vm.disabled2 = false;
+                        vm.disabled3 = false;
+                        vm.disabled4 = false;
+                        vm.disabled5 = false;
+                        vm.monitor_type = 'first';
+                        vm.unit_id = row;
+                        vm.basic = vm.basic1;
+                        vm.chart = vm.chart1;
+                        vm.job = vm.job1;
+                        vm.flow = vm.flow1;
+                        vm.centerDialogVisible = true
+                    }, 1);
+                this.get_db_connections();
 
             },
             del() {
                 vm.edit(0)
             },
-            change1(value){
-                if(value==3){
+            change1(value) {
+                if (value == 3) {
                     vm.sql1 = 'block';
                     vm.file1 = 'none';
                     vm.interface1 = 'none';
-                    vm.server_url='';
-                    vm.file_param='';
+                    vm.server_url = '';
+                    vm.file_param = '';
                     vm.basic.gather_rule = '';
                     vm.basic.gather_params = 'sql'
-                }else if (value==6) {
+                } else if (value == 6) {
                     vm.sql1 = 'none';
                     vm.file1 = 'block';
                     vm.interface1 = 'none';
-                    vm.server_url='';
-                    vm.file_param='';
+                    vm.server_url = '';
+                    vm.file_param = '';
                     vm.basic.gather_rule = '';
                     vm.basic.gather_params = 'file';
-                }else if (value==9){
+                } else if (value == 9) {
                     vm.sql1 = 'none';
                     vm.file1 = 'none';
                     vm.interface1 = 'block';
-                    vm.server_url='';
-                    vm.file_param='';
+                    vm.server_url = '';
+                    vm.file_param = '';
                     vm.basic.gather_rule = '';
                     vm.basic.gather_params = 'interface';
                 }
             },
-            change2(value){
-                if (value==1) {
+            change2(value) {
+                if (value == 1) {
                     vm.zuoye = 'block';
-                }else {
+                } else {
                     vm.zuoye = 'none';
                 }
             },
-            change3(value){
-                if (value==1) {
+            change3(value) {
+                if (value == 1) {
                     vm.liucheng = 'block';
-                }else {
+                } else {
                     vm.liucheng = 'none';
                 }
             },
-            time1(){
+            time1() {
                 vm.disabled1 = true;
-                setTimeout(function(){
+                setTimeout(function () {
                     vm.disabled1 = false;
-                },60000);
+                }, 60000);
             },
             rowclass({row, rowIndex}) {
                 return 'background:#F7F7F7'
@@ -1097,6 +1123,92 @@
             $('#result2').val(JSON.stringify(data));
         });
             }
+            get_db_connections() {
+                axios({
+                    url: '${SITE_URL}DataBaseManage/get_all_db_connection/',
+                    method: 'post',
+                }).then((res) => {
+                    console.log(this.sites)
+                    let json = [];
+
+                    if (res.data.results.length > 0){
+                        for (let i = 0;i < res.data.results.length; i++){
+                            let j = {};
+                            j.value = res.data.results[i].id;
+                            j.label = res.data.results[i].connname;
+                            json.push(j);
+                        };
+                        this.sites1 = json;
+                    }
+
+                }).catch((res) => {
+                    console.log('获取数据库连接错误')
+                })
+            },
+            connection(){
+                var myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
+
+    var seriesData = [{
+        name: '已执行',
+        value: 30
+    },{
+        name: '正执行',
+        value: 11
+    },{
+        name: '执行出错',
+        value: 26
+    },{
+        name: '未执行',
+        value: 33
+    }];
+    var legendData = ['已执行', '正执行', '执行出错', '未执行'];
+    option = {
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            type: 'scroll',
+            orient: 'vertical',
+            right: 10,
+            bottom: 50,
+            data: legendData
+        },
+        series : [
+            {
+                name: '执行状态',
+                type: 'pie',
+                radius : '50%',
+                center: ['50%', '30%'],
+                data: seriesData,
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                },
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'inside',
+                        formatter: '{c}'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
+            }
         },
         mounted() {
 
@@ -1107,12 +1219,12 @@
 </script>
 <script>
     setInterval(function () {
-        $('input[type=number]').keypress(function(e) {
-　　if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
-　　　　return false;
-　　}
-});
-    },1)
+        $('input[type=number]').keypress(function (e) {
+            if (!String.fromCharCode(e.keyCode).match(/[0-9\.]/)) {
+                return false;
+            }
+        });
+    }, 1)
 </script>
 
 
