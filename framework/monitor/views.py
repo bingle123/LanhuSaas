@@ -43,6 +43,12 @@ def add_unit(request):
     res = function.add_unit(request)
     return render_json(res)
 
+
 def test(request):
     res = function.test(request)
+    return render_json(res)
+
+
+def job_test(request):
+    res = function.job_test(request)
     return render_json(res)
