@@ -16,6 +16,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('item_id', models.PositiveIntegerField(verbose_name='\u76d1\u63a7\u9879ID')),
                 ('key_name', models.CharField(max_length=50, verbose_name='\u6570\u636ekey\u540d\u79f0')),
+                ('rule_name', models.CharField(max_length=50, verbose_name='\u89c4\u5219\u540d\u79f0')),
                 ('upper_limit', models.DecimalField(verbose_name='\u4e0a\u9650\u503c', max_digits=10, decimal_places=4)),
                 ('lower_limit', models.DecimalField(verbose_name='\u4e0b\u9650\u503c', max_digits=10, decimal_places=4)),
                 ('alert_title', models.CharField(max_length=100, verbose_name='\u544a\u8b66\u6807\u9898')),
