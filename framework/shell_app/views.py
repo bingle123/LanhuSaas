@@ -7,6 +7,15 @@ import tools
 import time
 
 
+def special_scene(request):
+    """
+    夜间特殊场景
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/special_scene.html')
+
+
 def data_base(request):
     """
 
@@ -234,3 +243,12 @@ def get_active_user(request):
     res = tools.get_active_user(request)
     return render_json(res)
 
+
+def get_guotai_system_info(request):
+    """
+    获取国泰系统系统状态
+    :param request:
+    :return:
+    """
+    res = function.get_guotai_system_info(request)
+    return render_json(res)

@@ -5,7 +5,7 @@ import time
 from django.forms.models import model_to_dict
 from DataBaseManage.models import *
 from framework.shell_app import tools
-import MySQLdb
+import pymysql as MySQLdb
 import cx_Oracle
 import pymssql
 import datetime
@@ -54,10 +54,13 @@ def selecthor(request):
     for cur in curren_page.object_list:
         conn = model_to_dict(cur)
         conn['count'] = pages
+        password = conn['password']
+        conn['password'] = decrypt_str(password)
         objs.append(conn)
     return objs
 
-#查询所有
+
+# 查询所有
 def getconn_all(request):
     res = json.loads(request.body)
     page = res['page']
@@ -71,11 +74,13 @@ def getconn_all(request):
     for cur in current_page.object_list:
         conn=model_to_dict(cur)
         conn['count'] = pages
+        password = conn['password']
+        conn['password'] = decrypt_str(password)
         objs.append(conn)
     return objs
 
 
-#保存
+# 保存
 def saveconn_all(request):
     try:
         res = json.loads(request.body)
@@ -93,13 +98,11 @@ def saveconn_all(request):
         return res1
 
 
-
 #修改
 def eidtconnn(request):
     try:
         res = json.loads(request.body)
-        res.pop('page_count')
-        print res
+        res.pop('count')
         cilent = tools.interface_param(request)
         user = cilent.bk_login.get_user({})
         res['editname'] = user['data']['bk_username']
@@ -113,7 +116,8 @@ def eidtconnn(request):
         res1 = tools.error_result(e)
         return res1
 
-#删除
+
+# 删除
 def delete_conn(request,id):
     try:
         res = Conn.objects.filter(id=id).delete()
@@ -122,7 +126,8 @@ def delete_conn(request,id):
         res1 = tools.error_result(e)
         return tools.error_result(res1)
 
-#测试
+
+# 测试
 def testConn(request):
     res = json.loads(request.body)
     ip = str(res['ip'])
@@ -134,19 +139,35 @@ def testConn(request):
         if res['type'] == 'MySQL':
             db = MySQLdb.connect(host=ip, user=username, passwd=password, db=databasename, port=int(port))
         elif res['type'] == 'Oracle':
-            sql=r'%s/%s@%s/%s'%(username,password,ip,databasename)
+            sql = r'%s/%s@%s/%s'%(username, password, ip, databasename)
             db = cx_Oracle.connect(sql)
         else:
-            db = pymssql.connect(host = ip+r':'+port,user =username,password = password,database = databasename)
-
+            db = pymssql.connect(host=ip+r':'+port, user=username, password=password, database=databasename)
         cursor = db.cursor()
+        # print cursor
         if cursor != '':
             cursor.close()
             db.close()
-            return tools.success_result(cursor)
+            return tools.success_result('0')
     except Exception as e:
         return tools.error_result(e)
 
+
+def get_all_db_connection(request):
+    """
+    获取所有的数据库名称
+    :param request:
+    :return:
+    """
+    try:
+        res = Conn.objects.all()
+        result = []
+        for i in res:
+            obj = model_to_dict(i)
+            result.append(obj)
+        return tools.success_result(result)
+    except Exception as e:
+        return tools.error_result(str(e))
 
 
 

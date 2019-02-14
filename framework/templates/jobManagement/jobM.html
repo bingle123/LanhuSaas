@@ -29,7 +29,7 @@
 
 <body>
 <div class="content">
-    <el-dialog title="新增岗位人员" :visible.sync="dialogFormVisible" width="70%">
+    <el-dialog title="新增岗位人员" :visible.sync="dialogFormVisible" width="70%" :before-close="handleDialogClose">
         <el-form :model="form">
             <el-form-item label="">
                 <template>
@@ -187,6 +187,9 @@
             },
         },
         methods: {
+            handleDialogClose(){
+                vm. ref()
+            },
             get_tree() {
                 axios({
                     method: 'post',

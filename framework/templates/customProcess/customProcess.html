@@ -535,6 +535,9 @@
                             this.customProcessHasNode = false;
                             this.customProcessStatus = false;
                             this.customProcessTableData = [];
+                            this.customProcessStartButtonType = 'primary';
+                            this.customProcessStartButtonText = '开始执行流程';
+                            this.customProcessStartButtonDisabled = false;
                             this.$message({
                                 type: 'success',
                                 message: '流程已被删除！'
@@ -593,7 +596,6 @@
                         this.customProcessStep = count;
                         this.customProcessStatus = true;
                     }
-                    alert('INDEX: '+ this.customProcessStep);
                     loading.close();
                 }).catch((res) => {
                     loading.close();
