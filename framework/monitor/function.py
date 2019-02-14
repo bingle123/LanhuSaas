@@ -16,6 +16,8 @@ import pymssql
 import copy
 import base64
 import re
+from framework.market_day import function
+from framework.market_day import celery_opt as co
 
 
 def unit_show(request):
@@ -111,7 +113,9 @@ def delete_unit(request):
     try:
         res = json.loads(request.body)
         unit_id = res['unit_id']
+        schename=res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
+        co.delete_task(schename)
         if Scene.objects.filter(item_id=unit_id).exists():
             Scene.objects.filter(item_id=unit_id).delete()
         return None
@@ -144,6 +148,7 @@ def add_unit(request):
         print add_dic['params']
         print add_dic
         Monitor.objects.create(**add_dic)
+        function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
     except Exception as e:
         result = tools.error_result(e)
@@ -172,6 +177,7 @@ def edit_unit(request):
         add_dic['status'] = 0
         add_dic['editor'] = user['data']['bk_username']
         Monitor.objects.filter(monitor_name=res['monitor_name']).update(**add_dic)
+        function.edit_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
     except Exception as e:
         result = tools.error_result(e)

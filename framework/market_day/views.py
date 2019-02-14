@@ -35,5 +35,9 @@ def cedemo(req):
     flag=function.addperdic_task()
     return HttpResponse(flag)
 
+def statusdemo(req):
+    function.add_unit_task()
+    return HttpResponse('ok')
+
 
 
