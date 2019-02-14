@@ -339,7 +339,7 @@
                                               placeholder="上证指数:3000  深证指数:3000"></el-input>
                                 </el-form-item>
                                 <el-form-item label="作业模板" prop="gather_params">
-                                    <el-select v-model="job.gather_rule" placeholder="请选择作业模板">
+                                    <el-select v-model="job.gather_rule" placeholder="请选择作业模板" @change="job_change">
                                         <el-option v-for="i in job2" :label="i.name" :value="i.name"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -1264,6 +1264,9 @@
                 myChart.setOption(option);
                     }
                 },
+        job_change(value){
+            console.log(value)
+        },
         mounted() {
         },
     });
