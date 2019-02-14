@@ -818,7 +818,8 @@
                     vm.page_count = res.data.results.res_list[0].page_count;
                     vm.job2 = res.data.results.job;
                     vm.flow2 = res.data.results.flow;
-                })
+                });
+                vm.get_db_connections();
             },
             select1() {
                 vm.centerDialogVisible = false;
@@ -975,7 +976,6 @@
                         vm.flow = vm.flow1;
                         vm.centerDialogVisible = true
                     }, 1);
-                this.get_db_connections();
 
             },
             del() {
