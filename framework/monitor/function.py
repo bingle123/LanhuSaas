@@ -14,6 +14,8 @@ from django.db.models import Q
 import pymysql as MySQLdb
 import pymssql
 import copy
+import base64
+import re
 
 
 def unit_show(request):
@@ -59,7 +61,8 @@ def unit_show(request):
         flow = []
         for i in flow_list:
             dic2 = {
-                'flow_name': i['name']
+                'flow_name': i['name'],
+                'id': i['bk_biz_id']
             }
             flow.append(dic2)
         for i in job_list:
@@ -193,41 +196,42 @@ def test(request):
 
 
 def job_test(request):
-    # res = json.loads(request.body)
-    cilent = tools.interface_param(request)
-    # select_job_params = {
-    #     'bk_biz_id': 2,
-    #     'bk_job_id': res['job_id']
-    # }
-    # job_params = {
-    #     'bk_biz_id': 2,
-    #     'bk_job_id': res['job_id']
-    # }
-    params = {
-        "bk_biz_id": 2,
-        "bk_job_id": 5,
-    }
-    # select_job = cilent.job.get_job_detail(select_job_params)
-    # job = cilent.job.execute_job(select_job_params)
-    test = cilent.job.get_job_detail(params)
-    # if job.get('result'):
-    #     job_list = select_job.get('data')
-    # else:
-    #     job_list = []
-    #     logger.error(u"请求作业模板失败：%s" % res.get('message'))
-    if test.get('result'):
-        select_job_list = test.get('data')
-    else:
-        select_job_list = []
-        logger.error(u"请求作业模板失败：%s" % res.get('message'))
-    ll=[]
-    # for i in select_job_list:
-    #     x = i['id']
-    #     ll.append
-    i_list = []
-    for i in select_job_list['steps']:
-        x = '{}'.format(i['script_param'])
-        y = len(x.split(' '))
-        i_list.append(y)
-    res = tools.success_result(select_job_list)
+    try:
+        res = json.loads(request.body)
+        x = res['params']
+        x1 = x.decode('utf-8')
+        bk_job_id = res['job_id']
+        script_param = base64.b64encode(x1)
+        cilent = tools.interface_param(request)
+        select_job_params = {
+            'bk_biz_id': 2,
+            'bk_job_id': bk_job_id,
+        }
+        select_job = cilent.job.get_job_detail(select_job_params)
+        if select_job.get('result'):
+            select_job_list = select_job.get('data')
+        else:
+            select_job_list = []
+            logger.error(u"请求作业模板失败：%s" % select_job.get('message'))
+        step_id = select_job_list['steps'][0]['step_id']
+
+        job_params = {
+            'bk_biz_id': 2,
+            'bk_job_id': bk_job_id,
+            'steps': [{
+                'step_id': step_id,
+                'script_param': script_param
+            }]
+        }
+        job = cilent.job.execute_job(job_params)
+        if job.get('result'):
+            job_list = job.get('data')
+        else:
+            job_list = []
+            logger.error(u"请求作业模板失败：%s" % job.get('message'))
+        res = tools.success_result(job_list)
+    except Exception as e:
+        res = tools.error_result (e)
     return res
+
+
