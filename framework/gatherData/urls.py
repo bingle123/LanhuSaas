@@ -13,14 +13,6 @@ from django.conf.urls import patterns
 
 
 urlpatterns = patterns(
-    'monitor.views',
-    (r'^$', 'index'),                                         # 首页--服务器选择页面
-    (r'^show/$', 'unit_show'),
-    (r'^show_message$', 'index'),
-    (r'^select/$', 'select_unit'),
-    (r'^edit/$', 'edit_unit'),
-    (r'^delete/$', 'delete_unit'),
-    (r'^add/$', 'add_unit'),
-    (r'^123/$', 'index1'),
-    (r'^test/$', 'test'),
+    'gatherData.views',
+    (r'^gather_data$', 'gather_data'),                                          # 采集数据
 )
