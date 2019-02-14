@@ -12,6 +12,9 @@
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
     <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
+    <script type="text/javascript" src="${STATIC_URL}assets/echarts/echarts.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/echarts/macarons.js"></script>
+    <link rel="stylesheet" href="${STATIC_URL}css/maintenanceIndex/maintenanceIndex.css">
     <style>
         input {
             width: 250px;
@@ -98,15 +101,19 @@
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item prop="width">
-                                              <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="basic.width" placeholder="请输入宽度"></el-input>
+                                              <el-input type="number" v-model.number="numberValidateForm.age"
+                                                        auto-complete="off" v-model="basic.width"
+                                                        placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="显示内容" prop="contents" style="width: 96%">
-                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000" type="textarea"></el-input>
+                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000"
+                                                  type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
-                                    <el-radio-group v-model="sql_file_interface" @change="change1" style="padding: 14px">
+                                    <el-radio-group v-model="sql_file_interface" @change="change1"
+                                                    style="padding: 14px">
                                         <el-radio :label="3">数据库</el-radio>
                                         <el-radio :label="6">文件</el-radio>
                                         <el-radio :label="9">接口</el-radio>
@@ -115,7 +122,8 @@
                                 <div :style="{ display: sql1 }">
                                     <el-form-item label="数据库连接">
                                         <el-select v-model="server_url" placeholder="请选择数据库">
-                                            <el-option v-for="i in sites1" :label="i.label" :value="i.value"></el-option>
+                                            <el-option v-for="i in sites" :label="i.editor"
+                                                       :value="i.editor"></el-option>
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item label="数据采集规则" style="width: 96%">
@@ -179,7 +187,7 @@
                             </div>
                             <div style="padding: 0px 20%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" v-on:click="test1()">采集测试</el-button>
+                                <el-button type="primary">采集测试</el-button>
                             </div>
                         </div></el-col>
                     </el-row>
@@ -217,7 +225,7 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="图表类型" prop="gather_params">
+                                <el-form-item label="图标类型" prop="gather_params">
                                     <el-select v-model="chart.gather_params" placeholder="请选择图表类型">
                                         <el-option label="折线图" value="折线图"></el-option>
                                         <el-option label="柱状图" value="柱状图"></el-option>
@@ -230,7 +238,8 @@
                                 </el-form-item>
                                 <el-form-item label="连接数据库">
                                     <el-select v-model="chart.params" placeholder="请选择数据库">
-                                        <el-option v-for="i in sites1" :label="i.label" :value="i.value"></el-option>
+                                        <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
+
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="图表采集规则" style="width: 96%">
@@ -266,12 +275,22 @@
                                 <h2>预览</h2>
                             </div>
                             <div style="text-align:center;width: 100%;height: 40%;">
-                                    <img src="${STATIC_URL}img/zhuzhuangtu.jpg"
-                                         style="max-width: 100%;max-height: 100%;">
+                                <div id="maintenanceIndex">
+                                    <el-row>
+                                        <el-col :span="24">
+                                            <el-card shadow="always" class="box-card">
+                                                <div slot="header" class="clearfix">
+                                                    <span class="maintenanceHeader">执行情况统计</span>
+                                                </div>
+                                                <div id="maintenancePie"></div>
+                                            </el-card>
+                                        </el-col>
+                                    </el-row>
+                                </div>
                             </div>
                             <div style="padding: 0px 20%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary">采集测试</el-button>
+                                <el-button type="primary" @click="asd">采集测试</el-button>
                             </div>
                         </div></el-col>
                     </el-row>
@@ -315,7 +334,7 @@
                                 </el-form-item>
                                 <el-form-item label="作业模板" prop="gather_params">
                                     <el-select v-model="job.gather_rule" placeholder="请选择作业模板">
-                                        <el-option v-for="i in job2" :label="i.name" :value="i.name"></el-option>
+                                        <el-option v-for="i in job2" :label="i.name" :value="i.id"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="NODE_KEY" style="width: 96%">
@@ -358,8 +377,8 @@
                             </div>
                             <div style="padding: 0px 10%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" :disabled="disabled1" v-on:click="time1">采集测试</el-button>
-                                <el-checkbox v-model="checked1" @change="change2">启动脚本</el-checkbox>
+                                <el-button type="primary" :disabled="disabled1" v-on:click="job_test">采集测试</el-button>
+                                <el-checkbox v-model="checked1" @change="change2" >启动脚本</el-checkbox>
                                 <div :style="{ display: zuoye }">
                                     <el-alert title="启动作业可能会对系统造成不可逆的变更，请谨慎勾选此项！" type="warning" show-icon show-icon
                                               true-label="1" false-label="0"></el-alert>
@@ -471,7 +490,7 @@
                             </div>
                             <div style="padding: 0px 10%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" v-on:click="time1" :disabled="disabled1">采集测试</el-button>
+                                <el-button type="primary" v-on:click="time2" :disabled="disabled1">采集测试</el-button>
                                 <el-checkbox v-model="checked2" @change="change3">启动流程</el-checkbox>
                                 <div :style="{ display: liucheng }">
                                     <el-alert title="启动流程可能会对系统造成不可逆的变更，请谨慎勾选此项！" type="warning" show-icon
@@ -735,6 +754,7 @@
         },
         methods: {
             test1(){
+                alert(vm.basic.params)
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/test/',
@@ -870,8 +890,7 @@
                     vm.chart.width = row.width;
                     vm.chart.start_time = row.start_time;
                     vm.chart.end_time = row.end_time;
-                    vm.chart.period = row.period;
-
+                    vm.chart.period = row.period
                 }
                 if (row.monitor_type == '作业单元类型') {
                     vm.disabled2 = true;
@@ -1022,7 +1041,24 @@
                     vm.liucheng = 'none';
                 }
             },
-            time1() {
+            job_test() {
+                alert(vm.job.params);
+                vm.disabled1 = true;
+                setTimeout(function () {
+                    vm.disabled1 = false;
+                }, 3000);
+                axios({
+                    url:'${SITE_URL}monitor/job_test/',
+                    method:'post',
+                    data: {
+                        'params': vm.job.params,
+                        'job_id': vm.job.gather_rule
+                    },
+                }).then((res) =>{
+
+                })
+            },
+            time2() {
                 vm.disabled1 = true;
                 setTimeout(function () {
                     vm.disabled1 = false;
@@ -1036,7 +1072,6 @@
                     url: '${SITE_URL}DataBaseManage/get_all_db_connection/',
                     method: 'post',
                 }).then((res) => {
-                    console.log(this.sites)
                     let json = [];
 
                     if (res.data.results.length > 0){
@@ -1048,10 +1083,144 @@
                         };
                         this.sites1 = json;
                     }
+            asd() {
+                var myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
+                var seriesData = [
+                    {
+                        name: '已执行',
+                        value: 30
+                    }, {
+                        name: '正执行',
+                        value: 11
+                    }, {
+                        name: '执行出错',
+                        value: 26
+                    }, {
+                        name: '未执行',
+                        value: 33
+                    }];
+                var legendData = ['已执行', '正执行', '执行出错', '未执行'];
+                option = {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        type: 'scroll',
+                        orient: 'vertical',
+                        right: 10,
+                        bottom: 50,
+                        data: legendData
+                    },
+                    series: [
+                        {
+                            name: '执行状态',
+                            type: 'pie',
+                            radius: '50%',
+                            center: ['50%', '30%'],
+                            data: seriesData,
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            },
+                            avoidLabelOverlap: false,
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'inside',
+                                    formatter: '{c}'
+                                }
+                            },
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                },
+                                emphasis: {
+                                    show: true
+                                }
+                            }
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+                var myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
 
-                }).catch((res) => {
-                    console.log('获取数据库连接错误')
-                })
+    option = {
+        tooltip : {
+            trigger: 'axis',
+            axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+            }
+        },
+        barWidth: 15,
+        legend: {
+            data: ['已执行', '正执行','执行出错','未执行'],
+            bottom: 10,
+            right: 30
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            top: 10,
+            containLabel: true
+        },
+        xAxis:  {
+            type: 'category',
+            data: ['6:00','7:00','8:00','9:00','10:00','11:00','12:00',
+                '13:00', '14:00', '15:00', '16:00', '17:00', '18:00',
+                '19:00', '20:00', '21:00', '22:00', '23:00', '24:00',
+                '1:00', '2:00', '3:00', '4:00', '5:00', '6:00']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                name: '已执行',
+                type: 'bar',
+                stack: 'data',
+                data: [0, 2, 4, 6, 8,
+                    10, 0, 2, 4, 6,
+                    8, 10, 0, 2, 4,
+                    6, 8, 10, 0, 2,
+                    4, 6, 8, 10, 0]
+            },
+            {
+                name: '正执行',
+                type: 'bar',
+                stack: 'data',
+                data: [2, 1, 2, 6, 4,
+                    2, 1, 2, 6, 4,
+                    2, 1, 2, 6, 4,
+                    2, 1, 2, 6, 4,
+                    2, 1, 2, 6, 4]
+            },
+            {
+                name: '执行出错',
+                type: 'bar',
+                stack: 'data',
+                data: [2, 4, 6, 10, 12,
+                    2, 4, 6, 10, 12,
+                    2, 4, 6, 10, 12,
+                    2, 4, 6, 10, 12,
+                    2, 4, 6, 10, 12]
+            },
+            {
+                name: '未执行',
+                type: 'bar',
+                stack: 'data',
+                data: [6, 2, 8, 4, 10,
+                    6, 2, 8, 4, 10,
+                    6, 2, 8, 4, 10,
+                    6, 2, 8, 4, 10,
+                    6, 2, 8, 4, 10]
+            }
+        ]
+    };
+    myChart.setOption(option);
             }
         },
         mounted() {
