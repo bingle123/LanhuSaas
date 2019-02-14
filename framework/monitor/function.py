@@ -64,7 +64,8 @@ def unit_show(request):
             flow.append(dic2)
         for i in job_list:
             dic1 = {
-                'name': i['name']
+                'name': i['name'],
+                'id': i['bk_job_id']
             }
             job.append(dic1)
         res_dic = {
@@ -174,7 +175,6 @@ def edit_unit(request):
     return result
 
 
-
 def test(request):
     res = json.loads(request.body)
     gather_rule = res['gather_rule']
@@ -190,3 +190,44 @@ def test(request):
     results = cursor.fetchall()
     db.close()
     return results
+
+
+def job_test(request):
+    # res = json.loads(request.body)
+    cilent = tools.interface_param(request)
+    # select_job_params = {
+    #     'bk_biz_id': 2,
+    #     'bk_job_id': res['job_id']
+    # }
+    # job_params = {
+    #     'bk_biz_id': 2,
+    #     'bk_job_id': res['job_id']
+    # }
+    params = {
+        "bk_biz_id": 2,
+        "bk_job_id": 5,
+    }
+    # select_job = cilent.job.get_job_detail(select_job_params)
+    # job = cilent.job.execute_job(select_job_params)
+    test = cilent.job.get_job_detail(params)
+    # if job.get('result'):
+    #     job_list = select_job.get('data')
+    # else:
+    #     job_list = []
+    #     logger.error(u"请求作业模板失败：%s" % res.get('message'))
+    if test.get('result'):
+        select_job_list = test.get('data')
+    else:
+        select_job_list = []
+        logger.error(u"请求作业模板失败：%s" % res.get('message'))
+    ll=[]
+    # for i in select_job_list:
+    #     x = i['id']
+    #     ll.append
+    i_list = []
+    for i in select_job_list['steps']:
+        x = '{}'.format(i['script_param'])
+        y = len(x.split(' '))
+        i_list.append(y)
+    res = tools.success_result(select_job_list)
+    return res
