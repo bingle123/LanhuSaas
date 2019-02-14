@@ -12,11 +12,10 @@ from gatherDataHistory.models import *
 
 def gather_data(info):
     # 临时测试时用的数据，实际应从info对象中获取参数,由celery提供info对象
-    info['id'] = '1'
-    info['gather_params'] = 'sql'
-    info['params'] = '46'
-    # 'SELECT china_point, japan_point FROM test_gather_data'
-    info['gather_rule'] = 'SELECT id_card, email FROM biz_person'
+    # info['id'] = '1'
+    # info['gather_params'] = 'sql'
+    # info['params'] = '46'
+    # info['gather_rule'] = 'SELECT china_point, japan_point FROM test_gather_data'
     # 获取数据采集的类型
     gather_type = info['gather_params']
     # 获取采集规则的字段有哪些
@@ -36,17 +35,12 @@ def gather_data(info):
         conn = MySQLdb.connect(host=conn_info.ip, user=conn_info.username, passwd=conn_info.password, db=conn_info.databasename, port=int(conn_info.port))
         cursor = conn.cursor()
         # 获取当前采集表中的数据是否为空，否则将采集表中的所有数据迁移到历史采集表中
-        # cursor.execute('SELECT COUNT(1) FROM td_gather_data')
         length = TDGatherData.objects.count()
         # 开始迁移表数据
         if length != 0:
-            # migrate_sql = 'INSERT INTO td_gather_history (item_id, instance_id, gather_time, data_key, data_value) ' \
-            #               'SELECT item_id, instance_id, gather_time, data_key, data_value FROM td_gather_data'
-            # cursor.execute(migrate_sql)
             migrate_data = TDGatherData.objects.all()
             for data in migrate_data:
                 TDGatherHistory(**model_to_dict(data)).save()
-            # cursor.execute('TRUNCATE TABLE td_gather_data')
             TDGatherData.objects.all().delete()
         cursor.execute(info['gather_rule'])
         result = cursor.fetchall()
