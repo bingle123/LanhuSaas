@@ -43,6 +43,8 @@ urlpatterns = patterns(
     url(r'^DataBaseManage/', include('DataBaseManage.urls')),
     #定制过程通知
     url(r'^customProcess/', include('customProcess.urls')),
+    #基本监控单元数据采集
+    url(r'^gatherData/', include('gatherData.urls')),
 )
 
 
