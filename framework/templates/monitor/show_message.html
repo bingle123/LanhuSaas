@@ -380,8 +380,8 @@
                             </div>
                             <div style="padding: 0px 10%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" :disabled="disabled1" v-on:click="time1">采集测试</el-button>
-                                <el-checkbox v-model="checked1" @change="change2">启动脚本</el-checkbox>
+                                <el-button type="primary" :disabled="disabled1" v-on:click="job_test">采集测试</el-button>
+                                <el-checkbox v-model="checked1" @change="change2" >启动脚本</el-checkbox>
                                 <div :style="{ display: zuoye }">
                                     <el-alert title="启动作业可能会对系统造成不可逆的变更，请谨慎勾选此项！" type="warning" show-icon show-icon
                                               true-label="1" false-label="0"></el-alert>
@@ -410,18 +410,12 @@
                                     <el-col :span="11">
                                         <el-form-item prop="height">
                                             <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.height" placeholder="请输入高度" @change="flow_height"></el-input>
-                                            <el-input type="number" v-model.number="numberValidateForm.age"
-                                                      auto-complete="off" v-model="flow.height"
-                                                      placeholder="请输入高度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item prop="width">
                                               <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.width" placeholder="请输入宽度" @change="flow_width"></el-input>
-                                              <el-input type="number" v-model.number="numberValidateForm.age"
-                                                        auto-complete="off" v-model="flow.width"
-                                                        placeholder="请输入宽度"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
@@ -559,7 +553,6 @@
                             </div>
                             <div style="padding: 0px 10%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" v-on:click="canvas_new" >采集测试</el-button>
                                 <el-button type="primary" v-on:click="time2" :disabled="disabled1">采集测试</el-button>
                                 <el-checkbox v-model="checked2" @change="change3">启动流程</el-checkbox>
                                 <div :style="{ display: liucheng }">
@@ -1110,11 +1103,22 @@
                     vm.liucheng = 'none';
                 }
             },
-            time1() {
+            job_test() {
+                alert(vm.job.params);
                 vm.disabled1 = true;
                 setTimeout(function () {
                     vm.disabled1 = false;
-                }, 60000);
+                }, 3000);
+                axios({
+                    url:'${SITE_URL}monitor/job_test/',
+                    method:'post',
+                    data: {
+                        'params': vm.job.params,
+                        'job_id': vm.job.gather_rule
+                    },
+                }).then((res) =>{
+
+                })
             },
             rowclass({row, rowIndex}) {
                 return 'background:#F7F7F7'
@@ -1167,13 +1171,13 @@
                 }
 
         });
-                    $('#save2').click(function() {
+                  $('#save2').click(function() {
             // 获取全部数据
             var data= $('#flow1').data('dataflow').getAllData();
             var name = data.location[0];
             $('#result2').val(JSON.stringify(data));
         });
-            }
+            },
             get_db_connections() {
                 axios({
                     url: '${SITE_URL}DataBaseManage/get_all_db_connection/',
@@ -1199,68 +1203,68 @@
             connection(){
                 var myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
 
-    var seriesData = [{
-        name: '已执行',
-        value: 30
-    },{
-        name: '正执行',
-        value: 11
-    },{
-        name: '执行出错',
-        value: 26
-    },{
-        name: '未执行',
-        value: 33
-    }];
-    var legendData = ['已执行', '正执行', '执行出错', '未执行'];
-    option = {
-        tooltip : {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-        legend: {
-            type: 'scroll',
-            orient: 'vertical',
-            right: 10,
-            bottom: 50,
-            data: legendData
-        },
-        series : [
-            {
-                name: '执行状态',
-                type: 'pie',
-                radius : '50%',
-                center: ['50%', '30%'],
-                data: seriesData,
-                itemStyle: {
-                    emphasis: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    }
-                },
-                avoidLabelOverlap: false,
-                label: {
-                    normal: {
-                        show: true,
-                        position: 'inside',
-                        formatter: '{c}'
-                    }
-                },
-                labelLine: {
-                    normal: {
-                        show: false
+                var seriesData = [{
+                    name: '已执行',
+                    value: 30
+                },{
+                    name: '正执行',
+                    value: 11
+                },{
+                    name: '执行出错',
+                    value: 26
+                },{
+                    name: '未执行',
+                    value: 33
+                }];
+                var legendData = ['已执行', '正执行', '执行出错', '未执行'];
+                option = {
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
                     },
-                    emphasis: {
-                        show: true
+                    legend: {
+                        type: 'scroll',
+                        orient: 'vertical',
+                        right: 10,
+                        bottom: 50,
+                        data: legendData
+                    },
+                    series : [
+                        {
+                            name: '执行状态',
+                            type: 'pie',
+                            radius : '50%',
+                            center: ['50%', '30%'],
+                            data: seriesData,
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            },
+                            avoidLabelOverlap: false,
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'inside',
+                                    formatter: '{c}'
+                                }
+                            },
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                },
+                                emphasis: {
+                                    show: true
+                                }
+                            }
+                        }
+                    ]
+                };
+                myChart.setOption(option);
                     }
-                }
-            }
-        ]
-    };
-    myChart.setOption(option);
-            }
-        },
+                },
         mounted() {
         },
     });
