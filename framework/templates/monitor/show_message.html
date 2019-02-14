@@ -315,7 +315,7 @@
                                 </el-form-item>
                                 <el-form-item label="作业模板" prop="gather_params">
                                     <el-select v-model="job.gather_rule" placeholder="请选择作业模板">
-                                        <el-option v-for="i in job2" :label="i.name" :value="i.name"></el-option>
+                                        <el-option v-for="i in job2" :label="i.name" :value="i.id"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="NODE_KEY" style="width: 96%">
@@ -358,8 +358,8 @@
                             </div>
                             <div style="padding: 0px 10%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" :disabled="disabled1" v-on:click="time1">采集测试</el-button>
-                                <el-checkbox v-model="checked1" @change="change2">启动脚本</el-checkbox>
+                                <el-button type="primary" :disabled="disabled1" v-on:click="job_test">采集测试</el-button>
+                                <el-checkbox v-model="checked1" @change="change2" >启动脚本</el-checkbox>
                                 <div :style="{ display: zuoye }">
                                     <el-alert title="启动作业可能会对系统造成不可逆的变更，请谨慎勾选此项！" type="warning" show-icon show-icon
                                               true-label="1" false-label="0"></el-alert>
@@ -471,7 +471,7 @@
                             </div>
                             <div style="padding: 0px 10%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" v-on:click="time1" :disabled="disabled1">采集测试</el-button>
+                                <el-button type="primary" v-on:click="time2" :disabled="disabled1">采集测试</el-button>
                                 <el-checkbox v-model="checked2" @change="change3">启动流程</el-checkbox>
                                 <div :style="{ display: liucheng }">
                                     <el-alert title="启动流程可能会对系统造成不可逆的变更，请谨慎勾选此项！" type="warning" show-icon
@@ -735,6 +735,7 @@
         },
         methods: {
             test1(){
+                alert(vm.basic.params)
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/test/',
@@ -1022,7 +1023,24 @@
                     vm.liucheng = 'none';
                 }
             },
-            time1() {
+            job_test() {
+                alert(vm.job.params);
+                vm.disabled1 = true;
+                setTimeout(function () {
+                    vm.disabled1 = false;
+                }, 3000);
+                axios({
+                    url:'${SITE_URL}monitor/job_test/',
+                    method:'post',
+                    data: {
+                        'params': vm.job.params,
+                        'job_id': vm.job.gather_rule
+                    },
+                }).then((res) =>{
+
+                })
+            },
+            time2() {
                 vm.disabled1 = true;
                 setTimeout(function () {
                     vm.disabled1 = false;
@@ -1036,7 +1054,6 @@
                     url: '${SITE_URL}DataBaseManage/get_all_db_connection/',
                     method: 'post',
                 }).then((res) => {
-                    console.log(this.sites)
                     let json = [];
 
                     if (res.data.results.length > 0){
