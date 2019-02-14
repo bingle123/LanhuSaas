@@ -57,10 +57,10 @@
                         <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
                         <el-button size="mini" type="text" v-on:click="edit(scope.row)">编辑</el-button>
                         <el-button size="mini" type="text" v-on:click="edit2(scope.row)">删除</el-button>
-                        <el-tooltip :content="value1" placement="top">
+
                             <el-switch v-model="scope.status" active-color="#13ce66" inactive-color="#ff4949"
                                        active-value="1" inactive-value="0"></el-switch>
-                        </el-tooltip>
+
                     </template>
                 </el-table-column>
             </el-table>
@@ -590,7 +590,6 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            value1: '',
             job2: [],                                   //作业模板
             flow2: [],                                  //流程模板
             page_count: 100,                            //总页码数

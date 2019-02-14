@@ -12,6 +12,7 @@ from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
 from django.db.models import Q
 import pymysql as MySQLdb
+import pymssql
 import copy
 
 
@@ -180,7 +181,10 @@ def test(request):
     server_url = res['server_url']
     sql = Conn.objects.get(id=server_url)
     password = function.decrypt_str(sql.password)
-    db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))
+    if sql.type == 'MySQL' or sql.type == 'Oracle':
+        db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))
+    if sql.type == 'SQL Server':
+        db = pymssql.connect(sql.ip, sql.username, password, sql.databasename)
     cursor = db.cursor()
     cursor.execute(gather_rule)
     results = cursor.fetchall()
