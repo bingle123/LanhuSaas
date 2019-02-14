@@ -52,3 +52,7 @@ def test(request):
 def job_test(request):
     res = function.job_test(request)
     return render_json(res)
+
+def test1(request):
+    res = function.ttt(request)
+    return render_json(res)

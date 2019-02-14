@@ -10,6 +10,8 @@ from shell_app import tools
 import uuid
 import time
 import datetime
+import json
+import random
 
 
 def show_host(request):
@@ -507,5 +509,31 @@ def save_staff_scene(request):
     result = tools.success_result(list)
     return result
 
+
+def get_guotai_system_info(request):
+    """
+    获取过国泰君安系统状态
+    :param request:
+    :return:
+    """
+    request_body = json.loads(request.body)
+    type_id = request_body['type_id']
+    if type_id == '1':
+        # 总系统状态查询
+        result_list = []
+        res = {
+            "status": int(random.uniform(0, 4)),
+            "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        result_list.append(res)
+    elif type_id == '2':
+        # 报盘系统状态查询
+        result_list = []
+        res = {
+            "status": int(random.uniform(0, 4)),
+            "time": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        result_list.append(res)
+    return tools.success_result(result_list)
 
 
