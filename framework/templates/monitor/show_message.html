@@ -14,19 +14,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
 
 
-    <script type="text/javascript" src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
-    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
+    <script type="text/javascript"
+            src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
+    <link rel="stylesheet"
+          href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css"/>
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
-     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
     <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
-<style>
-    input{
-        width: 250px;
-        height: 30px;
-    }
-    .el-table--border th{
-        padding:5px
-    }
+    <style>
+        input {
+            width: 250px;
+            height: 30px;
+        }
+
+        .el-table--border th {
+            padding: 5px
+        }
 
     </style>
 </head>
@@ -409,7 +412,9 @@
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item prop="height">
-                                            <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.height" placeholder="请输入高度" @change="flow_height"></el-input>
+                                            <el-input type="number" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="flow.height" placeholder="请输入高度"
+                                                      @change="flow_height"></el-input>
                                             <el-input type="number" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="flow.height"
                                                       placeholder="请输入高度"></el-input>
@@ -418,7 +423,9 @@
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item prop="width">
-                                              <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.width" placeholder="请输入宽度" @change="flow_width"></el-input>
+                                              <el-input type="number" v-model.number="numberValidateForm.age"
+                                                        auto-complete="off" v-model="flow.width" placeholder="请输入宽度"
+                                                        @change="flow_width"></el-input>
                                               <el-input type="number" v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="flow.width"
                                                         placeholder="请输入宽度"></el-input>
@@ -427,7 +434,8 @@
                                 </el-form-item>
                                 <el-form-item label="流程模板" prop="gather_params">
                                     <el-select v-model="flow.gather_params" placeholder="请选择模板">
-                                        <el-option v-for="i in flow2" :label="i.flow_name" :value="i.flow_name"></el-option>
+                                        <el-option v-for="i in flow2" :label="i.flow_name"
+                                                   :value="i.flow_name"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="参数1" style="width: 96%">
@@ -438,7 +446,8 @@
                                 </el-form-item>
                                    <el-form-item label="节点">
                                         <el-select v-model="flow.gather_params" placeholder="请选择节点">
-                                          <el-option v-for="i in flow2" :label="i.flow_name" :value="i.flow_name"></el-option>
+                                          <el-option v-for="i in flow2" :label="i.flow_name"
+                                                     :value="i.flow_name"></el-option>
                                         </el-select>
                                       </el-form-item>
                                 <div v-if="flow.gather_params === 'new20190114155906'">
@@ -505,7 +514,7 @@
 
                                         </div>
 
-                                        <!-- template 模板-->
+                                    <!-- template 模板-->
                                         <div class="jtk-delete jtk-none ">删除节点</div>
                                         <div id="template" class="jtk-none">
                                             <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
@@ -559,7 +568,7 @@
                             </div>
                             <div style="padding: 0px 10%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" v-on:click="canvas_new" >采集测试</el-button>
+                                <el-button type="primary" v-on:click="canvas_new">采集测试</el-button>
                                 <el-button type="primary" v-on:click="time2" :disabled="disabled1">采集测试</el-button>
                                 <el-checkbox v-model="checked2" @change="change3">启动流程</el-checkbox>
                                 <div :style="{ display: liucheng }">
@@ -600,7 +609,7 @@
             page_count: 100,                            //总页码数
             page: 1,                                    //分页页码数
             sites: [],                                  //table内容
-            sites1:[],
+            sites1: [],
             contents: '',                               //搜索输入框内容
             checked1: false,                           //作业启动选框
             checked2: false,                           //流程启动选框
@@ -823,13 +832,13 @@
             },
         },
         methods: {
-            test1(){
+            test1() {
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/test/',
                     data: {
-                        server_url:vm.server_url,
-                        gather_rule:vm.basic.gather_rule
+                        server_url: vm.server_url,
+                        gather_rule: vm.basic.gather_rule
                     },
                 }).then(function (res) {
                     console.log(res.data.message)
@@ -993,8 +1002,7 @@
                     vm.result_data = vm.basic;
                     if (vm.file_param == '') {
                         vm.basic.params = vm.server_url
-                    }
-                    else {
+                    } else {
                         vm.basic.params = vm.server_url + ',' + vm.file_param;
                     }
                     vm.basic.monitor_name = vm.monitor_name;
@@ -1119,61 +1127,59 @@
             rowclass({row, rowIndex}) {
                 return 'background:#F7F7F7'
             },
-            font_size(){        //修改流程单元中的表字体
-               $("#canvas").find('*').css("font-size",this.flow.font_size)
+            font_size() {        //修改流程单元中的表字体
+                $("#canvas").find('*').css("font-size", this.flow.font_size)
             },
-            flow_height(){      //修改流程单元中的高
-                $("#canvas").find('*').css("height",this.flow.height)
+            flow_height() {      //修改流程单元中的高
+                $("#canvas").find('*').css("height", this.flow.height)
             },
-            flow_width(){       //修改流程单元中的宽
-                $("#canvas").find('*').css("width",this.flow.height)
+            flow_width() {       //修改流程单元中的宽
+                $("#canvas").find('*').css("width", this.flow.height)
             },
-            canvas_new(){       //显示流程单元中的预览图
-                  $('#flow1').dataflow({
-            el: '.tool', //流程拖动源
-            canvas: '#canvas', //画布
-            arrowWidth: 8,
-            arrowHeight: 10,
-            template: '#template',
-            id: 'ch', // 定义节点id，当页面只有一个dataflow实例是可忽略，当有多个实例时，需自定义该字段，id具有唯一性
-            onRemoveNodeAfter: function(id, line) { //删除节点回调
-                //console.log(id);
-                //console.log(line);
-            },
-            onCreateNodeAfter: function(id) { //初始化节点回调
-                //console.log(id)
-            },
-            onCreateLineAfter: function() { //创建线条后回调
-                //console.log("1111")
-            },
-            ondrawData: function() { //初始化流程后回调
-                //console.log($('.node-icon').length)
-            },
-            data:
-                {
-                    "line"
-                :
-                    [{
-                        "source": {"id": "ch1", "arrow": "Right"},
-                        "target": {"id": "ch3", "arrow": "Left"}
-                    }, {
-                        "source": {"id": "ch3", "arrow": "Right"},
-                        "target": {"id": "ch2", "arrow": "Left"}
-                    }], "location"
-                :
-                    [{"id": "ch1", "x": 10, "y": 127, "type": "start"},
-                     { "id": "ch2","x": 380,"y": 127,"type": "start"},
-                     {"id": "ch3", "x": 188, "y": 200, "name": "", "type": "database"}]
-                }
+            canvas_new() {       //显示流程单元中的预览图
+                $('#flow1').dataflow({
+                    el: '.tool', //流程拖动源
+                    canvas: '#canvas', //画布
+                    arrowWidth: 8,
+                    arrowHeight: 10,
+                    template: '#template',
+                    id: 'ch', // 定义节点id，当页面只有一个dataflow实例是可忽略，当有多个实例时，需自定义该字段，id具有唯一性
+                    onRemoveNodeAfter: function (id, line) { //删除节点回调
+                        //console.log(id);
+                        //console.log(line);
+                    },
+                    onCreateNodeAfter: function (id) { //初始化节点回调
+                        //console.log(id)
+                    },
+                    onCreateLineAfter: function () { //创建线条后回调
+                        //console.log("1111")
+                    },
+                    ondrawData: function () { //初始化流程后回调
+                        //console.log($('.node-icon').length)
+                    },
+                    data:
+                        {
+                            "line":
+                                [{
+                                    "source": {"id": "ch1", "arrow": "Right"},
+                                    "target": {"id": "ch3", "arrow": "Left"}
+                                }, {
+                                    "source": {"id": "ch3", "arrow": "Right"},
+                                    "target": {"id": "ch2", "arrow": "Left"}
+                                }], "location":
+                                [{"id": "ch1", "x": 10, "y": 127, "type": "start"},
+                                    {"id": "ch2", "x": 380, "y": 127, "type": "start"},
+                                    {"id": "ch3", "x": 188, "y": 200, "name": "", "type": "database"}]
+                        }
 
-        });
-                    $('#save2').click(function() {
-            // 获取全部数据
-            var data= $('#flow1').data('dataflow').getAllData();
-            var name = data.location[0];
-            $('#result2').val(JSON.stringify(data));
-        });
-            }
+                });
+                $('#save2').click(function () {
+                    // 获取全部数据
+                    var data = $('#flow1').data('dataflow').getAllData();
+                    var name = data.location[0];
+                    $('#result2').val(JSON.stringify(data));
+                });
+            },
             get_db_connections() {
                 axios({
                     url: '${SITE_URL}DataBaseManage/get_all_db_connection/',
@@ -1182,13 +1188,14 @@
                     console.log(this.sites)
                     let json = [];
 
-                    if (res.data.results.length > 0){
-                        for (let i = 0;i < res.data.results.length; i++){
+                    if (res.data.results.length > 0) {
+                        for (let i = 0; i < res.data.results.length; i++) {
                             let j = {};
                             j.value = res.data.results[i].id;
                             j.label = res.data.results[i].connname;
                             json.push(j);
-                        };
+                        }
+                        ;
                         this.sites1 = json;
                     }
 
@@ -1196,69 +1203,69 @@
                     console.log('获取数据库连接错误')
                 })
             },
-            connection(){
+            connection() {
                 var myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
 
-    var seriesData = [{
-        name: '已执行',
-        value: 30
-    },{
-        name: '正执行',
-        value: 11
-    },{
-        name: '执行出错',
-        value: 26
-    },{
-        name: '未执行',
-        value: 33
-    }];
-    var legendData = ['已执行', '正执行', '执行出错', '未执行'];
-    option = {
-        tooltip : {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-        legend: {
-            type: 'scroll',
-            orient: 'vertical',
-            right: 10,
-            bottom: 50,
-            data: legendData
-        },
-        series : [
-            {
-                name: '执行状态',
-                type: 'pie',
-                radius : '50%',
-                center: ['50%', '30%'],
-                data: seriesData,
-                itemStyle: {
-                    emphasis: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    }
-                },
-                avoidLabelOverlap: false,
-                label: {
-                    normal: {
-                        show: true,
-                        position: 'inside',
-                        formatter: '{c}'
-                    }
-                },
-                labelLine: {
-                    normal: {
-                        show: false
+                var seriesData = [{
+                    name: '已执行',
+                    value: 30
+                }, {
+                    name: '正执行',
+                    value: 11
+                }, {
+                    name: '执行出错',
+                    value: 26
+                }, {
+                    name: '未执行',
+                    value: 33
+                }];
+                var legendData = ['已执行', '正执行', '执行出错', '未执行'];
+                option = {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
                     },
-                    emphasis: {
-                        show: true
-                    }
-                }
-            }
-        ]
-    };
-    myChart.setOption(option);
+                    legend: {
+                        type: 'scroll',
+                        orient: 'vertical',
+                        right: 10,
+                        bottom: 50,
+                        data: legendData
+                    },
+                    series: [
+                        {
+                            name: '执行状态',
+                            type: 'pie',
+                            radius: '50%',
+                            center: ['50%', '30%'],
+                            data: seriesData,
+                            itemStyle: {
+                                emphasis: {
+                                    shadowBlur: 10,
+                                    shadowOffsetX: 0,
+                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            },
+                            avoidLabelOverlap: false,
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'inside',
+                                    formatter: '{c}'
+                                }
+                            },
+                            labelLine: {
+                                normal: {
+                                    show: false
+                                },
+                                emphasis: {
+                                    show: true
+                                }
+                            }
+                        }
+                    ]
+                };
+                myChart.setOption(option);
             }
         },
         mounted() {
@@ -1290,6 +1297,6 @@
         // })
 
 
-    },1000)
+    }, 1000)
 </script>
 </html>
