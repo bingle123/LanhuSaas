@@ -68,7 +68,7 @@ def create_task_interval(name, task, task_args,interval_time, desc):
     return True
 
 
-def change_task_status(name, mode, crontab_time):
+def change_task_status(name,crontab_time,args):
     """
     任务状态切换：open or close
     :param name: 任务名称
@@ -90,7 +90,7 @@ def change_task_status(name, mode, crontab_time):
             # 如果没有就创建，有的话就继续复用之前的crontab
             crontab = celery_models.CrontabSchedule.objects.create(**crontab_time)
         task.crontab = crontab  # 设置crontab
-        task.enabled = mode
+        task.kwargs = json.dumps(args, ensure_ascii=False)  # 将kwargs传入
         task.save()
         return True
     except celery_models.PeriodicTask.DoesNotExist:
