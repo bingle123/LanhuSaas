@@ -54,6 +54,8 @@ def selecthor(request):
     for cur in curren_page.object_list:
         conn = model_to_dict(cur)
         conn['count'] = pages
+        password = conn['password']
+        conn['password'] = decrypt_str(password)
         objs.append(conn)
     return objs
 
@@ -72,6 +74,8 @@ def getconn_all(request):
     for cur in current_page.object_list:
         conn=model_to_dict(cur)
         conn['count'] = pages
+        password = conn['password']
+        conn['password'] = decrypt_str(password)
         objs.append(conn)
     return objs
 
@@ -98,8 +102,7 @@ def saveconn_all(request):
 def eidtconnn(request):
     try:
         res = json.loads(request.body)
-        res.pop('page_count')
-        print res
+        res.pop('count')
         cilent = tools.interface_param(request)
         user = cilent.bk_login.get_user({})
         res['editname'] = user['data']['bk_username']

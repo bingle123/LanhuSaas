@@ -376,11 +376,12 @@
                         alert('验证不通过');
                         return false;
                     }else {
-                        axios.post('${SITE_URL}DataBaseManage/editconn/',this.editDataBase)
-                    .then((res)=>{
-                        if(res.data.code == 0){
-                            ve.hide()
-                        }
+                        axios.post(
+                            '${SITE_URL}DataBaseManage/editconn/',this.editDataBase
+                        ).then(function(res){
+                            if(res.data.code == 0){
+                                ve.hide()
+                            }
                     })
                     }
                 })
