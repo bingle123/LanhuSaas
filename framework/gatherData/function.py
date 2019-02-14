@@ -34,6 +34,15 @@ def gather_data(info):
         conn_info.password = decrypt_str(conn_info.password)
         conn = MySQLdb.connect(host=conn_info.ip, user=conn_info.username, passwd=conn_info.password, db=conn_info.databasename, port=int(conn_info.port))
         cursor = conn.cursor()
+        # 获取当前采集表中的数据是否为空，否则将采集表中的所有数据迁移到历史采集表中
+        cursor.execute('SELECT COUNT(1) FROM td_gather_data')
+        length = cursor.fetchone()
+        # 开始迁移表数据
+        if length != 0:
+            migrate_sql = 'INSERT INTO td_gather_history (item_id, instance_id, gather_time, data_key, data_value) ' \
+                          'SELECT item_id, instance_id, gather_time, data_key, data_value FROM td_gather_data'
+            cursor.execute(migrate_sql)
+            cursor.execute('TRUNCATE TABLE td_gather_data')
         cursor.execute(info['gather_rule'])
         result = cursor.fetchall()
         # 获取当前采集时间
