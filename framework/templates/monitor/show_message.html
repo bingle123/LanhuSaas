@@ -21,10 +21,13 @@
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
     <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
+    <script type="text/javascript" src="${STATIC_URL}assets/echarts/echarts.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/echarts/macarons.js"></script>
+    <link rel="stylesheet" href="${STATIC_URL}css/maintenanceIndex/maintenanceIndex.css">
     <style>
         input {
             width: 250px;
-            height: 14px;
+            height: 30px;
         }
 
         .el-table--border th {
@@ -57,6 +60,7 @@
                         <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
                         <el-button size="mini" type="text" v-on:click="edit(scope.row)">编辑</el-button>
                         <el-button size="mini" type="text" v-on:click="edit2(scope.row)">删除</el-button>
+
                             <el-switch v-model="scope.status" active-color="#13ce66" inactive-color="#ff4949"
                                        active-value="1" inactive-value="0"></el-switch>
                     </template>
@@ -230,7 +234,7 @@
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="图标类型" prop="gather_params">
-                                    <el-select v-model="chart.gather_params" placeholder="请选择图表类型">
+                                    <el-select v-model="chart.gather_params" @change="show_chart" placeholder="请选择图表类型">
                                         <el-option label="折线图" value="折线图"></el-option>
                                         <el-option label="柱状图" value="柱状图"></el-option>
                                         <el-option label="饼图" value="饼图"></el-option>
@@ -238,7 +242,7 @@
                                 </el-form-item>
                                 <el-form-item label="显示内容" style="width: 96%" prop="contents">
                                     <el-input type="textarea" v-model="chart.contents"
-                                              placeholder="上证指数:3000  深证指数:3000"></el-input>
+                                              placeholder="上证指数:3000  深证指数:3000" @change="show_content"></el-input>
                                 </el-form-item>
                                 <el-form-item label="连接数据库">
                                     <el-select v-model="chart.params" placeholder="请选择数据库">
@@ -274,29 +278,31 @@
                                 </el-form-item>
                             </el-form>
                         </div></el-col>
-                        <el-col :span="12"><div class="grid-content bg-purple-light">
-                            <div style="padding: 0px 45% 0px 45%">
-                                <h2>预览</h2>
-                            </div>
-                            <div style="text-align:center;width: 100%;height: 40%;">
-                                <div id="maintenanceIndex">
-                                    <el-row>
-                                        <el-col :span="24">
-                                            <el-card shadow="always" class="box-card">
-                                                <div slot="header" class="clearfix">
-                                                    <span class="maintenanceHeader">执行情况统计</span>
-                                                </div>
-                                                <div id="maintenancePie"></div>
-                                            </el-card>
-                                        </el-col>
-                                    </el-row>
+                        <el-col :span="12">
+                            <div class="grid-content bg-purple-light">
+                                <div style="padding: 0px 45% 0px 45%">
+                                    <h2>预览</h2>
+                                </div>
+                                <div style="text-align:center;width: 100%;height: 40%;">
+                                    <div id="maintenanceIndex">
+                                        <el-row>
+                                            <el-col :span="24">
+                                                <el-card shadow="always" class="box-card">
+                                                    <div slot="header" class="clearfix">
+                                                        <span class="maintenanceHeader">{{ chart_content }}</span>
+                                                    </div>
+                                                    <div id="maintenancePie"></div>
+                                                </el-card>
+                                            </el-col>
+                                        </el-row>
+                                    </div>
+                                </div>
+                                <div style="padding: 0px 20%">
+                                    <div style="height: 20px"></div>
+                                    <el-button type="primary">采集测试</el-button>
                                 </div>
                             </div>
-                            <div style="padding: 0px 20%">
-                                <div style="height: 20px"></div>
-                                <el-button type="primary" @click="connection">采集测试</el-button>
-                            </div>
-                        </div></el-col>
+                        </el-col>
                     </el-row>
                 </el-tab-pane>
                 <!-- 图表单元 end-->
@@ -416,7 +422,9 @@
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item prop="width">
-                                              <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.width" placeholder="请输入宽度" @change="flow_width"></el-input>
+                                              <el-input type="number" v-model.number="numberValidateForm.age"
+                                                        auto-complete="off" v-model="flow.width" placeholder="请输入宽度"
+                                                        @change="flow_width"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
@@ -814,6 +822,8 @@
                 gather_rule: '',                     //采集规则
                 gather_params: '',                   //流程模板
             },
+            myChart: null,
+            chart_content:'',
         },
         methods: {
             test1() {
@@ -978,7 +988,6 @@
                     vm.flow.start_time = row.start_time;
                     vm.flow.end_time = row.end_time;
                     vm.flow.period = row.period
-
                 }
             },
             edit1() {
@@ -1190,82 +1199,215 @@
                             json.push(j);
                         };
                         this.sites1 = json;
-                        console.log(this.sites1)
                     }
 
                 }).catch((res) => {
                     console.log('获取数据库连接错误')
                 })
             },
-            connection() {
-                var myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
 
-                var seriesData = [{
-                    name: '已执行',
-                    value: 30
-                },{
-                    name: '正执行',
-                    value: 11
-                },{
-                    name: '执行出错',
-                    value: 26
-                },{
-                    name: '未执行',
-                    value: 33
-                }];
-                var legendData = ['已执行', '正执行', '执行出错', '未执行'];
-                option = {
-                    tooltip : {
-                        trigger: 'item',
-                        formatter: "{a} <br/>{b} : {c} ({d}%)"
-                    },
-                    legend: {
-                        type: 'scroll',
-                        orient: 'vertical',
-                        right: 10,
-                        bottom: 50,
-                        data: legendData
-                    },
-                    series : [
-                        {
-                            name: '执行状态',
-                            type: 'pie',
-                            radius : '50%',
-                            center: ['50%', '30%'],
-                            data: seriesData,
-                            itemStyle: {
-                                emphasis: {
-                                    shadowBlur: 10,
-                                    shadowOffsetX: 0,
-                                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                }
-                            },
-                            avoidLabelOverlap: false,
-                            label: {
-                                normal: {
-                                    show: true,
-                                    position: 'inside',
-                                    formatter: '{c}'
-                                }
-                            },
-                            labelLine: {
-                                normal: {
-                                    show: false
+            time2() {
+
+            },
+            show_chart() {
+                if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
+                    this.myChart.dispose();
+                }
+                if (vm.chart.gather_params == "饼图") {
+                    this.myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
+                    let seriesData = [{
+                        name: '已执行',
+                        value: 30
+                    }, {
+                        name: '正执行',
+                        value: 11
+                    }, {
+                        name: '执行出错',
+                        value: 26
+                    }, {
+                        name: '未执行',
+                        value: 33
+                    }];
+                    let legendData = ['已执行', '正执行', '执行出错', '未执行'];
+                    option = {
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            type: 'scroll',
+                            orient: 'vertical',
+                            right: 10,
+                            bottom: 50,
+                            data: legendData
+                        },
+                        series: [
+                            {
+                                name: '执行状态',
+                                type: 'pie',
+                                radius: '50%',
+                                center: ['50%', '30%'],
+                                data: seriesData,
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
                                 },
-                                emphasis: {
-                                    show: true
+                                avoidLabelOverlap: false,
+                                label: {
+                                    normal: {
+                                        show: true,
+                                        position: 'inside',
+                                        formatter: '{c}'
+                                    }
+                                },
+                                labelLine: {
+                                    normal: {
+                                        show: false
+                                    },
+                                    emphasis: {
+                                        show: true
+                                    }
                                 }
                             }
-                        }
-                    ]
-                };
-                myChart.setOption(option);
-                    }
-                },
+                        ]
+                    };
+                    this.myChart.setOption(option);
+                }
+                if (vm.chart.gather_params == "柱状图") {
 
+                    this.myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                            }
+                        },
+                        barWidth: 15,
+                        legend: {
+                            data: ['已执行', '正执行', '执行出错', '未执行'],
+                            bottom: 10,
+                            right: 30
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            top: 10,
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'category',
+                            data: ['6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00',
+                                '13:00', '14:00', '15:00', '16:00', '17:00', '18:00',
+                                '19:00', '20:00', '21:00', '22:00', '23:00', '24:00',
+                                '1:00', '2:00', '3:00', '4:00', '5:00', '6:00']
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [
+                            {
+                                name: '已执行',
+                                type: 'bar',
+                                stack: 'data',
+                                data: [0, 2, 4, 6, 8,
+                                    10, 0, 2, 4, 6,
+                                    8, 10, 0, 2, 4,
+                                    6, 8, 10, 0, 2,
+                                    4, 6, 8, 10, 0]
+                            },
+                            {
+                                name: '正执行',
+                                type: 'bar',
+                                stack: 'data',
+                                data: [2, 1, 2, 6, 4,
+                                    2, 1, 2, 6, 4,
+                                    2, 1, 2, 6, 4,
+                                    2, 1, 2, 6, 4,
+                                    2, 1, 2, 6, 4]
+                            },
+                            {
+                                name: '执行出错',
+                                type: 'bar',
+                                stack: 'data',
+                                data: [2, 4, 6, 10, 12,
+                                    2, 4, 6, 10, 12,
+                                    2, 4, 6, 10, 12,
+                                    2, 4, 6, 10, 12,
+                                    2, 4, 6, 10, 12]
+                            },
+                            {
+                                name: '未执行',
+                                type: 'bar',
+                                stack: 'data',
+                                data: [6, 2, 8, 4, 10,
+                                    6, 2, 8, 4, 10,
+                                    6, 2, 8, 4, 10,
+                                    6, 2, 8, 4, 10,
+                                    6, 2, 8, 4, 10]
+                            }
+                        ]
+                    };
+                    this.myChart.setOption(option);
+                }
+                if (vm.chart.gather_params == "折线图") {
+                    this.myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
+                    option = {
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['意向', '预购', '成交']
+                        },
+                        calculable: true,
+                        xAxis: [
+                            {
+                                type: 'category',
+                                boundaryGap: false,
+                                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value'
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '成交',
+                                type: 'line',
+                                smooth: true,
+                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                data: [10, 12, 21, 54, 260, 830, 710]
+                            },
+                            {
+                                name: '预购',
+                                type: 'line',
+                                smooth: true,
+                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                data: [30, 182, 434, 791, 390, 30, 10]
+                            },
+                            {
+                                name: '意向',
+                                type: 'line',
+                                smooth: true,
+                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                data: [1320, 1132, 601, 234, 120, 90, 20]
+                            }
+                        ]
+                    };
+                    this.myChart.setOption(option);
+                }
+            },
+            show_content(){
+                vm.chart_content=vm.chart.contents;
+            },
+        },
         mounted() {
         },
-
     });
     vm.show();
 </script>
