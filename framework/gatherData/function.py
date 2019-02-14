@@ -48,6 +48,7 @@ def gather_data(info):
         result = cursor.fetchall()
         # 获取当前采集时间
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        # 将结果集整理为key-value形式的采集数据
         for unit in result:
             count = 0
             for data in unit:
