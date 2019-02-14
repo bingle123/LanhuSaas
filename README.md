@@ -48,3 +48,4 @@ sudo yum update -y
 Then once that completed I disconnected from ssh and re-ran vagrant reload --provision
 The guest-additions were then showing as running OK.
 
+
