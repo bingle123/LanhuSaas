@@ -12,18 +12,21 @@
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
     <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
-    <script type="text/javascript" src="${STATIC_URL}assets/echarts/echarts.js"></script>
-    <script type="text/javascript" src="${STATIC_URL}assets/echarts/macarons.js"></script>
-    <link rel="stylesheet" href="${STATIC_URL}css/maintenanceIndex/maintenanceIndex.css">
-    <style>
-        input {
-            width: 250px;
-            height: 30px;
-        }
 
-        .el-table--border th {
-            padding: 5px
-        }
+
+    <script type="text/javascript" src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
+    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
+    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
+     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
+<style>
+    input{
+        width: 250px;
+        height: 30px;
+    }
+    .el-table--border th{
+        padding:5px
+    }
 
     </style>
 </head>
@@ -406,6 +409,7 @@
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item prop="height">
+                                            <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.height" placeholder="请输入高度" @change="flow_height"></el-input>
                                             <el-input type="number" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="flow.height"
                                                       placeholder="请输入高度"></el-input>
@@ -414,6 +418,7 @@
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item prop="width">
+                                              <el-input type="number" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.width" placeholder="请输入宽度" @change="flow_width"></el-input>
                                               <el-input type="number" v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="flow.width"
                                                         placeholder="请输入宽度"></el-input>
@@ -485,11 +490,76 @@
                             <div style="padding: 0px 45% 0px 45%">
                                 <h2>预览</h2>
                             </div>
-                            <div  style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;">
-                                <img src="${STATIC_URL}img/liucheng.png" style="max-width: 100%;max-height: 100%;">
+                            <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;">
+                                <div id="flow1" class="clearfix workflow-box" style="width: 100%;position: relative;">
+
+                                        <div class="workflow-canvas" style="margin-left: 0px;padding-left: 0px">
+                                            <!-- 画布模板 start -->
+                                            <div class="jtk-content">
+                                                <div class="jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan"
+                                                     id="canvas" style="height:500px">
+                                                    <!-- 流程 -->
+                                                </div>
+                                            </div>
+                                            <!-- 画布模板 end -->
+
+                                        </div>
+
+                                        <!-- template 模板-->
+                                        <div class="jtk-delete jtk-none ">删除节点</div>
+                                        <div id="template" class="jtk-none">
+                                            <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
+                                                 data-type="start">
+                                                <div class="node-wrapper">
+                                                    <div class="node-icon-start">
+                                                        <i class="bk-icon icon-star-shape"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="jtk-window jtk-node workfolw-node database-node" id="{charts}"
+                                                 data-type="database">
+                                                <div class="node-wrapper">
+                                                    <div class="node-content">
+                                                        <input type="text" class="node-title" value="">
+                                                        <p data="数据源" class="node-desc">一级分析</p>
+                                                    </div>
+                                                    <div class="node-icon">
+                                                        <i class="bk-icon icon-data"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="jtk-window jtk-node workfolw-node cog-node" id="{charts}"
+                                                 data-type="dataCog">
+                                                <div class="node-wrapper">
+                                                    <div class="node-content">
+                                                        <input type="text" class="node-title" value="">
+                                                        <p data="数据源" class="node-desc">实时加载</p>
+                                                    </div>
+                                                    <div class="node-icon">
+                                                        <i class="bk-icon icon-cog"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="jtk-window jtk-node workfolw-node filter-node" id="{charts}"
+                                                 data-type="dataFilter">
+                                                <div class="node-wrapper">
+                                                    <div class="node-content">
+                                                        <input type="text" class="node-title" value="">
+                                                        <p data="数据源" class="node-desc">离线计算</p>
+                                                    </div>
+                                                    <div class="node-icon">
+                                                        <i class="bk-icon icon-circle"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                             </div>
                             <div style="padding: 0px 10%">
                                 <div style="height: 20px"></div>
+                                <el-button type="primary" v-on:click="canvas_new" >采集测试</el-button>
                                 <el-button type="primary" v-on:click="time2" :disabled="disabled1">采集测试</el-button>
                                 <el-checkbox v-model="checked2" @change="change3">启动流程</el-checkbox>
                                 <div :style="{ display: liucheng }">
@@ -1049,6 +1119,61 @@
             rowclass({row, rowIndex}) {
                 return 'background:#F7F7F7'
             },
+            font_size(){        //修改流程单元中的表字体
+               $("#canvas").find('*').css("font-size",this.flow.font_size)
+            },
+            flow_height(){      //修改流程单元中的高
+                $("#canvas").find('*').css("height",this.flow.height)
+            },
+            flow_width(){       //修改流程单元中的宽
+                $("#canvas").find('*').css("width",this.flow.height)
+            },
+            canvas_new(){       //显示流程单元中的预览图
+                  $('#flow1').dataflow({
+            el: '.tool', //流程拖动源
+            canvas: '#canvas', //画布
+            arrowWidth: 8,
+            arrowHeight: 10,
+            template: '#template',
+            id: 'ch', // 定义节点id，当页面只有一个dataflow实例是可忽略，当有多个实例时，需自定义该字段，id具有唯一性
+            onRemoveNodeAfter: function(id, line) { //删除节点回调
+                //console.log(id);
+                //console.log(line);
+            },
+            onCreateNodeAfter: function(id) { //初始化节点回调
+                //console.log(id)
+            },
+            onCreateLineAfter: function() { //创建线条后回调
+                //console.log("1111")
+            },
+            ondrawData: function() { //初始化流程后回调
+                //console.log($('.node-icon').length)
+            },
+            data:
+                {
+                    "line"
+                :
+                    [{
+                        "source": {"id": "ch1", "arrow": "Right"},
+                        "target": {"id": "ch3", "arrow": "Left"}
+                    }, {
+                        "source": {"id": "ch3", "arrow": "Right"},
+                        "target": {"id": "ch2", "arrow": "Left"}
+                    }], "location"
+                :
+                    [{"id": "ch1", "x": 10, "y": 127, "type": "start"},
+                     { "id": "ch2","x": 380,"y": 127,"type": "start"},
+                     {"id": "ch3", "x": 188, "y": 200, "name": "", "type": "database"}]
+                }
+
+        });
+                    $('#save2').click(function() {
+            // 获取全部数据
+            var data= $('#flow1').data('dataflow').getAllData();
+            var name = data.location[0];
+            $('#result2').val(JSON.stringify(data));
+        });
+            }
             get_db_connections() {
                 axios({
                     url: '${SITE_URL}DataBaseManage/get_all_db_connection/',
@@ -1149,5 +1274,22 @@
             }
         });
     }, 1)
+</script>
+
+
+<script>
+    setInterval(function () {
+
+
+        //flow1_js_start
+
+        //flow1_js_end
+        // $('.node-wrapper').click(function () {
+        //
+        //     $(this).find(".node-title").attr('contenteditable','plaintext-only');
+        // })
+
+
+    },1000)
 </script>
 </html>

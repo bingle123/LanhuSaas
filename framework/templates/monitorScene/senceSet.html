@@ -13,16 +13,16 @@
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/v-charts/lib/index.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
-    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
-    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
     <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
     <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/jrange/css/jquery.range.css" rel="stylesheet">
-    <script type="text/javascript" src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
     <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
-
-
-    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
     <script src="${STATIC_URL}js/jquery.range-min.js"></script>
+
+
+    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
+    <script type="text/javascript" src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
+    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
+    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
      <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
 
 
@@ -54,7 +54,10 @@
                 </el-col>
             </el-row>
             <el-table :data='tableData' :header-cell-style='rowclass' style="width: 100%;margin-top: 10px">
-                <el-table-column prop='id' label='序号' width='80' sortable>
+
+                <el-table-column type="index" label='序号' width='80'>
+                </el-table-column>
+                <el-table-column prop='id'  v-if="false" label='id' width='80'>
                 </el-table-column>
                 <el-table-column prop='scene_name' label='场景名称'  style="width: 30%;" sortable>
                 </el-table-column>
@@ -381,6 +384,12 @@
                 pos_name:'',
                 scene_endTime:'',
             },
+            scene1: {                            //场景管理
+                scene_name: '', //场景名称
+                scene_startTime:'',
+                pos_name:'',
+                scene_endTime:'',
+            },
             scene_edit:{                       //编辑页面中的
                 id:'',
                 scene_name: '', //场景名称
@@ -422,7 +431,6 @@
                             }).then(function (res) {
                                 vm.isAdd = 1;
                                 vm.select_table()
-                                vm.scene = []
                             })
                         } else if (formName == 'scene_edit') {
                             axios({
@@ -473,8 +481,10 @@
             show() {
                 this.isAdd = 2;
                 vm.sen_position()
+                vm.scene = vm.scene1
                 setTimeout(function () {
                      vm.Time()
+
 
                 },100)
             },
@@ -494,17 +504,15 @@
             },
             hide() {
                 this.isAdd = 1
-                vm.a()
+                vm.paging()
             }, goto() {
                 window.location.href = '${SITE_URL}ming'
             },
             a(){
-                axios({
-                    method: 'post',
-                    url: '${SITE_URL}monitorScene/monitor_show/',
-                }).then(function(res) {
-                    vm.tableData = res.data.message;
-                })
+                scene_name: ''//场景名称
+                scene_startTime:''
+                pos_name:''
+                scene_endTime:''
             },
 
             select_table(){
@@ -540,7 +548,6 @@
                         data:  row.id
 
                     }).then((res) => {
-                        vm.a();
                         vm.paging();
                     }),);
             }).catch(() => {
@@ -599,7 +606,6 @@
         }
     });
 
-    vm.a();
     vm.paging();
 </script>
 
