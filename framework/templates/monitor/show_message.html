@@ -14,19 +14,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
 
 
-    <script type="text/javascript" src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
-    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
+    <script type="text/javascript"
+            src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
+    <link rel="stylesheet"
+          href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css"/>
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
-     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
     <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
-<style>
-    input{
-        width: 250px;
-        height: 30px;
-    }
-    .el-table--border th{
-        padding:5px
-    }
+    <style>
+        input {
+            width: 250px;
+            height: 30px;
+        }
+
+        .el-table--border th {
+            padding: 5px
+        }
 
     </style>
 </head>
@@ -816,13 +819,13 @@
             },
         },
         methods: {
-            test1(){
+            test1() {
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/test/',
                     data: {
-                        server_url:vm.server_url,
-                        gather_rule:vm.basic.gather_rule
+                        server_url: vm.server_url,
+                        gather_rule: vm.basic.gather_rule
                     },
                 }).then(function (res) {
                     console.log(res.data.message)
@@ -986,8 +989,7 @@
                     vm.result_data = vm.basic;
                     if (vm.file_param == '') {
                         vm.basic.params = vm.server_url
-                    }
-                    else {
+                    } else {
                         vm.basic.params = vm.server_url + ',' + vm.file_param;
                     }
                     vm.basic.monitor_name = vm.monitor_name;
@@ -1123,52 +1125,50 @@
             rowclass({row, rowIndex}) {
                 return 'background:#F7F7F7'
             },
-            font_size(){        //修改流程单元中的表字体
-               $("#canvas").find('*').css("font-size",this.flow.font_size)
+            font_size() {        //修改流程单元中的表字体
+                $("#canvas").find('*').css("font-size", this.flow.font_size)
             },
-            flow_height(){      //修改流程单元中的高
-                $("#canvas").find('*').css("height",this.flow.height)
+            flow_height() {      //修改流程单元中的高
+                $("#canvas").find('*').css("height", this.flow.height)
             },
-            flow_width(){       //修改流程单元中的宽
-                $("#canvas").find('*').css("width",this.flow.height)
+            flow_width() {       //修改流程单元中的宽
+                $("#canvas").find('*').css("width", this.flow.height)
             },
-            canvas_new(){       //显示流程单元中的预览图
-                  $('#flow1').dataflow({
-            el: '.tool', //流程拖动源
-            canvas: '#canvas', //画布
-            arrowWidth: 8,
-            arrowHeight: 10,
-            template: '#template',
-            id: 'ch', // 定义节点id，当页面只有一个dataflow实例是可忽略，当有多个实例时，需自定义该字段，id具有唯一性
-            onRemoveNodeAfter: function(id, line) { //删除节点回调
-                //console.log(id);
-                //console.log(line);
-            },
-            onCreateNodeAfter: function(id) { //初始化节点回调
-                //console.log(id)
-            },
-            onCreateLineAfter: function() { //创建线条后回调
-                //console.log("1111")
-            },
-            ondrawData: function() { //初始化流程后回调
-                //console.log($('.node-icon').length)
-            },
-            data:
-                {
-                    "line"
-                :
-                    [{
-                        "source": {"id": "ch1", "arrow": "Right"},
-                        "target": {"id": "ch3", "arrow": "Left"}
-                    }, {
-                        "source": {"id": "ch3", "arrow": "Right"},
-                        "target": {"id": "ch2", "arrow": "Left"}
-                    }], "location"
-                :
-                    [{"id": "ch1", "x": 10, "y": 127, "type": "start"},
-                     { "id": "ch2","x": 380,"y": 127,"type": "start"},
-                     {"id": "ch3", "x": 188, "y": 200, "name": "", "type": "database"}]
-                }
+            canvas_new() {       //显示流程单元中的预览图
+                $('#flow1').dataflow({
+                    el: '.tool', //流程拖动源
+                    canvas: '#canvas', //画布
+                    arrowWidth: 8,
+                    arrowHeight: 10,
+                    template: '#template',
+                    id: 'ch', // 定义节点id，当页面只有一个dataflow实例是可忽略，当有多个实例时，需自定义该字段，id具有唯一性
+                    onRemoveNodeAfter: function (id, line) { //删除节点回调
+                        //console.log(id);
+                        //console.log(line);
+                    },
+                    onCreateNodeAfter: function (id) { //初始化节点回调
+                        //console.log(id)
+                    },
+                    onCreateLineAfter: function () { //创建线条后回调
+                        //console.log("1111")
+                    },
+                    ondrawData: function () { //初始化流程后回调
+                        //console.log($('.node-icon').length)
+                    },
+                    data:
+                        {
+                            "line":
+                                [{
+                                    "source": {"id": "ch1", "arrow": "Right"},
+                                    "target": {"id": "ch3", "arrow": "Left"}
+                                }, {
+                                    "source": {"id": "ch3", "arrow": "Right"},
+                                    "target": {"id": "ch2", "arrow": "Left"}
+                                }], "location":
+                                [{"id": "ch1", "x": 10, "y": 127, "type": "start"},
+                                    {"id": "ch2", "x": 380, "y": 127, "type": "start"},
+                                    {"id": "ch3", "x": 188, "y": 200, "name": "", "type": "database"}]
+                        }
 
         });
                   $('#save2').click(function() {
@@ -1186,8 +1186,8 @@
                     console.log(this.sites)
                     let json = [];
 
-                    if (res.data.results.length > 0){
-                        for (let i = 0;i < res.data.results.length; i++){
+                    if (res.data.results.length > 0) {
+                        for (let i = 0; i < res.data.results.length; i++) {
                             let j = {};
                             j.value = res.data.results[i].id;
                             j.label = res.data.results[i].connname;
@@ -1200,7 +1200,7 @@
                     console.log('获取数据库连接错误')
                 })
             },
-            connection(){
+            connection() {
                 var myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
 
                 var seriesData = [{
@@ -1294,6 +1294,6 @@
         // })
 
 
-    },1000)
+    }, 1000)
 </script>
 </html>
