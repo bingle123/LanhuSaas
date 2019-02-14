@@ -14,17 +14,16 @@ def gather_data(info):
     # info['id'] = '1'
     # info['gather_params'] = 'sql'
     # info['params'] = '46'
-    # info['gather_rule'] = 'SELECT user_name, mobile_no FROM tb_user_info'
+    # info['gather_rule'] = 'SELECT china_point, japan_point FROM test_gather_data'
     # 获取数据采集的类型
     gather_type = info['gather_params']
     # 获取采集规则的字段有哪些
-    info['gather_rule'].find('FROM')
-    fields = info['gather_rule'][8 : info['gather_rule'].find('FROM')].split(',')
+    fields = info['gather_rule'][6:info['gather_rule'].find('FROM')].split(',')
     # 采集获取到的key-value
     data_set = []
     for field in fields:
         temp = dict()
-        temp['key'] = field
+        temp['key'] = field.strip()
         temp['value'] = list()
         data_set.append(temp)
     # 采集数据库中的数据
