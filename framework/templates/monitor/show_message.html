@@ -24,7 +24,7 @@
     <style>
         input {
             width: 250px;
-            height: 30px;
+            height: 14px;
         }
 
         .el-table--border th {
@@ -396,12 +396,12 @@
                 <!-- 作业单元 end-->
 
                 <!-- 流程单元 start-->
-                <el-tab-pane :disabled="disabled5" label="流程单元" name="fourth">
+                <el-tab-pane :disabled="disabled5" label="流程单元" name="fourth" v-on:click="canvas_new">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="flow" :rules="rules4" ref="flow" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
-                                    <el-select v-model="flow.font_size" placeholder="请选择字号">
+                                    <el-select v-model="flow.font_size" placeholder="请选择字号" @change="font_size">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
                                         <el-option label="12" value="12"></el-option>
@@ -556,7 +556,7 @@
                             </div>
                             <div style="padding: 0px 10%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" v-on:click="time2" :disabled="disabled1">采集测试</el-button>
+                                <el-button type="primary" v-on:click="canvas_new" :disabled="disabled1">采集测试</el-button>
                                 <el-checkbox v-model="checked2" @change="change3">启动流程</el-checkbox>
                                 <div :style="{ display: liucheng }">
                                     <el-alert title="启动流程可能会对系统造成不可逆的变更，请谨慎勾选此项！" type="warning" show-icon
@@ -981,6 +981,7 @@
                     vm.flow.start_time = row.start_time;
                     vm.flow.end_time = row.end_time;
                     vm.flow.period = row.period
+
                 }
             },
             edit1() {
@@ -1267,6 +1268,7 @@
                 },
         mounted() {
         },
+
     });
     vm.show();
 </script>
