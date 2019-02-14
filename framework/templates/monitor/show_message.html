@@ -242,7 +242,7 @@
                                 </el-form-item>
                                 <el-form-item label="连接数据库">
                                     <el-select v-model="chart.params" placeholder="请选择数据库">
-                                        <el-option v-for="i in sites" :label="i.editor" :value="i.editor"></el-option>
+                                        <el-option v-for="i in sites1" :label="i.label" :value="i.value"></el-option>
 
                                     </el-select>
                                 </el-form-item>
@@ -1180,7 +1180,6 @@
                     url: '${SITE_URL}DataBaseManage/get_all_db_connection/',
                     method: 'post',
                 }).then((res) => {
-                    console.log(this.sites)
                     let json = [];
 
                     if (res.data.results.length > 0) {
@@ -1191,6 +1190,7 @@
                             json.push(j);
                         };
                         this.sites1 = json;
+                        console.log(this.sites1)
                     }
 
                 }).catch((res) => {
