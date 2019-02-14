@@ -140,7 +140,8 @@ INSTALLED_APPS = (
     'DataBaseManage',
     'customProcess',
     'gatherData',
-    'gatherDataHistory'
+    'gatherDataHistory',
+    'alertRule'
 )
 
 # ==============================================================================
