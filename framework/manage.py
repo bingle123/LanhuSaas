@@ -10,8 +10,6 @@ See the License for the specific language governing permissions and limitations 
 """
 import os
 import sys
-from market_day import auto_celery
-
 if __name__ == '__main__':
     if 'celery' in sys.argv:
         if 'eventlet' in sys.argv:
