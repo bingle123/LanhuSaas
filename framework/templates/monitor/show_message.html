@@ -60,9 +60,10 @@
                         <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
                         <el-button size="mini" type="text" v-on:click="edit(scope.row)">编辑</el-button>
                         <el-button size="mini" type="text" v-on:click="edit2(scope.row)">删除</el-button>
-
-                            <el-switch v-model="scope.status" active-color="#13ce66" inactive-color="#ff4949"
+                        <el-tooltip :content="scope.row.status" placement="top">
+                            <el-switch  v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949" @change="switch_change(scope.row)"
                                        active-value="1" inactive-value="0"></el-switch>
+                            </el-tooltip>
                     </template>
                 </el-table-column>
             </el-table>
@@ -1423,7 +1424,19 @@
             show_content(){
                 vm.chart_content=vm.chart.contents;
             },
-
+            switch_change(value){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor/change_status/',
+                    data: {
+                        flag: value.status,
+                        id: value.id,
+                        monitor_name: vm.monitor_name
+                    },
+                }).then((res) =>{
+                    if (res.data.code == 1) {alert(res.data.message)}
+                })
+            },
         },
         mounted() {
         },

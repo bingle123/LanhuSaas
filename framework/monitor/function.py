@@ -29,15 +29,15 @@ def unit_show(request):
         p=Paginator(unit, limit)    #分页
         page_count = p.page_range[-1]  #总页数
         page = p.page(page)        #当前页数据
-
         res_list=[]
         for i in page.object_list:
             j=model_to_dict(i)
             j['page_count']=page_count
             j['edit_time'] = str(i.edit_time)
             j['create_time'] = str(i.create_time)
-            j['start_time'] = str (i.start_time)
-            j['end_time'] = str (i.end_time)
+            j['start_time'] = str(i.start_time)
+            j['end_time'] = str(i.end_time)
+            j['status'] = str(i.status)
             res_list.append(j)
         param = {
             'bk_username': 'admin',
@@ -248,18 +248,22 @@ def job_test(request):
     return res
 
 def change_unit_status(req):
-    res=json.loads(req.body)
-    schename=res['monitor_name']
-    flag=res['flag']
-    unit_id=res['id']
-    mon=Monitor.objects.get(id=unit_id)
-    mon.status=flag
-    mon.save()
-    if flag==0:
-        co.enable_task(schename)
-    else:
-        co.disable_task(schename)
-    return tools.success_result(None)
+    try:
+        res=json.loads(req.body)
+        schename=res['monitor_name']
+        flag=res['flag']
+        unit_id=res['id']
+        mon=Monitor.objects.get(id=unit_id)
+        mon.status=flag
+        mon.save()
+        if flag==0:
+            co.enable_task(schename)
+        else:
+            co.disable_task(schename)
+        res = tools.success_result(None)
+    except Exception as e:
+        res = tools.error_result(e)
+    return res
 
 
 

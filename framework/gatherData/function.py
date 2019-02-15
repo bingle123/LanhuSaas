@@ -14,7 +14,7 @@ from alertRule.function import *
 # 返回参数gather_status为ok采集正常，返回empty采集结果为空，返回error采集规则错误
 def gather_data(info):
     # 临时测试时用的数据，实际应从info对象中获取参数,由celery提供info对象
-    # info['id'] = '1'
+    # info['id'] = '2'
     # info['gather_params'] = 'sql'
     # info['params'] = '46'
     # info['gather_rule'] = 'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
@@ -39,7 +39,7 @@ def gather_data(info):
         gather_field.append(field[0])
         sql_field.append(field[1])
     # 生成采集使用的sql
-    gather_sql = info['gather_rule'].replace(rule_fields_str, ','.join(sql_field))
+        gather_sql = info['gather_rule'].replace(rule_fields_str, ','.join(sql_field))
     # 采集数据库中的数据
     if "sql" == gather_type:
         conn_info = Conn.objects.filter(id=info['params']).get()
