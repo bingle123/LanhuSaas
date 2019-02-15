@@ -190,12 +190,11 @@
                             </div>
                             <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;">
                                 <div style="height: 60px"></div>
-                                <h3>上证指数:3000</h3>
-                                <h3>深证指数:3000</h3>
+                                    <textarea id="">{{basic.contents}}</textarea>
                             </div>
                             <div style="padding: 0px 20%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary">采集测试</el-button>
+                                <el-button type="primary" @click="test1()">采集测试</el-button>
                             </div>
                         </div></el-col>
                     </el-row>
@@ -831,11 +830,19 @@
                     method: 'post',
                     url: '${SITE_URL}monitor/test/',
                     data: {
-                        server_url: vm.server_url,
-                        gather_rule: vm.basic.gather_rule
+                        server_url: vm.server_url
                     },
                 }).then(function (res) {
-                    console.log(res.data.message)
+                    var temp1 = vm.basic.contents.split("#")
+                    var temp2=[];
+                    for(var i=1;i<temp1.length;i=i+2){
+                        temp2.push(temp1[i])
+                    }
+                    console.log(temp2)
+                    for(i=0;i<temp2.length;i++){
+                        str = '#' + temp2[i] + '#'
+                        vm.basic.contents = vm.basic.contents.replace(str,res.data.message[0][temp2[i]])
+                    }
                 })
             },
             pefFrom() {
