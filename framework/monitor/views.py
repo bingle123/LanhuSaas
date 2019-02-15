@@ -14,7 +14,10 @@ def index1(request):
     return render_mako_context(request, '123.html')
 
 
+def unit_show(request):
 
+    res = function.unit_show(request)
+    return render_json(res)
 
 
 def select_unit(request):

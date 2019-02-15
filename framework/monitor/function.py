@@ -16,8 +16,8 @@ import pymssql
 import copy
 import base64
 import re
-from framework.market_day import function
-from framework.market_day import celery_opt as co
+from market_day import function
+from market_day import celery_opt as co
 
 
 def unit_show(request):
