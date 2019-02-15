@@ -299,7 +299,7 @@
                                 </div>
                                 <div style="padding: 0px 20%">
                                     <div style="height: 20px"></div>
-                                    <el-button type="primary">采集测试</el-button>
+                                    <el-button type="primary" v-on:click="chart_get_test">采集测试</el-button>
                                 </div>
                             </div>
                         </el-col>
@@ -1405,6 +1405,22 @@
             show_content(){
                 vm.chart_content=vm.chart.contents;
             },
+            chart_get_test(){
+                axios({
+                    url:'${SITE_URL}monitor/chart_get_test/',
+                    method:'post',
+                    data:{
+                        database_id:vm.chart.params,
+                        sql:vm.chart.gather_rule,
+                    },
+                }).then((res) => {
+                    console.log(res)
+                }).catch((res) =>{
+                    console.log(res)
+                });
+
+
+            }
         },
         mounted() {
         },
