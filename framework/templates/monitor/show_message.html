@@ -130,14 +130,11 @@
                                 <div :style="{ display: sql1 }">
                                     <el-form-item label="数据库连接">
                                         <el-select v-model="server_url" placeholder="请选择数据库">
-                                            <el-option v-for="i in sites" :label="i.editor"
-                                                       :value="i.editor"></el-option>
+                                            <el-option v-for="i in sites1" :label="i.label"
+                                                       :value="i.value"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="数据采集规则" style="width: 96%">
-                                        <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq"
-                                                  type="textarea"></el-input>
-                                    </el-form-item>
+
                                 </div>
 
                                 <div :style="{display:file1}">
@@ -159,6 +156,9 @@
                                         <el-input type="textarea" v-model="file_param"></el-input>
                                     </el-form-item>
                                 </div>
+                                <el-form-item label="数据采集规则" style="width: 96%">
+                                    <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq" type="textarea"></el-input>
+                                </el-form-item>
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
@@ -343,7 +343,7 @@
                                               placeholder="上证指数:3000  深证指数:3000"></el-input>
                                 </el-form-item>
                                 <el-form-item label="作业模板" prop="gather_params">
-                                    <el-select v-model="job.gather_rule" placeholder="请选择作业模板">
+                                    <el-select v-model="job.jion_id" placeholder="请选择作业模板">
                                         <el-option v-for="i in job2" :label="i.name" :value="i.id"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -1194,7 +1194,7 @@
                     if (res.data.results.length > 0) {
                         for (let i = 0; i < res.data.results.length; i++) {
                             let j = {};
-                            j.value = res.data.results[i].id;
+                            j.value = res.data.results[i].id+','+ res.data.results[i].connname;
                             j.label = res.data.results[i].connname;
                             json.push(j);
                         };
