@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from DataBaseManage import *
 
 
 class TbAlertRule(models.Model):
@@ -18,7 +19,9 @@ class TbAlertRule(models.Model):
 
     class Meta:
         db_table = 'tb_alert_rule'
-告警消息订阅表
+
+
+# 告警消息订阅表
 class TlAlertUser(models.Model):
     rule_id=models.ForeignKey(TbAlertRule) #规则外键
     user_id=models.ForeignKey('jobManagement.Localuser') #用户外键
@@ -26,7 +29,8 @@ class TlAlertUser(models.Model):
     class Meta:
         db_table='tl_alert_user'
 
-#发送告警信息日志
+
+# 发送告警信息日志
 class TdAlertLog(models.Model):
     rule_id=models.IntegerField(null=True, verbose_name=u"告警规则id")
     item_id = models.PositiveIntegerField(verbose_name=u"监控项ID")
