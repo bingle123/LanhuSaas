@@ -27,20 +27,21 @@ def getconn(request):
     return render_json(connall)
 
 
-#保存
+# 保存
 @csrf_exempt
 def saveconn(request):
     re = function.saveconn_all(request)
     return render_json(re)
 
 
-#修改
+# 修改
 @csrf_exempt
 def eidtconnn(request):
     re = function.eidtconnn(request)
     return render_json(re)
 
-#测试
+
+# 测试
 @csrf_exempt
 def testConn(request):
     r = function.testConn(request)

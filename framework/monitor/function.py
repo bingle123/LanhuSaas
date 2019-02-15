@@ -240,4 +240,69 @@ def job_test(request):
         res = tools.error_result (e)
     return res
 
+def change_unit_status(req):
+    res=json.loads(req.body)
+    schename=res['monitor_name']
+    flag=res['flag']
+    unit_id=res['id']
+    mon=Monitor.objects.get(id=unit_id)
+    mon.status=flag
+    mon.save()
+    if flag==0:
+        co.enable_task(schename)
+    else:
+        co.disable_task(schename)
+    return tools.success_result(None)
 
+
+def chart_get_test(request):
+    """
+    图表单元采集测试
+    :param request:
+    :return:
+    """
+    request_body = json.loads(request.body)
+    database_id = request_body['database_id']
+    sql = request_body['sql']
+
+    # 假定数据
+    # database_id = 4
+    # sql = 'SELECT count(*)@人口数@,cityName@城市名称@ from city GROUP BY cityName'
+
+    # sql查询列的名称
+    column_name_temp = sql.split('@')
+    column_name_list = []
+    execute_sql = ''
+    # 列名称和执行的sql
+    for i in range(0, len(column_name_temp)):
+        if i % 2 == 1:
+            column_name_list.append(column_name_temp[i])
+        else:
+            execute_sql += column_name_temp[i]
+    print execute_sql
+    # 更具数据库ID查询数据库配置
+    database_result = list(Conn.objects.filter(id=database_id).values())
+    # 数据库参数
+    username = database_result[0]['username']
+    database = database_result[0]['databasename']
+    password = decrypt_str(database_result[0]['password'])
+    host = database_result[0]['ip']
+    port = str(database_result[0]['port'])
+    db = MySQLdb.connect(host=host, user=username, passwd=password, db=database, port=int(port), charset='utf8')
+    cursor = db.cursor()
+    cursor.execute(execute_sql)
+    results = cursor.fetchall()
+    db.close()
+    result_list = []
+    for i in results:
+        temp_dict = {}
+        temp_dict['value'] = list(i)[1].encode('utf-8')
+        temp_dict['name'] = list(i)[0]
+        result_list.append(temp_dict)
+    return {
+        "result": True,
+        "message": u'成功',
+        "code": 0,
+        "results": result_list,
+        "column_name_list": column_name_list,
+    }

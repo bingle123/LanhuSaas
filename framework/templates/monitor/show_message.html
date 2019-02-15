@@ -163,7 +163,7 @@
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="basic.start_time"
-                                                            placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm" >
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
@@ -171,7 +171,7 @@
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="basic.end_time"
-                                                            placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                                            placeholder="结束时间点" format="HH:mm" value-format="HH:mm" >
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
@@ -258,7 +258,7 @@
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="chart.start_time"
-                                                            placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
@@ -266,7 +266,7 @@
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="chart.end_time"
-                                                            placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                                            placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
@@ -357,7 +357,7 @@
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="job.start_time"
-                                                            placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
@@ -365,7 +365,7 @@
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="job.end_time"
-                                                            placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                                            placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
@@ -449,7 +449,7 @@
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="flow.start_time"
-                                                            placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
@@ -457,7 +457,7 @@
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="flow.end_time"
-                                                            placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                                            placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
@@ -468,7 +468,7 @@
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="flow.start_time"
-                                                            placeholder="开始时间点1" format="hh:mm" value-format="hh:mm">
+                                                            placeholder="开始时间点1" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
@@ -476,7 +476,7 @@
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="flow.end_time"
-                                                            placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                                                            placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
@@ -1380,6 +1380,35 @@
                 var obj = JSON.parse(str);
 
                 console.log(obj);
+            },
+            chart_get_test(){
+                axios({
+                    url:'${SITE_URL}monitor/chart_get_test/',
+                    method:'post',
+                    data:{
+                        database_id:vm.chart.params,
+                        sql:vm.chart.gather_rule,
+                    },
+                }).then((res) => {
+                    console.log(res)
+                }).catch((res) =>{
+                    console.log(res)
+                });
+
+
+            }
+            switch_change(value){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor/change_status/',
+                    data: {
+                        flag: value.status,
+                        id: value.id,
+                        monitor_name: vm.monitor_name
+                    },
+                }).then((res) =>{
+                    if (res.data.code == 1) {alert(res.data.message)}
+                })
             },
         },
         mounted() {
