@@ -65,7 +65,7 @@ def addperdic_task():
 
 def add_unit_task(add_dicx):
     schename = add_dicx['monitor_name']
-    id=Monitor.objects.get(monitor_name=schename)
+    id=Monitor.objects.get(monitor_name=schename).id
     starthour = str(add_dicx['start_time'])[:2]
     endhour = str(add_dicx['end_time'])[:2]
     period = int(add_dicx['period'])
@@ -83,9 +83,9 @@ def add_unit_task(add_dicx):
                            task_args=info, desc=schename)
 
 def edit_unit_task(add_dicx):
-    id=Monitor.objects.get(monitor_name=schename)
     schename = add_dicx['monitor_name']
-    starthour = str(add_dicx['start_time'])[:2]
+    id=Monitor.objects.get(monitor_name=schename)
+    starthour = str(add_dicx['start_time'])[:2].id
     endhour = str(add_dicx['end_time'])[:2]
     period = add_dicx['period']
     ctime = {

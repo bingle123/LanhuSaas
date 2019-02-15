@@ -126,10 +126,10 @@ def delete_unit(request):
 
 
 def add_unit(request):
-    try:
+    # try:
         res = json.loads(request.body)
-        cilent = tools.interface_param (request)
-        user = cilent.bk_login.get_user({})
+        client = tools.interface_param (request)
+        user = client.bk_login.get_user({})
         monitor_type = res['monitor_type']
         if res['monitor_type'] == 'first':
             monitor_type = '基本单元类型'
@@ -151,9 +151,9 @@ def add_unit(request):
         Monitor.objects.create(**add_dic)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
-    except Exception as e:
-        result = tools.error_result(e)
-    return result
+    # except Exception as e:
+    #     result = tools.error_result(e)
+        return result
 
 
 def edit_unit(request):
