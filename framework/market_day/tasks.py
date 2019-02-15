@@ -104,9 +104,3 @@ def count_time(**i):
 #         else:
 #             monitor.status=1
 #         monitor.save()
-
-@task
-def send(receivers_mail,theme,send_content):
-    mail_send(theme, send_content, receivers_mail)
-    sml.objects.create(link_id=id, message_title=theme, message_content=send_content)
-    logging.error(u'消息日志保存成功')
