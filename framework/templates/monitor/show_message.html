@@ -299,7 +299,7 @@
                                 </div>
                                 <div style="padding: 0px 20%">
                                     <div style="height: 20px"></div>
-                                    <el-button type="primary" v-on:click="chart_get_test">采集测试</el-button>
+                                    <el-button type="primary">采集测试</el-button>
                                 </div>
                             </div>
                         </el-col>
@@ -1421,6 +1421,19 @@
 
 
             }
+            switch_change(value){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor/change_status/',
+                    data: {
+                        flag: value.status,
+                        id: value.id,
+                        monitor_name: vm.monitor_name
+                    },
+                }).then((res) =>{
+                    if (res.data.code == 1) {alert(res.data.message)}
+                })
+            },
         },
         mounted() {
         },

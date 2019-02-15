@@ -13,6 +13,8 @@ import base64
 import pyDes
 from django.db.models import Q
 from django.core.paginator import Paginator
+from monitor.models import *
+
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
@@ -170,7 +172,36 @@ def get_all_db_connection(request):
         return tools.error_result(str(e))
 
 
+def get_jobInstance(request):
+    monitor = Monitor.objects.filter(status=1, monitor_type='作业单元类型')
+    jion_list = []
+    dic = []
+    for x in monitor:
+        jobId = model_to_dict(x)['jion_id']
+        jion_list.append(jobId)
+    for i in jion_list:
+        try:
+            job_ins = Job.objects.filter(job_id=i)
+            for y in job_ins:
+                cilent = tools.interface_param(request)
+                id = y.instance_id
+                instance_status = cilent.job.get_job_instance_status({
+                    "bk_app_code": "mydjango1",
+                    "bk_app_secret": "99d97ec5-4864-4716-a877-455a6a8cf9ef",
+                    "bk_biz_id": 2,
+                    "job_instance_id": id,
+                })
+                # 作业状态码
+                iStatus = instance_status['data']['job_instance']['status']
+                # 作业步骤状态码
+                stepStatus = instance_status['data']['blocks'][0]['step_instances'][0]['status']
+                dic.append(iStatus)
+                dic.append(stepStatus)
 
+                print dic
+
+        except Exception as e:
+            print e
 
 
 

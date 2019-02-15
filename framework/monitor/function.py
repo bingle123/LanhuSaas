@@ -18,8 +18,6 @@ import base64
 import re
 from market_day import function
 from market_day import celery_opt as co
-from DataBaseManage.function import decrypt_str
-import pymysql
 
 
 def unit_show(request):
@@ -28,18 +26,18 @@ def unit_show(request):
         limit = res['limit']
         page = res['page']
         unit = Monitor.objects.all()
-        p = Paginator(unit, limit)  # 分页
-        page_count = p.page_range[-1]  # 总页数
-        page = p.page(page)  # 当前页数据
+        p=Paginator(unit, limit)    #分页
+        page_count = p.page_range[-1]  #总页数
+        page = p.page(page)        #当前页数据
 
-        res_list = []
+        res_list=[]
         for i in page.object_list:
-            j = model_to_dict(i)
-            j['page_count'] = page_count
+            j=model_to_dict(i)
+            j['page_count']=page_count
             j['edit_time'] = str(i.edit_time)
             j['create_time'] = str(i.create_time)
-            j['start_time'] = str(i.start_time)
-            j['end_time'] = str(i.end_time)
+            j['start_time'] = str (i.start_time)
+            j['end_time'] = str (i.end_time)
             res_list.append(j)
         param = {
             'bk_username': 'admin',
@@ -48,19 +46,19 @@ def unit_show(request):
         param1 = {
             "bk_biz_id": 2,
         }
-        client = tools.interface_param(request)
+        client = tools.interface_param (request)
         res = client.job.get_job_list(param)
         res1 = client.sops.get_template_list(param1)
         if res.get('result'):
             job_list = res.get('data')
         else:
             job_list = []
-            logger.error(u"请求作业模板失败：%s" % res.get('message'))
-        if res1.get('result'):
-            flow_list = res1.get('data')
+            logger.error (u"请求作业模板失败：%s" % res.get ('message'))
+        if res1.get ('result'):
+            flow_list = res1.get ('data')
         else:
             flow_list = []
-            logger.error(u"请求流程模板失败：%s" % res.get('message'))
+            logger.error (u"请求流程模板失败：%s" % res.get ('message'))
         job = []
         flow = []
         for i in flow_list:
@@ -87,34 +85,35 @@ def unit_show(request):
 
 
 def select_unit(request):
+
     res = json.loads(request.body)
     res_list = []
     res1 = "{}".format(res['data'])
     limit = res['limit']
     page = res['page']
-    unit = Monitor.objects.filter(
-        Q(monitor_type__icontains=res1) | Q(monitor_name__icontains=res1) | Q(editor__icontains=res1))
-    p = Paginator(unit, limit)  # 分页
+    unit =  Monitor.objects.filter(Q(monitor_type__icontains = res1)|Q(monitor_name__icontains = res1)| Q(editor__icontains = res1))
+    p = Paginator (unit, limit)  # 分页
     page_count = p.page_range[-1]  # 总页数
-    page = p.page(page)  # 当前页数据
+    page = p.page (page)  # 当前页数据
     for i in page:
-        j = model_to_dict(i)
+        j = model_to_dict (i)
         j['page_count'] = page_count
-        j['edit_time'] = str(i.edit_time)
-        j['create_time'] = str(i.create_time)
-        j['start_time'] = str(i.start_time)
-        j['end_time'] = str(i.end_time)
-        res_list.append(j)
+        j['edit_time'] = str (i.edit_time)
+        j['create_time'] = str (i.create_time)
+        j['start_time'] = str (i.start_time)
+        j['end_time'] = str (i.end_time)
+        res_list.append (j)
     return res_list
     # except Exception as e:
     #     return None
 
 
 def delete_unit(request):
+
     try:
         res = json.loads(request.body)
         unit_id = res['unit_id']
-        schename = res['monitor_name']
+        schename=res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
         co.delete_task(schename)
         if Scene.objects.filter(item_id=unit_id).exists():
@@ -128,7 +127,7 @@ def delete_unit(request):
 def add_unit(request):
     try:
         res = json.loads(request.body)
-        cilent = tools.interface_param(request)
+        cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
         monitor_type = res['monitor_type']
         if res['monitor_type'] == 'first':
@@ -158,8 +157,8 @@ def add_unit(request):
 
 def edit_unit(request):
     try:
-        res = json.loads(request.body)
-        cilent = tools.interface_param(request)
+        res = json.loads (request.body)
+        cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
         monitor_type = res['monitor_type']
         print(monitor_type)
@@ -238,19 +237,18 @@ def job_test(request):
             logger.error(u"请求作业模板失败：%s" % job.get('message'))
         res = tools.success_result(job_list)
     except Exception as e:
-        res = tools.error_result(e)
+        res = tools.error_result (e)
     return res
 
-
 def change_unit_status(req):
-    res = json.loads(req.body)
-    schename = res['monitor_name']
-    flag = res['flag']
-    unit_id = res['id']
-    mon = Monitor.objects.get(id=unit_id)
-    mon.status = flag
+    res=json.loads(req.body)
+    schename=res['monitor_name']
+    flag=res['flag']
+    unit_id=res['id']
+    mon=Monitor.objects.get(id=unit_id)
+    mon.status=flag
     mon.save()
-    if flag == 0:
+    if flag==0:
         co.enable_task(schename)
     else:
         co.disable_task(schename)
