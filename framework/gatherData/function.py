@@ -40,14 +40,6 @@ def gather_data(info):
         sql_field.append(field[1])
     # 生成采集使用的sql
     gather_sql = info['gather_rule'].replace(rule_fields_str, ','.join(sql_field))
-    # 采集获取到的key-value
-    data_set = []
-    for field in gather_field:
-        temp = dict()
-        temp['key'] = field.strip()
-        temp['value'] = list()
-        temp['value_str'] = ''
-        data_set.append(temp)
     # 采集数据库中的数据
     if "sql" == gather_type:
         conn_info = Conn.objects.filter(id=info['params']).get()
@@ -66,15 +58,27 @@ def gather_data(info):
             return gather_status
         # 获取当前采集时间
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        # 获取当前采集表中的数据是否为空，否则可能需要将某监控项的采集数据迁移到历史采集表中
+        length = TDGatherData.objects.count()
         if 0 != len(result):
-            # 获取当前采集表中的数据是否为空，否则将采集表中的所有数据迁移到历史采集表中
-            length = TDGatherData.objects.count()
-            # 开始迁移表数据
-            if length != 0:
-                migrate_data = TDGatherData.objects.all()
-                for data in migrate_data:
-                    TDGatherHistory(**model_to_dict(data)).save()
-                TDGatherData.objects.all().delete()
+            # 采集获取到的key-value
+            data_set = list()
+            for field in gather_field:
+                temp = dict()
+                temp['key'] = field.strip()
+                temp['value'] = list()
+                temp['value_str'] = ''
+                data_set.append(temp)
+                # 数据采集表存在数据的情况
+                if length != 0:
+                    # 如果采集表中存在监控项id与当前采集的监控项id对应相同的数据，则将采集表中的此部分数据移至历史记录
+                    length2 = TDGatherData.objects.filter(item_id=info['id']).count()
+                    if 0 != length2:
+                        # 开始迁移表数据
+                        migrate_data = TDGatherData.objects.filter(item_id=info['id']).all()
+                        for data in migrate_data:
+                            TDGatherHistory(**model_to_dict(data)).save()
+                        TDGatherData.objects.filter(item_id=info['id']).all().delete()
             # 将结果集整理为key-value形式的采集数据
             for unit in result:
                 count = 0
@@ -86,7 +90,8 @@ def gather_data(info):
             # 将采集的数据保存到td_gather_data中
             for item in data_set:
                 TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value_str']).save()
-            rule_check()
+            # 告警规则检查
+            rule_check(info['id'])
         else:
             gather_status = 'empty'
     elif "interface" == gather_type:
