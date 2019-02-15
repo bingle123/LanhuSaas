@@ -116,19 +116,17 @@ def select_unit(request):
 
 
 def delete_unit(request):
-
     try:
         res = json.loads(request.body)
         unit_id = res['unit_id']
-        schename=res['monitor_name']
+        monitor_name=res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
-        co.delete_task(schename)
+        co.delete_task(monitor_name)
         if Scene.objects.filter(item_id=unit_id).exists():
             Scene.objects.filter(item_id=unit_id).delete()
-        return None
     except Exception as e:
         res1 = tools.error_result(e)
-        return res1
+    return res1
 
 
 def add_unit(request):
@@ -143,14 +141,15 @@ def add_unit(request):
         monitor_type = '图表单元类型'
     if res['monitor_type'] == 'third':
         monitor_type = '作业单元类型'
+        add_dic['jion_id'] = int (add_dic['gather_rule']['id'])
+        add_dic['gather_rule'] = add_dic['gather_rule']['name']
     if res['monitor_type'] == 'fourth':
         monitor_type = '流程元类型'
+        add_dic['jion_id'] = int (add_dic['gather_rule']['id'])
+        add_dic['gather_rule'] = add_dic['gather_rule']['name']
     add_dic = res['data']
     add_dic['monitor_name'] = res['monitor_name']
     add_dic['monitor_type'] = monitor_type
-    print add_dic['gather_rule']
-    add_dic['jion_id'] = int(add_dic['gather_rule']['id'])
-    add_dic['gather_rule'] = add_dic['gather_rule']['name']
     add_dic['status'] = 0
     add_dic['creator'] = user['data']['bk_username']
     add_dic['editor'] = user['data']['bk_username']

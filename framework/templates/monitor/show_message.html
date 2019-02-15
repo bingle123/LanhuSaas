@@ -889,12 +889,12 @@
                             type: 'success',
                             message: '删除成功!',
                         },
-
                         axios({
                             method: 'post',
                             url: '${SITE_URL}monitor/delete/',
                             data: {
                                 unit_id: row.id,
+                                monitor_name:row.monitor_name,
                                 monitor_type: row.monitor_type,
                             }
                         }).then((res) => {
