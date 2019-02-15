@@ -53,3 +53,7 @@ def job_test(request):
 def test1(request):
     res = function.ttt(request)
     return render_json(res)
+
+def change_status(req):
+    res=function.change_unit_status(req)
+    return render_json(res)
