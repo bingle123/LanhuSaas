@@ -71,9 +71,9 @@ def crawl_task(**i):
             pass
         else:
             # print send_result
-            send_content = change_to_html(send_result)
             receivers_mail = ['761494073@qq.com', 'liaomingtao@zork.com.cn']
             theme = crawl_name + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + u'的爬虫信息'
+            send_content = change_to_html(send_result)
             mail_send(theme, send_content, receivers_mail)
             sml.objects.create(link_id=id, message_title=theme, message_content=send_content)
             logging.error(u'消息日志保存成功')
@@ -104,3 +104,9 @@ def count_time(**i):
 #         else:
 #             monitor.status=1
 #         monitor.save()
+
+@task
+def send(receivers_mail,theme,send_content):
+    mail_send(theme, send_content, receivers_mail)
+    sml.objects.create(link_id=id, message_title=theme, message_content=send_content)
+    logging.error(u'消息日志保存成功')
