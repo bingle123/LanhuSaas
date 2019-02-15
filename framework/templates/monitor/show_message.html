@@ -343,7 +343,7 @@
                                               placeholder="上证指数:3000  深证指数:3000"></el-input>
                                 </el-form-item>
                                 <el-form-item label="作业模板" prop="gather_params">
-                                    <el-select v-model="job.jion_id" placeholder="请选择作业模板">
+                                    <el-select v-model="job.gather_rule" placeholder="请选择作业模板">
                                         <el-option v-for="i in job2" :label="i.name" :value="i.id"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -429,7 +429,7 @@
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="流程模板" prop="gather_params">
-                                    <el-select v-model="flow.gather_params" placeholder="请选择模板">
+                                    <el-select v-model="flow.gather_rule" placeholder="请选择模板">
                                         <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -441,10 +441,10 @@
                                 </el-form-item>
                                    <el-form-item label="节点">
                                         <el-select v-model="flow.gather_params" placeholder="请选择节点">
-                                          <el-option v-for="i in flow2" :label="i.flow_name" :value="i.flow_name"></el-option>
+                                          <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id"></el-option>
                                         </el-select>
                                       </el-form-item>
-                                <div v-if="flow.gather_params === 'new20190114155906'">
+                                <div v-if="flow.gather_params.id === '1'">
                                 <el-form-item label="节点周期:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
@@ -1194,7 +1194,7 @@
                     if (res.data.results.length > 0) {
                         for (let i = 0; i < res.data.results.length; i++) {
                             let j = {};
-                            j.value = res.data.results[i].id+','+ res.data.results[i].connname;
+                            j.value = res.data.results[i].id;
                             j.label = res.data.results[i].connname;
                             json.push(j);
                         };
