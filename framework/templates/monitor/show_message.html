@@ -190,12 +190,11 @@
                             </div>
                             <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;">
                                 <div style="height: 60px"></div>
-                                <h3>上证指数:3000</h3>
-                                <h3>深证指数:3000</h3>
+                                    <textarea id="">{{basic.contents}}</textarea>
                             </div>
                             <div style="padding: 0px 20%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary">采集测试</el-button>
+                                <el-button type="primary" @click="test1()">采集测试</el-button>
                             </div>
                         </div></el-col>
                     </el-row>
@@ -824,6 +823,30 @@
             },
             myChart: null,
             chart_content:'',
+            chartData:[
+                {
+                    'name':'周一',
+                    'value':100
+                },{
+                    'name':'周二',
+                    'value':122
+                },{
+                    'name':'周三',
+                    'value':150
+                },{
+                    'name':'周四',
+                    'value':154
+                },{
+                    'name':'周五',
+                    'value':133
+                },{
+                    'name':'周六',
+                    'value':144
+                },{
+                    'name':'周日',
+                    'value':200
+                },
+            ],
         },
         methods: {
             test1() {
@@ -831,11 +854,19 @@
                     method: 'post',
                     url: '${SITE_URL}monitor/test/',
                     data: {
-                        server_url: vm.server_url,
-                        gather_rule: vm.basic.gather_rule
+                        server_url: vm.server_url
                     },
                 }).then(function (res) {
-                    console.log(res.data.message)
+                    var temp1 = vm.basic.contents.split("#")
+                    var temp2=[];
+                    for(var i=1;i<temp1.length;i=i+2){
+                        temp2.push(temp1[i])
+                    }
+                    console.log(temp2)
+                    for(i=0;i<temp2.length;i++){
+                        str = '#' + temp2[i] + '#'
+                        vm.basic.contents = vm.basic.contents.replace(str,res.data.message[0][temp2[i]])
+                    }
                 })
             },
             pefFrom() {
@@ -1215,19 +1246,6 @@
                 }
                 if (vm.chart.gather_params == "饼图") {
                     this.myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
-                    let seriesData = [{
-                        name: '已执行',
-                        value: 30
-                    }, {
-                        name: '正执行',
-                        value: 11
-                    }, {
-                        name: '执行出错',
-                        value: 26
-                    }, {
-                        name: '未执行',
-                        value: 33
-                    }];
                     let legendData = ['已执行', '正执行', '执行出错', '未执行'];
                     option = {
                         tooltip: {
@@ -1247,7 +1265,7 @@
                                 type: 'pie',
                                 radius: '50%',
                                 center: ['50%', '30%'],
-                                data: seriesData,
+                                data: vm.chartData,
                                 itemStyle: {
                                     emphasis: {
                                         shadowBlur: 10,
@@ -1279,6 +1297,12 @@
                 if (vm.chart.gather_params == "柱状图") {
 
                     this.myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
+                    let barX=[];
+                    let barCount=[];
+                    for(var i=0;i<vm.chartData.length;i++){
+                        this.$set(barX,i,vm.chartData[i].name);
+                        this.$set(barCount,i,vm.chartData[i].value);
+                    }
                     option = {
                         tooltip: {
                             trigger: 'axis',
@@ -1288,7 +1312,7 @@
                         },
                         barWidth: 15,
                         legend: {
-                            data: ['已执行', '正执行', '执行出错', '未执行'],
+                            data: ['已执行'],
                             bottom: 10,
                             right: 30
                         },
@@ -1300,10 +1324,7 @@
                         },
                         xAxis: {
                             type: 'category',
-                            data: ['6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00',
-                                '13:00', '14:00', '15:00', '16:00', '17:00', '18:00',
-                                '19:00', '20:00', '21:00', '22:00', '23:00', '24:00',
-                                '1:00', '2:00', '3:00', '4:00', '5:00', '6:00']
+                            data: barX
                         },
                         yAxis: {
                             type: 'value'
@@ -1313,61 +1334,33 @@
                                 name: '已执行',
                                 type: 'bar',
                                 stack: 'data',
-                                data: [0, 2, 4, 6, 8,
-                                    10, 0, 2, 4, 6,
-                                    8, 10, 0, 2, 4,
-                                    6, 8, 10, 0, 2,
-                                    4, 6, 8, 10, 0]
+                                data: barCount
                             },
-                            {
-                                name: '正执行',
-                                type: 'bar',
-                                stack: 'data',
-                                data: [2, 1, 2, 6, 4,
-                                    2, 1, 2, 6, 4,
-                                    2, 1, 2, 6, 4,
-                                    2, 1, 2, 6, 4,
-                                    2, 1, 2, 6, 4]
-                            },
-                            {
-                                name: '执行出错',
-                                type: 'bar',
-                                stack: 'data',
-                                data: [2, 4, 6, 10, 12,
-                                    2, 4, 6, 10, 12,
-                                    2, 4, 6, 10, 12,
-                                    2, 4, 6, 10, 12,
-                                    2, 4, 6, 10, 12]
-                            },
-                            {
-                                name: '未执行',
-                                type: 'bar',
-                                stack: 'data',
-                                data: [6, 2, 8, 4, 10,
-                                    6, 2, 8, 4, 10,
-                                    6, 2, 8, 4, 10,
-                                    6, 2, 8, 4, 10,
-                                    6, 2, 8, 4, 10]
-                            }
                         ]
                     };
                     this.myChart.setOption(option);
                 }
                 if (vm.chart.gather_params == "折线图") {
                     this.myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
+                    let lineX = [];
+                    let lineCount = [];
+                    for(var i=0;i<vm.chartData.length;i++){
+                        this.$set(lineX,i,vm.chartData[i].name);
+                        this.$set(lineCount,i,vm.chartData[i].value);
+                    }
                     option = {
                         tooltip: {
                             trigger: 'axis'
                         },
                         legend: {
-                            data: ['意向', '预购', '成交']
+                            data: ['成交']
                         },
                         calculable: true,
                         xAxis: [
                             {
                                 type: 'category',
                                 boundaryGap: false,
-                                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                                data: lineX
                             }
                         ],
                         yAxis: [
@@ -1381,29 +1374,19 @@
                                 type: 'line',
                                 smooth: true,
                                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                                data: [10, 12, 21, 54, 260, 830, 710]
+                                data: lineCount
                             },
-                            {
-                                name: '预购',
-                                type: 'line',
-                                smooth: true,
-                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                                data: [30, 182, 434, 791, 390, 30, 10]
-                            },
-                            {
-                                name: '意向',
-                                type: 'line',
-                                smooth: true,
-                                itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                                data: [1320, 1132, 601, 234, 120, 90, 20]
-                            }
                         ]
                     };
                     this.myChart.setOption(option);
                 }
             },
             show_content(){
-                vm.chart_content=vm.chart.contents;
+                let content=vm.chart.contents;
+                var str = '{"name":"jack"}';
+                var obj = JSON.parse(str);
+
+                console.log(obj);
             },
             chart_get_test(){
                 axios({
