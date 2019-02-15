@@ -240,4 +240,19 @@ def job_test(request):
         res = tools.error_result (e)
     return res
 
+def change_unit_status(req):
+    res=json.loads(req.body)
+    schename=res['monitor_name']
+    flag=res['flag']
+    unit_id=res['id']
+    mon=Monitor.objects.get(id=unit_id)
+    mon.status=flag
+    mon.save()
+    if flag==0:
+        co.enable_task(schename)
+    else:
+        co.disable_task(schename)
+    return tools.success_result(None)
+
+
 
