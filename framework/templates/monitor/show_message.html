@@ -299,7 +299,7 @@
                                 </div>
                                 <div style="padding: 0px 20%">
                                     <div style="height: 20px"></div>
-                                    <el-button type="primary">采集测试</el-button>
+                                    <el-button type="primary" v-on:click="chart_get_test">采集测试</el-button>
                                 </div>
                             </div>
                         </el-col>
@@ -1417,10 +1417,8 @@
                     console.log(res)
                 }).catch((res) =>{
                     console.log(res)
-                });
-
-
-            }
+                })
+            },
             switch_change(value){
                 axios({
                     method: 'post',

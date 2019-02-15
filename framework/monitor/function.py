@@ -18,6 +18,7 @@ import base64
 import re
 from market_day import function
 from market_day import celery_opt as co
+from DataBaseManage.function import decrypt_str
 
 
 def unit_show(request):
@@ -237,8 +238,9 @@ def job_test(request):
             logger.error(u"请求作业模板失败：%s" % job.get('message'))
         res = tools.success_result(job_list)
     except Exception as e:
-        res = tools.error_result (e)
+        res = tools.error_result(e)
     return res
+
 
 def change_unit_status(req):
     res=json.loads(req.body)
