@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from DataBaseManage import *
+from DataBaseManage.models import *
 
 
 class TbAlertRule(models.Model):
@@ -23,8 +23,8 @@ class TbAlertRule(models.Model):
 
 # 告警消息订阅表
 class TlAlertUser(models.Model):
-    rule_id=models.ForeignKey(TbAlertRule) #规则外键
-    user_id=models.ForeignKey('jobManagement.Localuser') #用户外键
+    rule_id=models.IntegerField(verbose_name=u'规则外键')
+    user_id=models.IntegerField(verbose_name=u'用户外键') #用户外键
 
     class Meta:
         db_table='tl_alert_user'
