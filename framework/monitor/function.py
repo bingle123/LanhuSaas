@@ -246,6 +246,7 @@ def job_test(request):
         res = tools.error_result (e)
     return res
 
+
 def change_unit_status(req):
     try:
         res=json.loads(req.body)
@@ -263,6 +264,5 @@ def change_unit_status(req):
     except Exception as e:
         res = tools.error_result(e)
     return res
-
 
 

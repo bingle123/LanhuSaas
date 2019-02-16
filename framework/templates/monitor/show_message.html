@@ -429,8 +429,8 @@
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="流程模板" prop="gather_params">
-                                    <el-select v-model="flow.gather_rule" placeholder="请选择模板">
-                                        <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id"></el-option>
+                                    <el-select v-model="flow.gather_rule" placeholder="请选择模板" @change="flow_change"	>
+                                        <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id.id"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="参数1" style="width: 96%">
@@ -441,7 +441,7 @@
                                 </el-form-item>
                                    <el-form-item label="节点">
                                         <el-select v-model="flow.gather_params" placeholder="请选择节点">
-                                          <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id"></el-option>
+                                          <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id.id"></el-option>
                                         </el-select>
                                       </el-form-item>
                                 <div v-if="flow.gather_params.id === '1'">
@@ -1059,6 +1059,12 @@
                         alert('保存失败！')
                     });
                 }
+            },
+            flow_change(value){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor/add/',
+                })
             },
             edit3(row) {
                 setTimeout(
