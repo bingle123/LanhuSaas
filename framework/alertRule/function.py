@@ -6,9 +6,11 @@ from DataBaseManage.models import *
 from DataBaseManage.function import *
 import MySQLdb
 from gatherData.models import *
-
+from jobManagement.models import Localuser
+from system_config.function import *
 
 def rule_check(monitor_id):
+    print monitor_id
     # 告警信息
     alert_infos = list()
     # 告警标志位
@@ -54,5 +56,19 @@ def rule_check(monitor_id):
                     alert_infos.append(alert_info)
     # 如果搜集到了告警信息，将alert_infos对象传递给celery并通知处理告警
     if 0 != len(alert_infos):
-        pass
+        send_alert(**alert_info)
     return "ok"
+
+def send_alert(**msg):
+    alert_title=msg['alert_title']
+    alert_content=msg['alert_content']
+    staff_users_ids=msg['staff_user']
+    msg.update({'persons': msg.pop("staff_user")})
+    print msg
+    receivers=[]
+    for id in staff_users_ids:
+        eml=Localuser.objects.get(id=id).email
+        receivers.append(eml)
+    print receivers
+    mail_send(alert_title, alert_content, receivers)
+    TdAlertLog.objects.create(**msg)

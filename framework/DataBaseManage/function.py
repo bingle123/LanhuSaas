@@ -13,6 +13,8 @@ import base64
 import pyDes
 from django.db.models import Q
 from django.core.paginator import Paginator
+from monitor.models import *
+
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
@@ -62,6 +64,8 @@ def selecthor(request):
 
 # 查询所有
 def getconn_all(request):
+
+
     res = json.loads(request.body)
     page = res['page']
     limit = res['limit']
@@ -169,8 +173,54 @@ def get_all_db_connection(request):
     except Exception as e:
         return tools.error_result(str(e))
 
+#获取作业状态以及作业步骤状态
+def get_jobInstance(request):
+    monitor = Monitor.objects.filter(status=0, monitor_type='作业单元类型')
+    jion_list = []
+    dic = []
+    for x in monitor:
+        jobId = model_to_dict(x)['jion_id']
+        jion_list.append(jobId)
+    for i in jion_list:
+        try:
+            job_ins = Job.objects.filter(job_id=i)
+            for y in job_ins:
+                cilent = tools.interface_param(request)
+                id = y.instance_id
+                instance_status = cilent.job.get_job_instance_status({
+                    "bk_app_code": "mydjango1",
+                    "bk_app_secret": "99d97ec5-4864-4716-a877-455a6a8cf9ef",
+                    "bk_biz_id": 2,
+                    "job_instance_id": id,
+                })
+                # 作业状态码
+                iStatus = instance_status['data']['job_instance']['status']
+                # 作业步骤状态码
+                stepStatus = instance_status['data']['blocks'][0]['step_instances'][0]['status']
+                dic.append(iStatus)
+                dic.append(stepStatus)
+            return dic
+        except Exception as e:
+            return e
 
 
-
+#获取流程节点状态
+def get_flowStatus(request):
+    flow = Monitor.objects.filter(status=0, monitor_type='流程元类型')
+    flow_list = []
+    dic = []
+    for x in flow:
+        flow_list.append(model_to_dict(x)['jion_id'])
+    for y in flow_list:
+        flows = Flow.objects.filter(flow_id=y)
+        for i in flows:
+            cilent = tools.interface_param(request)
+            res = cilent.sops.get_task_status({
+                "bk_app_code": "mydjango1",
+                "bk_app_secret": "99d97ec5-4864-4716-a877-455a6a8cf9ef",
+                "bk_biz_id": "2",
+                "task_id": y
+            })
+            print res['data']['state']
 
 
