@@ -64,6 +64,8 @@ def selecthor(request):
 
 # 查询所有
 def getconn_all(request):
+
+
     res = json.loads(request.body)
     page = res['page']
     limit = res['limit']
@@ -171,9 +173,9 @@ def get_all_db_connection(request):
     except Exception as e:
         return tools.error_result(str(e))
 
-
+#获取作业状态以及作业步骤状态
 def get_jobInstance(request):
-    monitor = Monitor.objects.filter(status=1, monitor_type='作业单元类型')
+    monitor = Monitor.objects.filter(status=0, monitor_type='作业单元类型')
     jion_list = []
     dic = []
     for x in monitor:
@@ -197,11 +199,28 @@ def get_jobInstance(request):
                 stepStatus = instance_status['data']['blocks'][0]['step_instances'][0]['status']
                 dic.append(iStatus)
                 dic.append(stepStatus)
-
-                print dic
-
+            return dic
         except Exception as e:
-            print e
+            return e
 
+
+#获取流程节点状态
+def get_flowStatus(request):
+    flow = Monitor.objects.filter(status=0, monitor_type='流程元类型')
+    flow_list = []
+    dic = []
+    for x in flow:
+        flow_list.append(model_to_dict(x)['jion_id'])
+    for y in flow_list:
+        flows = Flow.objects.filter(flow_id=y)
+        for i in flows:
+            cilent = tools.interface_param(request)
+            res = cilent.sops.get_task_status({
+                "bk_app_code": "mydjango1",
+                "bk_app_secret": "99d97ec5-4864-4716-a877-455a6a8cf9ef",
+                "bk_biz_id": "2",
+                "task_id": y
+            })
+            print res['data']['state']
 
 

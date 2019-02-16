@@ -29,3 +29,22 @@ ERROR [2019-02-13 10:23:30] H:\PyCharm 2018.3.2\LanhuSaas\framework\monitor\func
 ERROR [2019-02-13 10:24:51] H:\PyCharm 2018.3.2\LanhuSaas\framework\monitor\function.py 49 unit_show 6852 13656 
  	 璇锋眰浣滀笟妯℃澘澶辫触锛歍he user does not have permission to use this Business 
 
+ERROR [2019-02-14 15:52:32] E:\LanhuSaas\framework\account\http.py 50 _http_request 17984 1124 
+ 	 login http request error! type: GET, url: http://paas.bk.com/login/accounts/is_login/, data: {'bk_token': 'O8U30EeGC2TqJ6_9Ehhw7K80RSui7Z9A5pKVqUA-Ivo'} 
+Traceback (most recent call last):
+  File "E:\LanhuSaas\framework\account\http.py", line 38, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data)
+  File "D:\Python27\lib\site-packages\requests\api.py", line 67, in get
+    return request('get', url, params=params, **kwargs)
+  File "D:\Python27\lib\site-packages\requests\api.py", line 53, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "D:\Python27\lib\site-packages\requests\sessions.py", line 468, in request
+    resp = self.send(prep, **send_kwargs)
+  File "D:\Python27\lib\site-packages\requests\sessions.py", line 576, in send
+    r = adapter.send(request, **kwargs)
+  File "D:\Python27\lib\site-packages\requests\adapters.py", line 437, in send
+    raise ConnectionError(e, request=request)
+ConnectionError: HTTPConnectionPool(host='paas.bk.com', port=80): Max retries exceeded with url: /login/accounts/is_login/?bk_token=O8U30EeGC2TqJ6_9Ehhw7K80RSui7Z9A5pKVqUA-Ivo (Caused by NewConnectionError('<requests.packages.urllib3.connection.HTTPConnection object at 0x0000000005713B70>: Failed to establish a new connection: [Errno 10060] ',))
+INFO [2019-02-14 15:52:32] E:\LanhuSaas\framework\account\accounts.py 91 verify_bk_login 17984 1124 
+ 	 验证用户登录token无效： 
+

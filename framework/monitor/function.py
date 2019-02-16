@@ -6,7 +6,7 @@ import math
 from models import *
 from monitorScene.models import Scene
 from DataBaseManage.models import Conn
-from DataBaseManage import function
+from DataBaseManage import function as f
 import tools
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
@@ -18,6 +18,7 @@ import base64
 import re
 from market_day import function
 from market_day import celery_opt as co
+from DataBaseManage.function import decrypt_str
 
 
 def unit_show(request):
@@ -69,7 +70,6 @@ def unit_show(request):
                     'id': i['id']
                 }
             }
-            print dic2
             flow.append(dic2)
         for i in job_list:
             dic1 = {
@@ -124,6 +124,7 @@ def delete_unit(request):
         co.delete_task(monitor_name)
         if Scene.objects.filter(item_id=unit_id).exists():
             Scene.objects.filter(item_id=unit_id).delete()
+        res1 = tools.success_result(None)
     except Exception as e:
         res1 = tools.error_result(e)
     return res1
@@ -154,7 +155,7 @@ def add_unit(request):
     add_dic['creator'] = user['data']['bk_username']
     add_dic['editor'] = user['data']['bk_username']
     Monitor.objects.create(**add_dic)
-    # function.add_unit_task(add_dicx=add_dic)
+    function.add_unit_task(add_dicx=add_dic)
     result = tools.success_result(None)
     # except Exception as e:
     #     result = tools.error_result(e)
@@ -192,10 +193,12 @@ def edit_unit(request):
 
 def test(request):
     res = json.loads(request.body)
-    gather_rule = res['gather_rule']
+    result = []
+    gather_rule = "select data_key,data_value from td_gather_data"
     server_url = res['server_url']
-    sql = Conn.objects.get(id=server_url)
-    password = function.decrypt_str(sql.password)
+    tmp = server_url.split(",")
+    sql = Conn.objects.get(id=tmp[0])
+    password = f.decrypt_str(sql.password)
     if sql.type == 'MySQL' or sql.type == 'Oracle':
         db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))
     if sql.type == 'SQL Server':
@@ -203,6 +206,13 @@ def test(request):
     cursor = db.cursor()
     cursor.execute(gather_rule)
     results = cursor.fetchall()
+    dic = {}
+    for i in results:
+        dic1 = {
+            i[0]:i[1]
+        }
+        dic =  dict( dic, **dic1 )
+    result.append(dic)
     db.close()
     return results
 
@@ -243,7 +253,7 @@ def job_test(request):
             logger.error(u"请求作业模板失败：%s" % job.get('message'))
         res = tools.success_result(job_list)
     except Exception as e:
-        res = tools.error_result (e)
+        res = tools.error_result(e)
     return res
 
 
@@ -266,3 +276,54 @@ def change_unit_status(req):
     return res
 
 
+def chart_get_test(request):
+    """
+    图表单元采集测试
+    :param request:
+    :return:
+    """
+    request_body = json.loads(request.body)
+    database_id = request_body['database_id']
+    sql = request_body['sql']
+
+    # 假定数据
+    # database_id = 4
+    # sql = 'SELECT count(*)@人口数@,cityName@城市名称@ from city GROUP BY cityName'
+
+    # sql查询列的名称
+    column_name_temp = sql.split('@')
+    column_name_list = []
+    execute_sql = ''
+    # 列名称和执行的sql
+    for i in range(0, len(column_name_temp)):
+        if i % 2 == 1:
+            column_name_list.append(column_name_temp[i])
+        else:
+            execute_sql += column_name_temp[i]
+    print execute_sql
+    # 更具数据库ID查询数据库配置
+    database_result = list(Conn.objects.filter(id=database_id).values())
+    # 数据库参数
+    username = database_result[0]['username']
+    database = database_result[0]['databasename']
+    password = decrypt_str(database_result[0]['password'])
+    host = database_result[0]['ip']
+    port = str(database_result[0]['port'])
+    db = MySQLdb.connect(host=host, user=username, passwd=password, db=database, port=int(port), charset='utf8')
+    cursor = db.cursor()
+    cursor.execute(execute_sql)
+    results = cursor.fetchall()
+    db.close()
+    result_list = []
+    for i in results:
+        temp_dict = {}
+        temp_dict['value'] = list(i)[1].encode('utf-8')
+        temp_dict['name'] = list(i)[0]
+        result_list.append(temp_dict)
+    return {
+        "result": True,
+        "message": u'成功',
+        "code": 0,
+        "results": result_list,
+        "column_name_list": column_name_list,
+    }
