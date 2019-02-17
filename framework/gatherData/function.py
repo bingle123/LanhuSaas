@@ -14,6 +14,19 @@ from account.models import *
 from blueking.component.shortcuts import *
 
 
+# -------------------- 采集测试规则设定------------------------
+# 1. 针对于数据库的数据采集：
+# 采集规则的设置类似于SQL语法，但是在字段域有所不同：如@cp=china_point@表示保存在采集表中的字段名称为cp，
+# 实际进行目标数据库表采集的字段是china_point
+# 2. 针对于接口的数据采集：
+# $当前JSON的根路径定义在FROM字段后，可自定义名称，如FROM $代表使用$符号代表根路径。.代表JSON下一层属性名称，
+# 如@email.capatity@代表取JSON中所有email属性下的capacity属性下的信息，
+# @$.user_name@代表取JSON中第一层属性user_name的所有信息
+# 3. 针对于文件的数据采集：
+# 待定~
+# --------------------------------------------------------------
+
+
 # 采集测试参数初始化方法
 def gather_test_init():
     info = dict()
@@ -32,8 +45,8 @@ def gather_test_init():
     info['params'] = 'http://localhost:8989,user=root$password=123'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'echo "1234"'
-    # 接口测试用采集规则：'SELECT @cty=city@,@cap=email.capacity@ FROM test_gather_data'
-    info['gather_rule'] = 'SELECT @cty=city@,@cap=email.capacity@ FROM test_gather_data'
+    # 接口测试用采集规则：'SELECT @cty=city@,@cap=email.capacity@ FROM $'
+    info['gather_rule'] = 'SELECT @un=$.username@,@cap=email.capacity@ FROM $'
     # ------------------------------------------------------------------------------------
     return info
 
@@ -45,8 +58,11 @@ def gather_param_parse(info):
     # 字段索引
     field_start = 7
     field_end = info['gather_rule'].find('FROM') - 1
+    set_start = info['gather_rule'].find('FROM') + 5
     # 采集目标具体字段
     gather_params['target_field'] = list()
+    # 采集目标根路径名称
+    gather_params['target_root'] = info['gather_rule'][set_start:]
     # 采集表存储的键名
     gather_params['gather_field'] = list()
     # 采集所需的一些额外参数
@@ -113,8 +129,11 @@ def recursion_json_dict(json_dict, target_field, data_set, json_path):
     if isinstance(json_dict, dict):
         # 遍历，筛选，并将结果集整理为key-value形式的采集数据
         for key, value in json_dict.items():
+            # 如果当前遍历的还是一个字典，递归遍历该字典
             if isinstance(value, dict):
+                # '%s.%s' % (json_path, key)使用.拼接当前key与JSON上层JSON路径，获得当前JSON路径
                 recursion_json_dict(value, target_field, data_set, '%s.%s' % (json_path, key))
+            # 如果当期遍历的是一个数组，遍历当前数组，然后递归数组中的字典
             elif isinstance(value, list):
                 for v in value:
                     recursion_json_dict(v, target_field, data_set, '%s.%s' % (json_path, key))
@@ -123,19 +142,24 @@ def recursion_json_dict(json_dict, target_field, data_set, json_path):
                 # print "PATH: %s" % json_path
                 count = 0
                 for field in target_field:
+                    # 获取需要采集的字段名称single_key
                     index = field.rfind('.')
                     if -1 != index:
                         single_key = field[index + 1:]
                     else:
                         single_key = field
                     # print 'FIELD: %s, SINGLE_KEY: %s, KEY: %s, JSON_PATH: %s' % (field, single_key, key, json_path)
+                    # 判断当前遍历的key是否是需要采集的字段
                     if single_key == key:
+                        # 判断当前的JSON路径是否符合需要采集的字段的JSON路径
                         if str(json_path).endswith(field):
+                            # 保存当前JSON节点信息
                             t = data_set[count]
                             t['value'].append(str(value))
                             t['value_str'] = ','.join(t['value'])
                     count += 1
                 # print 'PATH: %s' % json_path
+                # 遍历完当前JSON节点后，回退到上一层节点继续遍历
                 index1 = json_path.rfind('.')
                 json_path = json_path[0:index1]
 
@@ -207,8 +231,9 @@ def gather_data(info):
             # 历史采集数据迁移
             gather_data_migrate(info['id'])
             # 遍历，筛选，并将结果集整理为key-value形式的采集数据
-            recursion_json_dict(json_dict, gather_params['target_field'], data_set, '$')
-            # print data_set
+            recursion_json_dict(json_dict, gather_params['target_field'], data_set, gather_params['target_root'])
+            # print 'ROOT: %s' % gather_params['target_root']
+            print data_set
             # 将采集的数据保存到td_gather_data中
             for item in data_set:
                 TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value_str']).save()
