@@ -208,8 +208,7 @@ def gather_data(info):
             gather_data_migrate(info['id'])
             # 遍历，筛选，并将结果集整理为key-value形式的采集数据
             recursion_json_dict(json_dict, gather_params['target_field'], data_set, '$')
-            # print 'BOOL: %s' % '$.info.email.capacity'.endswith('email.capacity')
-            print data_set
+            # print data_set
             # 将采集的数据保存到td_gather_data中
             for item in data_set:
                 TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value_str']).save()
