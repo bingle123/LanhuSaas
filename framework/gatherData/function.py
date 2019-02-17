@@ -32,8 +32,8 @@ def gather_test_init():
     info['params'] = 'http://localhost:8989,user=root$password=123'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'echo "1234"'
-    # 接口测试用采集规则：'SELECT @cty=city@,@cap=capacity@ FROM test_gather_data'
-    info['gather_rule'] = 'SELECT @cty=city@,@cap=capacity@ FROM test_gather_data'
+    # 接口测试用采集规则：'SELECT @cty=city@,@cap=email.capacity@ FROM test_gather_data'
+    info['gather_rule'] = 'SELECT @cty=city@,@cap=email.capacity@ FROM test_gather_data'
     # ------------------------------------------------------------------------------------
     return info
 
@@ -108,25 +108,36 @@ def gather_key_define(gather_field):
     return data_set
 
 
-# 遍历JSON字典中的所有key
-def recursion_json_dict(json_dict, target_field, data_set):
-    # print data_set
+# 遍历JSON字典中的所有key：json_dict需要递归的JSON字典，target_field目标采集字段，data_set采集结果，json_path当前遍历的JSON路径
+def recursion_json_dict(json_dict, target_field, data_set, json_path):
     if isinstance(json_dict, dict):
         # 遍历，筛选，并将结果集整理为key-value形式的采集数据
         for key, value in json_dict.items():
             if isinstance(value, dict):
-                recursion_json_dict(value, target_field, data_set)
+                recursion_json_dict(value, target_field, data_set, '%s.%s' % (json_path, key))
             elif isinstance(value, list):
                 for v in value:
-                    recursion_json_dict(v, target_field, data_set)
+                    recursion_json_dict(v, target_field, data_set, '%s.%s' % (json_path, key))
             else:
+                json_path = '%s.%s' % (json_path, key)
+                # print "PATH: %s" % json_path
                 count = 0
                 for field in target_field:
-                    if key == field:
-                        t = data_set[count]
-                        t['value'].append(str(value))
-                        t['value_str'] = ','.join(t['value'])
+                    index = field.rfind('.')
+                    if -1 != index:
+                        single_key = field[index + 1:]
+                    else:
+                        single_key = field
+                    # print 'FIELD: %s, SINGLE_KEY: %s, KEY: %s, JSON_PATH: %s' % (field, single_key, key, json_path)
+                    if single_key == key:
+                        if str(json_path).endswith(field):
+                            t = data_set[count]
+                            t['value'].append(str(value))
+                            t['value_str'] = ','.join(t['value'])
                     count += 1
+                # print 'PATH: %s' % json_path
+                index1 = json_path.rfind('.')
+                json_path = json_path[0:index1]
 
 
 # 采集方法，返回参数gather_status为ok采集正常，返回empty采集结果为空，返回error采集规则错误
@@ -186,7 +197,7 @@ def gather_data(info):
         # 发送请求，判断接口返回的信息，接口采集是否出错,如果出错，方法立即返回error结束
         pass
         # 发送请求，从接口获取JSON数据，此处为模拟数据
-        json_data = '{"username":"mary","age":"20","info":[{"tel":"1234566","mobile_phone":"15566757776","email":{"home":"home@qq.com","company":"company@qq.com","capacity":"2000"}}],"address":[{"city":"beijing","code":"1000022"},{"city":"shanghai","code":"2210444"}]}'
+        json_data = '{"username":"mary","age":"20","info":[{"tel":"1234566","mobile_phone":"15566757776","email":{"home":"home@qq.com","company":"company@qq.com","capacity":"2000"}}],"money":{"capacity":"50000","type":"RMB"},"address":[{"city":"beijing","code":"1000022"},{"city":"shanghai","code":"2210444"}]}'
         # 将JSON字符串解析为python字典对象，便于筛选并采集数据
         json_dict = json.loads(json_data)
         # 判断接口是否返回了空数据
@@ -196,7 +207,8 @@ def gather_data(info):
             # 历史采集数据迁移
             gather_data_migrate(info['id'])
             # 遍历，筛选，并将结果集整理为key-value形式的采集数据
-            recursion_json_dict(json_dict, gather_params['target_field'], data_set)
+            recursion_json_dict(json_dict, gather_params['target_field'], data_set, '$')
+            # print 'BOOL: %s' % '$.info.email.capacity'.endswith('email.capacity')
             print data_set
             # 将采集的数据保存到td_gather_data中
             for item in data_set:
