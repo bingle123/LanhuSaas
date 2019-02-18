@@ -1458,17 +1458,16 @@
                 }).catch((res) =>{
                     console.log(res)
                 });
-
-
             },
             switch_change(value){
+                console.log(value);
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/change_status/',
                     data: {
                         flag: value.status,
                         id: value.id,
-                        monitor_name: vm.monitor_name
+                        monitor_name: value.monitor_name
                     },
                 }).then((res) =>{
                     if (res.data.code == 1) {alert(res.data.message)}
