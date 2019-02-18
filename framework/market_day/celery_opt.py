@@ -104,6 +104,7 @@ def disable_task(name):
         task = celery_models.PeriodicTask.objects.get(name=name)
         task.enabled = False  # 设置关闭
         task.save()
+        print name+u'关闭成功'
         return True
     except celery_models.PeriodicTask.DoesNotExist:
         return False
@@ -117,6 +118,7 @@ def enable_task(name):
         task = celery_models.PeriodicTask.objects.get(name=name)
         task.enabled = True  # 设置开启
         task.save()
+        print name+u'开启成功'
         return True
     except celery_models.PeriodicTask.DoesNotExist:
         return False
@@ -132,6 +134,7 @@ def delete_task(name):
         task = celery_models.PeriodicTask.objects.get(name=name)
         task.enabled = False  # 设置关闭
         task.delete()
+        print name +u'删除成功'
         return True
     except celery_models.PeriodicTask.DoesNotExist:
         return False
