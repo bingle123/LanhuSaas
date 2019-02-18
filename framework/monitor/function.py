@@ -287,8 +287,8 @@ def chart_get_test(request):
     database_id=request_body['database_id']
 
     info={}
-    info['id'] = '71'
-    info['gather_params'] = 'sql'
+    info['id'] = '71' #id测试用的随意值
+    info['gather_params'] = 'sql' #图表监控项是sql语句查询
     info['params'] = request_body['database_id']
     info['gather_rule']=request_body['sql']
     sql = request_body['sql']
