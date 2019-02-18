@@ -117,7 +117,7 @@
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="显示内容" prop="contents" style="width: 96%">
-                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000"
+                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000" @change="sycontent()"
                                                   type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
@@ -150,7 +150,7 @@
                                 </div>
                                 <div :style="{display:interface1}">
                                     <el-form-item label="url">
-                                        <el-input  placeholder="请输入url" v-model="server_url"
+                                        <el-input placeholder="请输入url" v-model="server_url"
                                                   style="width: 96%"></el-input>
                                     </el-form-item>
                                     <el-form-item label="接口参数">
@@ -191,11 +191,11 @@
                             </div>
                             <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;" id="text1">
                                 <div style="height: 60px"></div>
-                                <textarea>{{ basic.contents }}</textarea>
+                                    <textarea id="textarea" style="resize: none;">{{tempcontents}}</textarea>
                             </div>
                             <div style="padding: 0px 20%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" v-on:click="test1()">采集测试</el-button>
+                                <el-button type="primary" @click="basic_test()">采集测试</el-button>
                             </div>
                         </div></el-col>
                     </el-row>
@@ -300,6 +300,7 @@
                                 <div style="padding: 0px 20%">
                                     <div style="height: 20px"></div>
                                     <el-button type="primary" v-on:click="chart_get_test">采集测试</el-button>
+                                    <el-button type="primary" @click="chart_get_test">采集测试</el-button>
                                 </div>
                             </div>
                         </el-col>
@@ -596,6 +597,8 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            tempcontents:'',
+            tempcontents2:'',
             msg1:'',
             job2: [],                                   //作业模板
             flow2: [],                                  //流程模板
@@ -825,51 +828,87 @@
             },
             myChart: null,
             chart_content:'',
-            chartData:[
-                {
-                    'name':'周一',
-                    'value':100
-                },{
-                    'name':'周二',
-                    'value':122
-                },{
-                    'name':'周三',
-                    'value':150
-                },{
-                    'name':'周四',
-                    'value':154
-                },{
-                    'name':'周五',
-                    'value':133
-                },{
-                    'name':'周六',
-                    'value':144
-                },{
-                    'name':'周日',
-                    'value':200
-                },
-            ],
+            chartData:'',
+            person_count:'',
         },
         methods: {
-            test1(){
+            basic_size(){
+              $("#textarea").css("font-size",this.basic.font_size)
+            },
+            basic_height(){
+                $('#textarea').css('height',this.basic.height)
+            },
+            basic_width(){
+                $("#textarea").css("width",this.basic.width)
+            },
+            sycontent(){
+                vm.tempcontents = vm.basic.contents
+                var temp1 = vm.tempcontents.split("#");
+                var temp2=[];
+                var temp3=[];
+                var temp4=[];
+                var str=[];
+                for(var i=1;i<temp1.length;i=i+2){
+                    temp2.push(temp1[i]);
+                }
+                for(var i=0;i<temp2.length;i++){
+                    temp3.push(temp2[i].split("="))
+                }
+                for(var i=0;i<temp3.length;i++){
+                    temp4.push(temp3[i][1])
+                }
+                for(i=0;i<temp2.length;i++){
+                    str[i]='#'+temp2[i]+'#'
+                }
+                var flag = 0
+                for(i=0;i<vm.tempcontents.length;i++){
+                    var char = vm.tempcontents[i]
+                    if(char == '#'){
+                        flag++
+                    }
+                }
+                for(i=0;i<flag/2;i++){
+                    vm.tempcontents = vm.tempcontents.replace(str[i].toString(),temp4[i].toString());
+                }
+            },
+            basic_test() {
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}monitor/test/',
+                    url: '${SITE_URL}monitor/basic_test/',
                     data: {
-                        server_url:vm.server_url,
-                        gather_rule:vm.basic.gather_rule,
+                        server_url: vm.server_url
                     },
                 }).then(function (res) {
+                    vm.tempcontents2 = vm.basic.contents
                     var temp1 = vm.basic.contents.split("#")
                     var temp2=[];
+                    var temp3=[];
+                    var temp4=[];
+                    var str=[];
                     for(var i=1;i<temp1.length;i=i+2){
                         temp2.push(temp1[i])
                     }
                     console.log(temp2)
                     for(i=0;i<temp2.length;i++){
-                        str = '#' + temp2[i] + '#'
-                        vm.basic.contents = vm.basic.contents.replace(str,res.data.message[0][temp2[i]])
+                        str[i]='#'+temp2[i]+'#'
                     }
+                    for(var i=0;i<temp2.length;i++){
+                    temp3.push(temp2[i].split("="))
+                    }
+                    for(var i=0;i<temp3.length;i++){
+                        temp4.push(temp3[i][0])
+                    }
+                    var flag = 0
+                    for(i=0;i<vm.tempcontents2.length;i++){
+                        var char = vm.tempcontents2[i]
+                        if(char == '#'){
+                            flag++
+                        }
+                    }
+                    for(i=0;i<flag/2;i++){
+                        vm.tempcontents2 = vm.tempcontents2.replace(str[i].toString(),res.data.message[0][temp4[i]].toString());
+                    }
+                    vm.tempcontents = vm.tempcontents2;
                 })
             },
             pefFrom() {
@@ -1259,7 +1298,11 @@
                 }
                 if (vm.chart.gather_params == "饼图") {
                     this.myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
-                    let legendData = ['已执行', '正执行', '执行出错', '未执行'];
+                    let legendData = [];
+                    for(let i=0;i<vm.chartData.length;i++){
+                        this.$set(legendData,i,vm.chartData[i].name);
+                    }
+
                     option = {
                         tooltip: {
                             trigger: 'item',
@@ -1274,7 +1317,7 @@
                         },
                         series: [
                             {
-                                name: '执行状态',
+                                name:vm.person_count,
                                 type: 'pie',
                                 radius: '50%',
                                 center: ['50%', '30%'],
@@ -1344,7 +1387,7 @@
                         },
                         series: [
                             {
-                                name: '已执行',
+                                name: vm.person_count,
                                 type: 'bar',
                                 stack: 'data',
                                 data: barCount
@@ -1366,7 +1409,7 @@
                             trigger: 'axis'
                         },
                         legend: {
-                            data: ['成交']
+                            data: [vm.person_count]
                         },
                         calculable: true,
                         xAxis: [
@@ -1383,7 +1426,7 @@
                         ],
                         series: [
                             {
-                                name: '成交',
+                                name: vm.person_count,
                                 type: 'line',
                                 smooth: true,
                                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
@@ -1410,10 +1453,13 @@
                         sql:vm.chart.gather_rule,
                     },
                 }).then((res) => {
-                    console.log(res)
+                    vm.chartData=res.data.results;
+                    vm.person_count=res.data.column_name_list[0]
                 }).catch((res) =>{
                     console.log(res)
-                })
+                });
+
+
             },
             switch_change(value){
                 axios({

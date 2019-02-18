@@ -7,6 +7,8 @@ from DataBaseManage.function import *
 import MySQLdb
 import datetime
 import json
+import urllib
+import urllib2
 from gatherData.models import *
 from gatherDataHistory.models import *
 from alertRule.function import *
@@ -41,8 +43,8 @@ def gather_test_init():
     info['gather_params'] = 'interface'
     # sql测试用参数：'46'
     # 文件测试用参数：'192.168.1.10,/fk/test.txt'
-    # 接口测试用参数：'http://localhost:8989,user=root$password=123'
-    info['params'] = 'http://localhost:8989,user=root$password=123'
+    # 接口测试用参数：'http://www.baidu.com,user=root$password=123'
+    info['params'] = 'http://www.baidu.com,user=root$password=123'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'echo "1234"'
     # 接口测试用采集规则：'SELECT @cty=city@,@cap=email.capacity@ FROM $'
@@ -220,7 +222,12 @@ def gather_data(info):
         data_set = gather_key_define(gather_params['gather_field'])
         # 发送请求，判断接口返回的信息，接口采集是否出错,如果出错，方法立即返回error结束
         pass
-        # 发送请求，从接口获取JSON数据，此处为模拟数据
+        # 发送请求，从接口获取JSON数据
+        request_params_encoded = urllib.urlencode(gather_params['extra_param']['request_param_dict'])
+        request_object = urllib2.Request(url=gather_params['extra_param']['interface_url'], data=request_params_encoded)
+        json_data = urllib2.urlopen(request_object).read()
+        print json_data
+        # JSON模拟接收的数据，测试时使用
         json_data = '{"username":"mary","age":"20","info":[{"tel":"1234566","mobile_phone":"15566757776","email":{"home":"home@qq.com","company":"company@qq.com","capacity":"2000"}}],"money":{"capacity":"50000","type":"RMB"},"address":[{"city":"beijing","code":"1000022"},{"city":"shanghai","code":"2210444"}]}'
         # 将JSON字符串解析为python字典对象，便于筛选并采集数据
         json_dict = json.loads(json_data)
@@ -239,7 +246,7 @@ def gather_data(info):
                 TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value_str']).save()
         else:
             gather_status = 'empty'
-    else:
+    elif "file" == gather_type:
         # 文件方式采集数据
         user_account = BkUser.objects.filter(id=1).get()
         # 根据id为1的用户获取客户端操作快速执行脚本
