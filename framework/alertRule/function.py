@@ -9,8 +9,9 @@ from gatherData.models import *
 from jobManagement.models import Localuser
 from system_config.function import *
 
+
 def rule_check(monitor_id):
-    print monitor_id
+    print 'monitor_id=%s-----Rule checking....' % monitor_id
     # 告警信息
     alert_infos = list()
     # 告警标志位
@@ -26,18 +27,18 @@ def rule_check(monitor_id):
                 # 告警规则配置了上限值和下限值的情况
                 if selected_rule.upper_limit is not None and selected_rule.lower_limit is not None:
                     if float(data.data_value) > selected_rule.upper_limit or float(data.data_value) < selected_rule.lower_limit:
-                        # print 'FIELD : %s, ALERT!!!!! VALUE %s OUT OF RANGE' % (data.data_key, data.data_value)
+                        print 'FIELD : %s, ALERT!!!!! VALUE %s OUT OF RANGE' % (data.data_key, data.data_value)
                         alert_flag = True
 
                 # 告警规则仅配置了上限值的情况
                 elif selected_rule.upper_limit is not None and selected_rule.lower_limit is None:
                     if float(data.data_value) > selected_rule.upper_limit:
-                        # print 'FIELD : %s, ALERT!!!!! VALUE %s OUT OF RANGE' % (data.data_key, data.data_value)
+                        print 'FIELD : %s, ALERT!!!!! VALUE %s OUT OF RANGE' % (data.data_key, data.data_value)
                         alert_flag = True
                 # 告警规则仅配置了下限值的情况
                 elif selected_rule.upper_limit is None and selected_rule.lower_limit is not None:
                     if float(data.data_value) < selected_rule.lower_limit:
-                        # print 'FIELD : %s, ALERT!!!!! VALUE %s OUT OF RANGE' % (data.data_key, data.data_value)
+                        print 'FIELD : %s, ALERT!!!!! VALUE %s OUT OF RANGE' % (data.data_key, data.data_value)
                         alert_flag = True
                 if alert_flag:
                     # 获取当前告警时间
@@ -54,6 +55,8 @@ def rule_check(monitor_id):
                     for alert_user in alert_user_results:
                         alert_info['staff_user'].append(alert_user.user_id)
                     alert_infos.append(alert_info)
+            else:
+                print 'INFO: Multiple value, rule check skip.......'
     # 如果搜集到了告警信息，将alert_infos对象传递给celery并通知处理告警
     if 0 != len(alert_infos):
         send_alert(**alert_info)

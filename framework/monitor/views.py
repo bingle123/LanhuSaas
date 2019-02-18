@@ -45,8 +45,8 @@ def add_unit(request):
     return render_json(res)
 
 
-def test(request):
-    res = function.test(request)
+def basic_test(request):
+    res = function.basic_test(request)
     return render_json(res)
 
 
@@ -72,4 +72,14 @@ def chart_get_test(request):
     :return:
     """
     res = function.chart_get_test(request)
+    return render_json(res)
+
+
+def flow_change(request):
+    """
+    图表单元采集测试
+    :param request:
+    :return:
+    """
+    res = function.flow_change(request)
     return render_json(res)

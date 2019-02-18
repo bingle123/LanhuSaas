@@ -60,9 +60,10 @@
                         <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
                         <el-button size="mini" type="text" v-on:click="edit(scope.row)">编辑</el-button>
                         <el-button size="mini" type="text" v-on:click="edit2(scope.row)">删除</el-button>
-
-                            <el-switch v-model="scope.status" active-color="#13ce66" inactive-color="#ff4949"
+                        <el-tooltip :content="scope.row.status" placement="top">
+                            <el-switch  v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949" @change="switch_change(scope.row)"
                                        active-value="1" inactive-value="0"></el-switch>
+                            </el-tooltip>
                     </template>
                 </el-table-column>
             </el-table>
@@ -90,7 +91,7 @@
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="basic" ref="basic" :rules="rules1" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
-                                    <el-select v-model="basic.font_size" placeholder="请选择字号">
+                                    <el-select v-model="basic.font_size" placeholder="请选择字号" @change="basic_size">
                                         <el-option label="8" value="8"></el-option>
                                         <el-option label="10" value="10"></el-option>
                                         <el-option label="12" value="12"></el-option>
@@ -103,7 +104,7 @@
                                         <el-form-item prop="height">
                                             <el-input type="number" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="basic.height"
-                                                      placeholder="请输入高度"></el-input>
+                                                      placeholder="请输入高度" @change="basic_height"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
@@ -111,12 +112,12 @@
                                         <el-form-item prop="width">
                                               <el-input type="number" v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="basic.width"
-                                                        placeholder="请输入宽度"></el-input>
+                                                        placeholder="请输入宽度" @change="basic_width"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="显示内容" prop="contents" style="width: 96%">
-                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000"
+                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000" @change="sycontent()"
                                                   type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
@@ -130,14 +131,11 @@
                                 <div :style="{ display: sql1 }">
                                     <el-form-item label="数据库连接">
                                         <el-select v-model="server_url" placeholder="请选择数据库">
-                                            <el-option v-for="i in sites" :label="i.editor"
-                                                       :value="i.editor"></el-option>
+                                            <el-option v-for="i in sites1" :label="i.label"
+                                                       :value="i.value"></el-option>
                                         </el-select>
                                     </el-form-item>
-                                    <el-form-item label="数据采集规则" style="width: 96%">
-                                        <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq"
-                                                  type="textarea"></el-input>
-                                    </el-form-item>
+
                                 </div>
 
                                 <div :style="{display:file1}">
@@ -159,6 +157,9 @@
                                         <el-input type="textarea" v-model="file_param"></el-input>
                                     </el-form-item>
                                 </div>
+                                <el-form-item label="数据采集规则" style="width: 96%">
+                                    <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq" type="textarea"></el-input>
+                                </el-form-item>
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
@@ -188,13 +189,13 @@
                             <div style="padding: 0px 45% 0px 45%">
                                 <h2>预览</h2>
                             </div>
-                            <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;">
+                            <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;" id="text1">
                                 <div style="height: 60px"></div>
-                                    <textarea id="">{{basic.contents}}</textarea>
+                                    <textarea id="textarea" style="resize: none;">{{tempcontents}}</textarea>
                             </div>
                             <div style="padding: 0px 20%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" @click="test1()">采集测试</el-button>
+                                <el-button type="primary" @click="basic_test()">采集测试</el-button>
                             </div>
                         </div></el-col>
                     </el-row>
@@ -428,8 +429,8 @@
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="流程模板" prop="gather_params">
-                                    <el-select v-model="flow.gather_params" placeholder="请选择模板">
-                                        <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id"></el-option>
+                                    <el-select v-model="flow.gather_rule" placeholder="请选择模板" @change="flow_change"	>
+                                        <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id.id"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="参数1" style="width: 96%">
@@ -440,10 +441,10 @@
                                 </el-form-item>
                                    <el-form-item label="节点">
                                         <el-select v-model="flow.gather_params" placeholder="请选择节点">
-                                          <el-option v-for="i in flow2" :label="i.flow_name" :value="i.flow_name"></el-option>
+                                          <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id.id"></el-option>
                                         </el-select>
                                       </el-form-item>
-                                <div v-if="flow.gather_params === 'new20190114155906'">
+                                <div v-if="flow.gather_params.id === '1'">
                                 <el-form-item label="节点周期:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
@@ -595,6 +596,9 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            tempcontents:'',
+            tempcontents2:'',
+            msg1:'',
             job2: [],                                   //作业模板
             flow2: [],                                  //流程模板
             page_count: 100,                            //总页码数
@@ -849,24 +853,83 @@
             ],
         },
         methods: {
-            test1() {
+            basic_size(){
+              $("#textarea").css("font-size",this.basic.font_size)
+            },
+            basic_height(){
+                $('#textarea').css('height',this.basic.height)
+            },
+            basic_width(){
+                $("#textarea").css("width",this.basic.width)
+            },
+            sycontent(){
+                vm.tempcontents = vm.basic.contents
+                var temp1 = vm.tempcontents.split("#");
+                var temp2=[];
+                var temp3=[];
+                var temp4=[];
+                var str=[];
+                for(var i=1;i<temp1.length;i=i+2){
+                    temp2.push(temp1[i]);
+                }
+                for(var i=0;i<temp2.length;i++){
+                    temp3.push(temp2[i].split("="))
+                }
+                for(var i=0;i<temp3.length;i++){
+                    temp4.push(temp3[i][1])
+                }
+                for(i=0;i<temp2.length;i++){
+                    str[i]='#'+temp2[i]+'#'
+                }
+                var flag = 0
+                for(i=0;i<vm.tempcontents.length;i++){
+                    var char = vm.tempcontents[i]
+                    if(char == '#'){
+                        flag++
+                    }
+                }
+                for(i=0;i<flag/2;i++){
+                    vm.tempcontents = vm.tempcontents.replace(str[i].toString(),temp4[i].toString());
+                }
+            },
+            basic_test() {
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}monitor/test/',
+                    url: '${SITE_URL}monitor/basic_test/',
                     data: {
                         server_url: vm.server_url
                     },
                 }).then(function (res) {
+                    vm.tempcontents2 = vm.basic.contents
                     var temp1 = vm.basic.contents.split("#")
                     var temp2=[];
+                    var temp3=[];
+                    var temp4=[];
+                    var str=[];
                     for(var i=1;i<temp1.length;i=i+2){
                         temp2.push(temp1[i])
                     }
                     console.log(temp2)
                     for(i=0;i<temp2.length;i++){
-                        str = '#' + temp2[i] + '#'
-                        vm.basic.contents = vm.basic.contents.replace(str,res.data.message[0][temp2[i]])
+                        str[i]='#'+temp2[i]+'#'
                     }
+                    for(var i=0;i<temp2.length;i++){
+                    temp3.push(temp2[i].split("="))
+                    }
+                    for(var i=0;i<temp3.length;i++){
+                        temp4.push(temp3[i][0])
+                    }
+                    var flag = 0
+                    for(i=0;i<vm.tempcontents2.length;i++){
+                        var char = vm.tempcontents2[i]
+                        if(char == '#'){
+                            flag++
+                        }
+                    }
+                    for(i=0;i<flag/2;i++){
+                        vm.tempcontents2 = vm.tempcontents2.replace(str[i].toString(),res.data.message[0][temp4[i]].toString());
+                    }
+                    vm.tempcontents = vm.tempcontents2;
                 })
             },
             pefFrom() {
@@ -916,6 +979,7 @@
                             url: '${SITE_URL}monitor/delete/',
                             data: {
                                 unit_id: row.id,
+                                monitor_name:row.monitor_name,
                                 monitor_type: row.monitor_type,
                             }
                         }).then((res) => {
@@ -962,7 +1026,6 @@
                         vm.page_count = res.data.message[0].page_count;
                     })
                 }
-
             },
             edit(row) {
                 vm.centerDialogVisible = true;
@@ -1080,6 +1143,15 @@
                         alert('保存失败！')
                     });
                 }
+            },
+            flow_change(value){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor/flow_change/',
+                    data: {
+                        template_id:value
+                    }
+                })
             },
             edit3(row) {
                 setTimeout(
