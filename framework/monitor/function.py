@@ -191,13 +191,12 @@ def edit_unit(request):
     return result
 
 
-def test(request):
+def basic_test(request):
     res = json.loads(request.body)
     result = []
     gather_rule = "select data_key,data_value from td_gather_data"
     server_url = res['server_url']
-    tmp = server_url.split(",")
-    sql = Conn.objects.get(id=tmp[0])
+    sql = Conn.objects.get(id=server_url)
     password = f.decrypt_str(sql.password)
     if sql.type == 'MySQL' or sql.type == 'Oracle':
         db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))
@@ -327,3 +326,13 @@ def chart_get_test(request):
         "results": result_list,
         "column_name_list": column_name_list,
     }
+
+
+def flow_change(request):
+    cilent = tools.interface_param (request)
+    params = {
+        "bk_biz_id": "2",
+        "template_id": "5"
+    }
+    res = cilent.sops.get_template_info(params)
+    return res
