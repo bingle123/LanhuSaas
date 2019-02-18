@@ -317,8 +317,8 @@ def chart_get_test(request):
     result_list = []
     for i in results:
         temp_dict = {}
-        temp_dict['value'] = list(i)[1].encode('utf-8')
-        temp_dict['name'] = list(i)[0]
+        temp_dict['name'] = list(i)[1].encode('utf-8')
+        temp_dict['value'] = list(i)[0]
         result_list.append(temp_dict)
     return {
         "result": True,
