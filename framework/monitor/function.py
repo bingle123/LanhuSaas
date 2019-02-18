@@ -136,6 +136,7 @@ def add_unit(request):
     res = json.loads(request.body)
     cilent = tools.interface_param (request)
     user = cilent.bk_login.get_user({})
+    add_dic = res['data'],
     monitor_type = res['monitor_type']
     if res['monitor_type'] == 'first':
         monitor_type = '基本单元类型'
@@ -143,13 +144,12 @@ def add_unit(request):
         monitor_type = '图表单元类型'
     if res['monitor_type'] == 'third':
         monitor_type = '作业单元类型'
-        add_dic['jion_id'] = int (add_dic['gather_rule']['id'])
+        add_dic['jion_id'] = int(add_dic['gather_rule']['id'])
         add_dic['gather_rule'] = add_dic['gather_rule']['name']
     if res['monitor_type'] == 'fourth':
-        monitor_type = '流程元类型'
+        monitor_type = '流程单元类型'
         add_dic['jion_id'] = int (add_dic['gather_rule']['id'])
         add_dic['gather_rule'] = add_dic['gather_rule']['name']
-    add_dic = res['data']
     add_dic['monitor_name'] = res['monitor_name']
     add_dic['monitor_type'] = monitor_type
     add_dic['status'] = 0
@@ -220,7 +220,8 @@ def basic_test(request):
 def job_test(request):
     try:
         res = json.loads(request.body)
-        x = res['params']
+        params = res['params']
+        x = res['gather_params']
         x1 = x.decode('utf-8')
         bk_job_id = res['job_id']
         script_param = base64.b64encode(x1)
@@ -236,14 +237,21 @@ def job_test(request):
             select_job_list = []
             logger.error(u"请求作业模板失败：%s" % select_job.get('message'))
         step_id = select_job_list['steps'][0]['step_id']
-
         job_params = {
             'bk_biz_id': 2,
             'bk_job_id': bk_job_id,
             'steps': [{
                 'step_id': step_id,
                 'script_param': script_param
-            }]
+            }],
+            "global_vars":
+                [{"ip_list": [
+                    {
+                        "bk_cloud_id": 1,
+                        "ip": params
+                    },
+                    ],
+                }]
         }
         job = cilent.job.execute_job(job_params)
         if job.get('result'):
@@ -251,7 +259,15 @@ def job_test(request):
         else:
             job_list = []
             logger.error(u"请求作业模板失败：%s" % job.get('message'))
+        info = {}
+        info['id'] = '21'  # id测试用的随意值
+        info['gather_params'] = 'interface'  # 作业监控项是sql语句查询
+        info['params'] = res['params']
+        info['gather_rule'] = res['gather_rule']
+        # 调用gatherData方法
+        gather_data(info)
         res = tools.success_result(job_list)
+
     except Exception as e:
         res = tools.error_result(e)
     return res
