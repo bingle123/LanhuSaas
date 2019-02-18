@@ -1088,7 +1088,10 @@
             flow_change(value){
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}monitor/add/',
+                    url: '${SITE_URL}monitor/flow_change/',
+                    data: {
+                        template_id:value
+                    }
                 })
             },
             edit3(row) {

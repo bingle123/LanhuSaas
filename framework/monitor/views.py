@@ -73,3 +73,13 @@ def chart_get_test(request):
     """
     res = function.chart_get_test(request)
     return render_json(res)
+
+
+def flow_change(request):
+    """
+    图表单元采集测试
+    :param request:
+    :return:
+    """
+    res = function.flow_change(request)
+    return render_json(res)

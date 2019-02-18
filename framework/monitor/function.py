@@ -327,3 +327,13 @@ def chart_get_test(request):
         "results": result_list,
         "column_name_list": column_name_list,
     }
+
+
+def flow_change(request):
+    cilent = tools.interface_param (request)
+    params = {
+        "bk_biz_id": "2",
+        "template_id": "5"
+    }
+    res = cilent.sops.get_template_info(params)
+    return res
