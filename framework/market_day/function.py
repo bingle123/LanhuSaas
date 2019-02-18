@@ -84,7 +84,7 @@ def add_unit_task(add_dicx):
 
 def edit_unit_task(add_dicx):
     schename = add_dicx['monitor_name']
-    id=Monitor.objects.get(monitor_name=schename)
+    id=Monitor.objects.get(monitor_name=schename).id
     starthour = str(add_dicx['start_time'])[:2].id
     endhour = str(add_dicx['end_time'])[:2]
     period = add_dicx['period']
