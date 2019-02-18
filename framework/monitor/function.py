@@ -210,10 +210,10 @@ def basic_test(request):
         dic1 = {
             i[0]:i[1]
         }
-        dic =  dict( dic, **dic1 )
+        dic = dict(dic, **dic1)
     result.append(dic)
     db.close()
-    return results
+    return result
 
 
 def job_test(request):
