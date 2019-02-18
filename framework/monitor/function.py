@@ -192,13 +192,12 @@ def edit_unit(request):
     return result
 
 
-def test(request):
+def basic_test(request):
     res = json.loads(request.body)
     result = []
     gather_rule = "select data_key,data_value from td_gather_data"
     server_url = res['server_url']
-    tmp = server_url.split(",")
-    sql = Conn.objects.get(id=tmp[0])
+    sql = Conn.objects.get(id=server_url)
     password = f.decrypt_str(sql.password)
     if sql.type == 'MySQL' or sql.type == 'Oracle':
         db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))

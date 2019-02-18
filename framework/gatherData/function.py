@@ -34,21 +34,21 @@ def gather_test_init():
     info = dict()
     # ------------临时测试时用的数据，实际应从info对象中获取参数,由celery提供info对象--------
     # sql测试用监控项ID：'1'
-    # 文件测试用监控项ID：'1'
     # 接口测试用监控项ID：'2'
-    info['id'] = '2'
+    # 文件测试用监控项ID：'3'
+    info['id'] = '1'
     # sql测试用类型：'sql'
     # 文件测试用类型：'file'
     # 接口测试用类型：'interface'
-    info['gather_params'] = 'interface'
+    info['gather_params'] = 'sql'
     # sql测试用参数：'46'
     # 文件测试用参数：'192.168.1.10,/fk/test.txt'
     # 接口测试用参数：'http://www.baidu.com,user=root$password=123'
-    info['params'] = 'http://www.baidu.com,user=root$password=123'
+    info['params'] = '46'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'echo "1234"'
     # 接口测试用采集规则：'SELECT @cty=city@,@cap=email.capacity@ FROM $'
-    info['gather_rule'] = 'SELECT @un=$.username@,@cap=email.capacity@ FROM $'
+    info['gather_rule'] = 'SELECT @人口数=count(*)@,@城市名称=cityName@ from city GROUP BY cityName'
     # ------------------------------------------------------------------------------------
     return info
 
@@ -59,8 +59,10 @@ def gather_param_parse(info):
     gather_params = dict()
     # 字段索引
     field_start = 7
-    field_end = info['gather_rule'].find('FROM') - 1
-    set_start = info['gather_rule'].find('FROM') + 5
+    field_end = info['gather_rule'].find('FROM')
+    if -1 == field_end:
+        field_end = info['gather_rule'].find('from') - 1
+    set_start = field_end + 5
     # 采集目标具体字段
     gather_params['target_field'] = list()
     # 采集目标根路径名称
@@ -71,6 +73,7 @@ def gather_param_parse(info):
     gather_params['extra_param'] = dict()
     # 获取采集规则的字段有哪些
     gather_params['rule_fields_str'] = info['gather_rule'][field_start:field_end]
+    print 'AAAA: %s' % gather_params['rule_fields_str']
     rule_fields = gather_params['rule_fields_str'].split(',')
     for rule_field in rule_fields:
         field = rule_field.strip('@').split('=')
@@ -185,6 +188,7 @@ def gather_data(info):
         # 连接指定数据库
         conn = MySQLdb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
         cursor = conn.cursor()
+        cursor.execute('SET NAMES UTF8')
         #采集规则是否异常判断
         # noinspection PyBroadException
         try:
@@ -194,6 +198,7 @@ def gather_data(info):
             print 'EXCEPTION'
             gather_status = 'error'
             return gather_status
+        print result
         # 获取当前采集时间
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         # 历史采集数据迁移
