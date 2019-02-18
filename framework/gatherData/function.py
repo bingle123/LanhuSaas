@@ -21,11 +21,9 @@ from blueking.component.shortcuts import *
 # 采集规则的设置类似于SQL语法，但是在字段域有所不同：如@cp=china_point@表示保存在采集表中的字段名称为cp，
 # 实际进行目标数据库表采集的字段是china_point
 # 2. 针对于接口的数据采集：
-# $当前JSON的根路径定义在FROM字段后，可自定义名称，如FROM $代表使用$符号代表根路径。.代表JSON下一层属性名称，
-# 如@email.capatity@代表取JSON中所有email属性下的capacity属性下的信息，
-# @$.user_name@代表取JSON中第一层属性user_name的所有信息
+# 采集规则为接口执行脚本，返回采集的JSON字符串
 # 3. 针对于文件的数据采集：
-# 待定~
+# 采集规则为linux快速执行脚本，采集数据由脚本保存到采集表gather_data中
 # --------------------------------------------------------------
 
 
