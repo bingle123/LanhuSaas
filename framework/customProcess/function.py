@@ -62,3 +62,12 @@ def select_node(node_id):
 def truncate_node():
     TbCustProcess.objects.all().delete()
     return "ok"
+
+
+def clear_execute_status():
+    nodes_status = TdCustProcessLog.objects.all()
+    for status in nodes_status:
+        status.is_done = 'n'
+        status.do_time = ''
+        status.do_person = ''
+        status.save()
