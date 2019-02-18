@@ -22,4 +22,5 @@ urlpatterns = patterns(
     (r'^del_node', 'del_node'),
     (r'^select_node', 'select_node'),
     (r'^truncate_node', 'truncate_node'),
+    (r'^clear_execute_status', 'clear_execute_status'),
 )
