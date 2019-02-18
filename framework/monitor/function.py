@@ -191,12 +191,13 @@ def edit_unit(request):
     return result
 
 
-def basic_test(request):
+def test(request):
     res = json.loads(request.body)
     result = []
     gather_rule = "select data_key,data_value from td_gather_data"
     server_url = res['server_url']
-    sql = Conn.objects.get(id=server_url)
+    tmp = server_url.split(",")
+    sql = Conn.objects.get(id=tmp[0])
     password = f.decrypt_str(sql.password)
     if sql.type == 'MySQL' or sql.type == 'Oracle':
         db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))
@@ -316,8 +317,8 @@ def chart_get_test(request):
     result_list = []
     for i in results:
         temp_dict = {}
-        temp_dict['value'] = list(i)[1].encode('utf-8')
-        temp_dict['name'] = list(i)[0]
+        temp_dict['name'] = list(i)[1].encode('utf-8')
+        temp_dict['value'] = list(i)[0]
         result_list.append(temp_dict)
     return {
         "result": True,
@@ -329,6 +330,7 @@ def chart_get_test(request):
 
 
 def flow_change(request):
+    
     cilent = tools.interface_param (request)
     params = {
         "bk_biz_id": "2",
