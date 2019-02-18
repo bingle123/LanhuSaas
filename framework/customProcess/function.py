@@ -26,7 +26,9 @@ def select_all_nodes():
 def add_node(node):
     TbCustProcess(**node).save()
     last_node = TbCustProcess.objects.last()
-    TdCustProcessLog(node_id=last_node.id).save()
+    has_record = TdCustProcessLog.objects.filter(node_id=last_node.id).count()
+    if 0 == has_record:
+        TdCustProcessLog(node_id=last_node.id).save()
     return "ok"
 
 
@@ -71,3 +73,4 @@ def clear_execute_status():
         status.do_time = ''
         status.do_person = ''
         status.save()
+    return "ok"
