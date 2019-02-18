@@ -300,6 +300,7 @@
                                 <div style="padding: 0px 20%">
                                     <div style="height: 20px"></div>
                                     <el-button type="primary" v-on:click="chart_get_test">采集测试</el-button>
+                                    <el-button type="primary" @click="chart_get_test">采集测试</el-button>
                                 </div>
                             </div>
                         </el-col>
@@ -827,30 +828,8 @@
             },
             myChart: null,
             chart_content:'',
-            chartData:[
-                {
-                    'name':'周一',
-                    'value':100
-                },{
-                    'name':'周二',
-                    'value':122
-                },{
-                    'name':'周三',
-                    'value':150
-                },{
-                    'name':'周四',
-                    'value':154
-                },{
-                    'name':'周五',
-                    'value':133
-                },{
-                    'name':'周六',
-                    'value':144
-                },{
-                    'name':'周日',
-                    'value':200
-                },
-            ],
+            chartData:'',
+            person_count:'',
         },
         methods: {
             basic_size(){
@@ -1026,6 +1005,7 @@
                         vm.page_count = res.data.message[0].page_count;
                     })
                 }
+
             },
             edit(row) {
                 vm.centerDialogVisible = true;
@@ -1318,7 +1298,11 @@
                 }
                 if (vm.chart.gather_params == "饼图") {
                     this.myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
-                    let legendData = ['已执行', '正执行', '执行出错', '未执行'];
+                    let legendData = [];
+                    for(let i=0;i<vm.chartData.length;i++){
+                        this.$set(legendData,i,vm.chartData[i].name);
+                    }
+
                     option = {
                         tooltip: {
                             trigger: 'item',
@@ -1333,7 +1317,7 @@
                         },
                         series: [
                             {
-                                name: '执行状态',
+                                name:vm.person_count,
                                 type: 'pie',
                                 radius: '50%',
                                 center: ['50%', '30%'],
@@ -1403,7 +1387,7 @@
                         },
                         series: [
                             {
-                                name: '已执行',
+                                name: vm.person_count,
                                 type: 'bar',
                                 stack: 'data',
                                 data: barCount
@@ -1425,7 +1409,7 @@
                             trigger: 'axis'
                         },
                         legend: {
-                            data: ['成交']
+                            data: [vm.person_count]
                         },
                         calculable: true,
                         xAxis: [
@@ -1442,7 +1426,7 @@
                         ],
                         series: [
                             {
-                                name: '成交',
+                                name: vm.person_count,
                                 type: 'line',
                                 smooth: true,
                                 itemStyle: {normal: {areaStyle: {type: 'default'}}},
@@ -1469,19 +1453,21 @@
                         sql:vm.chart.gather_rule,
                     },
                 }).then((res) => {
-                    console.log(res)
+                    vm.chartData=res.data.results;
+                    vm.person_count=res.data.column_name_list[0]
                 }).catch((res) =>{
                     console.log(res)
-                })
+                });
             },
             switch_change(value){
+                console.log(value);
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/change_status/',
                     data: {
                         flag: value.status,
                         id: value.id,
-                        monitor_name: vm.monitor_name
+                        monitor_name: value.monitor_name
                     },
                 }).then((res) =>{
                     if (res.data.code == 1) {alert(res.data.message)}

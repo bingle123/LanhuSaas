@@ -237,7 +237,7 @@
                 ],
                 seq: [
                     { required: true, message: '请输入节点顺序', trigger: 'blur' },
-                    { pattern: /^[1-9][0-9]{0,1}$/, message: '节点值在0~99之间', trigger: 'blur' }
+                    { pattern: /^[1-9][0-9]{0,1}$/, message: '节点值在1~99之间', trigger: 'blur' }
                 ],
                 receivers: [
                     { required: true, message: '请输入通知接收人', trigger: 'blur' },
@@ -587,8 +587,10 @@
                             this.customProcessStartButtonText = '当日流程已执行完毕';
                             this.customProcessStep = this.customProcessTableData.length;
                             this.customProcessStatus = true;
-                        } else//未开始执行
+                        } else{ //还未开始执行
                             this.customProcessStep = -1;
+                            this.customProcessStatus = false;
+                        }
                     }else{//流程节点正在执行的情况
                         this.customProcessStartButtonType = 'success';
                         this.customProcessStartButtonDisabled = true;
