@@ -84,7 +84,10 @@ def gather_param_parse(info):
         interface_params = info['params'].split(',')
         # 获取接口url参数
         gather_params['extra_param']['interface_url'] = interface_params[0]
-        request_params = interface_params[1].split('&')
+        if -1 != interface_params[1].find('&'):
+            request_params = interface_params[1].split('&')
+        else:
+            request_params = interface_params[1]
         request_param_dict = dict()
         # 获取调用接口所需的参数
         for request_param in request_params:
