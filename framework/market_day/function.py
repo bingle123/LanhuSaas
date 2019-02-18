@@ -64,8 +64,8 @@ def addperdic_task():
     return flag
 
 def add_unit_task(add_dicx):
-    print add_dicx
     schename = add_dicx['monitor_name']
+    id=Monitor.objects.get(monitor_name=schename)
     starthour = str(add_dicx['start_time'])[:2]
     endhour = str(add_dicx['end_time'])[:2]
     period = int(add_dicx['period'])
@@ -74,6 +74,7 @@ def add_unit_task(add_dicx):
         'minute': '*/' + str(period / 60),
     }
     info = {
+        'id':id,
         'gather_params': add_dicx['gather_params'],
         'params': add_dicx['params'],
         'gather_rule': add_dicx['gather_rule'],
@@ -82,7 +83,7 @@ def add_unit_task(add_dicx):
                            task_args=info, desc=schename)
 
 def edit_unit_task(add_dicx):
-    print add_dicx
+    id=Monitor.objects.get(monitor_name=schename)
     schename = add_dicx['monitor_name']
     starthour = str(add_dicx['start_time'])[:2]
     endhour = str(add_dicx['end_time'])[:2]
@@ -92,6 +93,7 @@ def edit_unit_task(add_dicx):
         'minute': '*/' + str(period / 60),
     }
     info = {
+        'id':id,
         'gather_params':add_dicx['gather_params'],
         'params':add_dicx['params'],
         'gather_rule':add_dicx['gather_rule'],

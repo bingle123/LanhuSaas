@@ -30,15 +30,15 @@ def unit_show(request):
         p=Paginator(unit, limit)    #分页
         page_count = p.page_range[-1]  #总页数
         page = p.page(page)        #当前页数据
-
         res_list=[]
         for i in page.object_list:
             j=model_to_dict(i)
             j['page_count']=page_count
             j['edit_time'] = str(i.edit_time)
             j['create_time'] = str(i.create_time)
-            j['start_time'] = str (i.start_time)
-            j['end_time'] = str (i.end_time)
+            j['start_time'] = str(i.start_time)
+            j['end_time'] = str(i.end_time)
+            j['status'] = str(i.status)
             res_list.append(j)
         param = {
             'bk_username': 'admin',
@@ -65,13 +65,19 @@ def unit_show(request):
         for i in flow_list:
             dic2 = {
                 'flow_name': i['name'],
-                'id': i['bk_biz_id']
+                'id': {
+                    'name': i['name'],
+                    'id': i['id']
+                }
             }
             flow.append(dic2)
         for i in job_list:
             dic1 = {
                 'name': i['name'],
-                'id': i['bk_job_id']
+                'id': {
+                    'name': i['name'],
+                    'id': i['bk_job_id']
+                }
             }
             job.append(dic1)
         res_dic = {
@@ -110,49 +116,49 @@ def select_unit(request):
 
 
 def delete_unit(request):
-
     try:
         res = json.loads(request.body)
         unit_id = res['unit_id']
-        schename=res['monitor_name']
+        monitor_name=res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
-        co.delete_task(schename)
+        co.delete_task(monitor_name)
         if Scene.objects.filter(item_id=unit_id).exists():
             Scene.objects.filter(item_id=unit_id).delete()
-        return None
+        res1 = tools.success_result(None)
     except Exception as e:
         res1 = tools.error_result(e)
-        return res1
+    return res1
 
 
 def add_unit(request):
-    try:
-        res = json.loads(request.body)
-        cilent = tools.interface_param (request)
-        user = cilent.bk_login.get_user({})
-        monitor_type = res['monitor_type']
-        if res['monitor_type'] == 'first':
-            monitor_type = '基本单元类型'
-        if res['monitor_type'] == 'second':
-            monitor_type = '图表单元类型'
-        if res['monitor_type'] == 'third':
-            monitor_type = '作业单元类型'
-        if res['monitor_type'] == 'fourth':
-            monitor_type = '流程元类型'
-        add_dic = res['data']
-        add_dic['monitor_name'] = res['monitor_name']
-        add_dic['monitor_type'] = monitor_type
-        add_dic['jion_id'] = None
-        add_dic['status'] = 0
-        add_dic['creator'] = user['data']['bk_username']
-        add_dic['editor'] = user['data']['bk_username']
-        print add_dic['params']
-        print add_dic
-        Monitor.objects.create(**add_dic)
-        function.add_unit_task(add_dicx=add_dic)
-        result = tools.success_result(None)
-    except Exception as e:
-        result = tools.error_result(e)
+
+    res = json.loads(request.body)
+    cilent = tools.interface_param (request)
+    user = cilent.bk_login.get_user({})
+    monitor_type = res['monitor_type']
+    if res['monitor_type'] == 'first':
+        monitor_type = '基本单元类型'
+    if res['monitor_type'] == 'second':
+        monitor_type = '图表单元类型'
+    if res['monitor_type'] == 'third':
+        monitor_type = '作业单元类型'
+        add_dic['jion_id'] = int (add_dic['gather_rule']['id'])
+        add_dic['gather_rule'] = add_dic['gather_rule']['name']
+    if res['monitor_type'] == 'fourth':
+        monitor_type = '流程元类型'
+        add_dic['jion_id'] = int (add_dic['gather_rule']['id'])
+        add_dic['gather_rule'] = add_dic['gather_rule']['name']
+    add_dic = res['data']
+    add_dic['monitor_name'] = res['monitor_name']
+    add_dic['monitor_type'] = monitor_type
+    add_dic['status'] = 0
+    add_dic['creator'] = user['data']['bk_username']
+    add_dic['editor'] = user['data']['bk_username']
+    Monitor.objects.create(**add_dic)
+    function.add_unit_task(add_dicx=add_dic)
+    result = tools.success_result(None)
+    # except Exception as e:
+    #     result = tools.error_result(e)
     return result
 
 
@@ -207,7 +213,7 @@ def basic_test(request):
         dic =  dict( dic, **dic1 )
     result.append(dic)
     db.close()
-    return result
+    return results
 
 
 def job_test(request):
@@ -251,18 +257,22 @@ def job_test(request):
 
 
 def change_unit_status(req):
-    res=json.loads(req.body)
-    schename=res['monitor_name']
-    flag=res['flag']
-    unit_id=res['id']
-    mon=Monitor.objects.get(id=unit_id)
-    mon.status=flag
-    mon.save()
-    if flag==0:
-        co.enable_task(schename)
-    else:
-        co.disable_task(schename)
-    return tools.success_result(None)
+    try:
+        res=json.loads(req.body)
+        schename=res['monitor_name']
+        flag=res['flag']
+        unit_id=res['id']
+        mon=Monitor.objects.get(id=unit_id)
+        mon.status=flag
+        mon.save()
+        if flag==0:
+            co.enable_task(schename)
+        else:
+            co.disable_task(schename)
+        res = tools.success_result(None)
+    except Exception as e:
+        res = tools.error_result(e)
+    return res
 
 
 def chart_get_test(request):
@@ -316,3 +326,13 @@ def chart_get_test(request):
         "results": result_list,
         "column_name_list": column_name_list,
     }
+
+
+def flow_change(request):
+    cilent = tools.interface_param (request)
+    params = {
+        "bk_biz_id": "2",
+        "template_id": "5"
+    }
+    res = cilent.sops.get_template_info(params)
+    return res
