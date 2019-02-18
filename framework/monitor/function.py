@@ -185,7 +185,7 @@ def edit_unit(request):
     return result
 
 
-def test(request):
+def basic_test(request):
     res = json.loads(request.body)
     result = []
     gather_rule = "select data_key,data_value from td_gather_data"

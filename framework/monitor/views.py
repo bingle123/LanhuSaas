@@ -45,8 +45,8 @@ def add_unit(request):
     return render_json(res)
 
 
-def test(request):
-    res = function.test(request)
+def basic_test(request):
+    res = function.basic_test(request)
     return render_json(res)
 
 
