@@ -42,7 +42,7 @@ def gather_test_init():
     # sql测试用参数：'46'
     # 文件测试用参数：'192.168.1.10,/fk/test.txt'
     # 接口测试用参数：'http://www.baidu.com,user=root$password=123'
-    info['params'] = '192.168.1.10,/fk/test.txt'
+    info['params'] = '192.168.1.10 /fk/test.txt'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'echo "1234"'
     # 接口测试用采集规则：'接口采集规则'
@@ -93,9 +93,7 @@ def gather_param_parse(info):
         gather_params['extra_param']['request_param_dict'] = request_param_dict
         gather_params['gather_rule'] = info['gather_rule']
     elif 'file' == info['gather_params']:
-        temp_params = info['params'].split(',')
-        gather_params['extra_param']['ip_address'] = temp_params[0]
-        gather_params['extra_param']['file_path'] = temp_params[1]
+        gather_params['extra_param']['script_params'] = info['params']
         gather_params['gather_rule'] = info['gather_rule']
     return gather_params
 
@@ -276,11 +274,7 @@ def gather_data(info):
         gather_params = gather_param_parse(info)
         # 脚本内容，使用Base64编码
         script_content = base64.b64encode(gather_params['gather_rule'])
-        # 目标文件的IP地址
-        ip_location = gather_params['extra_param']['ip_address']
-        # 目标文件所在服务器的路径
-        file_path = gather_params['extra_param']['file_path']
-        script_params = json.dumps(gather_params['extra_param'])
+        script_params = json.dumps(gather_params['extra_param']['script_params'])
         print 'SCRIPT_PARAMS: %s' % script_params
         # 蓝鲸业务ID，暂固定为2
         biz_id = '2'
