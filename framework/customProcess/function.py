@@ -70,7 +70,7 @@ def clear_execute_status():
     nodes_status = TdCustProcessLog.objects.all()
     for status in nodes_status:
         status.is_done = 'n'
-        status.do_time = ''
-        status.do_person = ''
+        status.do_time = None
+        status.do_person = None
         status.save()
     return "ok"
