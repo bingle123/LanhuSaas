@@ -19,6 +19,7 @@ import re
 from market_day import function
 from market_day import celery_opt as co
 from DataBaseManage.function import decrypt_str
+from gatherData.function import gather_data
 
 
 def unit_show(request):
@@ -260,12 +261,12 @@ def change_unit_status(req):
     try:
         res=json.loads(req.body)
         schename=res['monitor_name']
-        flag=res['flag']
+        flag=int(res['flag'])
         unit_id=res['id']
         mon=Monitor.objects.get(id=unit_id)
         mon.status=flag
         mon.save()
-        if flag==0:
+        if flag==1:
             co.enable_task(schename)
         else:
             co.disable_task(schename)
@@ -282,23 +283,28 @@ def chart_get_test(request):
     :return:
     """
     request_body = json.loads(request.body)
-    database_id = request_body['database_id']
+    #测试数据
+    database_id=request_body['database_id']
+
+    info={}
+    info['id'] = '71'
+    info['gather_params'] = 'sql'
+    info['params'] = request_body['database_id']
+    info['gather_rule']=request_body['sql']
     sql = request_body['sql']
-
-    # 假定数据
-    # database_id = 4
-    # sql = 'SELECT count(*)@人口数@,cityName@城市名称@ from city GROUP BY cityName'
-
+    #调用gatherData方法
+    gather_data(info)
     # sql查询列的名称
     column_name_temp = sql.split('@')
     column_name_list = []
     execute_sql = ''
     # 列名称和执行的sql
     for i in range(0, len(column_name_temp)):
-        if i % 2 == 1:
-            column_name_list.append(column_name_temp[i])
+        if i==0 or i==len(column_name_temp)-1:
+            execute_sql+=column_name_temp[i]
         else:
-            execute_sql += column_name_temp[i]
+            print column_name_temp[i].split('=')
+            execute_sql += (column_name_temp[i].split('=')[-1])
     print execute_sql
     # 更具数据库ID查询数据库配置
     database_result = list(Conn.objects.filter(id=database_id).values())
