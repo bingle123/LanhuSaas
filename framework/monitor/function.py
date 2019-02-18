@@ -6,7 +6,7 @@ import math
 from models import *
 from monitorScene.models import Scene
 from DataBaseManage.models import Conn
-from DataBaseManage import function
+from DataBaseManage import function as f
 import tools
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
@@ -18,6 +18,7 @@ import base64
 import re
 from market_day import function
 from market_day import celery_opt as co
+from DataBaseManage.function import decrypt_str
 
 
 def unit_show(request):
@@ -125,10 +126,10 @@ def delete_unit(request):
 
 
 def add_unit(request):
-    try:
+    # try:
         res = json.loads(request.body)
-        cilent = tools.interface_param (request)
-        user = cilent.bk_login.get_user({})
+        client = tools.interface_param (request)
+        user = client.bk_login.get_user({})
         monitor_type = res['monitor_type']
         if res['monitor_type'] == 'first':
             monitor_type = '基本单元类型'
@@ -150,9 +151,9 @@ def add_unit(request):
         Monitor.objects.create(**add_dic)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
-    except Exception as e:
-        result = tools.error_result(e)
-    return result
+    # except Exception as e:
+    #     result = tools.error_result(e)
+        return result
 
 
 def edit_unit(request):
@@ -186,10 +187,12 @@ def edit_unit(request):
 
 def test(request):
     res = json.loads(request.body)
-    gather_rule = res['gather_rule']
+    result = []
+    gather_rule = "select data_key,data_value from td_gather_data"
     server_url = res['server_url']
-    sql = Conn.objects.get(id=server_url)
-    password = function.decrypt_str(sql.password)
+    tmp = server_url.split(",")
+    sql = Conn.objects.get(id=tmp[0])
+    password = f.decrypt_str(sql.password)
     if sql.type == 'MySQL' or sql.type == 'Oracle':
         db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))
     if sql.type == 'SQL Server':
@@ -197,8 +200,15 @@ def test(request):
     cursor = db.cursor()
     cursor.execute(gather_rule)
     results = cursor.fetchall()
+    dic = {}
+    for i in results:
+        dic1 = {
+            i[0]:i[1]
+        }
+        dic = dict(dic, **dic1)
+    result.append(dic)
     db.close()
-    return results
+    return result
 
 
 def job_test(request):
@@ -237,8 +247,9 @@ def job_test(request):
             logger.error(u"请求作业模板失败：%s" % job.get('message'))
         res = tools.success_result(job_list)
     except Exception as e:
-        res = tools.error_result (e)
+        res = tools.error_result(e)
     return res
+
 
 def change_unit_status(req):
     res=json.loads(req.body)
