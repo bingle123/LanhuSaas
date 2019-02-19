@@ -305,7 +305,6 @@
                                 <div style="padding: 0px 20%">
                                     <div style="height: 20px"></div>
                                     <el-button type="primary" v-on:click="chart_get_test">采集测试</el-button>
-                                    <el-button type="primary" @click="chart_get_test">采集测试</el-button>
                                 </div>
                             </div>
                         </el-col>
@@ -319,12 +318,13 @@
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="job" :rules="rules3" ref="job" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
-                                    <el-select v-model="job.font_size" placeholder="请选择字号">
-                                        <el-option label="8" value="8"></el-option>
-                                        <el-option label="10" value="10"></el-option>
-                                        <el-option label="12" value="12"></el-option>
-                                        <el-option label="14" value="14"></el-option>
-                                        <el-option label="16" value="16"></el-option>
+                                    <el-select v-model="job.font_size" @change="change_job_fontSize" placeholder="请选择字号">
+                                        <el-option label="20" value="20"></el-option>
+                                        <el-option label="22" value="22"></el-option>
+                                        <el-option label="24" value="24"></el-option>
+                                        <el-option label="26" value="26"></el-option>
+                                        <el-option label="28" value="28"></el-option>
+                                        <el-option label="30" value="30"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
@@ -332,7 +332,7 @@
                                         <el-form-item prop="height">
                                             <el-input type="number" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="job.height"
-                                                      placeholder="请输入高度"></el-input>
+                                                      placeholder="请输入高度" @change="change_job_height"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
@@ -340,17 +340,17 @@
                                         <el-form-item prop="width">
                                               <el-input type="number" v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="job.width"
-                                                        placeholder="请输入宽度"></el-input>
+                                                        placeholder="请输入宽度" @change="change_job_width"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="显示内容" style="width: 96%" prop="contents">
                                     <el-input type="textarea" v-model="job.contents"
-                                              placeholder="上证指数:3000  深证指数:3000"></el-input>
+                                              placeholder="上证指数:3000  深证指数:3000" @change="change_job_contents"></el-input>
                                 </el-form-item>
                                 <el-form-item label="作业模板" prop="gather_params">
                                     <el-select v-model="job.gather_rule" placeholder="请选择作业模板">
-                                        <el-option v-for="i in job2" :label="i.name" :value="i.id.id"></el-option>
+                                        <el-option v-for="i in job2" :label="i.name" :value="i.id"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="脚本参数" style="width: 96%">
@@ -387,9 +387,27 @@
                             <div style="padding: 0px 45% 0px 45%">
                                 <h2>预览</h2>
                             </div>
-                            <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;">
+                            <div style="text-align:center;width: 100%;min-height:40%;height: auto;background-color: whitesmoke;">
                                 <div style="height: 60px"></div>
-                                <el-progress type="circle" :percentage="100" status="success"></el-progress>
+                                <div id="job_text" style="max-width: 100%; background: beige;margin: auto;padding-top: 20px 0;">
+                                    <div class="unexecuted" style="color: grey;display: block">
+                                        <h1>作业未执行</h1>
+                                        <i class="el-icon-error" style="color: grey;font-size: 30px;margin-top: 20px;"></i>
+                                    </div>
+                                    <div class="error" style="color: red;display: none">
+                                        <h1>作业执行失败</h1>
+                                        <i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i>
+                                    </div>
+                                    <div class="success" style="color: green;display: none">
+                                        <h1>作业执行成功</h1>
+                                        <i class="el-icon-success" style="color: green;font-size: 30px;margin-top: 20px;"></i>
+                                    </div>
+                                    <div class="loading" style="color: orange;display: none">
+                                        <h1>正在执行</h1>
+                                        <i class="el-icon-loading" style="color: orange;font-size: 30px;margin-top: 20px;"></i>
+                                    </div>
+                                </div>
+
                             </div>
                             <div style="padding: 0px 10%">
                                 <div style="height: 20px"></div>
@@ -436,7 +454,7 @@
                                 </el-form-item>
                                 <el-form-item label="流程模板" prop="gather_params">
                                     <el-select v-model="flow.gather_rule" placeholder="请选择模板" @change="flow_change"	>
-                                        <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id.id"></el-option>
+                                        <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="参数1" style="width: 96%">
@@ -518,7 +536,15 @@
                                         <div class="jtk-delete jtk-none ">删除节点</div>
                                         <div id="template" class="jtk-none">
                                             <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
-                                                 data-type="start">
+                                                 data-type="EmptyEndEvent">
+                                                <div class="node-wrapper">
+                                                    <div class="node-icon-start">
+                                                        <i class="bk-icon icon-star-shape"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                             <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
+                                                 data-type="EmptyStartEvent">
                                                 <div class="node-wrapper">
                                                     <div class="node-icon-start">
                                                         <i class="bk-icon icon-star-shape"></i>
@@ -526,7 +552,7 @@
                                                 </div>
                                             </div>
                                             <div class="jtk-window jtk-node workfolw-node database-node" id="{charts}"
-                                                 data-type="database">
+                                                 data-type="ServiceActivity">
                                                 <div class="node-wrapper">
                                                     <div class="node-content">
                                                         <input type="text" class="node-title" value="">
@@ -963,7 +989,6 @@
                         }
                     }
                     for(i=0;i<flag/2;i++){
-                        console.log(res.data.message)
                         vm.tempcontents2 = vm.tempcontents2.replace(str[i].toString(),res.data.message[0][temp4[i]]);
                     }
                     $("#text2").html("")
@@ -989,7 +1014,6 @@
                         }
                         icon = '@'+icon2[1]+'@',
                         icon4 = res.data.message[0]['gather_status']
-                        alert(icon4)
                         temp1[flag2] = temp1[flag2].replace(icon.toString(),'')
                         $("#text2").html("")
                         for(var i=0,j=0;i<temp1.length;i=i+2,j++){
@@ -1231,15 +1255,34 @@
                 }
             },
             flow_change(value){
+                var location = ''
+                var line=''
                 axios({
-                    method: 'post',
-                    url: '${SITE_URL}monitor/flow_change/',
-                    data:{
+                    method:'post',
+                    url:'${SITE_URL}monitor/flow_change/',
+                    data: {
                         template_id:value
                     }
-                }).then((res)=> {
-                    console.log(res)
+                }).then(function (res) {
+                    {
+                        location = res.data.activities
+                        line = res.data.flows
+                        //显示流程单元中的预览图
+                        $('#flow1').dataflow({
+                            el: '.tool', //流程拖动源
+                            canvas: '#canvas', //画布
+                            arrowWidth: 8,
+                            arrowHeight: 10,
+                            template: '#template',
+                            data:
+                                {
+                                    "line": line, "location": location
+
+                                }
+                        });
+                    }
                 })
+
             },
             edit3(row) {
                 setTimeout(
@@ -1305,22 +1348,76 @@
                     vm.liucheng = 'none';
                 }
             },
+            change_job_fontSize(){
+                $('#job_text').find("*").css('font-size',this.job.font_size);
+            },
+            change_job_height(){
+                $('#job_text').css('height',this.job.height);
+            },
+            change_job_width(){
+                $('#job_text').css('width',this.job.width);
+            },
+            change_job_contents(){
+                let contents=vm.job.contents;
+                let str = contents.split('@')[1].split('=')[1];
+                switch (str) {
+                    case '0':
+                        $('.unexecuted').css('display','block');
+                        $('.success').css('display','none');
+                        $('.error').css('display','none');
+                        $('.loading').css('display','none');
+                        break;
+                    case '1':
+                        $('.unexecuted').css('display','none');
+                        $('.success').css('display','block');
+                        $('.error').css('display','none');
+                        $('.loading').css('display','none');
+                        break;
+                    case '2':
+                        $('.unexecuted').css('display','none');
+                        $('.success').css('display','none');
+                        $('.error').css('display','none');
+                        $('.loading').css('display','block');
+                        break;
+                    case '-1':
+                        $('.unexecuted').css('display','none');
+                        $('.success').css('display','none');
+                        $('.error').css('display','block');
+                        $('.loading').css('display','none');
+                        break;
+                }
+            },
             job_test() {
                 vm.disabled1 = true;
                 setTimeout(function () {
                     vm.disabled1 = false;
                 }, 3000);
+                $('.unexecuted').css('display','none');
+                $('.success').css('display','none');
+                $('.error').css('display','none');
+                $('.loading').css('display','block');
                 axios({
                     url:'${SITE_URL}monitor/job_test/',
                     method:'post',
                     data: {
+
                         'gather_params': vm.job.gather_params,
                         'job_id': vm.job.gather_rule,
                         'params':vm.job.params,
-                        'gather_rule':vm.job.gather_rule,
                     },
                 }).then((res) =>{
-                    alert(res['data']['message'])
+                    let status=res['data']['result'];
+                    if(status){
+                        $('.unexecuted').css('display','none');
+                        $('.success').css('display','block');
+                        $('.error').css('display','none');
+                        $('.loading').css('display','none');
+                    }else {
+                        $('.unexecuted').css('display','none');
+                        $('.success').css('display','none');
+                        $('.error').css('display','block');
+                        $('.loading').css('display','none');
+                    }
                 })
             },
             rowclass({row, rowIndex}) {
@@ -1404,6 +1501,7 @@
             time2() {
 
             },
+            //显示图标
             show_chart() {
                 if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
                     this.myChart.dispose();
