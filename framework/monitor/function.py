@@ -310,56 +310,60 @@ def chart_get_test(request):
     :param request:
     :return:
     """
-    request_body = json.loads(request.body)
-    #测试数据
-    database_id=request_body['database_id']
+    try:
+        request_body = json.loads(request.body)
+        #测试数据
+        database_id=request_body['database_id']
 
-    info={}
-    info['id'] = '71' #id测试用的随意值
-    info['gather_params'] = 'sql' #图表监控项是sql语句查询
-    info['params'] = request_body['database_id']
-    info['gather_rule']=request_body['sql']
-    sql = request_body['sql']
-    #调用gatherData方法
-    gather_data(info)
-    # sql查询列的名称
-    column_name_temp = sql.split('@')
-    column_name_list = []
-    execute_sql = ''
-    # 列名称和执行的sql
-    for i in range(0, len(column_name_temp)):
-        if i==0 or i==len(column_name_temp)-1:
-            execute_sql+=column_name_temp[i]
-        else:
-            print column_name_temp[i].split('=')
-            execute_sql += (column_name_temp[i].split('=')[-1])
-    print execute_sql
-    # 更具数据库ID查询数据库配置
-    database_result = list(Conn.objects.filter(id=database_id).values())
-    # 数据库参数
-    username = database_result[0]['username']
-    database = database_result[0]['databasename']
-    password = decrypt_str(database_result[0]['password'])
-    host = database_result[0]['ip']
-    port = str(database_result[0]['port'])
-    db = MySQLdb.connect(host=host, user=username, passwd=password, db=database, port=int(port), charset='utf8')
-    cursor = db.cursor()
-    cursor.execute(execute_sql)
-    results = cursor.fetchall()
-    db.close()
-    result_list = []
-    for i in results:
-        temp_dict = {}
-        temp_dict['name'] = list(i)[1].encode('utf-8')
-        temp_dict['value'] = list(i)[0]
-        result_list.append(temp_dict)
-    return {
-        "result": True,
-        "message": u'成功',
-        "code": 0,
-        "results": result_list,
-        "column_name_list": column_name_list,
-    }
+        info={}
+        info['id'] = '71' #id测试用的随意值
+        info['gather_params'] = 'sql' #图表监控项是sql语句查询
+        info['params'] = request_body['database_id']
+        info['gather_rule']=request_body['sql']
+        sql = request_body['sql']
+        #调用gatherData方法
+        gather_data(info)
+        # sql查询列的名称
+        column_name_temp = sql.split('@')
+        column_name_list = []
+        execute_sql = ''
+        # 列名称和执行的sql
+        for i in range(0, len(column_name_temp)):
+            if i==0 or i==len(column_name_temp)-1:
+                execute_sql+=column_name_temp[i]
+            else:
+                print column_name_temp[i].split('=')
+                execute_sql += (column_name_temp[i].split('=')[-1])
+        print execute_sql
+        # 更具数据库ID查询数据库配置
+        database_result = list(Conn.objects.filter(id=database_id).values())
+        # 数据库参数
+        username = database_result[0]['username']
+        database = database_result[0]['databasename']
+        password = decrypt_str(database_result[0]['password'])
+        host = database_result[0]['ip']
+        port = str(database_result[0]['port'])
+        db = MySQLdb.connect(host=host, user=username, passwd=password, db=database, port=int(port), charset='utf8')
+        cursor = db.cursor()
+        cursor.execute(execute_sql)
+        results = cursor.fetchall()
+        db.close()
+        result_list = []
+        for i in results:
+            temp_dict = {}
+            temp_dict['name'] = list(i)[1].encode('utf-8')
+            temp_dict['value'] = list(i)[0]
+            result_list.append(temp_dict)
+        res= {
+            "result": True,
+            "message": u'成功',
+            "code": 0,
+            "results": result_list,
+            "column_name_list": column_name_list,
+        }
+    except Exception as e:
+        res=tools.error_result(e)
+    return res
 
 
 def flow_change(request):

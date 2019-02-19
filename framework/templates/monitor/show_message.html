@@ -1565,6 +1565,20 @@
                         sql:vm.chart.gather_rule,
                     },
                 }).then((res) => {
+                    console.log(res)
+                    if(res.data.result){
+                        this.$message({
+                            message:'数据采集成功，请选择图表类型进行查看！',
+                            type:'success',
+                            center:true
+                        })
+                    }else{
+                        this.$message({
+                            message:'数据采集失败，请检查数据配置或采集规则！',
+                            type:'warning',
+                            center:true
+                        })
+                    }
                     vm.chartData=res.data.results;
                     vm.person_count=res.data.column_name_list[0]
                 }).catch((res) =>{
