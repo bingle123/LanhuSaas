@@ -994,10 +994,11 @@
                     method: 'post',
                     url: '${SITE_URL}monitor/basic_test/',
                     data: {
-                        id:vm.typeid,
+                        id:vm.unit_id,
                         server_url: vm.server_url,
                         gather_rule:vm.basic.gather_rule,
-                        gather_params:vm.basic.gather_params
+                        gather_params:vm.basic.gather_params,
+                        file_param:vm.file_param
                     },
                 }).then(function (res) {
                     vm.tempcontents2 = vm.basic.contents
