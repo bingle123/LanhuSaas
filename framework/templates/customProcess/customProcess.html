@@ -176,7 +176,7 @@
                                 <el-col :span="24">
                                     <div id="customProcessAddButton">
                                         <el-button-group>
-                                            <el-button type="success" size="small" @click="addDialogVisible = true" :disabled="customProcessStatus">添加 / 修改过程通知</el-button>
+                                            <el-button type="success" size="small" @click="defineOrChangeProcess()">添加 / 修改过程通知</el-button>
                                             <el-button type="danger" size="small" @click="customProcessDelete()" :disabled="!customProcessHasNode">删除当前过程通知</el-button>
                                         </el-button-group>
                                     </div>
@@ -237,7 +237,7 @@
                 ],
                 seq: [
                     { required: true, message: '请输入节点顺序', trigger: 'blur' },
-                    { pattern: /^[1-9][0-9]{0,1}$/, message: '节点值在0~99之间', trigger: 'blur' }
+                    { pattern: /^[1-9][0-9]{0,1}$/, message: '节点值在1~99之间', trigger: 'blur' }
                 ],
                 receivers: [
                     { required: true, message: '请输入通知接收人', trigger: 'blur' },
@@ -398,6 +398,44 @@
                     this.customProcessPopupErrorMessage(msg);
                 });
             },
+            //增加/修改流程节点
+            defineOrChangeProcess: function() {
+                if(this.customProcessStatus){
+                    this.$confirm('当前流程正在使用中, 强行修改将会导致执行状态信息丢失，是否继续?', '提示', {
+                      confirmButtonText: '确定',
+                      cancelButtonText: '取消',
+                      type: 'warning',
+                      center: true
+                    }).then(() => {
+                        var url = '${SITE_URL}customProcess/clear_execute_status';
+                        const loading = this.customProcessPopupLoading();
+                        axios({
+                            method: 'post',
+                            url: url
+                        }).then((res) =>{
+                            if('ok' == res.data.message){
+                                this.addDialogVisible = true;
+                                this.customProcessSelectAllNodes()
+                            }else{
+                                var msg = '修改过程通知失败！';
+                                this.customProcessPopupErrorMessage(msg);
+                            }
+                            loading.close();
+                        }).catch((res) => {
+                            loading.close();
+                            var msg = '修改过程通知失败！';
+                            this.customProcessPopupErrorMessage(msg);
+                        });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '取消修改过程通知'
+                        });
+                    });
+                }else{
+                    this.addDialogVisible = true;
+                }
+            },
             //从数据库中删除节点信息
             customProcessDeleteNode: function(id) {
                 this.$confirm('此操作将删除该节点, 是否继续?', '提示', {
@@ -474,7 +512,7 @@
             },
             //流程开始
             customProcessBegin: function(elem) {
-                this.$confirm('即将开始执行当前流程，执行过程中将无法修改节点, 是否继续?', '提示', {
+                this.$confirm('即将开始执行当前流程，执行过程中将不能再随意修改节点, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning',
@@ -569,32 +607,38 @@
                 }).then((res) =>{
                     this.customProcessTableData = res.data.message;
                     this.customProcessStepSum = this.customProcessTableData.length;
-                    if(0 != this.customProcessStepSum)
+                    if(0 != this.customProcessStepSum) {
                         this.customProcessHasNode = true;
-                    //-----------当前流程节点执行位置判断----------
-                    $.each(this.customProcessTableData, function(index, elem){
-                        if(elem.status.is_done == 'c'){
-                            return false;
-                        }
-                        count++;
-                    });
-                    //流程节点没有开始执行或已经执行完毕的情况
-                    if(count == this.customProcessStepSum){
-                        //执行完毕
-                        if(this.customProcessTableData[count - 1].status.is_done == 'y'){
-                            this.customProcessStartButtonType = 'info';
+                        //-----------当前流程节点执行位置判断----------
+                        $.each(this.customProcessTableData, function(index, elem){
+                            if(elem.status.is_done == 'c'){
+                                return false;
+                            }
+                            count++;
+                        });
+                        //流程节点没有开始执行或已经执行完毕的情况
+                        if(count == this.customProcessStepSum){
+                            //执行完毕
+                            if(this.customProcessTableData[count - 1].status.is_done == 'y'){
+                                this.customProcessStartButtonType = 'info';
+                                this.customProcessStartButtonDisabled = true;
+                                this.customProcessStartButtonText = '当日流程已执行完毕';
+                                this.customProcessStep = this.customProcessTableData.length;
+                                this.customProcessStatus = true;
+                            } else{ //还未开始执行
+                                this.customProcessStep = -1;
+                                this.customProcessStatus = false;
+                                this.customProcessStartButtonType = 'primary';
+                                this.customProcessStartButtonText = '开始执行流程';
+                                this.customProcessStartButtonDisabled = false;
+                            }
+                        }else{//流程节点正在执行的情况
+                            this.customProcessStartButtonType = 'success';
                             this.customProcessStartButtonDisabled = true;
-                            this.customProcessStartButtonText = '当日流程已执行完毕';
-                            this.customProcessStep = this.customProcessTableData.length;
+                            this.customProcessStartButtonText = '正在执行流程';
+                            this.customProcessStep = count;
                             this.customProcessStatus = true;
-                        } else//未开始执行
-                            this.customProcessStep = -1;
-                    }else{//流程节点正在执行的情况
-                        this.customProcessStartButtonType = 'success';
-                        this.customProcessStartButtonDisabled = true;
-                        this.customProcessStartButtonText = '正在执行流程';
-                        this.customProcessStep = count;
-                        this.customProcessStatus = true;
+                        }
                     }
                     loading.close();
                 }).catch((res) => {

@@ -59,7 +59,7 @@
                         <span class="el-submenu" style="font-size: 18px;line-height: 56px;">场景展示</span>
                     </template>
                     <el-menu-item index="4-1" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html4')">场景轮播测试</el-menu-item>
-                    <el-menu-item index="4-2" style="font-size: 16px;line-height: 56px;" onclick="window.open(${SITE_URL}scene_carousel/)">大屏轮播</el-menu-item>
+                    <el-menu-item index="4-2" style="font-size: 16px;line-height: 56px;" onclick="window.open(${SITE_URL}scene_carousel)">大屏轮播</el-menu-item>
                 </el-submenu>
                 <el-submenu index="5">
                     <template slot="title">
@@ -70,7 +70,7 @@
                     <el-menu-item index="5-2" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html7')">数据库连接配置</el-menu-item>
                     <el-menu-item index="5-3" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html8')">交易日导入</el-menu-item>
                     <el-menu-item index="5-4" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html9')">网页抓取配置</el-menu-item>
-                    <el-menu-item index="5-5" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html10')">告警配置</el-menu-item>
+                    <el-menu-item index="5-5" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html10')">告警规则配置</el-menu-item>
                     <el-menu-item index="5-6" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html11')">接入配置</el-menu-item>
                     <el-menu-item index="5-7" style="font-size: 16px;line-height: 56px;" v-on:click="testClick('html16')">定制过程通知</el-menu-item>
                 </el-submenu>
@@ -157,7 +157,7 @@
                                 src="${SITE_URL}system_config/crawl_config_html"
                                 frameborder="0"></iframe>
                         <iframe v-if="ifArr.html10" class="ifa" scrolling=auto
-                                src="https://segmentfault.com/"
+                                src="${SITE_URL}alertRule/alertRuleManage"
                                 frameborder="0"></iframe>
                         <iframe v-if="ifArr.html11" class="ifa" scrolling=auto
                                 src="https://www.baidu.com/"

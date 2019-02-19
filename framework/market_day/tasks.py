@@ -2,31 +2,17 @@
 # -*- coding:utf-8 -*-
 from __future__ import absolute_import
 from celery import task
-from django.core.mail import send_mail
-from django.conf import settings
-from time import sleep
-from celery.task import periodic_task
 from system_config.crawl_template import crawl_temp
 from system_config.function import *
-from  system_config.models import SendMailLog as sml
+from celery.task import periodic_task
+from system_config.models import SendMailLog as sml
 import logging
-import datetime
+import time
+from gatherData import function
+from monitor.models import Monitor
+from django.db.models import Q
+from django.forms import model_to_dict
 
-
-@task
-def sendemail(email):
-    content='www.baidu.com'+str(datetime.datetime.now())
-    send_mail('i come from china',content,settings.DEFAULT_FROM_EMAIL,[email],fail_silently=False)
-    return 'success'
-@task
-def count_time(**i):
-    return i['x']*i['y']
-
-
-@periodic_task(run_every=10)
-def get_mail():
-    count_time.delay({'x':10,'y':15})
-    logging.error('计算成功')
 
 @task
 def crawl_task(**i):
@@ -85,11 +71,36 @@ def crawl_task(**i):
             pass
         else:
             # print send_result
-            send_content = change_to_html(send_result)
             receivers_mail = ['761494073@qq.com', 'liaomingtao@zork.com.cn']
             theme = crawl_name + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + u'的爬虫信息'
+            send_content = change_to_html(send_result)
             mail_send(theme, send_content, receivers_mail)
-            sml.objects.create(link_id=id,message_title=theme,message_content=send_content)
+            sml.objects.create(link_id=id, message_title=theme, message_content=send_content)
             logging.error(u'消息日志保存成功')
     return 'success'
 
+
+@task
+def gather_data_task(**i):
+    print '采集开始'
+    # 调用数据采集的方法
+    function.gather_data(i)
+    return '采集成功'
+
+
+# 定时任务测试
+@task
+def count_time(**i):
+    return i['x'] * i['y']
+
+# 每十秒检查监控项的状态
+# @periodic_task(run_every=10)
+# def check_gather_status():
+#     monitors = Monitor.objects.all()
+#     for monitor in monitors:
+#         if (time.strftime('%H:%M:%S',time.localtime(time.time()))>str(monitor.start_time))&(time.strftime('%H:%M:%S',time.localtime(time.time()))<str(monitor.end_time)):
+#             if(monitor.status!=2):
+#                 monitor.status=0
+#         else:
+#             monitor.status=1
+#         monitor.save()

@@ -4,6 +4,8 @@ from models import Holiday
 import os
 from xlrd import open_workbook
 from framework.conf import default
+from monitor.models import Monitor
+from django.forms import model_to_dict
 import celery_opt as co
 import tasks
 
@@ -60,3 +62,40 @@ def addone(req, date):
 def addperdic_task():
     flag=co.create_task_interval(name='demo_per', task='market_day.tasks.count_time', task_args=[10,50], desc='demodemo',interval_time={'every':10,'period':'seconds'})
     return flag
+
+def add_unit_task(add_dicx):
+    schename = add_dicx['monitor_name']
+    id=Monitor.objects.get(monitor_name=schename).id
+    starthour = str(add_dicx['start_time'])[:2]
+    endhour = str(add_dicx['end_time'])[:2]
+    period = int(add_dicx['period'])
+    ctime = {
+        'hour': starthour + '-' + endhour,
+        'minute': '*/' + str(period / 60),
+    }
+    info = {
+        'id':id,
+        'gather_params': add_dicx['gather_params'],
+        'params': add_dicx['params'],
+        'gather_rule': add_dicx['gather_rule'],
+    }
+    co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task', crontab_time=ctime,
+                           task_args=info, desc=schename)
+
+def edit_unit_task(add_dicx):
+    schename = add_dicx['monitor_name']
+    id=Monitor.objects.get(monitor_name=schename).id
+    starthour = str(add_dicx['start_time'])[:2].id
+    endhour = str(add_dicx['end_time'])[:2]
+    period = add_dicx['period']
+    ctime = {
+        'hour': starthour + '-' + endhour,
+        'minute': '*/' + str(period / 60),
+    }
+    info = {
+        'id':id,
+        'gather_params':add_dicx['gather_params'],
+        'params':add_dicx['params'],
+        'gather_rule':add_dicx['gather_rule'],
+    }
+    co.change_task_status(name=schename,crontab_time=ctime,args=info)

@@ -1,3 +1,4 @@
+# encoding:utf-8
 import function
 from common.mymako import render_json, render_mako_context
 
@@ -43,6 +44,42 @@ def add_unit(request):
     res = function.add_unit(request)
     return render_json(res)
 
-def test(request):
-    res = function.test(request)
+
+def basic_test(request):
+    res = function.basic_test(request)
+    return render_json(res)
+
+
+def job_test(request):
+    res = function.job_test(request)
+    return render_json(res)
+
+
+def test1(request):
+    res = function.ttt(request)
+    return render_json(res)
+
+
+def change_status(req):
+    res=function.change_unit_status(req)
+    return render_json(res)
+
+
+def chart_get_test(request):
+    """
+    图表单元采集测试
+    :param request:
+    :return:
+    """
+    res = function.chart_get_test(request)
+    return render_json(res)
+
+
+def flow_change(request):
+    """
+    图表单元采集测试
+    :param request:
+    :return:
+    """
+    res = function.flow_change(request)
     return render_json(res)

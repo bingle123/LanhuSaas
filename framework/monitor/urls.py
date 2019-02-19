@@ -22,5 +22,9 @@ urlpatterns = patterns(
     (r'^delete/$', 'delete_unit'),
     (r'^add/$', 'add_unit'),
     (r'^123/$', 'index1'),
-    (r'^test/$', 'test'),
+    (r'^basic_test/$', 'basic_test'),
+    (r'^job_test/$', 'job_test'),
+    (r'^chart_get_test/$', 'chart_get_test'),
+    (r'^change_status/$', 'change_status'),                 #改变监控项的启用状态
+    (r'^flow_change/$', 'flow_change'),
 )

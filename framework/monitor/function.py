@@ -6,13 +6,20 @@ import math
 from models import *
 from monitorScene.models import Scene
 from DataBaseManage.models import Conn
-from DataBaseManage import function
+from DataBaseManage import function as f
 import tools
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
 from django.db.models import Q
 import pymysql as MySQLdb
+import pymssql
 import copy
+import base64
+import re
+from market_day import function
+from market_day import celery_opt as co
+from DataBaseManage.function import decrypt_str
+from gatherData.function import gather_data
 
 
 def unit_show(request):
@@ -24,15 +31,15 @@ def unit_show(request):
         p=Paginator(unit, limit)    #分页
         page_count = p.page_range[-1]  #总页数
         page = p.page(page)        #当前页数据
-
         res_list=[]
         for i in page.object_list:
             j=model_to_dict(i)
             j['page_count']=page_count
             j['edit_time'] = str(i.edit_time)
             j['create_time'] = str(i.create_time)
-            j['start_time'] = str (i.start_time)
-            j['end_time'] = str (i.end_time)
+            j['start_time'] = str(i.start_time)
+            j['end_time'] = str(i.end_time)
+            j['status'] = str(i.status)
             res_list.append(j)
         param = {
             'bk_username': 'admin',
@@ -58,12 +65,20 @@ def unit_show(request):
         flow = []
         for i in flow_list:
             dic2 = {
-                'flow_name': i['name']
+                'flow_name': i['name'],
+                'id': {
+                    'name': i['name'],
+                    'id': i['id']
+                }
             }
             flow.append(dic2)
         for i in job_list:
             dic1 = {
-                'name': i['name']
+                'name': i['name'],
+                'id': {
+                    'name': i['name'],
+                    'id': i['bk_job_id']
+                }
             }
             job.append(dic1)
         res_dic = {
@@ -102,46 +117,49 @@ def select_unit(request):
 
 
 def delete_unit(request):
-
     try:
         res = json.loads(request.body)
         unit_id = res['unit_id']
+        monitor_name=res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
+        co.delete_task(monitor_name)
         if Scene.objects.filter(item_id=unit_id).exists():
             Scene.objects.filter(item_id=unit_id).delete()
-        return None
+        res1 = tools.success_result(None)
     except Exception as e:
         res1 = tools.error_result(e)
-        return res1
+    return res1
 
 
 def add_unit(request):
-    try:
-        res = json.loads(request.body)
-        cilent = tools.interface_param (request)
-        user = cilent.bk_login.get_user({})
-        monitor_type = res['monitor_type']
-        if res['monitor_type'] == 'first':
-            monitor_type = '基本单元类型'
-        if res['monitor_type'] == 'second':
-            monitor_type = '图表单元类型'
-        if res['monitor_type'] == 'third':
-            monitor_type = '作业单元类型'
-        if res['monitor_type'] == 'fourth':
-            monitor_type = '流程元类型'
-        add_dic = res['data']
-        add_dic['monitor_name'] = res['monitor_name']
-        add_dic['monitor_type'] = monitor_type
-        add_dic['jion_id'] = None
-        add_dic['status'] = 0
-        add_dic['creator'] = user['data']['bk_username']
-        add_dic['editor'] = user['data']['bk_username']
-        print add_dic['params']
-        print add_dic
-        Monitor.objects.create(**add_dic)
-        result = tools.success_result(None)
-    except Exception as e:
-        result = tools.error_result(e)
+
+    res = json.loads(request.body)
+    cilent = tools.interface_param (request)
+    user = cilent.bk_login.get_user({})
+    add_dic = res['data'],
+    monitor_type = res['monitor_type']
+    if res['monitor_type'] == 'first':
+        monitor_type = '基本单元类型'
+    if res['monitor_type'] == 'second':
+        monitor_type = '图表单元类型'
+    if res['monitor_type'] == 'third':
+        monitor_type = '作业单元类型'
+        add_dic['jion_id'] = int(add_dic['gather_rule']['id'])
+        add_dic['gather_rule'] = add_dic['gather_rule']['name']
+    if res['monitor_type'] == 'fourth':
+        monitor_type = '流程单元类型'
+        add_dic['jion_id'] = int (add_dic['gather_rule']['id'])
+        add_dic['gather_rule'] = add_dic['gather_rule']['name']
+    add_dic['monitor_name'] = res['monitor_name']
+    add_dic['monitor_type'] = monitor_type
+    add_dic['status'] = 0
+    add_dic['creator'] = user['data']['bk_username']
+    add_dic['editor'] = user['data']['bk_username']
+    Monitor.objects.create(**add_dic)
+    function.add_unit_task(add_dicx=add_dic)
+    result = tools.success_result(None)
+    # except Exception as e:
+    #     result = tools.error_result(e)
     return result
 
 
@@ -167,22 +185,189 @@ def edit_unit(request):
         add_dic['status'] = 0
         add_dic['editor'] = user['data']['bk_username']
         Monitor.objects.filter(monitor_name=res['monitor_name']).update(**add_dic)
+        function.edit_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
     except Exception as e:
         result = tools.error_result(e)
     return result
 
 
-
-def test(request):
+def basic_test(request):
     res = json.loads(request.body)
-    gather_rule = res['gather_rule']
+    result = []
+    gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = 1"
     server_url = res['server_url']
+    gather_rule = res['gather_rule']
+    typeid = res['id']
+    gather_params = res['gather_params']
     sql = Conn.objects.get(id=server_url)
-    password = function.decrypt_str(sql.password)
-    db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))
+    password = f.decrypt_str(sql.password)
+    info = {
+        'id':typeid,
+        'gather_params':gather_params,
+        'params':server_url,
+        'gather_rule':gather_rule
+    }
+    gather_data(info)
+    if sql.type == 'MySQL' or sql.type == 'Oracle':
+        db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))
+    if sql.type == 'SQL Server':
+        db = pymssql.connect(sql.ip, sql.username, password, sql.databasename)
     cursor = db.cursor()
-    cursor.execute(gather_rule)
+    cursor.execute(gather_rule2)
+    results = cursor.fetchall()
+    dic = {}
+    for i in results:
+        dic1 = {
+            i[0]:i[1],
+            'gather_status':i[2]
+        }
+        dic =  dict( dic, **dic1 )
+    result.append(dic)
+    db.close()
+    return result
+
+
+
+def job_test(request):
+    try:
+        res = json.loads(request.body)
+        params = res['params']
+        x = res['gather_params']
+        x1 = x.decode('utf-8')
+        bk_job_id = res['job_id']
+        script_param = base64.b64encode(x1)
+        cilent = tools.interface_param(request)
+        select_job_params = {
+            'bk_biz_id': 2,
+            'bk_job_id': bk_job_id,
+        }
+        select_job = cilent.job.get_job_detail(select_job_params)
+        if select_job.get('result'):
+            select_job_list = select_job.get('data')
+        else:
+            select_job_list = []
+            logger.error(u"请求作业模板失败：%s" % select_job.get('message'))
+        step_id = select_job_list['steps'][0]['step_id']
+        job_params = {
+            'bk_biz_id': 2,
+            'bk_job_id': bk_job_id,
+            'steps': [{
+                'step_id': step_id,
+                'script_param': script_param
+            }],
+            "global_vars":
+                [{"ip_list": [
+                    {
+                        "bk_cloud_id": 1,
+                        "ip": params
+                    },
+                    ],
+                }]
+        }
+        job = cilent.job.execute_job(job_params)
+        if job.get('result'):
+            job_list = job.get('data')
+        else:
+            job_list = []
+            logger.error(u"请求作业模板失败：%s" % job.get('message'))
+        info = {}
+        info['id'] = '21'  # id测试用的随意值
+        info['gather_params'] = 'interface'  # 作业监控项是sql语句查询
+        info['params'] = res['params']
+        info['gather_rule'] = res['gather_rule']
+        # 调用gatherData方法
+        gather_data(info)
+        res = tools.success_result(job_list)
+
+    except Exception as e:
+        res = tools.error_result(e)
+    return res
+
+
+def change_unit_status(req):
+    try:
+        res=json.loads(req.body)
+        schename=res['monitor_name']
+        flag=int(res['flag'])
+        unit_id=res['id']
+        mon=Monitor.objects.get(id=unit_id)
+        mon.status=flag
+        mon.save()
+        if flag==1:
+            co.enable_task(schename)
+        else:
+            co.disable_task(schename)
+        res = tools.success_result(None)
+    except Exception as e:
+        res = tools.error_result(e)
+    return res
+
+
+def chart_get_test(request):
+    """
+    图表单元采集测试
+    :param request:
+    :return:
+    """
+    request_body = json.loads(request.body)
+    #测试数据
+    database_id=request_body['database_id']
+
+    info={}
+    info['id'] = '71' #id测试用的随意值
+    info['gather_params'] = 'sql' #图表监控项是sql语句查询
+    info['params'] = request_body['database_id']
+    info['gather_rule']=request_body['sql']
+    sql = request_body['sql']
+    #调用gatherData方法
+    gather_data(info)
+    # sql查询列的名称
+    column_name_temp = sql.split('@')
+    column_name_list = []
+    execute_sql = ''
+    # 列名称和执行的sql
+    for i in range(0, len(column_name_temp)):
+        if i==0 or i==len(column_name_temp)-1:
+            execute_sql+=column_name_temp[i]
+        else:
+            print column_name_temp[i].split('=')
+            execute_sql += (column_name_temp[i].split('=')[-1])
+    print execute_sql
+    # 更具数据库ID查询数据库配置
+    database_result = list(Conn.objects.filter(id=database_id).values())
+    # 数据库参数
+    username = database_result[0]['username']
+    database = database_result[0]['databasename']
+    password = decrypt_str(database_result[0]['password'])
+    host = database_result[0]['ip']
+    port = str(database_result[0]['port'])
+    db = MySQLdb.connect(host=host, user=username, passwd=password, db=database, port=int(port), charset='utf8')
+    cursor = db.cursor()
+    cursor.execute(execute_sql)
     results = cursor.fetchall()
     db.close()
-    return results
+    result_list = []
+    for i in results:
+        temp_dict = {}
+        temp_dict['name'] = list(i)[1].encode('utf-8')
+        temp_dict['value'] = list(i)[0]
+        result_list.append(temp_dict)
+    return {
+        "result": True,
+        "message": u'成功',
+        "code": 0,
+        "results": result_list,
+        "column_name_list": column_name_list,
+    }
+
+
+def flow_change(request):
+    
+    cilent = tools.interface_param (request)
+    params = {
+        "bk_biz_id": "2",
+        "template_id": "5"
+    }
+    res = cilent.sops.get_template_info(params)
+    return res
