@@ -33,7 +33,11 @@
         .el-table--border th {
             padding: 5px
         }
-
+        .circle1{display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
+        .circle2{display: inline-block;margin-left:5px;width:16px;height:16px;background-color:darkgreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
+        .circle3{display: inline-block;margin-left:5px;width:16px;height:16px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
+        .circle4{display: inline-block;margin-left:5px;width:16px;height:16px;background-color:red;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
+        .asd{display: inline-block;}
     </style>
 </head>
 <body>
@@ -189,13 +193,14 @@
                             <div style="padding: 0px 45% 0px 45%">
                                 <h2>预览</h2>
                             </div>
-                            <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;" id="text1">
-                                <div style="height: 60px"></div>
-                                    <textarea id="textarea" style="resize: none;">{{tempcontents}}</textarea>
+                            <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke; position: relative" id="text1">
+
+                                <div id = "text2" style="position:absolute;left:230px;top:150px;">
+                                </div>
                             </div>
                             <div style="padding: 0px 20%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" @click="basic_test()">采集测试</el-button>
+                                <el-button type="primary" @click="basic_test">采集测试</el-button>
                             </div>
                         </div></el-col>
                     </el-row>
@@ -616,6 +621,7 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            typeid:'1',
             tempcontents:'',
             tempcontents2:'',
             msg1:'',
@@ -852,13 +858,13 @@
         },
         methods: {
             basic_size(){
-              $("#textarea").css("font-size",this.basic.font_size)
+              $("#text2").css("font-size",this.basic.font_size)
             },
             basic_height(){
-                $('#textarea').css('height',this.basic.height)
+                $('#text2').css('top',this.basic.height)
             },
             basic_width(){
-                $("#textarea").css("width",this.basic.width)
+                $("#text2").css("left",this.basic.width)
             },
             sycontent(){
                 vm.tempcontents = vm.basic.contents
@@ -889,13 +895,64 @@
                 for(i=0;i<flag/2;i++){
                     vm.tempcontents = vm.tempcontents.replace(str[i].toString(),temp4[i].toString());
                 }
+                for(var i=0;i<vm.basic.contents.length;i++){
+                    if(vm.basic.contents[i] == '@'){
+                        var icon1 = vm.tempcontents.split("@");
+                        var icon2 =[];
+                        var icon3=[];
+                        var icon4='';
+                        var icon='';
+                        var flag2 = 0
+                        for(var i=0;i<temp1.length;i=i+2){
+                            for(var j=0;j<temp1[i].length;j++){
+                                if(temp1[i][j] == "@"){
+                                    icon1 = temp1[i].split("@")
+                                    flag2 = i
+                                    for(var k=0;k<icon1.length;k++){
+                                        icon2.push(icon1[k])
+                                    }
+                                    break
+                                }
+                            }
+                        }
+                        icon = '@'+icon2[1]+'@',
+                        icon3 = icon2[1].split("=")
+                        icon4 = icon3[1]
+                        temp1[flag2] = temp1[flag2].replace(icon.toString(),'')
+                        $("#text2").html("")
+                        for(var i=0,j=0;i<temp1.length;i=i+2,j++){
+                            if(i == flag2){
+                                $("#text2").append("<div class=\"asd\">"+temp1[flag2]+"</div>");
+                                if(icon4 == 1){
+                                    $("#text2").append("<div class=\"circle1\"></div>");
+                                }
+                                if(icon4 == 2){
+                                    $("#text2").append("<div class=\"circle2\"></div>");
+                                }
+                                if(icon4 == 0){
+                                    $("#text2").append("<div class=\"circle4\"></div>");
+                                }
+                                if(icon4 == -1){
+                                    $("#text2").append("<div class=\"circle3\"></div>");
+                                }
+                            }
+                            else{
+                                $("#text2").append("<div style=\"font-size:"+ this.basic.font_size +"px\">"+temp1[i]+temp4[j]+"</div>");
+                            }
+                        }
+                        break
+                    }
+                }
             },
             basic_test() {
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/basic_test/',
                     data: {
-                        server_url: vm.server_url
+                        id:vm.typeid,
+                        server_url: vm.server_url,
+                        gather_rule:vm.basic.gather_rule,
+                        gather_params:vm.basic.gather_params
                     },
                 }).then(function (res) {
                     vm.tempcontents2 = vm.basic.contents
@@ -912,7 +969,7 @@
                         str[i]='#'+temp2[i]+'#'
                     }
                     for(var i=0;i<temp2.length;i++){
-                    temp3.push(temp2[i].split("="))
+                        temp3.push(temp2[i].split("="))
                     }
                     for(var i=0;i<temp3.length;i++){
                         temp4.push(temp3[i][0])
@@ -925,9 +982,56 @@
                         }
                     }
                     for(i=0;i<flag/2;i++){
-                        vm.tempcontents2 = vm.tempcontents2.replace(str[i].toString(),res.data.message[0][temp4[i]].toString());
+                        vm.tempcontents2 = vm.tempcontents2.replace(str[i].toString(),res.data.message[0][temp4[i]]);
                     }
-                    vm.tempcontents = vm.tempcontents2;
+                    $("#text2").html("")
+                    for(var i=0;i<vm.basic.contents.length;i++){
+                    if(vm.basic.contents[i] == '@'){
+                        var icon1 = vm.tempcontents.split("@");
+                        var icon2 =[];
+                        var icon3=[];
+                        var icon4='';
+                        var icon='';
+                        var flag2 = 0
+                        for(var i=0;i<temp1.length;i=i+2){
+                            for(var j=0;j<temp1[i].length;j++){
+                                if(temp1[i][j] == "@"){
+                                    icon1 = temp1[i].split("@")
+                                    flag2 = i
+                                    for(var k=0;k<icon1.length;k++){
+                                        icon2.push(icon1[k])
+                                    }
+                                    break
+                                }
+                            }
+                        }
+                        icon = '@'+icon2[1]+'@',
+                        icon4 = res.data.message[0]['gather_status']
+                        temp1[flag2] = temp1[flag2].replace(icon.toString(),'')
+                        $("#text2").html("")
+                        for(var i=0,j=0;i<temp1.length;i=i+2,j++){
+                            if(i == flag2){
+                                $("#text2").append("<div class=\"asd\">"+temp1[flag2]+"</div>");
+                                if(icon4 == 'success'){
+                                    $("#text2").append("<div class=\"circle1\"></div>");
+                                }
+                                if(icon4 == 2){
+                                    $("#text2").append("<div class=\"circle2\"></div>");
+                                }
+                                if(icon4 == 'empty'){
+                                    $("#text2").append("<div class=\"circle3\"></div>");
+                                }
+                                if(icon4 == 'error'){
+                                    $("#text2").append("<div class=\"circle4\"></div>");
+                                }
+                            }
+                            else{
+                                $("#text2").append("<div style=\"font-size:"+ vm.basic.font_size +"px\">"+temp1[i]+res.data.message[0][temp4[j]]+"</div>");
+                            }
+                        }
+                        break
+                    }
+                }
                 })
             },
             pefFrom() {
@@ -1147,9 +1251,11 @@
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/flow_change/',
-                    data: {
+                    data:{
                         template_id:value
                     }
+                }).then((res)=> {
+                    console.log(res)
                 })
             },
             edit3(row) {
@@ -1183,6 +1289,7 @@
                     vm.basic.gather_rule = '';
                     vm.basic.gather_params = 'sql'
                 } else if (value == 6) {
+                    vm.typeid = '2';
                     vm.sql1 = 'none';
                     vm.file1 = 'block';
                     vm.interface1 = 'none';
@@ -1191,6 +1298,7 @@
                     vm.basic.gather_rule = '';
                     vm.basic.gather_params = 'file';
                 } else if (value == 9) {
+                    vm.typeid = '3';
                     vm.sql1 = 'none';
                     vm.file1 = 'none';
                     vm.interface1 = 'block';
@@ -1266,8 +1374,10 @@
                     url:'${SITE_URL}monitor/job_test/',
                     method:'post',
                     data: {
-                        'params': vm.job.gather_params,
-                        'job_id': vm.job.gather_rule
+                        'gather_params': vm.job.gather_params,
+                        'job_id': vm.job.gather_rule,
+                        'params':vm.job.params,
+                        'gather_rule':vm.job.gather_rule,
                     },
                 }).then((res) =>{
                     let status=res['data']['result'];

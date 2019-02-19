@@ -48,3 +48,8 @@ def select_node(request):
 def truncate_node(request):
     status = function.truncate_node()
     return render_json(status)
+
+
+def clear_execute_status(request):
+    status = function.clear_execute_status()
+    return render_json(status)

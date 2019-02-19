@@ -21,11 +21,9 @@ from blueking.component.shortcuts import *
 # 采集规则的设置类似于SQL语法，但是在字段域有所不同：如@cp=china_point@表示保存在采集表中的字段名称为cp，
 # 实际进行目标数据库表采集的字段是china_point
 # 2. 针对于接口的数据采集：
-# $当前JSON的根路径定义在FROM字段后，可自定义名称，如FROM $代表使用$符号代表根路径。.代表JSON下一层属性名称，
-# 如@email.capatity@代表取JSON中所有email属性下的capacity属性下的信息，
-# @$.user_name@代表取JSON中第一层属性user_name的所有信息
+# 采集规则为接口执行脚本，返回采集的JSON字符串
 # 3. 针对于文件的数据采集：
-# 待定~
+# 采集规则为linux快速执行脚本，采集数据由脚本保存到采集表gather_data中
 # --------------------------------------------------------------
 
 
@@ -34,21 +32,21 @@ def gather_test_init():
     info = dict()
     # ------------临时测试时用的数据，实际应从info对象中获取参数,由celery提供info对象--------
     # sql测试用监控项ID：'1'
-    # 文件测试用监控项ID：'1'
     # 接口测试用监控项ID：'2'
-    info['id'] = '2'
+    # 文件测试用监控项ID：'3'
+    info['id'] = '1'
     # sql测试用类型：'sql'
     # 文件测试用类型：'file'
     # 接口测试用类型：'interface'
-    info['gather_params'] = 'interface'
+    info['gather_params'] = 'sql'
     # sql测试用参数：'46'
     # 文件测试用参数：'192.168.1.10,/fk/test.txt'
     # 接口测试用参数：'http://www.baidu.com,user=root$password=123'
-    info['params'] = 'http://www.baidu.com,user=root$password=123'
+    info['params'] = '46'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'echo "1234"'
-    # 接口测试用采集规则：'SELECT @cty=city@,@cap=email.capacity@ FROM $'
-    info['gather_rule'] = 'SELECT @un=$.username@,@cap=email.capacity@ FROM $'
+    # 接口测试用采集规则：'接口采集规则'
+    info['gather_rule'] = 'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # ------------------------------------------------------------------------------------
     return info
 
@@ -57,26 +55,26 @@ def gather_test_init():
 def gather_param_parse(info):
     # 采集参数对象
     gather_params = dict()
-    # 字段索引
-    field_start = 7
-    field_end = info['gather_rule'].find('FROM') - 1
-    set_start = info['gather_rule'].find('FROM') + 5
     # 采集目标具体字段
     gather_params['target_field'] = list()
-    # 采集目标根路径名称
-    gather_params['target_root'] = info['gather_rule'][set_start:]
     # 采集表存储的键名
     gather_params['gather_field'] = list()
     # 采集所需的一些额外参数
     gather_params['extra_param'] = dict()
-    # 获取采集规则的字段有哪些
-    gather_params['rule_fields_str'] = info['gather_rule'][field_start:field_end]
-    rule_fields = gather_params['rule_fields_str'].split(',')
-    for rule_field in rule_fields:
-        field = rule_field.strip('@').split('=')
-        gather_params['gather_field'].append(field[0])
-        gather_params['target_field'].append(field[1])
     if 'sql' == info['gather_params']:
+        # 字段索引
+        field_start = 7
+        field_end = info['gather_rule'].find('FROM')
+        if -1 == field_end:
+            field_end = info['gather_rule'].find('from')
+        # 获取采集规则的字段有哪些
+        gather_params['rule_fields_str'] = info['gather_rule'][field_start:field_end].strip(' ')
+        # 获取采集域
+        rule_fields = gather_params['rule_fields_str'].split(',')
+        for rule_field in rule_fields:
+            field = rule_field.strip(' ').strip('@').split('=')
+            gather_params['gather_field'].append(field[0])
+            gather_params['target_field'].append(field[1])
         # 根据参数获取数据库连接配置
         conn_info = Conn.objects.filter(id=info['params']).get()
         # 解密存储在数据库中的数据库密码
@@ -86,15 +84,20 @@ def gather_param_parse(info):
         interface_params = info['params'].split(',')
         # 获取接口url参数
         gather_params['extra_param']['interface_url'] = interface_params[0]
-        request_params = interface_params[1].split('$')
+        if -1 != interface_params[1].find('&'):
+            request_params = interface_params[1].split('&')
+        else:
+            request_params = interface_params[1]
         request_param_dict = dict()
         # 获取调用接口所需的参数
         for request_param in request_params:
             temp_param = request_param.split('=')
             request_param_dict[temp_param[0]] = temp_param[1]
         gather_params['extra_param']['request_param_dict'] = request_param_dict
+        gather_params['gather_rule'] = info['gather_rule']
     elif 'file' == info['gather_params']:
-        pass
+        gather_params['extra_param']['script_params'] = info['params']
+        gather_params['gather_rule'] = info['gather_rule']
     return gather_params
 
 
@@ -114,8 +117,8 @@ def gather_data_migrate(item_id):
             TDGatherData.objects.filter(item_id=item_id).all().delete()
 
 
-# 采集的key-value定义
-def gather_key_define(gather_field):
+# 数据库采集的key-value定义
+def sql_kv_process(gather_field, sql_result):
     data_set = list()
     for field in gather_field:
         temp = dict()
@@ -123,47 +126,69 @@ def gather_key_define(gather_field):
         temp['value'] = list()
         temp['value_str'] = ''
         data_set.append(temp)
+    # 将结果集整理为key-value形式的采集数据
+    for unit in sql_result:
+        count = 0
+        for data in unit:
+            t = data_set[count]
+            t['value'].append(str(data))
+            t['value_str'] = ','.join(t['value'])
+            count += 1
+    return data_set
+
+
+# 接口数据采集的key-value定义
+def interface_kv_process(json_dict):
+    data_set = list()
+    for key, value in json_dict.items():
+        temp = dict()
+        if isinstance(value, dict):
+            temp['value'] = json.dumps(value)
+        else:
+            temp['value'] = value
+        temp['key'] = key
+        data_set.append(temp)
     return data_set
 
 
 # 遍历JSON字典中的所有key：json_dict需要递归的JSON字典，target_field目标采集字段，data_set采集结果，json_path当前遍历的JSON路径
-def recursion_json_dict(json_dict, target_field, data_set, json_path):
-    if isinstance(json_dict, dict):
-        # 遍历，筛选，并将结果集整理为key-value形式的采集数据
-        for key, value in json_dict.items():
-            # 如果当前遍历的还是一个字典，递归遍历该字典
-            if isinstance(value, dict):
-                # '%s.%s' % (json_path, key)使用.拼接当前key与JSON上层JSON路径，获得当前JSON路径
-                recursion_json_dict(value, target_field, data_set, '%s.%s' % (json_path, key))
-            # 如果当期遍历的是一个数组，遍历当前数组，然后递归数组中的字典
-            elif isinstance(value, list):
-                for v in value:
-                    recursion_json_dict(v, target_field, data_set, '%s.%s' % (json_path, key))
-            else:
-                json_path = '%s.%s' % (json_path, key)
-                # print "PATH: %s" % json_path
-                count = 0
-                for field in target_field:
-                    # 获取需要采集的字段名称single_key
-                    index = field.rfind('.')
-                    if -1 != index:
-                        single_key = field[index + 1:]
-                    else:
-                        single_key = field
-                    # print 'FIELD: %s, SINGLE_KEY: %s, KEY: %s, JSON_PATH: %s' % (field, single_key, key, json_path)
-                    # 判断当前遍历的key是否是需要采集的字段
-                    if single_key == key:
-                        # 判断当前的JSON路径是否符合需要采集的字段的JSON路径
-                        if str(json_path).endswith(field):
-                            # 保存当前JSON节点信息
-                            t = data_set[count]
-                            t['value'].append(str(value))
-                            t['value_str'] = ','.join(t['value'])
-                    count += 1
-                # print 'PATH: %s' % json_path
-                # 遍历完当前JSON节点后，回退到上一层节点继续遍历
-                index1 = json_path.rfind('.')
-                json_path = json_path[0:index1]
+# def recursion_json_dict(json_dict, target_field, data_set, json_path):
+#     if isinstance(json_dict, dict):
+#         # 遍历，筛选，并将结果集整理为key-value形式的采集数据
+#         for key, value in json_dict.items():
+#             # 如果当前遍历的还是一个字典，递归遍历该字典
+#             if isinstance(value, dict):
+#                 # '%s.%s' % (json_path, key)使用.拼接当前key与JSON上层JSON路径，获得当前JSON路径
+#                 recursion_json_dict(value, target_field, data_set, '%s.%s' % (json_path, key))
+#             # 如果当期遍历的是一个数组，遍历当前数组，然后递归数组中的字典
+#             elif isinstance(value, list):
+#                 for v in value:
+#                     recursion_json_dict(v, target_field, data_set, '%s.%s' % (json_path, key))
+#             else:
+#                 json_path = '%s.%s' % (json_path, key)
+#                 # print "PATH: %s" % json_path
+#                 count = 0
+#                 for field in target_field:
+#                     # 获取需要采集的字段名称single_key
+#                     index = field.rfind('.')
+#                     if -1 != index:
+#                         single_key = field[index + 1:]
+#                     else:
+#                         single_key = field
+#                     # print 'FIELD: %s, SINGLE_KEY: %s, KEY: %s, JSON_PATH: %s' % (field, single_key, key, json_path)
+#                     # 判断当前遍历的key是否是需要采集的字段
+#                     if single_key == key:
+#                         # 判断当前的JSON路径是否符合需要采集的字段的JSON路径
+#                         if str(json_path).endswith(field):
+#                             # 保存当前JSON节点信息
+#                             t = data_set[count]
+#                             t['value'].append(str(value))
+#                             t['value_str'] = ','.join(t['value'])
+#                     count += 1
+#                 # print 'PATH: %s' % json_path
+#                 # 遍历完当前JSON节点后，回退到上一层节点继续遍历
+#                 index1 = json_path.rfind('.')
+#                 json_path = json_path[0:index1]
 
 
 # 采集方法，返回参数gather_status为ok采集正常，返回empty采集结果为空，返回error采集规则错误
@@ -185,14 +210,17 @@ def gather_data(info):
         # 连接指定数据库
         conn = MySQLdb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
         cursor = conn.cursor()
+        cursor.execute('SET NAMES UTF8')
         #采集规则是否异常判断
         # noinspection PyBroadException
         try:
             cursor.execute(gather_sql)
             result = cursor.fetchall()
-        except Exception:
-            print 'EXCEPTION'
+        except Exception as e:
+            print e
             gather_status = 'error'
+            # 保存采集错误信息到采集表中
+            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None, gather_status='error').save()
             return gather_status
         # 获取当前采集时间
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -200,33 +228,30 @@ def gather_data(info):
         gather_data_migrate(info['id'])
         if 0 != len(result):
             # 定义key-value
-            data_set = gather_key_define(gather_params['gather_field'])
-            # 将结果集整理为key-value形式的采集数据
-            for unit in result:
-                count = 0
-                for data in unit:
-                    t = data_set[count]
-                    t['value'].append(str(data))
-                    t['value_str'] = ','.join(t['value'])
-                    count += 1
+            data_set = sql_kv_process(gather_params['gather_field'], result)
             # 将采集的数据保存到td_gather_data中
             for item in data_set:
-                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value_str']).save()
+                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value_str'], gather_status='success').save()
         else:
+            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None, gather_status='empty').save()
             gather_status = 'empty'
     elif "interface" == gather_type:
         # 接口方式采集数据
         # 获取采集参数
         gather_params = gather_param_parse(info)
         # 定义key-value
-        data_set = gather_key_define(gather_params['gather_field'])
-        # 发送请求，判断接口返回的信息，接口采集是否出错,如果出错，方法立即返回error结束
-        pass
         # 发送请求，从接口获取JSON数据
-        request_params_encoded = urllib.urlencode(gather_params['extra_param']['request_param_dict'])
+        # 请求参数定义
+        request_params = {'interface_param': json.dumps(gather_params['extra_param']['request_param_dict']), 'gather_rule': gather_params['gather_rule']}
+        print 'REQUEST_PARAMS: %s' % request_params
+        request_params_encoded = urllib.urlencode(request_params)
         request_object = urllib2.Request(url=gather_params['extra_param']['interface_url'], data=request_params_encoded)
         json_data = urllib2.urlopen(request_object).read()
-        print json_data
+        # 判断接口返回的信息，接口采集是否出错,如果出错，方法立即返回error结束
+        if 'success' != json_data['message']:
+            gather_status = 'error'
+            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None, gather_status='error').save()
+            return gather_status
         # JSON模拟接收的数据，测试时使用
         json_data = '{"username":"mary","age":"20","info":[{"tel":"1234566","mobile_phone":"15566757776","email":{"home":"home@qq.com","company":"company@qq.com","capacity":"2000"}}],"money":{"capacity":"50000","type":"RMB"},"address":[{"city":"beijing","code":"1000022"},{"city":"shanghai","code":"2210444"}]}'
         # 将JSON字符串解析为python字典对象，便于筛选并采集数据
@@ -237,14 +262,14 @@ def gather_data(info):
             now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             # 历史采集数据迁移
             gather_data_migrate(info['id'])
-            # 遍历，筛选，并将结果集整理为key-value形式的采集数据
-            recursion_json_dict(json_dict, gather_params['target_field'], data_set, gather_params['target_root'])
-            # print 'ROOT: %s' % gather_params['target_root']
-            print data_set
+            # 将结果集整理为key-value形式的采集数据
+            # recursion_json_dict(json_dict, gather_params['target_field'], data_set, gather_params['target_root'])
+            data_set = interface_kv_process(json_dict)
             # 将采集的数据保存到td_gather_data中
             for item in data_set:
-                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value_str']).save()
+                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value'], gather_status='success').save()
         else:
+            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None, gather_status='empty').save()
             gather_status = 'empty'
     elif "file" == gather_type:
         # 文件方式采集数据
@@ -252,13 +277,12 @@ def gather_data(info):
         # 根据id为1的用户获取客户端操作快速执行脚本
         client = get_client_by_user(user_account)
         client.set_bk_api_ver('v2')
+        # 获取采集参数
+        gather_params = gather_param_parse(info)
         # 脚本内容，使用Base64编码
-        script_content = base64.b64encode(info['gather_rule'])
-        temp_param = info['params'].split(',')
-        # 目标文件的IP地址
-        ip_location = temp_param[0]
-        # 目标文件所在服务器的路径
-        file_path = temp_param[1]
+        script_content = base64.b64encode(gather_params['gather_rule'])
+        script_params = json.dumps(gather_params['extra_param']['script_params'])
+        print 'SCRIPT_PARAMS: %s' % script_params
         # 蓝鲸业务ID，暂固定为2
         biz_id = '2'
         # 蓝鲸云区域ID，暂固定为0
@@ -269,6 +293,7 @@ def gather_data(info):
         bk_params = {
             'bk_biz_id': biz_id,
             'script_content': script_content,
+            'script_param': script_params,
             'is_param_sensitive': 0,
             'account': 'root',
             'script_type': 1,
@@ -280,7 +305,9 @@ def gather_data(info):
             ]
         }
         res = client.job.fast_execute_script(bk_params)
-        print res
+        if 'success' != res['message']:
+            gather_status = 'error'
     # 数据采集完毕后使用告警规则检查数据合法性
-    rule_check(info['id'])
+    if None != info['id']:
+        rule_check(info['id'])
     return gather_status

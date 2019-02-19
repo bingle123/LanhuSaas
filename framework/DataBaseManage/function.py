@@ -4,7 +4,7 @@ import json
 import time
 from django.forms.models import model_to_dict
 from DataBaseManage.models import *
-from framework.shell_app import tools
+from shell_app import tools
 import pymysql as MySQLdb
 import cx_Oracle
 import pymssql
@@ -14,7 +14,8 @@ import pyDes
 from django.db.models import Q
 from django.core.paginator import Paginator
 from monitor.models import *
-
+from celery.task import periodic_task
+import datetime
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
@@ -64,7 +65,6 @@ def selecthor(request):
 
 # 查询所有
 def getconn_all(request):
-
 
     res = json.loads(request.body)
     page = res['page']
@@ -204,7 +204,8 @@ def get_jobInstance(request):
             return e
 
 
-#获取流程节点状态
+# 获取流程节点状态并实时更新
+@periodic_task(run_every=5)
 def get_flowStatus(request):
     flow = Monitor.objects.filter(status=0, monitor_type='流程元类型')
     flow_list = []
@@ -212,15 +213,53 @@ def get_flowStatus(request):
     for x in flow:
         flow_list.append(model_to_dict(x)['jion_id'])
     for y in flow_list:
+        print y
         flows = Flow.objects.filter(flow_id=y)
         for i in flows:
+
             cilent = tools.interface_param(request)
             res = cilent.sops.get_task_status({
                 "bk_app_code": "mydjango1",
                 "bk_app_secret": "99d97ec5-4864-4716-a877-455a6a8cf9ef",
                 "bk_biz_id": "2",
-                "task_id": y
+                "task_id": y,  # task_id
             })
-            print res['data']['state']
+            res1 = cilent.sops.create_task({
+                "bk_app_code": "mydjango1",
+                "bk_app_secret": "99d97ec5-4864-4716-a877-455a6a8cf9ef",
+                "bk_biz_id": "2",
+                "template_id": "5",
+                "name": "zz",
+                "flow_type": "common"
+            })
+            task_id = res1['data']['task_id']
+            time = datetime.datetime.now()
+            #创建节点
+            Flow.objects.create(instance_id=task_id, status=0, start_time=None, test_flag=1, flow_id=y)
+            status = 0
+            if res['data']['state'] == 'RUNNING':
+                status = 2
+                r = Flow.objects.filter(instance_id=task_id).update(status=status,start_time=time)
+            elif res['data']['state'] == 'FAILED':
+                status = 3
+            elif res['data']['state'] == 'SUSPENDED':
+                status = 4
+            elif res['data']['state'] == 'REVOKED':
+                status = 5
+            elif res['data']['state'] == 'FINISHED':
+                status = 6
 
+            r = Flow.objects.filter(instance_id=task_id).update(status=status)
+            return r
 
+#获取所有菜单
+def get_user_muenu(request):
+    # cilent = tools.interface_param(request)
+    # user = cilent.bk_login.get_user({})
+    # bk_roleid = user['data']['bk_role']
+    muenus = Muenu.objects.all()
+    for i in muenus:
+        mname = model_to_dict(i)['mname']
+        urls = model_to_dict(i)['url']
+        print mname.encode('utf-8')
+        print urls
