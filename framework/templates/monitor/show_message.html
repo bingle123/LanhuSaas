@@ -863,7 +863,7 @@
         },
         methods: {
             basic_size(){
-              $("#text2").css("font-size",this.basic.font_size)
+              $("#text2").find("*").css("font-size",this.basic.font_size)
             },
             basic_height(){
                 $('#text2').css('top',this.basic.height)
@@ -896,10 +896,10 @@
                     $("#text2").html("")
                      for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                          if(j<temp4.length){
-                             $("#text2").append("<div style=\"font-size:" + this.basic.font_size + "px\">" + temp1[i] + temp4[j]+ "</div>");
+                             $("#text2").append("<div>" + temp1[i] + temp4[j]+ "</div>");
                          }
                          else{
-                              $("#text2").append("<div style=\"font-size:" + this.basic.font_size + "px\">" + temp1[i]+ "</div>");
+                              $("#text2").append("<div>" + temp1[i]+ "</div>");
                          }
                      }
                   }
@@ -920,7 +920,7 @@
                         icon4.push(icon3[i][1]);
                     }
                     $("#text2").html("")
-                    $("#text2").append("<div class = \"asd\";style=\"font-size:"+ this.basic.font_size +"px\">"+icon1[0]+"</div>");
+                    $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
                     if(icon4 ){
                         icon4.push("-2")
                      }
@@ -984,7 +984,7 @@
                                 $("#text2").append("<div class=\"circle3\"></div>");
                             }
                         } else {
-                            $("#text2").append("<div style=\"font-size:" + this.basic.font_size + "px\">" + temp1[i] + temp4[j] + "</div>");
+                            $("#text2").append("<div>" + temp1[i] + temp4[j] + "</div>");
                         }
                     }
                 }
@@ -994,10 +994,11 @@
                     method: 'post',
                     url: '${SITE_URL}monitor/basic_test/',
                     data: {
-                        id:vm.typeid,
+                        id:vm.unit_id,
                         server_url: vm.server_url,
                         gather_rule:vm.basic.gather_rule,
-                        gather_params:vm.basic.gather_params
+                        gather_params:vm.basic.gather_params,
+                        file_param:vm.file_param
                     },
                 }).then(function (res) {
                     vm.tempcontents2 = vm.basic.contents
@@ -1021,10 +1022,10 @@
                         $("#text2").html("")
                          for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                              if(j<temp4.length){
-                                 $("#text2").append("<div style=\"font-size:" + vm.basic.font_size + "px\">" + temp1[i] + res.data.message[0][temp4[j]]+ "</div>");
+                                 $("#text2").append("<div>" + temp1[i] + res.data.message[0][temp4[j]]+ "</div>");
                              }
                              else{
-                                  $("#text2").append("<div style=\"font-size:" + vm.basic.font_size + "px\">" + temp1[i]+ "</div>");
+                                  $("#text2").append("<div>" + temp1[i]+ "</div>");
                              }
                          }
                       }
@@ -1034,7 +1035,7 @@
                         var icon3=[];
                         var icon4=res.data.message[0]['gather_status'];
                         $("#text2").html("")
-                        $("#text2").append("<div class = \"asd\";style=\"font-size:"+ vm.basic.font_size +"px\">"+icon1[0]+"</div>");
+                        $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
                         if (icon4 == 'success') {
                              $("#text2").append("<div class=\"circle1\"></div>");
                          }
@@ -1081,7 +1082,7 @@
                         $("#text2").html("")
                         for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                             if (i == flag2) {
-                                $("#text2").append("<div class = \"asd\";style=\"font-size:"+ vm.basic.font_size +"px\">"+icon1[0]+"</div>");
+                                $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
                                 if (icon4 == 'success') {
                                      $("#text2").append("<div class=\"circle1\"></div>");
                                  }
@@ -1095,7 +1096,7 @@
                                      $("#text2").append("<div class=\"circle4\"></div>");
                                  }
                             } else {
-                                $("#text2").append("<div style=\"font-size:" + vm.basic.font_size + "px\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                                $("#text2").append("<div>" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
                             }
                         }
                 }
