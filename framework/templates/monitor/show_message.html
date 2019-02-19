@@ -139,9 +139,7 @@
                                                        :value="i.value"></el-option>
                                         </el-select>
                                     </el-form-item>
-
                                 </div>
-
                                 <div :style="{display:file1}">
                                     <el-form-item label="服务器">
                                         <el-input placeholder="请输入服务器" v-model="server_url"
@@ -226,7 +224,7 @@
                                         <el-form-item prop="height">
                                             <el-input type="number" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="chart.height"
-                                                      placeholder="请输入高度"></el-input>
+                                                      placeholder="请输入高度" @change="echart_height"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
@@ -234,7 +232,7 @@
                                         <el-form-item prop="width">
                                               <el-input type="number" v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="chart.width"
-                                                        placeholder="请输入宽度"></el-input>
+                                                        placeholder="请输入宽度" @change="echart_width"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
@@ -389,7 +387,7 @@
                             </div>
                             <div style="text-align:center;width: 100%;min-height:40%;height: auto;background-color: whitesmoke;">
                                 <div style="height: 60px"></div>
-                                <div id="job_text" style="max-width: 100%; background: beige;margin: auto;padding-top: 20px 0;">
+                                <div id="job_text" style="max-width: 100%; background: beige;margin: auto;padding-top: 20px;">
                                     <div class="unexecuted" style="color: grey;display: block">
                                         <h1>作业未执行</h1>
                                         <i class="el-icon-error" style="color: grey;font-size: 30px;margin-top: 20px;"></i>
@@ -843,7 +841,7 @@
                 gather_params: '',                   //作业模板
                 params: '',                         //执行服务器
             },
-            flow1: {                                //流程单元
+            flow7: {                                //流程单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
                 font_size: '',                       //字号
@@ -1132,7 +1130,6 @@
                     }
                 });
             },
-
             edit2(row) {
                 this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -1201,20 +1198,54 @@
             },
             edit(row) {
                 vm.centerDialogVisible = true;
+                vm.disabled2 = false;
+                vm.disabled3 = true;
+                vm.disabled4 = true;
+                vm.disabled5 = true;
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
                 if (row.monitor_type == '基本单元类型') {
-                    vm.disabled2 = false;
-                    vm.disabled3 = true;
-                    vm.disabled4 = true;
-                    vm.disabled5 = true;
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
                     vm.basic.height = row.height;
                     vm.basic.width = row.width;
                     vm.basic.start_time = row.start_time;
                     vm.basic.end_time = row.end_time;
-                    vm.basic.period = row.period
+                    vm.basic.period = row.period;
+                    vm.sql_file_interface = row.gather_params;
+                    vm.basic.start_time = row.start_time;
+                    vm.basic.end_time = row.end_time;
+                    vm.basic.gather_rule = row.gather_rule;
+                    vm.basic.contents = row.contents;
+                    if (vm.sql_file_interface == 'sql') {
+                        vm.sql_file_interface =3;
+                        vm.sql1 = 'block';
+                        vm.file1 = 'none';
+                        vm.interface1 = 'none';
+                        vm.basic.gather_params = 'sql'
+                    }
+                    if (vm.sql_file_interface == 'file') {
+                        vm.sql_file_interface =6;
+                        arr=row.params.split(",");
+                        vm.server_url = arr[0];
+                        vm.file_param = arr[1]
+                        vm.typeid = '2';
+                        vm.sql1 = 'none';
+                        vm.file1 = 'block';
+                        vm.interface1 = 'none';
+                        vm.basic.gather_params = 'file';
+                    }
+                    if (vm.sql_file_interface == 'interface') {
+                        vm.sql_file_interface =9;
+                        arr=row.params.split(",");
+                        vm.server_url = arr[0];
+                        vm.file_param = arr[1];
+                        vm.typeid = '3';
+                        vm.sql1 = 'none';
+                        vm.file1 = 'none';
+                        vm.interface1 = 'block';
+                        vm.basic.gather_params = 'interface';
+                    }
                 }
                 if (row.monitor_type == '图表单元类型') {
                     vm.disabled2 = true;
@@ -1347,22 +1378,18 @@
 
             },
             edit3(row) {
-                setTimeout(
-                    function () {
-                        vm.disabled2 = false;
-                        vm.disabled3 = false;
-                        vm.disabled4 = false;
-                        vm.disabled5 = false;
-                        vm.monitor_type = 'first';
-                        vm.unit_id = row;
-                        vm.basic = vm.basic1;
-                        vm.chart = vm.chart1;
-                        vm.job = vm.job1;
-                        vm.flow = vm.flow1;
-                        vm.centerDialogVisible = true
-                    }, 1);
-                this.get_db_connections();
-
+                     {
+                         vm.monitor_name = '';
+                         vm.Initialization();
+                         vm.disabled2 = false;
+                         vm.disabled3 = false;
+                         vm.disabled4 = false;
+                         vm.disabled5 = false;
+                         vm.monitor_type = 'first';
+                         vm.unit_id = row;
+                         vm.centerDialogVisible = true;
+                         this.get_db_connections();
+                    };
             },
             del() {
                 vm.edit(0)
@@ -1410,16 +1437,16 @@
                     vm.liucheng = 'none';
                 }
             },
-            change_job_fontSize(){
+            change_job_fontSize(){       //修改作业单元中预览字体
                 $('#job_text').find("*").css('font-size',this.job.font_size);
             },
-            change_job_height(){
+            change_job_height(){       //修改作业单元中预览高度
                 $('#job_text').css('height',this.job.height);
             },
-            change_job_width(){
+            change_job_width(){       //修改作业单元中预览宽度
                 $('#job_text').css('width',this.job.width);
             },
-            change_job_contents(){
+            change_job_contents(){       //作业单元显示内容
                 let contents=vm.job.contents;
                 let str = contents.split('@')[1].split('=')[1];
                 switch (str) {
@@ -1559,9 +1586,16 @@
                     console.log('获取数据库连接错误')
                 })
             },
-
-            time2() {
-
+            //初始化
+            Initialization(){
+                Object.assign(vm.basic, {});
+                Object.assign(vm.basic, vm.basic1);
+                Object.assign(vm.job, {});
+                Object.assign(vm.job, vm.job1);
+                Object.assign(vm.flow, {});
+                Object.assign(vm.flow, vm.flow7);
+                Object.assign(vm.chart, {});
+                Object.assign(vm.chart, vm.chart1);
             },
             //显示图标
             show_chart() {
@@ -1664,6 +1698,12 @@
                                 stack: 'data',
                                 data: barCount
                             },
+                            {
+                                name: vm.person_count,
+                                type: 'bar',
+                                stack: 'data',
+                                data: barCount
+                            },
                         ]
                     };
                     this.myChart.setOption(option);
@@ -1711,10 +1751,17 @@
             },
             show_content(){
                 let content=vm.chart.contents;
-                var str = '{"name":"jack"}';
-                var obj = JSON.parse(str);
-
-                console.log(obj);
+                let obj = JSON.parse(content);
+                let echartData = [];
+                for(let i=0;i<obj.X.v.length;i++){
+                    let obj_1={};
+                    obj_1.name=obj.X.v[i];
+                    obj_1.value=obj.Y.v[i];
+                    console.log(obj_1);
+                    this.$set(echartData,i,obj_1);
+                }
+                console.log(echartData);
+                vm.chartData=echartData;
             },
             chart_get_test(){
                 axios({
@@ -1744,6 +1791,12 @@
                 }).catch((res) =>{
                     console.log(res)
                 });
+            },
+            echart_height(){
+                $('#maintenanceIndex').find("canvas").css('height',vm.chart.height);
+            },
+            echart_width(){
+                $('#maintenanceIndex').find("canvas").css('width',vm.chart.width)
             },
             switch_change(value){
                 console.log(value);

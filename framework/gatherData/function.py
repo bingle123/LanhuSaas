@@ -34,19 +34,19 @@ def gather_test_init():
     # sql测试用监控项ID：'1'
     # 接口测试用监控项ID：'2'
     # 文件测试用监控项ID：'3'
-    info['id'] = '1'
+    info['id'] = '2'
     # sql测试用类型：'sql'
     # 文件测试用类型：'file'
     # 接口测试用类型：'interface'
-    info['gather_params'] = 'sql'
+    info['gather_params'] = 'interface'
     # sql测试用参数：'46'
-    # 文件测试用参数：'192.168.1.10,/fk/test.txt'
+    # 文件测试用参数：'192.168.1.10 /fk/test.txt'
     # 接口测试用参数：'http://www.baidu.com,user=root$password=123'
-    info['params'] = '46'
+    info['params'] = 'http://www.baidu.com,user=root&password=123'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'echo "1234"'
     # 接口测试用采集规则：'接口采集规则'
-    info['gather_rule'] = 'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
+    info['gather_rule'] = '接口采集规则'
     # ------------------------------------------------------------------------------------
     return info
 
@@ -98,6 +98,8 @@ def gather_param_parse(info):
     elif 'file' == info['gather_params']:
         gather_params['extra_param']['script_params'] = info['params']
         gather_params['gather_rule'] = info['gather_rule']
+    elif 'space_interface' == info['gather_params']:
+        pass
     return gather_params
 
 
@@ -194,7 +196,7 @@ def interface_kv_process(json_dict):
 # 采集方法，返回参数gather_status为ok采集正常，返回empty采集结果为空，返回error采集规则错误
 def gather_data(info):
     # 采集测试参数初始化
-    info = gather_test_init()
+    # info = gather_test_init()
     # 采集状态，默认为ok
     gather_status = 'ok'
     # 获取数据采集的类型
@@ -247,25 +249,32 @@ def gather_data(info):
         request_params_encoded = urllib.urlencode(request_params)
         request_object = urllib2.Request(url=gather_params['extra_param']['interface_url'], data=request_params_encoded)
         json_data = urllib2.urlopen(request_object).read()
-        # 判断接口返回的信息，接口采集是否出错,如果出错，方法立即返回error结束
-        if 'success' != json_data['message']:
-            gather_status = 'error'
-            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None, gather_status='error').save()
-            return gather_status
+        print json_data
         # JSON模拟接收的数据，测试时使用
         json_data = '{"username":"mary","age":"20","info":[{"tel":"1234566","mobile_phone":"15566757776","email":{"home":"home@qq.com","company":"company@qq.com","capacity":"2000"}}],"money":{"capacity":"50000","type":"RMB"},"address":[{"city":"beijing","code":"1000022"},{"city":"shanghai","code":"2210444"}]}'
         # 将JSON字符串解析为python字典对象，便于筛选并采集数据
         json_dict = json.loads(json_data)
+        # 判断接口返回的信息，接口采集是否出错,如果出错，方法立即返回error结束
+        # 测试使用，接口调用状态默认为成功
+        json_dict['message'] = 'success'
+        if 'success' != json_dict['message']:
+            gather_status = 'error'
+            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None,
+                         gather_status='error').save()
+            return gather_status
+        # 获取完接口调用状态后，删除此数据，保存其它的需要的采集数据
+        del json_dict['message']
         # 判断接口是否返回了空数据
         if 0 != len(json_dict):
             # 获取当前采集时间
-            now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            now = datetime.datetime.now().strftime('Y-%m-%d %H:%M:%S%')
             # 历史采集数据迁移
             gather_data_migrate(info['id'])
             # 将结果集整理为key-value形式的采集数据
             # recursion_json_dict(json_dict, gather_params['target_field'], data_set, gather_params['target_root'])
             data_set = interface_kv_process(json_dict)
             # 将采集的数据保存到td_gather_data中
+            print 'IDDDD: %s' % data_set
             for item in data_set:
                 TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value'], gather_status='success').save()
         else:
@@ -308,6 +317,10 @@ def gather_data(info):
         if 'success' != res['message']:
             gather_status = 'error'
     # 数据采集完毕后使用告警规则检查数据合法性
+    elif "space_interface" == gather_type:
+        now = datetime.datetime.now ().strftime ('%Y-%m-%d %H:%M:%S')
+        TDGatherData (item_id=info['id'], gather_time=now, data_key=info['message'], data_value=info['message_value'],
+                      gather_status='success').save ()
     if None != info['id']:
         rule_check(info['id'])
     return gather_status
