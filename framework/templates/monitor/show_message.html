@@ -936,7 +936,6 @@
                         gather_params:vm.basic.gather_params
                     },
                 }).then(function (res) {
-                    console.log(res)
                     vm.tempcontents2 = vm.basic.contents
                     var temp1 = vm.basic.contents.split("#")
                     var temp2=[];
@@ -964,9 +963,9 @@
                         }
                     }
                     for(i=0;i<flag/2;i++){
-                        vm.tempcontents2 = vm.tempcontents2.replace(str[i].toString(),res.data.message[0][temp4[i]].toString());
+                        console.log(res.data.message)
+                        vm.tempcontents2 = vm.tempcontents2.replace(str[i].toString(),res.data.message[0][temp4[i]]);
                     }
-                    console.log(temp4)
                     $("#text2").html("")
                     for(var i=0;i<vm.basic.contents.length;i++){
                     if(vm.basic.contents[i] == '@'){
@@ -989,14 +988,14 @@
                             }
                         }
                         icon = '@'+icon2[1]+'@',
-                        icon4 = 2
-                        console.log(temp1)
+                        icon4 = res.data.message[0]['gather_status']
+                        alert(icon4)
                         temp1[flag2] = temp1[flag2].replace(icon.toString(),'')
                         $("#text2").html("")
                         for(var i=0,j=0;i<temp1.length;i=i+2,j++){
                             if(i == flag2){
                                 $("#text2").append("<div class=\"asd\">"+temp1[flag2]+"</div>");
-                                if(icon4 == 1){
+                                if(icon4 == 'success'){
                                     $("#text2").append("<div class=\"circle1\"></div>");
                                 }
                                 if(icon4 == 2){
