@@ -59,7 +59,8 @@ def rule_check(monitor_id):
                 print 'INFO: Multiple value, rule check skip.......'
     # 如果搜集到了告警信息，将alert_infos对象传递给celery并通知处理告警
     if 0 != len(alert_infos):
-        send_alert(**alert_info)
+        #邮箱被封暂时不能用了 send_alert(**alert_info)
+        pass
     return "ok"
 
 def send_alert(**msg):
