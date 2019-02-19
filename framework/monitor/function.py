@@ -219,7 +219,7 @@ def basic_test(request):
         info = {
             'id': item_id,
             'gather_params': gather_params,
-            'params': server_url + file_param,
+            'params': server_url +' '+ file_param,
             'gather_rule': gather_rule
         }
 
@@ -229,7 +229,7 @@ def basic_test(request):
         info = {
             'id': item_id,
             'gather_params': gather_params,
-            'params': server_url +' '+file_param,
+            'params': server_url+','+file_param,
             'gather_rule': gather_rule
         }
 
