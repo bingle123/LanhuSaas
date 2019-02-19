@@ -65,6 +65,7 @@ def selecthor(request):
 
 # 查询所有
 def getconn_all(request):
+
     res = json.loads(request.body)
     page = res['page']
     limit = res['limit']
@@ -250,3 +251,15 @@ def get_flowStatus(request):
 
             r = Flow.objects.filter(instance_id=task_id).update(status=status)
             return r
+
+#获取所有菜单
+def get_user_muenu(request):
+    # cilent = tools.interface_param(request)
+    # user = cilent.bk_login.get_user({})
+    # bk_roleid = user['data']['bk_role']
+    muenus = Muenu.objects.all()
+    for i in muenus:
+        mname = model_to_dict(i)['mname']
+        urls = model_to_dict(i)['url']
+        print mname.encode('utf-8')
+        print urls
