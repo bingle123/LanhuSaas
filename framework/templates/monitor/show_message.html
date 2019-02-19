@@ -389,7 +389,7 @@
                             </div>
                             <div style="text-align:center;width: 100%;min-height:40%;height: auto;background-color: whitesmoke;">
                                 <div style="height: 60px"></div>
-                                <div id="job_text" style="max-width: 100%; background: beige;margin: auto;padding-top: 20px 0;">
+                                <div id="job_text" style="max-width: 100%; background: beige;margin: auto;padding-top: 20px;">
                                     <div class="unexecuted" style="color: grey;display: block">
                                         <h1>作业未执行</h1>
                                         <i class="el-icon-error" style="color: grey;font-size: 30px;margin-top: 20px;"></i>
@@ -1285,22 +1285,24 @@
 
             },
             edit3(row) {
-                setTimeout(
-                    function () {
+                     {
                         vm.disabled2 = false;
                         vm.disabled3 = false;
                         vm.disabled4 = false;
                         vm.disabled5 = false;
                         vm.monitor_type = 'first';
                         vm.unit_id = row;
+                        vm.basic = '';
+                        vm.chart = '';
+                        vm.job = '';
+                        vm.flow = '';
                         vm.basic = vm.basic1;
                         vm.chart = vm.chart1;
                         vm.job = vm.job1;
                         vm.flow = vm.flow1;
                         vm.centerDialogVisible = true
-                    }, 1);
-                this.get_db_connections();
-
+                        this.get_db_connections();
+                    };
             },
             del() {
                 vm.edit(0)
@@ -1497,9 +1499,8 @@
                     console.log('获取数据库连接错误')
                 })
             },
-
-            time2() {
-
+            //初始化
+            Initialization(){
             },
             //显示图标
             show_chart() {

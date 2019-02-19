@@ -2,7 +2,6 @@
 from __future__ import division
 from common.log import logger
 import json
-import math
 from models import *
 from monitorScene.models import Scene
 from DataBaseManage.models import Conn
@@ -13,9 +12,6 @@ from django.forms.models import model_to_dict
 from django.db.models import Q
 import pymysql as MySQLdb
 import pymssql
-import copy
-import base64
-import re
 from market_day import function
 from market_day import celery_opt as co
 from DataBaseManage.function import decrypt_str
@@ -132,33 +128,54 @@ def delete_unit(request):
 
 
 def add_unit(request):
-    try:
-        res = json.loads(request.body)
-        cilent = tools.interface_param (request)
-        user = cilent.bk_login.get_user({})
-        add_dic = res['data']
-        monitor_type = res['monitor_type']
-        if res['monitor_type'] == 'first':
-            monitor_type = '基本单元类型'
-        if res['monitor_type'] == 'second':
-            monitor_type = '图表单元类型'
-        if res['monitor_type'] == 'third':
-            monitor_type = '作业单元类型'
-            add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
-            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
-        if res['monitor_type'] == 'fourth':
-            monitor_type = '流程单元类型'
-            add_dic['jion_id'] = res['data']['gather_rule']['id']
-        add_dic['monitor_name'] = res['monitor_name']
-        add_dic['monitor_type'] = monitor_type
-        add_dic['status'] = 0
-        add_dic['creator'] = user['data']['bk_username']
-        add_dic['editor'] = user['data']['bk_username']
-        Monitor.objects.create(**add_dic)
-        function.add_unit_task(add_dicx=add_dic)
-        result = tools.success_result(None)
-    except Exception as e:
-        result = tools.error_result(e)
+# try:
+    res = json.loads(request.body)
+    print(res)
+    cilent = tools.interface_param (request)
+    user = cilent.bk_login.get_user({})
+    add_dic = res['data']
+    monitor_type = res['monitor_type']
+    if res['monitor_type'] == 'first':
+        monitor_type = '基本单元类型'
+    if res['monitor_type'] == 'second':
+        monitor_type = '图表单元类型'
+    if res['monitor_type'] == 'third':
+        monitor_type = '作业单元类型'
+        add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
+        add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+    if res['monitor_type'] == 'fourth':
+        monitor_type = '流程单元类型'
+        add_dic['jion_id'] = res['data']['gather_rule']['id']
+    add_dic['monitor_name'] = res['monitor_name']
+    add_dic['monitor_type'] = monitor_type
+    add_dic['status'] = 0
+    add_dic['creator'] = user['data']['bk_username']
+    add_dic['editor'] = user['data']['bk_username']
+    Monitor.objects.create(**add_dic)
+    if res['monitor_type'] == 'third':
+        unit_obj = Monitor.objects.all().last()
+        id = unit_obj.id
+        tools_params = {
+            'params':res['data']['params'],
+            'job_id':[{
+                'name': add_dic['gather_rule'],
+                'id': add_dic['jion_id']
+            }],
+            'gather_params':res['data']['gather_params']
+        }
+        tools_res = tools.job_interface(tools_params)
+
+        info = {
+        'id': id,                                     #关联id
+        'message': "message",                       #状态
+        'message_value': tools_res['message'],     #状态值
+        'gather_params': 'space_interface'        #类型
+        }
+        gather_data(info)
+    function.add_unit_task(add_dicx=add_dic)
+    result = tools.success_result(None)
+    # except Exception as e:
+    #     result = tools.error_result(e)
     return result
 
 
@@ -168,7 +185,6 @@ def edit_unit(request):
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
         monitor_type = res['monitor_type']
-        print(monitor_type)
         if res['monitor_type'] == 'first':
             monitor_type = '基本单元类型'
         if res['monitor_type'] == 'second':
@@ -228,74 +244,10 @@ def basic_test(request):
 
 
 def job_test(request):
-    try:
-        res = json.loads(request.body)
-        params = res['params']                #ip
-        gather_params = res['gather_params']
-        bk_job_id = res['job_id'][0]['id']
-        script_param = base64.b64encode(gather_params)
-        cilent = tools.interface_param(request)
-        select_job_params = {
-            'bk_biz_id': 2,
-            'bk_job_id': bk_job_id,
-        }
-        select_job = cilent.job.get_job_detail(select_job_params)
-        if select_job.get('result'):
-            select_job_list = select_job.get('data')
-        else:
-            select_job_list = []
-            logger.error(u"请求作业模板失败：%s" % select_job.get('message'))
-        step_id = select_job_list['steps'][0]['step_id']
-        cloud_params = {
-            'bk_biz_id':2,
-            'ip':{
-                'data':[params,],
-                'exact':1
-            },
-            "condition": [
-            {
-                "bk_obj_id": "host",
-                "fields": [],
-                "condition": [
-                    {
-                        "field": "bk_host_innerip",
-                        "operator": "$eq",
-                        "value": params
-                    }
-                ]
-            }]
-        }
-        cloud_select = cilent.cc.search_host(cloud_params)
-        print(cloud_select)
-        if cloud_select.get('result'):
-            cloud_id = cloud_select['data']['info'][0]['host']['bk_cloud_id'][0]['id']
-        else:
-            cloud_id = -1
-            logger.error (u"请求主机信息失败：%s" % cloud_select.get ('message'))
 
-        job_params = {
-            'bk_biz_id': 2,
-            'bk_job_id': bk_job_id,
-            'steps': [{
-                'step_id': step_id,
-                'script_param': script_param,
-                "ip_list":[ {
-                    "bk_cloud_id": cloud_id,
-                    "ip": params
-                },]
-            },],
-        }
-        job = cilent.job.execute_job(job_params)
-        if job.get('result'):
-            job_list = job.get('data')
-        else:
-            job_list = []
-            logger.error(u"请求作业模板失败：%s" % job.get('message'))
-        res = tools.success_result(job_list)
-
-    except Exception as e:
-        res = tools.error_result(e)
-    return res
+    res = json.loads(request.body)
+    result = tools.job_interface(res)
+    return result
 
 
 def change_unit_status(req):
