@@ -136,6 +136,7 @@ def add_unit(request):
     cilent = tools.interface_param (request)
     user = cilent.bk_login.get_user({})
     monitor_type = res['monitor_type']
+    add_dic = res['data']
     if res['monitor_type'] == 'first':
         monitor_type = '基本单元类型'
     if res['monitor_type'] == 'second':
@@ -148,7 +149,7 @@ def add_unit(request):
         monitor_type = '流程元类型'
         add_dic['jion_id'] = int (add_dic['gather_rule']['id'])
         add_dic['gather_rule'] = add_dic['gather_rule']['name']
-    add_dic = res['data']
+
     add_dic['monitor_name'] = res['monitor_name']
     add_dic['monitor_type'] = monitor_type
     add_dic['status'] = 0
@@ -331,9 +332,50 @@ def chart_get_test(request):
 
 def flow_change(request):
     cilent = tools.interface_param (request)
+    id = json.loads(request.body)
     params = {
         "bk_biz_id": "2",
-        "template_id": "5"
+        "template_id":id['template_id']
     }
     res = cilent.sops.get_template_info(params)
-    return res
+    activities2 = []
+    start_event =res['data']['pipeline_tree']['start_event']   #开始节点信息
+    start_event['x']=100
+    start_event['y'] = 200
+    end_event = res['data']['pipeline_tree']['end_event']   #结束节点信息
+    end_event['x']=150
+    end_event['y'] = 250
+    activities2.append(start_event)
+    activities2.append(end_event)
+    activities = res['data']['pipeline_tree']['activities']
+    for key in activities:
+        activities1 = {}
+        activities1['id'] = str(activities[key]['id'])
+        activities1['x'] = 300
+        activities1['y']=400
+        # activities1['outgoing'] = str(activities[key]['outgoing'])
+        # activities1['incoming'] = str(activities[key]['incoming'])
+        activities1['type'] = str(activities[key]['type'])
+        activities1['name'] = activities[key]['name']
+        activities2.append(activities1)
+    flows1=[]
+    flows2 = res['data']['pipeline_tree']['flows']
+    for key in flows2:
+        flows3 = {
+            'source':{
+                'arrow': 'Right',
+                'id':str(flows2[key]['source'])
+            },
+            'target':{
+                'arrow':'Left',
+                'id':str(flows2[key]['target'])
+            }
+        }
+        # flows3['source'] = str(flows2[key]['source'])
+        # flows3['target'] = str(flows2[key]['target'])
+        flows1.append(flows3)
+    pipeline_tree={
+        'activities':activities2,
+        'flows':flows1
+    }
+    return pipeline_tree
