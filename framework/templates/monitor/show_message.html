@@ -895,13 +895,6 @@
                     for(i=0;i<temp2.length;i++){
                         str[i]='#'+temp2[i]+'#'
                     }
-                    var flag = 0
-                    for(i=0;i<vm.tempcontents.length;i++){
-                        var char = vm.tempcontents[i]
-                        if(char == '#'){
-                            flag++
-                        }
-                    }
                     $("#text2").html("")
                      for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                          if(j<temp4.length){
@@ -910,7 +903,6 @@
                          else{
                               $("#text2").append("<div style=\"font-size:" + this.basic.font_size + "px\">" + temp1[i]+ "</div>");
                          }
-
                      }
                   }
                 if(vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1){
@@ -928,13 +920,6 @@
                     for(var i=0;i<icon3.length;i++){
                         icon4.pop();
                         icon4.push(icon3[i][1]);
-                    }
-                    var flag = 0
-                    for(i=0;i<vm.tempcontents.length;i++){
-                        var char = vm.tempcontents[i]
-                        if(char == '@'){
-                            flag++
-                        }
                     }
                     $("#text2").html("")
                     $("#text2").append("<div class = \"asd\";style=\"font-size:"+ this.basic.font_size +"px\">"+icon1[0]+"</div>");
