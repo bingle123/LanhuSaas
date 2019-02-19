@@ -195,26 +195,38 @@ def edit_unit(request):
 def basic_test(request):
     res = json.loads(request.body)
     result = []
-    gather_rule = "select data_key,data_value from td_gather_data"
+    gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = 1"
     server_url = res['server_url']
+    gather_rule = res['gather_rule']
+    typeid = res['id']
+    gather_params = res['gather_params']
     sql = Conn.objects.get(id=server_url)
     password = f.decrypt_str(sql.password)
+    info = {
+        'id':typeid,
+        'gather_params':gather_params,
+        'params':server_url,
+        'gather_rule':gather_rule
+    }
+    gather_data(info)
     if sql.type == 'MySQL' or sql.type == 'Oracle':
         db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))
     if sql.type == 'SQL Server':
         db = pymssql.connect(sql.ip, sql.username, password, sql.databasename)
     cursor = db.cursor()
-    cursor.execute(gather_rule)
+    cursor.execute(gather_rule2)
     results = cursor.fetchall()
     dic = {}
     for i in results:
         dic1 = {
-            i[0]:i[1]
+            i[0]:i[1],
+            'gather_status':i[2]
         }
         dic =  dict( dic, **dic1 )
     result.append(dic)
     db.close()
-    return results
+    return result
+
 
 
 def job_test(request):
