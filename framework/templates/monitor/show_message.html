@@ -843,7 +843,7 @@
                 gather_params: '',                   //作业模板
                 params: '',                         //执行服务器
             },
-            flow1: {                                //流程单元
+            flow7: {                                //流程单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
                 font_size: '',                       //字号
@@ -1132,7 +1132,6 @@
                     }
                 });
             },
-
             edit2(row) {
                 this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -1348,22 +1347,16 @@
             },
             edit3(row) {
                      {
-                        vm.disabled2 = false;
-                        vm.disabled3 = false;
-                        vm.disabled4 = false;
-                        vm.disabled5 = false;
-                        vm.monitor_type = 'first';
-                        vm.unit_id = row;
-                        vm.basic = '';
-                        vm.chart = '';
-                        vm.job = '';
-                        vm.flow = '';
-                        vm.basic = vm.basic1;
-                        vm.chart = vm.chart1;
-                        vm.job = vm.job1;
-                        vm.flow = vm.flow1;
-                        vm.centerDialogVisible = true
-                        this.get_db_connections();
+                         vm.monitor_name = '';
+                         vm.Initialization();
+                         vm.disabled2 = false;
+                         vm.disabled3 = false;
+                         vm.disabled4 = false;
+                         vm.disabled5 = false;
+                         vm.monitor_type = 'first';
+                         vm.unit_id = row;
+                         vm.centerDialogVisible = true;
+                         this.get_db_connections();
                     };
             },
             del() {
@@ -1563,6 +1556,14 @@
             },
             //初始化
             Initialization(){
+                Object.assign(vm.basic, {});
+                Object.assign(vm.basic, vm.basic1);
+                Object.assign(vm.job, {});
+                Object.assign(vm.job, vm.job1);
+                Object.assign(vm.flow, {});
+                Object.assign(vm.flow, vm.flow7);
+                Object.assign(vm.chart, {});
+                Object.assign(vm.cahrt, vm.chart1);
             },
             //显示图标
             show_chart() {
