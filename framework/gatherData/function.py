@@ -34,19 +34,19 @@ def gather_test_init():
     # sql测试用监控项ID：'1'
     # 接口测试用监控项ID：'2'
     # 文件测试用监控项ID：'3'
-    info['id'] = '3'
+    info['id'] = '1'
     # sql测试用类型：'sql'
     # 文件测试用类型：'file'
     # 接口测试用类型：'interface'
-    info['gather_params'] = 'file'
+    info['gather_params'] = 'sql'
     # sql测试用参数：'46'
     # 文件测试用参数：'192.168.1.10,/fk/test.txt'
     # 接口测试用参数：'http://www.baidu.com,user=root$password=123'
-    info['params'] = '192.168.1.10 /fk/test.txt'
+    info['params'] = '46'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'echo "1234"'
     # 接口测试用采集规则：'接口采集规则'
-    info['gather_rule'] = 'echo "1234"'
+    info['gather_rule'] = 'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # ------------------------------------------------------------------------------------
     return info
 
@@ -66,13 +66,13 @@ def gather_param_parse(info):
         field_start = 7
         field_end = info['gather_rule'].find('FROM')
         if -1 == field_end:
-            field_end = info['gather_rule'].find('from') - 1
+            field_end = info['gather_rule'].find('from')
         # 获取采集规则的字段有哪些
-        gather_params['rule_fields_str'] = info['gather_rule'][field_start:field_end]
+        gather_params['rule_fields_str'] = info['gather_rule'][field_start:field_end].strip(' ')
         # 获取采集域
         rule_fields = gather_params['rule_fields_str'].split(',')
         for rule_field in rule_fields:
-            field = rule_field.strip('@').split('=')
+            field = rule_field.strip(' ').strip('@').split('=')
             gather_params['gather_field'].append(field[0])
             gather_params['target_field'].append(field[1])
         # 根据参数获取数据库连接配置
@@ -216,11 +216,12 @@ def gather_data(info):
         try:
             cursor.execute(gather_sql)
             result = cursor.fetchall()
-        except Exception:
-            print 'EXCEPTION'
+        except Exception as e:
+            print e
             gather_status = 'error'
+            # 保存采集错误信息到采集表中
+            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None, gather_status='error').save()
             return gather_status
-        print result
         # 获取当前采集时间
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         # 历史采集数据迁移
@@ -230,8 +231,9 @@ def gather_data(info):
             data_set = sql_kv_process(gather_params['gather_field'], result)
             # 将采集的数据保存到td_gather_data中
             for item in data_set:
-                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value_str']).save()
+                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value_str'], gather_status='success').save()
         else:
+            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None, gather_status='empty').save()
             gather_status = 'empty'
     elif "interface" == gather_type:
         # 接口方式采集数据
@@ -248,6 +250,7 @@ def gather_data(info):
         # 判断接口返回的信息，接口采集是否出错,如果出错，方法立即返回error结束
         if 'success' != json_data['message']:
             gather_status = 'error'
+            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None, gather_status='error').save()
             return gather_status
         # JSON模拟接收的数据，测试时使用
         json_data = '{"username":"mary","age":"20","info":[{"tel":"1234566","mobile_phone":"15566757776","email":{"home":"home@qq.com","company":"company@qq.com","capacity":"2000"}}],"money":{"capacity":"50000","type":"RMB"},"address":[{"city":"beijing","code":"1000022"},{"city":"shanghai","code":"2210444"}]}'
@@ -264,8 +267,9 @@ def gather_data(info):
             data_set = interface_kv_process(json_dict)
             # 将采集的数据保存到td_gather_data中
             for item in data_set:
-                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value']).save()
+                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value'], gather_status='success').save()
         else:
+            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None, gather_status='empty').save()
             gather_status = 'empty'
     elif "file" == gather_type:
         # 文件方式采集数据
