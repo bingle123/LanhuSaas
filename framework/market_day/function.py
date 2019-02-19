@@ -65,6 +65,8 @@ def addperdic_task():
 
 def add_unit_task(add_dicx):
     schename = add_dicx['monitor_name']
+    type=add_dicx['monitor_type']
+    print type
     id=Monitor.objects.get(monitor_name=schename).id
     starthour = str(add_dicx['start_time'])[:2]
     endhour = str(add_dicx['end_time'])[:2]
@@ -79,8 +81,13 @@ def add_unit_task(add_dicx):
         'params': add_dicx['params'],
         'gather_rule': add_dicx['gather_rule'],
     }
-    co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task', crontab_time=ctime,
-                           task_args=info, desc=schename)
+    if type=='基本单元类型' or type=='图表单元类型':
+        co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,task_args=info, desc=schename)
+    elif type=='作业单元类型':
+        co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_two', crontab_time=ctime,task_args=info, desc=schename)
+    elif type=='流程单元类型':
+        co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_thrid', crontab_time=ctime,task_args=info, desc=schename)
+
 
 def edit_unit_task(add_dicx):
     schename = add_dicx['monitor_name']
