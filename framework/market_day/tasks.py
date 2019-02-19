@@ -79,12 +79,26 @@ def crawl_task(**i):
             logging.error(u'消息日志保存成功')
     return 'success'
 
-
+#基本监控项和图标监控项的采集task
 @task
-def gather_data_task(**i):
+def gather_data_task_one(**i):
     print '采集开始'
-    # 调用数据采集的方法
+    # 调用基本监控项和图标监控项数据采集的方法
     function.gather_data(i)
+    return '采集成功'
+
+#作业监控项的采集task
+@task
+def gather_data_task_two(**i):
+    print '采集开始'
+    # 调用作业监控项数据采集的方法
+    return '采集成功'
+
+#流程监控项的采集task
+@task
+def gather_data_task_thrid(**i):
+    print '采集开始'
+    # 调用流程监控项数据采集的方法
     return '采集成功'
 
 
