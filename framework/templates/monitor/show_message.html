@@ -350,7 +350,7 @@
                                 </el-form-item>
                                 <el-form-item label="作业模板" prop="gather_params">
                                     <el-select v-model="job.gather_rule" placeholder="请选择作业模板">
-                                        <el-option v-for="i in job2" :label="i.name" :value="i.id.id"></el-option>
+                                        <el-option v-for="i in job2" :label="i.name" :value="i.id"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="脚本参数" style="width: 96%">
@@ -436,7 +436,7 @@
                                 </el-form-item>
                                 <el-form-item label="流程模板" prop="gather_params">
                                     <el-select v-model="flow.gather_rule" placeholder="请选择模板" @change="flow_change"	>
-                                        <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id.id"></el-option>
+                                        <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="参数1" style="width: 96%">
@@ -1312,10 +1312,10 @@
                     url:'${SITE_URL}monitor/job_test/',
                     method:'post',
                     data: {
+
                         'gather_params': vm.job.gather_params,
                         'job_id': vm.job.gather_rule,
                         'params':vm.job.params,
-                        'gather_rule':vm.job.gather_rule,
                     },
                 }).then((res) =>{
                     alert(res['data']['message'])

@@ -66,19 +66,19 @@ def unit_show(request):
         for i in flow_list:
             dic2 = {
                 'flow_name': i['name'],
-                'id': {
+                'id': [{
                     'name': i['name'],
                     'id': i['id']
-                }
+                }]
             }
             flow.append(dic2)
         for i in job_list:
             dic1 = {
                 'name': i['name'],
-                'id': {
+                'id': [{
                     'name': i['name'],
                     'id': i['bk_job_id']
-                }
+                }]
             }
             job.append(dic1)
         res_dic = {
@@ -132,34 +132,33 @@ def delete_unit(request):
 
 
 def add_unit(request):
-
-    res = json.loads(request.body)
-    cilent = tools.interface_param (request)
-    user = cilent.bk_login.get_user({})
-    add_dic = res['data'],
-    monitor_type = res['monitor_type']
-    if res['monitor_type'] == 'first':
-        monitor_type = '基本单元类型'
-    if res['monitor_type'] == 'second':
-        monitor_type = '图表单元类型'
-    if res['monitor_type'] == 'third':
-        monitor_type = '作业单元类型'
-        add_dic['jion_id'] = int(add_dic['gather_rule']['id'])
-        add_dic['gather_rule'] = add_dic['gather_rule']['name']
-    if res['monitor_type'] == 'fourth':
-        monitor_type = '流程单元类型'
-        add_dic['jion_id'] = int (add_dic['gather_rule']['id'])
-        add_dic['gather_rule'] = add_dic['gather_rule']['name']
-    add_dic['monitor_name'] = res['monitor_name']
-    add_dic['monitor_type'] = monitor_type
-    add_dic['status'] = 0
-    add_dic['creator'] = user['data']['bk_username']
-    add_dic['editor'] = user['data']['bk_username']
-    Monitor.objects.create(**add_dic)
-    function.add_unit_task(add_dicx=add_dic)
-    result = tools.success_result(None)
-    # except Exception as e:
-    #     result = tools.error_result(e)
+    try:
+        res = json.loads(request.body)
+        cilent = tools.interface_param (request)
+        user = cilent.bk_login.get_user({})
+        add_dic = res['data']
+        monitor_type = res['monitor_type']
+        if res['monitor_type'] == 'first':
+            monitor_type = '基本单元类型'
+        if res['monitor_type'] == 'second':
+            monitor_type = '图表单元类型'
+        if res['monitor_type'] == 'third':
+            monitor_type = '作业单元类型'
+            add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
+            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+        if res['monitor_type'] == 'fourth':
+            monitor_type = '流程单元类型'
+            add_dic['jion_id'] = res['data']['gather_rule']['id']
+        add_dic['monitor_name'] = res['monitor_name']
+        add_dic['monitor_type'] = monitor_type
+        add_dic['status'] = 0
+        add_dic['creator'] = user['data']['bk_username']
+        add_dic['editor'] = user['data']['bk_username']
+        Monitor.objects.create(**add_dic)
+        function.add_unit_task(add_dicx=add_dic)
+        result = tools.success_result(None)
+    except Exception as e:
+        result = tools.error_result(e)
     return result
 
 
@@ -208,6 +207,7 @@ def basic_test(request):
         'params':server_url,
         'gather_rule':gather_rule
     }
+    print(info)
     gather_data(info)
     if sql.type == 'MySQL' or sql.type == 'Oracle':
         db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))
@@ -228,15 +228,13 @@ def basic_test(request):
     return result
 
 
-
 def job_test(request):
     try:
         res = json.loads(request.body)
-        params = res['params']
-        x = res['gather_params']
-        x1 = x.decode('utf-8')
-        bk_job_id = res['job_id']
-        script_param = base64.b64encode(x1)
+        params = res['params']                #ip
+        gather_params = res['gather_params']
+        bk_job_id = res['job_id'][0]['id']
+        script_param = base64.b64encode(gather_params)
         cilent = tools.interface_param(request)
         select_job_params = {
             'bk_biz_id': 2,
@@ -249,21 +247,44 @@ def job_test(request):
             select_job_list = []
             logger.error(u"请求作业模板失败：%s" % select_job.get('message'))
         step_id = select_job_list['steps'][0]['step_id']
+        cloud_params = {
+            'bk_biz_id':2,
+            'ip':{
+                'data':[params,],
+                'exact':1
+            },
+            "condition": [
+            {
+                "bk_obj_id": "host",
+                "fields": [],
+                "condition": [
+                    {
+                        "field": "bk_host_innerip",
+                        "operator": "$eq",
+                        "value": params
+                    }
+                ]
+            }]
+        }
+        cloud_select = cilent.cc.search_host(cloud_params)
+        print(cloud_select)
+        if cloud_select.get('result'):
+            cloud_id = cloud_select['data']['info'][0]['host']['bk_cloud_id'][0]['id']
+        else:
+            cloud_id = -1
+            logger.error (u"请求主机信息失败：%s" % cloud_select.get ('message'))
+
         job_params = {
             'bk_biz_id': 2,
             'bk_job_id': bk_job_id,
             'steps': [{
                 'step_id': step_id,
-                'script_param': script_param
-            }],
-            "global_vars":
-                [{"ip_list": [
-                    {
-                        "bk_cloud_id": 1,
-                        "ip": params
-                    },
-                    ],
-                }]
+                'script_param': script_param,
+                "ip_list":[ {
+                    "bk_cloud_id": cloud_id,
+                    "ip": params
+                },]
+            },],
         }
         job = cilent.job.execute_job(job_params)
         if job.get('result'):
@@ -271,13 +292,6 @@ def job_test(request):
         else:
             job_list = []
             logger.error(u"请求作业模板失败：%s" % job.get('message'))
-        info = {}
-        info['id'] = '21'  # id测试用的随意值
-        info['gather_params'] = 'interface'  # 作业监控项是sql语句查询
-        info['params'] = res['params']
-        info['gather_rule'] = res['gather_rule']
-        # 调用gatherData方法
-        gather_data(info)
         res = tools.success_result(job_list)
 
     except Exception as e:
