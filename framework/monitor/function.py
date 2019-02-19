@@ -19,6 +19,7 @@ import re
 from market_day import function
 from market_day import celery_opt as co
 from DataBaseManage.function import decrypt_str
+import time
 from gatherData.function import gather_data
 
 
@@ -283,6 +284,7 @@ def job_test(request):
 
     except Exception as e:
         res = tools.error_result(e)
+    time.sleep(5)
     return res
 
 
