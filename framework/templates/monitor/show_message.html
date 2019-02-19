@@ -963,7 +963,6 @@
                         }
                     }
                     for(i=0;i<flag/2;i++){
-                        console.log(res.data.message)
                         vm.tempcontents2 = vm.tempcontents2.replace(str[i].toString(),res.data.message[0][temp4[i]]);
                     }
                     $("#text2").html("")
@@ -989,7 +988,6 @@
                         }
                         icon = '@'+icon2[1]+'@',
                         icon4 = res.data.message[0]['gather_status']
-                        alert(icon4)
                         temp1[flag2] = temp1[flag2].replace(icon.toString(),'')
                         $("#text2").html("")
                         for(var i=0,j=0;i<temp1.length;i=i+2,j++){
