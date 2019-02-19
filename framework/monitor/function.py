@@ -19,6 +19,7 @@ import re
 from market_day import function
 from market_day import celery_opt as co
 from DataBaseManage.function import decrypt_str
+from gatherData.function import gather_data
 
 
 def unit_show(request):
@@ -143,10 +144,10 @@ def add_unit(request):
         monitor_type = '图表单元类型'
     if res['monitor_type'] == 'third':
         monitor_type = '作业单元类型'
-        add_dic['jion_id'] = int (add_dic['gather_rule']['id'])
+        add_dic['jion_id'] = int(add_dic['gather_rule']['id'])
         add_dic['gather_rule'] = add_dic['gather_rule']['name']
     if res['monitor_type'] == 'fourth':
-        monitor_type = '流程元类型'
+        monitor_type = '流程单元类型'
         add_dic['jion_id'] = int (add_dic['gather_rule']['id'])
         add_dic['gather_rule'] = add_dic['gather_rule']['name']
 
@@ -192,36 +193,48 @@ def edit_unit(request):
     return result
 
 
-def test(request):
+def basic_test(request):
     res = json.loads(request.body)
     result = []
-    gather_rule = "select data_key,data_value from td_gather_data"
+    gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = 1"
     server_url = res['server_url']
-    tmp = server_url.split(",")
-    sql = Conn.objects.get(id=tmp[0])
+    gather_rule = res['gather_rule']
+    typeid = res['id']
+    gather_params = res['gather_params']
+    sql = Conn.objects.get(id=server_url)
     password = f.decrypt_str(sql.password)
+    info = {
+        'id':typeid,
+        'gather_params':gather_params,
+        'params':server_url,
+        'gather_rule':gather_rule
+    }
+    gather_data(info)
     if sql.type == 'MySQL' or sql.type == 'Oracle':
         db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))
     if sql.type == 'SQL Server':
         db = pymssql.connect(sql.ip, sql.username, password, sql.databasename)
     cursor = db.cursor()
-    cursor.execute(gather_rule)
+    cursor.execute(gather_rule2)
     results = cursor.fetchall()
     dic = {}
     for i in results:
         dic1 = {
-            i[0]:i[1]
+            i[0]:i[1],
+            'gather_status':i[2]
         }
         dic =  dict( dic, **dic1 )
     result.append(dic)
     db.close()
-    return results
+    return result
+
 
 
 def job_test(request):
     try:
         res = json.loads(request.body)
-        x = res['params']
+        params = res['params']
+        x = res['gather_params']
         x1 = x.decode('utf-8')
         bk_job_id = res['job_id']
         script_param = base64.b64encode(x1)
@@ -237,14 +250,21 @@ def job_test(request):
             select_job_list = []
             logger.error(u"请求作业模板失败：%s" % select_job.get('message'))
         step_id = select_job_list['steps'][0]['step_id']
-
         job_params = {
             'bk_biz_id': 2,
             'bk_job_id': bk_job_id,
             'steps': [{
                 'step_id': step_id,
                 'script_param': script_param
-            }]
+            }],
+            "global_vars":
+                [{"ip_list": [
+                    {
+                        "bk_cloud_id": 1,
+                        "ip": params
+                    },
+                    ],
+                }]
         }
         job = cilent.job.execute_job(job_params)
         if job.get('result'):
@@ -252,7 +272,15 @@ def job_test(request):
         else:
             job_list = []
             logger.error(u"请求作业模板失败：%s" % job.get('message'))
+        info = {}
+        info['id'] = '21'  # id测试用的随意值
+        info['gather_params'] = 'interface'  # 作业监控项是sql语句查询
+        info['params'] = res['params']
+        info['gather_rule'] = res['gather_rule']
+        # 调用gatherData方法
+        gather_data(info)
         res = tools.success_result(job_list)
+
     except Exception as e:
         res = tools.error_result(e)
     return res
@@ -262,12 +290,12 @@ def change_unit_status(req):
     try:
         res=json.loads(req.body)
         schename=res['monitor_name']
-        flag=res['flag']
+        flag=int(res['flag'])
         unit_id=res['id']
         mon=Monitor.objects.get(id=unit_id)
         mon.status=flag
         mon.save()
-        if flag==0:
+        if flag==1:
             co.enable_task(schename)
         else:
             co.disable_task(schename)
@@ -284,23 +312,28 @@ def chart_get_test(request):
     :return:
     """
     request_body = json.loads(request.body)
-    database_id = request_body['database_id']
+    #测试数据
+    database_id=request_body['database_id']
+
+    info={}
+    info['id'] = '71' #id测试用的随意值
+    info['gather_params'] = 'sql' #图表监控项是sql语句查询
+    info['params'] = request_body['database_id']
+    info['gather_rule']=request_body['sql']
     sql = request_body['sql']
-
-    # 假定数据
-    # database_id = 4
-    # sql = 'SELECT count(*)@人口数@,cityName@城市名称@ from city GROUP BY cityName'
-
+    #调用gatherData方法
+    gather_data(info)
     # sql查询列的名称
     column_name_temp = sql.split('@')
     column_name_list = []
     execute_sql = ''
     # 列名称和执行的sql
     for i in range(0, len(column_name_temp)):
-        if i % 2 == 1:
-            column_name_list.append(column_name_temp[i])
+        if i==0 or i==len(column_name_temp)-1:
+            execute_sql+=column_name_temp[i]
         else:
-            execute_sql += column_name_temp[i]
+            print column_name_temp[i].split('=')
+            execute_sql += (column_name_temp[i].split('=')[-1])
     print execute_sql
     # 更具数据库ID查询数据库配置
     database_result = list(Conn.objects.filter(id=database_id).values())
@@ -318,8 +351,8 @@ def chart_get_test(request):
     result_list = []
     for i in results:
         temp_dict = {}
-        temp_dict['value'] = list(i)[1].encode('utf-8')
-        temp_dict['name'] = list(i)[0]
+        temp_dict['name'] = list(i)[1].encode('utf-8')
+        temp_dict['value'] = list(i)[0]
         result_list.append(temp_dict)
     return {
         "result": True,
@@ -331,6 +364,7 @@ def chart_get_test(request):
 
 
 def flow_change(request):
+
     cilent = tools.interface_param (request)
     id = json.loads(request.body)
     params = {

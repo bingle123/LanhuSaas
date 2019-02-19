@@ -14,3 +14,13 @@ class Conn(models.Model):
     createtime = models.DateTimeField(u'创建时间', auto_now_add=True)
     editname = models.CharField(u'修改人', max_length=64)
     edittime = models.DateTimeField(u'修改时间', auto_now=True)
+
+
+class Muenu(models.Model):
+    mname = models.CharField(u'名称',max_length=255)
+    url = models.CharField(u'地址',max_length=255)
+
+
+class Role(models.Model):
+    rname = models.CharField(u'角色',max_length=255)
+    muenu = models.ManyToManyField(Muenu)
