@@ -139,9 +139,7 @@
                                                        :value="i.value"></el-option>
                                         </el-select>
                                     </el-form-item>
-
                                 </div>
-
                                 <div :style="{display:file1}">
                                     <el-form-item label="服务器">
                                         <el-input placeholder="请输入服务器" v-model="server_url"
@@ -843,7 +841,7 @@
                 gather_params: '',                   //作业模板
                 params: '',                         //执行服务器
             },
-            flow1: {                                //流程单元
+            flow7: {                                //流程单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
                 font_size: '',                       //字号
@@ -1132,7 +1130,6 @@
                     }
                 });
             },
-
             edit2(row) {
                 this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -1201,20 +1198,54 @@
             },
             edit(row) {
                 vm.centerDialogVisible = true;
+                vm.disabled2 = false;
+                vm.disabled3 = true;
+                vm.disabled4 = true;
+                vm.disabled5 = true;
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
                 if (row.monitor_type == '基本单元类型') {
-                    vm.disabled2 = false;
-                    vm.disabled3 = true;
-                    vm.disabled4 = true;
-                    vm.disabled5 = true;
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
                     vm.basic.height = row.height;
                     vm.basic.width = row.width;
                     vm.basic.start_time = row.start_time;
                     vm.basic.end_time = row.end_time;
-                    vm.basic.period = row.period
+                    vm.basic.period = row.period;
+                    vm.sql_file_interface = row.gather_params;
+                    vm.basic.start_time = row.start_time;
+                    vm.basic.end_time = row.end_time;
+                    vm.basic.gather_rule = row.gather_rule;
+                    vm.basic.contents = row.contents;
+                    if (vm.sql_file_interface == 'sql') {
+                        vm.sql_file_interface =3;
+                        vm.sql1 = 'block';
+                        vm.file1 = 'none';
+                        vm.interface1 = 'none';
+                        vm.basic.gather_params = 'sql'
+                    }
+                    if (vm.sql_file_interface == 'file') {
+                        vm.sql_file_interface =6;
+                        arr=row.params.split(",");
+                        vm.server_url = arr[0];
+                        vm.file_param = arr[1]
+                        vm.typeid = '2';
+                        vm.sql1 = 'none';
+                        vm.file1 = 'block';
+                        vm.interface1 = 'none';
+                        vm.basic.gather_params = 'file';
+                    }
+                    if (vm.sql_file_interface == 'interface') {
+                        vm.sql_file_interface =9;
+                        arr=row.params.split(",");
+                        vm.server_url = arr[0];
+                        vm.file_param = arr[1];
+                        vm.typeid = '3';
+                        vm.sql1 = 'none';
+                        vm.file1 = 'none';
+                        vm.interface1 = 'block';
+                        vm.basic.gather_params = 'interface';
+                    }
                 }
                 if (row.monitor_type == '图表单元类型') {
                     vm.disabled2 = true;
@@ -1348,22 +1379,16 @@
             },
             edit3(row) {
                      {
-                        vm.disabled2 = false;
-                        vm.disabled3 = false;
-                        vm.disabled4 = false;
-                        vm.disabled5 = false;
-                        vm.monitor_type = 'first';
-                        vm.unit_id = row;
-                        vm.basic = '';
-                        vm.chart = '';
-                        vm.job = '';
-                        vm.flow = '';
-                        vm.basic = vm.basic1;
-                        vm.chart = vm.chart1;
-                        vm.job = vm.job1;
-                        vm.flow = vm.flow1;
-                        vm.centerDialogVisible = true
-                        this.get_db_connections();
+                         vm.monitor_name = '';
+                         vm.Initialization();
+                         vm.disabled2 = false;
+                         vm.disabled3 = false;
+                         vm.disabled4 = false;
+                         vm.disabled5 = false;
+                         vm.monitor_type = 'first';
+                         vm.unit_id = row;
+                         vm.centerDialogVisible = true;
+                         this.get_db_connections();
                     };
             },
             del() {
@@ -1563,6 +1588,14 @@
             },
             //初始化
             Initialization(){
+                Object.assign(vm.basic, {});
+                Object.assign(vm.basic, vm.basic1);
+                Object.assign(vm.job, {});
+                Object.assign(vm.job, vm.job1);
+                Object.assign(vm.flow, {});
+                Object.assign(vm.flow, vm.flow7);
+                Object.assign(vm.chart, {});
+                Object.assign(vm.chart, vm.chart1);
             },
             //显示图标
             show_chart() {
