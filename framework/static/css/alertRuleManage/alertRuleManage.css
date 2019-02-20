@@ -1,0 +1,9 @@
+/*表格字段居中*/
+#alertRuleTable .cell{
+    text-align: center;
+    vertical-align: middle;
+}
+/*表单按钮居中显示*/
+.alertRuleFormButton{
+    text-align: center;
+}

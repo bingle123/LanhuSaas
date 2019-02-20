@@ -128,6 +128,21 @@ def delete_conn(request,id):
         return tools.error_result(res1)
 
 
+# 获取名称
+def get_conname(request):
+    try:
+        res = request.body
+        print res
+        res_obj = Conn.objects.filter(id=res)
+        for i in res_obj:
+            sql_name = i.connname
+
+        reslut =  tools.success_result(sql_name)
+    except Exception as e:
+        reslut = tools.error_result(e)
+    return reslut
+
+
 # 测试
 def testConn(request):
     res = json.loads(request.body)

@@ -12,7 +12,8 @@ from gatherData import function
 from monitor.models import Monitor
 from django.db.models import Q
 from django.forms import model_to_dict
-
+from monitor import tools
+from celery.schedules import crontab
 
 @task
 def crawl_task(**i):
@@ -79,12 +80,27 @@ def crawl_task(**i):
             logging.error(u'消息日志保存成功')
     return 'success'
 
-
+#基本监控项和图标监控项的采集task
 @task
-def gather_data_task(**i):
+def gather_data_task_one(**i):
     print '采集开始'
-    # 调用数据采集的方法
+    # 调用基本监控项和图标监控项数据采集的方法
     function.gather_data(i)
+    return '采集成功'
+
+#作业监控项的采集task
+@task
+def gather_data_task_two(**i):
+    print '采集开始'
+    # 调用作业监控项数据采集的方法
+    tools.job_interface(res=i)
+    return '采集成功'
+
+#流程监控项的采集task
+@task
+def gather_data_task_thrid(**i):
+    print '采集开始'
+    # 调用流程监控项数据采集的方法
     return '采集成功'
 
 
@@ -104,3 +120,8 @@ def count_time(**i):
 #         else:
 #             monitor.status=1
 #         monitor.save()
+
+@periodic_task(run_every=crontab(minute='*',hour='8-10'))
+def taskdemo():
+    print u'每天8点到10点每分钟执行一次'
+    return '11111'
