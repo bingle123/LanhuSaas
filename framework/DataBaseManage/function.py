@@ -39,8 +39,7 @@ def decrypt_str(data):
     return method.decrypt(k)
 
 
-
-#模糊查询
+#数据库链接模糊查询
 def selecthor(request):
     res = json.loads(request.body)
     search = res['search']
@@ -62,10 +61,8 @@ def selecthor(request):
         objs.append(conn)
     return objs
 
-
 # 查询所有
 def getconn_all(request):
-
     res = json.loads(request.body)
     page = res['page']
     limit = res['limit']
@@ -252,14 +249,101 @@ def get_flowStatus(request):
             r = Flow.objects.filter(instance_id=task_id).update(status=status)
             return r
 
-#获取所有菜单
+
+############################菜单#########################
+
+#菜单模糊查询
+def selecthor2(request):
+    res = json.loads(request.body)
+    search = res['search']
+    page = res['page']
+    limit = res['limit']
+    sciencenews = Muenu.objects.filter(Q(mname__contains=search)|Q(url__contains=search))
+    p = Paginator(sciencenews, limit)
+    count = p.page_range
+    pages = count[-1]
+
+    curren_page = p.page(page)
+    objs = []
+    for cur in curren_page.object_list:
+        muenu = model_to_dict(cur)
+        muenu['count'] = pages
+        objs.append(muenu)
+    return objs
+
+#获取角色对应的菜单名和Url
 def get_user_muenu(request):
-    # cilent = tools.interface_param(request)
-    # user = cilent.bk_login.get_user({})
-    # bk_roleid = user['data']['bk_role']
-    muenus = Muenu.objects.all()
+    """
+
+    :param request:
+    :return:
+    """
+    cilent = tools.interface_param(request)
+    user = cilent.bk_login.get_user({})
+    bk_roleid = user['data']['bk_role']
+    muenus = Muenu.objects.filter(role__id=bk_roleid)
+    temp_list = []
     for i in muenus:
-        mname = model_to_dict(i)['mname']
-        urls = model_to_dict(i)['url']
-        print mname.encode('utf-8')
-        print urls
+        temp = {}
+        temp = model_to_dict(i)
+        temp_list.append(temp)
+    return tools.success_result(temp_list)
+
+
+
+
+#获取所有菜单
+def get_all_muenu(request):
+    res = json.loads(request.body)
+    page = res['page']
+    limit = res['limit']
+    muenus = Muenu.objects.all()
+    p = Paginator(muenus, limit)
+    count = p.page_range
+    pages = count[-1]
+    objs = []
+    current_page = p.page(page)
+    for cur in current_page.object_list:
+        muenus = model_to_dict(cur)
+        muenus['count'] = pages
+        objs.append(muenus)
+    return objs
+
+
+
+
+#增加菜单
+def addmuenus(request):
+    try:
+        res = json.loads(request.body)
+        re = Muenu(**res).save()
+        return tools.success_result(re)
+    except Exception as e:
+        res1 = tools.error_result(e)
+        return res1
+
+
+
+#修改菜单
+def edit_muenu(request):
+    try:
+        res = json.loads(request.body)
+        res.pop('count')
+        re1 = Muenu.objects.filter(id=res['id']).update(**res)
+        print tools.success_result(re1)
+        return tools.success_result(re1)
+    except Exception as e:
+        res1 = tools.error_result(e)
+        print res1
+        return res1
+
+
+#删除菜单
+def delete_muenu(request,id):
+    try:
+        res = Muenu.objects.filter(id=id).delete()
+        return tools.success_result(res)
+    except Exception as e:
+        res1 = tools.error_result(e)
+        return tools.error_result(res1)
+
