@@ -139,9 +139,7 @@
                                                        :value="i.value"></el-option>
                                         </el-select>
                                     </el-form-item>
-
                                 </div>
-
                                 <div :style="{display:file1}">
                                     <el-form-item label="服务器">
                                         <el-input placeholder="请输入服务器" v-model="server_url"
@@ -628,9 +626,6 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            typeid:'1',
-            tempcontents:'',
-            tempcontents2:'',
             msg1:'',
             job2: [],                                   //作业模板
             flow2: [],                                  //流程模板
@@ -843,7 +838,7 @@
                 gather_params: '',                   //作业模板
                 params: '',                         //执行服务器
             },
-            flow1: {                                //流程单元
+            flow7: {                                //流程单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
                 font_size: '',                       //字号
@@ -865,7 +860,7 @@
         },
         methods: {
             basic_size(){
-              $("#text2").css("font-size",this.basic.font_size)
+              $("#text2").find("*").css("font-size",this.basic.font_size)
             },
             basic_height(){
                 $('#text2').css('top',this.basic.height)
@@ -874,11 +869,11 @@
                 $("#text2").css("left",this.basic.width)
             },
             sycontent(){
-                vm.tempcontents = vm.basic.contents
+                let tempcontents = vm.basic.contents
                 $("#text2").html("")
-                $("#text2").append("<div>"+vm.tempcontents+"</div>")
+                $("#text2").append("<div>"+tempcontents+"</div>")
                 if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
-                    var temp1 = vm.tempcontents.split("#");
+                    var temp1 = tempcontents.split("#");
                     var temp2=[];
                     var temp3=[];
                     var temp4=[];
@@ -898,15 +893,15 @@
                     $("#text2").html("")
                      for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                          if(j<temp4.length){
-                             $("#text2").append("<div style=\"font-size:" + this.basic.font_size + "px\">" + temp1[i] + temp4[j]+ "</div>");
+                             $("#text2").append("<div>" + temp1[i] + temp4[j]+ "</div>");
                          }
                          else{
-                              $("#text2").append("<div style=\"font-size:" + this.basic.font_size + "px\">" + temp1[i]+ "</div>");
+                              $("#text2").append("<div>" + temp1[i]+ "</div>");
                          }
                      }
                   }
                 if(vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1){
-                    var icon1 = vm.tempcontents.split("@");
+                    var icon1 = tempcontents.split("@");
                     var icon2=[];
                     var icon3=[];
                     var icon4=[-2];
@@ -922,7 +917,7 @@
                         icon4.push(icon3[i][1]);
                     }
                     $("#text2").html("")
-                    $("#text2").append("<div class = \"asd\";style=\"font-size:"+ this.basic.font_size +"px\">"+icon1[0]+"</div>");
+                    $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
                     if(icon4 ){
                         icon4.push("-2")
                      }
@@ -940,7 +935,7 @@
                      }
                  }
                 if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
-                    var temp1 = vm.tempcontents.split("#");
+                    var temp1 = tempcontents.split("#");
                     var temp2 = [];
                     var temp3 = [];
                     var temp4 = [];
@@ -971,6 +966,7 @@
                     icon4 = icon3[1]
                     $("#text2").html("")
                     for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
+
                         if (i == flag2) {
                             $("#text2").append("<div class=\"asd\">" + icon1[0] + "</div>");
                             if (icon4 == 1) {
@@ -986,27 +982,28 @@
                                 $("#text2").append("<div class=\"circle3\"></div>");
                             }
                         } else {
-                            $("#text2").append("<div style=\"font-size:" + this.basic.font_size + "px\">" + temp1[i] + temp4[j] + "</div>");
+                            $("#text2").append("<div>" + temp1[i] + temp4[j] + "</div>");
                         }
                     }
                 }
             },
-            basic_test() {
+            basic_test(){
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/basic_test/',
                     data: {
-                        id:vm.typeid,
+                        id:vm.unit_id,
                         server_url: vm.server_url,
                         gather_rule:vm.basic.gather_rule,
-                        gather_params:vm.basic.gather_params
+                        gather_params:vm.basic.gather_params,
+                        file_param:vm.file_param
                     },
                 }).then(function (res) {
-                    vm.tempcontents2 = vm.basic.contents
+                    let tempcontents2 = vm.basic.contents
                     $("#text2").html("")
-                    $("#text2").append("<div>"+vm.tempcontents2+"</div>")
+                    $("#text2").append("<div>"+tempcontents2+"</div>")
                     if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
-                        var temp1 = vm.tempcontents.split("#");
+                        var temp1 = tempcontents2.split("#");
                         var temp2=[];
                         var temp3=[];
                         var temp4=[];
@@ -1023,20 +1020,20 @@
                         $("#text2").html("")
                          for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                              if(j<temp4.length){
-                                 $("#text2").append("<div style=\"font-size:" + vm.basic.font_size + "px\">" + temp1[i] + res.data.message[0][temp4[j]]+ "</div>");
+                                 $("#text2").append("<div>" + temp1[i] + res.data.message[0][temp4[j]]+ "</div>");
                              }
                              else{
-                                  $("#text2").append("<div style=\"font-size:" + vm.basic.font_size + "px\">" + temp1[i]+ "</div>");
+                                  $("#text2").append("<div>" + temp1[i]+ "</div>");
                              }
                          }
                       }
                     if(vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1){
-                        var icon1 = vm.tempcontents.split("@");
+                        var icon1 = tempcontents2.split("@");
                         var icon2=[];
                         var icon3=[];
                         var icon4=res.data.message[0]['gather_status'];
                         $("#text2").html("")
-                        $("#text2").append("<div class = \"asd\";style=\"font-size:"+ vm.basic.font_size +"px\">"+icon1[0]+"</div>");
+                        $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
                         if (icon4 == 'success') {
                              $("#text2").append("<div class=\"circle1\"></div>");
                          }
@@ -1051,7 +1048,7 @@
                          }
                      }
                     if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
-                        var temp1 = vm.tempcontents.split("#");
+                        var temp1 = tempcontents2.split("#");
                         var temp2 = [];
                         var temp3 = [];
                         var temp4 = [];
@@ -1083,7 +1080,7 @@
                         $("#text2").html("")
                         for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                             if (i == flag2) {
-                                $("#text2").append("<div class = \"asd\";style=\"font-size:"+ vm.basic.font_size +"px\">"+icon1[0]+"</div>");
+                                $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
                                 if (icon4 == 'success') {
                                      $("#text2").append("<div class=\"circle1\"></div>");
                                  }
@@ -1097,7 +1094,7 @@
                                      $("#text2").append("<div class=\"circle4\"></div>");
                                  }
                             } else {
-                                $("#text2").append("<div style=\"font-size:" + vm.basic.font_size + "px\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                                $("#text2").append("<div>" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
                             }
                         }
                 }
@@ -1132,7 +1129,6 @@
                     }
                 });
             },
-
             edit2(row) {
                 this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -1201,20 +1197,55 @@
             },
             edit(row) {
                 vm.centerDialogVisible = true;
+                vm.disabled2 = false;
+                vm.disabled3 = true;
+                vm.disabled4 = true;
+                vm.disabled5 = true;
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
                 if (row.monitor_type == '基本单元类型') {
-                    vm.disabled2 = false;
-                    vm.disabled3 = true;
-                    vm.disabled4 = true;
-                    vm.disabled5 = true;
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
                     vm.basic.height = row.height;
                     vm.basic.width = row.width;
                     vm.basic.start_time = row.start_time;
                     vm.basic.end_time = row.end_time;
-                    vm.basic.period = row.period
+                    vm.basic.period = row.period;
+                    vm.sql_file_interface = row.gather_params;
+                    vm.basic.start_time = row.start_time;
+                    vm.basic.end_time = row.end_time;
+                    vm.basic.gather_rule = row.gather_rule;
+                    vm.basic.contents = row.contents;
+                    if (vm.sql_file_interface == 'sql') {
+                        vm.sql_file_interface =3;
+                        vm.sql1 = 'block';
+                        vm.file1 = 'none';
+                        vm.interface1 = 'none';
+                        vm.basic.gather_params = 'sql'
+                    }
+                    if (vm.sql_file_interface == 'file') {
+                        vm.sql_file_interface =6;
+                        arr=row.params.split(",");
+                        vm.server_url = arr[0];
+                        vm.file_param = arr[1]
+                        vm.typeid = '2';
+                        vm.sql1 = 'none';
+                        vm.file1 = 'block';
+                        vm.interface1 = 'none';
+                        vm.basic.gather_params = 'file';
+                    }
+                    if (vm.sql_file_interface == 'interface') {
+                        vm.sql_file_interface =9;
+                        arr=row.params.split(",");
+                        vm.server_url = arr[0];
+                        vm.file_param = arr[1];
+                        vm.typeid = '3';
+                        vm.sql1 = 'none';
+                        vm.file1 = 'none';
+                        vm.interface1 = 'block';
+                        vm.basic.gather_params = 'interface';
+                    }
+                    this.sycontent()
                 }
                 if (row.monitor_type == '图表单元类型') {
                     vm.disabled2 = true;
@@ -1348,22 +1379,16 @@
             },
             edit3(row) {
                      {
-                        vm.disabled2 = false;
-                        vm.disabled3 = false;
-                        vm.disabled4 = false;
-                        vm.disabled5 = false;
-                        vm.monitor_type = 'first';
-                        vm.unit_id = row;
-                        vm.basic = '';
-                        vm.chart = '';
-                        vm.job = '';
-                        vm.flow = '';
-                        vm.basic = vm.basic1;
-                        vm.chart = vm.chart1;
-                        vm.job = vm.job1;
-                        vm.flow = vm.flow1;
-                        vm.centerDialogVisible = true
-                        this.get_db_connections();
+                         vm.monitor_name = '';
+                         vm.Initialization();
+                         vm.disabled2 = false;
+                         vm.disabled3 = false;
+                         vm.disabled4 = false;
+                         vm.disabled5 = false;
+                         vm.monitor_type = 'first';
+                         vm.unit_id = row;
+                         vm.centerDialogVisible = true;
+                         this.get_db_connections();
                     };
             },
             del() {
@@ -1568,6 +1593,14 @@
             },
             //初始化
             Initialization(){
+                Object.assign(vm.basic, {});
+                Object.assign(vm.basic, vm.basic1);
+                Object.assign(vm.job, {});
+                Object.assign(vm.job, vm.job1);
+                Object.assign(vm.flow, {});
+                Object.assign(vm.flow, vm.flow7);
+                Object.assign(vm.chart, {});
+                Object.assign(vm.chart, vm.chart1);
             },
             //显示图标
             show_chart() {

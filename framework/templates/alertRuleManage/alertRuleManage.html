@@ -11,456 +11,426 @@
     <!--axios.min.js--vue.js的ajax支持-->
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
-    <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/alertRuleManage/alertRuleManage.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
 </head>
 
 <body>
-<div class="content" id="main">
-    <div class="header">
-        <el-breadcrumb class="route" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item>首页</el-breadcrumb-item>
-            <el-breadcrumb-item>SQL数据库连接管理</el-breadcrumb-item>
-        </el-breadcrumb>
-    </div>
-
-    <div class="body">
-        <el-card shadow="always">
-            <!--表单展示-->
-            <div v-if="isAdd == '1'">
-                <div id="pagetitle">
-                    SQL数据库连接管理
-                </div>
-                <hr id="hr">
-                <el-row type="flex" justify="space-between" align="center" class="row">
-
-                    <el-col :span="12">
-                        <el-col :span="9">
-                            <el-input v-model="search" placeholder="请输入内容"></el-input>
-                        </el-col>
-                        <el-col :span="3">
-                            <el-button type="primary" icon="el-icon-search" v-on:click="select_table">搜索</el-button>
-                        </el-col>
-                    </el-col>
-                <el-col :span='3'>
-                    <el-button type='primary'  @click='show'>新增数据库连接</el-button>
+<div id="alertRuleManage">
+    <el-row>
+        <el-col :span="24">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item>首页</el-breadcrumb-item>
+                <el-breadcrumb-item>告警规则配置</el-breadcrumb-item>
+            </el-breadcrumb>
+        </el-col>
+    </el-row>
+    <el-card>
+        <!--表单展示-->
+        <div v-if="alertRuleTableStatus == 'list'">
+            <el-row>
+                <el-col :span="24">
+                    <div style="font-weight: bold">告警规则列表</div>
+                    <hr>
                 </el-col>
-                </el-row>
-
-                <el-table :data="tableData" :header-cell-style="rowClass" style="width: 100%">
-                    <el-table-column prop="id" label="序号" width="80px">
-                    </el-table-column>
-                    <el-table-column prop="connname" label="连接名称" style="width: 25%">
-                    </el-table-column>
-                    <el-table-column prop="type" label="连接类型" style="width: 25%">
-                    </el-table-column>
-                    <el-table-column prop="ip" label="IP地址" style="width: 25%">
-                    </el-table-column>
-                    <el-table-column prop="port" label="端口" style="width: 25%">
-                    </el-table-column>
-                    <el-table-column prop="username" label="用户名" style="width: 25%">
-                    </el-table-column>
-                    <el-table-column prop="operation" label="操作">
-                        <template slot-scope="scope">
-                            <el-button type="text" @click="showe(scope.row)" size="small">编辑</el-button>
-                            <el-button type="text" @click="deleteDataBase(scope.row.id,scope.$index,tableData)" size="small">删除</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
-            </div>
-
-            <!--新增-->
-            <div v-else-if="isAdd == '2'">
-                <div id="pagetitle">
-                    新增数据库连接
-                </div>
-                <hr id="hr">
-                <el-form label-width="140px" :model="addconn" ref="addconn" :rules="rules" class="demo-ruleForm">
-                    <el-row type="flex" class="row-bg" justify="space-around">
-                        <el-col :span="9">
-                            <el-form-item label="连接名称：" prop="connname">
-                                <el-input v-model="addconn.connname"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="9">
-                            <el-form-item label="数据库类型:" prop="type">
-                                    <el-select v-model="addconn.type" placeholder="请选择数据库类型" style="width: 250px;">
-                                        <el-option label="MySQL" value="MySQL"></el-option>
-                                        <el-option label="Oracle" value="Oracle"></el-option>
-                                        <el-option label="SQL Server" value="SQL Server"></el-option>
-                                    </el-select>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row type="flex" class="row-bg" justify="space-around">
-                        <el-col :span="9">
-                            <el-form-item label="Ip地址：" prop="ip">
-                                <el-input v-model="addconn.ip"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="9">
-                            <el-form-item label="端口号：" prop="port">
-                                <el-input v-model="addconn.port"></el-input>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row type="flex" class="row-bg" justify="space-around">
-                        <el-col :span="9">
-                            <div id="son">
-                                <el-form-item label="数据库名称：" prop="databasename">
-                                    <el-input v-model="addconn.databasename"></el-input>
-                                </el-form-item>
-                            </div>
-                        </el-col>
-                        <el-col :span="9">
-                            <div id="son">
-                                <el-form-item label="用户名：" prop="username">
-                                    <el-input v-model="addconn.username"></el-input>
-                                </el-form-item>
-                            </div>
-                        </el-col>
-
-                    </el-row>
-                    <el-row type="flex" class="row-bg" justify="space-around">
-                        <el-col :span="9">
-                            <div id="son">
-                                <el-form-item label="密码：" prop="password">
-                                    <el-input v-model="addconn.password" type="password"></el-input>
-                                </el-form-item>
-                            </div>
-                        </el-col>
-
-                    </el-row>
-                </el-form>
-                <el-row type="flex" class="row-bg" justify="center">
-                    <el-col :span="18">
-                        <el-button type="info" @click="testConn('addconn')">测试连接</el-button>
+            </el-row>
+            <el-row type="flex" justify="space-between" align="center" class="row">
+                <el-col :span="12">
+                    <el-col :span="9">
+                        <el-input v-model="rule_search" size="medium" placeholder="请输入规则名称"></el-input>
                     </el-col>
-                    <el-col :span="2">
-                        <el-button type="primary" id="button" @click="saveconn('addconn')">保存</el-button>
+                    <el-col :span="3">
+                        <el-button type="primary" size="medium" icon="el-icon-search" v-on:click="alertRuleSearch">搜索</el-button>
                     </el-col>
-                    <el-col :span="2">
-                        <el-button @click="hide()" id="button">取消</el-button>
+                </el-col>
+                <el-col :span='12' style="text-align: right">
+                    <el-button type='primary' size="medium" @click='alertRuleAdd'>新增告警规则</el-button>
+                </el-col>
+            </el-row>
+            <el-table :data="alertRuleTableData">
+                <el-table-column prop="id" label="序号" width="50">
+                </el-table-column>
+                <el-table-column prop="item_id" label="监控项ID" width="100" align="center">
+                </el-table-column>
+                <el-table-column prop="rule_name" label="规则名称" width="200" align="center">
+                </el-table-column>
+                <el-table-column prop="key_name" label="告警键值" width="200" align="center">
+                </el-table-column>
+                <el-table-column prop="upper_limit" label="上限值" width="100" align="center">
+                </el-table-column>
+                <el-table-column prop="lower_limit" label="下限值" width="100" align="center">
+                </el-table-column>
+                <el-table-column prop="alert_title" label="告警标题" width="200" align="center">
+                </el-table-column>
+                <el-table-column prop="alert_content" label="告警内容" width="200" align="center">
+                </el-table-column>
+                <el-table-column prop="create_time" label="创建时间" width="200" align="center">
+                </el-table-column>
+                <el-table-column prop="creator" label="创建人" width="100" align="center">
+                </el-table-column>
+                <el-table-column prop="edit_time" label="修改时间" width="200" align="center">
+                </el-table-column>
+                <el-table-column prop="editor" label="修改人" width="100" align="center">
+                </el-table-column>
+                <el-table-column prop="operation" label="操作" width="100" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="text" size="small" @click="alertRuleEdit(scope.row.id)">编辑</el-button>
+                        <el-button type="text" size="small" @click="alertRuleDelete(scope.row.id)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-pagination :page-count="alertRulesCount" background layout="prev, pager, next" style="float:right" @current-change="alertRulePageChange"></el-pagination>
+        </div>
+        <!--数据添加/修改-->
+        <div v-if="alertRuleTableStatus == 'add' || alertRuleTableStatus == 'edit'">
+            <el-row>
+                <el-col :span="24">
+                    <div style="font-weight: bold">告警规则添加</div>
+                    <hr>
+                </el-col>
+            </el-row>
+            <el-form :rules="rules" :model="alertRuleData" ref="alertRuleData" label-position="right" label-width="100px">
+                <el-row>
+                    <el-col :span="11" :offset="1">
+                        <el-form-item label="监控项ID:" prop="item_id">
+                            <el-input v-model="alertRuleData.item_id"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="11" :offset="1">
+                        <el-form-item label="规则名称:" prop="rule_name">
+                            <el-input v-model="alertRuleData.rule_name"></el-input>
+                        </el-form-item>
                     </el-col>
                 </el-row>
-            </div>
-
-            <!--编辑-->
-            <div v-else="isAdd == '3'">
-                <div id="pagetitle">
-                    编辑数据库连接
-                </div>
-                <hr id="hr">
-                <el-form label-width="140px" :model="editDataBase" ref="editDataBase" :rules="rules" class="demo-ruleForm">
-                    <el-row type="flex" class="row-bg" justify="space-around">
-                        <el-col :span="9">
-                            <el-form-item label="连接名称：" prop="connname">
-                                <el-input v-model="editDataBase.connname"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="9">
-                            <el-form-item label="数据库类型:" prop="type">
-                                    <el-select v-model="editDataBase.type" placeholder="请选择数据库类型" style="width: 250px;">
-                                        <el-option label="MySQL" value="MySQL"></el-option>
-                                        <el-option label="Oracle" value="Oracle"></el-option>
-                                        <el-option label="SQL Server" value="SQL Server"></el-option>
-                                    </el-select>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row type="flex" class="row-bg" justify="space-around">
-                        <el-col :span="9">
-                            <el-form-item label="Ip地址：" prop="ip">
-                                <el-input v-model="editDataBase.ip"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="9">
-                            <el-form-item label="端口号：" prop="port">
-                                <el-input v-model="editDataBase.port"></el-input>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row type="flex" class="row-bg" justify="space-around">
-                        <el-col :span="9">
-                            <div id="son">
-                                <el-form-item label="数据库名称：" prop="databasename">
-                                    <el-input v-model="editDataBase.databasename"></el-input>
-                                </el-form-item>
-                            </div>
-                        </el-col>
-                        <el-col :span="9">
-                            <div id="son">
-                                <el-form-item label="用户名：" prop="username">
-                                    <el-input v-model="editDataBase.username"></el-input>
-                                </el-form-item>
-                            </div>
-                        </el-col>
-
-                    </el-row>
-                    <el-row type="flex" class="row-bg" justify="space-around">
-                        <el-col :span="9">
-                            <div id="son">
-                                <el-form-item label="密码：" prop="password">
-                                    <el-input v-model="editDataBase.password" type="password"></el-input>
-                                </el-form-item>
-                            </div>
-                        </el-col>
-
-                    </el-row>
-                </el-form>
-                <el-row type="flex" class="row-bg" justify="center">
-                    <el-col :span="18">
-                        <el-button type="info" @click="textconn2('editDataBase')">测试连接</el-button>
+                <el-row>
+                    <el-col :span="11" :offset="1">
+                        <el-form-item label="告警键值:" prop="key_name">
+                            <el-input v-model="alertRuleData.key_name"></el-input>
+                        </el-form-item>
                     </el-col>
-                    <el-col :span="2">
-                        <el-button type="primary" @click="editConn('editDataBase')">修改</el-button>
-                    </el-col>
-                    <el-col :span="2">
-                        <el-button @click="hide()">取消</el-button>
+                    <el-col :span="11" :offset="1">
+                        <el-form-item label="上限值:" prop="upper_limit">
+                            <el-input v-model="alertRuleData.upper_limit"></el-input>
+                        </el-form-item>
                     </el-col>
                 </el-row>
-            </div>
-            <!--||||||||||||||||-->
-        </el-card>
-    </div>
-
+                <el-row>
+                    <el-col :span="11" :offset="1">
+                        <el-form-item label="下限值:" prop="lower_limit">
+                            <el-input id="lowerValue" v-model="alertRuleData.lower_limit"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="11" :offset="1">
+                        <el-form-item label="告警标题:" prop="alert_title">
+                            <el-input v-model="alertRuleData.alert_title"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="23" :offset="1">
+                        <el-form-item label="告警内容:" prop="alert_content">
+                            <el-input type="textarea" :rows="10" v-model="alertRuleData.alert_content"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row class="alertRuleFormButton">
+                    <el-button @click="alertRuleList()">取 消</el-button>
+                    <el-button type="primary" @click="alertRuleSave('alertRuleData')">添加 / 修改</el-button>
+                </el-row>
+            </el-form>
+        </div>
+    </el-card>
 </div>
 
 <script type="text/javascript">
-    var ve = new Vue({
-        el: '#main',
+    //csrf验证
+    axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
+    const upperLimitCheck= (rule, value, callback) => {
+        var lv = $('#lowerValue');
+        if (value != null && value.length > 0) {
+            if (parseFloat(value).toString() != "NaN" && parseFloat(value) >= 1 && parseFloat(value) <= 9999) {
+                vue.upper_valid_status = true;
+                lv.focus();
+                lv.blur();
+                callback();
+            } else {
+                callback(new Error('上限值在1~9999之间'));
+            }
+        } else {
+            vue.upper_valid_status = false;
+            lv.focus();
+            lv.blur();
+            callback();
+        }
+    };
+    const lowerLimitCheck = (rule, value, callback) => {
+        if (value != null && value.length > 0) {
+            if (parseFloat(value).toString() != "NaN" && parseFloat(value) >= 1 && parseFloat(value) <= 9999) {
+                callback();
+            } else {
+                callback(new Error('下限值在1~9999之间'));
+            }
+        } else {
+            if(!vue.upper_valid_status){
+                callback(new Error('上限值与下限值必须选择其一填写'))
+            }else{
+                callback();
+            }
+        }
+    };
+    var vue = new Vue({
+        el: '#alertRuleManage',
         data: {
-            search:'',//搜索框的值
-            page_count:0,
-            page:1, //当前页
-            isAdd: 1,
-            tableData: [],
-            dataType:[],
-            editDataBase:[],
-            addconn: {
-                connname:'',
-                type:'',
-                ip: '',
-                port: '',
-                username:'',
-                password:'',
-                databasename:'',
-            },
+            upper_valid_status: false,
+            lower_valid_status: false,
+            alertRuleTableStatus: 'list',
+            alertRuleTableData: null,
+            alertRuleData: {},
+            rule_search: null,
+            alertRulesCount: null,
             rules: {
-                connname: [
-                    { required: true, message: '请输入连接名称', trigger: 'blur' },
-                    { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' },
-
-              ],
-                ip: [
-                    { required: true, message: '请输入ip地址', trigger: 'blur' },
-                    {pattern: /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/,message:'请输入正确的IP地址',trigger: 'blur' }
-              ],
-                port: [
-                    { required: true, message: '请输入端口号', trigger: 'blur' },
-                    {pattern:/^([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-4]\d{4}|65[0-4]\d{2}|655[0-2]\d|6553[0-5])$/,message:'请输入正确端口号',trigger: 'blur' }
-              ],
-                databasename: [
-                { required: true, message: '请输入数据库名称', trigger: 'blur' },
-                { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
-              ],
-                type: [
-                { required: true, message: '请选择数据库类型', trigger: 'blur' },
-              ],
-                username: [
-                    { required: true, message: '请输入用户名', trigger: 'blur' },
-                    { min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur' }
-              ],
-                password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
-              ]
-            },
-
-
+                item_id: [
+                    { required: true, message: '请输入监控项ID', trigger: 'blur' },
+                    { pattern: /^([1-9]\d{0,2}|1000)$/, message: '监控项ID在1~1000之间', trigger: 'blur' }
+                ],
+                key_name: [
+                    { required: true, message: '请输入告警键值', trigger: 'blur' },
+                    { min: 1, max: 50, message: '告警键值长度在1~50之间', trigger: 'blur' }
+                ],
+                rule_name: [
+                    { required: true, message: '请输入规则名称', trigger: 'blur' },
+                    { min: 1, max: 50, message: '规则名称长度在1~50之间', trigger: 'blur' }
+                ],
+                upper_limit: [
+                    { validator: upperLimitCheck, trigger: 'blur' }
+                ],
+                lower_limit: [
+                    { validator: lowerLimitCheck, trigger: 'blur' }
+                ],
+                alert_title: [
+                    { required: true, message: '请输入告警标题', trigger: 'blur' },
+                    { min: 1, max: 100, message: '告警标题长度在1~100之间', trigger: 'blur' }
+                ],
+                alert_content: [
+                    { required: true, message: '请输入告警内容', trigger: 'blur' },
+                    { min: 1, max: 2000, message: '告警内容长度在1~2000之间', trigger: 'blur' }
+                ]
+            }
         },
         methods: {
-            current_change1(value) {
-                ve.page = value;
+            validateUpperLimit: function(){
+
+            },
+            loadAlertRuleInfo: function(){
+                const loading = this.alertRulePopupLoading();
+                //加载告警规则数据
+                var url = '${SITE_URL}alertRuleManage/select_all_rules';
+                axios({
+                        method: 'post',
+                        url: url
+                }).then((res) =>{
+                    this.alertRuleTableData = res.data.message;
+                    loading.close();
+                }).catch((res) => {
+                    loading.close();
+                    var msg = '告警规则数据加载失败！' + res;
+                    this.alertRulePopupErrorMessage(msg);
+                });
+            },
+            alertRulePopupErrorMessage: function(msg) {
+                this.$notify.error({
+                  title: '错误',
+                  message: msg
+                });
+            },
+            alertRulePopupLoading: function() {
+                //返回加载标记，供外部关闭
+                return this.$loading({
+                    lock: true,
+                    text: '正在拼命加载中...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            },
+            alertRuleSearch: function(){
+
+            },
+            alertRuleAdd: function(){
+                this.alertRuleTableStatus = 'add';
+            },
+            alertRulePageChange: function(){
+
+            },
+            alertRuleEdit: function(id){
+                const loading = this.alertRulePopupLoading();
+                var url = '${SITE_URL}alertRuleManage/select_rule';
+                var editData = {};
+                editData.id = id;
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}DataBaseManage/selecthor/',
-                    data: {
-                        search:this.search,
-                        page:ve.page,
-                        limit:5,
-                    }
-                }).then((res) => {
-                    ve.tableData = res.data.message;
-                    ve.page_count = res.data.message[0].count;
-                })
-                },
-            show() {
-                this.isAdd = 2
+                    url: url,
+                    data: editData,
+                }).then((res) =>{
+                    loading.close();
+                    this.alertRuleData = res.data;
+                    this.alertRuleTableStatus = 'edit';
+                }).catch((res) => {
+                    loading.close();
+                    var msg = '获取告警规则数据失败！' + res;
+                    this.alertRulePopupErrorMessage(msg);
+                });
             },
-
-            hide() {
-                this.isAdd=1
-                ve.conn()
-            },
-
-            rowClass({row, rowIndex}) {
-                return 'background:#F7F7F7'
-            },
-
-
-            //搜索
-
-            select_table() {
-                axios({
-                    method: 'post',
-                    url: '${SITE_URL}DataBaseManage/selecthor/',
-                    data: {
-                        search:this.search,
-                        page:1,
-                        limit:5,
-                    }
-                }).then((res) => {
-                    ve.tableData = res.data.message;
-                    ve.page_count = res.data.message[0].count;
-                })
-            },
-            //查询所有
-            conn(){
-                 axios({
-                    method: 'post',
-                    url: '${SITE_URL}DataBaseManage/getall/',
-                    data:{
-                        search:this.search,
-                        page:ve.page,
-                        limit:5,
-                    }
-                }).then(function(response) {
-                    ve.tableData = response.data.message
-                    ve.page_count = response.data.message[0].count;
-                })
-            },
-
-
-
-            //保存
-            saveconn(formName){
-               this.$refs[formName].validate((valid) => {
-                    if (!valid) {
-                        alert('验证不通过');
-                        return false;
-                    }else {
-                        axios.post(
-                        '${SITE_URL}DataBaseManage/saveconn/',this.addconn
-                    ).then(function (res) {
-                        if(res.data.code == 0){
-                            ve.hide()
+            alertRuleDelete: function(id){
+                this.$confirm('确认删除当前告警规则吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    const loading = this.alertRulePopupLoading();
+                    var url = '${SITE_URL}alertRuleManage/del_rule';
+                    var delData = {};
+                    delData.id = id;
+                    axios({
+                        method: 'post',
+                        url: url,
+                        data: delData,
+                    }).then((res) =>{
+                        loading.close();
+                        if('ok' == res.data.message){
+                            this.loadAlertRuleInfo();
+                            this.$message({
+                                type: 'success',
+                                message: '删除告警规则成功!'
+                            });
+                        }else if('restrict' == res.data.message){
+                            this.$confirm('当前告警规则正在被用户使用，强制删除?', '提示', {
+                                confirmButtonText: '确定',
+                                cancelButtonText: '取消',
+                                type: 'warning',
+                                center: true
+                            }).then(() => {
+                                this.alertRuleForceDelete(id);
+                            }).catch((res) => {
+                                loading.close();
+                                this.$message({
+                                    type: 'info',
+                                    message: '取消告警规则删除，如需继续删除，请先删除用户订阅此告警规则的记录'
+                                });
+                            });
+                        }else{
+                            var msg = '请求删除告警规则失败！';
+                            this.alertRulePopupErrorMessage(msg + res.data.message);
                         }
+                    }).catch((res) => {
+                        loading.close();
+                        var msg = '请求删除告警规则失败！';
+                        this.alertRulePopupErrorMessage(msg + res);
                     });
-                    }
+                }).catch(() => {
+                    loading.close();
+                    this.$message({
+                        type: 'info',
+                        message: '取消告警规则删除'
+                    });
                 });
             },
-
-
-            //去修改
-            showe(row){
-                this.isAdd = 3
-                this.editDataBase=row
+            alertRuleForceDelete: function(id){
+                var url = '${SITE_URL}alertRuleManage/force_del_rule';
+                var delData = {};
+                delData.id = id;
+                const loading = this.alertRulePopupLoading();
+                axios({
+                    method: 'post',
+                    url: url,
+                    data: delData,
+                }).then((res) =>{
+                    loading.close();
+                    if('ok' == res.data.message){
+                        this.loadAlertRuleInfo();
+                        this.$message({
+                            type: 'success',
+                            message: '删除告警规则成功!'
+                        });
+                    }
+                }).catch((res) => {
+                    loading.close();
+                    var msg = '删除告警规则失败！' + res;
+                    this.alertRulePopupErrorMessage(msg);
+                });
             },
-
-            //修改
-            editConn(formName){
+            alertRuleSave: function(formName){
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
-                        alert('验证不通过');
+                        this.$message({
+                            type: 'error',
+                            message: '请仔细检查表单项!'
+                        });
                         return false;
                     }else {
-                        axios.post(
-                            '${SITE_URL}DataBaseManage/editconn/',this.editDataBase
-                        ).then(function(res){
-                            if(res.data.code == 0){
-                                ve.hide()
+                        if(this.alertRuleTableStatus == 'add'){
+                            this.alertRuleData.create_time = this.dataToString('yyyy-MM-dd hh:mm:ss', new Date());
+                            this.alertRuleData.creator = 'lhAdmin';
+                            this.alertRuleData.edit_time = this.dataToString('yyyy-MM-dd hh:mm:ss', new Date());
+                            this.alertRuleData.editor = 'lhAdmin';
+                        }else if(this.alertRuleTableStatus == 'edit'){
+                            this.alertRuleData.edit_time = this.dataToString('yyyy-MM-dd hh:mm:ss', new Date());
+                            this.alertRuleData.editor = 'lhAdmin';
+                        }
+                        const loading = this.alertRulePopupLoading();
+                        var url = '${SITE_URL}alertRuleManage/add_rule';
+                        axios({
+                            method: 'post',
+                            url: url,
+                            data: this.alertRuleData,
+                        }).then((res) =>{
+                            loading.close();
+                            if('ok' == res.data.message){
+                                this.loadAlertRuleInfo();
+                                this.alertRuleList();
+                            }else{
+                                var msg = '请求添加/修改告警规则失败！';
+                                this.alertRulePopupErrorMessage(msg + res);
                             }
-                    })
+                        }).catch((res) => {
+                            loading.close();
+                            var msg = '请求添加/修改告警规则失败！';
+                            this.alertRulePopupErrorMessage(msg + res);
+                        });
                     }
-                })
-            },
-
-
-            //删除
-            deleteDataBase(id,index,data){
-            this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning',
-                center: true
-            }).then(() => {
-                this.$message({
-                        type: 'success',
-                        message: '删除成功!',
-                    },
-                    axios.post(
-                   '${SITE_URL}DataBaseManage/deleteconn/'+id+'/'
-               ).then((res) => {
-                   if(res.data.message==0){
-                       this.$message('删除成功')
-                       data.splice(index,1)
-                   }
-                    })
-                    ,
-                );
-            }).catch(() => {
-                this.$message({
-                    type: 'info',
-                    message: '已取消删除'
                 });
-            });
+            },
+            alertRuleList: function(){
+                this.alertRuleData = {};
+                this.alertRuleTableStatus = 'list';
+            },
+            dataToString: function(fmt, date) {
+                var o = {
+                    "M+": date.getMonth() + 1,                 //月份
+                    "d+": date.getDate(),                    //日
+                    "h+": date.getHours(),                   //小时
+                    "m+": date.getMinutes(),                 //分
+                    "s+": date.getSeconds(),                 //秒
+                    "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+                    "S": date.getMilliseconds()             //毫秒
+                };
+                if (/(y+)/.test(fmt))
+                    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in o)
+                    if (new RegExp("(" + k + ")").test(fmt))
+                        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                return fmt;
+            }
         },
-
-            //数据库连接测试
-            testConn(formName){
-                console.log(this.addconn)
-                this.$refs[formName].validate((valid) => {
-                    if (!valid) {
-                        alert('验证不通过');
-                        return false;
-                    }else {
-                        axios.post('${SITE_URL}DataBaseManage/testConn/',this.addconn)
-                            .then((res)=>{
-                        if(res.data.code == 0){
-                             alert("数据库连接成功")
-                        }else{
-                            alert("数据库连接失败")
-                        }
-                    })
-                    }
-                })
-
-            },
-
-            //测试2
-            textconn2(formName){
-                this.$refs[formName].validate((valid) => {
-                    if (!valid) {
-                        alert('验证不通过');
-                        return false;
-                    }else {
-                        axios.post('${SITE_URL}DataBaseManage/testConn/',this.editDataBase)
-                            .then((res)=>{
-                        if(res.data.code == 0){
-                             alert("数据库连接成功")
-                        }else{
-                            alert("数据库连接失败")
-                        }
-                    })
-                    }
-                })
-
-            },
+        mounted(){
+            this.loadAlertRuleInfo();
         }
     });
-    ve.conn()
 </script>
 
 </body>

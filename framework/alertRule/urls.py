@@ -14,5 +14,10 @@ from django.conf.urls import patterns
 
 urlpatterns = patterns(
     'alertRule.views',
-    (r'^alertRuleManage$', 'show_index'),                                          # 首页
+    (r'^index$', 'show_index'),                                          # 首页
+    (r'^select_all_rules$', 'select_all_rules'),
+    (r'^select_rule$', 'select_rule'),
+    (r'^del_rule$', 'del_rule'),
+    (r'^force_del_rule$', 'force_del_rule'),
+    (r'^add_rule$', 'add_rule'),
 )
