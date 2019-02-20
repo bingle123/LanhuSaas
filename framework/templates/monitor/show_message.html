@@ -121,7 +121,7 @@
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="显示内容" prop="contents" style="width: 96%">
-                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000" @change="sycontent()"
+                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000" @change="sycontent"
                                                   type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
@@ -630,9 +630,6 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            typeid:'1',
-            tempcontents:'',
-            tempcontents2:'',
             msg1:'',
             job2: [],                                   //作业模板
             flow2: [],                                  //流程模板
@@ -884,11 +881,11 @@
                 $("#text2").css("left",this.basic.width)
             },
             sycontent(){
-                vm.tempcontents = vm.basic.contents
+                let tempcontents = vm.basic.contents
                 $("#text2").html("")
-                $("#text2").append("<div>"+vm.tempcontents+"</div>")
+                $("#text2").append("<div>"+tempcontents+"</div>")
                 if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
-                    var temp1 = vm.tempcontents.split("#");
+                    var temp1 = tempcontents.split("#");
                     var temp2=[];
                     var temp3=[];
                     var temp4=[];
@@ -916,7 +913,7 @@
                      }
                   }
                 if(vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1){
-                    var icon1 = vm.tempcontents.split("@");
+                    var icon1 = tempcontents.split("@");
                     var icon2=[];
                     var icon3=[];
                     var icon4=[-2];
@@ -950,7 +947,7 @@
                      }
                  }
                 if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
-                    var temp1 = vm.tempcontents.split("#");
+                    var temp1 = tempcontents.split("#");
                     var temp2 = [];
                     var temp3 = [];
                     var temp4 = [];
@@ -981,6 +978,7 @@
                     icon4 = icon3[1]
                     $("#text2").html("")
                     for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
+
                         if (i == flag2) {
                             $("#text2").append("<div class=\"asd\">" + icon1[0] + "</div>");
                             if (icon4 == 1) {
@@ -1001,23 +999,23 @@
                     }
                 }
             },
-            basic_test() {
+            basic_test(){
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/basic_test/',
                     data: {
                         id:vm.unit_id,
-                        server_url: vm.server_url,
+                        server_url:vm.server_url,
                         gather_rule:vm.basic.gather_rule,
                         gather_params:vm.basic.gather_params,
                         file_param:vm.file_param
                     },
                 }).then(function (res) {
-                    vm.tempcontents2 = vm.basic.contents
+                    let tempcontents2 = vm.basic.contents
                     $("#text2").html("")
-                    $("#text2").append("<div>"+vm.tempcontents2+"</div>")
+                    $("#text2").append("<div>"+tempcontents2+"</div>")
                     if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
-                        var temp1 = vm.tempcontents.split("#");
+                        var temp1 = tempcontents2.split("#");
                         var temp2=[];
                         var temp3=[];
                         var temp4=[];
@@ -1042,7 +1040,7 @@
                          }
                       }
                     if(vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1){
-                        var icon1 = vm.tempcontents.split("@");
+                        var icon1 = tempcontents2.split("@");
                         var icon2=[];
                         var icon3=[];
                         var icon4=res.data.message[0]['gather_status'];
@@ -1062,7 +1060,7 @@
                          }
                      }
                     if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
-                        var temp1 = vm.tempcontents.split("#");
+                        var temp1 = tempcontents2.split("#");
                         var temp2 = [];
                         var temp3 = [];
                         var temp4 = [];
@@ -1210,6 +1208,7 @@
 
             },
             edit(row) {
+                this.get_db_connections();
                 vm.centerDialogVisible = true;
                 vm.disabled2 = false;
                 vm.disabled3 = true;
@@ -1226,12 +1225,22 @@
                     vm.basic.end_time = row.end_time;
                     vm.basic.period = row.period;
                     vm.sql_file_interface = row.gather_params;
+                    vm.file_param = row.file_param;
                     vm.basic.start_time = row.start_time;
                     vm.basic.end_time = row.end_time;
                     vm.basic.gather_rule = row.gather_rule;
                     vm.basic.contents = row.contents;
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface =3;
+                        axios({
+                            method: 'post',
+                            url: '${SITE_URL}DataBaseManage/get_conname/',
+                            data:row.params,
+                        }).then((res)=> {
+                            vm.server_url = res['data']['results']
+                        }).catch((error) => {
+                        alert('拉取数据库失败！')
+                        });
                         vm.sql1 = 'block';
                         vm.file1 = 'none';
                         vm.interface1 = 'none';
@@ -1241,7 +1250,7 @@
                         vm.sql_file_interface =6;
                         arr=row.params.split(",");
                         vm.server_url = arr[0];
-                        vm.file_param = arr[1]
+                        vm.file_param = arr[1];
                         vm.typeid = '2';
                         vm.sql1 = 'none';
                         vm.file1 = 'block';
@@ -1259,6 +1268,8 @@
                         vm.interface1 = 'block';
                         vm.basic.gather_params = 'interface';
                     }
+                    vm.sycontent()
+                    vm.basic_test()
                 }
                 if (row.monitor_type == '图表单元类型') {
                     vm.disabled2 = true;
@@ -1271,7 +1282,21 @@
                     vm.chart.width = row.width;
                     vm.chart.start_time = row.start_time;
                     vm.chart.end_time = row.end_time;
-                    vm.chart.period = row.period
+                    vm.chart.period = row.period;
+                    vm.chart.gather_params = row.gather_params;
+                    vm.chart.contents = row.contents;
+                    vm.chart.start_time = row.start_time;
+                    vm.chart.end_time = row.end_time;
+                    vm.chart.gather_rule = row.gather_rule;
+                    axios({
+                            method: 'post',
+                            url: '${SITE_URL}DataBaseManage/get_conname/',
+                            data:row.params,
+                        }).then((res)=> {
+                            vm.chart.params = res['data']['results']
+                        }).catch((error) => {
+                        alert('拉取数据库失败！')
+                        });
                 }
                 if (row.monitor_type == '作业单元类型') {
                     vm.disabled2 = true;
@@ -1284,7 +1309,11 @@
                     vm.job.width = row.width;
                     vm.job.start_time = row.start_time;
                     vm.job.end_time = row.end_time;
-                    vm.job.period = row.period
+                    vm.job.period = row.period;
+                    vm.job.contents = row.contents;
+                    vm.job.gather_rule = row.gather_rule;
+                    vm.job.gather_params = row.gather_params;
+                    vm.job.params = row.params;
                 }
                 if (row.monitor_type == '流程单元类型') {
                     vm.disabled2 = true;
@@ -1487,6 +1516,11 @@
                         $('.error').css('display','block');
                         $('.loading').css('display','none');
                         break;
+                    default:
+                        $('.unexecuted').css('display','block');
+                        $('.success').css('display','none');
+                        $('.error').css('display','none');
+                        $('.loading').css('display','none');
                 }
             },
             job_test() {
@@ -1609,6 +1643,8 @@
                 Object.assign(vm.flow, vm.flow7);
                 Object.assign(vm.chart, {});
                 Object.assign(vm.chart, vm.chart1);
+                vm.server_url = '';
+                vm.file_param = '';
             },
             //显示图标
             show_chart() {
@@ -1770,10 +1806,8 @@
                     let obj_1={};
                     obj_1.name=obj.X.v[i];
                     obj_1.value=obj.Y.v[i];
-                    console.log(obj_1);
                     this.$set(echartData,i,obj_1);
                 }
-                console.log(echartData);
                 vm.chartData=echartData;
             },
             chart_get_test(){

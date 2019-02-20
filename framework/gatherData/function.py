@@ -313,7 +313,7 @@ def gather_data(info):
     elif "space_interface" == gather_type:
         now = datetime.datetime.now ().strftime ('%Y-%m-%d %H:%M:%S')
         TDGatherData (item_id=info['id'], gather_time=now, data_key=info['message'], data_value=info['message_value'],
-                      gather_status='success').save ()
+                      gather_error_log='success').save ()
     if None != info['id']:
         rule_check(info['id'])
     return 'success'
