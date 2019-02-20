@@ -10,6 +10,94 @@ from jobManagement.models import Localuser
 from system_config.function import *
 
 
+# 获取所有告警规则
+def select_all_rules():
+    alert_rules = TbAlertRule.objects.order_by('item_id').all()
+    rule_list = []
+    for alert_rule in alert_rules:
+        create_time = alert_rule.create_time
+        edit_time = alert_rule.edit_time
+        upper_limit = alert_rule.upper_limit
+        lower_limit = alert_rule.lower_limit
+        alert_rule.create_time = None
+        alert_rule.edit_time = None
+        alert_rule.upper_limit = None
+        alert_rule.lower_limit = None
+        temp = model_to_dict(alert_rule)
+        if create_time is None:
+            temp['create_time'] = ''
+        else:
+            temp['create_time'] = create_time.strftime('%Y-%m-%d %H:%M:%S')
+        if edit_time is None:
+            temp['edit_time'] = ''
+        else:
+            temp['edit_time'] = edit_time.strftime('%Y-%m-%d %H:%M:%S')
+        if upper_limit is None:
+            temp['upper_limit'] = ''
+        else:
+            temp['upper_limit'] = str(upper_limit)
+        if lower_limit is None:
+            temp['lower_limit'] = ''
+        else:
+            temp['lower_limit'] = str(lower_limit)
+        rule_list.append(temp)
+    return rule_list
+
+
+# 根据id获取告警规则
+def select_rule(rule_data):
+    alert_rule = TbAlertRule.objects.filter(id=rule_data['id']).get()
+    create_time = alert_rule.create_time
+    edit_time = alert_rule.edit_time
+    upper_limit = alert_rule.upper_limit
+    lower_limit = alert_rule.lower_limit
+    alert_rule.create_time = None
+    alert_rule.edit_time = None
+    alert_rule.upper_limit = None
+    alert_rule.lower_limit = None
+    selected_rule = model_to_dict(alert_rule)
+    if create_time is None:
+        selected_rule['create_time'] = ''
+    else:
+        selected_rule['create_time'] = create_time.strftime('%Y-%m-%d %H:%M:%S')
+    if edit_time is None:
+        selected_rule['edit_time'] = ''
+    else:
+        selected_rule['edit_time'] = edit_time.strftime('%Y-%m-%d %H:%M:%S')
+    if upper_limit is None:
+        selected_rule['upper_limit'] = ''
+    else:
+        selected_rule['upper_limit'] = str(upper_limit)
+    if lower_limit is None:
+        selected_rule['lower_limit'] = ''
+    else:
+        selected_rule['lower_limit'] = str(lower_limit)
+    return selected_rule
+
+
+# 根据ID删除告警规则
+def del_rule(rule_data):
+    user_count = TlAlertUser.objects.filter(rule_id=rule_data['id']).count()
+    if 0 != user_count:
+        return "restrict"
+    else:
+        TbAlertRule.objects.filter(id=rule_data['id']).delete()
+        return "ok"
+
+
+# 根据ID强制删除告警规则
+def force_del_rule(rule_data):
+    TlAlertUser.objects.filter(rule_id=rule_data['id']).delete()
+    TbAlertRule.objects.filter(id=rule_data['id']).delete()
+    return "ok"
+
+
+#告警规则添加
+def add_rule(rule_data):
+    TbAlertRule(**rule_data).save()
+    return "ok"
+
+
 def rule_check(monitor_id):
     print 'monitor_id=%s-----Rule checking....' % monitor_id
     # 告警信息
