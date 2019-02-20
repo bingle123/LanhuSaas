@@ -1195,6 +1195,7 @@
 
             },
             edit(row) {
+                this.get_db_connections();
                 vm.centerDialogVisible = true;
                 vm.disabled2 = false;
                 vm.disabled3 = true;
@@ -1218,6 +1219,15 @@
                     vm.basic.contents = row.contents;
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface =3;
+                        axios({
+                            method: 'post',
+                            url: '${SITE_URL}DataBaseManage/get_conname/',
+                            data:row.params,
+                        }).then((res)=> {
+                            vm.server_url = res['data']['results']
+                        }).catch((error) => {
+                        alert('拉取数据库失败！')
+                        });
                         vm.sql1 = 'block';
                         vm.file1 = 'none';
                         vm.interface1 = 'none';
@@ -1227,7 +1237,7 @@
                         vm.sql_file_interface =6;
                         arr=row.params.split(",");
                         vm.server_url = arr[0];
-                        vm.file_param = arr[1]
+                        vm.file_param = arr[1];
                         vm.typeid = '2';
                         vm.sql1 = 'none';
                         vm.file1 = 'block';
@@ -1259,7 +1269,21 @@
                     vm.chart.width = row.width;
                     vm.chart.start_time = row.start_time;
                     vm.chart.end_time = row.end_time;
-                    vm.chart.period = row.period
+                    vm.chart.period = row.period;
+                    vm.chart.gather_params = row.gather_params;
+                    vm.chart.contents = row.contents;
+                    vm.chart.start_time = row.start_time;
+                    vm.chart.end_time = row.end_time;
+                    vm.chart.gather_rule = row.gather_rule;
+                    axios({
+                            method: 'post',
+                            url: '${SITE_URL}DataBaseManage/get_conname/',
+                            data:row.params,
+                        }).then((res)=> {
+                            vm.chart.params = res['data']['results']
+                        }).catch((error) => {
+                        alert('拉取数据库失败！')
+                        });
                 }
                 if (row.monitor_type == '作业单元类型') {
                     vm.disabled2 = true;
@@ -1272,7 +1296,11 @@
                     vm.job.width = row.width;
                     vm.job.start_time = row.start_time;
                     vm.job.end_time = row.end_time;
-                    vm.job.period = row.period
+                    vm.job.period = row.period;
+                    vm.job.contents = row.contents;
+                    vm.job.gather_rule = row.gather_rule;
+                    vm.job.gather_params = row.gather_params;
+                    vm.job.params = row.params;
                 }
                 if (row.monitor_type == '流程单元类型') {
                     vm.disabled2 = true;
@@ -1602,6 +1630,8 @@
                 Object.assign(vm.flow, vm.flow7);
                 Object.assign(vm.chart, {});
                 Object.assign(vm.chart, vm.chart1);
+                vm.server_url = '';
+                vm.file_param = '';
             },
             //显示图表
             show_chart() {
