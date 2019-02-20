@@ -164,7 +164,6 @@ def add_unit(request):
             'gather_params':res['data']['gather_params']
         }
         tools_res = tools.job_interface(tools_params)
-
         info = {
         'id': id,                                     #关联id
         'message': "message",                       #状态
