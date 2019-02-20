@@ -34,14 +34,14 @@ def gather_test_init():
     # sql测试用监控项ID：'1'
     # 接口测试用监控项ID：'2'
     # 文件测试用监控项ID：'3'
-    info['id'] = '2'
+    info['id'] = '888'
     # sql测试用类型：'sql'
     # 文件测试用类型：'file'
     # 接口测试用类型：'interface'
     info['gather_params'] = 'interface'
     # sql测试用参数：'46'
     # 文件测试用参数：'192.168.1.10 /fk/test.txt'
-    # 接口测试用参数：'http://www.baidu.com,user=root$password=123'
+    # 接口测试用参数：'http://www.baidu.com,user=root&password=123'
     info['params'] = 'http://www.baidu.com,user=root&password=123'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'echo "1234"'
@@ -196,7 +196,7 @@ def interface_kv_process(json_dict):
 # 采集方法，返回参数gather_status为ok采集正常，返回empty采集结果为空，返回error采集规则错误
 def gather_data(info):
     # 采集测试参数初始化
-    # info = gather_test_init()
+    info = gather_test_init()
     # 采集状态，默认为ok
     gather_status = 'ok'
     # 获取数据采集的类型
@@ -267,7 +267,7 @@ def gather_data(info):
         # 判断接口是否返回了空数据
         if 0 != len(json_dict):
             # 获取当前采集时间
-            now = datetime.datetime.now().strftime('Y-%m-%d %H:%M:%S%')
+            now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             # 历史采集数据迁移
             gather_data_migrate(info['id'])
             # 将结果集整理为key-value形式的采集数据

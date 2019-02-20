@@ -2,6 +2,8 @@
 from __future__ import division
 from common.log import logger
 import json
+import requests
+import math
 from models import *
 from monitorScene.models import Scene
 from DataBaseManage.models import Conn
@@ -16,7 +18,6 @@ from market_day import function
 from market_day import celery_opt as co
 from DataBaseManage.function import decrypt_str
 from gatherData.function import gather_data
-
 
 def unit_show(request):
     try:
@@ -209,24 +210,46 @@ def edit_unit(request):
 def basic_test(request):
     res = json.loads(request.body)
     result = []
-    gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = 1"
-    server_url = res['server_url']
     gather_rule = res['gather_rule']
-    typeid = res['id']
+    item_id = res['id']
     gather_params = res['gather_params']
-    sql = Conn.objects.get(id=server_url)
-    password = f.decrypt_str(sql.password)
-    info = {
-        'id':typeid,
-        'gather_params':gather_params,
-        'params':server_url,
-        'gather_rule':gather_rule
-    }
+    params = res['params']
+    if 'sql'== gather_params:
+        gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = " + str(item_id)
+        sql = Conn.objects.get(id=server_url)
+        password = f.decrypt_str(sql.password)
+        info = {
+            'id': item_id,
+            'gather_params': gather_params,
+            'params': params,
+            'gather_rule': gather_rule
+        }
+        if sql.type == 'MySQL' or sql.type == 'Oracle':
+            db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename,port=int(sql.port))
+        if sql.type == 'SQL Server':
+            db = pymssql.connect(sql.ip, sql.username, password, sql.databasename)
+
+    if 'file' == gather_params:
+        gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = " + str(item_id)
+        db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1',port=3306)
+        info = {
+            'id': item_id,
+            'gather_params': gather_params,
+            'params': params,
+            'gather_rule': gather_rule
+        }
+
+    if 'interface' == gather_params:
+        gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = " + str(item_id)
+        db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1',port=3306)
+        info = {
+            'id': item_id,
+            'gather_params': gather_params,
+            'params': params,
+            'gather_rule': gather_rule
+        }
+
     gather_data(info)
-    if sql.type == 'MySQL' or sql.type == 'Oracle':
-        db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename, port=int(sql.port))
-    if sql.type == 'SQL Server':
-        db = pymssql.connect(sql.ip, sql.username, password, sql.databasename)
     cursor = db.cursor()
     cursor.execute(gather_rule2)
     results = cursor.fetchall()
@@ -325,38 +348,57 @@ def chart_get_test(request):
         "column_name_list": column_name_list,
     }
 
+def get_desc(id):
+    headers = {
+        'Content-Type': 'application/json;charset=utf-8',
+        'Cookie': 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
+        'Host': 'paas.bk.com',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3679.0 Safari/537.36',
+        'X-CSRFToken': 'X5kSUR63CCqoQJrdcAp94A0uEZjqfg1t',
+        'X-Requested-With': 'XMLHttpRequest'
+    }
+    a_url="http://paas.bk.com/o/bk_sops/api/v3/template/%s/"%(id)
+    req=requests.get(url=a_url,headers=headers)
+    req.encoding=req.apparent_encoding
+    req.raise_for_status()
+    return json.loads(req.text)
+if __name__ == '__main__':
+    get_desc(id)
 
 def flow_change(request):
 
     cilent = tools.interface_param (request)
     id = json.loads(request.body)
-    params = {
-        "bk_biz_id": "2",
-        "template_id":id['template_id']
-    }
-    res = cilent.sops.get_template_info(params)
+    res = get_desc(id['template_id'])
+    res1=json.loads(res['pipeline_tree'])
     activities2 = []
-    start_event =res['data']['pipeline_tree']['start_event']   #开始节点信息
-    start_event['x']=100
-    start_event['y'] = 200
-    end_event = res['data']['pipeline_tree']['end_event']   #结束节点信息
-    end_event['x']=150
-    end_event['y'] = 250
+    start_event = res1['start_event']  #开始节点信息
+    location = res1['location']
+    for l in location:
+        if l['id']==start_event['id']:
+            start_event['x'] = l['x']*0.48
+            start_event['y'] = l['y']
+    end_event = res1['end_event']   #结束节点信息
+    for l in location:
+        if l['id']==end_event['id']:
+            end_event['x'] = l['x']*0.48
+            end_event['y'] = l['y']
+
     activities2.append(start_event)
     activities2.append(end_event)
-    activities = res['data']['pipeline_tree']['activities']
+    activities = res1['activities']
     for key in activities:
         activities1 = {}
         activities1['id'] = str(activities[key]['id'])
-        activities1['x'] = 300
-        activities1['y']=400
-        # activities1['outgoing'] = str(activities[key]['outgoing'])
-        # activities1['incoming'] = str(activities[key]['incoming'])
         activities1['type'] = str(activities[key]['type'])
         activities1['name'] = activities[key]['name']
-        activities2.append(activities1)
+        for l in location:
+            if l['id']==activities1['id']:
+                activities1['x'] = l['x']*0.48
+                activities1['y'] = l['y']
+                activities2.append(activities1)
     flows1=[]
-    flows2 = res['data']['pipeline_tree']['flows']
+    flows2 = res1['flows']
     for key in flows2:
         flows3 = {
             'source':{

@@ -626,9 +626,6 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            typeid:'1',
-            tempcontents:'',
-            tempcontents2:'',
             msg1:'',
             job2: [],                                   //作业模板
             flow2: [],                                  //流程模板
@@ -863,7 +860,7 @@
         },
         methods: {
             basic_size(){
-              $("#text2").css("font-size",this.basic.font_size)
+              $("#text2").find("*").css("font-size",this.basic.font_size)
             },
             basic_height(){
                 $('#text2').css('top',this.basic.height)
@@ -872,11 +869,11 @@
                 $("#text2").css("left",this.basic.width)
             },
             sycontent(){
-                vm.tempcontents = vm.basic.contents
+                let tempcontents = vm.basic.contents
                 $("#text2").html("")
-                $("#text2").append("<div>"+vm.tempcontents+"</div>")
+                $("#text2").append("<div>"+tempcontents+"</div>")
                 if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
-                    var temp1 = vm.tempcontents.split("#");
+                    var temp1 = tempcontents.split("#");
                     var temp2=[];
                     var temp3=[];
                     var temp4=[];
@@ -896,15 +893,15 @@
                     $("#text2").html("")
                      for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                          if(j<temp4.length){
-                             $("#text2").append("<div style=\"font-size:" + this.basic.font_size + "px\">" + temp1[i] + temp4[j]+ "</div>");
+                             $("#text2").append("<div>" + temp1[i] + temp4[j]+ "</div>");
                          }
                          else{
-                              $("#text2").append("<div style=\"font-size:" + this.basic.font_size + "px\">" + temp1[i]+ "</div>");
+                              $("#text2").append("<div>" + temp1[i]+ "</div>");
                          }
                      }
                   }
                 if(vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1){
-                    var icon1 = vm.tempcontents.split("@");
+                    var icon1 = tempcontents.split("@");
                     var icon2=[];
                     var icon3=[];
                     var icon4=[-2];
@@ -920,7 +917,7 @@
                         icon4.push(icon3[i][1]);
                     }
                     $("#text2").html("")
-                    $("#text2").append("<div class = \"asd\";style=\"font-size:"+ this.basic.font_size +"px\">"+icon1[0]+"</div>");
+                    $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
                     if(icon4 ){
                         icon4.push("-2")
                      }
@@ -938,7 +935,7 @@
                      }
                  }
                 if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
-                    var temp1 = vm.tempcontents.split("#");
+                    var temp1 = tempcontents.split("#");
                     var temp2 = [];
                     var temp3 = [];
                     var temp4 = [];
@@ -969,6 +966,7 @@
                     icon4 = icon3[1]
                     $("#text2").html("")
                     for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
+
                         if (i == flag2) {
                             $("#text2").append("<div class=\"asd\">" + icon1[0] + "</div>");
                             if (icon4 == 1) {
@@ -984,27 +982,27 @@
                                 $("#text2").append("<div class=\"circle3\"></div>");
                             }
                         } else {
-                            $("#text2").append("<div style=\"font-size:" + this.basic.font_size + "px\">" + temp1[i] + temp4[j] + "</div>");
+                            $("#text2").append("<div>" + temp1[i] + temp4[j] + "</div>");
                         }
                     }
                 }
             },
-            basic_test() {
+            basic_test(){
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/basic_test/',
                     data: {
-                        id:vm.typeid,
-                        server_url: vm.server_url,
+                        id:vm.unit_id,
+                        params:vm.basic.params,
                         gather_rule:vm.basic.gather_rule,
-                        gather_params:vm.basic.gather_params
+                        gather_params:vm.basic.gather_params,
                     },
                 }).then(function (res) {
-                    vm.tempcontents2 = vm.basic.contents
+                    let tempcontents2 = vm.basic.contents
                     $("#text2").html("")
-                    $("#text2").append("<div>"+vm.tempcontents2+"</div>")
+                    $("#text2").append("<div>"+tempcontents2+"</div>")
                     if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
-                        var temp1 = vm.tempcontents.split("#");
+                        var temp1 = tempcontents2.split("#");
                         var temp2=[];
                         var temp3=[];
                         var temp4=[];
@@ -1021,20 +1019,20 @@
                         $("#text2").html("")
                          for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                              if(j<temp4.length){
-                                 $("#text2").append("<div style=\"font-size:" + vm.basic.font_size + "px\">" + temp1[i] + res.data.message[0][temp4[j]]+ "</div>");
+                                 $("#text2").append("<div>" + temp1[i] + res.data.message[0][temp4[j]]+ "</div>");
                              }
                              else{
-                                  $("#text2").append("<div style=\"font-size:" + vm.basic.font_size + "px\">" + temp1[i]+ "</div>");
+                                  $("#text2").append("<div>" + temp1[i]+ "</div>");
                              }
                          }
                       }
                     if(vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1){
-                        var icon1 = vm.tempcontents.split("@");
+                        var icon1 = tempcontents2.split("@");
                         var icon2=[];
                         var icon3=[];
                         var icon4=res.data.message[0]['gather_status'];
                         $("#text2").html("")
-                        $("#text2").append("<div class = \"asd\";style=\"font-size:"+ vm.basic.font_size +"px\">"+icon1[0]+"</div>");
+                        $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
                         if (icon4 == 'success') {
                              $("#text2").append("<div class=\"circle1\"></div>");
                          }
@@ -1049,7 +1047,7 @@
                          }
                      }
                     if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
-                        var temp1 = vm.tempcontents.split("#");
+                        var temp1 = tempcontents2.split("#");
                         var temp2 = [];
                         var temp3 = [];
                         var temp4 = [];
@@ -1081,7 +1079,7 @@
                         $("#text2").html("")
                         for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                             if (i == flag2) {
-                                $("#text2").append("<div class = \"asd\";style=\"font-size:"+ vm.basic.font_size +"px\">"+icon1[0]+"</div>");
+                                $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
                                 if (icon4 == 'success') {
                                      $("#text2").append("<div class=\"circle1\"></div>");
                                  }
@@ -1095,7 +1093,7 @@
                                      $("#text2").append("<div class=\"circle4\"></div>");
                                  }
                             } else {
-                                $("#text2").append("<div style=\"font-size:" + vm.basic.font_size + "px\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                                $("#text2").append("<div>" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
                             }
                         }
                 }
@@ -1214,6 +1212,7 @@
                     vm.basic.end_time = row.end_time;
                     vm.basic.period = row.period;
                     vm.sql_file_interface = row.gather_params;
+                    vm.file_param = row.file_param;
                     vm.basic.start_time = row.start_time;
                     vm.basic.end_time = row.end_time;
                     vm.basic.gather_rule = row.gather_rule;
@@ -1256,6 +1255,8 @@
                         vm.interface1 = 'block';
                         vm.basic.gather_params = 'interface';
                     }
+                    vm.sycontent()
+                    vm.basic_test()
                 }
                 if (row.monitor_type == '图表单元类型') {
                     vm.disabled2 = true;
@@ -1502,6 +1503,11 @@
                         $('.error').css('display','block');
                         $('.loading').css('display','none');
                         break;
+                    default:
+                        $('.unexecuted').css('display','block');
+                        $('.success').css('display','none');
+                        $('.error').css('display','none');
+                        $('.loading').css('display','none');
                 }
             },
             job_test() {
@@ -1627,7 +1633,7 @@
                 vm.server_url = '';
                 vm.file_param = '';
             },
-            //显示图标
+            //显示图表
             show_chart() {
                 if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
                     this.myChart.dispose();
@@ -1787,11 +1793,10 @@
                     let obj_1={};
                     obj_1.name=obj.X.v[i];
                     obj_1.value=obj.Y.v[i];
-                    console.log(obj_1);
                     this.$set(echartData,i,obj_1);
                 }
-                console.log(echartData);
                 vm.chartData=echartData;
+                vm.show_chart();
             },
             chart_get_test(){
                 axios({
@@ -1817,7 +1822,8 @@
                         })
                     }
                     vm.chartData=res.data.results;
-                    vm.person_count=res.data.column_name_list[0]
+                    vm.person_count=res.data.column_name_list[0];
+                    vm.show_chart();
                 }).catch((res) =>{
                     console.log(res)
                 });
