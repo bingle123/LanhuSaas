@@ -9,6 +9,7 @@ import datetime
 import json
 import urllib
 import urllib2
+import os
 from gatherData.models import *
 from gatherDataHistory.models import *
 from alertRule.function import *
@@ -42,11 +43,11 @@ def gather_test_init():
     # sql测试用参数：'46'
     # 文件测试用参数：'192.168.1.10 /fk/test.txt'
     # 接口测试用参数：'http://www.baidu.com,user=root&password=123'
-    info['params'] = 'http://www.baidu.com,user=root&password=123'
+    info['params'] = 'http://t.weather.sojson.com/api/weather/city/,101030100'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'echo "1234"'
     # 接口测试用采集规则：'接口采集规则'
-    info['gather_rule'] = '接口采集规则'
+    info['gather_rule'] = 'url=$1\ncode=$2\nwget http://t.weather.sojson.com/api/weather/city/$code\ncat ./$code'
     # ------------------------------------------------------------------------------------
     return info
 
@@ -83,17 +84,11 @@ def gather_param_parse(info):
     elif 'interface' == info['gather_params']:
         interface_params = info['params'].split(',')
         # 获取接口url参数
-        gather_params['extra_param']['interface_url'] = interface_params[0]
-        if -1 != interface_params[1].find('&'):
-            request_params = interface_params[1].split('&')
-        else:
-            request_params = interface_params[1]
-        request_param_dict = dict()
+        interface_url = interface_params[0]
         # 获取调用接口所需的参数
-        for request_param in request_params:
-            temp_param = request_param.split('=')
-            request_param_dict[temp_param[0]] = temp_param[1]
-        gather_params['extra_param']['request_param_dict'] = request_param_dict
+        interface_params = interface_params[1]
+        gather_params['extra_param']['interface_url'] = interface_url
+        gather_params['extra_param']['script_params'] = interface_url + ' ' + interface_params
         gather_params['gather_rule'] = info['gather_rule']
     elif 'file' == info['gather_params']:
         gather_params['extra_param']['script_params'] = info['params']
@@ -197,8 +192,6 @@ def interface_kv_process(json_dict):
 def gather_data(info):
     # 采集测试参数初始化
     info = gather_test_init()
-    # 采集状态，默认为ok
-    gather_status = 'ok'
     # 获取数据采集的类型
     gather_type = info['gather_params']
     # 采集数据库中的数据
@@ -209,77 +202,90 @@ def gather_data(info):
         gather_sql = info['gather_rule'].replace(gather_params['rule_fields_str'], ','.join(gather_params['target_field']))
         # 获取数据库连接参数
         conn_params = gather_params['extra_param']['connection_param']
+        # 历史采集数据迁移
+        gather_data_migrate(info['id'])
         # 连接指定数据库
-        conn = MySQLdb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
+        try:
+            conn = MySQLdb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
+        except Exception as e:
+            now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            TDGatherData(item_id=info['id'], gather_time=now, data_key='DB_CONNECTION', data_value='-1',gather_error_log=str(e)).save()
+            return "error"
+        # 采集规则是否异常判断
+        # noinspection PyBroadException
         cursor = conn.cursor()
         cursor.execute('SET NAMES UTF8')
-        #采集规则是否异常判断
-        # noinspection PyBroadException
         try:
             cursor.execute(gather_sql)
             result = cursor.fetchall()
         except Exception as e:
-            print e
-            gather_status = 'error'
-            # 保存采集错误信息到采集表中
-            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None, gather_status='error').save()
-            return gather_status
+            # 保存采集规则错误信息到采集表中
+            now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            TDGatherData(item_id=info['id'], gather_time=now, data_key='DB_CONNECTION', data_value='-2', gather_error_log=str(e)).save()
+            return "error"
         # 获取当前采集时间
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        # 历史采集数据迁移
-        gather_data_migrate(info['id'])
         if 0 != len(result):
             # 定义key-value
             data_set = sql_kv_process(gather_params['gather_field'], result)
             # 将采集的数据保存到td_gather_data中
             for item in data_set:
-                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value_str'], gather_status='success').save()
+                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value_str']).save()
+            return "success"
         else:
-            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None, gather_status='empty').save()
-            gather_status = 'empty'
+            TDGatherData(item_id=info['id'], gather_time=now, data_key='DB_CONNECTION', data_value='0').save()
+            return "empty"
     elif "interface" == gather_type:
         # 接口方式采集数据
         # 获取采集参数
         gather_params = gather_param_parse(info)
-        # 定义key-value
+        # 判断接口连接状态
+        if not os.path.exists('./gather_data.sh'):
+            f = open('./ping_interface.sh', 'w')
+            f.write('echo ping $1 -c 1 -s 1 -W 1 | grep "100% packet loss" | wc -l')
+            f.close()
+            print './ping_interface.sh' + " created."
+        else:
+            print './ping_interface.sh' + " already existed."
+        ping_status = os.popen('./ping_interface.sh ' + gather_params['extra_param']['interface_url'])
+        # 获取当前采集时间
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        if '1' == ping_status:
+            TDGatherData(item_id=info['id'], gather_time=now, data_key='URL_CONNECTION', data_value='-1', gather_error_log='request interface timeout.').save()
+            return "error"
         # 发送请求，从接口获取JSON数据
-        # 请求参数定义
-        request_params = {'interface_param': json.dumps(gather_params['extra_param']['request_param_dict']), 'gather_rule': gather_params['gather_rule']}
-        print 'REQUEST_PARAMS: %s' % request_params
-        request_params_encoded = urllib.urlencode(request_params)
-        request_object = urllib2.Request(url=gather_params['extra_param']['interface_url'], data=request_params_encoded)
-        json_data = urllib2.urlopen(request_object).read()
-        print json_data
+        if not os.path.exists('./gather_data.sh'):
+            f = open('./gather_data.sh', 'w')
+            f.write(gather_params['gather_rule'])
+            f.close()
+            print './gather_data.sh' + " created."
+        else:
+            os.remove('./gather_data.sh')
+            print './gather_data.sh' + " already existed. remove..."
+            f = open('./gather_data.sh', 'w')
+            f.write(gather_params['gather_rule'])
+            f.close()
+            print 'new file ./gather_data.sh' + " created."
+        json_data = os.popen('./gather_data.sh ' + gather_params['extra_param']['script_params'])
         # JSON模拟接收的数据，测试时使用
         json_data = '{"username":"mary","age":"20","info":[{"tel":"1234566","mobile_phone":"15566757776","email":{"home":"home@qq.com","company":"company@qq.com","capacity":"2000"}}],"money":{"capacity":"50000","type":"RMB"},"address":[{"city":"beijing","code":"1000022"},{"city":"shanghai","code":"2210444"}]}'
         # 将JSON字符串解析为python字典对象，便于筛选并采集数据
         json_dict = json.loads(json_data)
-        # 判断接口返回的信息，接口采集是否出错,如果出错，方法立即返回error结束
-        # 测试使用，接口调用状态默认为成功
-        json_dict['message'] = 'success'
-        if 'success' != json_dict['message']:
-            gather_status = 'error'
-            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None,
-                         gather_status='error').save()
-            return gather_status
-        # 获取完接口调用状态后，删除此数据，保存其它的需要的采集数据
-        del json_dict['message']
+        # 获取当前采集时间
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         # 判断接口是否返回了空数据
         if 0 != len(json_dict):
-            # 获取当前采集时间
-            now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             # 历史采集数据迁移
             gather_data_migrate(info['id'])
             # 将结果集整理为key-value形式的采集数据
             # recursion_json_dict(json_dict, gather_params['target_field'], data_set, gather_params['target_root'])
             data_set = interface_kv_process(json_dict)
             # 将采集的数据保存到td_gather_data中
-            print 'IDDDD: %s' % data_set
             for item in data_set:
-                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value'], gather_status='success').save()
+                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value']).save()
         else:
-            TDGatherData(item_id=info['id'], gather_time=None, data_key=None, data_value=None, gather_status='empty').save()
-            gather_status = 'empty'
+            TDGatherData(item_id=info['id'], gather_time=now, data_key='URL_CONNECTION', data_value='0').save()
+            return 'empty'
     elif "file" == gather_type:
         # 文件方式采集数据
         user_account = BkUser.objects.filter(id=1).get()
@@ -315,7 +321,7 @@ def gather_data(info):
         }
         res = client.job.fast_execute_script(bk_params)
         if 'success' != res['message']:
-            gather_status = 'error'
+            return 'error'
     # 数据采集完毕后使用告警规则检查数据合法性
     elif "space_interface" == gather_type:
         now = datetime.datetime.now ().strftime ('%Y-%m-%d %H:%M:%S')
@@ -323,4 +329,4 @@ def gather_data(info):
                       gather_status='success').save ()
     if None != info['id']:
         rule_check(info['id'])
-    return gather_status
+    return 'success'
