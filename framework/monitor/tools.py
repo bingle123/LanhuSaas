@@ -4,6 +4,7 @@ from common.log import logger
 import base64
 from account.models import *
 from blueking.component.shortcuts import *
+from gatherData.function import gather_data
 
 
 def error_result(e):
@@ -104,7 +105,6 @@ def job_interface(res):
                 }]
         }
         cloud_select = client.cc.search_host (cloud_params)
-        print(cloud_select)
         if cloud_select.get ('result'):
             cloud_id = cloud_select['data']['info'][0]['host']['bk_cloud_id'][0]['id']
         else:
@@ -122,13 +122,25 @@ def job_interface(res):
                 }, ]
             }, ],
         }
-        job = client.job.execute_job (job_params)
+        job = client.job.execute_job(job_params)
         if job.get ('result'):
             job_list = job.get ('data')
         else:
             job_list = []
             logger.error (u"请求作业模板失败：%s" % job.get ('message'))
-        res1 = success_result (job_list)
+        res1 = success_result(job_list)
+        data = res1['results']['message']
+
     except Exception as e:
         res1 = error_result(e)
+        data = res1['message']
+    print res1
+    print data
+    info = {
+        'id': res['id'],  # 关联id
+        'message': "message",  # 状态
+        'message_value': data,  # 状态值
+        'gather_params': 'space_interface'  # 类型
+    }
+    gather_data (info)
     return res1
