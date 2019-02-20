@@ -12,4 +12,5 @@ urlpatterns = patterns(
     (r'^testConn/$','testConn'),                             #测试连接
     (r'^selecthor/$','selecthor'),                          #模糊查询
     (r'^get_all_db_connection/$','get_all_db_connection'),                          # 获取所有的数据库连接
+    (r'^get_conname/$','get_conname'),                       #获取名称
 )
