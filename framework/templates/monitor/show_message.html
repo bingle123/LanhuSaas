@@ -1475,6 +1475,11 @@
                         $('.error').css('display','block');
                         $('.loading').css('display','none');
                         break;
+                    default:
+                        $('.unexecuted').css('display','block');
+                        $('.success').css('display','none');
+                        $('.error').css('display','none');
+                        $('.loading').css('display','none');
                 }
             },
             job_test() {
@@ -1758,10 +1763,8 @@
                     let obj_1={};
                     obj_1.name=obj.X.v[i];
                     obj_1.value=obj.Y.v[i];
-                    console.log(obj_1);
                     this.$set(echartData,i,obj_1);
                 }
-                console.log(echartData);
                 vm.chartData=echartData;
             },
             chart_get_test(){
