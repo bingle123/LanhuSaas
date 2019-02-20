@@ -200,6 +200,10 @@
                                 <div style="height: 20px"></div>
                                 <el-button type="primary" @click="basic_test">采集测试</el-button>
                             </div>
+                            <div style="padding: 0px 20%">
+                                <div style="height: 20px"></div>
+                                <el-button type="primary" @click="test">TEST</el-button>
+                            </div>
                         </div></el-col>
                     </el-row>
                 </el-tab-pane>
@@ -862,6 +866,14 @@
             person_count:'',
         },
         methods: {
+            test: function(){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}gatherData/gather_data',
+                }).then(function (res) {
+                    console.log(res.data.message)
+                })
+            },
             basic_size(){
               $("#text2").find("*").css("font-size",this.basic.font_size)
             },
