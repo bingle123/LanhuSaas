@@ -1602,7 +1602,7 @@
                 Object.assign(vm.chart, {});
                 Object.assign(vm.chart, vm.chart1);
             },
-            //显示图标
+            //显示图表
             show_chart() {
                 if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
                     this.myChart.dispose();
@@ -1765,6 +1765,7 @@
                     this.$set(echartData,i,obj_1);
                 }
                 vm.chartData=echartData;
+                vm.show_chart();
             },
             chart_get_test(){
                 axios({
@@ -1790,7 +1791,8 @@
                         })
                     }
                     vm.chartData=res.data.results;
-                    vm.person_count=res.data.column_name_list[0]
+                    vm.person_count=res.data.column_name_list[0];
+                    vm.show_chart();
                 }).catch((res) =>{
                     console.log(res)
                 });
