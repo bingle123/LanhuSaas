@@ -993,10 +993,9 @@
                     url: '${SITE_URL}monitor/basic_test/',
                     data: {
                         id:vm.unit_id,
-                        server_url: vm.server_url,
+                        params:vm.basic.params,
                         gather_rule:vm.basic.gather_rule,
                         gather_params:vm.basic.gather_params,
-                        file_param:vm.file_param
                     },
                 }).then(function (res) {
                     let tempcontents2 = vm.basic.contents
@@ -1212,6 +1211,7 @@
                     vm.basic.end_time = row.end_time;
                     vm.basic.period = row.period;
                     vm.sql_file_interface = row.gather_params;
+                    vm.file_param = row.file_param;
                     vm.basic.start_time = row.start_time;
                     vm.basic.end_time = row.end_time;
                     vm.basic.gather_rule = row.gather_rule;
@@ -1245,7 +1245,8 @@
                         vm.interface1 = 'block';
                         vm.basic.gather_params = 'interface';
                     }
-                    this.sycontent()
+                    vm.sycontent()
+                    vm.basic_test()
                 }
                 if (row.monitor_type == '图表单元类型') {
                     vm.disabled2 = true;

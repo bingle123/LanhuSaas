@@ -193,11 +193,10 @@ def edit_unit(request):
 def basic_test(request):
     res = json.loads(request.body)
     result = []
-    server_url = res['server_url']
     gather_rule = res['gather_rule']
     item_id = res['id']
     gather_params = res['gather_params']
-    file_param = res['file_param']
+    params = res['params']
     if 'sql'== gather_params:
         gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = " + str(item_id)
         sql = Conn.objects.get(id=server_url)
@@ -205,7 +204,7 @@ def basic_test(request):
         info = {
             'id': item_id,
             'gather_params': gather_params,
-            'params': server_url,
+            'params': params,
             'gather_rule': gather_rule
         }
         if sql.type == 'MySQL' or sql.type == 'Oracle':
@@ -219,7 +218,7 @@ def basic_test(request):
         info = {
             'id': item_id,
             'gather_params': gather_params,
-            'params': server_url +' '+ file_param,
+            'params': params,
             'gather_rule': gather_rule
         }
 
@@ -229,7 +228,7 @@ def basic_test(request):
         info = {
             'id': item_id,
             'gather_params': gather_params,
-            'params': server_url+','+file_param,
+            'params': params,
             'gather_rule': gather_rule
         }
 
