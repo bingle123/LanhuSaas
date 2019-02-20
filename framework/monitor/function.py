@@ -93,7 +93,7 @@ def select_unit(request):
     try:
         res = json.loads(request.body)
         res_list = []
-        res1 = "{}".format(res['data'])
+        res1 = res['data']
         limit = res['limit']
         page = res['page']
         unit =  Monitor.objects.filter(Q(monitor_type__icontains = res1)|Q(monitor_name__icontains = res1)| Q(editor__icontains = res1))

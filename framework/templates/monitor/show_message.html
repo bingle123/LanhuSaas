@@ -48,7 +48,7 @@
             <el-input placeholder="请输入内容" clearable v-model="contents" style="width:30%"></el-input>
             <el-button type="primary" icon="el-icon-search" v-on:click="select1">搜索</el-button>
             <el-popover placement="top-start" width="200" trigger="hover" content="新增一个单元。" style="float:right;">
-                <el-button slot="reference" v-on:click="edit3(0)">新增</el-button>
+                <el-button slot="reference" v-on:click="add_unit(0)">新增</el-button>
             </el-popover>
         </div>
         <div style="height: 20px"></div>
@@ -62,8 +62,8 @@
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
-                        <el-button size="mini" type="text" v-on:click="edit(scope.row)">编辑</el-button>
-                        <el-button size="mini" type="text" v-on:click="edit2(scope.row)">删除</el-button>
+                        <el-button size="mini" type="text" v-on:click="edit_unit(scope.row)">编辑</el-button>
+                        <el-button size="mini" type="text" v-on:click="delete_unit(scope.row)">删除</el-button>
                         <el-tooltip :content="scope.row.status" placement="top">
                             <el-switch  v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949" @change="switch_change(scope.row)"
                                        active-value="1" inactive-value="0"></el-switch>
@@ -96,11 +96,7 @@
                             <el-form :model="basic" ref="basic" :rules="rules1" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="basic.font_size" placeholder="请选择字号" @change="basic_size">
-                                        <el-option label="8" value="8"></el-option>
-                                        <el-option label="10" value="10"></el-option>
-                                        <el-option label="12" value="12"></el-option>
-                                        <el-option label="14" value="14"></el-option>
-                                        <el-option label="16" value="16"></el-option>
+                                        <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
@@ -216,11 +212,7 @@
                             <el-form :model="chart" :rules="rules2" ref="chart" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="chart.font_size" placeholder="请选择字号">
-                                        <el-option label="8" value="8"></el-option>
-                                        <el-option label="10" value="10"></el-option>
-                                        <el-option label="12" value="12"></el-option>
-                                        <el-option label="14" value="14"></el-option>
-                                        <el-option label="16" value="16"></el-option>
+                                        <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
@@ -321,12 +313,7 @@
                             <el-form :model="job" :rules="rules3" ref="job" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="job.font_size" @change="change_job_fontSize" placeholder="请选择字号">
-                                        <el-option label="20" value="20"></el-option>
-                                        <el-option label="22" value="22"></el-option>
-                                        <el-option label="24" value="24"></el-option>
-                                        <el-option label="26" value="26"></el-option>
-                                        <el-option label="28" value="28"></el-option>
-                                        <el-option label="30" value="30"></el-option>
+                                        <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
@@ -432,11 +419,7 @@
                             <el-form :model="flow" :rules="rules4" ref="flow" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="flow.font_size" placeholder="请选择字号" @change="font_size">
-                                        <el-option label="8" value="8"></el-option>
-                                        <el-option label="10" value="10"></el-option>
-                                        <el-option label="12" value="12"></el-option>
-                                        <el-option label="14" value="14"></el-option>
-                                        <el-option label="16" value="16"></el-option>
+                                        <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
@@ -631,6 +614,8 @@
         el: '#app',
         data: {
             msg1:'',
+            add_pamas:0,                                        //新增编辑判断
+            font_size_range:[20,22,24,26,28,30,32,34,36,38,40],   //字体大小
             job2: [],                                   //作业模板
             flow2: [],                                  //流程模板
             page_count: 100,                            //总页码数
@@ -665,12 +650,12 @@
             basic: {                                   //基本单元
                 monitor_name: '',                      //单元名称
                 monitor_type: '',                      //单元类型
-                font_size: '',                         //字号
-                height: '',                            //高度
-                width: '',                             //宽度
+                font_size: '20',                         //字号
+                height: '20',                            //高度
+                width: '0',                             //宽度
                 start_time: '',                        //开始时间
                 end_time: '',                          //结束时间
-                period: '',                            //采集周期
+                period: '10',                            //采集周期
                 params: '',                            //监控参数
                 status: '',                            //监控状态
                 contents: '',                          //显示内容
@@ -698,12 +683,12 @@
             chart: {                                //图表单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '20',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
-                period: '',                          //采集周期
+                period: '10',                          //采集周期
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
@@ -733,12 +718,12 @@
             job: {                                   //作业单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '0',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
-                period: '',                          //采集周期
+                period: '10',                          //采集周期
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
                 gather_rule: '',                     //NODE_KEY
@@ -768,12 +753,12 @@
             flow: {                                //流程单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '0',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
-                period: '',                          //采集周期
+                period: '10',                          //采集周期
                 params: '',                         //监控参数
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
@@ -800,12 +785,12 @@
             basic1: {                                //基本单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '0',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
-                period: '',                          //采集周期
+                period: '10',                          //采集周期
                 params: '',                         //监控参数
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
@@ -815,12 +800,12 @@
             chart1: {                                //图表单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '0',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
-                period: '',                          //采集周期
+                period: '10',                          //采集周期
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
@@ -830,12 +815,12 @@
             job1: {                                   //作业单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '0',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
-                period: '',                          //采集周期
+                period: '10',                          //采集周期
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
                 gather_rule: '',                     //NODE_KEY
@@ -845,13 +830,13 @@
             flow7: {                                //流程单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '0',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
                 period: '',                          //采集周期
-                params: '',                         //监控参数
+                params: '10',                         //监控参数
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
@@ -1131,6 +1116,7 @@
                 vm.page = value;
                 vm.show()
             },
+            //保存按钮
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
@@ -1141,7 +1127,7 @@
                     }
                 });
             },
-            edit2(row) {
+            delete_unit(row) {
                 this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -1152,7 +1138,6 @@
                             type: 'success',
                             message: '删除成功!',
                         },
-
                         axios({
                             method: 'post',
                             url: '${SITE_URL}monitor/delete/',
@@ -1207,8 +1192,10 @@
                 }
 
             },
-            edit(row) {
+            //编辑单元
+            edit_unit(row) {
                 this.get_db_connections();
+                vm.add_pamas = 1;
                 vm.centerDialogVisible = true;
                 vm.disabled2 = false;
                 vm.disabled3 = true;
@@ -1329,6 +1316,7 @@
                     vm.flow.period = row.period
                 }
             },
+            //保存数据处理
             edit1() {
                 vm.centerDialogVisible = false;
                 if (vm.monitor_type == 'first') {
@@ -1419,10 +1407,12 @@
                 })
 
             },
-            edit3(row) {
-                     {
-                         vm.monitor_name = '';
+            add_unit(row) {                         //新增单元
+                     {   if (vm.add_pamas == 1) {
                          vm.Initialization();
+                        }
+                         vm.add_pamas = 0;
+                         vm.monitor_name = '';
                          vm.disabled2 = false;
                          vm.disabled3 = false;
                          vm.disabled4 = false;
