@@ -134,8 +134,6 @@ def job_interface(res):
     except Exception as e:
         res1 = error_result(e)
         data = res1['message']
-    print res1
-    print data
     info = {
         'id': res['id'],  # 关联id
         'message': "message",  # 状态
