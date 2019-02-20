@@ -5,6 +5,7 @@ from django.conf.urls import patterns
 urlpatterns = patterns(
     'DataBaseManage.views',
     (r'^data_base/$', 'data_base'),
+
     (r'^getall/$', 'getconn'),                               #查询所有
     (r'^saveconn/$','saveconn'),                             #保存
     (r'^editconn/$','eidtconnn'),                             #编辑

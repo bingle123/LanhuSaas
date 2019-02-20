@@ -288,21 +288,20 @@ def selecthor2(request):
 
 #获取角色对应的菜单名和Url
 def get_user_muenu(request):
-    """
-
-    :param request:
-    :return:
-    """
     cilent = tools.interface_param(request)
     user = cilent.bk_login.get_user({})
     bk_roleid = user['data']['bk_role']
-    muenus = Muenu.objects.filter(role__id=bk_roleid)
+    role_muenus = rm.objects.filter(roleid=bk_roleid)
     temp_list = []
-    for i in muenus:
+    for i in role_muenus:
+        muenuid = model_to_dict(i)['muenuid']
+        muenu = Muenu.objects.get(id=muenuid)
         temp = {}
-        temp = model_to_dict(i)
+        temp = model_to_dict(muenu)
         temp_list.append(temp)
+
     return tools.success_result(temp_list)
+
 
 
 
