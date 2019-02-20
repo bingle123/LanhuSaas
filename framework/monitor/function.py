@@ -349,81 +349,81 @@ def chart_get_test(request):
         "column_name_list": column_name_list,
     }
 
-# def get_desc(request, id):
-#     headers = {
-#         'Content-Type': 'application/json;charset=utf-8',
-#         'Cookie': 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
-#         'Host': 'paas.bk.com',
-#         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3679.0 Safari/537.36',
-#         'X-CSRFToken': 'FI1fszvZzgIsYYX8n6aPMduEeAL7qTV3',
-#         'X-Requested-With': 'XMLHttpRequest'
-#     }
-#     csrftoken = request.COOKIES["csrftoken"];
-#     Cookie="keyA=1";
-#     for key in request.COOKIES:
-#         Cookie = "%s;%s=%s"%(Cookie,key,request.COOKIES[key]);
-#     print("Cookie=%s"%(Cookie));
-#     headers['Cookie'] = Cookie;
-#     headers['X-CSRFToken'] = csrftoken;
-#     a_url="http://paas.bk.com/o/bk_sops/api/v3/template/4/";
-#     req=requests.get(url=a_url,headers=headers)
-#     req.encoding=req.apparent_encoding
-#     req.raise_for_status()
-#     return json.loads(req.text)
-#
-# if __name__ == '__main__':
-#     get_desc(id)
-#
-# def flow_change(request):
-#
-#     cilent = tools.interface_param (request)
-#     id = json.loads(request.body)
-#     res = get_desc(request, id['template_id'])
-#     res1=json.loads(res['pipeline_tree'])
-#     activities2 = []
-#     start_event = res1['start_event']  #开始节点信息
-#     location = res1['location']
-#     for l in location:
-#         if l['id']==start_event['id']:
-#             start_event['x'] = l['x']*0.48
-#             start_event['y'] = l['y']
-#     end_event = res1['end_event']   #结束节点信息
-#     for l in location:
-#         if l['id']==end_event['id']:
-#             end_event['x'] = l['x']*0.48
-#             end_event['y'] = l['y']
-#
-#     activities2.append(start_event)
-#     activities2.append(end_event)
-#     activities = res1['activities']
-#     for key in activities:
-#         activities1 = {}
-#         activities1['id'] = str(activities[key]['id'])
-#         activities1['type'] = str(activities[key]['type'])
-#         activities1['name'] = activities[key]['name']
-#         for l in location:
-#             if l['id']==activities1['id']:
-#                 activities1['x'] = l['x']*0.48
-#                 activities1['y'] = l['y']
-#                 activities2.append(activities1)
-#     flows1=[]
-#     flows2 = res1['flows']
-#     for key in flows2:
-#         flows3 = {
-#             'source':{
-#                 'arrow': 'Right',
-#                 'id':str(flows2[key]['source'])
-#             },
-#             'target':{
-#                 'arrow':'Left',
-#                 'id':str(flows2[key]['target'])
-#             }
-#         }
-#         # flows3['source'] = str(flows2[key]['source'])
-#         # flows3['target'] = str(flows2[key]['target'])
-#         flows1.append(flows3)
-#     pipeline_tree={
-#         'activities':activities2,
-#         'flows':flows1
-#     }
-#     return pipeline_tree
+def get_desc(request, id):
+    headers = {
+        'Content-Type': 'application/json;charset=utf-8',
+        'Cookie': 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
+        'Host': 'paas.bk.com',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3679.0 Safari/537.36',
+        'X-CSRFToken': 'FI1fszvZzgIsYYX8n6aPMduEeAL7qTV3',
+        'X-Requested-With': 'XMLHttpRequest'
+    }
+    csrftoken = request.COOKIES["csrftoken"];
+    Cookie="keyA=1";
+    for key in request.COOKIES:
+        Cookie = "%s;%s=%s"%(Cookie,key,request.COOKIES[key]);
+    print("Cookie=%s"%(Cookie));
+    headers['Cookie'] = Cookie;
+    headers['X-CSRFToken'] = csrftoken;
+    a_url="http://paas.bk.com/o/bk_sops/api/v3/template/4/";
+    req=requests.get(url=a_url,headers=headers)
+    req.encoding=req.apparent_encoding
+    req.raise_for_status()
+    return json.loads(req.text)
+
+if __name__ == '__main__':
+    get_desc(id)
+
+def flow_change(request):
+
+    cilent = tools.interface_param (request)
+    id = json.loads(request.body)
+    res = get_desc(request, id['template_id'])
+    res1=json.loads(res['pipeline_tree'])
+    activities2 = []
+    start_event = res1['start_event']  #开始节点信息
+    location = res1['location']
+    for l in location:
+        if l['id']==start_event['id']:
+            start_event['x'] = l['x']*0.48
+            start_event['y'] = l['y']
+    end_event = res1['end_event']   #结束节点信息
+    for l in location:
+        if l['id']==end_event['id']:
+            end_event['x'] = l['x']*0.48
+            end_event['y'] = l['y']
+
+    activities2.append(start_event)
+    activities2.append(end_event)
+    activities = res1['activities']
+    for key in activities:
+        activities1 = {}
+        activities1['id'] = str(activities[key]['id'])
+        activities1['type'] = str(activities[key]['type'])
+        activities1['name'] = activities[key]['name']
+        for l in location:
+            if l['id']==activities1['id']:
+                activities1['x'] = l['x']*0.48
+                activities1['y'] = l['y']
+                activities2.append(activities1)
+    flows1=[]
+    flows2 = res1['flows']
+    for key in flows2:
+        flows3 = {
+            'source':{
+                'arrow': 'Right',
+                'id':str(flows2[key]['source'])
+            },
+            'target':{
+                'arrow':'Left',
+                'id':str(flows2[key]['target'])
+            }
+        }
+        # flows3['source'] = str(flows2[key]['source'])
+        # flows3['target'] = str(flows2[key]['target'])
+        flows1.append(flows3)
+    pipeline_tree={
+        'activities':activities2,
+        'flows':flows1
+    }
+    return pipeline_tree
