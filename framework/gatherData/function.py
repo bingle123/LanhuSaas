@@ -45,9 +45,9 @@ def gather_test_init():
     # 接口测试用参数：'http://t.weather.sojson.com/api/weather/city/,101030100'
     info['params'] = '192.168.1.10 /fk/test.txt'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
-    # 文件测试用采集规则：'echo {name: abc, age: 12}'
+    # 文件测试用采集规则：'echo \'{\"name\":\"zs\",\" age\":\"66\"}\''
     # 接口测试用采集规则：'url=$1\ncode=$2\nwget http://t.weather.sojson.com/api/weather/city/$code\ncat ./$code'
-    info['gather_rule'] = str('echo "{\"name\":\"zs\",\" age\":\"lisi\"}"')
+    info['gather_rule'] = ''
     # ------------------------------------------------------------------------------------
     return info
 
@@ -247,6 +247,8 @@ def gather_data(info):
             TDGatherData(item_id=info['id'], gather_time=now, data_key='URL_CONNECTION', data_value='0').save()
             return 'empty'
     elif "file" == gather_type:
+        # 历史采集数据迁移
+        gather_data_migrate(info['id'])
         # 文件方式采集数据
         user_account = BkUser.objects.filter(id=1).get()
         # 根据id为1的用户获取客户端操作快速执行脚本
@@ -254,9 +256,6 @@ def gather_data(info):
         client.set_bk_api_ver('v2')
         # 获取采集参数
         gather_params = gather_param_parse(info)
-        # 脚本内容，使用Base64编码
-        print 'DD: %s' % gather_params['gather_rule']
-        print 'AA: %s' %  base64.b64encode(gather_params['gather_rule'])
         script_content = base64.b64encode(gather_params['gather_rule'])
         script_params = json.dumps(gather_params['extra_param']['script_params'])
         print 'SCRIPT_PARAMS: %s' % script_params
@@ -279,7 +278,13 @@ def gather_data(info):
                 }
             ]
         }
+        # 获取当前采集时间
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         res = client.job.fast_execute_script(script_bk_params)
+        if '0' != str(res['code']):
+            TDGatherData(item_id=info['id'], gather_time=now, data_key='SCRIPT_EXECUTE', data_value='-1', gather_error_log=str(res['message'])).save()
+            return "error"
+        print res
         # 向蓝鲸平台请求执行作业平台日志
         job_log_bk_params = {
             'bk_biz_id': biz_id,
@@ -289,26 +294,23 @@ def gather_data(info):
         while 'True' != str(r['data'][0]['is_finished']):
             time.sleep(3)
             r = client.job.get_job_instance_log(job_log_bk_params)
+        print r
         # 获取当前采集时间
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        if '3' != str(r['data'][0]['status']):
+            TDGatherData(item_id=info['id'], gather_time=now, data_key='SCRIPT_EXECUTE', data_value='-1', gather_error_log=str(r['data'][0]['step_results'][0]['tag'])).save()
+            return "error"
         json_data = r['data'][0]['step_results'][0]['ip_logs'][0]['log_content']
-        print json_data.encode('utf-8')
-        json_dict = json.loads(json_data.encode('utf-8'))
-        # 判断文件是否返回了空数据
-        if 0 != len(json_dict):
-            # 历史采集数据迁移
-            gather_data_migrate(info['id'])
-            # 将结果集整理为key-value形式的采集数据
-            # recursion_json_dict(json_dict, gather_params['target_field'], data_set, gather_params['target_root'])
-            data_set = fi_kv_process(json_dict)
-            # 将采集的数据保存到td_gather_data中
-            for item in data_set:
-                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value']).save()
-        else:
-            TDGatherData(item_id=info['id'], gather_time=now, data_key='URL_CONNECTION', data_value='0').save()
-            return 'empty'
-        if 'success' != res['message']:
-            return 'error'
+        # 判断采集文件是否返回了空数据
+        if len(json_data) == 0:
+            TDGatherData(item_id=info['id'], gather_time=now, data_key='FILE_EXIST', data_value='0').save()
+            return "empty"
+        json_dict = json.loads(json_data)
+        # 将结果集整理为key-value形式的采集数据
+        data_set = fi_kv_process(json_dict)
+        # 将采集的数据保存到td_gather_data中
+        for item in data_set:
+            TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value']).save()
     # 数据采集完毕后使用告警规则检查数据合法性
     elif "space_interface" == gather_type:
         now = datetime.datetime.now ().strftime ('%Y-%m-%d %H:%M:%S')
