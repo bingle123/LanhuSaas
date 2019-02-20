@@ -396,20 +396,28 @@ def chart_get_test(request):
         "column_name_list": column_name_list,
     }
 
-def get_desc(id):
+def get_desc(request, id):
     headers = {
         'Content-Type': 'application/json;charset=utf-8',
         'Cookie': 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
         'Host': 'paas.bk.com',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3679.0 Safari/537.36',
-        'X-CSRFToken': 'X5kSUR63CCqoQJrdcAp94A0uEZjqfg1t',
+        'X-CSRFToken': 'FI1fszvZzgIsYYX8n6aPMduEeAL7qTV3',
         'X-Requested-With': 'XMLHttpRequest'
     }
-    a_url="http://paas.bk.com/o/bk_sops/api/v3/template/%s/"%(id)
+    csrftoken = request.COOKIES["csrftoken"];
+    Cookie="keyA=1";
+    for key in request.COOKIES:
+        Cookie = "%s;%s=%s"%(Cookie,key,request.COOKIES[key]);
+    print("Cookie=%s"%(Cookie));
+    headers['Cookie'] = Cookie;
+    headers['X-CSRFToken'] = csrftoken;
+    a_url="http://paas.bk.com/o/bk_sops/api/v3/template/4/";
     req=requests.get(url=a_url,headers=headers)
     req.encoding=req.apparent_encoding
     req.raise_for_status()
     return json.loads(req.text)
+
 if __name__ == '__main__':
     get_desc(id)
 
@@ -417,7 +425,7 @@ def flow_change(request):
 
     cilent = tools.interface_param (request)
     id = json.loads(request.body)
-    res = get_desc(id['template_id'])
+    res = get_desc(request, id['template_id'])
     res1=json.loads(res['pipeline_tree'])
     activities2 = []
     start_event = res1['start_event']  #开始节点信息
