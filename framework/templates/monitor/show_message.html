@@ -96,11 +96,7 @@
                             <el-form :model="basic" ref="basic" :rules="rules1" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="basic.font_size" placeholder="请选择字号" @change="basic_size">
-                                        <el-option label="8" value="8"></el-option>
-                                        <el-option label="10" value="10"></el-option>
-                                        <el-option label="12" value="12"></el-option>
-                                        <el-option label="14" value="14"></el-option>
-                                        <el-option label="16" value="16"></el-option>
+                                        <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
@@ -212,11 +208,7 @@
                             <el-form :model="chart" :rules="rules2" ref="chart" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="chart.font_size" placeholder="请选择字号">
-                                        <el-option label="8" value="8"></el-option>
-                                        <el-option label="10" value="10"></el-option>
-                                        <el-option label="12" value="12"></el-option>
-                                        <el-option label="14" value="14"></el-option>
-                                        <el-option label="16" value="16"></el-option>
+                                        <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
@@ -317,12 +309,7 @@
                             <el-form :model="job" :rules="rules3" ref="job" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="job.font_size" @change="change_job_fontSize" placeholder="请选择字号">
-                                        <el-option label="20" value="20"></el-option>
-                                        <el-option label="22" value="22"></el-option>
-                                        <el-option label="24" value="24"></el-option>
-                                        <el-option label="26" value="26"></el-option>
-                                        <el-option label="28" value="28"></el-option>
-                                        <el-option label="30" value="30"></el-option>
+                                        <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
@@ -428,11 +415,7 @@
                             <el-form :model="flow" :rules="rules4" ref="flow" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="flow.font_size" placeholder="请选择字号" @change="font_size">
-                                        <el-option label="8" value="8"></el-option>
-                                        <el-option label="10" value="10"></el-option>
-                                        <el-option label="12" value="12"></el-option>
-                                        <el-option label="14" value="14"></el-option>
-                                        <el-option label="16" value="16"></el-option>
+                                        <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
@@ -627,6 +610,7 @@
         el: '#app',
         data: {
             msg1:'',
+            font_size_range:[20,22,24,26,28,30,32,34,36,38,40],   //字体大小
             job2: [],                                   //作业模板
             flow2: [],                                  //流程模板
             page_count: 100,                            //总页码数
@@ -661,12 +645,12 @@
             basic: {                                   //基本单元
                 monitor_name: '',                      //单元名称
                 monitor_type: '',                      //单元类型
-                font_size: '',                         //字号
-                height: '',                            //高度
-                width: '',                             //宽度
+                font_size: '20',                         //字号
+                height: '20',                            //高度
+                width: '0',                             //宽度
                 start_time: '',                        //开始时间
                 end_time: '',                          //结束时间
-                period: '',                            //采集周期
+                period: '10',                            //采集周期
                 params: '',                            //监控参数
                 status: '',                            //监控状态
                 contents: '',                          //显示内容
@@ -694,12 +678,12 @@
             chart: {                                //图表单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '20',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
-                period: '',                          //采集周期
+                period: '10',                          //采集周期
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
@@ -729,12 +713,12 @@
             job: {                                   //作业单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '0',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
-                period: '',                          //采集周期
+                period: '10',                          //采集周期
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
                 gather_rule: '',                     //NODE_KEY
@@ -764,12 +748,12 @@
             flow: {                                //流程单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '0',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
-                period: '',                          //采集周期
+                period: '10',                          //采集周期
                 params: '',                         //监控参数
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
@@ -796,12 +780,12 @@
             basic1: {                                //基本单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '0',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
-                period: '',                          //采集周期
+                period: '10',                          //采集周期
                 params: '',                         //监控参数
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
@@ -811,12 +795,12 @@
             chart1: {                                //图表单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '0',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
-                period: '',                          //采集周期
+                period: '10',                          //采集周期
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
@@ -826,12 +810,12 @@
             job1: {                                   //作业单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '0',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
-                period: '',                          //采集周期
+                period: '10',                          //采集周期
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
                 gather_rule: '',                     //NODE_KEY
@@ -841,13 +825,13 @@
             flow7: {                                //流程单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '',                       //字号
-                height: '',                          //高度
-                width: '',                            //宽度
+                font_size: '20',                       //字号
+                height: '20',                          //高度
+                width: '0',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
                 period: '',                          //采集周期
-                params: '',                         //监控参数
+                params: '10',                         //监控参数
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
@@ -1140,7 +1124,6 @@
                             type: 'success',
                             message: '删除成功!',
                         },
-
                         axios({
                             method: 'post',
                             url: '${SITE_URL}monitor/delete/',
