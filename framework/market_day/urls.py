@@ -11,6 +11,6 @@ urlpatterns = patterns(
     url(r'delall/',views.delall),
     url(r'delone/(.+)',views.delone),
     url(r'addone/(.+)',views.addone),
-    url(r'cedemo',views.statusdemo)
+    url(r'cedemo',views.cedemo)
 )
 

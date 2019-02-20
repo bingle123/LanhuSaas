@@ -121,7 +121,7 @@
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="显示内容" prop="contents" style="width: 96%">
-                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000" @change="sycontent()"
+                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000" @change="sycontent"
                                                   type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
@@ -993,9 +993,10 @@
                     url: '${SITE_URL}monitor/basic_test/',
                     data: {
                         id:vm.unit_id,
-                        params:vm.basic.params,
+                        server_url:vm.server_url,
                         gather_rule:vm.basic.gather_rule,
                         gather_params:vm.basic.gather_params,
+                        file_param:vm.file_param
                     },
                 }).then(function (res) {
                     let tempcontents2 = vm.basic.contents
@@ -1633,7 +1634,7 @@
                 vm.server_url = '';
                 vm.file_param = '';
             },
-            //显示图表
+            //显示图标
             show_chart() {
                 if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
                     this.myChart.dispose();
@@ -1796,7 +1797,6 @@
                     this.$set(echartData,i,obj_1);
                 }
                 vm.chartData=echartData;
-                vm.show_chart();
             },
             chart_get_test(){
                 axios({
@@ -1822,8 +1822,7 @@
                         })
                     }
                     vm.chartData=res.data.results;
-                    vm.person_count=res.data.column_name_list[0];
-                    vm.show_chart();
+                    vm.person_count=res.data.column_name_list[0]
                 }).catch((res) =>{
                     console.log(res)
                 });

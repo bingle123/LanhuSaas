@@ -213,42 +213,35 @@ def basic_test(request):
     gather_rule = res['gather_rule']
     item_id = res['id']
     gather_params = res['gather_params']
-    params = res['params']
+    server_url = res['server_url']
+    gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(item_id)
+    info = {
+        'id': item_id,
+        'gather_params': gather_params,
+        'gather_rule': gather_rule
+    }
     if 'sql'== gather_params:
-        gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = " + str(item_id)
-        sql = Conn.objects.get(id=server_url)
-        password = f.decrypt_str(sql.password)
-        info = {
-            'id': item_id,
-            'gather_params': gather_params,
-            'params': params,
-            'gather_rule': gather_rule
+        #sql = Conn.objects.get(id=server_url)
+        #password = f.decrypt_str(sql.password)
+        info2 = {
+            'params': server_url,
         }
-        if sql.type == 'MySQL' or sql.type == 'Oracle':
-            db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename,port=int(sql.port))
-        if sql.type == 'SQL Server':
-            db = pymssql.connect(sql.ip, sql.username, password, sql.databasename)
-
+        #if sql.type == 'MySQL' or sql.type == 'Oracle':
+        #   db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename,port=int(sql.port))
+        #if sql.type == 'SQL Server':
+        #    db = pymssql.connect(sql.ip, sql.username, password, sql.databasename)
     if 'file' == gather_params:
-        gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = " + str(item_id)
-        db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1',port=3306)
-        info = {
-            'id': item_id,
-            'gather_params': gather_params,
-            'params': params,
-            'gather_rule': gather_rule
+        file_param = res['file_param']
+        info2 = {
+            'params': server_url +' '+file_param,
         }
-
     if 'interface' == gather_params:
-        gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = " + str(item_id)
-        db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1',port=3306)
-        info = {
-            'id': item_id,
-            'gather_params': gather_params,
-            'params': params,
-            'gather_rule': gather_rule
+        file_param = res['file_param']
+        info2 = {
+            'params': server_url +','+file_param,
         }
-
+    info = dict(info, **info2)
+    db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306)
     gather_data(info)
     cursor = db.cursor()
     cursor.execute(gather_rule2)
