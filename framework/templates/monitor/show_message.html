@@ -871,7 +871,7 @@
             sycontent(){
                 let tempcontents = vm.basic.contents
                 $("#text2").html("")
-                $("#text2").append("<div>"+vm.tempcontents+"</div>")
+                $("#text2").append("<div>"+tempcontents+"</div>")
                 if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
                     var temp1 = tempcontents.split("#");
                     var temp2=[];
@@ -1001,7 +1001,7 @@
                 }).then(function (res) {
                     let tempcontents2 = vm.basic.contents
                     $("#text2").html("")
-                    $("#text2").append("<div>"+vm.tempcontents2+"</div>")
+                    $("#text2").append("<div>"+tempcontents2+"</div>")
                     if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
                         var temp1 = tempcontents2.split("#");
                         var temp2=[];
