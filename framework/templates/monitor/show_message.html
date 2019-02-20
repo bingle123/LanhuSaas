@@ -626,9 +626,6 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            typeid:'1',
-            tempcontents:'',
-            tempcontents2:'',
             msg1:'',
             job2: [],                                   //作业模板
             flow2: [],                                  //流程模板
@@ -872,11 +869,11 @@
                 $("#text2").css("left",this.basic.width)
             },
             sycontent(){
-                vm.tempcontents = vm.basic.contents
+                let tempcontents = vm.basic.contents
                 $("#text2").html("")
                 $("#text2").append("<div>"+vm.tempcontents+"</div>")
                 if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
-                    var temp1 = vm.tempcontents.split("#");
+                    var temp1 = tempcontents.split("#");
                     var temp2=[];
                     var temp3=[];
                     var temp4=[];
@@ -904,7 +901,7 @@
                      }
                   }
                 if(vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1){
-                    var icon1 = vm.tempcontents.split("@");
+                    var icon1 = tempcontents.split("@");
                     var icon2=[];
                     var icon3=[];
                     var icon4=[-2];
@@ -938,7 +935,7 @@
                      }
                  }
                 if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
-                    var temp1 = vm.tempcontents.split("#");
+                    var temp1 = tempcontents.split("#");
                     var temp2 = [];
                     var temp3 = [];
                     var temp4 = [];
@@ -969,6 +966,7 @@
                     icon4 = icon3[1]
                     $("#text2").html("")
                     for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
+
                         if (i == flag2) {
                             $("#text2").append("<div class=\"asd\">" + icon1[0] + "</div>");
                             if (icon4 == 1) {
@@ -989,7 +987,7 @@
                     }
                 }
             },
-            basic_test() {
+            basic_test(){
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/basic_test/',
@@ -1001,11 +999,11 @@
                         file_param:vm.file_param
                     },
                 }).then(function (res) {
-                    vm.tempcontents2 = vm.basic.contents
+                    let tempcontents2 = vm.basic.contents
                     $("#text2").html("")
                     $("#text2").append("<div>"+vm.tempcontents2+"</div>")
                     if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
-                        var temp1 = vm.tempcontents.split("#");
+                        var temp1 = tempcontents2.split("#");
                         var temp2=[];
                         var temp3=[];
                         var temp4=[];
@@ -1030,7 +1028,7 @@
                          }
                       }
                     if(vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1){
-                        var icon1 = vm.tempcontents.split("@");
+                        var icon1 = tempcontents2.split("@");
                         var icon2=[];
                         var icon3=[];
                         var icon4=res.data.message[0]['gather_status'];
@@ -1050,7 +1048,7 @@
                          }
                      }
                     if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
-                        var temp1 = vm.tempcontents.split("#");
+                        var temp1 = tempcontents2.split("#");
                         var temp2 = [];
                         var temp3 = [];
                         var temp4 = [];
@@ -1247,6 +1245,7 @@
                         vm.interface1 = 'block';
                         vm.basic.gather_params = 'interface';
                     }
+                    this.sycontent()
                 }
                 if (row.monitor_type == '图表单元类型') {
                     vm.disabled2 = true;
