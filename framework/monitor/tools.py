@@ -68,6 +68,16 @@ def interface_param(request):
     client.set_bk_api_ver('v2')                                     # 以v2版本调用接口
     return client
 
+def user_interface_param():
+    """
+    返回client对象
+    :param :
+    :return:
+    """
+    user_account = BkUser.objects.filter (id=1).get ()
+    client = get_client_by_user (user_account)
+    client.set_bk_api_ver ('v2')                                    # 以v2版本调用接口
+    return client
 
 def job_interface(res):
     try:
@@ -75,10 +85,8 @@ def job_interface(res):
         gather_params = res['gather_params']
         bk_job_id = res['job_id'][0]['id']
         script_param = base64.b64encode (gather_params)
-        user_account = BkUser.objects.filter(id=1).get()
         # 根据id为1的用户获取客户端操作快速执行脚本
-        client = get_client_by_user(user_account)
-        client.set_bk_api_ver('v2')
+        client = user_interface_param()
         select_job_params = {
             'bk_biz_id': 2,
             'bk_job_id': bk_job_id,
@@ -174,10 +182,7 @@ def flow_gather_task(**info):
     task_id=info['task_id']
     item_id=info['item_id']
     node_times=info['node_times']
-    user_account = BkUser.objects.filter(id=1).get()
-    # 根据id为1的用户获取客户端操作快速执行脚本
-    client = get_client_by_user(user_account)
-    client.set_bk_api_ver('v2')
+    client = user_interface_param ()
     param = {
         "bk_biz_id": "2",
         "task_id":task_id
