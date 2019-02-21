@@ -37,7 +37,7 @@ def gather_test_init():
     # sql测试用监控项ID：'1'
     # 接口测试用监控项ID：'2'
     # 文件测试用监控项ID：'3'
-    info['id'] = '6868'
+    info['id'] = '233'
     # sql测试用类型：'sql'
     # 文件测试用类型：'file'
     # 接口测试用类型：'interface'
@@ -158,6 +158,8 @@ def gather_data(info):
     gather_type = info['gather_params']
     # 采集数据库中的数据
     if "sql" == gather_type:
+        # 获取当前采集时间
+        now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         # 获取采集参数
         gather_params = gather_param_parse(info)
         # 生成数据库采集使用的sql
@@ -170,9 +172,10 @@ def gather_data(info):
         try:
             conn = MySQLdb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
         except Exception as e:
-            now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             TDGatherData(item_id=info['id'], gather_time=now, data_key='DB_CONNECTION', data_value='-1',gather_error_log=str(e)).save()
             return "error"
+        # 保存连接状态为正常
+        TDGatherData(item_id=info['id'], gather_time=now, data_key='DB_CONNECTION', data_value='1').save()
         # 采集规则是否异常判断
         # noinspection PyBroadException
         cursor = conn.cursor()
@@ -209,17 +212,19 @@ def gather_data(info):
         # 历史采集数据迁移
         gather_data_migrate(info['id'])
         gather_params = gather_param_parse(info)
-        # 判断接口连接状态
         res1 = execute_script(client, ping_script, base64.b64encode(gather_params['extra_param']['interface_url']), info['id'], 'URL_CONNECTION')
         if None is res1:
             return "error"
         res2 = get_execute_result(client, res1['data']['job_instance_id'], info['id'], 'URL_CONNECTION')
         if None is res2:
             return "error"
+        # 判断接口连接状态
         ping_flag = str(res2['data'][0]['step_results'][0]['ip_logs'][0]['log_content'])
         if -1 == int(ping_flag):
             TDGatherData(item_id=info['id'], gather_time=now, data_key='URL_CONNECTION', data_value='-1', gather_error_log='request interface timeout.').save()
             return "error"
+        # 接口连接状态为正常
+        TDGatherData(item_id=info['id'], gather_time=now, data_key='URL_CONNECTION', data_value='1').save()
         # 发送请求，从接口获取JSON数据
         res3 = execute_script(client, base64.b64encode(gather_params['gather_rule']), base64.b64encode(gather_params['extra_param']['script_params']), info['id'], 'URL_CONNECTION')
         # 测试打开
@@ -267,7 +272,6 @@ def gather_data(info):
         gather_params = gather_param_parse(info)
         script_params = base64.b64encode(gather_params['extra_param']['script_params'])
         # print 'SCRIPT_PARAMS: %s' % script_params
-        # 检测文件是否存在
         file_exist_script = 'cGF0aD0kMQppZiBbICEgLWYgIiRwYXRoIiBdOyB0aGVuCiAgICBlY2hvICItMSIKZWxzZQogICAgZWNobyAiMCIKZmkK'
         res1 = execute_script(client, file_exist_script, script_params, info['id'], 'FILE_EXIST')
         if None is res1:
@@ -275,11 +279,14 @@ def gather_data(info):
         res2 = get_execute_result(client, res1['data']['job_instance_id'], info['id'], 'FILE_EXIST')
         if None is res2:
             return "error"
+        # 检测文件是否存在
         file_flag = str(res2['data'][0]['step_results'][0]['ip_logs'][0]['log_content'])
         # print 'FILE %s' % file_flag
         if -1 == int(file_flag):
             TDGatherData(item_id=info['id'], gather_time=now, data_key='FILE_EXIST', data_value='-1', gather_error_log='file not exist').save()
             return "error"
+        # 文件状态存在
+        TDGatherData(item_id=info['id'], gather_time=now, data_key='FILE_EXIST', data_value='1').save()
         res3 = execute_script(client, base64.b64encode(gather_params['gather_rule']), script_params, info['id'], 'FILE_EXIST')
         # 测试打开
         # res3 = execute_script(client, gather_params['gather_rule'], script_params, info['id'], 'FILE_EXIST')
