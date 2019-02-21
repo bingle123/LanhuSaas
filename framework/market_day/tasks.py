@@ -6,6 +6,7 @@ from system_config.crawl_template import crawl_temp
 from system_config.function import *
 from celery.task import periodic_task
 from system_config.models import SendMailLog as sml
+from djcelery import models as celery_models
 import logging
 import time
 from gatherData import function
@@ -14,6 +15,10 @@ from django.db.models import Q
 from django.forms import model_to_dict
 from monitor import tools
 from celery.schedules import crontab
+import market_day.celery_opt as co
+from account.models import BkUser
+from blueking.component.shortcuts import get_client_by_user
+from datetime import datetime
 
 @task
 def crawl_task(**i):
@@ -101,9 +106,55 @@ def gather_data_task_two(**i):
 def gather_data_task_thrid(**i):
     print '采集开始'
     # 调用流程监控项数据采集的方法
+    tools.flow_gather_task(i)
     return '采集成功'
 
-
+def start_flow_task(**info):
+    #得到client对象，方便调用接口
+    user_account = BkUser.objects.filter(id=1).get()
+    client = get_client_by_user(user_account)
+    client.set_bk_api_ver('v2')
+    template_id=info['template_id']
+    constants=info['constants']
+    strnow = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
+    name=info['template_name']+strnow
+    param = {
+        "bk_biz_id": "2",
+        "template_id": template_id,
+        'name': name,
+        'constants':constants
+    }
+    res=client.sops.create_task(param)
+    #调用接口创建任务并得到任务的id
+    task_id=res['data']['task_id']
+    #调用接口启动任务，开始执行任务
+    param = {
+        "bk_biz_id": "2",
+        'task_id':task_id
+    }
+    res=client.sops.start_task(param)
+    flag=res['result']
+    #如果启动任务成功创建一个定时查看节点状态的任务
+    if flag:
+        node_times = info['node_times']
+        starthour = str(node_times[-1]['starttime']).split(':')[0]
+        endhour = str(node_times[0]['endtime'])[:2].split(':')[0]
+        startmin = str(node_times[-1]['starttime'])[:2].split(':')[-1]
+        endmin = str(node_times[0]['endtime'])[:2].split(':')[-1]
+        period=info['period']
+        args = {
+            'item_id': info['id'],
+            'task_id': task_id,  # 启动流程的任务id
+            'node_times': node_times,
+            'period': 'period',
+        }
+        ctime = {
+            'hour': starthour + '-' + endhour,
+            'minute': '*/1',
+        }
+        print args
+        co.create_task_crontab(name=info['template_name']+'_check_status', task='market_day.tasks.gather_data_task_thrid', crontab_time=ctime,
+                               task_args=args, desc=name)
 # 定时任务测试
 @task
 def count_time(**i):

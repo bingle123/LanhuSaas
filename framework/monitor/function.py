@@ -199,7 +199,7 @@ def edit_unit(request):
         add_dic['status'] = 0
         add_dic['editor'] = user['data']['bk_username']
         Monitor.objects.filter(monitor_name=res['monitor_name']).update(**add_dic)
-        function.edit_unit_task(add_dicx=add_dic)
+        function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
     except Exception as e:
         result = tools.error_result(e)
@@ -414,3 +414,9 @@ def node_name(request):
         'activities': activities2
     }
     return pipeline_tree
+
+def flow_gather_test(req):
+    res=json.loads(req.body)
+    res['id']=0
+    tools.flow_gather_task(info=res)
+    return 'success'
