@@ -209,17 +209,7 @@ def edit_unit(request):
 def basic_test(request):
     res = json.loads(request.body)
     result = []
-    gather_rule = res['gather_rule']
-    item_id = res['id']
-    gather_params = res['gather_params']
-    params = res['params']
-    info = {
-        'id': item_id,
-        'gather_params': gather_params,
-        'gather_rule': gather_rule,
-        'params': params
-    }
-    gather_data(info)
+    gather_data(res)
     gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(item_id)
     db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306)
     cursor = db.cursor()
