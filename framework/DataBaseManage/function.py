@@ -303,6 +303,7 @@ def get_user_muenu(request):
 
 
 
+
 #获取所有菜单
 def get_all_muenu(request):
     res = json.loads(request.body)
@@ -363,7 +364,7 @@ def delete_muenu(request,id):
 def get_roleAmuenus(request):
     roles = Role.objects.all()
     menus = Muenu.objects.all()
-    length=menus.__len__()
+    menuslen = menus.__len__()
     tree=[]
     for x in roles:
         temp = {}
@@ -373,7 +374,7 @@ def get_roleAmuenus(request):
         childrens=[]
         for menu in menus:
             chi={}
-            chi['id']=(x.id-1)*length+menu.id
+            chi['id']=(x.id)*50+menu.id
             chi['label']=menu.mname
             childrens.append(chi)
         temp['children']=childrens
@@ -384,10 +385,12 @@ def get_roleAmuenus(request):
 #获取勾选Id
 def checked_menu(request):
     objs=rm.objects.all()
+    roles = Role.objects.all()
+    rolelen = roles.__len__()
     menus = Muenu.objects.all()
-    length = menus.__len__()
+    menuslen = menus.__len__()
     ids=[]
     for obj in objs:
-        temp_id=(obj.roleid-1)*length+obj.muenuid
+        temp_id=(obj.roleid)*50+obj.muenuid
         ids.append(temp_id)
     return  ids
