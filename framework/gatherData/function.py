@@ -10,7 +10,6 @@ import json
 import urllib
 import urllib2
 import os
-import yaml
 from gatherData.models import *
 from gatherDataHistory.models import *
 from alertRule.function import *
