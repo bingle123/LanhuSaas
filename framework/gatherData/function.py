@@ -41,15 +41,15 @@ def gather_test_init():
     # sql测试用类型：'sql'
     # 文件测试用类型：'file'
     # 接口测试用类型：'interface'
-    info['gather_params'] = 'file'
+    info['gather_params'] = 'interface'
     # sql测试用参数：'46'
-    # 文件测试用参数：'./gather_data_test'
+    # 文件测试用参数：'192.168.1.52,./gather_data_test'
     # 接口测试用参数：'http://t.weather.sojson.com/api/weather/city/101030100,http://t.weather.sojson.com/api/weather/city/ 101030100'
-    info['params'] = './gather_data_test'
+    info['params'] = 'http://t.weather.sojson.com/api/weather/city/101030100,http://t.weather.sojson.com/api/weather/city/ 101030100'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'cGF0aD0kMQpjYXQgJHBhdGgK'
     # 接口测试用采集规则：'dXJsPSQxCmNvZGU9JDIKYHdnZXQgLXFPIGdhdGhlcl9kYXRhX3RlbXAgJHVybCRjb2RlYApjYXQgZ2F0aGVyX2RhdGFfdGVtcAo='
-    info['gather_rule'] = 'cGF0aD0kMQpjYXQgJHBhdGgK'
+    info['gather_rule'] = 'dXJsPSQxCmNvZGU9JDIKYHdnZXQgLXFPIGdhdGhlcl9kYXRhX3RlbXAgJHVybCRjb2RlYApjYXQgZ2F0aGVyX2RhdGFfdGVtcAo='
     # ------------------------------------------------------------------------------------
     return info
 
@@ -93,7 +93,9 @@ def gather_param_parse(info):
         gather_params['extra_param']['script_params'] = interface_params
         gather_params['gather_rule'] = info['gather_rule']
     elif 'file' == info['gather_params']:
-        gather_params['extra_param']['script_params'] = info['params']
+        file_params = info['params'].split(',')
+        gather_params['extra_param']['file_server'] = file_params[0]
+        gather_params['extra_param']['script_params'] = file_params[1]
         gather_params['gather_rule'] = info['gather_rule']
     elif 'space_interface' == info['gather_params']:
         pass
@@ -212,7 +214,7 @@ def gather_data(info):
         # 历史采集数据迁移
         gather_data_migrate(info['id'])
         gather_params = gather_param_parse(info)
-        res1 = execute_script(client, ping_script, base64.b64encode(gather_params['extra_param']['interface_url']), info['id'], 'URL_CONNECTION')
+        res1 = execute_script(client, ping_script, base64.b64encode(gather_params['extra_param']['interface_url']), info['id'], 'URL_CONNECTION', settings.GATHER_DATA_HOST)
         if None is res1:
             return "error"
         res2 = get_execute_result(client, res1['data']['job_instance_id'], info['id'], 'URL_CONNECTION')
@@ -226,9 +228,9 @@ def gather_data(info):
         # 接口连接状态为正常
         TDGatherData(item_id=info['id'], gather_time=now, data_key='URL_CONNECTION', data_value='1').save()
         # 发送请求，从接口获取JSON数据
-        res3 = execute_script(client, base64.b64encode(gather_params['gather_rule']), base64.b64encode(gather_params['extra_param']['script_params']), info['id'], 'URL_CONNECTION')
+        res3 = execute_script(client, base64.b64encode(gather_params['gather_rule']), base64.b64encode(gather_params['extra_param']['script_params']), info['id'], 'URL_CONNECTION', settings.GATHER_DATA_HOST)
         # 测试打开
-        # res3 = execute_script(client, gather_params['gather_rule'], base64.b64encode(gather_params['extra_param']['script_params']), info['id'], 'URL_CONNECTION')
+        # res3 = execute_script(client, gather_params['gather_rule'], base64.b64encode(gather_params['extra_param']['script_params']), info['id'], 'URL_CONNECTION', settings.GATHER_DATA_HOST)
         if None is res3:
             return "error"
         res4 = get_execute_result(client, res3['data']['job_instance_id'], info['id'], 'URL_CONNECTION')
@@ -273,7 +275,7 @@ def gather_data(info):
         script_params = base64.b64encode(gather_params['extra_param']['script_params'])
         # print 'SCRIPT_PARAMS: %s' % script_params
         file_exist_script = 'cGF0aD0kMQppZiBbICEgLWYgIiRwYXRoIiBdOyB0aGVuCiAgICBlY2hvICItMSIKZWxzZQogICAgZWNobyAiMCIKZmkK'
-        res1 = execute_script(client, file_exist_script, script_params, info['id'], 'FILE_EXIST')
+        res1 = execute_script(client, file_exist_script, script_params, info['id'], 'FILE_EXIST', gather_params['extra_param']['file_server'])
         if None is res1:
             return "error"
         res2 = get_execute_result(client, res1['data']['job_instance_id'], info['id'], 'FILE_EXIST')
@@ -287,9 +289,9 @@ def gather_data(info):
             return "error"
         # 文件状态存在
         TDGatherData(item_id=info['id'], gather_time=now, data_key='FILE_EXIST', data_value='1').save()
-        res3 = execute_script(client, base64.b64encode(gather_params['gather_rule']), script_params, info['id'], 'FILE_EXIST')
+        res3 = execute_script(client, base64.b64encode(gather_params['gather_rule']), script_params, info['id'], 'FILE_EXIST', gather_params['extra_param']['file_server'])
         # 测试打开
-        # res3 = execute_script(client, gather_params['gather_rule'], script_params, info['id'], 'FILE_EXIST')
+        # res3 = execute_script(client, gather_params['gather_rule'], script_params, info['id'], 'FILE_EXIST', gather_params['extra_param']['file_server'])
         if None is res3:
             return "error"
         res4 = get_execute_result(client, res3['data']['job_instance_id'], info['id'], 'FILE_EXIST')
@@ -317,13 +319,13 @@ def gather_data(info):
     return 'success'
 
 
-def execute_script(client, script_content, script_params, item_id, execute_type):
+def execute_script(client, script_content, script_params, item_id, execute_type, execute_server):
     # 蓝鲸业务ID，暂固定为2
     biz_id = '2'
     # 蓝鲸云区域ID，暂固定为0
     cloud_id = '0'
     # 蓝鲸Agent所在IP地址
-    agent_id = settings.GATHER_DATA_HOST
+    agent_id = execute_server
     # 向蓝鲸平台请求执行快速执行脚本
     script_bk_params = {
         'bk_biz_id': biz_id,
@@ -362,7 +364,7 @@ def get_execute_result(client, job_instance_id, item_id, execute_type):
                      gather_error_log=str(res['message'])).save()
         return None
     while 'True' != str(res['data'][0]['is_finished']):
-        time.sleep(3)
+        time.sleep(1)
         res = client.job.get_job_instance_log(job_log_bk_params)
     # print res
     if 3 != int(res['data'][0]['status']):
