@@ -988,7 +988,6 @@
                 let params = '';
                 if (vm.sql_file_interface == 3) {
                      params = vm.server_url
-                    alert(vm.server_url)
                 }
                 if (vm.sql_file_interface == 6) {
                      params = vm.server_url +' '+ vm.file_param
@@ -996,7 +995,6 @@
                 if (vm.sql_file_interface == 9) {
                      params = vm.server_url +','+ vm.file_param
                 }
-                alert(params)
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/basic_test/',
@@ -1236,6 +1234,11 @@
                             data:row.params,
                         }).then((res)=> {
                             vm.server_url = res['data']['results']
+                            vm.basic_size();
+                            vm.basic_height();
+                            vm.basic_width();
+                            vm.sycontent();
+                            vm.basic_test()
                         }).catch((error) => {
                         alert('拉取数据库失败！')
                         });
@@ -1266,12 +1269,6 @@
                         vm.interface1 = 'block';
                         vm.basic.gather_params = 'interface';
                     }
-                    vm.basic_size();
-                    vm.basic_height();
-                    vm.basic_width();
-                    vm.sycontent();
-                    vm.basic_test();
-
                 }
                 if (row.monitor_type == '图表单元类型') {
                     vm.disabled2 = true;
