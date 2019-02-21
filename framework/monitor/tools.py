@@ -7,6 +7,9 @@ from blueking.component.shortcuts import *
 from gatherData.function import gather_data
 import time
 from monitor.models import Job
+from gatherData.function import gather_data_migrate
+from gatherData import models
+from alertRule.function import rule_check
 
 
 def error_result(e):
@@ -166,3 +169,38 @@ def job_interface(res):
     else:
         Job (instance_id=job_instance_id, status=status, test_flag=1,job_log=info['gather_error_log'],job_id=bk_job_id).save()
     return res1
+
+def flow_gather_task(**info):
+    task_id=info['task_id']
+    item_id=info['item_id']
+    node_times=info['node_times']
+    user_account = BkUser.objects.filter(id=1).get()
+    # 根据id为1的用户获取客户端操作快速执行脚本
+    client = get_client_by_user(user_account)
+    client.set_bk_api_ver('v2')
+    param = {
+        "bk_biz_id": "2",
+        "task_id":task_id
+    }
+    res = client.sops.get_task_status(param)
+    msg=''
+    state=res['data']['state']
+    temps=res['data']['children']
+    keys = temps.keys()
+    gather_data_migrate(item_id=item_id)
+    if state=='FAILED':
+        for key in keys:
+            if temps[key]['state']==u'FAILED':
+                msg=temps[key]['id']+u'节点执行出错，请检查这个节点'
+    elif state=='RUNNING':
+        msg=u'该任务正在执行中'
+    elif state=='SUSPENDED':
+        msg=u'该任务被暂停'
+    elif state=='REVOKED':
+        msg=u'该任务已被终止'
+    elif state=='FINISHED':
+        msg=u'该任务成功执行'
+    for key in keys:
+        models.TDGatherData(item_id=item_id,instance_id=task_id,data_key=key, data_value=temps[key]['state'],gather_error_log=msg).save()
+    if item_id!=0:
+        rule_check(item_id)

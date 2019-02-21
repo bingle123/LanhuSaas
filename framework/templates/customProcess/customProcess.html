@@ -165,7 +165,7 @@
                                     </div>
                                 </el-col>
                                 <el-col :span="6" :offset="11" style="padding-top: 50px;" v-show="customProcessStepSum > 0">
-                                    <div style="height: 800px;">
+                                    <div id="customProcessStepsHeight">
                                         <el-steps id="customMainProcess" direction="vertical" :active="customProcessStep" finish-status="success" process-status="finish">
                                             <el-step :title="processData.node_name" v-for="processData in customProcessTableData"></el-step>
                                         </el-steps>
@@ -200,6 +200,7 @@
     var vue = new Vue({
         el: '#customProcess',
         data: {
+            customProcessHeight: '1000',
             //执行流程按钮属性控制
             customProcessStartButtonType: 'primary',
             customProcessStartButtonText: '开始执行流程',
@@ -607,6 +608,9 @@
                 }).then((res) =>{
                     this.customProcessTableData = res.data.message;
                     this.customProcessStepSum = this.customProcessTableData.length;
+                    //根据节点数量计算步骤条的高度
+                    var stepsHeight = this.customProcessStepSum * 120;
+                    $('#customProcessStepsHeight').css('height',stepsHeight + 'px');
                     if(0 != this.customProcessStepSum) {
                         this.customProcessHasNode = true;
                         //-----------当前流程节点执行位置判断----------

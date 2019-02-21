@@ -132,12 +132,9 @@ def delete_conn(request,id):
 def get_conname(request):
     try:
         res = request.body
-        print res
-        res_obj = Conn.objects.filter(id=res)
-        for i in res_obj:
-            sql_name = i.connname
-
-        reslut =  tools.success_result(sql_name)
+        res_obj = Conn.objects.get(id=res)
+        conn = model_to_dict(res_obj)
+        reslut =  tools.success_result(conn)
     except Exception as e:
         reslut = tools.error_result(e)
     return reslut
@@ -273,7 +270,7 @@ def selecthor2(request):
     search = res['search']
     page = res['page']
     limit = res['limit']
-    sciencenews = Muenu.objects.filter(Q(mname__contains=search)|Q(url__contains=search))
+    sciencenews = Muenu.objects.filter(Q(mname__contains=search)|Q(url__contains=search)).exclude(url ='DataBaseManage/muenu_manage/')
     p = Paginator(sciencenews, limit)
     count = p.page_range
     pages = count[-1]
@@ -306,12 +303,13 @@ def get_user_muenu(request):
 
 
 
+
 #获取所有菜单
 def get_all_muenu(request):
     res = json.loads(request.body)
     page = res['page']
     limit = res['limit']
-    muenus = Muenu.objects.all()
+    muenus = Muenu.objects.all().exclude(url ='DataBaseManage/muenu_manage/')
     p = Paginator(muenus, limit)
     count = p.page_range
     pages = count[-1]
@@ -355,9 +353,44 @@ def edit_muenu(request):
 #删除菜单
 def delete_muenu(request,id):
     try:
-        res = Muenu.objects.filter(id=id).delete()
-        return tools.success_result(res)
+        res1 = Muenu.objects.get(id=id).delete()
+        res2 = rm.objects.get(muenuid=id).delete()
+        if res1 !=None & res2 !=None:
+            return tools.success_result(res1)
     except Exception as e:
-        res1 = tools.error_result(e)
-        return tools.error_result(res1)
+        res3 = tools.error_result(e)
+        return tools.error_result(res3)
 
+def get_roleAmuenus(request):
+    roles = Role.objects.all()
+    menus = Muenu.objects.all()
+    menuslen = menus.__len__()
+    tree=[]
+    for x in roles:
+        temp = {}
+        muenu_ids = rm.objects.filter(roleid=x.id)
+        temp['label']=x.rname
+        temp['id']=x.id
+        childrens=[]
+        for menu in menus:
+            chi={}
+            chi['id']=(x.id)*50+menu.id
+            chi['label']=menu.mname
+            childrens.append(chi)
+        temp['children']=childrens
+        tree.append(temp)
+    print tree[1]
+    return tree
+
+#获取勾选Id
+def checked_menu(request):
+    objs=rm.objects.all()
+    roles = Role.objects.all()
+    rolelen = roles.__len__()
+    menus = Muenu.objects.all()
+    menuslen = menus.__len__()
+    ids=[]
+    for obj in objs:
+        temp_id=(obj.roleid)*50+obj.muenuid
+        ids.append(temp_id)
+    return  ids

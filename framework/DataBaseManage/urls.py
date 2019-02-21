@@ -21,4 +21,6 @@ urlpatterns = patterns(
     (r'^edit_muenu/$', 'edit_muenu'),       #编辑菜单
     (r'^delete_muenu/(.+)/$', 'delete_muenu'),       #删除菜单
     (r'^get_conname/$','get_conname'),                       #获取名称
+    (r'^get_roleAmuenus/$','get_roleAmuenus'),    #获取所有角色对应菜单
+    (r'^checked_menu/$','checked_menu')
 )

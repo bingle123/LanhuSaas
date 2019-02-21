@@ -27,4 +27,5 @@ urlpatterns = patterns(
     (r'^chart_get_test/$', 'chart_get_test'),
     (r'^change_status/$', 'change_status'),                 #改变监控项的启用状态
     (r'^flow_change/$', 'flow_change'),
+    (r'^node_name/$', 'node_name'),
 )

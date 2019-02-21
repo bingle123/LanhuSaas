@@ -18,7 +18,7 @@
             src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
     <link rel="stylesheet"
           href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css"/>
-    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
     <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
     <script type="text/javascript" src="${STATIC_URL}assets/echarts/echarts.js"></script>
@@ -198,7 +198,6 @@
                             </div>
                             <div style="padding: 0px 20%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" @click="test">TEST</el-button>
                             </div>
                         </div></el-col>
                     </el-row>
@@ -417,6 +416,41 @@
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="flow" :rules="rules4" ref="flow" label-width="100px">
+                                <el-form-item label="流程模板" prop="gather_params">
+                                    <el-select v-model="flow.gather_rule" placeholder="请选择模板" @change="flow_change"	>
+                                        <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="节点">
+                                        <el-select v-model="flow.node_name" placeholder="请选择节点">
+                                          <el-option v-for="i in activities_node_name" :label="i.name" :value="i.name"></el-option>
+                                        </el-select>
+                                 </el-form-item>
+
+
+                                  <el-form-item label="采集时间段:" style="width: 96%">
+                                    <el-col :span="11">
+                                        <el-form-item>
+                                            <el-time-picker style="width: 96%" v-model="activities_node_time.start_time"
+                                                            placeholder="开始时间点" @change="Rendering_start_time" format="HH:mm" value-format="HH:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
+                                        </el-col>
+                                    <el-col class="line" :span="2">—</el-col>
+                                    <el-col :span="11">
+                                        <el-form-item>
+                                            <el-time-picker style="width: 96%" v-model="activities_node_time.end_time"
+                                                            placeholder="结束时间点" @change="Rendering_end_time" format="HH:mm" value-format="HH:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+
+                                <el-form-item v-for="i in constants" :label="i.name" style="width: 96%">
+                                    <el-input v-model="i.value" placeholder="请输入参数"></el-input>
+                                </el-form-item>
+
+
                                 <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="flow.font_size" placeholder="请选择字号" @change="font_size">
                                         <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
@@ -437,22 +471,7 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="流程模板" prop="gather_params">
-                                    <el-select v-model="flow.gather_rule" placeholder="请选择模板" @change="flow_change"	>
-                                        <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="参数1" style="width: 96%">
-                                    <el-input v-model="param1" placeholder="请输入参数"></el-input>
-                                </el-form-item>
-                                <el-form-item label="参数2" style="width: 96%">
-                                    <el-input v-model="param2" placeholder="请输入参数"></el-input>
-                                </el-form-item>
-                                   <el-form-item label="节点">
-                                        <el-select v-model="flow.gather_params" placeholder="请选择节点">
-                                          <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id.id"></el-option>
-                                        </el-select>
-                                      </el-form-item>
+
                                 <div v-if="flow.gather_params.id === '1'">
                                 <el-form-item label="节点周期:" style="width: 96%">
                                     <el-col :span="11">
@@ -502,7 +521,7 @@
                             <div style="padding: 0px 45% 0px 45%">
                                 <h2>预览</h2>
                             </div>
-                            <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;">
+                            <div id="flow_canvas" style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;">
                                 <div id="flow1" class="clearfix workflow-box" style="width: 100%;position: relative;">
 
                                         <div class="workflow-canvas" style="margin-left: 0px;padding-left: 0px">
@@ -517,7 +536,7 @@
 
                                         </div>
 
-                                        <!-- template 模板-->
+    <!-- template 模板-->
                                         <div class="jtk-delete jtk-none ">删除节点</div>
                                         <div id="template" class="jtk-none">
                                             <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
@@ -529,7 +548,7 @@
                                                 </div>
                                             </div>
                                              <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
-                                                 data-type="EmptyStartEvent">
+                                                  data-type="EmptyStartEvent">
                                                 <div class="node-wrapper">
                                                     <div class="node-icon-start">
                                                         <i class="bk-icon icon-star-shape"></i>
@@ -539,9 +558,10 @@
                                             <div class="jtk-window jtk-node workfolw-node database-node" id="{charts}"
                                                  data-type="ServiceActivity">
                                                 <div class="node-wrapper">
-                                                    <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">一级分析</p>
+                                                    <div class="node-content" style="position: relative">
+                                                        <div class="start_time" style="position: absolute;width: 70px;height: 20px;top: -26px;left: 0px;"></div>
+                                                        <div class="end_time" style="position: absolute;width: 70px;height: 20px;top: -26px;right: 0px;"></div>
+                                                        <p class="node-title"></p>
                                                     </div>
                                                     <div class="node-icon">
                                                         <i class="bk-icon icon-data"></i>
@@ -553,8 +573,7 @@
                                                  data-type="dataCog">
                                                 <div class="node-wrapper">
                                                     <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">实时加载</p>
+                                                        <p class="node-title"></p>
                                                     </div>
                                                     <div class="node-icon">
                                                         <i class="bk-icon icon-cog"></i>
@@ -566,8 +585,7 @@
                                                  data-type="dataFilter">
                                                 <div class="node-wrapper">
                                                     <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">离线计算</p>
+                                                        <p class="node-title"></p>
                                                     </div>
                                                     <div class="node-icon">
                                                         <i class="bk-icon icon-circle"></i>
@@ -613,11 +631,21 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            constants:'',
+            location : '',
+            line:'',
+            old_html:'',
             msg1:'',
+            sql_id:'',
             add_pamas:0,                                        //新增编辑判断
             font_size_range:[20,22,24,26,28,30,32,34,36,38,40],   //字体大小
             job2: [],                                   //作业模板
             flow2: [],                                  //流程模板
+            activities_node_name:[],                    //节点名称
+            activities_node_time:{                      //节点时间
+                start_time: '',                      //开始时间
+                end_time: '',                        //结束时间
+            },
             page_count: 100,                            //总页码数
             page: 1,                                    //分页页码数
             sites: [],                                  //table内容
@@ -764,6 +792,7 @@
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
                 gather_params: '',                   //流程模板
+                node_name:''
             },
             rules4: {
                 font_size: [
@@ -848,14 +877,6 @@
             person_count:'',
         },
         methods: {
-            test: function(){
-                axios({
-                    method: 'post',
-                    url: '${SITE_URL}gatherData/gather_data',
-                }).then(function (res) {
-                    console.log(res.data.message)
-                })
-            },
             basic_size(){
               $("#text2").find("*").css("font-size",this.basic.font_size)
             },
@@ -985,15 +1006,21 @@
                 }
             },
             basic_test(){
+                let params = '';
+                if (vm.sql_file_interface == 3) {
+                     params = vm.sql_id
+                }
+                if (vm.sql_file_interface == 6  || vm.sql_file_interface == 9) {
+                     params = vm.server_url +','+ vm.file_param
+                }
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/basic_test/',
                     data: {
                         id:vm.unit_id,
-                        server_url:vm.server_url,
+                        params:params,
                         gather_rule:vm.basic.gather_rule,
                         gather_params:vm.basic.gather_params,
-                        file_param:vm.file_param
                     },
                 }).then(function (res) {
                     let tempcontents2 = vm.basic.contents
@@ -1013,7 +1040,6 @@
                         for(var i=0;i<temp3.length;i++){
                             temp4.push(temp3[i][0])
                         }
-                        console.log(temp1[0])
                         $("#text2").html("")
                          for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                              if(j<temp4.length){
@@ -1028,19 +1054,28 @@
                         var icon1 = tempcontents2.split("@");
                         var icon2=[];
                         var icon3=[];
-                        var icon4=res.data.message[0]['gather_status'];
+                        var icon4='';
+                        if(res.data.message[0]['DB_CONNECTION']){
+                              icon4=res.data.message[0]['DB_CONNECTION'];
+                        }
+                        if(res.data.message[0]['URL_CONNECTION']){
+                              icon4=res.data.message[0]['URL_CONNECTION'];
+                        }
+                        if(res.data.message[0]['FILE_EXIST']){
+                              icon4=res.data.message[0]['FILE_EXIST'];
+                        }
                         $("#text2").html("")
                         $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
-                        if (icon4 == 'success') {
+                        if (icon4 == 1) {
                              $("#text2").append("<div class=\"circle1\"></div>");
                          }
                          if (icon4 == 2) {
                              $("#text2").append("<div class=\"circle2\"></div>");
                          }
-                         if (icon4 == 'empty') {
+                         if (icon4 == 0) {
                              $("#text2").append("<div class=\"circle3\"></div>");
                          }
-                         if (icon4 == 'error') {
+                         if (icon4 == -1 || icon4 == -2) {
                              $("#text2").append("<div class=\"circle4\"></div>");
                          }
                      }
@@ -1073,28 +1108,36 @@
                             }
                         }
                         icon3 = icon2[1].split("=")
-                        icon4 = res.data.message[0]['gather_status']
+                        if(res.data.message[0]['DB_CONNECTION']){
+                              icon4=res.data.message[0]['DB_CONNECTION'];
+                        }
+                        if(res.data.message[0]['URL_CONNECTION']){
+                              icon4=res.data.message[0]['URL_CONNECTION'];
+                        }
+                        if(res.data.message[0]['FILE_EXIST']){
+                              icon4=res.data.message[0]['FILE_EXIST'];
+                        }
                         $("#text2").html("")
                         for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                             if (i == flag2) {
                                 $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
-                                if (icon4 == 'success') {
+                                if (icon4 == 1) {
                                      $("#text2").append("<div class=\"circle1\"></div>");
                                  }
                                  if (icon4 == 2) {
                                      $("#text2").append("<div class=\"circle2\"></div>");
                                  }
-                                 if (icon4 == 'empty') {
+                                 if (icon4 == 0) {
                                      $("#text2").append("<div class=\"circle3\"></div>");
                                  }
-                                 if (icon4 == 'error') {
+                                 if (icon4 == -1) {
                                      $("#text2").append("<div class=\"circle4\"></div>");
                                  }
                             } else {
                                 $("#text2").append("<div>" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
                             }
                         }
-                }
+                     }
                 })
             },
             pefFrom() {
@@ -1224,7 +1267,13 @@
                             url: '${SITE_URL}DataBaseManage/get_conname/',
                             data:row.params,
                         }).then((res)=> {
-                            vm.server_url = res['data']['results']
+                            vm.server_url = res['data']['results']['connname']
+                            vm.sql_id = res['data']['results']['id']
+                            vm.basic_size();
+                            vm.basic_height();
+                            vm.basic_width();
+                            vm.sycontent();
+                            vm.basic_test()
                         }).catch((error) => {
                         alert('拉取数据库失败！')
                         });
@@ -1243,6 +1292,11 @@
                         vm.file1 = 'block';
                         vm.interface1 = 'none';
                         vm.basic.gather_params = 'file';
+                        vm.basic_size();
+                        vm.basic_height();
+                        vm.basic_width();
+                        vm.sycontent();
+                        vm.basic_test()
                     }
                     if (vm.sql_file_interface == 'interface') {
                         vm.sql_file_interface =9;
@@ -1254,9 +1308,12 @@
                         vm.file1 = 'none';
                         vm.interface1 = 'block';
                         vm.basic.gather_params = 'interface';
+                        vm.basic_size();
+                        vm.basic_height();
+                        vm.basic_width();
+                        vm.sycontent();
+                        vm.basic_test()
                     }
-                    vm.sycontent()
-                    vm.basic_test()
                 }
                 if (row.monitor_type == '图表单元类型') {
                     vm.disabled2 = true;
@@ -1378,8 +1435,9 @@
                 }
             },
             flow_change(value){
-                var location = ''
-                var line=''
+                vm.node_name(value)
+                vm.location =''
+                vm.line=''
                 axios({
                     method:'post',
                     url:'${SITE_URL}monitor/flow_change/',
@@ -1388,10 +1446,85 @@
                     }
                 }).then(function (res) {
                     {
-                        location = res.data.activities
-                        line = res.data.flows
+                        vm.constants = res.data.constants
+                        var aa=" <div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width: 100%;position: relative;\">\n" +
+                            "\n" +
+                            "                                        <div class=\"workflow-canvas\" style=\"margin-left: 0px;padding-left: 0px\">\n" +
+                            "                                            <!-- 画布模板 start -->\n" +
+                            "                                            <div class=\"jtk-content\">\n" +
+                            "                                                <div class=\"jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan\"\n" +
+                            "                                                     id=\"canvas\" style=\"height:500px\">\n" +
+                            "                                                    <!-- 流程 -->\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "                                            <!-- 画布模板 end -->\n" +
+                            "\n" +
+                            "                                        </div>\n" +
+                            "\n" +
+                            "    <!-- template 模板-->\n" +
+                            "                                        <div class=\"jtk-delete jtk-none \">删除节点</div>\n" +
+                            "                                        <div id=\"template\" class=\"jtk-none\">\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\"\n" +
+                            "                                                 data-type=\"EmptyEndEvent\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-icon-start\">\n" +
+                            "                                                        <i class=\"bk-icon icon-star-shape\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "                                             <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\"\n" +
+                            "                                                  data-type=\"EmptyStartEvent\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-icon-start\">\n" +
+                            "                                                        <i class=\"bk-icon icon-star-shape\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node database-node\" id=\"{charts}\"\n" +
+                            "                                                 data-type=\"ServiceActivity\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-content\" style=\"position: relative\">\n" +
+                            "                                                        <div class=\"start_time\" style=\"position: absolute;width: 70px;height: 20px;top: -26px;left: 0px;\"></div>\n" +
+                            "                                                        <div class=\"end_time\" style=\"position: absolute;width: 70px;height: 20px;top: -26px;right: 0px;\"></div>\n" +
+                            "                                                        <p class=\"node-title\"></p>\n" +
+                            "                                                    </div>\n" +
+                            "                                                    <div class=\"node-icon\">\n" +
+                            "                                                        <i class=\"bk-icon icon-data\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node cog-node\" id=\"{charts}\"\n" +
+                            "                                                 data-type=\"dataCog\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-content\">\n" +
+                            "                                                        <p class=\"node-title\"></p>\n" +
+                            "                                                    </div>\n" +
+                            "                                                    <div class=\"node-icon\">\n" +
+                            "                                                        <i class=\"bk-icon icon-cog\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node filter-node\" id=\"{charts}\"\n" +
+                            "                                                 data-type=\"dataFilter\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-content\">\n" +
+                            "                                                        <p class=\"node-title\"></p>\n" +
+                            "                                                    </div>\n" +
+                            "                                                    <div class=\"node-icon\">\n" +
+                            "                                                        <i class=\"bk-icon icon-circle\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "                                        </div>\n" +
+                            "                                    </div>"
+                        $('#flow_canvas').html(aa)
+                        vm.location = res.data.activities
+                        vm.line = res.data.flows
                         //显示流程单元中的预览图
                         $('#flow1').dataflow({
+
                             el: '.tool', //流程拖动源
                             canvas: '#canvas', //画布
                             arrowWidth: 8,
@@ -1399,13 +1532,35 @@
                             template: '#template',
                             data:
                                 {
-                                    "line": line, "location": location
+                                    "line": vm.line, "location": vm.location
 
                                 }
                         });
+
+                        $('.node-icon').css('top','-7px')
+                        let old_html  = $('#canvas').html()
+                        $('#canvas').html('<div style="transform: scale(0.65)">'+old_html+'</div>')
                     }
                 })
 
+            },
+            node_name(value){
+                axios({
+                    method:'post',
+                    url:'${SITE_URL}monitor/node_name/',
+                    data:{
+                        'id':value
+                    }
+                }).then(function (res) {
+                    vm.activities_node_name=res.data.activities
+
+                })
+            },
+            Rendering_start_time(){
+                $('p:contains('+vm.flow.node_name+')').parent().find('.start_time').text(vm.activities_node_time.start_time)
+            },
+             Rendering_end_time(){
+                $('p:contains('+vm.flow.node_name+')').parent().find('.end_time').text(vm.activities_node_time.end_time)
             },
             add_unit(row) {                         //新增单元
                      {   if (vm.add_pamas == 1) {
@@ -1799,6 +1954,7 @@
                     this.$set(echartData,i,obj_1);
                 }
                 vm.chartData=echartData;
+                vm.show_chart();
             },
             chart_get_test(){
                 axios({
@@ -1824,7 +1980,8 @@
                         })
                     }
                     vm.chartData=res.data.results;
-                    vm.person_count=res.data.column_name_list[0]
+                    vm.person_count=res.data.column_name_list[0];
+                    vm.show_chart();
                 }).catch((res) =>{
                     console.log(res)
                 });
