@@ -152,25 +152,6 @@ def add_unit(request):
         add_dic['creator'] = user['data']['bk_username']
         add_dic['editor'] = user['data']['bk_username']
         Monitor.objects.create(**add_dic)
-        if res['monitor_type'] == 'third':
-            unit_obj = Monitor.objects.all().last()
-            id = unit_obj.id
-            tools_params = {
-                'params':res['data']['params'],
-                'job_id':[{
-                    'name': add_dic['gather_rule'],
-                    'id': add_dic['jion_id']
-                }],
-                'gather_params':res['data']['gather_params']
-            }
-            tools_res = tools.job_interface(tools_params)
-            info = {
-            'id': id,                                     #关联id
-            'message': "message",                       #状态
-            'message_value': tools_res['message'],     #状态值
-            'gather_params': 'space_interface'        #类型
-            }
-            gather_data(info)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
     except Exception as e:
