@@ -399,8 +399,33 @@ def flow_change(request):
         # flows3['source'] = str(flows2[key]['source'])
         # flows3['target'] = str(flows2[key]['target'])
         flows1.append(flows3)
+    constants1= []
+    constants = res1['constants']
+    for key in constants:
+        constants2={}
+        constants2['name']=constants[key]["name"]
+        constants2['value']=constants[key]["value"]
+        constants2['key']=constants[key]["key"]
+        constants1.append(constants2)
     pipeline_tree={
         'activities':activities2,
-        'flows':flows1
+        'flows':flows1,
+        'constants':constants1
+    }
+    return pipeline_tree
+
+def node_name(request):
+    id = json.loads(request.body)
+    res = get_desc(request, id['id'])
+    res1 = json.loads(res['pipeline_tree'])
+    activities2 = []
+    location = res1['location']
+    activities = res1['activities']
+    for key in activities:
+        activities1 = {}
+        activities1['name'] = activities[key]['name']
+        activities2.append(activities1)
+    pipeline_tree = {
+        'activities': activities2
     }
     return pipeline_tree
