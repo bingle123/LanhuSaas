@@ -614,6 +614,7 @@
             line:'',
             old_html:'',
             msg1:'',
+            sql_id:'',
             add_pamas:0,                                        //新增编辑判断
             font_size_range:[20,22,24,26,28,30,32,34,36,38,40],   //字体大小
             job2: [],                                   //作业模板
@@ -987,7 +988,7 @@
             basic_test(){
                 let params = '';
                 if (vm.sql_file_interface == 3) {
-                     params = vm.server_url
+                     params = vm.sql_id
                 }
                 if (vm.sql_file_interface == 6) {
                      params = vm.server_url +' '+ vm.file_param
@@ -1037,19 +1038,28 @@
                         var icon1 = tempcontents2.split("@");
                         var icon2=[];
                         var icon3=[];
-                        var icon4=res.data.message[0]['gather_status'];
+                        var icon4='';
+                        if(res.data.message[0]['DB_CONNECTION']){
+                              icon4=res.data.message[0]['DB_CONNECTION'];
+                        }
+                        if(res.data.message[0]['URL_CONNECTION']){
+                              icon4=res.data.message[0]['URL_CONNECTION'];
+                        }
+                        if(res.data.message[0]['FILE_EXIST']){
+                              icon4=res.data.message[0]['FILE_EXIST'];
+                        }
                         $("#text2").html("")
                         $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
-                        if (icon4 == 'success') {
+                        if (icon4 == 1) {
                              $("#text2").append("<div class=\"circle1\"></div>");
                          }
                          if (icon4 == 2) {
                              $("#text2").append("<div class=\"circle2\"></div>");
                          }
-                         if (icon4 == 'empty') {
+                         if (icon4 == 0) {
                              $("#text2").append("<div class=\"circle3\"></div>");
                          }
-                         if (icon4 == 'error') {
+                         if (icon4 == -1) {
                              $("#text2").append("<div class=\"circle4\"></div>");
                          }
                      }
@@ -1082,7 +1092,15 @@
                             }
                         }
                         icon3 = icon2[1].split("=")
-                        icon4 = res.data.message[0]['gather_status']
+                        if(res.data.message[0]['DB_CONNECTION']){
+                              icon4=res.data.message[0]['DB_CONNECTION'];
+                        }
+                        if(res.data.message[0]['URL_CONNECTION']){
+                              icon4=res.data.message[0]['URL_CONNECTION'];
+                        }
+                        if(res.data.message[0]['FILE_EXIST']){
+                              icon4=res.data.message[0]['FILE_EXIST'];
+                        }
                         $("#text2").html("")
                         for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                             if (i == flag2) {
@@ -1233,7 +1251,8 @@
                             url: '${SITE_URL}DataBaseManage/get_conname/',
                             data:row.params,
                         }).then((res)=> {
-                            vm.server_url = res['data']['results']
+                            vm.server_url = res['data']['results']['connname']
+                            vm.sql_id = res['data']['results']['id']
                             vm.basic_size();
                             vm.basic_height();
                             vm.basic_width();
