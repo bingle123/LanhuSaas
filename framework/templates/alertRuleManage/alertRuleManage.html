@@ -110,7 +110,7 @@
                     </el-col>
                     <el-col :span="11" :offset="1">
                         <el-form-item label="上限值:" prop="upper_limit">
-                            <el-input v-model="alertRuleData.upper_limit"></el-input>
+                            <el-input id="upperValue" v-model="alertRuleData.upper_limit"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -153,13 +153,13 @@
     const upperLimitCheck= (rule, value, callback) => {
         var lv = $('#lowerValue');
         if (value != null && value.length > 0) {
-            if (parseFloat(value).toString() != "NaN" && parseFloat(value) >= 1 && parseFloat(value) <= 9999) {
+            if (parseFloat(value).toString() != "NaN" && parseFloat(value) >= 0 && parseFloat(value) <= 10000) {
                 vue.upper_valid_status = true;
                 lv.focus();
                 lv.blur();
                 callback();
             } else {
-                callback(new Error('上限值在1~9999之间'));
+                callback(new Error('上限值在0~10000之间'));
             }
         } else {
             vue.upper_valid_status = false;
@@ -170,10 +170,15 @@
     };
     const lowerLimitCheck = (rule, value, callback) => {
         if (value != null && value.length > 0) {
-            if (parseFloat(value).toString() != "NaN" && parseFloat(value) >= 1 && parseFloat(value) <= 9999) {
-                callback();
+            var uv = $('#upperValue');
+            if (parseFloat(value).toString() != "NaN" && parseFloat(value) >= 0 && parseFloat(value) <= 10000) {
+                if(parseFloat(uv.val()) < parseFloat(value)){
+                    callback(new Error('上限值不能小于下限值'));
+                }else{
+                    callback();
+                }
             } else {
-                callback(new Error('下限值在1~9999之间'));
+                callback(new Error('下限值在0~10000之间'));
             }
         } else {
             if(!vue.upper_valid_status){
