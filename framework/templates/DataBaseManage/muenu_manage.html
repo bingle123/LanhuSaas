@@ -105,14 +105,14 @@
                     权限分配
                 </div>
                 <hr id="hr">
-                    <el-tree
-                            :data="data2"
-                            show-checkbox
-                            node-key="id"
-                            :default-checked-keys="checked"
-                            >
-                    </el-tree>
-                <el-button type="primary" @click="getCurrentNode('data2')">修改</el-button>
+                <el-tree
+                        :data="data2"
+                        show-checkbox
+                        node-key="id"
+                        :default-checked-keys="checked"
+                >
+                </el-tree>
+
             </div>
 
             <!--编辑-->
@@ -170,8 +170,8 @@
             roles: [],
             dataType: [],
             editMuenu: [],
-            data2:[],
-            checked:[],
+            data2: [],
+            checked: [],
             addmuenus: {
                 mname: '',
                 url: '',
@@ -216,12 +216,14 @@
                     console.log(res)
                     ve.data2 = res.data.message
                 })
-                axios.post('${SITE_URL}DataBaseManage/checked_menu/').then((re)=>{
+                axios.post('${SITE_URL}DataBaseManage/checked_menu/').then((re) => {
                     console.log(re)
                     ve.checked = re.data.message
                 })
                 this.isAdd = 4
             },
+
+
 
             hide() {
                 this.isAdd = 1
