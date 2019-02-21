@@ -363,4 +363,34 @@ def delete_muenu(request,id):
         res3 = tools.error_result(e)
         return tools.error_result(res3)
 
+def get_roleAmuenus(request):
+    roles = Role.objects.all()
+    menus = Muenu.objects.all()
+    length=menus.__len__()
+    tree=[]
+    for x in roles:
+        temp = {}
+        muenu_ids = rm.objects.filter(roleid=x.id)
+        temp['label']=x.rname
+        temp['id']=x.id
+        childrens=[]
+        for menu in menus:
+            chi={}
+            chi['id']=(x.id-1)*length+menu.id
+            chi['label']=menu.mname
+            childrens.append(chi)
+        temp['children']=childrens
+        tree.append(temp)
+    print tree[1]
+    return tree
 
+#获取勾选Id
+def checked_menu(request):
+    objs=rm.objects.all()
+    menus = Muenu.objects.all()
+    length = menus.__len__()
+    ids=[]
+    for obj in objs:
+        temp_id=(obj.roleid-1)*length+obj.muenuid
+        ids.append(temp_id)
+    return  ids
