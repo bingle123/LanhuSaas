@@ -1942,6 +1942,8 @@
                     };
                     this.myChart.setOption(option);
                 }
+                vm.echart_height();
+                vm.echart_width();
             },
             show_content(){
                 let content=vm.chart.contents;
@@ -1955,6 +1957,8 @@
                 }
                 vm.chartData=echartData;
                 vm.show_chart();
+                vm.echart_height();
+                vm.echart_width();
             },
             chart_get_test(){
                 axios({
@@ -1982,6 +1986,8 @@
                     vm.chartData=res.data.results;
                     vm.person_count=res.data.column_name_list[0];
                     vm.show_chart();
+                    vm.echart_height();
+                    vm.echart_width();
                 }).catch((res) =>{
                     console.log(res)
                 });
