@@ -39,6 +39,9 @@ APP_TOKEN = '99d97ec5-4864-4716-a877-455a6a8cf9ef'
 # 上海APP_TOKEN
 # APP_TOKEN = 'c6369717-7906-4699-ad0d-31f5798d5cef'
 
+# 数据采集测试用主机地址
+GATHER_DATA_HOST = '192.168.1.52'
+
 # 蓝鲸智云开发者中心的域名，形如：http://paas.bking.com#
 # 长沙
 BK_PAAS_HOST = 'http://paas.bk.com'

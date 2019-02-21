@@ -10,6 +10,7 @@ import json
 import urllib
 import urllib2
 import os
+import settings
 from gatherData.models import *
 from gatherDataHistory.models import *
 from alertRule.function import *
@@ -22,9 +23,10 @@ from blueking.component.shortcuts import *
 # 采集规则的设置类似于SQL语法，但是在字段域有所不同：如@cp=china_point@表示保存在采集表中的字段名称为cp，
 # 实际进行目标数据库表采集的字段是china_point
 # 2. 针对于接口的数据采集：
-# 采集规则为接口执行脚本，返回采集的JSON字符串
+# 采集规则为linux快速执行脚本，返回采集的JSON字符串
 # 3. 针对于文件的数据采集：
-# 采集规则为linux快速执行脚本，采集数据由脚本保存到采集表gather_data中
+# 采集规则为linux快速执行脚本，返回采集的JSON字符串
+# agent默认路径：/usr/local/gse/agent/bin
 # --------------------------------------------------------------
 
 
@@ -35,19 +37,19 @@ def gather_test_init():
     # sql测试用监控项ID：'1'
     # 接口测试用监控项ID：'2'
     # 文件测试用监控项ID：'3'
-    info['id'] = '888'
+    info['id'] = '6868'
     # sql测试用类型：'sql'
     # 文件测试用类型：'file'
     # 接口测试用类型：'interface'
-    info['gather_params'] = 'interface'
+    info['gather_params'] = 'file'
     # sql测试用参数：'46'
-    # 文件测试用参数：'192.168.1.10 /fk/test.txt'
-    # 接口测试用参数：'http://t.weather.sojson.com/api/weather/city/,101030100'
-    info['params'] = 'http://t.weather.sojson.com/api/weather/city/101030100,ok'
+    # 文件测试用参数：'./gather_data_test'
+    # 接口测试用参数：'http://t.weather.sojson.com/api/weather/city/101030100,http://t.weather.sojson.com/api/weather/city/ 101030100'
+    info['params'] = './gather_data_test'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
-    # 文件测试用采集规则：'echo \'{\"name\":\"zs\",\" age\":\"66\"}\''
-    # 接口测试用采集规则：'url=$1\ncode=$2\nwget http://t.weather.sojson.com/api/weather/city/$code\ncat ./$code'
-    info['gather_rule'] = ''
+    # 文件测试用采集规则：'cGF0aD0kMQpjYXQgJHBhdGgK'
+    # 接口测试用采集规则：'dXJsPSQxCmNvZGU9JDIKYHdnZXQgLXFPIGdhdGhlcl9kYXRhX3RlbXAgJHVybCRjb2RlYApjYXQgZ2F0aGVyX2RhdGFfdGVtcAo='
+    info['gather_rule'] = 'cGF0aD0kMQpjYXQgJHBhdGgK'
     # ------------------------------------------------------------------------------------
     return info
 
@@ -88,7 +90,7 @@ def gather_param_parse(info):
         # 获取调用接口所需的参数
         interface_params = interface_params[1]
         gather_params['extra_param']['interface_url'] = interface_url
-        gather_params['extra_param']['script_params'] = interface_url
+        gather_params['extra_param']['script_params'] = interface_params
         gather_params['gather_rule'] = info['gather_rule']
     elif 'file' == info['gather_params']:
         gather_params['extra_param']['script_params'] = info['params']
@@ -140,7 +142,7 @@ def fi_kv_process(json_dict):
     for key, value in json_dict.items():
         temp = dict()
         if isinstance(value, dict):
-            temp['value'] = json.dumps(value)
+            temp['value'] = json.dumps(value, ensure_ascii=False)
         else:
             temp['value'] = value
         temp['key'] = key
@@ -150,8 +152,8 @@ def fi_kv_process(json_dict):
 
 # 采集方法，返回参数gather_status为ok采集正常，返回empty采集结果为空，返回error采集规则错误
 def gather_data(info):
-    # 采集测试参数初始化
-    info = gather_test_init()
+    # 采集测试参数初始化，实际使用时关闭
+    # info = gather_test_init()
     # 获取数据采集的类型
     gather_type = info['gather_params']
     # 采集数据库中的数据
@@ -196,18 +198,8 @@ def gather_data(info):
             TDGatherData(item_id=info['id'], gather_time=now, data_key='DB_CONNECTION', data_value='0').save()
             return "empty"
     elif "interface" == gather_type:
-        content = ''
-        # with open('./t.sh') as f:
-        #     line = f.readline()
-        #     while line:
-        #         content = content + line
-        #         line = f.readline()
-        # print content
-        # print base64.b64encode(content)
         # 获取当前采集时间
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        # def execute_script(client, script_content, script_params, item_id):
-        # def get_execute_result(client, job_instance_id, item_id):
         ping_script = 'aXA9JDEKYHdnZXQgLXQgMSAtVCA1MDAgLS1zcGlkZXIgLW8gdGVtcCAkaXBgCmNvdW50PWBjYXQgdGVtcCB8IGdyZXAgIjIwMCBPSyIgfCB3YyAtbGAKaWYgWyAkY291bnQgLWd0IDAgXTsgdGhlbgogICAgZWNobyAiMCIKZWxzZQogICAgZWNobyAiLTEiCmZpCg=='
         # 接口方式采集数据
         user_account = BkUser.objects.filter(id=1).get()
@@ -218,30 +210,34 @@ def gather_data(info):
         gather_data_migrate(info['id'])
         gather_params = gather_param_parse(info)
         # 判断接口连接状态
-        res1 = execute_script(client, ping_script, base64.b64encode(gather_params['extra_param']['interface_url']), info['id'])
+        res1 = execute_script(client, ping_script, base64.b64encode(gather_params['extra_param']['interface_url']), info['id'], 'URL_CONNECTION')
         if None is res1:
             return "error"
-        res2 = get_execute_result(client, res1['data']['job_instance_id'], info['id'])
+        res2 = get_execute_result(client, res1['data']['job_instance_id'], info['id'], 'URL_CONNECTION')
         if None is res2:
             return "error"
         ping_flag = str(res2['data'][0]['step_results'][0]['ip_logs'][0]['log_content'])
-        print ping_flag
         if -1 == int(ping_flag):
             TDGatherData(item_id=info['id'], gather_time=now, data_key='URL_CONNECTION', data_value='-1', gather_error_log='request interface timeout.').save()
             return "error"
-
         # 发送请求，从接口获取JSON数据
-        res3 = execute_script(client, gather_params['gather_rule'], None, info['id'])
-        # JSON模拟接收的数据，测试时使用
-        json_data = '{"username":"mary","age":"20","info":[{"tel":"1234566","mobile_phone":"15566757776","email":{"home":"home@qq.com","company":"company@qq.com","capacity":"2000"}}],"money":{"capacity":"50000","type":"RMB"},"address":[{"city":"beijing","code":"1000022"},{"city":"shanghai","code":"2210444"}]}'
+        res3 = execute_script(client, base64.b64encode(gather_params['gather_rule']), base64.b64encode(gather_params['extra_param']['script_params']), info['id'], 'URL_CONNECTION')
+        # 测试打开
+        # res3 = execute_script(client, gather_params['gather_rule'], base64.b64encode(gather_params['extra_param']['script_params']), info['id'], 'URL_CONNECTION')
+        if None is res3:
+            return "error"
+        res4 = get_execute_result(client, res3['data']['job_instance_id'], info['id'], 'URL_CONNECTION')
+        if None is res4:
+            return "error"
+        json_data = res4['data'][0]['step_results'][0]['ip_logs'][0]['log_content']
         # 将JSON字符串解析为python字典对象，便于筛选并采集数据
         json_dict = json.loads(json_data)
+        # encode_change_fun(json_dict)
         # 获取当前采集时间
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         # 判断接口是否返回了空数据
         if 0 != len(json_dict):
             # 将结果集整理为key-value形式的采集数据
-            # recursion_json_dict(json_dict, gather_params['target_field'], data_set, gather_params['target_root'])
             data_set = fi_kv_process(json_dict)
             # 将采集的数据保存到td_gather_data中
             for item in data_set:
@@ -250,6 +246,14 @@ def gather_data(info):
             TDGatherData(item_id=info['id'], gather_time=now, data_key='URL_CONNECTION', data_value='0').save()
             return 'empty'
     elif "file" == gather_type:
+        # content = ''
+        # with open('./file_gather_data.sh') as f:
+        #     line = f.readline()
+        #     while line:
+        #         content = content + line
+        #         line = f.readline()
+        # print content
+        # print base64.b64encode(content)
         # 历史采集数据迁移
         gather_data_migrate(info['id'])
         # 获取当前采集时间
@@ -262,27 +266,30 @@ def gather_data(info):
         # 获取采集参数
         gather_params = gather_param_parse(info)
         script_params = base64.b64encode(gather_params['extra_param']['script_params'])
-        print 'SCRIPT_PARAMS: %s' % script_params
+        # print 'SCRIPT_PARAMS: %s' % script_params
         # 检测文件是否存在
-        script_content = 'cGF0aD0kMQppZiBbICEgLWYgIiRwYXRoIiBdOyB0aGVuCiAgICBlY2hvICItMSIKZWxzZQogICAgZWNobyAiMCIKZmkK'
-        res1 = execute_script(client, script_content, script_params, info['id'])
+        file_exist_script = 'cGF0aD0kMQppZiBbICEgLWYgIiRwYXRoIiBdOyB0aGVuCiAgICBlY2hvICItMSIKZWxzZQogICAgZWNobyAiMCIKZmkK'
+        res1 = execute_script(client, file_exist_script, script_params, info['id'], 'FILE_EXIST')
         if None is res1:
             return "error"
-        res2 = get_execute_result(client, res1['data']['job_instance_id'], info['id'])
+        res2 = get_execute_result(client, res1['data']['job_instance_id'], info['id'], 'FILE_EXIST')
         if None is res2:
             return "error"
         file_flag = str(res2['data'][0]['step_results'][0]['ip_logs'][0]['log_content'])
+        # print 'FILE %s' % file_flag
         if -1 == int(file_flag):
             TDGatherData(item_id=info['id'], gather_time=now, data_key='FILE_EXIST', data_value='-1', gather_error_log='file not exist').save()
             return "error"
-        script_content = base64.b64encode(gather_params['gather_rule'])
-        res3 = execute_script(client, script_content, None, info['id'])
+        res3 = execute_script(client, base64.b64encode(gather_params['gather_rule']), script_params, info['id'], 'FILE_EXIST')
+        # 测试打开
+        # res3 = execute_script(client, gather_params['gather_rule'], script_params, info['id'], 'FILE_EXIST')
         if None is res3:
             return "error"
-        res4 = get_execute_result(client, res3['data']['job_instance_id'], info['id'])
+        res4 = get_execute_result(client, res3['data']['job_instance_id'], info['id'], 'FILE_EXIST')
         if None is res4:
             return "error"
         json_data = res4['data'][0]['step_results'][0]['ip_logs'][0]['log_content']
+        # print json_data
         # 判断采集文件是否返回了空数据
         if len(json_data) == 0:
             TDGatherData(item_id=info['id'], gather_time=now, data_key='FILE_EXIST', data_value='0').save()
@@ -303,13 +310,13 @@ def gather_data(info):
     return 'success'
 
 
-def execute_script(client, script_content, script_params, item_id):
+def execute_script(client, script_content, script_params, item_id, execute_type):
     # 蓝鲸业务ID，暂固定为2
     biz_id = '2'
     # 蓝鲸云区域ID，暂固定为0
     cloud_id = '0'
-    # 蓝鲸Agent所在IP地址，暂固定为192.168.1.52
-    agent_id = '192.168.1.52'
+    # 蓝鲸Agent所在IP地址
+    agent_id = settings.GATHER_DATA_HOST
     # 向蓝鲸平台请求执行快速执行脚本
     script_bk_params = {
         'bk_biz_id': biz_id,
@@ -328,13 +335,13 @@ def execute_script(client, script_content, script_params, item_id):
     # 获取当前采集时间
     now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     if '0' != str(res['code']):
-        TDGatherData(item_id=item_id, gather_time=now, data_key='FILE_EXIST', data_value='-2',
+        TDGatherData(item_id=item_id, gather_time=now, data_key=execute_type, data_value='-2',
                      gather_error_log=str(res['message'])).save()
         return None
     return res
 
 
-def get_execute_result(client, job_instance_id, item_id):
+def get_execute_result(client, job_instance_id, item_id, execute_type):
     # 向蓝鲸平台请求执行作业平台日志
     job_log_bk_params = {
         'bk_biz_id': 2,
@@ -344,15 +351,16 @@ def get_execute_result(client, job_instance_id, item_id):
     # 获取当前采集时间
     now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     if 0 != int(res['code']):
-        TDGatherData(item_id=item_id, gather_time=now, data_key='FILE_EXIST', data_value='-2',
+        TDGatherData(item_id=item_id, gather_time=now, data_key=execute_type, data_value='-2',
                      gather_error_log=str(res['message'])).save()
         return None
     while 'True' != str(res['data'][0]['is_finished']):
         time.sleep(3)
         res = client.job.get_job_instance_log(job_log_bk_params)
-    print res
+    # print res
     if 3 != int(res['data'][0]['status']):
-        TDGatherData(item_id=item_id, gather_time=now, data_key='FILE_EXIST', data_value='-2',
+        TDGatherData(item_id=item_id, gather_time=now, data_key=execute_type, data_value='-2',
                      gather_error_log='script execution failed ').save()
         return None
     return res
+
