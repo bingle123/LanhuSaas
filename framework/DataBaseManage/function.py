@@ -132,12 +132,9 @@ def delete_conn(request,id):
 def get_conname(request):
     try:
         res = request.body
-        print res
-        res_obj = Conn.objects.filter(id=res)
-        for i in res_obj:
-            sql_name = i.connname
-
-        reslut =  tools.success_result(sql_name)
+        res_obj = Conn.objects.get(id=res)
+        conn = model_to_dict(res_obj)
+        reslut =  tools.success_result(conn)
     except Exception as e:
         reslut = tools.error_result(e)
     return reslut
@@ -273,7 +270,7 @@ def selecthor2(request):
     search = res['search']
     page = res['page']
     limit = res['limit']
-    sciencenews = Muenu.objects.filter(Q(mname__contains=search)|Q(url__contains=search))
+    sciencenews = Muenu.objects.filter(Q(mname__contains=search)|Q(url__contains=search)).exclude(url ='DataBaseManage/muenu_manage/')
     p = Paginator(sciencenews, limit)
     count = p.page_range
     pages = count[-1]
@@ -311,7 +308,7 @@ def get_all_muenu(request):
     res = json.loads(request.body)
     page = res['page']
     limit = res['limit']
-    muenus = Muenu.objects.all()
+    muenus = Muenu.objects.all().exclude(url ='DataBaseManage/muenu_manage/')
     p = Paginator(muenus, limit)
     count = p.page_range
     pages = count[-1]
@@ -362,4 +359,5 @@ def delete_muenu(request,id):
     except Exception as e:
         res3 = tools.error_result(e)
         return tools.error_result(res3)
+
 
