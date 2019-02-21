@@ -207,15 +207,15 @@ def edit_unit(request):
 
 
 def basic_test(request):
-    res = json.loads(request.body)
+    info = json.loads(request.body)
     result = []
-    gather_data(res)
-    gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(item_id)
+    gather_data(info)
+    gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
     db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306)
     cursor = db.cursor()
     cursor.execute(gather_rule2)
     results = cursor.fetchall()
-    if 'sql'== gather_params:
+    if 'sql'== info['gather_params']:
         dic = {}
         for i in results:
             dic1 = {
@@ -224,9 +224,9 @@ def basic_test(request):
             }
             dic = dict(dic, **dic1)
         result.append(dic)
-    if 'file' == gather_params:
+    if 'file' == info['gather_params']:
         result = results
-    if 'interface' == gather_params:
+    if 'interface' == info['gather_params']:
         result = results
     db.close()
     return result
