@@ -37,7 +37,7 @@
             <el-row type="flex" justify="space-between" align="center" class="row">
                 <el-col :span="12">
                     <el-col :span="9">
-                        <el-input v-model="rule_search" size="medium" placeholder="请输入规则名称"></el-input>
+                        <el-input v-model="ruleSearch" size="medium" placeholder="请输入规则名称"></el-input>
                     </el-col>
                     <el-col :span="3">
                         <el-button type="primary" size="medium" icon="el-icon-search" v-on:click="alertRuleSearch">搜索</el-button>
@@ -186,6 +186,7 @@
     var vue = new Vue({
         el: '#alertRuleManage',
         data: {
+            currentPage: 1,
             //上限值是否验证通过标记
             upper_valid_status: false,
             //下限值是否通过验证标记
@@ -197,7 +198,7 @@
             //当前正在添加或修改的告警规则的保存对象
             alertRuleData: {},
             //告警规则名称搜索
-            rule_search: '',
+            ruleSearch: '',
             //当前有多少页
             alertRulesCount: 0,
             rules: {
@@ -274,11 +275,11 @@
             },
             //告警规则数据分页获取
             alertRulePageChange: function(page){
-                //this.currentPage = page;
+                this.currentPage = page;
                 const loading = this.alertRulePopupLoading();
                 var data = {
-                    search: this.rule_search,
-                    page: page,
+                    search: this.ruleSearch,
+                    page: this.currentPage,
                     limit: 5
                 };
                 axios({
@@ -334,7 +335,7 @@
                     }).then((res) =>{
                         loading.close();
                         if('ok' == res.data.message){
-                            this.loadAlertRuleInfo();
+                            this.alertRulePageChange();
                             this.$message({
                                 type: 'success',
                                 message: '删除告警规则成功!'
@@ -384,7 +385,7 @@
                 }).then((res) =>{
                     loading.close();
                     if('ok' == res.data.message){
-                        this.loadAlertRuleInfo();
+                        this.alertRulePageChange(this.currentPage);
                         this.$message({
                             type: 'success',
                             message: '删除告警规则成功!'
@@ -424,7 +425,7 @@
                         }).then((res) =>{
                             loading.close();
                             if('ok' == res.data.message){
-                                this.loadAlertRuleInfo();
+                                this.alertRulePageChange(this.currentPage);
                                 this.alertRuleList();
                             }else{
                                 var msg = '请求添加/修改告警规则失败！';
