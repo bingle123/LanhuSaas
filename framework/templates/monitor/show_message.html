@@ -18,7 +18,7 @@
             src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
     <link rel="stylesheet"
           href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css"/>
-    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
     <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
     <script type="text/javascript" src="${STATIC_URL}assets/echarts/echarts.js"></script>
@@ -515,7 +515,7 @@
                             <div style="padding: 0px 45% 0px 45%">
                                 <h2>预览</h2>
                             </div>
-                            <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;">
+                            <div id="flow_canvas" style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;">
                                 <div id="flow1" class="clearfix workflow-box" style="width: 100%;position: relative;">
 
                                         <div class="workflow-canvas" style="margin-left: 0px;padding-left: 0px">
@@ -530,7 +530,7 @@
 
                                         </div>
 
-                                        <!-- template 模板-->
+    <!-- template 模板-->
                                         <div class="jtk-delete jtk-none ">删除节点</div>
                                         <div id="template" class="jtk-none">
                                             <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
@@ -542,7 +542,7 @@
                                                 </div>
                                             </div>
                                              <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
-                                                 data-type="EmptyStartEvent">
+                                                  data-type="EmptyStartEvent">
                                                 <div class="node-wrapper">
                                                     <div class="node-icon-start">
                                                         <i class="bk-icon icon-star-shape"></i>
@@ -553,8 +553,7 @@
                                                  data-type="ServiceActivity">
                                                 <div class="node-wrapper">
                                                     <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">一级分析</p>
+                                                        <p class="node-title"></p>
                                                     </div>
                                                     <div class="node-icon">
                                                         <i class="bk-icon icon-data"></i>
@@ -566,8 +565,7 @@
                                                  data-type="dataCog">
                                                 <div class="node-wrapper">
                                                     <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">实时加载</p>
+                                                        <p class="node-title"></p>
                                                     </div>
                                                     <div class="node-icon">
                                                         <i class="bk-icon icon-cog"></i>
@@ -579,8 +577,7 @@
                                                  data-type="dataFilter">
                                                 <div class="node-wrapper">
                                                     <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">离线计算</p>
+                                                        <p class="node-title"></p>
                                                     </div>
                                                     <div class="node-icon">
                                                         <i class="bk-icon icon-circle"></i>
@@ -626,6 +623,9 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            location : '',
+            line:'',
+            old_html:'',
             msg1:'',
             job2: [],                                   //作业模板
             flow2: [],                                  //流程模板
@@ -1377,8 +1377,8 @@
                 }
             },
             flow_change(value){
-                var location = ''
-                var line=''
+                vm.location =''
+                vm.line=''
                 axios({
                     method:'post',
                     url:'${SITE_URL}monitor/flow_change/',
@@ -1387,10 +1387,82 @@
                     }
                 }).then(function (res) {
                     {
-                        location = res.data.activities
-                        line = res.data.flows
+                        var aa="<div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width: 100%;position: relative;\">\n" +
+                            "\n" +
+                            "                                        <div class=\"workflow-canvas\" style=\"margin-left: 0px;padding-left: 0px\">\n" +
+                            "                                            <!-- 画布模板 start -->\n" +
+                            "                                            <div class=\"jtk-content\">\n" +
+                            "                                                <div class=\"jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan\"\n" +
+                            "                                                     id=\"canvas\" style=\"height:500px\">\n" +
+                            "                                                    <!-- 流程 -->\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "                                            <!-- 画布模板 end -->\n" +
+                            "\n" +
+                            "                                        </div>\n" +
+                            "\n" +
+                            "    <!-- template 模板-->\n" +
+                            "                                        <div class=\"jtk-delete jtk-none \">删除节点</div>\n" +
+                            "                                        <div id=\"template\" class=\"jtk-none\">\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\"\n" +
+                            "                                                 data-type=\"EmptyEndEvent\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-icon-start\">\n" +
+                            "                                                        <i class=\"bk-icon icon-star-shape\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "                                             <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\"\n" +
+                            "                                                  data-type=\"EmptyStartEvent\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-icon-start\">\n" +
+                            "                                                        <i class=\"bk-icon icon-star-shape\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node database-node\" id=\"{charts}\"\n" +
+                            "                                                 data-type=\"ServiceActivity\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-content\">\n" +
+                            "                                                        <p class=\"node-title\"></p>\n" +
+                            "                                                    </div>\n" +
+                            "                                                    <div class=\"node-icon\">\n" +
+                            "                                                        <i class=\"bk-icon icon-data\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node cog-node\" id=\"{charts}\"\n" +
+                            "                                                 data-type=\"dataCog\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-content\">\n" +
+                            "                                                        <p class=\"node-title\"></p>\n" +
+                            "                                                    </div>\n" +
+                            "                                                    <div class=\"node-icon\">\n" +
+                            "                                                        <i class=\"bk-icon icon-cog\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node filter-node\" id=\"{charts}\"\n" +
+                            "                                                 data-type=\"dataFilter\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-content\">\n" +
+                            "                                                        <p class=\"node-title\"></p>\n" +
+                            "                                                    </div>\n" +
+                            "                                                    <div class=\"node-icon\">\n" +
+                            "                                                        <i class=\"bk-icon icon-circle\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "                                        </div>\n" +
+                            "                                    </div>"
+                        $('#flow_canvas').html(aa)
+                        vm.location = res.data.activities
+                        vm.line = res.data.flows
                         //显示流程单元中的预览图
                         $('#flow1').dataflow({
+
                             el: '.tool', //流程拖动源
                             canvas: '#canvas', //画布
                             arrowWidth: 8,
@@ -1398,14 +1470,19 @@
                             template: '#template',
                             data:
                                 {
-                                    "line": line, "location": location
+                                    "line": vm.line, "location": vm.location
 
                                 }
                         });
+
+                        $('.node-icon').css('top','-7px')
+                        let old_html  = $('#canvas').html()
+                        $('#canvas').html('<div style="transform: scale(0.65)">'+old_html+'</div>')
                     }
                 })
 
             },
+
             edit3(row) {
                      {
                          vm.monitor_name = '';

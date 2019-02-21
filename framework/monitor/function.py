@@ -361,10 +361,9 @@ def get_desc(request, id):
     Cookie="keyA=1";
     for key in request.COOKIES:
         Cookie = "%s;%s=%s"%(Cookie,key,request.COOKIES[key]);
-    print("Cookie=%s"%(Cookie));
     headers['Cookie'] = Cookie;
     headers['X-CSRFToken'] = csrftoken;
-    a_url="http://paas.bk.com/o/bk_sops/api/v3/template/4/";
+    a_url="http://paas.bk.com/o/bk_sops/api/v3/template/{}/".format(id[0]['id']);
     req=requests.get(url=a_url,headers=headers)
     req.encoding=req.apparent_encoding
     req.raise_for_status()
@@ -384,12 +383,12 @@ def flow_change(request):
     location = res1['location']
     for l in location:
         if l['id']==start_event['id']:
-            start_event['x'] = l['x']*0.48
+            start_event['x'] = l['x']*0.5
             start_event['y'] = l['y']
     end_event = res1['end_event']   #结束节点信息
     for l in location:
         if l['id']==end_event['id']:
-            end_event['x'] = l['x']*0.48
+            end_event['x'] = l['x']*0.5
             end_event['y'] = l['y']
 
     activities2.append(start_event)
@@ -402,7 +401,7 @@ def flow_change(request):
         activities1['name'] = activities[key]['name']
         for l in location:
             if l['id']==activities1['id']:
-                activities1['x'] = l['x']*0.48
+                activities1['x'] = l['x']*0.5
                 activities1['y'] = l['y']
                 activities2.append(activities1)
     flows1=[]
