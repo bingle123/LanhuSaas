@@ -3,17 +3,14 @@ from __future__ import division
 from common.log import logger
 import json
 import requests
-import math
 from models import *
 from monitorScene.models import Scene
 from DataBaseManage.models import Conn
-from DataBaseManage import function as f
 import tools
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
 from django.db.models import Q
 import pymysql as MySQLdb
-import pymssql
 from market_day import function
 from market_day import celery_opt as co
 from DataBaseManage.function import decrypt_str
@@ -45,7 +42,7 @@ def unit_show(request):
         param1 = {
             "bk_biz_id": 2,
         }
-        client = tools.interface_param (request)
+        client = tools.user_interface_param()
         res = client.job.get_job_list(param)
         res1 = client.sops.get_template_list(param1)
         if res.get('result'):
