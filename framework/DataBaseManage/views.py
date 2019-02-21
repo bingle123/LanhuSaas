@@ -110,6 +110,15 @@ def delete_muenu(request,id):
 
 # 获取名称
 def get_conname(request):
-
     res = function.get_conname(request)
+    return render_json(res)
+
+# 获取所有角色对应菜单
+def get_roleAmuenus(request):
+    res = function.get_roleAmuenus(request)
+    return render_json(res)
+
+# 获取勾选id
+def checked_menu(request):
+    res = function.checked_menu(request)
     return render_json(res)
