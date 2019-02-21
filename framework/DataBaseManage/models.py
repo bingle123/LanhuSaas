@@ -23,4 +23,7 @@ class Muenu(models.Model):
 
 class Role(models.Model):
     rname = models.CharField(u'角色',max_length=255)
-    muenu = models.ManyToManyField(Muenu)
+
+class rm(models.Model):
+    roleid = models.IntegerField(u'角色id')
+    muenuid = models.IntegerField(u'菜单id')
