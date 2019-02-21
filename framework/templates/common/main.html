@@ -92,7 +92,7 @@
                 <template>
                     <div id="app">
                             <iframe  v-show="isarr" class="ifa" scrolling=auto
-                            :src=clickhtml
+                            :src="'${SITE_URL}'+clickhtml"
                             frameborder="0"  height="800px;"></iframe>
                     </div>
                 </template>
