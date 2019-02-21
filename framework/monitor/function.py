@@ -199,7 +199,7 @@ def edit_unit(request):
         add_dic['status'] = 0
         add_dic['editor'] = user['data']['bk_username']
         Monitor.objects.filter(monitor_name=res['monitor_name']).update(**add_dic)
-        function.edit_unit_task(add_dicx=add_dic)
+        function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
     except Exception as e:
         result = tools.error_result(e)
@@ -207,37 +207,22 @@ def edit_unit(request):
 
 
 def basic_test(request):
-    res = json.loads(request.body)
+    info = json.loads(request.body)
     result = []
-    gather_rule = res['gather_rule']
-    item_id = res['id']
-    gather_params = res['gather_params']
-    params = res['params']
-    info = {
-        'id': item_id,
-        'gather_params': gather_params,
-        'gather_rule': gather_rule,
-        'params': params
-    }
     gather_data(info)
-    gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(item_id)
-    db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306)
+    gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
+    db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306,charset='utf8')
     cursor = db.cursor()
     cursor.execute(gather_rule2)
     results = cursor.fetchall()
-    if 'sql'== gather_params:
-        dic = {}
-        for i in results:
-            dic1 = {
-                i[0]: i[1],
-                'gather_status': i[2]
-            }
-            dic = dict(dic, **dic1)
-        result.append(dic)
-    if 'file' == gather_params:
-        result = results
-    if 'interface' == gather_params:
-        result = results
+    dic = {}
+    for i in results:
+        dic1 = {
+            i[0]: i[1],
+            'gather_status': i[2]
+        }
+        dic = dict(dic, **dic1)
+    result.append(dic)
     db.close()
     return result
 
@@ -399,8 +384,39 @@ def flow_change(request):
         # flows3['source'] = str(flows2[key]['source'])
         # flows3['target'] = str(flows2[key]['target'])
         flows1.append(flows3)
+    constants1= []
+    constants = res1['constants']
+    for key in constants:
+        constants2={}
+        constants2['name']=constants[key]["name"]
+        constants2['value']=constants[key]["value"]
+        constants2['key']=constants[key]["key"]
+        constants1.append(constants2)
     pipeline_tree={
         'activities':activities2,
-        'flows':flows1
+        'flows':flows1,
+        'constants':constants1
     }
     return pipeline_tree
+
+def node_name(request):
+    id = json.loads(request.body)
+    res = get_desc(request, id['id'])
+    res1 = json.loads(res['pipeline_tree'])
+    activities2 = []
+    location = res1['location']
+    activities = res1['activities']
+    for key in activities:
+        activities1 = {}
+        activities1['name'] = activities[key]['name']
+        activities2.append(activities1)
+    pipeline_tree = {
+        'activities': activities2
+    }
+    return pipeline_tree
+
+def flow_gather_test(req):
+    res=json.loads(req.body)
+    res['id']=0
+    tools.flow_gather_task(info=res)
+    return 'success'

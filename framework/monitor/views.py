@@ -83,3 +83,7 @@ def flow_change(request):
     """
     res = function.flow_change(request)
     return render_json(res)
+
+def node_name(request):
+    res = function.node_name(request)
+    return render_json(res)

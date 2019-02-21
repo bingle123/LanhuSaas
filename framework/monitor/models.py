@@ -53,7 +53,7 @@ class Job(models.Model):
 
 class Flow(models.Model):
     flow_id = models.PositiveIntegerField(verbose_name=u'关联ID')
-    instance_id = models.PositiveIntegerField(verbose_name=u'作业实列ID')
+    instance_id = models.PositiveIntegerField(verbose_name=u'流程实列ID')
     status = models.PositiveIntegerField(verbose_name=u'节点状态')
     test_flag = models.PositiveIntegerField(verbose_name=u'测试标识')
     start_time = models.DateTimeField(verbose_name=u'开始时间')

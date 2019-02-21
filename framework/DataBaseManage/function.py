@@ -132,12 +132,9 @@ def delete_conn(request,id):
 def get_conname(request):
     try:
         res = request.body
-        print res
-        res_obj = Conn.objects.filter(id=res)
-        for i in res_obj:
-            sql_name = i.connname
-
-        reslut =  tools.success_result(sql_name)
+        res_obj = Conn.objects.get(id=res)
+        conn = model_to_dict(res_obj)
+        reslut =  tools.success_result(conn)
     except Exception as e:
         reslut = tools.error_result(e)
     return reslut
