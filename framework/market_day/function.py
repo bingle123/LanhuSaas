@@ -75,15 +75,23 @@ def add_unit_task(add_dicx):
         'hour': starthour + '-' + endhour,
         'minute': '*/' + str(period / 60),
     }
-    info = {
-        'id':id,
-        'gather_params': add_dicx['gather_params'],
-        'params': add_dicx['params'],
-        'gather_rule': add_dicx['gather_rule'],
-    }
     if type=='基本单元类型' or type=='图表单元类型':
+        info = {
+            'id': id,
+            'gather_params': add_dicx['gather_params'],
+            'params': add_dicx['params'],
+            'gather_rule': add_dicx['gather_rule'],
+        }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,task_args=info, desc=schename)
     elif type=='作业单元类型':
+        info = {
+            'params' : add_dicx['params'],  # ip
+            'gather_params' : add_dicx['gather_params'],
+            'job_id': [{
+                'name': add_dicx['gather_rule'],
+                'id': add_dicx['jion_id']
+            }]
+        }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_two', crontab_time=ctime,task_args=info, desc=schename)
     elif type=='流程单元类型':
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_thrid', crontab_time=ctime,task_args=info, desc=schename)

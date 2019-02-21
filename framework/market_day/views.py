@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_page
 import tasks
 import os
+from shell_app import tools
 def get_holiday(req):
     days=function.get_holiday(req)
     return render_json(days)
@@ -32,9 +33,13 @@ def addone(req,date):
     return render_json(flag)
 
 def cedemo(req):
-    flag=function.addperdic_task()
-    return HttpResponse(flag)
-
+    client=tools.interface_param(req)
+    param={
+        "bk_biz_id": "2",
+        "task_id": "15"
+    }
+    res=client.sops.get_task_status(param)
+    return render_json(res['data']['children'])
 def statusdemo(req):
     function.add_unit_task()
     return HttpResponse('ok')
