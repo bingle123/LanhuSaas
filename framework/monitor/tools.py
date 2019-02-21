@@ -145,9 +145,9 @@ def job_interface(res):
             log = client.job.get_job_instance_log(log_params)
         json_data = log['data'][0]['step_results'][0]['ip_logs'][0]['log_content']
         if log['data'][0]['status'] ==3:
-            status=3
+            status=1
         else:
-            status = -1
+            status = -2
         res1 = success_result(job_list)
     except Exception as e:
         res1 = error_result(e)
