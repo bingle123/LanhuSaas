@@ -1023,7 +1023,6 @@
                         for(var i=0;i<temp3.length;i++){
                             temp4.push(temp3[i][0])
                         }
-                        console.log(temp1[0])
                         $("#text2").html("")
                          for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                              if(j<temp4.length){
@@ -1105,16 +1104,16 @@
                         for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                             if (i == flag2) {
                                 $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
-                                if (icon4 == 'success') {
+                                if (icon4 == 1) {
                                      $("#text2").append("<div class=\"circle1\"></div>");
                                  }
                                  if (icon4 == 2) {
                                      $("#text2").append("<div class=\"circle2\"></div>");
                                  }
-                                 if (icon4 == 'empty') {
+                                 if (icon4 == 0) {
                                      $("#text2").append("<div class=\"circle3\"></div>");
                                  }
-                                 if (icon4 == 'error') {
+                                 if (icon4 == -1) {
                                      $("#text2").append("<div class=\"circle4\"></div>");
                                  }
                             } else {
