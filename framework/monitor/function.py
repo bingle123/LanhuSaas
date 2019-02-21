@@ -198,7 +198,7 @@ def basic_test(request):
     gather_params = res['gather_params']
     params = res['params']
     if 'sql'== gather_params:
-        gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = " + str(item_id)
+        gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(item_id)
         sql = Conn.objects.get(id=server_url)
         password = f.decrypt_str(sql.password)
         info = {
@@ -213,7 +213,7 @@ def basic_test(request):
             db = pymssql.connect(sql.ip, sql.username, password, sql.databasename)
 
     if 'file' == gather_params:
-        gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = " + str(item_id)
+        gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(item_id)
         db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1',port=3306)
         info = {
             'id': item_id,
@@ -223,7 +223,7 @@ def basic_test(request):
         }
 
     if 'interface' == gather_params:
-        gather_rule2 = "select data_key,data_value,gather_status from td_gather_data where item_id = " + str(item_id)
+        gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(item_id)
         db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1',port=3306)
         info = {
             'id': item_id,
@@ -240,7 +240,7 @@ def basic_test(request):
     for i in results:
         dic1 = {
             i[0]:i[1],
-            'gather_status':i[2]
+            'gather_error_log':i[2]
         }
         dic =  dict( dic, **dic1 )
     result.append(dic)
@@ -367,6 +367,7 @@ def chart_get_test(request):
         else:
             print column_name_temp[i].split('=')
             execute_sql += (column_name_temp[i].split('=')[-1])
+            column_name_list.append(column_name_temp[i].split('=')[0])
     print execute_sql
     # 更具数据库ID查询数据库配置
     database_result = list(Conn.objects.filter(id=database_id).values())
