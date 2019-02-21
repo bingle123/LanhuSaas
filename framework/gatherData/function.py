@@ -151,7 +151,8 @@ def fi_kv_process(json_dict):
 # 采集方法，返回参数gather_status为ok采集正常，返回empty采集结果为空，返回error采集规则错误
 def gather_data(info):
     # 采集测试参数初始化
-    info = gather_test_init()
+    # info = gather_test_init()
+    print info['gather_error_log']
     # 获取数据采集的类型
     gather_type = info['gather_params']
     # 采集数据库中的数据
@@ -314,8 +315,12 @@ def gather_data(info):
     # 数据采集完毕后使用告警规则检查数据合法性
     elif "space_interface" == gather_type:
         now = datetime.datetime.now ().strftime ('%Y-%m-%d %H:%M:%S')
-        TDGatherData (item_id=info['id'], gather_time=now, data_key=info['message'], data_value=info['message_value'],
-                      gather_error_log='success').save ()
+        if info['data_key'] == 3:
+            TDGatherData (item_id=info['id'], gather_time=now, data_key=info['data_key'], data_value=info['data_value'],
+                          gather_error_log=info['gather_error_log'],instance_id = info['instance_id']).save()
+        else:
+            TDGatherData (item_id=info['id'], gather_time=now, data_key=info['data_key'], data_value=info['data_value'],
+                          gather_error_log=info['gather_error_log'],instance_id = info['instance_id']).save ()
     if None != info['id']:
         rule_check(info['id'])
     return 'success'

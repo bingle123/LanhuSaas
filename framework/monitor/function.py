@@ -131,7 +131,6 @@ def delete_unit(request):
 def add_unit(request):
     try:
         res = json.loads(request.body)
-        print(res)
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
         add_dic = res['data']
@@ -312,9 +311,7 @@ def chart_get_test(request):
         if i==0 or i==len(column_name_temp)-1:
             execute_sql+=column_name_temp[i]
         else:
-            print column_name_temp[i].split('=')
             execute_sql += (column_name_temp[i].split('=')[-1])
-    print execute_sql
     # 更具数据库ID查询数据库配置
     database_result = list(Conn.objects.filter(id=database_id).values())
     # 数据库参数
@@ -355,7 +352,6 @@ def get_desc(request, id):
     Cookie="keyA=1";
     for key in request.COOKIES:
         Cookie = "%s;%s=%s"%(Cookie,key,request.COOKIES[key]);
-    print("Cookie=%s"%(Cookie));
     headers['Cookie'] = Cookie;
     headers['X-CSRFToken'] = csrftoken;
     a_url="http://paas.bk.com/o/bk_sops/api/v3/template/4/";

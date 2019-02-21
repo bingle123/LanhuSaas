@@ -5,6 +5,8 @@ import base64
 from account.models import *
 from blueking.component.shortcuts import *
 from gatherData.function import gather_data
+import time
+from monitor.models import Job
 
 
 def error_result(e):
@@ -125,20 +127,42 @@ def job_interface(res):
         job = client.job.execute_job(job_params)
         if job.get ('result'):
             job_list = job.get ('data')
+            job_instance_id = job_list['job_instance_id']
         else:
             job_list = []
+            job_instance_id = 0
             logger.error (u"请求作业模板失败：%s" % job.get ('message'))
+        log_params = {
+            "bk_biz_id": "2",
+            "job_instance_id": job_instance_id
+        }
+        log = client.job.get_job_instance_log(log_params)
+        while 'True' != str (log['data'][0]['is_finished']):
+            time.sleep(3)
+            log = client.job.get_job_instance_log(log_params)
+        json_data = log['data'][0]['step_results'][0]['ip_logs'][0]['log_content']
+        if log['data'][0]['status'] ==3:
+            status=3
+        else:
+            status = -1
         res1 = success_result(job_list)
-        data = res1['results']['message']
-
     except Exception as e:
         res1 = error_result(e)
-        data = res1['message']
+        status = -1
+    name_status  = job['data']['job_instance_name']
     info = {
-        'id': res['id'],  # 关联id
-        'message': "message",  # 状态
-        'message_value': data,  # 状态值
-        'gather_params': 'space_interface'  # 类型
+        'id': res['id'],                       # 关联id
+        'data_key': name_status,               # 状态key
+        'gather_params': 'space_interface',  # 类型
+        'data_value':status,                   #状态value
+        'gather_error_log': {                 #采集数据
+            'data_key':json_data
+        } ,
+        'instance_id': job_list['job_instance_id']     #实列id
     }
     gather_data (info)
+    if res['id']==0:
+        Job(instance_id=job_instance_id,status=status,test_flag=0,job_log=info['gather_error_log'],job_id=bk_job_id).save()
+    else:
+        Job (instance_id=job_instance_id, status=status, test_flag=1,job_log=info['gather_error_log'],job_id=bk_job_id).save()
     return res1
