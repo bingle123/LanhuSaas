@@ -131,7 +131,6 @@ def delete_unit(request):
 def add_unit(request):
     try:
         res = json.loads(request.body)
-        print(res)
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
         add_dic = res['data']
@@ -213,47 +212,32 @@ def basic_test(request):
     gather_rule = res['gather_rule']
     item_id = res['id']
     gather_params = res['gather_params']
-    server_url = res['server_url']
-    gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(item_id)
+    params = res['params']
     info = {
         'id': item_id,
         'gather_params': gather_params,
-        'gather_rule': gather_rule
+        'gather_rule': gather_rule,
+        'params': params
     }
-    if 'sql'== gather_params:
-        #sql = Conn.objects.get(id=server_url)
-        #password = f.decrypt_str(sql.password)
-        info2 = {
-            'params': server_url,
-        }
-        #if sql.type == 'MySQL' or sql.type == 'Oracle':
-        #   db = MySQLdb.connect(host=sql.ip, user=sql.username, passwd=password, db=sql.databasename,port=int(sql.port))
-        #if sql.type == 'SQL Server':
-        #    db = pymssql.connect(sql.ip, sql.username, password, sql.databasename)
-    if 'file' == gather_params:
-        file_param = res['file_param']
-        info2 = {
-            'params': server_url +' '+file_param,
-        }
-    if 'interface' == gather_params:
-        file_param = res['file_param']
-        info2 = {
-            'params': server_url +','+file_param,
-        }
-    info = dict(info, **info2)
-    db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306)
     gather_data(info)
+    gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(item_id)
+    db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306)
     cursor = db.cursor()
     cursor.execute(gather_rule2)
     results = cursor.fetchall()
-    dic = {}
-    for i in results:
-        dic1 = {
-            i[0]:i[1],
-            'gather_status':i[2]
-        }
-        dic =  dict( dic, **dic1 )
-    result.append(dic)
+    if 'sql'== gather_params:
+        dic = {}
+        for i in results:
+            dic1 = {
+                i[0]: i[1],
+                'gather_status': i[2]
+            }
+            dic = dict(dic, **dic1)
+        result.append(dic)
+    if 'file' == gather_params:
+        result = results
+    if 'interface' == gather_params:
+        result = results
     db.close()
     return result
 
@@ -314,6 +298,7 @@ def chart_get_test(request):
         else:
             print column_name_temp[i].split('=')
             execute_sql += (column_name_temp[i].split('=')[-1])
+            column_name_list.append(column_name_temp[i].split('=')[0])
     print execute_sql
     # 更具数据库ID查询数据库配置
     database_result = list(Conn.objects.filter(id=database_id).values())
@@ -355,10 +340,9 @@ def get_desc(request, id):
     Cookie="keyA=1";
     for key in request.COOKIES:
         Cookie = "%s;%s=%s"%(Cookie,key,request.COOKIES[key]);
-    print("Cookie=%s"%(Cookie));
     headers['Cookie'] = Cookie;
     headers['X-CSRFToken'] = csrftoken;
-    a_url="http://paas.bk.com/o/bk_sops/api/v3/template/4/";
+    a_url="http://paas.bk.com/o/bk_sops/api/v3/template/{}/".format(id[0]['id']);
     req=requests.get(url=a_url,headers=headers)
     req.encoding=req.apparent_encoding
     req.raise_for_status()
@@ -378,12 +362,12 @@ def flow_change(request):
     location = res1['location']
     for l in location:
         if l['id']==start_event['id']:
-            start_event['x'] = l['x']*0.48
+            start_event['x'] = l['x']*0.5
             start_event['y'] = l['y']
     end_event = res1['end_event']   #结束节点信息
     for l in location:
         if l['id']==end_event['id']:
-            end_event['x'] = l['x']*0.48
+            end_event['x'] = l['x']*0.5
             end_event['y'] = l['y']
 
     activities2.append(start_event)
@@ -396,7 +380,7 @@ def flow_change(request):
         activities1['name'] = activities[key]['name']
         for l in location:
             if l['id']==activities1['id']:
-                activities1['x'] = l['x']*0.48
+                activities1['x'] = l['x']*0.5
                 activities1['y'] = l['y']
                 activities2.append(activities1)
     flows1=[]
