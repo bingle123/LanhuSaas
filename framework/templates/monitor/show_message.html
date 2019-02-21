@@ -198,7 +198,6 @@
                             </div>
                             <div style="padding: 0px 20%">
                                 <div style="height: 20px"></div>
-                                <el-button type="primary" @click="test">TEST</el-button>
                             </div>
                         </div></el-col>
                     </el-row>
@@ -637,6 +636,7 @@
             line:'',
             old_html:'',
             msg1:'',
+            sql_id:'',
             add_pamas:0,                                        //新增编辑判断
             font_size_range:[20,22,24,26,28,30,32,34,36,38,40],   //字体大小
             job2: [],                                   //作业模板
@@ -877,14 +877,6 @@
             person_count:'',
         },
         methods: {
-            test: function(){
-                axios({
-                    method: 'post',
-                    url: '${SITE_URL}gatherData/gather_data',
-                }).then(function (res) {
-                    console.log(res.data.message)
-                })
-            },
             basic_size(){
               $("#text2").find("*").css("font-size",this.basic.font_size)
             },
@@ -1016,16 +1008,11 @@
             basic_test(){
                 let params = '';
                 if (vm.sql_file_interface == 3) {
-                     params = vm.server_url
-                    alert(vm.server_url)
+                     params = vm.sql_id
                 }
-                if (vm.sql_file_interface == 6) {
-                     params = vm.server_url +' '+ vm.file_param
-                }
-                if (vm.sql_file_interface == 9) {
+                if (vm.sql_file_interface == 6  || vm.sql_file_interface == 9) {
                      params = vm.server_url +','+ vm.file_param
                 }
-                alert(params)
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/basic_test/',
@@ -1053,7 +1040,6 @@
                         for(var i=0;i<temp3.length;i++){
                             temp4.push(temp3[i][0])
                         }
-                        console.log(temp1[0])
                         $("#text2").html("")
                          for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                              if(j<temp4.length){
@@ -1068,19 +1054,28 @@
                         var icon1 = tempcontents2.split("@");
                         var icon2=[];
                         var icon3=[];
-                        var icon4=res.data.message[0]['gather_status'];
+                        var icon4='';
+                        if(res.data.message[0]['DB_CONNECTION']){
+                              icon4=res.data.message[0]['DB_CONNECTION'];
+                        }
+                        if(res.data.message[0]['URL_CONNECTION']){
+                              icon4=res.data.message[0]['URL_CONNECTION'];
+                        }
+                        if(res.data.message[0]['FILE_EXIST']){
+                              icon4=res.data.message[0]['FILE_EXIST'];
+                        }
                         $("#text2").html("")
                         $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
-                        if (icon4 == 'success') {
+                        if (icon4 == 1) {
                              $("#text2").append("<div class=\"circle1\"></div>");
                          }
                          if (icon4 == 2) {
                              $("#text2").append("<div class=\"circle2\"></div>");
                          }
-                         if (icon4 == 'empty') {
+                         if (icon4 == 0) {
                              $("#text2").append("<div class=\"circle3\"></div>");
                          }
-                         if (icon4 == 'error') {
+                         if (icon4 == -1 || icon4 == -2) {
                              $("#text2").append("<div class=\"circle4\"></div>");
                          }
                      }
@@ -1113,21 +1108,29 @@
                             }
                         }
                         icon3 = icon2[1].split("=")
-                        icon4 = res.data.message[0]['gather_status']
+                        if(res.data.message[0]['DB_CONNECTION']){
+                              icon4=res.data.message[0]['DB_CONNECTION'];
+                        }
+                        if(res.data.message[0]['URL_CONNECTION']){
+                              icon4=res.data.message[0]['URL_CONNECTION'];
+                        }
+                        if(res.data.message[0]['FILE_EXIST']){
+                              icon4=res.data.message[0]['FILE_EXIST'];
+                        }
                         $("#text2").html("")
                         for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                             if (i == flag2) {
                                 $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
-                                if (icon4 == 'success') {
+                                if (icon4 == 1) {
                                      $("#text2").append("<div class=\"circle1\"></div>");
                                  }
                                  if (icon4 == 2) {
                                      $("#text2").append("<div class=\"circle2\"></div>");
                                  }
-                                 if (icon4 == 'empty') {
+                                 if (icon4 == 0) {
                                      $("#text2").append("<div class=\"circle3\"></div>");
                                  }
-                                 if (icon4 == 'error') {
+                                 if (icon4 == -1) {
                                      $("#text2").append("<div class=\"circle4\"></div>");
                                  }
                             } else {
@@ -1264,7 +1267,13 @@
                             url: '${SITE_URL}DataBaseManage/get_conname/',
                             data:row.params,
                         }).then((res)=> {
-                            vm.server_url = res['data']['results']
+                            vm.server_url = res['data']['results']['connname']
+                            vm.sql_id = res['data']['results']['id']
+                            vm.basic_size();
+                            vm.basic_height();
+                            vm.basic_width();
+                            vm.sycontent();
+                            vm.basic_test()
                         }).catch((error) => {
                         alert('拉取数据库失败！')
                         });
@@ -1283,6 +1292,11 @@
                         vm.file1 = 'block';
                         vm.interface1 = 'none';
                         vm.basic.gather_params = 'file';
+                        vm.basic_size();
+                        vm.basic_height();
+                        vm.basic_width();
+                        vm.sycontent();
+                        vm.basic_test()
                     }
                     if (vm.sql_file_interface == 'interface') {
                         vm.sql_file_interface =9;
@@ -1294,13 +1308,12 @@
                         vm.file1 = 'none';
                         vm.interface1 = 'block';
                         vm.basic.gather_params = 'interface';
+                        vm.basic_size();
+                        vm.basic_height();
+                        vm.basic_width();
+                        vm.sycontent();
+                        vm.basic_test()
                     }
-                    vm.basic_size();
-                    vm.basic_height();
-                    vm.basic_width();
-                    vm.sycontent();
-                    vm.basic_test();
-
                 }
                 if (row.monitor_type == '图表单元类型') {
                     vm.disabled2 = true;

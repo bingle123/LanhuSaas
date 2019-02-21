@@ -207,37 +207,22 @@ def edit_unit(request):
 
 
 def basic_test(request):
-    res = json.loads(request.body)
+    info = json.loads(request.body)
     result = []
-    gather_rule = res['gather_rule']
-    item_id = res['id']
-    gather_params = res['gather_params']
-    params = res['params']
-    info = {
-        'id': item_id,
-        'gather_params': gather_params,
-        'gather_rule': gather_rule,
-        'params': params
-    }
     gather_data(info)
-    gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(item_id)
-    db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306)
+    gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
+    db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306,charset='utf8')
     cursor = db.cursor()
     cursor.execute(gather_rule2)
     results = cursor.fetchall()
-    if 'sql'== gather_params:
-        dic = {}
-        for i in results:
-            dic1 = {
-                i[0]: i[1],
-                'gather_status': i[2]
-            }
-            dic = dict(dic, **dic1)
-        result.append(dic)
-    if 'file' == gather_params:
-        result = results
-    if 'interface' == gather_params:
-        result = results
+    dic = {}
+    for i in results:
+        dic1 = {
+            i[0]: i[1],
+            'gather_status': i[2]
+        }
+        dic = dict(dic, **dic1)
+    result.append(dic)
     db.close()
     return result
 
