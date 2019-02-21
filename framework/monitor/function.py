@@ -211,23 +211,18 @@ def basic_test(request):
     result = []
     gather_data(info)
     gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
-    db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306)
+    db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306,charset='utf8')
     cursor = db.cursor()
     cursor.execute(gather_rule2)
     results = cursor.fetchall()
-    if 'sql'== info['gather_params']:
-        dic = {}
-        for i in results:
-            dic1 = {
-                i[0]: i[1],
-                'gather_status': i[2]
-            }
-            dic = dict(dic, **dic1)
-        result.append(dic)
-    if 'file' == info['gather_params']:
-        result = results
-    if 'interface' == info['gather_params']:
-        result = results
+    dic = {}
+    for i in results:
+        dic1 = {
+            i[0]: i[1],
+            'gather_status': i[2]
+        }
+        dic = dict(dic, **dic1)
+    result.append(dic)
     db.close()
     return result
 
