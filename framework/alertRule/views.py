@@ -38,3 +38,9 @@ def add_rule(request):
     rule_data = json.loads(request.body)
     status = function.add_rule(rule_data)
     return render_json(status)
+
+
+def select_rules_pagination(request):
+    page_info = json.loads(request.body)
+    selected_rules = function.select_rules_pagination(page_info)
+    return render_json(selected_rules)
