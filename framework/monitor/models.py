@@ -64,6 +64,18 @@ class Flow(models.Model):
         db_table = 'td_flow_instance'
 
 
+class flow_node(models.Model):
+    flow_id = models.PositiveIntegerField(verbose_name=u'流程ID')
+    node_name = models.CharField(verbose_name=u'节点名称',max_length=50)
+    start_time = models.TimeField (verbose_name=u'开始时间')
+    end_time = models.TimeField (verbose_name=u'结束时间')
+
+    class Meta:
+        verbose_name = u'流程节点表'
+        verbose_name_plural = u'流程节点信息'
+        db_table = 'tb_flow_node'
+
+
 class scene_monitor(models.Model):
     x = models.PositiveIntegerField(verbose_name=u'x坐标')
     y= models.PositiveIntegerField(verbose_name=u'y坐标')

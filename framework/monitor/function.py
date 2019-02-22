@@ -17,6 +17,7 @@ from market_day import celery_opt as co
 from db_connection.function import decrypt_str
 from gatherData.function import gather_data
 
+
 def unit_show(request):
     try:
         res = json.loads(request.body)
