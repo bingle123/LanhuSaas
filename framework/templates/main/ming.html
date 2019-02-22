@@ -71,16 +71,16 @@
         <el-col :span="24">
             <h1 style="rgba(40, 147, 108, 0.45);line-height: 60px;text-align: center">场景编排</h1>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="6">
             <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245)">
                 <h2 class="monitor_title" style="line-height:48px;background:#283593;text-align: center;color: #ffffff">监控项</h2>
                 <el-col :span="24">
-                        <h3 class="monitor_type">基本监控项</h3>
+                        <h3 class="monitor_type" @click="show_first">基本监控项</h3>
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in base_monitor" :key="index">
                         <div @click="add_monitor(i)">
-                            <p>{{ i }}</p>
+                            <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-monitors"></i>
                         </div>
 
@@ -89,12 +89,12 @@
                            @current-change="current_change1"></el-pagination>
                 </div>
                 <el-col :span="24">
-                        <h3 class="monitor_type">图表监控项</h3>
+                        <h3 class="monitor_type" @click="show_first">图表监控项</h3>
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in chart_monitor" :key="index">
                         <div>
-                            <p>{{ i }}</p>
+                            <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-panel-permission"></i>
                         </div>
                     </el-col>
@@ -102,12 +102,12 @@
                            @current-change="current_change2"></el-pagination>
                 </div>
                 <el-col :span="24">
-                        <h3 class="monitor_type">作业监控项</h3>
+                        <h3 class="monitor_type" @click="show_first">作业监控项</h3>
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in job_monitor" :key="index">
                         <div>
-                            <p>{{ i }}</p>
+                            <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-monitors"></i>
                         </div>
                     </el-col>
@@ -115,12 +115,12 @@
                            @current-change="current_change3"></el-pagination>
                 </div>
                 <el-col :span="24">
-                        <h3 class="monitor_type">流程监控项</h3>
+                        <h3 class="monitor_type" @click="show_first">流程监控项</h3>
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in flow_monitor" :key="index">
                         <div>
-                            <p>{{ i }}</p>
+                            <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-monitors"></i>
                         </div>
                     </el-col>
@@ -129,7 +129,7 @@
                 </div>
             </div>
         </el-col>
-        <el-col :span="20">
+        <el-col :span="18">
             <div class="monitor_content" style="min-height: 600px;background: rgb(244, 244, 245)">
             </div>
         </el-col>
@@ -138,34 +138,46 @@
 
 
 <script type="text/javascript">
+        axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
     var vm = new Vue({
         el: '#app',
         data:{
-            page_count:4,
+            page_count:100,
             page:1,
             monitor_type:0,
             limit:4,
-            base_monitor:[1,2,3,4],
-            chart_monitor:[5,6,7,8],
-            job_monitor:['a','b','c','d'],
-            flow_monitor:['q','w','e','r'],
+            base_monitor:[],
+            chart_monitor:[],
+            job_monitor:[],
+            flow_monitor:[],
             drigging_id:1,
         },
         methods:{
             show(){
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}main/scene_show/',
+                    url: '${SITE_URL}monitorScene/scene_show/',
                     data: {
                         limit:vm.limit,
                         type:vm.monitor_type,
                         page:vm.page
                     },
                 }).then((res)=> {
-                    console.log(res)
-                }).catch((error) => {
-                alert('获取数据失败！')
+                    vm.base_monitor=res.data.results.base_list;
+                    vm.chart_monitor=res.data.results.chart_list;
+                    vm.job_monitor=res.data.results.job_list;
+                    vm.flow_monitor=res.data.results.flow_list;
                 });
+            },
+            show_first(){
+                vm.monitor_type=0;
+                vm.page=1;
+                vm.show();
             },
             add_monitor(i){
                 $('.monitor_content').append('<div class=\"Drigging\" type=\"'+i+'\" id=\"'+vm.drigging_id+'\">123</div>')
@@ -174,22 +186,22 @@
             current_change1(value) {
                 vm.page = value;
                 vm.monitor_type=1;
-                vm.show()
+                vm.show();
             },
             current_change2(value) {
                 vm.page = value;
                 vm.monitor_type=2;
-                vm.show()
+                vm.show();
             },
             current_change3(value) {
                 vm.page = value;
                 vm.monitor_type=3;
-                vm.show()
+                vm.show();
             },
             current_change4(value) {
                 vm.page = value;
                 vm.monitor_type=4;
-                vm.show()
+                vm.show();
             },
 
         }
@@ -253,6 +265,7 @@
     //<p id="Drigging" class="Drigging" style="float:left">拖拽层</p>
     //<p id="Drigging1" class="Drigging" style="position: absolute;top: 150px;">拖拽层1</p>
 </script>
+
 </body>
 
 </html>
