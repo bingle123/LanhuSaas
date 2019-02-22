@@ -49,3 +49,10 @@ def pos_name(request):
 def paging(request):
     res=function.paging(request)
     return  render_json(res)
+
+
+@csrf_exempt
+def scene_show(request):
+
+    res = function.scene_show()
+    return res
