@@ -74,6 +74,7 @@ def gather_param_parse(info):
             field_end = info['gather_rule'].find('from')
             if -1 == field_end:
                 TDGatherData(item_id=info['id'], gather_time=now, data_key='DB_CONNECTION', data_value='-2', gather_error_log='gather rule missing \'from\' field').save()
+                return None
         # 获取采集规则的字段有哪些
         gather_params['rule_fields_str'] = info['gather_rule'][field_start:field_end].strip(' ')
         # 获取采集域
@@ -85,6 +86,7 @@ def gather_param_parse(info):
                 gather_params['target_field'].append(field[1])
         except Exception as e:
             TDGatherData(item_id=info['id'], gather_time=now, data_key='DB_CONNECTION', data_value='-2', gather_error_log=str(e)).save()
+            return None
         # 根据参数获取数据库连接配置
         conn_info = Conn.objects.filter(id=info['params']).get()
         # 解密存储在数据库中的数据库密码
@@ -102,26 +104,18 @@ def gather_param_parse(info):
         for key, value in json_params.items():
             info['gather_rule'] = info['gather_rule'].replace('${%s}' % key, value)
         gather_params['extra_param']['url'] = interface_params[0]
-        print '-------------file execute script--------'
-        print info['gather_rule']
-        print '----------------------------------------'
         gather_params['gather_rule'] = info['gather_rule']
+        print '-------------file execute script--------'
+        print gather_params['gather_rule']
+        print '----------------------------------------'
     elif 'file' == info['gather_params']:
         file_params = info['params'].split('#')
-        try:
-            json_params = json.loads(file_params[1])
-        except Exception as e:
-            TDGatherData(item_id=info['id'], gather_time=now, data_key='FILE_EXIST', data_value='-3',gather_error_log=str(e)).save()
-            return None
-        for key, value in json_params.items():
-            if 'file_path' == key:
-                gather_params['extra_param']['file_path'] = value
-                info['gather_rule'] = info['gather_rule'].replace('${%s}' % key, value)
+        gather_params['extra_param']['file_path'] = file_params[1]
         gather_params['extra_param']['file_server'] = file_params[0]
+        gather_params['gather_rule'] = info['gather_rule'].replace('${file_path}', gather_params['extra_param']['file_path'])
         print '-------------file execute script--------'
-        print info['gather_rule']
+        print gather_params['gather_rule']
         print '----------------------------------------'
-        gather_params['gather_rule'] = info['gather_rule']
     elif 'space_interface' == info['gather_params']:
         pass
     return gather_params
@@ -189,6 +183,8 @@ def gather_data(info):
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         # 获取采集参数
         gather_params = gather_param_parse(info)
+        if None is gather_params:
+            return "error"
         # 生成数据库采集使用的sql
         gather_sql = info['gather_rule'].replace(gather_params['rule_fields_str'], ','.join(gather_params['target_field']))
         # 获取数据库连接参数
@@ -240,6 +236,8 @@ def gather_data(info):
         # 测试开启
         # info['gather_rule'] = load_script_content('URL_TEST')
         gather_params = gather_param_parse(info)
+        if None is gather_params:
+            return "error"
         ping_script = base64.b64encode(load_script_content('URL_CONNECTION').replace('${url}', gather_params['extra_param']['url']))
         res1 = execute_script(client, ping_script, None, info['id'], 'URL_CONNECTION', settings.GATHER_DATA_HOST)
         if None is res1:
