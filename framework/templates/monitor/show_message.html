@@ -1572,7 +1572,43 @@
             },
             canvas_new() {
                 if(vm.liucheng == 'block'){
+                    var node_id=''
+                    var start_time=''
+                    var end_time=''
+                    var node_times=[]
+                    for(var i=2;i<=vm.location.length-1;i++){
+                            var node_time={}
+                            node_time.node_id= vm.location[i].id ,
+                            node_time.starttime= $('#' + vm.location[i].id + '').find('.start_time').text(),
+                             node_time.endtime= $('#' + vm.location[i].id + '').find('.end_time').text()
+                            node_time.node_name=   $('#' + vm.location[i].id + '').find('.node-title').text()
+                            node_times.push(node_time)
 
+                    }
+                    var period = $('#period').val()
+                    var template_list = vm.template_list
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}monitor/start_flow_task/',
+                        data: {
+                            'period': period,
+                            'template_list': template_list,
+                            'node_times': node_times,
+                            'monitor_name':vm.monitor_name,
+                            'monitor_type':vm.monitor_type,
+                            'constants':vm.constants
+                        }
+                    }).then(function (res) {
+                        axios({
+                            method:'post',
+                            url:'${SITE_URL}monitor/node_state/',
+                            data:{
+                                'item_id':res.data
+                            }
+                        }).then(function (res) {
+                            console.log(res)
+                        })
+                    })
                 }else if(vm.liucheng == 'none'){
 
                     var period = $('#period').val()
@@ -1646,35 +1682,6 @@
             change3(value) {
                 if (value == 1) {
                     vm.liucheng = 'block';
-                    var node_id=''
-                    var start_time=''
-                    var end_time=''
-                    var node_times=[]
-                    for(var i=2;i<=vm.location.length-1;i++){
-                            var node_time={}
-                            node_time.node_id= vm.location[i].id ,
-                            node_time.starttime= $('#' + vm.location[i].id + '').find('.start_time').text(),
-                             node_time.endtime= $('#' + vm.location[i].id + '').find('.end_time').text()
-                            node_time.node_name=   $('#' + vm.location[i].id + '').find('.node-title').text()
-                            node_times.push(node_time)
-
-                    }
-                    var period = $('#period').val()
-                    var template_list = vm.template_list
-                    axios({
-                        method: 'post',
-                        url: '${SITE_URL}monitor/start_flow_task/',
-                        data: {
-                            'period': period,
-                            'template_list': template_list,
-                            'node_times': node_times,
-                            'monitor_name':vm.monitor_name,
-                            'monitor_type':vm.monitor_type,
-                            'constants':vm.constants
-                        }
-                    }).then(function (res) {
-                        console.log(res)
-                    })
                 } else {
                     vm.liucheng = 'none';
                 }

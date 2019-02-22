@@ -104,7 +104,8 @@ def add_unit_task(add_dicx):
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_two', crontab_time=ctime,task_args=info, desc=schename)
     elif type=='流程单元类型':
-        template_id=add_dicx['template_id']
+        template_list=add_dicx['template_list']
+        period=add_dicx['period']
         node_times=add_dicx['node_times']
         constants=add_dicx['constants']
         print node_times[-1]
