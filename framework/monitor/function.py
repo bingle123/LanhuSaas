@@ -3,17 +3,14 @@ from __future__ import division
 from common.log import logger
 import json
 import requests
-import math
 from models import *
 from monitorScene.models import Scene
 from DataBaseManage.models import Conn
-from DataBaseManage import function as f
 import tools
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
 from django.db.models import Q
 import pymysql as MySQLdb
-import pymssql
 from market_day import function
 from market_day import celery_opt as co
 from DataBaseManage.function import decrypt_str
@@ -45,7 +42,7 @@ def unit_show(request):
         param1 = {
             "bk_biz_id": 2,
         }
-        client = tools.interface_param (request)
+        client = tools.user_interface_param()
         res = client.job.get_job_list(param)
         res1 = client.sops.get_template_list(param1)
         if res.get('result'):
@@ -152,25 +149,6 @@ def add_unit(request):
         add_dic['creator'] = user['data']['bk_username']
         add_dic['editor'] = user['data']['bk_username']
         Monitor.objects.create(**add_dic)
-        if res['monitor_type'] == 'third':
-            unit_obj = Monitor.objects.all().last()
-            id = unit_obj.id
-            tools_params = {
-                'params':res['data']['params'],
-                'job_id':[{
-                    'name': add_dic['gather_rule'],
-                    'id': add_dic['jion_id']
-                }],
-                'gather_params':res['data']['gather_params']
-            }
-            tools_res = tools.job_interface(tools_params)
-            info = {
-            'id': id,                                     #关联id
-            'message': "message",                       #状态
-            'message_value': tools_res['message'],     #状态值
-            'gather_params': 'space_interface'        #类型
-            }
-            gather_data(info)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
     except Exception as e:
@@ -199,7 +177,7 @@ def edit_unit(request):
         add_dic['status'] = 0
         add_dic['editor'] = user['data']['bk_username']
         Monitor.objects.filter(monitor_name=res['monitor_name']).update(**add_dic)
-        function.edit_unit_task(add_dicx=add_dic)
+        function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
     except Exception as e:
         result = tools.error_result(e)
@@ -384,8 +362,39 @@ def flow_change(request):
         # flows3['source'] = str(flows2[key]['source'])
         # flows3['target'] = str(flows2[key]['target'])
         flows1.append(flows3)
+    constants1= []
+    constants = res1['constants']
+    for key in constants:
+        constants2={}
+        constants2['name']=constants[key]["name"]
+        constants2['value']=constants[key]["value"]
+        constants2['key']=constants[key]["key"]
+        constants1.append(constants2)
     pipeline_tree={
         'activities':activities2,
-        'flows':flows1
+        'flows':flows1,
+        'constants':constants1
     }
     return pipeline_tree
+
+def node_name(request):
+    id = json.loads(request.body)
+    res = get_desc(request, id['id'])
+    res1 = json.loads(res['pipeline_tree'])
+    activities2 = []
+    location = res1['location']
+    activities = res1['activities']
+    for key in activities:
+        activities1 = {}
+        activities1['name'] = activities[key]['name']
+        activities2.append(activities1)
+    pipeline_tree = {
+        'activities': activities2
+    }
+    return pipeline_tree
+
+def flow_gather_test(req):
+    res=json.loads(req.body)
+    res['id']=0
+    tools.flow_gather_task(info=res)
+    return 'success'

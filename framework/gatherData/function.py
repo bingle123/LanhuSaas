@@ -312,8 +312,12 @@ def gather_data(info):
     # 数据采集完毕后使用告警规则检查数据合法性
     elif "space_interface" == gather_type:
         now = datetime.datetime.now ().strftime ('%Y-%m-%d %H:%M:%S')
-        TDGatherData (item_id=info['id'], gather_time=now, data_key=info['message'], data_value=info['message_value'],
-                      gather_error_log='success').save ()
+        if info['data_key'] == 3:
+            TDGatherData (item_id=info['id'], gather_time=now, data_key=info['data_key'], data_value=info['data_value'],
+                          gather_error_log=info['gather_error_log'],instance_id = info['instance_id']).save()
+        else:
+            TDGatherData (item_id=info['id'], gather_time=now, data_key=info['data_key'], data_value=info['data_value'],
+                          gather_error_log=info['gather_error_log'],instance_id = info['instance_id']).save ()
     if None != info['id']:
         rule_check(info['id'])
     return 'success'

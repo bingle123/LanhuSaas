@@ -42,8 +42,8 @@ class Job(models.Model):
     instance_id = models.PositiveIntegerField(verbose_name=u'作业实列ID')
     status = models.PositiveIntegerField(verbose_name=u'作业状态')
     test_flag = models.PositiveIntegerField(verbose_name=u'测试标识')
-    start_time = models.DateTimeField(verbose_name=u'开始时间')
-    job_log = models.CharField(verbose_name=u'作业日志', max_length=500)
+    start_time = models.TimeField(verbose_name=u'开始时间',auto_now_add=True)
+    job_log = models.CharField(verbose_name=u'作业日志', max_length=5000)
 
     class Meta:
         verbose_name = u'作业实列表'
@@ -53,10 +53,10 @@ class Job(models.Model):
 
 class Flow(models.Model):
     flow_id = models.PositiveIntegerField(verbose_name=u'关联ID')
-    instance_id = models.PositiveIntegerField(verbose_name=u'作业实列ID')
+    instance_id = models.PositiveIntegerField(verbose_name=u'流程实列ID')
     status = models.PositiveIntegerField(verbose_name=u'节点状态')
     test_flag = models.PositiveIntegerField(verbose_name=u'测试标识')
-    start_time = models.DateTimeField(verbose_name=u'开始时间')
+    start_time = models.TimeField(verbose_name=u'开始时间',auto_now_add=True)
 
     class Meta:
         verbose_name = u'流程实列表'
