@@ -54,23 +54,23 @@ def scene_show(request):
     }
     param1 = {
         'limit': 4,
-        "base_page":2,
+        "page":2,
         "type":1
     }
     param2 = {
         'limit': 4,
-        "chart_page":2,
+        "page":2,
         "type": 2
     }
     param3 = {
         'limit': 4,
-        "job_page":2,
+        "page":2,
         "type": 3
     }
     param4 = {
         'limit': 4,
-        "flow_page":2,
-        "type":"flow"
+        "page":2,
+        "type":4
     }
-    res = function.scene_show(param0)
+    res = function.scene_show(param3)
     return  render_json(res)
