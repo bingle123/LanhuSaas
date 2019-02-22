@@ -5,7 +5,8 @@ import json
 import requests
 from models import *
 from monitorScene.models import Scene
-from DataBaseManage.models import Conn
+from db_connection.models import Conn
+from db_connection import function as f
 import tools
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
@@ -13,7 +14,7 @@ from django.db.models import Q
 import pymysql as MySQLdb
 from market_day import function
 from market_day import celery_opt as co
-from DataBaseManage.function import decrypt_str
+from db_connection.function import decrypt_str
 from gatherData.function import gather_data
 
 def unit_show(request):
@@ -373,7 +374,8 @@ def flow_change(request):
     pipeline_tree={
         'activities':activities2,
         'flows':flows1,
-        'constants':constants1
+        'constants':constants1,
+        'template_id':id['template_id']
     }
     return pipeline_tree
 
@@ -393,8 +395,14 @@ def node_name(request):
     }
     return pipeline_tree
 
-def flow_gather_test(req):
-    res=json.loads(req.body)
-    res['id']=0
-    tools.flow_gather_task(info=res)
-    return 'success'
+def flow_gather_test(request):
+    print "123"
+    return None
+    # res=json.loads(req.body)
+    # res['id']=0
+    # tools.flow_gather_task(info=res)
+    # return 'success'
+
+def start_flow_task(request):
+    print request.body
+    return None

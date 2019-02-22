@@ -9,11 +9,11 @@ import function
 
 def data_base(request):
 
-    return render_mako_context(request, './DataBaseManage/database.html')
+    return render_mako_context(request, './db_connection/database.html')
 
 #菜单管理
 def muenu_manage(request):
-    return render_mako_context(request, './DataBaseManage/muenu_manage.html')
+    return render_mako_context(request, './db_connection/muenu_manage.html')
 
 #模糊查询
 def selecthor(request):

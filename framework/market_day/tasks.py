@@ -108,7 +108,7 @@ def gather_data_task_thrid(**i):
     # 调用流程监控项数据采集的方法
     tools.flow_gather_task(i)
     return '采集成功'
-
+@task
 def start_flow_task(**info):
     #得到client对象，方便调用接口
     user_account = BkUser.objects.filter(id=1).get()
@@ -139,14 +139,12 @@ def start_flow_task(**info):
         node_times = info['node_times']
         starthour = str(node_times[-1]['starttime']).split(':')[0]
         endhour = str(node_times[0]['endtime'])[:2].split(':')[0]
-        startmin = str(node_times[-1]['starttime'])[:2].split(':')[-1]
-        endmin = str(node_times[0]['endtime'])[:2].split(':')[-1]
         period=info['period']
         args = {
             'item_id': info['id'],
             'task_id': task_id,  # 启动流程的任务id
             'node_times': node_times,
-            'period': 'period',
+            'period': period,
         }
         ctime = {
             'hour': starthour + '-' + endhour,

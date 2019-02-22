@@ -94,7 +94,8 @@ HelloWorld=1000
         如：
             从本文档中提取HelloWorld的值，可以配置:
             echo {keyA='valueA',keyB='valueB'}
-
+###控项文件和接口采集规则
+        配置内容：入参配置采用json串配置，实例如{"params1"：“xxx”，“params2”：“xxx”}
     
     
     
