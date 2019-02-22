@@ -173,7 +173,6 @@ def testConn(request):
         else:
             db = pymssql.connect(host=ip+r':'+port, user=username, password=password, database=databasename)
         cursor = db.cursor()
-        # print cursor
         if cursor != '':
             cursor.close()
             db.close()
@@ -238,7 +237,6 @@ def get_flowStatus(request):
     for x in flow:
         flow_list.append(model_to_dict(x)['jion_id'])
     for y in flow_list:
-        print y
         flows = Flow.objects.filter(flow_id=y)
         for i in flows:
 
@@ -304,7 +302,6 @@ def get_user_muenu(request):
     cilent = tools.interface_param(request)
     user = cilent.bk_login.get_user({})
     bk_roleid = user['data']['bk_role']
-    print bk_roleid
     role_muenus = rm.objects.filter(roleid=bk_roleid)
     temp_list = []
     for i in role_muenus:
@@ -314,9 +311,6 @@ def get_user_muenu(request):
         temp = model_to_dict(muenu)
         temp_list.append(temp)
     return tools.success_result(temp_list)
-
-
-
 
 
 
@@ -336,8 +330,6 @@ def get_all_muenu(request):
         muenus['count'] = pages
         objs.append(muenus)
     return objs
-
-
 
 
 #增加菜单
@@ -418,7 +410,6 @@ def get_roleAmuenus(request):
             childrens.append(chi)
         temp['children']=childrens
         tree.append(temp)
-    print tree
     return tree
 
 #获取已经勾选Id
@@ -434,4 +425,49 @@ def checked_menu(request):
         ids.append(temp_id)
     return  ids
 
-#获取所有勾选id
+#获取所有节点菜单
+def savemnus(request):
+    ids = json.loads(request.body)
+    x = 0
+    parent_id = []
+    son_id = []
+    data1 = []
+    if isinstance(ids[0],int):
+        print ids
+    else:
+        for i in ids:
+            if ('children' in i) and ('label' in i):
+                data = []
+                for y in i['children']:
+                    x = y['id']/50
+                    x = int(x)
+                    if y['id'] not in son_id:
+                        son_id.append(y['id'])
+                        data.append(y['id'])
+                    if x not in parent_id:
+                        parent_id.append(x)
+                        mdic = {
+                            'rid': x,
+                            'data': data
+                        }
+                    else:
+                        pass
+                print mdic
+            elif ('children' not in i) and ('label' in i):
+                x = i['id'] / 50
+                x = int(x)
+                if i['id'] not in son_id:
+                    son_id.append(i['id'])
+                    data1.append(i['id'])
+                if x not in parent_id:
+                    parent_id.append(x)
+                    zdic = {
+                        'rid': x,
+                        'data': data1
+                    }
+            else:
+                pass
+
+        print zdic
+    # print parent_id
+    # print son_id
