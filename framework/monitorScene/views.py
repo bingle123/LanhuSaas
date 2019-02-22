@@ -1,11 +1,7 @@
-import json
-
-from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
-
+# -*- coding: utf-8 -*-
 import function
 from common.mymako import render_json, render_mako_context
-
+import json
 
 # Create your views here.
 
@@ -15,37 +11,42 @@ def index(request):
 
 
 
-@csrf_exempt
 def monitor_show(request):
     res = function.monitor_show(request)
     return render_json(res)
 
-@csrf_exempt
+
 def addSence(request):
     res=function.addSence(request)
     return render_json(res)
 
-@csrf_exempt
+
 def select_table(request):
     res=function.select_table(request)
     return  render_json(res)
-@csrf_exempt
+
 def delect(request):
     res=function.delect(request)
     return  render_json(res)
-@csrf_exempt
+
 def editSence(request):
     res=function.editSence(request)
     return  render_json(res)
 
 
-@csrf_exempt
 def pos_name(request):
     res=function.pos_name(request)
     return  render_json(res)
 
 
-@csrf_exempt
 def paging(request):
     res=function.paging(request)
+    return  render_json(res)
+
+
+def scene_show(request):
+
+    param = json.loads(request.body)
+    print param
+    res = function.scene_show(param)
     return  render_json(res)

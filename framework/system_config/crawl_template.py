@@ -80,7 +80,7 @@ def crawl_temp_second(url, total_xpath, title_xpath, time_xpath, url_xpath):
     driver.get(url)
 
     # 方法1：显式给3秒加载时间
-    # time.sleep(3)
+    time.sleep(3)
 
     # 方法2：让 Selenium 不断地检查某个元素是否存在，以此确定页面是否已经完全加载(需要导入库)
     try:

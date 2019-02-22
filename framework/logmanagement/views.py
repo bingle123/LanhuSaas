@@ -8,8 +8,8 @@ from common.mymako import render_json, render_mako_context
 def index(request):
     return render_mako_context(request, './monitor/show_message.html')
 
-def add_log(request):
-    res = function.add_log(request)
+def add_log(info):
+    res = function.add_log(info)
     return render_json(res)
 
 

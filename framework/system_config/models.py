@@ -46,3 +46,14 @@ class SendMailLog(models.Model):
     send_time=models.DateTimeField(verbose_name=u'消息发送的时间',auto_now_add=True)
 
 
+class SceneType(models.Model):
+    """
+    场景类型表
+    """
+    scene_type_id = models.CharField(verbose_name=u'场景UUID', max_length=128)
+    scene_type_name = models.CharField(verbose_name=u'场景类型名称', max_length=64)
+    create_user = models.CharField(verbose_name=u'创建人', max_length=64)
+    create_time = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)  # 新建后无法更改
+    update_user = models.CharField(verbose_name=u'最后修改用户', max_length=64)
+    update_time = models.DateTimeField(verbose_name=u'最后修改时间', auto_now=True)  # 跟新数据库，字段自动更新
+
