@@ -173,6 +173,7 @@ def testConn(request):
         else:
             db = pymssql.connect(host=ip+r':'+port, user=username, password=password, database=databasename)
         cursor = db.cursor()
+        # print cursor
         if cursor != '':
             cursor.close()
             db.close()
@@ -237,6 +238,7 @@ def get_flowStatus(request):
     for x in flow:
         flow_list.append(model_to_dict(x)['jion_id'])
     for y in flow_list:
+        print y
         flows = Flow.objects.filter(flow_id=y)
         for i in flows:
 
@@ -302,6 +304,7 @@ def get_user_muenu(request):
     cilent = tools.interface_param(request)
     user = cilent.bk_login.get_user({})
     bk_roleid = user['data']['bk_role']
+    print bk_roleid
     role_muenus = rm.objects.filter(roleid=bk_roleid)
     temp_list = []
     for i in role_muenus:
@@ -311,6 +314,9 @@ def get_user_muenu(request):
         temp = model_to_dict(muenu)
         temp_list.append(temp)
     return tools.success_result(temp_list)
+
+
+
 
 
 
@@ -330,6 +336,8 @@ def get_all_muenu(request):
         muenus['count'] = pages
         objs.append(muenus)
     return objs
+
+
 
 
 #增加菜单
@@ -410,6 +418,7 @@ def get_roleAmuenus(request):
             childrens.append(chi)
         temp['children']=childrens
         tree.append(temp)
+    print tree
     return tree
 
 #获取已经勾选Id
@@ -424,6 +433,7 @@ def checked_menu(request):
         temp_id=(obj.roleid)*50+obj.muenuid
         ids.append(temp_id)
     return  ids
+
 
 #获取所有节点菜单
 def savemnus(request):

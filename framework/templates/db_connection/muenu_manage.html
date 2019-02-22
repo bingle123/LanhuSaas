@@ -109,7 +109,7 @@
                          @check="checked"
                 >
                 </el-tree>
-
+                <el-button type="primary" @click="savemnus()">保存</el-button>
             </div>
 
             <!--编辑-->
@@ -233,9 +233,20 @@
             checked(e, data3) {
                 //this.checkedNames = []
                 this.checkedKeys = data3.checkedNodes
+                ve.checkedKeys = []
+                this.getchekedKeys = data3.checkedNodes
+                //console.log(this.getchekedKeys)
+                console.log(e)
+            },
 
-                console.log(data3.checkedNodes)
-
+            //保存节点
+            savemnus(){
+                if(ve.getchekedKeys ==''){
+                    ve.getchekedKeys = ve.checkedKeys
+                }
+                axios.post('${SITE_URL}db_connection/savemnus/',ve.getchekedKeys).then((res)=>{
+                    //console.log(res)
+                })
             },
 
 
