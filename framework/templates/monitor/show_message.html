@@ -1653,9 +1653,9 @@
                     for(var i=2;i<=vm.location.length-1;i++){
                             var node_time={}
                             node_time.node_id= vm.location[i].id ,
-                            node_time.start_time= $('#' + vm.location[i].id + '').find('.start_time').text(),
-                             node_time.end_time= $('#' + vm.location[i].id + '').find('.end_time').text()
-
+                            node_time.starttime= $('#' + vm.location[i].id + '').find('.start_time').text(),
+                             node_time.endtime= $('#' + vm.location[i].id + '').find('.end_time').text()
+                            node_time.node_name=   $('#' + vm.location[i].id + '').find('.node-title').text()
                             node_times.push(node_time)
 
                     }
