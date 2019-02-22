@@ -288,6 +288,7 @@ def get_user_muenu(request):
     cilent = tools.interface_param(request)
     user = cilent.bk_login.get_user({})
     bk_roleid = user['data']['bk_role']
+    print bk_roleid
     role_muenus = rm.objects.filter(roleid=bk_roleid)
     temp_list = []
     for i in role_muenus:
@@ -296,7 +297,6 @@ def get_user_muenu(request):
         temp = {}
         temp = model_to_dict(muenu)
         temp_list.append(temp)
-
     return tools.success_result(temp_list)
 
 
