@@ -8,341 +8,248 @@
     <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
     <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
-    <link type="text/css" href="css/home.css" rel="stylesheet">
-    <link type="text/css" href="css/li.css" rel="stylesheet">
+    <link type="text/css" href="${STATIC_URL}css/monitorScene/style.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/v-charts/lib/index.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
-
-    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
-    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
-    <script type="text/javascript" src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/jrange/css/jquery.range.css" rel="stylesheet">
     <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+    <script src="${STATIC_URL}js/jquery.range-min.js"></script>
+
+
+    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
+    <script type="text/javascript"
+            src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
+    <link rel="stylesheet"
+          href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css"/>
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
-     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <style>
+        .Drigging {
+
+            width: 200px;
+
+            background: #CCC;
+
+            border: solid 1px #666;
+
+            height: 80px;
+
+            line-height: 80px;
+
+            text-align: center;
+
+            position: absolute;
+        }
+        .monitor_type{
+            line-height: 48px;
+            background: #28359324;
+            text-align: center;
+        }
+        .monitor_list{
+            display: none;
+        }
+        .monitor_list div{
+            text-align: center;
+        }
+        .el-row{
+            border: 1px solid #ffffff;
+        }
+        .el-col{
+            border: 1px solid #ffffff;
+        }
+        p,i{
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
-<el-container class="content">
+<div id="app" style="width: 100%;height: auto;min-height: 600px">
+    <el-row>
+        <el-col :span="24">
+            <h1 style="rgba(40, 147, 108, 0.45);line-height: 60px;text-align: center">场景编排</h1>
+        </el-col>
+        <el-col :span="4">
+            <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245)">
+                <h2 class="monitor_title" style="line-height:48px;background:#283593;text-align: center;color: #ffffff">监控项</h2>
+                <el-col :span="24">
+                        <h3 class="monitor_type">基本监控项</h3>
+                </el-col>
+                <div class="monitor_list">
+                    <el-col :span="12" v-for="(i,index) in base_monitor" :key="index">
+                        <div @click="add_monitor(i)">
+                            <p>{{ i }}</p>
+                            <i class="bk-icon icon-monitors"></i>
+                        </div>
 
-<div id="flow1" class="clearfix workflow-box">
-    <div class="workflow-tools">
-        <div class="tools-title">
-            工具
-        </div>
-        <ul class="tools">
-            <!-- data-type 对应流程模版类型 -->
-            <li>
-                <div class="tool-title"><p>开始节点</p></div>
-                <div class="tool-list row" style="display: none">
-                    <div class="tool col-md-3 col-md-offset-1" data-type="start">
-                        <i class="bk-icon icon-star-shape" title="开始"></i>
-                        <p>数据</p>
-                    </div>
-
+                    </el-col>
+                    <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                           @current-change="current_change1"></el-pagination>
                 </div>
-            </li>
-            <li>
-                <div class="tool-title"><p>中间节点</p></div>
-                <div class="tool-list row" style="display: none">
-                    <div class="tool col-md-3" data-type="database">
-                        <i class="bk-icon icon-data" title="数据源"></i>
-                        <span>数据源</span>
-                    </div>
-                    <div class="tool col-md-3" data-type="dataCog">
-                        <i class="bk-icon icon-cog" title="配置"></i>
-                        <span>配置源</span>
-                    </div>
-                    <div class="tool col-md-3" data-type="dataFilter">
-                        <i class="bk-icon icon-circle" title="过滤源asdasd"></i>
-                        <span>过滤源asdasd</span>
-                    </div>
-                    <div class="tool col-md-3" data-type="dataCog">
-                        <i class="bk-icon icon-cog" title="配置"></i>
-                        <span>配置源</span>
-                    </div>
-                    <div class="tool col-md-3" data-type="dataFilter">
-                        <i class="bk-icon icon-circle" title="过滤"></i>
-                        <span>过滤</span>
-                    </div>
-                    <div class="tool col-md-3" data-type="dataCog">
-                        <i class="bk-icon icon-cog" title="配置"></i>
-                        <span>配置</span>
-                    </div>
-                    <div class="tool col-md-3" data-type="dataFilter">
-                        <i class="bk-icon icon-circle" title="过滤"></i>
-                        <span>过滤</span>
-                    </div>
-                    <div class="tool col-md-3" data-type="dataCog">
-                        <i class="bk-icon icon-cog" title="配置"></i>
-                        <span>配置</span>
-                    </div>
-                    <div class="tool col-md-3" data-type="dataFilter">
-                        <i class="bk-icon icon-circle" title="过滤"></i>
-                        <span>过滤</span>
-                    </div>
-                    <div class="tool col-md-3" data-type="dataCog">
-                        <i class="bk-icon icon-cog" title="配置"></i>
-                        <span>配置</span>
-                    </div>
-                    <div class="page row">
-                        <span col-md-2><i class="bk-icon icon-cog" title="上一页"></i></span>
-                        <span col-md-2>1</span>
-                        <span col-md-2>2</span>
-                        <span col-md-2>...</span>
-                        <span col-md-2>100</span>
-                        <span col-md-2><i class="bk-icon icon-cog" title="下一页"></i></span>
-                    </div>
+                <el-col :span="24">
+                        <h3 class="monitor_type">图表监控项</h3>
+                </el-col>
+                <div class="monitor_list">
+                    <el-col :span="12" v-for="(i,index) in chart_monitor" :key="index">
+                        <div>
+                            <p>{{ i }}</p>
+                            <i class="bk-icon icon-panel-permission"></i>
+                        </div>
+                    </el-col>
+                    <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                           @current-change="current_change2"></el-pagination>
                 </div>
-
-            </li>
-            <li>
-                <div class="tool-title"><p>结束节点</p></div>
-                <div class="tool-list row" style="display: none">
-                    <div class="tool col-md-2 col-md-offset-1" data-type="start">
-                        <i class="bk-icon icon-star-shape" title="开始"></i>
-                        <p>数据</p>
-                    </div>
-
+                <el-col :span="24">
+                        <h3 class="monitor_type">作业监控项</h3>
+                </el-col>
+                <div class="monitor_list">
+                    <el-col :span="12" v-for="(i,index) in job_monitor" :key="index">
+                        <div>
+                            <p>{{ i }}</p>
+                            <i class="bk-icon icon-monitors"></i>
+                        </div>
+                    </el-col>
+                    <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                           @current-change="current_change3"></el-pagination>
                 </div>
-            </li>
-            <li>
-                <div class="tool-title"><p>结束节点</p></div>
-                <div class="tool-list row" style="display: none">
-                    <div class="tool col-md-2 col-md-offset-1" data-type="start">
-                        <i class="bk-icon icon-star-shape" title="开始"></i>
-                        <p>数据</p>
-                    </div>
-
-                </div>
-            </li>
-            <li>
-                <div class="tool-title"><p>结束节点</p></div>
-                <div class="tool-list row" style="display: none">
-                    <div class="tool col-md-2 col-md-offset-1" data-type="start">
-                        <i class="bk-icon icon-star-shape" title="开始"></i>
-                        <p>数据</p>
-                    </div>
-
-                </div>
-            </li>
-
-
-        </ul>
-        <button id="save2">保存</button>
-        <button id="resetCanvas">清空</button>
-    </div>
-    <div class="workflow-canvas">
-        <!-- 画布模板 start -->
-        <div class="jtk-content">
-            <input class="magic-desc" value="" id="canvasName">
-            <div class="jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan" id="canvas" style="height:370px;">
-                <!-- 流程 -->
-            </div>
-        </div>
-        <!-- 画布模板 end -->
-        <div id="text">
-            <textarea name="" id="result2"></textarea>
-        </div>
-    </div>
-
-    <!-- template 模板-->
-    <div class="jtk-delete jtk-none ">删除节点</div>
-    <div id="template" class="jtk-none">
-        <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}" data-type="start">
-            <div class="node-wrapper">
-                <div class="node-icon-start">
-                    <i class="bk-icon icon-star-shape"></i>
+                <el-col :span="24">
+                        <h3 class="monitor_type">流程监控项</h3>
+                </el-col>
+                <div class="monitor_list">
+                    <el-col :span="12" v-for="(i,index) in flow_monitor" :key="index">
+                        <div>
+                            <p>{{ i }}</p>
+                            <i class="bk-icon icon-monitors"></i>
+                        </div>
+                    </el-col>
+                    <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                           @current-change="current_change4"></el-pagination>
                 </div>
             </div>
-        </div>
-        <div class="jtk-window jtk-node workfolw-node database-node" id="{charts}" data-type="database">
-            <div class="node-wrapper">
-                <div class="node-content">
-                    <input type="text" class="node-title" value="">
-                    <p data="数据源" class="node-desc">一级分析</p>
-                </div>
-                <div class="node-icon">
-                    <i class="bk-icon icon-data"></i>
-                </div>
+        </el-col>
+        <el-col :span="20">
+            <div class="monitor_content" style="min-height: 600px;background: rgb(244, 244, 245)">
             </div>
-        </div>
-
-        <div class="jtk-window jtk-node workfolw-node cog-node" id="{charts}" data-type="dataCog">
-            <div class="node-wrapper">
-                <div class="node-content">
-                    <input type="text" class="node-title" value="">
-                    <p data="数据源" class="node-desc">实时加载</p>
-                </div>
-                <div class="node-icon">
-                    <i class="bk-icon icon-cog"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="jtk-window jtk-node workfolw-node filter-node" id="{charts}" data-type="dataFilter">
-            <div class="node-wrapper">
-                <div class="node-content">
-                    <input type="text" class="node-title" value="">
-                    <p data="数据源" class="node-desc">离线计算</p>
-                </div>
-                <div class="node-icon">
-                    <i class="bk-icon icon-circle"></i>
-                </div>
-            </div>
-        </div>
-    </div>
+        </el-col>
+    </el-row>
 </div>
-</el-container>
+
 
 <script type="text/javascript">
-  $(function() {
+    var vm = new Vue({
+        el: '#app',
+        data:{
+            page_count:100,
+            page:1,
+            monitor_type:0,
+            limit:4,
+            base_monitor:[1,2,3,4],
+            chart_monitor:[5,6,7,8],
+            job_monitor:['a','b','c','d'],
+            flow_monitor:['q','w','e','r'],
+            drigging_id:1,
+        },
+        methods:{
+            show(){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}main/scene_show/',
+                    data: {
+                        limit:vm.limit,
+                        type:vm.monitor_type,
+                        page:vm.page
+                    },
+                })
+            },
+            add_monitor(i){
+                $('.monitor_content').append('<div class=\"Drigging\" type=\"'+i+'\" id=\"'+vm.drigging_id+'\">123</div>')
+                vm.drigging_id++
+            },
+            current_change1(value) {
+                vm.page = value;
+                vm.monitor_type=1;
+                vm.show()
+            },
+            current_change2(value) {
+                vm.page = value;
+                vm.monitor_type=2;
+                vm.show()
+            },
+            current_change3(value) {
+                vm.page = value;
+                vm.monitor_type=3;
+                vm.show()
+            },
+            current_change4(value) {
+                vm.page = value;
+                vm.monitor_type=4;
+                vm.show()
+            },
 
-
-        //flow1_js_start
-        $('#flow1').dataflow({
-            el: '.tool', //流程拖动源
-            canvas: '#canvas', //画布
-            arrowWidth: 8,
-            arrowHeight: 10,
-            template: '#template',
-            id: 'ch', // 定义节点id，当页面只有一个dataflow实例是可忽略，当有多个实例时，需自定义该字段，id具有唯一性
-            onRemoveNodeAfter: function(id, line) { //删除节点回调
-                //console.log(id);
-                //console.log(line);
-            },
-            onCreateNodeAfter: function(id) { //初始化节点回调
-                //console.log(id)
-            },
-            onCreateLineAfter: function() { //创建线条后回调
-                //console.log("1111")
-            },
-            ondrawData: function() { //初始化流程后回调
-                //console.log($('.node-icon').length)
-            },
-            data: {
-                "line": [
-                    {
-                    "source": {
-                        "id": "ch1",
-                        "arrow": "Bottom"
-                    },
-                    "target": {
-                        "id": "ch3",
-                        "arrow": "Left"
-                    }
-                    },
-                    {
-                        "source": {
-                            "id": "ch2",
-                            "arrow": "Right"
-                        },
-                        "target": {
-                            "id": "ch3",
-                            "arrow": "Right"
-                        }
-                    },
-                    {
-                        "source": {
-                            "id": "ch3",
-                            "arrow": "Top"
-                        },
-                        "target": {
-                            "id": "ch2",
-                            "arrow": "Bottom"
-                        }
-                    },
-                    {
-                        "source": {
-                            "id": "ch3",
-                            "arrow": "Top"
-                        },
-                        "target": {
-                            "id": "ch2",
-                            "arrow": "Right"
-                        }
-                    },
-                    {
-                        "source": {
-                            "id": "ch3",
-                            "arrow": "Top"
-                        },
-                        "target": {
-                            "id": "ch4",
-                            "arrow": "Right"
-                        }
-                    },
-                    ],
-                "location": [
-                    {
-                        "id": "ch1",
-                        "x": 130,
-                        "y": 48,
-                        "name":"1",
-                        "type": "database"
-                    },
-                    {
-                        "id": "ch2",
-                        "x": 406,
-                        "y": 33,
-                        "name":"2",
-                        "type": "dataCog"
-                    },
-                    {
-                        "id": "ch3",
-                        "x": 406,
-                        "y": 243,
-                        "name":"3",
-                        "type": "dataCog"
-                    },
-                    {
-                        "id": "ch4",
-                        "x": 150,
-                        "y": 60,
-                        "name":"4",
-                        "type": "database"
-                    },
-                ]
+        }
+    });
+    $('.monitor_type').click(function () {
+        $(this).parent().next('div').animate({
+           height:'toggle'
+        });
+        $(this).parent().next('div').siblings('.monitor_list').animate({
+            height:"hide"
+        });
+    });
+    $(function () {
+        var selector = '';
+        var bool = false; //标识是否移动元素
+        var offsetX = 0; //声明p在当前窗口的Left值
+        var offsetY = 0; //声明p在当前窗口的Top值
+        $(document).on("mouseover", ".Drigging", function () {
+            $(this).css('cursor', 'pointer');//当鼠标移动到拖拽的p上的时候，将鼠标的样式设置为移动(move)
+        });
+        $(document).on("mousedown", ".Drigging", function () {
+            selector = '#' + this.id;
+            bool = true;//当鼠标在移动元素按下的时候将bool设定为true
+            offsetX = event.offsetX;//获取鼠标在当前窗口的相对偏移位置的Left值并赋值给offsetX
+            offsetY = event.offsetY;//获取鼠在当前窗口的相对偏移位置的Top值并赋值给offsetY
+            $(this).css('cursor', 'pointer');
+        });
+        $(document).on("mouseup", ".Drigging", function () {
+            bool = false;//当鼠标在移动元素起来的时候将bool设定为false
+        });
+        $(document).mousemove(function () {
+            if (!bool)//如果bool为false则返回
+                return;//当bool为true的时候执行下面的代码
+            var x = event.clientX - offsetX;
+            //event.clientX得到鼠标相对于客户端正文区域的偏移
+            //然后减去offsetX即得到当前推拽元素相对于当前窗口的X值
+            //（减去鼠标刚开始拖动的时候在当前窗口的偏移X）
+            var y = event.clientY - offsetY;
+            //event.clientY得到鼠标相对于客户端正文区域的偏移
+            //然后减去offsetX即得到当前推拽元素相对于当前窗口的Y值
+            //（减去鼠标刚开始拖动的时候在当前窗口的偏移Y）
+            $(selector).css("left", x);
+            $(selector).css("top", y);
+            $(selector).css('cursor', 'pointer');
+        });
+        $(document).on("mousedown", ".Drigging", function (e) {
+            if (3 == e.which) {
+                alert('这 是右键单击事件');
             }
         });
-        $('#save2').click(function() {
-            // 获取全部数据
-            var data= $('#flow1').data('dataflow').getAllData();
-            var name = $('#canvasName').val();
-            alert(name)
-            $('#result2').val(JSON.stringify(data));
-            axios({
-                method:'post',
-                url:'${SITE_URL}monitorScene/add_temp/',
-                data:{
-                        dat:JSON.stringify(data),
-                        name:name,
-            }}).then((res=>{
-                if(res.data.code == 0){
-                    alert("成功")
-                }
-            }))
-        });
-
-        // 清空画布
-        $('#resetCanvas').click(function() {
-            $('#flow1').data('dataflow').resetCanvas();
-        });
-        //flow1_js_end
-        // $('.node-wrapper').click(function () {
-        //
-        //     $(this).find(".node-title").attr('contenteditable','plaintext-only');
-        // })
-        //节点抽屉
-        $('.tool-title').click(function () {
-            $(this).next('.tool-list').animate({
-                height:'toggle'
-            });
-            $(this).parent().siblings().children('.tool-list').animate({
-                height:"hide"
-            });
-        });
-
     });
+    //$('.tool-title').click(function () {
+    //$(this).next('.tool-list').animate({
+    //    height:'toggle'
+    //});
+    //$(this).parent().siblings().children('.tool-list').animate({
+    //    height:"hide"
+    //});
+    //});
+    //<p id="Drigging" class="Drigging" style="float:left">拖拽层</p>
+    //<p id="Drigging1" class="Drigging" style="position: absolute;top: 150px;">拖拽层1</p>
 </script>
 </body>
+
 </html>
+
+
