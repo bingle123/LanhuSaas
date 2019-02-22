@@ -90,7 +90,7 @@ def crawl_task(**i):
 def gather_data_task_one(**i):
     print '采集开始'
     # 调用基本监控项和图标监控项数据采集的方法
-    function.gather_data(i)
+    function.gather_data(**i)
     return '采集成功'
 
 #作业监控项的采集task
@@ -106,9 +106,9 @@ def gather_data_task_two(**i):
 def gather_data_task_thrid(**i):
     print '采集开始'
     # 调用流程监控项数据采集的方法
-    tools.flow_gather_task(i)
+    tools.flow_gather_task(**i)
     return '采集成功'
-
+@task
 def start_flow_task(**info):
     #得到client对象，方便调用接口
     user_account = BkUser.objects.filter(id=1).get()
@@ -134,27 +134,30 @@ def start_flow_task(**info):
     }
     res=client.sops.start_task(param)
     flag=res['result']
+    status=0
     #如果启动任务成功创建一个定时查看节点状态的任务
     if flag:
         node_times = info['node_times']
         starthour = str(node_times[-1]['starttime']).split(':')[0]
         endhour = str(node_times[0]['endtime'])[:2].split(':')[0]
-        startmin = str(node_times[-1]['starttime'])[:2].split(':')[-1]
-        endmin = str(node_times[0]['endtime'])[:2].split(':')[-1]
         period=info['period']
         args = {
             'item_id': info['id'],
             'task_id': task_id,  # 启动流程的任务id
             'node_times': node_times,
-            'period': 'period',
+            'period': period,
         }
         ctime = {
             'hour': starthour + '-' + endhour,
             'minute': '*/1',
         }
-        print args
         co.create_task_crontab(name=info['template_name']+'_check_status', task='market_day.tasks.gather_data_task_thrid', crontab_time=ctime,
                                task_args=args, desc=name)
+        status=1
+        for time in node_times:
+            Flow_Node(flow_id=item_id, node_name=time['node_name'], start_time=time['starttime'],
+                      end_time=time['endtime']).save()
+    Flow(instance_id=task_id, status=flag, test_flag=0, flow_id=item_id).save()
 # 定时任务测试
 @task
 def count_time(**i):

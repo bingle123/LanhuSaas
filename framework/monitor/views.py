@@ -1,6 +1,8 @@
 # encoding:utf-8
 import function
+import tools
 from common.mymako import render_json, render_mako_context
+import json
 
 
 # Create your views here.
@@ -86,4 +88,13 @@ def flow_change(request):
 
 def node_name(request):
     res = function.node_name(request)
+    return render_json(res)
+
+def start_flow_task(request):
+    info=json.loads(request.body)
+    res = tools.start_flow_task(**info)
+    return render_json(res)
+
+def node_state(request):
+    res = function.node_state(request)
     return render_json(res)

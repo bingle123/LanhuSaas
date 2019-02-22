@@ -16,6 +16,7 @@ from django.core.paginator import Paginator
 from monitor.models import *
 from celery.task import periodic_task
 import datetime
+from logmanagement.function import *
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
@@ -93,10 +94,17 @@ def saveconn_all(request):
         password = encryption_str(res['password'])
         res['password'] = password
         re = Conn(**res).save()
+        info = make_log_info(u'数据库连接配置保存', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         return tools.success_result(re)
     except Exception as e:
+        info = make_log_info(u'数据库连接配置保存', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         res1 = tools.error_result(e)
         return res1
+
+
+
 
 
 #修改
@@ -288,6 +296,7 @@ def get_user_muenu(request):
     cilent = tools.interface_param(request)
     user = cilent.bk_login.get_user({})
     bk_roleid = user['data']['bk_role']
+    print bk_roleid
     role_muenus = rm.objects.filter(roleid=bk_roleid)
     temp_list = []
     for i in role_muenus:
@@ -296,7 +305,6 @@ def get_user_muenu(request):
         temp = {}
         temp = model_to_dict(muenu)
         temp_list.append(temp)
-
     return tools.success_result(temp_list)
 
 
@@ -364,7 +372,6 @@ def delete_muenu(request,id):
 def get_roleAmuenus(request):
     roles = Role.objects.all()
     menus = Muenu.objects.all()
-    menuslen = menus.__len__()
     tree=[]
     for x in roles:
         temp = {}
@@ -379,10 +386,10 @@ def get_roleAmuenus(request):
             childrens.append(chi)
         temp['children']=childrens
         tree.append(temp)
-    print tree[1]
+    print tree
     return tree
 
-#获取勾选Id
+#获取已经勾选Id
 def checked_menu(request):
     objs=rm.objects.all()
     roles = Role.objects.all()
@@ -394,3 +401,5 @@ def checked_menu(request):
         temp_id=(obj.roleid)*50+obj.muenuid
         ids.append(temp_id)
     return  ids
+
+#获取所有勾选id

@@ -61,7 +61,7 @@ def create_task_interval(name, task, task_args,interval_time, desc):
         # 如果没有就创建，有的话就继续复用之前的crontab
         interval = celery_models.IntervalSchedule.objects.create(**interval_time)
     task.interval=interval  # 设置crontab
-    task.enabled = False  # 开启task
+    task.enabled = True  # 开启task
     task.kwargs=json.dumps(task_args, ensure_ascii=False) #将kwargs传入
     task.description = desc
     task.save()

@@ -16,6 +16,8 @@ from market_day import function
 from market_day import celery_opt as co
 from db_connection.function import decrypt_str
 from gatherData.function import gather_data
+from gatherData.models import TDGatherData
+
 
 def unit_show(request):
     try:
@@ -311,10 +313,6 @@ def get_desc(request, id):
     req.encoding=req.apparent_encoding
     req.raise_for_status()
     return json.loads(req.text)
-
-if __name__ == '__main__':
-    get_desc(id)
-
 def flow_change(request):
 
     cilent = tools.interface_param (request)
@@ -374,7 +372,8 @@ def flow_change(request):
     pipeline_tree={
         'activities':activities2,
         'flows':flows1,
-        'constants':constants1
+        'constants':constants1,
+        'template_id':id['template_id']
     }
     return pipeline_tree
 
@@ -394,8 +393,16 @@ def node_name(request):
     }
     return pipeline_tree
 
-def flow_gather_test(req):
-    res=json.loads(req.body)
-    res['id']=0
-    tools.flow_gather_task(info=res)
-    return 'success'
+def node_state(request):
+    res = json.loads(request.body)
+    item_id= res['item_id']['message']
+    print item_id
+    data = TDGatherData.objects.filter(item_id=item_id)
+    data1=[]
+    for i in data:
+        dic={
+            'data_key':i.data_key,
+            'data_value':i.data_value
+        }
+        data1.append(dic)
+    return data1

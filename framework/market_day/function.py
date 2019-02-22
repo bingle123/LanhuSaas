@@ -118,7 +118,7 @@ def add_unit_task(add_dicx):
             'id': id,
             'template_id': template_id,   #创建任务的模板id
             'node_times':node_times,
-            'period':'period',
+            'period':period,
             'constants':constants
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.start_flow_task', crontab_time=ctime,task_args=info, desc=schename)

@@ -47,7 +47,7 @@
         <div>
             <el-input placeholder="请输入内容" clearable v-model="contents" style="width:30%"></el-input>
             <el-button type="primary" icon="el-icon-search" v-on:click="select1">搜索</el-button>
-            <el-popover placement="top-start" width="200" trigger="hover" content="新增一个单元。" style="float:right;">
+            <el-popover placement="top-start" width="200" trigger="hover" content="新增一个监控项。" style="float:right;">
                 <el-button slot="reference" v-on:click="add_unit(0)">新增</el-button>
             </el-popover>
         </div>
@@ -82,15 +82,15 @@
         <HR align=center width=100% color=#979797 SIZE=0.5>
         <div style="height: 30px"></div>
         <div>
-            <span>监控单元名称</span>
-            <el-input placeholder="请输入单元名称" v-model="monitor_name" style="width: 30%"></el-input>
+            <span>监控监控项名称</span>
+            <el-input placeholder="请输入监控项名称" v-model="monitor_name" style="width: 30%"></el-input>
         </div>
         <div style="height: 30px"></div>
         <span>
             <el-tabs type="card" v-model="monitor_type">
 
                 <!--基本单元 start-->
-                <el-tab-pane :disabled="disabled2" label="基本单元" name="first">
+                <el-tab-pane :disabled="disabled2" label="基本监控项" name="first">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="basic" ref="basic" :rules="rules1" label-width="100px">
@@ -205,7 +205,7 @@
                 <!-- 基本单元 end-->
 
                 <!-- 图表单元 start-->
-                <el-tab-pane :disabled="disabled3" label="图表单元" name="second">
+                <el-tab-pane :disabled="disabled3" label="图表监控项" name="second">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="chart" :rules="rules2" ref="chart" label-width="100px">
@@ -306,7 +306,7 @@
                 <!-- 图表单元 end-->
 
                 <!-- 作业单元 start-->
-                <el-tab-pane :disabled="disabled4" label="作业单元" name="third">
+                <el-tab-pane :disabled="disabled4" label="作业监控项" name="third">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="job" :rules="rules3" ref="job" label-width="100px">
@@ -412,7 +412,7 @@
                 <!-- 作业单元 end-->
 
                 <!-- 流程单元 start-->
-                <el-tab-pane :disabled="disabled5" label="流程单元" name="fourth" v-on:click="canvas_new">
+                <el-tab-pane :disabled="disabled5" label="流程监控项" name="fourth">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="flow" :rules="rules4" ref="flow" label-width="100px">
@@ -511,7 +511,7 @@
                                 </el-form-item>
                                 </div>
                                  <el-form-item label="采集周期" prop="period">
-                                            <el-input type="number" v-model.number="numberValidateForm.age"
+                                            <el-input type="number" id="period" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="flow.period" style="width: 96%"
                                                       placeholder="请输入采集周期(秒)"></el-input>
                                 </el-form-item>
@@ -637,6 +637,10 @@
             old_html:'',
             msg1:'',
             sql_id:'',
+            template_list:{
+                name:'',
+                id:''
+            },
             add_pamas:0,                                        //新增编辑判断
             font_size_range:[20,22,24,26,28,30,32,34,36,38,40],   //字体大小
             job2: [],                                   //作业模板
@@ -1011,7 +1015,7 @@
                      params = vm.sql_id
                 }
                 if (vm.sql_file_interface == 6  || vm.sql_file_interface == 9) {
-                     params = vm.server_url +','+ vm.file_param
+                     params = vm.server_url +'#'+ vm.file_param
                 }
                 axios({
                     method: 'post',
@@ -1208,6 +1212,7 @@
                         limit: 10
                     },
                 }).then(function (res) {
+                    console.log(res)
                     vm.sites = res.data.results.res_list;
                     vm.page_count = res.data.results.res_list[0].page_count;
                     vm.job2 = res.data.results.job;
@@ -1381,7 +1386,7 @@
                     if (vm.file_param == '') {
                         vm.basic.params = vm.server_url
                     } else {
-                        vm.basic.params = vm.server_url + ',' + vm.file_param;
+                        vm.basic.params = vm.server_url + '#' + vm.file_param;
                     }
                     vm.basic.monitor_name = vm.monitor_name;
                     vm.basic.monitor_type = vm.monitor_type
@@ -1446,6 +1451,9 @@
                     }
                 }).then(function (res) {
                     {
+                        console.log(res.data.template_id[0])
+                        vm.template_list.id=res.data.template_id[0].id
+                        vm.template_list.name=res.data.template_id[0].name
                         vm.constants = res.data.constants
                         var aa=" <div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width: 100%;position: relative;\">\n" +
                             "\n" +
@@ -1561,6 +1569,60 @@
             },
              Rendering_end_time(){
                 $('p:contains('+vm.flow.node_name+')').parent().find('.end_time').text(vm.activities_node_time.end_time)
+            },
+            canvas_new() {
+                if(vm.liucheng == 'block'){
+                    var node_id=''
+                    var start_time=''
+                    var end_time=''
+                    var node_times=[]
+                    for(var i=2;i<=vm.location.length-1;i++){
+                            var node_time={}
+                            node_time.node_id= vm.location[i].id ,
+                            node_time.starttime= $('#' + vm.location[i].id + '').find('.start_time').text(),
+                             node_time.endtime= $('#' + vm.location[i].id + '').find('.end_time').text()
+                            node_time.node_name=   $('#' + vm.location[i].id + '').find('.node-title').text()
+                            node_times.push(node_time)
+
+                    }
+                    var period = $('#period').val()
+                    var template_list = vm.template_list
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}monitor/start_flow_task/',
+                        data: {
+                            'period': period,
+                            'template_list': template_list,
+                            'node_times': node_times,
+                            'monitor_name':vm.monitor_name,
+                            'monitor_type':vm.monitor_type,
+                            'constants':vm.constants
+                        }
+                    }).then(function (res) {
+                        axios({
+                            method:'post',
+                            url:'${SITE_URL}monitor/node_state/',
+                            data:{
+                                'item_id':res.data
+                            }
+                        }).then(function (res) {
+                            console.log(res)
+                        })
+                    })
+                }else if(vm.liucheng == 'none'){
+
+                    var period = $('#period').val()
+                    var template_list = vm.template_list
+
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}monitor/flow_gather_test/',
+                        data: {}
+                    }).then(function () {
+
+                    })
+                }
+
             },
             add_unit(row) {                         //新增单元
                      {   if (vm.add_pamas == 1) {
@@ -1713,50 +1775,7 @@
             flow_width() {       //修改流程单元中的宽
                 $("#canvas").find('*').css("width", this.flow.height)
             },
-            canvas_new() {       //显示流程单元中的预览图
-                $('#flow1').dataflow({
-                    el: '.tool', //流程拖动源
-                    canvas: '#canvas', //画布
-                    arrowWidth: 8,
-                    arrowHeight: 10,
-                    template: '#template',
-                    id: 'ch', // 定义节点id，当页面只有一个dataflow实例是可忽略，当有多个实例时，需自定义该字段，id具有唯一性
-                    onRemoveNodeAfter: function (id, line) { //删除节点回调
-                        //console.log(id);
-                        //console.log(line);
-                    },
-                    onCreateNodeAfter: function (id) { //初始化节点回调
-                        //console.log(id)
-                    },
-                    onCreateLineAfter: function () { //创建线条后回调
-                        //console.log("1111")
-                    },
-                    ondrawData: function () { //初始化流程后回调
-                        //console.log($('.node-icon').length)
-                    },
-                    data:
-                        {
-                            "line":
-                                [{
-                                    "source": {"id": "ch1", "arrow": "Right"},
-                                    "target": {"id": "ch3", "arrow": "Left"}
-                                }, {
-                                    "source": {"id": "ch3", "arrow": "Right"},
-                                    "target": {"id": "ch2", "arrow": "Left"}
-                                }], "location":
-                                [{"id": "ch1", "x": 10, "y": 127, "type": "start"},
-                                    {"id": "ch2", "x": 380, "y": 127, "type": "start"},
-                                    {"id": "ch3", "x": 188, "y": 200, "name": "", "type": "database"}]
-                        }
 
-        });
-                  $('#save2').click(function() {
-            // 获取全部数据
-            var data= $('#flow1').data('dataflow').getAllData();
-            var name = data.location[0];
-            $('#result2').val(JSON.stringify(data));
-        });
-            },
             get_db_connections() {
                 axios({
                     url: '${SITE_URL}db_connection/get_all_db_connection/',

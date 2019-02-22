@@ -50,7 +50,8 @@ class Job(models.Model):
         verbose_name_plural = u'作业实列信息'
         db_table = 'td_job_instance'
 
-
+#status：1表示FAILED  2表示RUNNING   3表示SUSPENDED   4表示REVOKED   5表示FINISHED
+#test_flag 1表示测试  2表示非测试
 class Flow(models.Model):
     flow_id = models.PositiveIntegerField(verbose_name=u'关联ID')
     instance_id = models.PositiveIntegerField(verbose_name=u'流程实列ID')
@@ -62,6 +63,18 @@ class Flow(models.Model):
         verbose_name = u'流程实列表'
         verbose_name_plural = u'流程实列信息'
         db_table = 'td_flow_instance'
+
+
+class Flow_Node(models.Model):
+    flow_id = models.PositiveIntegerField(verbose_name=u'流程ID')
+    node_name = models.CharField(verbose_name=u'节点名称',max_length=50)
+    start_time = models.CharField(verbose_name=u'开始时间',max_length=50)
+    end_time = models.CharField(verbose_name=u'结束时间',max_length=50)
+
+    class Meta:
+        verbose_name = u'流程节点表'
+        verbose_name_plural = u'流程节点信息'
+        db_table = 'tb_flow_node'
 
 
 class scene_monitor(models.Model):
