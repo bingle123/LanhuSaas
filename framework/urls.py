@@ -40,7 +40,7 @@ urlpatterns = patterns(
     # 岗位管理
     url(r'^jobManagement/', include('jobManagement.urls')),
     url(r'market_day/', include('market_day.urls')),
-    url(r'^DataBaseManage/', include('DataBaseManage.urls')),
+    url(r'^db_connection/', include('db_connection.urls')),
     # 定制过程通知
     url(r'^customProcess/', include('customProcess.urls')),
     # 基本监控单元数据采集
