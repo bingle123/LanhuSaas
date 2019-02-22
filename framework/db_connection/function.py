@@ -16,6 +16,7 @@ from django.core.paginator import Paginator
 from monitor.models import *
 from celery.task import periodic_task
 import datetime
+from logmanagement.function import *
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
@@ -93,10 +94,17 @@ def saveconn_all(request):
         password = encryption_str(res['password'])
         res['password'] = password
         re = Conn(**res).save()
+        info = make_log_info(u'数据库连接配置保存', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         return tools.success_result(re)
     except Exception as e:
+        info = make_log_info(u'数据库连接配置保存', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         res1 = tools.error_result(e)
         return res1
+
+
+
 
 
 #修改

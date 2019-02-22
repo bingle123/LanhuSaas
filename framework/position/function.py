@@ -77,7 +77,7 @@ def delete_job(request):
         info = make_log_info(u'删除岗位', u'业务日志', u'JobInstance', method, nowPerson, '成功', '无')
     except Exception as e:
         res1 = tools.error_result(e)
-        info = make_log_info(u'增加岗位', u'业务日志', u'JobInstance', method, nowPerson, '失败', repr(e))
+        info = make_log_info(u'删除岗位', u'业务日志', u'JobInstance', method, nowPerson, '失败', repr(e))
     add_log(info)
     return res1
 
