@@ -17,7 +17,7 @@ from monitor.models import *
 from celery.task import periodic_task
 import datetime
 import sys
-from logmanagement.function import *
+from logmanagement.function import add_log,make_log_info,get_active_user
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"

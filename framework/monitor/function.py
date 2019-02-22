@@ -18,76 +18,76 @@ from db_connection.function import decrypt_str
 from gatherData.function import gather_data
 from gatherData.models import TDGatherData
 import sys
-from logmanagement.function import *
+from logmanagement.function import add_log,make_log_info,get_active_user
 
 
 def unit_show(request):
-    try:
-        res = json.loads(request.body)
-        limit = res['limit']
-        page = res['page']
-        unit = Monitor.objects.all()
-        p=Paginator(unit, limit)    #分页
-        page_count = p.page_range[-1]  #总页数
-        page = p.page(page)        #当前页数据
-        res_list=[]
-        for i in page.object_list:
-            j=model_to_dict(i)
-            j['page_count']=page_count
-            j['edit_time'] = str(i.edit_time)
-            j['create_time'] = str(i.create_time)
-            j['start_time'] = str(i.start_time)
-            j['end_time'] = str(i.end_time)
-            j['status'] = str(i.status)
-            res_list.append(j)
-        param = {
-            'bk_username': 'admin',
-            "bk_biz_id": 2,
-        }
-        param1 = {
-            "bk_biz_id": 2,
-        }
-        client = tools.user_interface_param()
-        res = client.job.get_job_list(param)
-        res1 = client.sops.get_template_list(param1)
-        if res.get('result'):
-            job_list = res.get('data')
-        else:
-            job_list = []
-            logger.error (u"请求作业模板失败：%s" % res.get ('message'))
-        if res1.get ('result'):
-            flow_list = res1.get ('data')
-        else:
-            flow_list = []
-            logger.error (u"请求流程模板失败：%s" % res.get ('message'))
-        job = []
-        flow = []
-        for i in flow_list:
-            dic2 = {
-                'flow_name': i['name'],
-                'id': [{
-                    'name': i['name'],
-                    'id': i['id']
-                }]
-            }
-            flow.append(dic2)
-        for i in job_list:
-            dic1 = {
+# try:
+    res = json.loads(request.body)
+    limit = res['limit']
+    page = res['page']
+    unit = Monitor.objects.all()
+    p=Paginator(unit, limit)    #分页
+    page_count = p.page_range[-1]  #总页数
+    page = p.page(page)        #当前页数据
+    res_list=[]
+    for i in page.object_list:
+        j=model_to_dict(i)
+        j['page_count']=page_count
+        j['edit_time'] = str(i.edit_time)
+        j['create_time'] = str(i.create_time)
+        j['start_time'] = str(i.start_time)
+        j['end_time'] = str(i.end_time)
+        j['status'] = str(i.status)
+        res_list.append(j)
+    param = {
+        'bk_username': 'admin',
+        "bk_biz_id": 2,
+    }
+    param1 = {
+        "bk_biz_id": 2,
+    }
+    client = tools.user_interface_param()
+    res = client.job.get_job_list(param)
+    res1 = client.sops.get_template_list(param1)
+    if res.get('result'):
+        job_list = res.get('data')
+    else:
+        job_list = []
+        logger.error (u"请求作业模板失败：%s" % res.get ('message'))
+    if res1.get ('result'):
+        flow_list = res1.get ('data')
+    else:
+        flow_list = []
+        logger.error (u"请求流程模板失败：%s" % res.get ('message'))
+    job = []
+    flow = []
+    for i in flow_list:
+        dic2 = {
+            'flow_name': i['name'],
+            'id': [{
                 'name': i['name'],
-                'id': [{
-                    'name': i['name'],
-                    'id': i['bk_job_id']
-                }]
-            }
-            job.append(dic1)
-        res_dic = {
-            'res_list': res_list,
-            'job': job,
-            'flow': flow,
+                'id': i['id']
+            }]
         }
-        result = tools.success_result(res_dic)
-    except Exception as e:
-        result = tools.error_result(e)
+        flow.append(dic2)
+    for i in job_list:
+        dic1 = {
+            'name': i['name'],
+            'id': [{
+                'name': i['name'],
+                'id': i['bk_job_id']
+            }]
+        }
+        job.append(dic1)
+    res_dic = {
+        'res_list': res_list,
+        'job': job,
+        'flow': flow,
+    }
+    result = tools.success_result(res_dic)
+    # except Exception as e:
+    #     result = tools.error_result(e)
     return result
 
 
@@ -128,16 +128,16 @@ def delete_unit(request):
         info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
         add_log(info)
-        info = make_log_info(u'删除监控项', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
+        info2 = make_log_info(u'删除监控项', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
-        add_log(info)
+        add_log(info2)
     except Exception as e:
         info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
         add_log(info)
-        info = make_log_info(u'删除监控项', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
+        info2 = make_log_info(u'删除监控项', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        add_log(info)
+        add_log(info2)
         res1 = tools.error_result(e)
 
     return res1
