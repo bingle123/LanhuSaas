@@ -20,4 +20,5 @@ urlpatterns = patterns(
     (r'^del_rule$', 'del_rule'),
     (r'^force_del_rule$', 'force_del_rule'),
     (r'^add_rule$', 'add_rule'),
+    (r'^select_rules_pagination$', 'select_rules_pagination'),
 )
