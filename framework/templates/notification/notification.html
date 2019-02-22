@@ -430,7 +430,11 @@
                         }).then((res) =>{
                             loading.close();
                             if('ok' == res.data.message){
-                                this.alertRulePageChange(this.alertRulesCount);
+                                if(this.alertRuleTableStatus == 'edit'){
+                                    this.alertRulePageChange(this.currentPage);
+                                }else if(this.alertRuleTableStatus == 'add'){
+                                    this.alertRulePageChange(this.alertRulesCount);
+                                }
                                 this.alertRuleList();
                             }else{
                                 var msg = '请求添加/修改告警规则失败！';

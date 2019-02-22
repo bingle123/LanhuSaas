@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
-from django.views.decorators.csrf import csrf_exempt
 import json
 import math
+from django.core.paginator import Paginator
+from django.forms import model_to_dict
 from models import Scene
 from models import position_scene
 from monitor.models import scene_monitor,Monitor
+from monitor import tools
 from position.models import JobInstance
 
 
@@ -37,36 +39,22 @@ def monitor_show(request):
 
 
 def addSence(request):
-    try:
-       res = request.body
-       senceModel = json.loads(res)
-       senceModel2 = {
-           "scene_name":senceModel['data']['scene_name'],
-           "scene_startTime":senceModel['data']["scene_startTime"],
-           "scene_endTime":senceModel['data']["scene_endTime"],
-           "scene_creator":"admin"
-       }
-       Scene.objects.create(**senceModel2)
-       id = Scene.objects.last()
-       senceModel3 = {
-           "scene":id,
-           "position_id":senceModel['data']["pos_name"]
-       }
-       position_scene.objects.create(**senceModel3)
-       info = make_log_info(u'增加场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
-                            get_active_user(request)['data']['bk_username'], '成功', '无')
-       add_log(info)
-       info2 = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                            get_active_user(request)['data']['bk_username'], '成功', '无')
-       add_log(info2)
-    except Exception as e:
-        info = make_log_info(u'增加场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        add_log(info)
-        info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        add_log(info)
-    return None
+   res = request.body
+   senceModel = json.loads(res)
+   senceModel2 = {
+       "scene_name":senceModel['data']['scene_name'],
+       "scene_startTime":senceModel['data']["scene_startTime"],
+       "scene_endTime":senceModel['data']["scene_endTime"],
+       "scene_creator":"admin"
+   }
+   Scene.objects.create(**senceModel2)
+   id = Scene.objects.last()
+   senceModel3 = {
+       "scene":id,
+       "position_id":senceModel['data']["pos_name"]
+   }
+   position_scene.objects.create(**senceModel3)
+   return None
 
 
 def select_table(request):
@@ -98,51 +86,30 @@ def select_table(request):
 
 
 def delect(request):
-    try:
-        Scene.objects.filter(id=request.body).delete()
-        position_scene.objects.filter(scene=request.body).delete()
-        info = make_log_info(u'删除场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
-    except Exception as e:
-        info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    add_log(info)
+    Scene.objects.filter(id=request.body).delete()
+    position_scene.objects.filter(scene=request.body).delete()
     return ""
 
 
 def editSence(request):
-    try:
-        model = json.loads(request.body)
-        senceModel2 = {
-            "scene_name": model['data']['scene_name'],
-            "scene_startTime": model['data']["scene_startTime"],
-            "scene_endTime": model['data']["scene_endTime"],
-            "scene_editor":"admin"
+    model = json.loads(request.body)
+    senceModel2 = {
+        "scene_name": model['data']['scene_name'],
+        "scene_startTime": model['data']["scene_startTime"],
+        "scene_endTime": model['data']["scene_endTime"],
+        "scene_editor":"admin"
+    }
+    Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
+    scene = Scene.objects.get(id=model['data']['id'])
+    scene.save()
+    job =JobInstance.objects.filter(pos_name=model['data']["pos_name"])
+    for j in job:
+        senceModel3 = {
+        "scene_id": model['data']['id'],
+        "position_id": j.id
         }
-        Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
-        info = make_log_info(u'编辑场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
-        add_log(info)
-        scene = Scene.objects.get(id=model['data']['id'])
-        scene.save()
-        job =JobInstance.objects.filter(pos_name=model['data']["pos_name"])
-        for j in job:
-            senceModel3 = {
-            "scene_id": model['data']['id'],
-            "position_id": j.id
-            }
-            print senceModel3
-        position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
-        info2 = make_log_info(u'编辑场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
-        add_log(info2)
-    except Exception as e:
-        info = make_log_info(u'编辑场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        add_log(info)
-        info2 = make_log_info(u'编辑场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        add_log(info2)
+        print senceModel3
+    position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
     return None
 
 
@@ -192,8 +159,30 @@ def paging(request):
     return res_list
 
 
-def scene_show():
+def scene_show(res):
 
-    resluts = Monitor.objects.get(monitor_type="基本单元类型")
-    print(resluts)
-    return None
+    type = res['type']
+    limit = res['limit']
+    page = res['page']
+    if type == 0:
+        base_unit = Monitor.objects.filter(monitor_type='基本单元类型')
+        base_page_data, base_page_count = tools.page_paging(base_unit,limit,page)
+        chart_unit = Monitor.objects.filter (monitor_type='图表单元类型')
+        chart_page_data, chart_page_count = tools.page_paging (chart_unit, limit, page)
+        job_unit = Monitor.objects.filter (monitor_type='作业单元类型')
+        job_page_data, job_page_count = tools.page_paging (job_unit, limit, page)
+        flow_unit = Monitor.objects.filter (monitor_type='流程单元类型')
+        flow_page_data, flow_page_count = tools.page_paging (flow_unit, limit, page)
+
+    base_list = tools.obt_dic(base_page_data,base_page_count)
+    chart_list = tools.obt_dic(chart_page_data, chart_page_count)
+    job_list = tools.obt_dic (job_page_data, job_page_count)
+    flow_list = tools.obt_dic (flow_page_data, flow_page_count)
+    res_dic = {
+        'base_list': base_list,
+        'chart_list': chart_list,
+        'job_list': job_list,
+        'flow_list': flow_list,
+    }
+    result = tools.success_result(res_dic)
+    return result
