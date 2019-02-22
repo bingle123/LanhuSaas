@@ -1577,6 +1577,7 @@
 
                     var period = $('#period').val()
                     var template_list = vm.template_list
+
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor/flow_gather_test/',
@@ -1668,7 +1669,8 @@
                             'template_list': template_list,
                             'node_times': node_times,
                             'monitor_name':vm.monitor_name,
-                            'monitor_type':vm.monitor_type
+                            'monitor_type':vm.monitor_type,
+                            'constants':vm.constants
                         }
                     }).then(function (res) {
                         console.log(res)
