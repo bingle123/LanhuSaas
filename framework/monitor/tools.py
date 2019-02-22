@@ -5,9 +5,11 @@ import base64
 from account.models import *
 from blueking.component.shortcuts import *
 from gatherData.function import gather_data
+import time
+from monitor.models import Job
 from gatherData.function import gather_data_migrate
 from gatherData import models
-from alertRule.function import rule_check
+from notification.function import rule_check
 from market_day import celery_opt as co
 from djcelery import models as celery_models
 
@@ -64,36 +66,45 @@ def interface_param(request):
     :param request:
     :return:
     """
-    client = get_client_by_request(request)  # 获取code、secret参数
-    client.set_bk_api_ver('v2')  # 以v2版本调用接口
+    client = get_client_by_request(request)                         # 获取code、secret参数
+    client.set_bk_api_ver('v2')                                     # 以v2版本调用接口
     return client
 
+
+def user_interface_param():
+    """
+    返回client对象
+    :param :
+    :return:
+    """
+    user_account = BkUser.objects.filter (id=1).get ()
+    client = get_client_by_user (user_account)
+    client.set_bk_api_ver ('v2')                                    # 以v2版本调用接口
+    return client
 
 def job_interface(res):
     try:
         params = res['params']  # ip
         gather_params = res['gather_params']
         bk_job_id = res['job_id'][0]['id']
-        script_param = base64.b64encode(gather_params)
-        user_account = BkUser.objects.filter(id=1).get()
+        script_param = base64.b64encode (gather_params)
         # 根据id为1的用户获取客户端操作快速执行脚本
-        client = get_client_by_user(user_account)
-        client.set_bk_api_ver('v2')
+        client = user_interface_param()
         select_job_params = {
             'bk_biz_id': 2,
             'bk_job_id': bk_job_id,
         }
-        select_job = client.job.get_job_detail(select_job_params)
-        if select_job.get('result'):
-            select_job_list = select_job.get('data')
+        select_job = client.job.get_job_detail (select_job_params)
+        if select_job.get ('result'):
+            select_job_list = select_job.get ('data')
         else:
             select_job_list = []
-            logger.error(u"请求作业模板失败：%s" % select_job.get('message'))
+            logger.error (u"请求作业模板失败：%s" % select_job.get ('message'))
         step_id = select_job_list['steps'][0]['step_id']
         cloud_params = {
             'bk_biz_id': 2,
             'ip': {
-                'data': [params, ],
+                'data': [params,],
                 'exact': 1
             },
             "condition": [
@@ -109,12 +120,12 @@ def job_interface(res):
                     ]
                 }]
         }
-        cloud_select = client.cc.search_host(cloud_params)
-        if cloud_select.get('result'):
+        cloud_select = client.cc.search_host (cloud_params)
+        if cloud_select.get ('result'):
             cloud_id = cloud_select['data']['info'][0]['host']['bk_cloud_id'][0]['id']
         else:
             cloud_id = -1
-            logger.error(u"请求主机信息失败：%s" % cloud_select.get('message'))
+            logger.error (u"请求主机信息失败：%s" % cloud_select.get ('message'))
         job_params = {
             'bk_biz_id': 2,
             'bk_job_id': bk_job_id,
@@ -128,26 +139,50 @@ def job_interface(res):
             }, ],
         }
         job = client.job.execute_job(job_params)
-        if job.get('result'):
-            job_list = job.get('data')
+        if job.get ('result'):
+            job_list = job.get ('data')
+            job_instance_id = job_list['job_instance_id']
         else:
             job_list = []
-            logger.error(u"请求作业模板失败：%s" % job.get('message'))
+            job_instance_id = 0
+            logger.error (u"请求作业模板失败：%s" % job.get ('message'))
+        log_params = {
+            "bk_biz_id": "2",
+            "job_instance_id": job_instance_id
+        }
+        log = client.job.get_job_instance_log(log_params)
+        while 'True' != str (log['data'][0]['is_finished']):
+            time.sleep(3)
+            log = client.job.get_job_instance_log(log_params)
+        json_data = log['data'][0]['step_results'][0]['ip_logs'][0]['log_content']
+        if log['data'][0]['status'] ==3:
+            status=1
+        else:
+            status = -2
         res1 = success_result(job_list)
-        data = res1['results']['message']
-
     except Exception as e:
         res1 = error_result(e)
-        data = res1['message']
-    info = {
-        'id': res['id'],  # 关联id
-        'message': "message",  # 状态
-        'message_value': data,  # 状态值
-        'gather_params': 'space_interface'  # 类型
-    }
-    gather_data(info)
+        status = -1
+    try:
+        name_status  = job['data']['job_instance_name']
+        info = {
+            'id': res['id'],                       # 关联id
+            'data_key': name_status,               # 状态key
+            'gather_params': 'space_interface',  # 类型
+            'data_value':status,                   #状态value
+            'gather_error_log': {                 #采集数据
+                'data_key':json_data
+            } ,
+            'instance_id': job_list['job_instance_id']     #实列id
+        }
+        gather_data (info)
+        if res['id']==0:
+            Job(instance_id=job_instance_id,status=status,test_flag=0,job_log=info['gather_error_log'],job_id=bk_job_id).save()
+        else:
+            Job (instance_id=job_instance_id, status=status, test_flag=1,job_log=info['gather_error_log'],job_id=bk_job_id).save()
+    except Exception as e:
+        res1 = error_result(e)
     return res1
-
 
 def flow_gather_task(**info):
     task_id = info['task_id']
@@ -192,6 +227,7 @@ def flow_gather_task(**info):
                             gather_error_log=msg).save()
     if item_id != 0:
         rule_check(item_id)
+    Flow (instance_id=1, status=1, test_flag=1, start_time=1, flow_id=1).save ()
 
 
 def start_flow_task(**info):
@@ -241,3 +277,4 @@ def start_flow_task(**info):
                                task='market_day.tasks.gather_data_task_thrid', interval_time=ctime,
                                task_args=args, desc=name)
     return task_id
+
