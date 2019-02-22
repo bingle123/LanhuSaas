@@ -68,41 +68,34 @@ def select_job(request):
 
 
 def delete_job(request):
-    method = sys._getframe().f_code.co_name
-    nowPerson = get_active_user(request)['data']['bk_username']
     try:
         res = json.loads(request.body)
         id = res['id']
         res1 = JobInstance.objects.filter(id=id).delete()
-        info = make_log_info(u'删除岗位', u'业务日志', u'JobInstance', method, nowPerson, '成功', '无')
+        info = make_log_info(u'删除岗位', u'业务日志', u'JobInstance', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
         res1 = tools.error_result(e)
-        info = make_log_info(u'删除岗位', u'业务日志', u'JobInstance', method, nowPerson, '失败', repr(e))
+        info = make_log_info(u'删除岗位', u'业务日志', u'JobInstance', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '失败', repr(e))
     add_log(info)
     return res1
 
 
 def add_job(request):
-    method = sys._getframe().f_code.co_name
-    nowPerson = get_active_user(request)['data']['bk_username']
     try:
         res = json.loads(request.body)
         tmp = get_active_user(request)
         nowPerson = tmp['data']['bk_username']
         res['creator'] = nowPerson
         re = JobInstance.objects.create(**res)
-
-        info = make_log_info(u'增加岗位', u'业务日志', u'JobInstance', method, nowPerson,'成功','无')
+        info = make_log_info(u'增加岗位', u'业务日志', u'JobInstance',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功','无')
     except Exception, e:
         re = tools.error_result(e)
-        info = make_log_info(u'增加岗位', u'业务日志', u'JobInstance', method, nowPerson, '失败',repr(e))
+        info = make_log_info(u'增加岗位', u'业务日志', u'JobInstance',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '失败',repr(e))
     add_log(info)
     return re
 
 
 def add_person(request):
-    method = sys._getframe().f_code.co_name
-    nowPerson = get_active_user(request)['data']['bk_username']
     try:
         res = json.loads(request.body)
         id = res['id']
@@ -116,17 +109,15 @@ def add_person(request):
                     tmp.remove(i)
         for k in tmp:
             Localuser.objects.filter(user_name=k).update(user_pos='1')
-        info = make_log_info(u'岗位人员增加或移除', u'业务日志', u'JobInstance', method, nowPerson, '成功', '无')
+        info = make_log_info(u'岗位人员增加或移除', u'业务日志', u'JobInstance', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功', '无')
     except Exception, e:
         res2 = tools.error_result(e)
-        info = make_log_info(u'岗位人员增加或移除', u'业务日志', u'JobInstance', method, nowPerson, '失败', repr(e))
+        info = make_log_info(u'岗位人员增加或移除', u'业务日志', u'JobInstance', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败', repr(e))
     add_log(info)
     return res2
 
 
 def edit_job(request):
-    method = sys._getframe().f_code.co_name
-    nowPerson = get_active_user(request)['data']['bk_username']
     try:
         res = json.loads(request.body)
         id = res['id']
@@ -135,10 +126,10 @@ def edit_job(request):
         tmp = get_active_user(request)
         nowPerson = tmp['data']['bk_username']
         r1 = JobInstance.objects.filter(id=id).update(pos_name=posname,edit_time=nowTime,editor=nowPerson)
-        info = make_log_info(u'编辑岗位', u'业务日志', u'JobInstance', method, nowPerson, '成功', '无')
+        info = make_log_info(u'编辑岗位', u'业务日志', u'JobInstance',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功', '无')
     except Exception, e:
         r1 = tools.error_result(e)
-        info = make_log_info(u'编辑岗位', u'业务日志', u'JobInstance', method, nowPerson, '失败', repr(e))
+        info = make_log_info(u'编辑岗位', u'业务日志', u'JobInstance', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败', repr(e))
     add_log(info)
     return r1
 
@@ -227,8 +218,6 @@ def synchronize(request):
     """
         用户同步
         """
-    method = sys._getframe().f_code.co_name
-    nowPerson = get_active_user(request)['data']['bk_username']
     try:
         res = get_user(request)
         reslist = res['data']
@@ -249,9 +238,9 @@ def synchronize(request):
                     flag2 = 1
             if flag2 == 0:
                 Localuser.objects.filter(user_name=x.user_name).delete()
-        info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'Localuser', method, nowPerson, '成功', '无')
+        info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'Localuser',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception, e:
         r1 = tools.error_result(e)
-        info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'Localuser', method, nowPerson, '失败', repr(e))
+        info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'Localuser',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败', repr(e))
     add_log(info)
     return  0
