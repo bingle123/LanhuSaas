@@ -67,7 +67,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
+                <el-pagination :page-count="page_count" :current-page="page" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
             </div>
 
             <!--新增-->
@@ -307,7 +307,8 @@
             },
 
             hide() {
-                this.isAdd=1
+                this.isAdd=1;
+                ve.conn()
             },
 
             rowClass({row, rowIndex}) {
@@ -360,6 +361,7 @@
                         '${SITE_URL}db_connection/saveconn/',this.addconn
                     ).then(function (res) {
                         if(res.data.code == 0){
+                            ve.page=ve.page_count;
                             ve.hide()
                         }
                     });
