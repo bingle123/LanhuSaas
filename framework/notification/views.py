@@ -7,7 +7,7 @@ import json
 
 
 def show_index(request):
-    return render_mako_context(request, './alertRuleManage/alertRuleManage.html')
+    return render_mako_context(request, './notification/notification.html')
 
 
 def select_all_rules(request):
