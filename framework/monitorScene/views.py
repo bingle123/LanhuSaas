@@ -1,11 +1,7 @@
-import json
-
-from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
-
+# -*- coding: utf-8 -*-
 import function
 from common.mymako import render_json, render_mako_context
-
+import json
 
 # Create your views here.
 
@@ -15,44 +11,66 @@ def index(request):
 
 
 
-@csrf_exempt
 def monitor_show(request):
     res = function.monitor_show(request)
     return render_json(res)
 
-@csrf_exempt
+
 def addSence(request):
     res=function.addSence(request)
     return render_json(res)
 
-@csrf_exempt
+
 def select_table(request):
     res=function.select_table(request)
     return  render_json(res)
-@csrf_exempt
+
 def delect(request):
     res=function.delect(request)
     return  render_json(res)
-@csrf_exempt
+
 def editSence(request):
     res=function.editSence(request)
     return  render_json(res)
 
 
-@csrf_exempt
 def pos_name(request):
     res=function.pos_name(request)
     return  render_json(res)
 
 
-@csrf_exempt
 def paging(request):
     res=function.paging(request)
     return  render_json(res)
 
 
-@csrf_exempt
 def scene_show(request):
 
-    res = function.scene_show()
-    return res
+    # res = json.loads(request.body)
+    param0 = {
+        'limit': 4,
+        "page":1,
+        "type":0
+    }
+    param1 = {
+        'limit': 4,
+        "base_page":2,
+        "type":1
+    }
+    param2 = {
+        'limit': 4,
+        "chart_page":2,
+        "type": 2
+    }
+    param3 = {
+        'limit': 4,
+        "job_page":2,
+        "type": 3
+    }
+    param4 = {
+        'limit': 4,
+        "flow_page":2,
+        "type":"flow"
+    }
+    res = function.scene_show(param0)
+    return  render_json(res)
