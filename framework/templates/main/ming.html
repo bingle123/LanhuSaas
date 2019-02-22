@@ -141,7 +141,7 @@
     var vm = new Vue({
         el: '#app',
         data:{
-            page_count:100,
+            page_count:4,
             page:1,
             monitor_type:0,
             limit:4,
@@ -161,7 +161,11 @@
                         type:vm.monitor_type,
                         page:vm.page
                     },
-                })
+                }).then((res)=> {
+                    console.log(res)
+                }).catch((error) => {
+                alert('获取数据失败！')
+                });
             },
             add_monitor(i){
                 $('.monitor_content').append('<div class=\"Drigging\" type=\"'+i+'\" id=\"'+vm.drigging_id+'\">123</div>')
@@ -190,6 +194,7 @@
 
         }
     });
+    vm.show();
     $('.monitor_type').click(function () {
         $(this).parent().next('div').animate({
            height:'toggle'
