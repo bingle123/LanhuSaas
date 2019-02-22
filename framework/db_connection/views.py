@@ -9,11 +9,11 @@ import function
 
 def data_base(request):
 
-    return render_mako_context(request, './DataBaseManage/database.html')
+    return render_mako_context(request, './db_connection/database.html')
 
 #菜单管理
 def muenu_manage(request):
-    return render_mako_context(request, './DataBaseManage/muenu_manage.html')
+    return render_mako_context(request, './db_connection/muenu_manage.html')
 
 #模糊查询
 def selecthor(request):
@@ -110,6 +110,15 @@ def delete_muenu(request,id):
 
 # 获取名称
 def get_conname(request):
-
     res = function.get_conname(request)
+    return render_json(res)
+
+# 获取所有角色对应菜单
+def get_roleAmuenus(request):
+    res = function.get_roleAmuenus(request)
+    return render_json(res)
+
+# 获取勾选id
+def checked_menu(request):
+    res = function.checked_menu(request)
     return render_json(res)

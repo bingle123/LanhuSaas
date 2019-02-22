@@ -140,11 +140,11 @@ INSTALLED_APPS = (
     'system_config',
     'jobManagement',
     'market_day',
-    'DataBaseManage',
+    'db_connection',
     'customProcess',
     'gatherData',
     'gatherDataHistory',
-    'alertRule'
+    'notification'
 )
 
 # ==============================================================================

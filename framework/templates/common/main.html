@@ -172,7 +172,7 @@
 
             //获取角色对应的所有菜单名称
             get_Muenu() {
-                axios.post('${SITE_URL}DataBaseManage/get_user_muenu/')
+                axios.post('${SITE_URL}db_connection/get_user_muenu/')
                     .then((res) => {
                         vm.muenus = res.data.results;
                     })

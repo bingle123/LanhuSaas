@@ -37,7 +37,7 @@
             <el-row type="flex" justify="space-between" align="center" class="row">
                 <el-col :span="12">
                     <el-col :span="9">
-                        <el-input v-model="rule_search" size="medium" placeholder="请输入规则名称"></el-input>
+                        <el-input v-model="ruleSearch" size="medium" placeholder="请输入规则名称"></el-input>
                     </el-col>
                     <el-col :span="3">
                         <el-button type="primary" size="medium" icon="el-icon-search" v-on:click="alertRuleSearch">搜索</el-button>
@@ -79,7 +79,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination :page-count="alertRulesCount" background layout="prev, pager, next" style="float:right" @current-change="alertRulePageChange"></el-pagination>
+            <el-pagination :page-count="alertRulesCount" :current-page="currentPage" background layout="prev, pager, next" style="float:right" @current-change="alertRulePageChange"></el-pagination>
         </div>
         <!--数据添加/修改-->
         <div v-if="alertRuleTableStatus == 'add' || alertRuleTableStatus == 'edit'">
@@ -110,7 +110,7 @@
                     </el-col>
                     <el-col :span="11" :offset="1">
                         <el-form-item label="上限值:" prop="upper_limit">
-                            <el-input v-model="alertRuleData.upper_limit"></el-input>
+                            <el-input id="upperValue" v-model="alertRuleData.upper_limit"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -153,13 +153,13 @@
     const upperLimitCheck= (rule, value, callback) => {
         var lv = $('#lowerValue');
         if (value != null && value.length > 0) {
-            if (parseFloat(value).toString() != "NaN" && parseFloat(value) >= 1 && parseFloat(value) <= 9999) {
+            if (parseFloat(value).toString() != "NaN" && parseFloat(value) >= 0 && parseFloat(value) <= 10000) {
                 vue.upper_valid_status = true;
                 lv.focus();
                 lv.blur();
                 callback();
             } else {
-                callback(new Error('上限值在1~9999之间'));
+                callback(new Error('上限值在0~10000之间'));
             }
         } else {
             vue.upper_valid_status = false;
@@ -170,10 +170,15 @@
     };
     const lowerLimitCheck = (rule, value, callback) => {
         if (value != null && value.length > 0) {
-            if (parseFloat(value).toString() != "NaN" && parseFloat(value) >= 1 && parseFloat(value) <= 9999) {
-                callback();
+            var uv = $('#upperValue');
+            if (parseFloat(value).toString() != "NaN" && parseFloat(value) >= 0 && parseFloat(value) <= 10000) {
+                if(parseFloat(uv.val()) < parseFloat(value)){
+                    callback(new Error('上限值不能小于下限值'));
+                }else{
+                    callback();
+                }
             } else {
-                callback(new Error('下限值在1~9999之间'));
+                callback(new Error('下限值在0~10000之间'));
             }
         } else {
             if(!vue.upper_valid_status){
@@ -186,13 +191,21 @@
     var vue = new Vue({
         el: '#alertRuleManage',
         data: {
+            currentPage: 1,
+            //上限值是否验证通过标记
             upper_valid_status: false,
+            //下限值是否通过验证标记
             lower_valid_status: false,
+            //当前告警规则状态：list列表,edit修改,add添加
             alertRuleTableStatus: 'list',
+            //当前告警规则Table所使用的数据集
             alertRuleTableData: null,
+            //当前正在添加或修改的告警规则的保存对象
             alertRuleData: {},
-            rule_search: null,
-            alertRulesCount: null,
+            //告警规则名称搜索
+            ruleSearch: '',
+            //当前有多少页
+            alertRulesCount: 0,
             rules: {
                 item_id: [
                     { required: true, message: '请输入监控项ID', trigger: 'blur' },
@@ -223,13 +236,11 @@
             }
         },
         methods: {
-            validateUpperLimit: function(){
-
-            },
+            //加载所有告警规则信息
             loadAlertRuleInfo: function(){
                 const loading = this.alertRulePopupLoading();
                 //加载告警规则数据
-                var url = '${SITE_URL}alertRuleManage/select_all_rules';
+                var url = '${SITE_URL}notification/select_all_rules';
                 axios({
                         method: 'post',
                         url: url
@@ -242,12 +253,14 @@
                     this.alertRulePopupErrorMessage(msg);
                 });
             },
+            //弹出错误信息
             alertRulePopupErrorMessage: function(msg) {
                 this.$notify.error({
                   title: '错误',
                   message: msg
                 });
             },
+            //显示加载中..
             alertRulePopupLoading: function() {
                 //返回加载标记，供外部关闭
                 return this.$loading({
@@ -257,18 +270,41 @@
                     background: 'rgba(0, 0, 0, 0.7)'
                 });
             },
+            //告警规则搜索方法
             alertRuleSearch: function(){
-
+                this.alertRulePageChange(1);
             },
+            //显示告警规则添加页面
             alertRuleAdd: function(){
                 this.alertRuleTableStatus = 'add';
             },
-            alertRulePageChange: function(){
-
+            //告警规则数据分页获取
+            alertRulePageChange: function(page){
+                this.currentPage = page;
+                const loading = this.alertRulePopupLoading();
+                var data = {
+                    search: this.ruleSearch,
+                    page: this.currentPage,
+                    limit: 5
+                };
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}notification/select_rules_pagination',
+                    data: data
+                }).then((res) => {
+                    loading.close();
+                    this.alertRulesCount = res.data.pages;
+                    this.alertRuleTableData = res.data.items;
+                }).catch((res) => {
+                    loading.close();
+                    var msg = '告警规则信息加载失败！';
+                    this.alertRulePopupErrorMessage(msg + res);
+                });
             },
+            //告警规则编辑
             alertRuleEdit: function(id){
                 const loading = this.alertRulePopupLoading();
-                var url = '${SITE_URL}alertRuleManage/select_rule';
+                var url = '${SITE_URL}notification/select_rule';
                 var editData = {};
                 editData.id = id;
                 axios({
@@ -285,6 +321,7 @@
                     this.alertRulePopupErrorMessage(msg);
                 });
             },
+            //告警规则删除
             alertRuleDelete: function(id){
                 this.$confirm('确认删除当前告警规则吗?', '提示', {
                     confirmButtonText: '确定',
@@ -293,7 +330,7 @@
                     center: true
                 }).then(() => {
                     const loading = this.alertRulePopupLoading();
-                    var url = '${SITE_URL}alertRuleManage/del_rule';
+                    var url = '${SITE_URL}notification/del_rule';
                     var delData = {};
                     delData.id = id;
                     axios({
@@ -303,7 +340,7 @@
                     }).then((res) =>{
                         loading.close();
                         if('ok' == res.data.message){
-                            this.loadAlertRuleInfo();
+                            this.alertRulePageChange(this.currentPage);
                             this.$message({
                                 type: 'success',
                                 message: '删除告警规则成功!'
@@ -340,8 +377,9 @@
                     });
                 });
             },
+            //强制删除告警规则
             alertRuleForceDelete: function(id){
-                var url = '${SITE_URL}alertRuleManage/force_del_rule';
+                var url = '${SITE_URL}notification/force_del_rule';
                 var delData = {};
                 delData.id = id;
                 const loading = this.alertRulePopupLoading();
@@ -352,7 +390,7 @@
                 }).then((res) =>{
                     loading.close();
                     if('ok' == res.data.message){
-                        this.loadAlertRuleInfo();
+                        this.alertRulePageChange(this.currentPage);
                         this.$message({
                             type: 'success',
                             message: '删除告警规则成功!'
@@ -364,6 +402,7 @@
                     this.alertRulePopupErrorMessage(msg);
                 });
             },
+            //保存告警规则
             alertRuleSave: function(formName){
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
@@ -383,7 +422,7 @@
                             this.alertRuleData.editor = 'lhAdmin';
                         }
                         const loading = this.alertRulePopupLoading();
-                        var url = '${SITE_URL}alertRuleManage/add_rule';
+                        var url = '${SITE_URL}notification/add_rule';
                         axios({
                             method: 'post',
                             url: url,
@@ -391,7 +430,7 @@
                         }).then((res) =>{
                             loading.close();
                             if('ok' == res.data.message){
-                                this.loadAlertRuleInfo();
+                                this.alertRulePageChange(this.alertRulesCount);
                                 this.alertRuleList();
                             }else{
                                 var msg = '请求添加/修改告警规则失败！';
@@ -405,10 +444,12 @@
                     }
                 });
             },
+            //显示告警规则清单
             alertRuleList: function(){
                 this.alertRuleData = {};
                 this.alertRuleTableStatus = 'list';
             },
+            //Data对象根据表达式转字符串
             dataToString: function(fmt, date) {
                 var o = {
                     "M+": date.getMonth() + 1,                 //月份
@@ -428,7 +469,8 @@
             }
         },
         mounted(){
-            this.loadAlertRuleInfo();
+            //this.loadAlertRuleInfo();
+            this.alertRulePageChange(1);
         }
     });
 </script>
