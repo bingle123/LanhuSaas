@@ -90,7 +90,10 @@ def gather_param_parse(info):
         json_params = json.loads(interface_params[1])
         for key, value in json_params.items():
             info['gather_rule'] = info['gather_rule'].replace('${%s}' % key, value)
-            gather_params['extra_param']['url'] = interface_params[0]
+        gather_params['extra_param']['url'] = interface_params[0]
+        print '-------------file execute script--------'
+        print info['gather_rule']
+        print '----------------------------------------'
         gather_params['gather_rule'] = info['gather_rule']
     elif 'file' == info['gather_params']:
         file_params = info['params'].split('#')
@@ -100,6 +103,9 @@ def gather_param_parse(info):
                 gather_params['extra_param']['file_path'] = value
                 info['gather_rule'] = info['gather_rule'].replace('${%s}' % key, value)
         gather_params['extra_param']['file_server'] = file_params[0]
+        print '-------------file execute script--------'
+        print info['gather_rule']
+        print '----------------------------------------'
         gather_params['gather_rule'] = info['gather_rule']
     elif 'space_interface' == info['gather_params']:
         pass
@@ -241,21 +247,20 @@ def gather_data(info):
         if None is res4:
             return "error"
         json_data = res4['data'][0]['step_results'][0]['ip_logs'][0]['log_content']
+        # 判断接口是否返回了空数据
+        if len(json_data) == 0:
+            TDGatherData(item_id=info['id'], gather_time=now, data_key='URL_CONNECTION', data_value='0').save()
+            return "empty"
         # 将JSON字符串解析为python字典对象，便于筛选并采集数据
         json_dict = json.loads(json_data)
         # encode_change_fun(json_dict)
         # 获取当前采集时间
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        # 判断接口是否返回了空数据
-        if 0 != len(json_dict):
-            # 将结果集整理为key-value形式的采集数据
-            data_set = fi_kv_process(json_dict)
-            # 将采集的数据保存到td_gather_data中
-            for item in data_set:
-                TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value']).save()
-        else:
-            TDGatherData(item_id=info['id'], gather_time=now, data_key='URL_CONNECTION', data_value='0').save()
-            return 'empty'
+        # 将结果集整理为key-value形式的采集数据
+        data_set = fi_kv_process(json_dict)
+        # 将采集的数据保存到td_gather_data中
+        for item in data_set:
+            TDGatherData(item_id=info['id'], gather_time=now, data_key=item['key'], data_value=item['value']).save()
     elif "file" == gather_type:
         # 历史采集数据迁移
         gather_data_migrate(info['id'])
