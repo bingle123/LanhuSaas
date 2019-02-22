@@ -79,7 +79,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination :page-count="alertRulesCount" background layout="prev, pager, next" style="float:right" @current-change="alertRulePageChange"></el-pagination>
+            <el-pagination :page-count="alertRulesCount" :current-page="currentPage" background layout="prev, pager, next" style="float:right" @current-change="alertRulePageChange"></el-pagination>
         </div>
         <!--数据添加/修改-->
         <div v-if="alertRuleTableStatus == 'add' || alertRuleTableStatus == 'edit'">
@@ -240,7 +240,7 @@
             loadAlertRuleInfo: function(){
                 const loading = this.alertRulePopupLoading();
                 //加载告警规则数据
-                var url = '${SITE_URL}alertRuleManage/select_all_rules';
+                var url = '${SITE_URL}notification/select_all_rules';
                 axios({
                         method: 'post',
                         url: url
@@ -289,7 +289,7 @@
                 };
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}alertRuleManage/select_rules_pagination',
+                    url: '${SITE_URL}notification/select_rules_pagination',
                     data: data
                 }).then((res) => {
                     loading.close();
@@ -304,7 +304,7 @@
             //告警规则编辑
             alertRuleEdit: function(id){
                 const loading = this.alertRulePopupLoading();
-                var url = '${SITE_URL}alertRuleManage/select_rule';
+                var url = '${SITE_URL}notification/select_rule';
                 var editData = {};
                 editData.id = id;
                 axios({
@@ -330,7 +330,7 @@
                     center: true
                 }).then(() => {
                     const loading = this.alertRulePopupLoading();
-                    var url = '${SITE_URL}alertRuleManage/del_rule';
+                    var url = '${SITE_URL}notification/del_rule';
                     var delData = {};
                     delData.id = id;
                     axios({
@@ -340,7 +340,7 @@
                     }).then((res) =>{
                         loading.close();
                         if('ok' == res.data.message){
-                            this.alertRulePageChange();
+                            this.alertRulePageChange(this.currentPage);
                             this.$message({
                                 type: 'success',
                                 message: '删除告警规则成功!'
@@ -379,7 +379,7 @@
             },
             //强制删除告警规则
             alertRuleForceDelete: function(id){
-                var url = '${SITE_URL}alertRuleManage/force_del_rule';
+                var url = '${SITE_URL}notification/force_del_rule';
                 var delData = {};
                 delData.id = id;
                 const loading = this.alertRulePopupLoading();
@@ -422,7 +422,7 @@
                             this.alertRuleData.editor = 'lhAdmin';
                         }
                         const loading = this.alertRulePopupLoading();
-                        var url = '${SITE_URL}alertRuleManage/add_rule';
+                        var url = '${SITE_URL}notification/add_rule';
                         axios({
                             method: 'post',
                             url: url,
@@ -430,7 +430,7 @@
                         }).then((res) =>{
                             loading.close();
                             if('ok' == res.data.message){
-                                this.alertRulePageChange(this.currentPage);
+                                this.alertRulePageChange(this.alertRulesCount);
                                 this.alertRuleList();
                             }else{
                                 var msg = '请求添加/修改告警规则失败！';

@@ -374,7 +374,8 @@ def flow_change(request):
     pipeline_tree={
         'activities':activities2,
         'flows':flows1,
-        'constants':constants1
+        'constants':constants1,
+        'template_id':id['template_id']
     }
     return pipeline_tree
 
@@ -394,8 +395,14 @@ def node_name(request):
     }
     return pipeline_tree
 
-def flow_gather_test(req):
-    res=json.loads(req.body)
-    res['id']=0
-    tools.flow_gather_task(info=res)
-    return 'success'
+def flow_gather_test(request):
+    print "123"
+    return None
+    # res=json.loads(req.body)
+    # res['id']=0
+    # tools.flow_gather_task(info=res)
+    # return 'success'
+
+def start_flow_task(request):
+    print request.body
+    return None

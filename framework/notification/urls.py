@@ -13,7 +13,7 @@ from django.conf.urls import patterns
 
 
 urlpatterns = patterns(
-    'alertRule.views',
+    'notification.views',
     (r'^index$', 'show_index'),                                          # 首页
     (r'^select_all_rules$', 'select_all_rules'),
     (r'^select_rule$', 'select_rule'),

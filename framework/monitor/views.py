@@ -87,3 +87,11 @@ def flow_change(request):
 def node_name(request):
     res = function.node_name(request)
     return render_json(res)
+
+def flow_gather_test(request):
+    res = function.flow_gather_test(request)
+    return res
+
+def start_flow_task(request):
+    res = function.start_flow_task(request)
+    return res

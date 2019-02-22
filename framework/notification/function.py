@@ -158,7 +158,7 @@ def rule_check(monitor_id):
     # 获取当前监控项下的所有采集数据
     gather_data = TDGatherData.objects.filter(item_id=monitor_id).all()
     for data in gather_data:
-        #如果当前采集数据有对应的告警规则
+        # 如果当前采集数据有对应的告警规则
         if 0 != TbAlertRule.objects.filter(item_id=data.item_id, key_name=data.data_key).count():
             selected_rule = TbAlertRule.objects.filter(item_id=data.item_id, key_name=data.data_key).get()
             # 只处理单值情况的告警，多值情况下的采集数据忽略
@@ -201,6 +201,7 @@ def rule_check(monitor_id):
         #邮箱被封暂时不能用了 send_alert(**alert_info)
         pass
     return "ok"
+
 
 def send_alert(**msg):
     alert_title=msg['alert_title']

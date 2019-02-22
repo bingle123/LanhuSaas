@@ -46,7 +46,9 @@ urlpatterns = patterns(
     # 基本监控单元数据采集
     url(r'^gatherData/', include('gatherData.urls')),
     # 告警规则配置
-    url(r'^alertRuleManage/', include('alertRule.urls')),
+    url(r'^notification/', include('notification.urls')),
+    # 操作日志记录
+    url(r'^logmanagement/', include('logmanagement.urls')),
 )
 
 
