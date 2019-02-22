@@ -17,6 +17,8 @@ from market_day import celery_opt as co
 from db_connection.function import decrypt_str
 from gatherData.function import gather_data
 from gatherData.models import TDGatherData
+import sys
+from logmanagement.function import *
 
 
 def unit_show(request):
