@@ -5,6 +5,7 @@ import base64
 from account.models import *
 from blueking.component.shortcuts import *
 from gatherData.function import gather_data
+from datetime import datetime
 import time
 from monitor.models import Job
 from gatherData.function import gather_data_migrate
@@ -227,7 +228,7 @@ def flow_gather_task(**info):
                             gather_error_log=msg).save()
     if item_id != 0:
         rule_check(item_id)
-    Flow (instance_id=1, status=1, test_flag=1, start_time=1, flow_id=1).save ()
+    # Flow (instance_id=1, status=1, test_flag=1, start_time=1, flow_id=1).save ()
 
 
 def start_flow_task(**info):
