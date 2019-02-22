@@ -6,10 +6,12 @@ from account.models import *
 from blueking.component.shortcuts import *
 from gatherData.function import gather_data
 import time
-from monitor.models import Job,Flow
+from monitor.models import Job
 from gatherData.function import gather_data_migrate
 from gatherData import models
-from notification.function import rule_check
+from alertRule.function import rule_check
+from market_day import celery_opt as co
+from djcelery import models as celery_models
 
 
 def error_result(e):
@@ -49,12 +51,12 @@ def page_paging(request, limit):
     :param limit:   页面容量
     :return:        页面起始页码
     """
-    click_page_unicode = request.GET.get("clickPage")               # 获取页面页码数
-    if click_page_unicode is None or click_page_unicode == "":      # 页码数是否为空，空时赋值为第一页
+    click_page_unicode = request.GET.get("clickPage")  # 获取页面页码数
+    if click_page_unicode is None or click_page_unicode == "":  # 页码数是否为空，空时赋值为第一页
         click_page = 1
     else:
-        click_page = int(click_page_unicode.encode("utf-8"))        # 对页码进行转码
-    start_page = (click_page - 1) * limit                           # 接口参数:数据起始页码
+        click_page = int(click_page_unicode.encode("utf-8"))  # 对页码进行转码
+    start_page = (click_page - 1) * limit  # 接口参数:数据起始页码
     return start_page
 
 
@@ -183,34 +185,96 @@ def job_interface(res):
     return res1
 
 def flow_gather_task(**info):
-    task_id=info['task_id']
-    item_id=info['item_id']
-    node_times=info['node_times']
-    client = user_interface_param ()
+    task_id = info['task_id']
+    item_id = info['item_id']
+    node_times = info['node_times']
+    user_account = BkUser.objects.filter(id=1).get()
+    # 根据id为1的用户获取客户端操作快速执行脚本
+    client = get_client_by_user(user_account)
+    client.set_bk_api_ver('v2')
     param = {
         "bk_biz_id": "2",
-        "task_id":task_id
+        "task_id": task_id
     }
     res = client.sops.get_task_status(param)
-    msg=''
-    state=res['data']['state']
-    temps=res['data']['children']
+    msg = ''
+    state = res['data']['state']
+    temps = res['data']['children']
     keys = temps.keys()
+    flag=info['flag']
+    task_name=info['task_name']
     gather_data_migrate(item_id=item_id)
-    if state=='FAILED':
+    if state == 'FAILED':
+        if flag:
+            co.delete_task(task_name)
         for key in keys:
-            if temps[key]['state']==u'FAILED':
-                msg=temps[key]['id']+u'节点执行出错，请检查这个节点'
-    elif state=='RUNNING':
-        msg=u'该任务正在执行中'
-    elif state=='SUSPENDED':
-        msg=u'该任务被暂停'
-    elif state=='REVOKED':
-        msg=u'该任务已被终止'
-    elif state=='FINISHED':
-        msg=u'该任务成功执行'
+            if temps[key]['state'] == u'FAILED':
+                msg = temps[key]['id'] + u'节点执行出错，请检查这个节点'
+    elif state == 'RUNNING':
+        msg = u'该任务正在执行中'
+    elif state == 'SUSPENDED':
+        msg = u'该任务被暂停'
+    elif state == 'REVOKED':
+        msg = u'该任务已被终止'
+        if flag:
+            co.delete_task(task_name)
+    elif state == 'FINISHED':
+        msg = u'该任务成功执行'
+        if flag:
+            co.delete_task(task_name)
     for key in keys:
-        models.TDGatherData(item_id=item_id,instance_id=task_id,data_key=key, data_value=temps[key]['state'],gather_error_log=msg).save()
-    if item_id!=0:
+        models.TDGatherData(item_id=item_id, instance_id=task_id, data_key=key, data_value=temps[key]['state'],
+                            gather_error_log=msg).save()
+    if item_id != 0:
         rule_check(item_id)
-    Flow(instance_id=1,status=1,test_flag=1,start_time=1,flow_id=1).save()
+    Flow (instance_id=1, status=1, test_flag=1, start_time=1, flow_id=1).save ()
+
+
+def start_flow_task(**info):
+    # 得到client对象，方便调用接口
+    user_account = BkUser.objects.filter(id=1).get()
+    client = get_client_by_user(user_account)
+    client.set_bk_api_ver('v2')
+    template_id = info['template_id']
+    constants = info['constants']
+    strnow = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
+    name = info['template_name'] + strnow
+    param = {
+        "bk_biz_id": "2",
+        "template_id": template_id,
+        'name': name,
+        'constants': constants
+    }
+    res = client.sops.create_task(param)
+    # 调用接口创建任务并得到任务的id
+    task_id = res['data']['task_id']
+    # 调用接口启动任务，开始执行任务
+    param = {
+        "bk_biz_id": "2",
+        'task_id': task_id
+    }
+    res = client.sops.start_task(param)
+    flag = res['result']
+    # 如果启动任务成功创建一个定时查看节点状态的任务
+    if flag:
+        node_times = info['node_times']
+        starthour = str(node_times[-1]['starttime']).split(':')[0]
+        endhour = str(node_times[0]['endtime'])[:2].split(':')[0]
+        period = info['period']
+        args = {
+            'item_id': info['id'],
+            'task_id': task_id,  # 启动流程的任务id
+            'node_times': node_times,
+            'period': period,
+            'flag':True,
+            'task_name':info['template_name'] + '_check_status_test'
+        }
+        ctime = {
+            'every': period,
+            'period': 'seconds'
+        }
+        co.create_task_interval(name=info['template_name'] + '_check_status_test',
+                               task='market_day.tasks.gather_data_task_thrid', interval_time=ctime,
+                               task_args=args, desc=name)
+    return task_id
+

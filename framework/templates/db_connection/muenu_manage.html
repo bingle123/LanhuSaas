@@ -210,11 +210,11 @@
             //获取所有角色对应菜单
             get_roleAmuenus() {
                 axios.post('${SITE_URL}db_connection/get_roleAmuenus/').then((res) => {
-                    console.log(res)
+                    //console.log(res)
                     ve.data3 = res.data.message
                 })
                 axios.post('${SITE_URL}db_connection/checked_menu/').then((re) => {
-                    console.log(re)
+                    //console.log(re)
                     ve.checkedKeys = re.data.message
                 })
                 this.isAdd = 4
@@ -229,6 +229,7 @@
                 return 'background:#F7F7F7'
             },
 
+            //获取选中节点
             checked(e, data3) {
                 //this.checkedNames = []
                 this.checkedKeys = []
