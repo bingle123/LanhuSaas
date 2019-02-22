@@ -47,7 +47,7 @@
         <div>
             <el-input placeholder="请输入内容" clearable v-model="contents" style="width:30%"></el-input>
             <el-button type="primary" icon="el-icon-search" v-on:click="select1">搜索</el-button>
-            <el-popover placement="top-start" width="200" trigger="hover" content="新增一个单元。" style="float:right;">
+            <el-popover placement="top-start" width="200" trigger="hover" content="新增一个监控项。" style="float:right;">
                 <el-button slot="reference" v-on:click="add_unit(0)">新增</el-button>
             </el-popover>
         </div>
@@ -82,15 +82,15 @@
         <HR align=center width=100% color=#979797 SIZE=0.5>
         <div style="height: 30px"></div>
         <div>
-            <span>监控单元名称</span>
-            <el-input placeholder="请输入单元名称" v-model="monitor_name" style="width: 30%"></el-input>
+            <span>监控监控项名称</span>
+            <el-input placeholder="请输入监控项名称" v-model="monitor_name" style="width: 30%"></el-input>
         </div>
         <div style="height: 30px"></div>
         <span>
             <el-tabs type="card" v-model="monitor_type">
 
                 <!--基本单元 start-->
-                <el-tab-pane :disabled="disabled2" label="基本单元" name="first">
+                <el-tab-pane :disabled="disabled2" label="基本监控项" name="first">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="basic" ref="basic" :rules="rules1" label-width="100px">
@@ -205,7 +205,7 @@
                 <!-- 基本单元 end-->
 
                 <!-- 图表单元 start-->
-                <el-tab-pane :disabled="disabled3" label="图表单元" name="second">
+                <el-tab-pane :disabled="disabled3" label="图表监控项" name="second">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="chart" :rules="rules2" ref="chart" label-width="100px">
@@ -306,7 +306,7 @@
                 <!-- 图表单元 end-->
 
                 <!-- 作业单元 start-->
-                <el-tab-pane :disabled="disabled4" label="作业单元" name="third">
+                <el-tab-pane :disabled="disabled4" label="作业监控项" name="third">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="job" :rules="rules3" ref="job" label-width="100px">
@@ -412,7 +412,7 @@
                 <!-- 作业单元 end-->
 
                 <!-- 流程单元 start-->
-                <el-tab-pane :disabled="disabled5" label="流程单元" name="fourth">
+                <el-tab-pane :disabled="disabled5" label="流程监控项" name="fourth">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="flow" :rules="rules4" ref="flow" label-width="100px">
@@ -1212,6 +1212,7 @@
                         limit: 10
                     },
                 }).then(function (res) {
+                    console.log(res)
                     vm.sites = res.data.results.res_list;
                     vm.page_count = res.data.results.res_list[0].page_count;
                     vm.job2 = res.data.results.job;
@@ -1571,35 +1572,12 @@
             },
             canvas_new() {
                 if(vm.liucheng == 'block'){
-                    var node_id=''
-                    var start_time=''
-                    var end_time=''
-                    var node_times=[]
-                    for(var i=2;i<=vm.location.length-1;i++){
-                            var node_time={}
-                            node_time.node_id= vm.location[i].id ,
-                            node_time.start_time= $('#' + vm.location[i].id + '').find('.start_time').text(),
-                             node_time.end_time= $('#' + vm.location[i].id + '').find('.end_time').text()
-                            node_times.push(node_time)
 
-                    }
-                    var period = $('#period').val()
-                    var template_list = vm.template_list
-                    axios({
-                        method: 'post',
-                        url: '${SITE_URL}monitor/start_flow_task/',
-                        data: {
-                            'period': period,
-                            'template_list': template_list,
-                            'node_times': node_times
-                        }
-                    }).then(function () {
-
-                    })
                 }else if(vm.liucheng == 'none'){
 
                     var period = $('#period').val()
                     var template_list = vm.template_list
+
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor/flow_gather_test/',
@@ -1668,6 +1646,35 @@
             change3(value) {
                 if (value == 1) {
                     vm.liucheng = 'block';
+                    var node_id=''
+                    var start_time=''
+                    var end_time=''
+                    var node_times=[]
+                    for(var i=2;i<=vm.location.length-1;i++){
+                            var node_time={}
+                            node_time.node_id= vm.location[i].id ,
+                            node_time.start_time= $('#' + vm.location[i].id + '').find('.start_time').text(),
+                             node_time.end_time= $('#' + vm.location[i].id + '').find('.end_time').text()
+
+                            node_times.push(node_time)
+
+                    }
+                    var period = $('#period').val()
+                    var template_list = vm.template_list
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}monitor/start_flow_task/',
+                        data: {
+                            'period': period,
+                            'template_list': template_list,
+                            'node_times': node_times,
+                            'monitor_name':vm.monitor_name,
+                            'monitor_type':vm.monitor_type,
+                            'constants':vm.constants
+                        }
+                    }).then(function (res) {
+                        console.log(res)
+                    })
                 } else {
                     vm.liucheng = 'none';
                 }
