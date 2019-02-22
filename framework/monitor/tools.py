@@ -9,7 +9,7 @@ import time
 from monitor.models import Job
 from gatherData.function import gather_data_migrate
 from gatherData import models
-from alertRule.function import rule_check
+from notification.function import rule_check
 
 
 def error_result(e):

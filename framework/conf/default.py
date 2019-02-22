@@ -144,7 +144,7 @@ INSTALLED_APPS = (
     'customProcess',
     'gatherData',
     'gatherDataHistory',
-    'alertRule'
+    'notification'
 )
 
 # ==============================================================================

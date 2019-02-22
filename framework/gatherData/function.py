@@ -13,7 +13,7 @@ import os
 import settings
 from gatherData.models import *
 from gatherDataHistory.models import *
-from alertRule.function import *
+from notification.function import *
 from account.models import *
 from blueking.component.shortcuts import *
 
