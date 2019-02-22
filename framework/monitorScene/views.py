@@ -46,31 +46,7 @@ def paging(request):
 
 def scene_show(request):
 
-    # res = json.loads(request.body)
-    param0 = {
-        'limit': 4,
-        "page":1,
-        "type":0
-    }
-    param1 = {
-        'limit': 4,
-        "page":2,
-        "type":1
-    }
-    param2 = {
-        'limit': 4,
-        "page":2,
-        "type": 2
-    }
-    param3 = {
-        'limit': 4,
-        "page":2,
-        "type": 3
-    }
-    param4 = {
-        'limit': 4,
-        "page":2,
-        "type":4
-    }
-    res = function.scene_show(param3)
+    param = json.loads(request.body)
+    print param
+    res = function.scene_show(param)
     return  render_json(res)
