@@ -16,6 +16,7 @@ from market_day import function
 from market_day import celery_opt as co
 from db_connection.function import decrypt_str
 from gatherData.function import gather_data
+from gatherData.models import TDGatherData
 
 
 def unit_show(request):
@@ -392,3 +393,16 @@ def node_name(request):
     }
     return pipeline_tree
 
+def node_state(request):
+    res = json.loads(request.body)
+    item_id= res['item_id']['message']
+    print item_id
+    data = TDGatherData.objects.filter(item_id=item_id)
+    data1=[]
+    for i in data:
+        dic={
+            'data_key':i.data_key,
+            'data_value':i.data_value
+        }
+        data1.append(dic)
+    return data1
