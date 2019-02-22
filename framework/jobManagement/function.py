@@ -2,11 +2,13 @@
 from __future__ import division
 import json
 import math
+import sys
 from models import JobInstance, Localuser
 from django.forms.models import model_to_dict
 from shell_app import tools
 from django.db.models import Q
 from django.core.paginator import Paginator
+from logmanagement.function import *
 import datetime
 
 
@@ -66,49 +68,79 @@ def select_job(request):
 
 
 def delete_job(request):
+    method = sys._getframe().f_code.co_name
+    nowPerson = get_active_user(request)['data']['bk_username']
     try:
         res = json.loads(request.body)
         id = res['id']
-        JobInstance.objects.filter(id=id).delete()
+        res1 = JobInstance.objects.filter(id=id).delete()
+        info = make_log_info(u'删除岗位', u'业务日志', u'JobInstance', method, nowPerson, '成功', '无')
     except Exception as e:
         res1 = tools.error_result(e)
-        return res1
+        info = make_log_info(u'增加岗位', u'业务日志', u'JobInstance', method, nowPerson, '失败', repr(e))
+    add_log(info)
+    return res1
 
 
 def add_job(request):
-    res = json.loads(request.body)
-    tmp = get_active_user(request)
-    nowPerson = tmp['data']['bk_username']
-    res['creator'] = nowPerson
-    re = JobInstance.objects.create(**res)
+    method = sys._getframe().f_code.co_name
+    nowPerson = get_active_user(request)['data']['bk_username']
+    try:
+        res = json.loads(request.body)
+        tmp = get_active_user(request)
+        nowPerson = tmp['data']['bk_username']
+        res['creator'] = nowPerson
+        re = JobInstance.objects.create(**res)
+
+        info = make_log_info(u'增加岗位', u'业务日志', u'JobInstance', method, nowPerson,'成功','无')
+    except Exception, e:
+        re = tools.error_result(e)
+        info = make_log_info(u'增加岗位', u'业务日志', u'JobInstance', method, nowPerson, '失败',repr(e))
+    add_log(info)
     return re
 
 
 def add_person(request):
-    res = json.loads(request.body)
-    id = res['id']
-    res2 = dict_get(res['data2'], u'pinyin', None)
-    res3 = res['value2']
-    tmp = res2
-    for i in res3:
-        Localuser.objects.filter(user_name=i).update(user_pos=id)
-        for j in res2:
-            if i == j:
-                tmp.remove(i)
-    for k in tmp:
-        Localuser.objects.filter(user_name=k).update(user_pos='1')
+    method = sys._getframe().f_code.co_name
+    nowPerson = get_active_user(request)['data']['bk_username']
+    try:
+        res = json.loads(request.body)
+        id = res['id']
+        res2 = dict_get(res['data2'], u'pinyin', None)
+        res3 = res['value2']
+        tmp = res2
+        for i in res3:
+            Localuser.objects.filter(user_name=i).update(user_pos=id)
+            for j in res2:
+                if i == j:
+                    tmp.remove(i)
+        for k in tmp:
+            Localuser.objects.filter(user_name=k).update(user_pos='1')
+        info = make_log_info(u'岗位人员增加或移除', u'业务日志', u'JobInstance', method, nowPerson, '成功', '无')
+    except Exception, e:
+        res2 = tools.error_result(e)
+        info = make_log_info(u'岗位人员增加或移除', u'业务日志', u'JobInstance', method, nowPerson, '失败', repr(e))
+    add_log(info)
     return res2
 
 
 def edit_job(request):
-    res = json.loads(request.body)
-    id = res['id']
-    posname = res['pos_name']
-    nowTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    tmp = get_active_user(request)
-    nowPerson = tmp['data']['bk_username']
-    rl = JobInstance.objects.filter(id=id).update(pos_name=posname,edit_time=nowTime,editor=nowPerson)
-    return rl
+    method = sys._getframe().f_code.co_name
+    nowPerson = get_active_user(request)['data']['bk_username']
+    try:
+        res = json.loads(request.body)
+        id = res['id']
+        posname = res['pos_name']
+        nowTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        tmp = get_active_user(request)
+        nowPerson = tmp['data']['bk_username']
+        r1 = JobInstance.objects.filter(id=id).update(pos_name=posname,edit_time=nowTime,editor=nowPerson)
+        info = make_log_info(u'编辑岗位', u'业务日志', u'JobInstance', method, nowPerson, '成功', '无')
+    except Exception, e:
+        r1 = tools.error_result(e)
+        info = make_log_info(u'编辑岗位', u'业务日志', u'JobInstance', method, nowPerson, '失败', repr(e))
+    add_log(info)
+    return r1
 
 
 def dict_get(list, objkey, default):
@@ -195,24 +227,31 @@ def synchronize(request):
     """
         用户同步
         """
-    res = get_user(request)
-    reslist = res['data']
-    users = Localuser.objects.all()
-    for i in reslist:
-        flag1 = 0
-        for j in users:
-            if i['bk_username'] == j.user_name:
-                Localuser.objects.filter(user_name=j.user_name).update(mobile_no=i['phone'],email=i['email'],open_id=i['wx_userid'])
-                flag1=1
-        if flag1 == 0:
-            Localuser.objects.create(user_name=i['bk_username'],user_pos_id=1,mobile_no=i['phone'], email=i['email'], open_id=i['wx_userid'])
+    method = sys._getframe().f_code.co_name
+    nowPerson = get_active_user(request)['data']['bk_username']
+    try:
+        res = get_user(request)
+        reslist = res['data']
+        users = Localuser.objects.all()
+        for i in reslist:
+            flag1 = 0
+            for j in users:
+                if i['bk_username'] == j.user_name:
+                    Localuser.objects.filter(user_name=j.user_name).update(mobile_no=i['phone'],email=i['email'],open_id=i['wx_userid'])
+                    flag1=1
+            if flag1 == 0:
+                Localuser.objects.create(user_name=i['bk_username'],user_pos_id=1,mobile_no=i['phone'], email=i['email'], open_id=i['wx_userid'])
 
-    for x in users:
-        flag2 = 0
-        for y in reslist:
-            if x.user_name == y['bk_username']:
-                flag2 = 1
-        if flag2 == 0:
-            Localuser.objects.filter(user_name=x.user_name).delete()
-
+        for x in users:
+            flag2 = 0
+            for y in reslist:
+                if x.user_name == y['bk_username']:
+                    flag2 = 1
+            if flag2 == 0:
+                Localuser.objects.filter(user_name=x.user_name).delete()
+        info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'Localuser', method, nowPerson, '成功', '无')
+    except Exception, e:
+        r1 = tools.error_result(e)
+        info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'Localuser', method, nowPerson, '失败', repr(e))
+    add_log(info)
     return  0
