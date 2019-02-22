@@ -1,5 +1,6 @@
 # encoding:utf-8
 import function
+import tools
 from common.mymako import render_json, render_mako_context
 
 
@@ -93,5 +94,6 @@ def flow_gather_test(request):
     return res
 
 def start_flow_task(request):
-    res = function.start_flow_task(request)
+    print request.body
+    res = tools.start_flow_task(request)
     return res
