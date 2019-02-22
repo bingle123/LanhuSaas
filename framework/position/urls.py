@@ -13,7 +13,7 @@ from django.conf.urls import patterns
 
 
 urlpatterns = patterns(
-    'jobManagement.views',
+    'position.views',
     (r'^jobM/$', 'index'),                                          # 首页--服务器选择页面
     (r'^get_tree/$', 'get_tree'),
     (r'^show/$', 'show'),                                           #显示数据
