@@ -30,4 +30,5 @@ urlpatterns = patterns(
     (r'^node_name/$', 'node_name'),
     (r'^flow_gather_test/$', 'flow_gather_test'),
     (r'^start_flow_task/$', 'start_flow_task'),
+    (r'^node_state/$', 'node_state'),
 )

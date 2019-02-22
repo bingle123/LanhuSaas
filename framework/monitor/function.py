@@ -16,6 +16,9 @@ from market_day import function
 from market_day import celery_opt as co
 from db_connection.function import decrypt_str
 from gatherData.function import gather_data
+from gatherData.models import TDGatherData
+import sys
+from logmanagement.function import *
 
 
 def unit_show(request):
@@ -122,8 +125,21 @@ def delete_unit(request):
         if Scene.objects.filter(item_id=unit_id).exists():
             Scene.objects.filter(item_id=unit_id).delete()
         res1 = tools.success_result(None)
+        info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
+        info = make_log_info(u'删除监控项', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
     except Exception as e:
+        info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
+        info = make_log_info(u'删除监控项', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         res1 = tools.error_result(e)
+
     return res1
 
 
@@ -153,7 +169,11 @@ def add_unit(request):
         Monitor.objects.create(**add_dic)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
+        info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
+        info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
         result = tools.error_result(e)
     return result
 
@@ -181,8 +201,13 @@ def edit_unit(request):
         Monitor.objects.filter(monitor_name=res['monitor_name']).update(**add_dic)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
+        info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
+        info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
         result = tools.error_result(e)
+    add_log(info)
     return result
 
 
@@ -312,10 +337,6 @@ def get_desc(request, id):
     req.encoding=req.apparent_encoding
     req.raise_for_status()
     return json.loads(req.text)
-
-if __name__ == '__main__':
-    get_desc(id)
-
 def flow_change(request):
 
     cilent = tools.interface_param (request)
@@ -396,14 +417,16 @@ def node_name(request):
     }
     return pipeline_tree
 
-def flow_gather_test(request):
-    print "123"
-    return None
-    # res=json.loads(req.body)
-    # res['id']=0
-    # tools.flow_gather_task(info=res)
-    # return 'success'
-
-def start_flow_task(request):
-    print request.body
-    return None
+def node_state(request):
+    res = json.loads(request.body)
+    item_id= res['item_id']['message']
+    print item_id
+    data = TDGatherData.objects.filter(item_id=item_id)
+    data1=[]
+    for i in data:
+        dic={
+            'data_key':i.data_key,
+            'data_value':i.data_value
+        }
+        data1.append(dic)
+    return data1

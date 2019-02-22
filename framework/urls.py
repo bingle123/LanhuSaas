@@ -38,7 +38,7 @@ urlpatterns = patterns(
     url(r'^system_config/', include('system_config.urls')),
     url(r'^monitorScene/', include('monitorScene.urls')),
     # 岗位管理
-    url(r'^jobManagement/', include('jobManagement.urls')),
+    url(r'^position/', include('position.urls')),
     url(r'market_day/', include('market_day.urls')),
     url(r'^db_connection/', include('db_connection.urls')),
     # 定制过程通知
@@ -48,7 +48,7 @@ urlpatterns = patterns(
     # 告警规则配置
     url(r'^notification/', include('notification.urls')),
     # 操作日志记录
-    url(r'^logmanagement/', include('logmanagement.urls')),
+    # url(r'^logmanagement/', include('logmanagement.urls')),
 )
 
 

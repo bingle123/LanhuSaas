@@ -16,6 +16,8 @@ from django.core.paginator import Paginator
 from monitor.models import *
 from celery.task import periodic_task
 import datetime
+import sys
+from logmanagement.function import *
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
@@ -93,10 +95,17 @@ def saveconn_all(request):
         password = encryption_str(res['password'])
         res['password'] = password
         re = Conn(**res).save()
+        info = make_log_info(u'保存数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功','无')
+        add_log(info)
         return tools.success_result(re)
     except Exception as e:
+        info = make_log_info(u'保存数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败',repr(e))
+        add_log(info)
         res1 = tools.error_result(e)
         return res1
+
+
+
 
 
 #修改
@@ -112,9 +121,13 @@ def eidtconnn(request):
         password = encryption_str(res['password'])
         res['password'] = password
         re1 = Conn.objects.filter(id=res['id']).update(**res)
+        info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         return tools.success_result(re1)
     except Exception as e:
         res1 = tools.error_result(e)
+        info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         return res1
 
 
@@ -122,9 +135,15 @@ def eidtconnn(request):
 def delete_conn(request,id):
     try:
         res = Conn.objects.filter(id=id).delete()
+        info = make_log_info(u'删除数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         return tools.success_result(res)
     except Exception as e:
         res1 = tools.error_result(e)
+        info = make_log_info(u'删除数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         return tools.error_result(res1)
 
 
@@ -288,6 +307,7 @@ def get_user_muenu(request):
     cilent = tools.interface_param(request)
     user = cilent.bk_login.get_user({})
     bk_roleid = user['data']['bk_role']
+    print bk_roleid
     role_muenus = rm.objects.filter(roleid=bk_roleid)
     temp_list = []
     for i in role_muenus:
@@ -296,7 +316,6 @@ def get_user_muenu(request):
         temp = {}
         temp = model_to_dict(muenu)
         temp_list.append(temp)
-
     return tools.success_result(temp_list)
 
 
@@ -329,9 +348,15 @@ def addmuenus(request):
     try:
         res = json.loads(request.body)
         re = Muenu(**res).save()
+        info = make_log_info(u'增加菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         return tools.success_result(re)
     except Exception as e:
         res1 = tools.error_result(e)
+        info = make_log_info(u'增加菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'],'失败',repr(e))
+        add_log(info)
         return res1
 
 
@@ -342,10 +367,16 @@ def edit_muenu(request):
         res = json.loads(request.body)
         res.pop('count')
         re1 = Muenu.objects.filter(id=res['id']).update(**res)
+        info = make_log_info(u'修改菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         print tools.success_result(re1)
         return tools.success_result(re1)
     except Exception as e:
         res1 = tools.error_result(e)
+        info = make_log_info(u'修改菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         print res1
         return res1
 
@@ -355,9 +386,21 @@ def delete_muenu(request,id):
     try:
         res1 = Muenu.objects.get(id=id).delete()
         res2 = rm.objects.get(muenuid=id).delete()
+        info = make_log_info(u'删除菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
+        info = make_log_info(u'删除菜单', u'业务日志', u'rm', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         if res1 !=None & res2 !=None:
             return tools.success_result(res1)
     except Exception as e:
+        info = make_log_info(u'删除菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
+        info = make_log_info(u'删除菜单', u'业务日志', u'rm', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         res3 = tools.error_result(e)
         return tools.error_result(res3)
 
