@@ -16,7 +16,6 @@ from django.core.paginator import Paginator
 from monitor.models import *
 from celery.task import periodic_task
 import datetime
-from shell_app import tools
 import sys
 from logmanagement.function import *
 
