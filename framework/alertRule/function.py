@@ -2,8 +2,8 @@
 
 from models import *
 from django.forms.models import model_to_dict
-from DataBaseManage.models import *
-from DataBaseManage.function import *
+from db_connection.models import *
+from db_connection.function import *
 import MySQLdb
 from gatherData.models import *
 from jobManagement.models import Localuser

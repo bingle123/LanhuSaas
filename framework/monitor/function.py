@@ -6,8 +6,8 @@ import requests
 import math
 from models import *
 from monitorScene.models import Scene
-from DataBaseManage.models import Conn
-from DataBaseManage import function as f
+from db_connection.models import Conn
+from db_connection import function as f
 import tools
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
@@ -16,7 +16,7 @@ import pymysql as MySQLdb
 import pymssql
 from market_day import function
 from market_day import celery_opt as co
-from DataBaseManage.function import decrypt_str
+from db_connection.function import decrypt_str
 from gatherData.function import gather_data
 
 def unit_show(request):
