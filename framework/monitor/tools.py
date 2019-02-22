@@ -6,7 +6,7 @@ from account.models import *
 from blueking.component.shortcuts import *
 from gatherData.function import gather_data
 import time
-from monitor.models import Job
+from monitor.models import Job,Flow
 from gatherData.function import gather_data_migrate
 from gatherData import models
 from notification.function import rule_check
@@ -67,6 +67,7 @@ def interface_param(request):
     client = get_client_by_request(request)                         # 获取code、secret参数
     client.set_bk_api_ver('v2')                                     # 以v2版本调用接口
     return client
+
 
 def user_interface_param():
     """
@@ -160,22 +161,25 @@ def job_interface(res):
     except Exception as e:
         res1 = error_result(e)
         status = -1
-    name_status  = job['data']['job_instance_name']
-    info = {
-        'id': res['id'],                       # 关联id
-        'data_key': name_status,               # 状态key
-        'gather_params': 'space_interface',  # 类型
-        'data_value':status,                   #状态value
-        'gather_error_log': {                 #采集数据
-            'data_key':json_data
-        } ,
-        'instance_id': job_list['job_instance_id']     #实列id
-    }
-    gather_data (info)
-    if res['id']==0:
-        Job(instance_id=job_instance_id,status=status,test_flag=0,job_log=info['gather_error_log'],job_id=bk_job_id).save()
-    else:
-        Job (instance_id=job_instance_id, status=status, test_flag=1,job_log=info['gather_error_log'],job_id=bk_job_id).save()
+    try:
+        name_status  = job['data']['job_instance_name']
+        info = {
+            'id': res['id'],                       # 关联id
+            'data_key': name_status,               # 状态key
+            'gather_params': 'space_interface',  # 类型
+            'data_value':status,                   #状态value
+            'gather_error_log': {                 #采集数据
+                'data_key':json_data
+            } ,
+            'instance_id': job_list['job_instance_id']     #实列id
+        }
+        gather_data (info)
+        if res['id']==0:
+            Job(instance_id=job_instance_id,status=status,test_flag=0,job_log=info['gather_error_log'],job_id=bk_job_id).save()
+        else:
+            Job (instance_id=job_instance_id, status=status, test_flag=1,job_log=info['gather_error_log'],job_id=bk_job_id).save()
+    except Exception as e:
+        res1 = error_result(e)
     return res1
 
 def flow_gather_task(**info):
@@ -209,3 +213,4 @@ def flow_gather_task(**info):
         models.TDGatherData(item_id=item_id,instance_id=task_id,data_key=key, data_value=temps[key]['state'],gather_error_log=msg).save()
     if item_id!=0:
         rule_check(item_id)
+    Flow(instance_id=1,status=1,test_flag=1,start_time=1,flow_id=1).save()
