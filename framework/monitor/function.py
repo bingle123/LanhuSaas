@@ -3,7 +3,7 @@ from __future__ import division
 from common.log import logger
 import json
 import requests
-from models import *
+from models import Monitor
 from monitorScene.models import Scene
 from db_connection.models import Conn
 from monitor import tools
@@ -15,7 +15,7 @@ from db_connection.function import decrypt_str
 from gatherData.function import gather_data
 from gatherData.models import TDGatherData
 import sys
-from logmanagement.function import *
+from logmanagement.function import add_log,make_log_info,get_active_user
 
 
 def unit_show(request):
@@ -99,24 +99,14 @@ def delete_unit(request):
         monitor_name=res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
         co.delete_task(monitor_name)
-        if Scene.objects.filter(item_id=unit_id).exists():
-            Scene.objects.filter(item_id=unit_id).delete()
         res1 = tools.success_result(None)
         info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
-        add_log(info)
-        info = make_log_info(u'删除监控项', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
-        add_log(info)
     except Exception as e:
         info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        add_log(info)
-        info = make_log_info(u'删除监控项', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        add_log(info)
         res1 = tools.error_result(e)
-
+    add_log(info)
     return res1
 
 
@@ -175,7 +165,7 @@ def edit_unit(request):
         add_dic['jion_id'] = None
         add_dic['status'] = 0
         add_dic['editor'] = user['data']['bk_username']
-        Monitor.objects.filter(monitor_name=res['monitor_name']).update(**add_dic)
+        Monitor.objects.filter(id=res['unit_id']).update(**add_dic)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
