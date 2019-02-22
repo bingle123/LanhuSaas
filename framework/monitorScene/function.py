@@ -2,10 +2,8 @@
 from __future__ import division
 import json
 import math
-
 from django.core.paginator import Paginator
 from django.forms import model_to_dict
-
 from models import Scene
 from models import position_scene
 from monitor.models import scene_monitor,Monitor
