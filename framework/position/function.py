@@ -8,7 +8,7 @@ from django.forms.models import model_to_dict
 from shell_app import tools
 from django.db.models import Q
 from django.core.paginator import Paginator
-from logmanagement.function import *
+from logmanagement.function import add_log,make_log_info,get_active_user
 import datetime
 
 

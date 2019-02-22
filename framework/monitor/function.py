@@ -6,11 +6,8 @@ import requests
 from models import *
 from monitorScene.models import Scene
 from db_connection.models import Conn
-from db_connection import function as f
-import tools
-from django.core.paginator import Paginator
+from monitor import tools
 from django.forms.models import model_to_dict
-from django.db.models import Q
 import pymysql as MySQLdb
 from market_day import function
 from market_day import celery_opt as co
@@ -18,7 +15,7 @@ from db_connection.function import decrypt_str
 from gatherData.function import gather_data
 from gatherData.models import TDGatherData
 import sys
-from logmanagement.function import *
+from logmanagement.function import add_log,make_log_info,get_active_user
 
 
 def unit_show(request):
@@ -27,19 +24,8 @@ def unit_show(request):
         limit = res['limit']
         page = res['page']
         unit = Monitor.objects.all()
-        p=Paginator(unit, limit)    #分页
-        page_count = p.page_range[-1]  #总页数
-        page = p.page(page)        #当前页数据
-        res_list=[]
-        for i in page.object_list:
-            j=model_to_dict(i)
-            j['page_count']=page_count
-            j['edit_time'] = str(i.edit_time)
-            j['create_time'] = str(i.create_time)
-            j['start_time'] = str(i.start_time)
-            j['end_time'] = str(i.end_time)
-            j['status'] = str(i.status)
-            res_list.append(j)
+        page_data, base_page_count = tools.page_paging(unit,limit,page)
+        res_list= tools.obt_dic(page_data,base_page_count)
         param = {
             'bk_username': 'admin',
             "bk_biz_id": 2,
@@ -99,17 +85,8 @@ def select_unit(request):
         limit = res['limit']
         page = res['page']
         unit =  Monitor.objects.filter(Q(monitor_type__icontains = res1)|Q(monitor_name__icontains = res1)| Q(editor__icontains = res1))
-        p = Paginator (unit, limit)  # 分页
-        page_count = p.page_range[-1]  # 总页数
-        page = p.page (page)  # 当前页数据
-        for i in page:
-            j = model_to_dict (i)
-            j['page_count'] = page_count
-            j['edit_time'] = str (i.edit_time)
-            j['create_time'] = str (i.create_time)
-            j['start_time'] = str (i.start_time)
-            j['end_time'] = str (i.end_time)
-            res_list.append (j)
+        page_data, base_page_count = tools.page_paging(unit,limit,page)
+        res_list= tools.obt_dic(page_data,base_page_count)
         return res_list
     except Exception as e:
         return None
