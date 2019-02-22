@@ -56,6 +56,8 @@ def gather_test_init():
 
 # 采集参数解析
 def gather_param_parse(info):
+    # 获取当前采集时间
+    now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     # 采集参数对象
     gather_params = dict()
     # 采集目标具体字段
@@ -70,14 +72,19 @@ def gather_param_parse(info):
         field_end = info['gather_rule'].find('FROM')
         if -1 == field_end:
             field_end = info['gather_rule'].find('from')
+            if -1 == field_end:
+                TDGatherData(item_id=info['id'], gather_time=now, data_key='DB_CONNECTION', data_value='-2', gather_error_log='gather rule missing \'from\' field').save()
         # 获取采集规则的字段有哪些
         gather_params['rule_fields_str'] = info['gather_rule'][field_start:field_end].strip(' ')
         # 获取采集域
-        rule_fields = gather_params['rule_fields_str'].split(',')
-        for rule_field in rule_fields:
-            field = rule_field.strip(' ').strip('@').split('=')
-            gather_params['gather_field'].append(field[0])
-            gather_params['target_field'].append(field[1])
+        try:
+            rule_fields = gather_params['rule_fields_str'].split(',')
+            for rule_field in rule_fields:
+                field = rule_field.strip(' ').strip('@').split('=')
+                gather_params['gather_field'].append(field[0])
+                gather_params['target_field'].append(field[1])
+        except Exception as e:
+            TDGatherData(item_id=info['id'], gather_time=now, data_key='DB_CONNECTION', data_value='-2', gather_error_log=str(e)).save()
         # 根据参数获取数据库连接配置
         conn_info = Conn.objects.filter(id=info['params']).get()
         # 解密存储在数据库中的数据库密码
@@ -87,7 +94,11 @@ def gather_param_parse(info):
         interface_params = info['params'].split('#')
         print interface_params
         # 获取调用接口所需的参数
-        json_params = json.loads(interface_params[1])
+        try:
+            json_params = json.loads(interface_params[1])
+        except Exception as e:
+            TDGatherData(item_id=info['id'], gather_time=now, data_key='URL_CONNECTION', data_value='-3',gather_error_log=str(e)).save()
+            return None
         for key, value in json_params.items():
             info['gather_rule'] = info['gather_rule'].replace('${%s}' % key, value)
         gather_params['extra_param']['url'] = interface_params[0]
@@ -97,7 +108,11 @@ def gather_param_parse(info):
         gather_params['gather_rule'] = info['gather_rule']
     elif 'file' == info['gather_params']:
         file_params = info['params'].split('#')
-        json_params = json.loads(file_params[1])
+        try:
+            json_params = json.loads(file_params[1])
+        except Exception as e:
+            TDGatherData(item_id=info['id'], gather_time=now, data_key='FILE_EXIST', data_value='-3',gather_error_log=str(e)).save()
+            return None
         for key, value in json_params.items():
             if 'file_path' == key:
                 gather_params['extra_param']['file_path'] = value
