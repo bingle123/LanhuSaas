@@ -442,14 +442,16 @@
                         vm.$message({
                             type: 'info',
                             message: res.data.results,
-                        })
+                        });
+                        loading.close();
                     }
                 }).catch((res) => {
                     loading.close();
                     vm.$message({
                         type: 'info',
                         message: '爬虫异常' + res,
-                    })
+                    });
+                    loading.close();
                 })
             }
         }

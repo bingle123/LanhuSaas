@@ -4,6 +4,7 @@ from shell_app.tools import error_result
 from shell_app.tools import get_active_user
 from models import CrawlerConfig
 from models import CrawlContent
+from models import SceneType
 from django.db.models import Q
 import json
 import datetime
@@ -12,6 +13,8 @@ from django.db import transaction
 from django.core.mail import send_mail
 from django.conf import settings
 from market_day import celery_opt as co
+from django.forms.models import model_to_dict
+import uuid
 
 
 def crawl_manage(request):
@@ -310,3 +313,77 @@ def crawl_test(request):
                         title_xpath=title_xpath)
     print result
     return success_result(result['results'])
+
+
+def get_scene_type(type_name):
+    """
+    获取场景分组类别
+    :param type_name:       场景类型名称
+    :return:
+    """
+    scene_type_list = SceneType.objects.filter(Q(scene_type_name__icontains=type_name)).order_by(
+        '-update_time').values()
+    result_list = []
+    for i in scene_type_list:
+        i['create_time'] = i['create_time'].strftime("%Y-%m-%d %H:%M:%S")
+        i['update_time'] = i['update_time'].strftime("%Y-%m-%d %H:%M:%S")
+        result_list.append(i)
+    return success_result(result_list)
+
+
+def delete_scene_by_uuid(scene_type_id):
+    """
+    删除场景
+    :param scene_type_id:    场景类型UUID
+    :return:
+    """
+    try:
+        with transaction.atomic():
+            SceneType.objects.filter(scene_type_id=scene_type_id).delete()
+            return success_result('删除成功')
+    except Exception as e:
+        return error_result(e)
+
+
+def edit_scene_type_by_uuid(scene_type_id, edit_user, scene_type_name):
+    """
+    根据UUID修改场景类型
+    :param scene_type_id:   场景类型UUID
+    :param edit_user:       编辑者
+    :param scene_type_name: 场景类型名称
+    :return:
+    """
+    scene_type = SceneType.objects.filter(scene_type_name=scene_type_name)
+    if scene_type is None:
+        try:
+            with transaction.atomic():
+                SceneType.objects.filter(scene_type_id=scene_type_id).update(update_user=edit_user,
+                                                                             scene_type_name=scene_type_name,
+                                                                             update_time=datetime.datetime.now())
+                return success_result({})
+        except Exception as e:
+            return error_result(e)
+    else:
+        return error_result(u'场景类型已经存在')
+
+
+def add_scene_type(create_user, scene_type_name):
+    """
+    新增场景类型
+    :param create_user:         创建者
+    :param scene_type_name:     场景类型名称
+    :return:
+    """
+    # 生成UUID
+    scene_type_id = uuid.uuid1()
+    scene_type = SceneType.objects.filter(scene_type_name=scene_type_name)
+    if scene_type is None:
+        try:
+            with transaction.atomic():
+                SceneType.objects.create(scene_type_id=scene_type_id, create_user=create_user,
+                                         scene_type_name=scene_type_name, update_user=create_user)
+                return success_result('新增场景类型成功')
+        except Exception as e:
+            return error_result(e)
+    else:
+        return error_result(u'场景类型已经存在')
