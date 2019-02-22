@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from DataBaseManage.models import *
+from db_connection.models import *
 
 
 class TbAlertRule(models.Model):

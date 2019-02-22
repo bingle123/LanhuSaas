@@ -3,7 +3,7 @@ from __future__ import division
 import json
 import time
 from django.forms.models import model_to_dict
-from DataBaseManage.models import *
+from db_connection.models import *
 from shell_app import tools
 import pymysql as MySQLdb
 import cx_Oracle
@@ -270,7 +270,7 @@ def selecthor2(request):
     search = res['search']
     page = res['page']
     limit = res['limit']
-    sciencenews = Muenu.objects.filter(Q(mname__contains=search)|Q(url__contains=search)).exclude(url ='DataBaseManage/muenu_manage/')
+    sciencenews = Muenu.objects.filter(Q(mname__contains=search)|Q(url__contains=search)).exclude(url ='db_connection/muenu_manage/')
     p = Paginator(sciencenews, limit)
     count = p.page_range
     pages = count[-1]
@@ -309,7 +309,7 @@ def get_all_muenu(request):
     res = json.loads(request.body)
     page = res['page']
     limit = res['limit']
-    muenus = Muenu.objects.all().exclude(url ='DataBaseManage/muenu_manage/')
+    muenus = Muenu.objects.all().exclude(url ='db_connection/muenu_manage/')
     p = Paginator(muenus, limit)
     count = p.page_range
     pages = count[-1]

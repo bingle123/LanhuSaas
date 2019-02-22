@@ -291,7 +291,7 @@
                 ve.page = value;
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}DataBaseManage/selecthor/',
+                    url: '${SITE_URL}db_connection/selecthor/',
                     data: {
                         search:this.search,
                         page:ve.page,
@@ -320,7 +320,7 @@
             select_table() {
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}DataBaseManage/selecthor/',
+                    url: '${SITE_URL}db_connection/selecthor/',
                     data: {
                         search:this.search,
                         page:1,
@@ -335,7 +335,7 @@
             conn(){
                  axios({
                     method: 'post',
-                    url: '${SITE_URL}DataBaseManage/getall/',
+                    url: '${SITE_URL}db_connection/getall/',
                     data:{
                         search:this.search,
                         page:ve.page,
@@ -357,7 +357,7 @@
                         return false;
                     }else {
                         axios.post(
-                        '${SITE_URL}DataBaseManage/saveconn/',this.addconn
+                        '${SITE_URL}db_connection/saveconn/',this.addconn
                     ).then(function (res) {
                         if(res.data.code == 0){
                             ve.hide()
@@ -382,7 +382,7 @@
                         return false;
                     }else {
                         axios.post(
-                            '${SITE_URL}DataBaseManage/editconn/',this.editDataBase
+                            '${SITE_URL}db_connection/editconn/',this.editDataBase
                         ).then(function(res){
                             if(res.data.code == 0){
                                 ve.hide()
@@ -406,7 +406,7 @@
                         message: '删除成功!',
                     },
                     axios.post(
-                   '${SITE_URL}DataBaseManage/deleteconn/'+id+'/'
+                   '${SITE_URL}db_connection/deleteconn/'+id+'/'
                ).then((res) => {
                    if(res.data.message==0){
                        this.$message('删除成功')
@@ -432,7 +432,7 @@
                         alert('验证不通过');
                         return false;
                     }else {
-                        axios.post('${SITE_URL}DataBaseManage/testConn/',this.addconn)
+                        axios.post('${SITE_URL}db_connection/testConn/',this.addconn)
                             .then((res)=>{
                         if(res.data.code == 0){
                              alert("数据库连接成功")
@@ -452,7 +452,7 @@
                         alert('验证不通过');
                         return false;
                     }else {
-                        axios.post('${SITE_URL}DataBaseManage/testConn/',this.editDataBase)
+                        axios.post('${SITE_URL}db_connection/testConn/',this.editDataBase)
                             .then((res)=>{
                         if(res.data.code == 0){
                              alert("数据库连接成功")
