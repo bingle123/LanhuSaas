@@ -237,6 +237,7 @@ def flow_gather_task(**info):
         rule_check(item_id)
 
 def start_flow_task(**info):
+    print info
     # 得到client对象，方便调用接口
     user_account = BkUser.objects.filter(id=1).get()
     client = get_client_by_user(user_account)
