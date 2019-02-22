@@ -3,7 +3,7 @@ from __future__ import division
 from common.log import logger
 import json
 import requests
-from models import *
+from models import Monitor
 from monitorScene.models import Scene
 from db_connection.models import Conn
 from monitor import tools
@@ -99,8 +99,6 @@ def delete_unit(request):
         monitor_name=res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
         co.delete_task(monitor_name)
-        if Scene.objects.filter(item_id=unit_id).exists():
-            Scene.objects.filter(item_id=unit_id).delete()
         res1 = tools.success_result(None)
         info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
@@ -117,7 +115,7 @@ def delete_unit(request):
         add_log(info)
         res1 = tools.error_result(e)
 
-    return res1
+        return res1
 
 
 def add_unit(request):
