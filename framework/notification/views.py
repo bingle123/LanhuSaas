@@ -7,7 +7,7 @@ import json
 
 
 def show_index(request):
-    return render_mako_context(request, './alertRuleManage/alertRuleManage.html')
+    return render_mako_context(request, './notification/notification.html')
 
 
 def select_all_rules(request):
@@ -38,3 +38,9 @@ def add_rule(request):
     rule_data = json.loads(request.body)
     status = function.add_rule(rule_data)
     return render_json(status)
+
+
+def select_rules_pagination(request):
+    page_info = json.loads(request.body)
+    selected_rules = function.select_rules_pagination(page_info)
+    return render_json(selected_rules)

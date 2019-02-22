@@ -3,20 +3,18 @@ from __future__ import division
 from common.log import logger
 import json
 import requests
-import math
 from models import *
 from monitorScene.models import Scene
-from DataBaseManage.models import Conn
-from DataBaseManage import function as f
+from db_connection.models import Conn
+from db_connection import function as f
 import tools
 from django.core.paginator import Paginator
 from django.forms.models import model_to_dict
 from django.db.models import Q
 import pymysql as MySQLdb
-import pymssql
 from market_day import function
 from market_day import celery_opt as co
-from DataBaseManage.function import decrypt_str
+from db_connection.function import decrypt_str
 from gatherData.function import gather_data
 
 def unit_show(request):
@@ -45,7 +43,7 @@ def unit_show(request):
         param1 = {
             "bk_biz_id": 2,
         }
-        client = tools.interface_param (request)
+        client = tools.user_interface_param()
         res = client.job.get_job_list(param)
         res1 = client.sops.get_template_list(param1)
         if res.get('result'):
@@ -152,25 +150,6 @@ def add_unit(request):
         add_dic['creator'] = user['data']['bk_username']
         add_dic['editor'] = user['data']['bk_username']
         Monitor.objects.create(**add_dic)
-        if res['monitor_type'] == 'third':
-            unit_obj = Monitor.objects.all().last()
-            id = unit_obj.id
-            tools_params = {
-                'params':res['data']['params'],
-                'job_id':[{
-                    'name': add_dic['gather_rule'],
-                    'id': add_dic['jion_id']
-                }],
-                'gather_params':res['data']['gather_params']
-            }
-            tools_res = tools.job_interface(tools_params)
-            info = {
-            'id': id,                                     #关联id
-            'message': "message",                       #状态
-            'message_value': tools_res['message'],     #状态值
-            'gather_params': 'space_interface'        #类型
-            }
-            gather_data(info)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
     except Exception as e:

@@ -952,7 +952,7 @@
                      if (icon4[0] == 0) {
                          $("#text2").append("<div class=\"circle4\"></div>");
                      }
-                     if (icon4[0] == -1) {
+                     if (icon4[0] == -1 || icon4 == -2) {
                          $("#text2").append("<div class=\"circle3\"></div>");
                      }
                  }
@@ -1000,7 +1000,7 @@
                             if (icon4 == 0) {
                                 $("#text2").append("<div class=\"circle4\"></div>");
                             }
-                            if (icon4 == -1) {
+                            if (icon4 == -1 || icon4 == -2) {
                                 $("#text2").append("<div class=\"circle3\"></div>");
                             }
                         } else {
@@ -1134,7 +1134,7 @@
                                  if (icon4 == 0) {
                                      $("#text2").append("<div class=\"circle3\"></div>");
                                  }
-                                 if (icon4 == -1) {
+                                 if (icon4 == -1 || icon4 == -1) {
                                      $("#text2").append("<div class=\"circle4\"></div>");
                                  }
                             } else {
@@ -1268,7 +1268,7 @@
                         vm.sql_file_interface =3;
                         axios({
                             method: 'post',
-                            url: '${SITE_URL}DataBaseManage/get_conname/',
+                            url: '${SITE_URL}db_connection/get_conname/',
                             data:row.params,
                         }).then((res)=> {
                             vm.server_url = res['data']['results']['connname']
@@ -1338,7 +1338,7 @@
                     vm.chart.gather_rule = row.gather_rule;
                     axios({
                             method: 'post',
-                            url: '${SITE_URL}DataBaseManage/get_conname/',
+                            url: '${SITE_URL}db_connection/get_conname/',
                             data:row.params,
                         }).then((res)=> {
                             vm.chart.params = res['data']['results']
@@ -1764,7 +1764,7 @@
 
             get_db_connections() {
                 axios({
-                    url: '${SITE_URL}DataBaseManage/get_all_db_connection/',
+                    url: '${SITE_URL}db_connection/get_all_db_connection/',
                     method: 'post',
                 }).then((res) => {
                     let json = [];
@@ -1947,6 +1947,8 @@
                     };
                     this.myChart.setOption(option);
                 }
+                vm.echart_height();
+                vm.echart_width();
             },
             show_content(){
                 let content=vm.chart.contents;
@@ -1959,6 +1961,9 @@
                     this.$set(echartData,i,obj_1);
                 }
                 vm.chartData=echartData;
+                vm.show_chart();
+                vm.echart_height();
+                vm.echart_width();
             },
             chart_get_test(){
                 axios({
@@ -1984,7 +1989,10 @@
                         })
                     }
                     vm.chartData=res.data.results;
-                    vm.person_count=res.data.column_name_list[0]
+                    vm.person_count=res.data.column_name_list[0];
+                    vm.show_chart();
+                    vm.echart_height();
+                    vm.echart_width();
                 }).catch((res) =>{
                     console.log(res)
                 });

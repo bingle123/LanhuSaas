@@ -2,8 +2,9 @@
 
 from models import *
 from django.forms.models import model_to_dict
-from DataBaseManage.models import *
-from DataBaseManage.function import *
+from db_connection.models import *
+from db_connection.function import *
+from django.core.paginator import *
 import MySQLdb
 from gatherData.models import *
 from jobManagement.models import Localuser
@@ -42,6 +43,56 @@ def select_all_rules():
             temp['lower_limit'] = str(lower_limit)
         rule_list.append(temp)
     return rule_list
+
+
+# 分页获取告警规则
+def select_rules_pagination(page_info):
+    result_dict = dict()
+    list_set = list()
+    search = page_info['search']
+    page = page_info['page']
+    limit = page_info['limit']
+    if None is not search and '' != search:
+        rules_list = TbAlertRule.objects.filter(rule_name__contains=search).all()
+    else:
+        rules_list = TbAlertRule.objects.all()
+    paginator = Paginator(rules_list, limit)
+    try:
+        selected_set = paginator.page(page)
+    except PageNotAnInteger:
+        selected_set = paginator.page(1)
+    except EmptyPage:
+        selected_set = paginator.page(paginator.num_pages)
+    for selected_data in selected_set:
+        create_time = selected_data.create_time
+        edit_time = selected_data.edit_time
+        upper_limit = selected_data.upper_limit
+        lower_limit = selected_data.lower_limit
+        selected_data.create_time = None
+        selected_data.edit_time = None
+        selected_data.upper_limit = None
+        selected_data.lower_limit = None
+        temp = model_to_dict(selected_data)
+        if create_time is None:
+            temp['create_time'] = ''
+        else:
+            temp['create_time'] = create_time.strftime('%Y-%m-%d %H:%M:%S')
+        if edit_time is None:
+            temp['edit_time'] = ''
+        else:
+            temp['edit_time'] = edit_time.strftime('%Y-%m-%d %H:%M:%S')
+        if upper_limit is None:
+            temp['upper_limit'] = ''
+        else:
+            temp['upper_limit'] = str(upper_limit)
+        if lower_limit is None:
+            temp['lower_limit'] = ''
+        else:
+            temp['lower_limit'] = str(lower_limit)
+        list_set.append(temp)
+    result_dict['items'] = list_set
+    result_dict['pages'] = paginator.num_pages
+    return result_dict
 
 
 # 根据id获取告警规则
@@ -92,7 +143,7 @@ def force_del_rule(rule_data):
     return "ok"
 
 
-#告警规则添加
+# 告警规则添加
 def add_rule(rule_data):
     TbAlertRule(**rule_data).save()
     return "ok"
@@ -107,7 +158,7 @@ def rule_check(monitor_id):
     # 获取当前监控项下的所有采集数据
     gather_data = TDGatherData.objects.filter(item_id=monitor_id).all()
     for data in gather_data:
-        #如果当前采集数据有对应的告警规则
+        # 如果当前采集数据有对应的告警规则
         if 0 != TbAlertRule.objects.filter(item_id=data.item_id, key_name=data.data_key).count():
             selected_rule = TbAlertRule.objects.filter(item_id=data.item_id, key_name=data.data_key).get()
             # 只处理单值情况的告警，多值情况下的采集数据忽略
@@ -150,6 +201,7 @@ def rule_check(monitor_id):
         #邮箱被封暂时不能用了 send_alert(**alert_info)
         pass
     return "ok"
+
 
 def send_alert(**msg):
     alert_title=msg['alert_title']
