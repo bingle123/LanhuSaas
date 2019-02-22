@@ -312,10 +312,6 @@ def get_desc(request, id):
     req.encoding=req.apparent_encoding
     req.raise_for_status()
     return json.loads(req.text)
-
-if __name__ == '__main__':
-    get_desc(id)
-
 def flow_change(request):
 
     cilent = tools.interface_param (request)

@@ -90,7 +90,7 @@ def crawl_task(**i):
 def gather_data_task_one(**i):
     print '采集开始'
     # 调用基本监控项和图标监控项数据采集的方法
-    function.gather_data(i)
+    function.gather_data(**i)
     return '采集成功'
 
 #作业监控项的采集task
@@ -106,7 +106,7 @@ def gather_data_task_two(**i):
 def gather_data_task_thrid(**i):
     print '采集开始'
     # 调用流程监控项数据采集的方法
-    tools.flow_gather_task(i)
+    tools.flow_gather_task(**i)
     return '采集成功'
 @task
 def start_flow_task(**info):
@@ -134,6 +134,7 @@ def start_flow_task(**info):
     }
     res=client.sops.start_task(param)
     flag=res['result']
+    status=0
     #如果启动任务成功创建一个定时查看节点状态的任务
     if flag:
         node_times = info['node_times']
@@ -150,9 +151,13 @@ def start_flow_task(**info):
             'hour': starthour + '-' + endhour,
             'minute': '*/1',
         }
-        print args
         co.create_task_crontab(name=info['template_name']+'_check_status', task='market_day.tasks.gather_data_task_thrid', crontab_time=ctime,
                                task_args=args, desc=name)
+        status=1
+        for time in node_times:
+            Flow_Node(flow_id=item_id, node_name=time['node_name'], start_time=time['starttime'],
+                      end_time=time['endtime']).save()
+    Flow(instance_id=task_id, status=flag, test_flag=0, flow_id=item_id).save()
 # 定时任务测试
 @task
 def count_time(**i):
