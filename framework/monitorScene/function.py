@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
-from django.views.decorators.csrf import csrf_exempt
 import json
 import math
+
+from django.core.paginator import Paginator
+from django.forms import model_to_dict
+
 from models import Scene
 from models import position_scene
-# from models import scene_monitor
-from jobManagement.models import JobInstance
+from monitor.models import scene_monitor,Monitor
+from monitor import tools
+from position.models import JobInstance
+
 
 def monitor_show(request):
     monitor = Scene.objects.all()
@@ -34,6 +39,7 @@ def monitor_show(request):
         res_list.append(dic)
     return res_list
 
+
 def addSence(request):
    res = request.body
    senceModel = json.loads(res)
@@ -51,6 +57,7 @@ def addSence(request):
    }
    position_scene.objects.create(**senceModel3)
    return None
+
 
 def select_table(request):
     res = request.body
@@ -85,6 +92,7 @@ def delect(request):
     position_scene.objects.filter(scene=request.body).delete()
     return ""
 
+
 def editSence(request):
     model = json.loads(request.body)
     senceModel2 = {
@@ -106,6 +114,7 @@ def editSence(request):
     position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
     return None
 
+
 def pos_name(request):
     job=JobInstance.objects.all()
     res_list = []
@@ -116,6 +125,8 @@ def pos_name(request):
         }
         res_list.append(dic)
     return res_list
+
+
 def paging(request):
     res = json.loads(request.body)
     page = res['page']
@@ -148,3 +159,32 @@ def paging(request):
                 dic['pos_name'] = jobs["pos_name"]
         res_list.append(dic)
     return res_list
+
+
+def scene_show(res):
+
+    type = res['type']
+    limit = res['limit']
+    page = res['page']
+    if type == 0:
+        base_unit = Monitor.objects.filter(monitor_type='基本单元类型')
+        base_page_data, base_page_count = tools.page_paging(base_unit,limit,page)
+        chart_unit = Monitor.objects.filter (monitor_type='图表单元类型')
+        chart_page_data, chart_page_count = tools.page_paging (chart_unit, limit, page)
+        job_unit = Monitor.objects.filter (monitor_type='作业单元类型')
+        job_page_data, job_page_count = tools.page_paging (job_unit, limit, page)
+        flow_unit = Monitor.objects.filter (monitor_type='流程单元类型')
+        flow_page_data, flow_page_count = tools.page_paging (flow_unit, limit, page)
+
+    base_list = tools.obt_dic(base_page_data,base_page_count)
+    chart_list = tools.obt_dic(chart_page_data, chart_page_count)
+    job_list = tools.obt_dic (job_page_data, job_page_count)
+    flow_list = tools.obt_dic (flow_page_data, flow_page_count)
+    res_dic = {
+        'base_list': base_list,
+        'chart_list': chart_list,
+        'job_list': job_list,
+        'flow_list': flow_list,
+    }
+    result = tools.success_result(res_dic)
+    return result

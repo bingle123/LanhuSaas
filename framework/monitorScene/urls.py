@@ -22,6 +22,5 @@ urlpatterns = patterns(
     (r'^editSence/$', 'editSence'),
     (r'^pos_name/$', 'pos_name'),
     (r'^paging/$', 'paging'),
-
-
+    (r'^scene_show/$', 'scene_show'),                        #场景展示
 )

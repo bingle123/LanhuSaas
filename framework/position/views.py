@@ -10,7 +10,7 @@ from common.mymako import render_json, render_mako_context
 # Create your views here.
 
 def index(request):
-    return render_mako_context(request, './jobManagement/jobM.html')
+    return render_mako_context(request, './position/jobM.html')
 
 @csrf_exempt
 def show(request):

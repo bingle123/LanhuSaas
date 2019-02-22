@@ -138,13 +138,14 @@ INSTALLED_APPS = (
     'db_connection_manage',
     'monitorScene',
     'system_config',
-    'jobManagement',
+    'position',
     'market_day',
     'db_connection',
     'customProcess',
     'gatherData',
     'gatherDataHistory',
-    'notification'
+    'notification',
+    'logmanagement',
 )
 
 # ==============================================================================

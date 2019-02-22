@@ -7,7 +7,7 @@ from db_connection.function import *
 from django.core.paginator import *
 import MySQLdb
 from gatherData.models import *
-from jobManagement.models import Localuser
+from position.models import Localuser
 from system_config.function import *
 
 

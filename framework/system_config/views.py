@@ -16,6 +16,15 @@ def crawl_config_html(request):
     return render_mako_context(request, './system_config/crawl_config.html')
 
 
+def scene_type_html(request):
+    """
+    场景分组配置
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './system_config/scene_type.html')
+
+
 def manage_crawl(request):
     """
     爬虫信息新增和修改
@@ -125,4 +134,44 @@ def mail_send(request):
     :return:
     """
     res = function.send(request)
+    return render_json(res)
+
+
+def get_scene_type(request):
+    """
+    获取所有场景信息
+    :param request:
+    :return:
+    """
+    res = function.get_scene_type('')
+    return render_json(res)
+
+
+def add_scene_type(request):
+    """
+    新增场景类型
+    :param request:
+    :return:
+    """
+    res = function.add_scene_type('zork', '夜市')
+    return render_json(res)
+
+
+def edit_scene_type_by_uuid(request):
+    """
+    修改场景分组
+    :param request:
+    :return:
+    """
+    res = function.edit_scene_type_by_uuid('584fb4cf-366b-11e9-87c6-9c2a708419f2', 'lmt', '开盘')
+    return render_json(res)
+
+
+def delete_scene_type(request):
+    """
+    删除场景分组
+    :param request:
+    :return:
+    """
+    res = function.delete_scene_by_uuid('584fb4cf-366b-11e9-87c6-9c2a708419f2')
     return render_json(res)

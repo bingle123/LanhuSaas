@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-from jobManagement.models import JobInstance
+from position.models import JobInstance
 
 
 

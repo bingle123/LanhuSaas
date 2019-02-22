@@ -13,22 +13,7 @@ from django.conf.urls import patterns
 
 
 urlpatterns = patterns(
-    'monitor.views',
-    (r'^$', 'index'),                                         # 首页--服务器选择页面
-    (r'^show/$', 'unit_show'),
-    (r'^show_message$', 'index'),
-    (r'^select/$', 'select_unit'),
-    (r'^edit/$', 'edit_unit'),
-    (r'^delete/$', 'delete_unit'),
-    (r'^add/$', 'add_unit'),
-    (r'^123/$', 'index1'),
-    (r'^basic_test/$', 'basic_test'),
-    (r'^job_test/$', 'job_test'),
-    (r'^chart_get_test/$', 'chart_get_test'),
-    (r'^change_status/$', 'change_status'),                 #改变监控项的启用状态
-    (r'^flow_change/$', 'flow_change'),
-    (r'^node_name/$', 'node_name'),
-    (r'^flow_gather_test/$', 'flow_gather_test'),
-    (r'^start_flow_task/$', 'start_flow_task'),
-    (r'^node_state/$', 'node_state'),
+    'logmanagement.views',
+    (r'^logmanagement/$', 'index'),                                          # 首页--服务器选择页面
+    (r'^add_log/$', 'add_log'),                                              #增加操作日志记录
 )

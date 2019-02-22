@@ -33,6 +33,9 @@ def addone(req,date):
     return render_json(flag)
 
 def cedemo(req):
+    user_account = BkUser.objects.filter(id=1).get()
+    client = get_client_by_user(user_account)
+    client.set_bk_api_ver('v2')
     param={
        'monitor_name':'frg',
        'monitor_type':'流程单元类型',
@@ -62,9 +65,13 @@ def cedemo(req):
         'template_name': 'CY流程测试',
         'period':100
     }
+    param = {
+        "bk_biz_id": "2",
+        'task_id': 41
+    }
+    res = client.sops.start_task(param)
     p={"item_id": 51, "node_times": [{"endtime": "16:30", "starttime": "15:30"}, {"endtime": "16:30", "starttime": "15:30"}], "task_id": 31}
-    tools.flow_gather_task(**p)
-    return render_json('ok')
+    return render_json(res)
 def statusdemo(req):
     function.add_unit_task()
     return HttpResponse('ok')

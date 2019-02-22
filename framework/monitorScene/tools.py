@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from django.core.paginator import Paginator
+
 from blueking.component.shortcuts import get_client_by_request
 
 
@@ -32,20 +34,18 @@ def success_result(results):
     return result
 
 
-def page_paging(request, limit):
+def page_paging(abj,limit,page):
     """
-    分页方法
-    :param request:
-    :param limit:   页面容量
-    :return:        页面起始页码
+
+    :param abj: 对象
+    :param limit: 个数
+    :param page: 页数
+    :return: 当前页数据，总页数
     """
-    click_page_unicode = request.GET.get("clickPage")               # 获取页面页码数
-    if click_page_unicode is None or click_page_unicode == "":      # 页码数是否为空，空时赋值为第一页
-        click_page = 1
-    else:
-        click_page = int(click_page_unicode.encode("utf-8"))        # 对页码进行转码
-    start_page = (click_page - 1) * limit                           # 接口参数:数据起始页码
-    return start_page
+    p = Paginator (abj, limit)  # 分页
+    page_count = p.page_range[-1]  # 总页数
+    page_data = p.page(page)  # 当前页数据
+    return page_data,page_count
 
 
 def interface_param(request):
