@@ -221,7 +221,7 @@
             },
 
             hide() {
-                this.isAdd = 1
+                this.isAdd = 1;
                 ve.select_muenus()
             },
 
@@ -277,7 +277,8 @@
                         limit: 5,
                     }
                 }).then(function (response) {
-                    ve.tableData = response.data.message
+                    alert(Object.keys(response));
+                    ve.tableData = response.data.message;
                     ve.page_count = response.data.message[0].count;
                 })
             },
@@ -343,8 +344,8 @@
                             '${SITE_URL}db_connection/delete_muenu/' + id + '/'
                         ).then((res) => {
                             if (res.data.code == 0) {
-                                this.$message('删除成功')
-                                data.splice(index, 1)
+                                this.$message('删除成功');
+                                data.splice(index, 1);
                                 ve.hide()
                             }
                         }),
