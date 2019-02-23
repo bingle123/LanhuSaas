@@ -255,6 +255,11 @@
                     this.alertRulePopupErrorMessage(msg);
                 });
             },
+            get_header_data(){
+            axios.get('/market_day/get_header/').then(function (res) {
+               console.log(res)
+            })
+            },
             //弹出错误信息
             alertRulePopupErrorMessage: function(msg) {
                 this.$notify.error({
@@ -489,6 +494,7 @@
         mounted(){
             //this.loadAlertRuleInfo();
             this.alertRulePageChange(1);
+            this.get_header_data()
         }
     });
 </script>

@@ -203,6 +203,11 @@
                     ve.page_count = res.data.message[0].count;
                 })
             },
+            get_header_data(){
+            axios.get('/market_day/get_header/').then(function (res) {
+               console.log(res)
+            })
+            },
             show() {
                 this.isAdd = 2
             },
@@ -359,6 +364,7 @@
         }
     });
     ve.select_muenus()
+    ve.get_header_data()
 </script>
 </body>
 </html>
