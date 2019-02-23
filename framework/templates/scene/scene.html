@@ -54,8 +54,15 @@
         methods: {
             handleClick(tab, event) {
                 console.log(tab, event);
+            },get_header_data(){
+            axios.get('/market_day/get_header/').then(function (res) {
+               console.log(res)
+            })
             }
         },
+        mounted(){
+            this.get_header_data()
+        }
     });
 </script>
 

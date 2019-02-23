@@ -64,7 +64,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                <el-pagination :page-count="page_count" :current-page="page" background layout="prev, pager, next" style="float:right"
                                @current-change="current_change1"></el-pagination>
             </div>
 
@@ -204,6 +204,11 @@
                     ve.page_count = res.data.message[0].count;
                 })
             },
+            get_header_data(){
+            axios.get('/market_day/get_header/').then(function (res) {
+               console.log(res)
+            })
+            },
             show() {
                 this.isAdd = 2
             },
@@ -220,7 +225,7 @@
             },
 
             hide() {
-                this.isAdd = 1
+                this.isAdd = 1;
                 ve.select_muenus()
             },
 
@@ -278,7 +283,7 @@
                         limit: 5,
                     }
                 }).then(function (response) {
-                    ve.tableData = response.data.message
+                    ve.tableData = response.data.message;
                     ve.page_count = response.data.message[0].count;
                 })
             },
@@ -295,7 +300,7 @@
                             '${SITE_URL}db_connection/addmuenus/', this.addmuenus
                         ).then(function (res) {
                             if (res.data.code == 0) {
-                                ve.hide()
+                                ve.hide();
                             }
                         });
                     }
@@ -344,8 +349,8 @@
                             '${SITE_URL}db_connection/delete_muenu/' + id + '/'
                         ).then((res) => {
                             if (res.data.code == 0) {
-                                this.$message('删除成功')
-                                data.splice(index, 1)
+                                this.$message('删除成功');
+                                data.splice(index, 1);
                                 ve.hide()
                             }
                         }),
@@ -360,6 +365,7 @@
         }
     });
     ve.select_muenus()
+    ve.get_header_data()
 </script>
 </body>
 </html>
