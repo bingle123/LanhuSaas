@@ -128,33 +128,19 @@ def select_rule(rule_data):
 
 # 根据ID删除告警规则
 def del_rule(rule_data):
-    status_dic = dict()
     user_count = TlAlertUser.objects.filter(rule_id=rule_data['id']).count()
     if 0 != user_count:
         return "restrict"
     else:
         TbAlertRule.objects.filter(id=rule_data['id']).delete()
-        items_count = TbAlertRule.objects.count()
-        pages = items_count / 5
-        if 0 != items_count % 5:
-            pages = pages + 1
-        status_dic['message'] = 'ok'
-        status_dic['total_pages'] = pages
-        return status_dic
+        return "ok"
 
 
 # 根据ID强制删除告警规则
 def force_del_rule(rule_data):
-    status_dic = dict()
     TlAlertUser.objects.filter(rule_id=rule_data['id']).delete()
     TbAlertRule.objects.filter(id=rule_data['id']).delete()
-    items_count = TbAlertRule.objects.count()
-    pages = items_count / 5
-    if 0 != items_count % 5:
-        pages = pages + 1
-    status_dic['message'] = 'ok'
-    status_dic['total_pages'] = pages
-    return status_dic
+    return "ok"
 
 
 # 告警规则添加
