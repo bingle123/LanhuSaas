@@ -146,6 +146,7 @@ def force_del_rule(rule_data):
 # 告警规则添加
 def add_rule(rule_data):
     status_dic = dict()
+    print rule_data
     TbAlertRule(**rule_data).save()
     items_count = TbAlertRule.objects.count()
     pages = items_count / 5
