@@ -299,9 +299,12 @@
                     data: data
                 }).then((res) => {
                     loading.close();
-                    this.currentPage = page;
-                    this.alertRulesCount = res.data.pages;
                     this.alertRuleTableData = res.data.items;
+                    this.alertRulesCount = res.data.pages;
+                    this.currentPage = page;
+                    if(page > res.data.pages){
+                        this.currentPage = res.data.pages;
+                    }
                 }).catch((res) => {
                     loading.close();
                     var msg = '告警规则信息加载失败！';
