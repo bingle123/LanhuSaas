@@ -64,7 +64,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                <el-pagination :page-count="page_count" :current-page="page" background layout="prev, pager, next" style="float:right"
                                @current-change="current_change1"></el-pagination>
             </div>
 
@@ -277,7 +277,6 @@
                         limit: 5,
                     }
                 }).then(function (response) {
-                    alert(Object.keys(response));
                     ve.tableData = response.data.message;
                     ve.page_count = response.data.message[0].count;
                 })
@@ -295,7 +294,7 @@
                             '${SITE_URL}db_connection/addmuenus/', this.addmuenus
                         ).then(function (res) {
                             if (res.data.code == 0) {
-                                ve.hide()
+                                ve.hide();
                             }
                         });
                     }
