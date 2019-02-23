@@ -7,13 +7,16 @@ from blueking.component.shortcuts import *
 from gatherData.function import gather_data
 from datetime import datetime
 import time
+import json
 from monitor.models import Job
 from gatherData.function import gather_data_migrate
-from gatherData import models
+from gatherData import models as mo
 from notification.function import rule_check
 from market_day import celery_opt as co
+from market_day.models import HeaderData as hd
 from djcelery import models as celery_models
 from models import *
+import requests
 
 
 def error_result(e):
@@ -189,55 +192,83 @@ def job_interface(res):
 def flow_gather_task(**info):
     task_id = info['task_id']
     item_id = info['item_id']
+    mess=hd.objects.get(id=1).header
+    headers=json.loads(mess.decode('utf-8').replace("'", "\""))
     node_times = info['node_times']
     user_account = BkUser.objects.filter(id=1).get()
-    # 根据id为1的用户获取客户端操作快速执行脚本
     client = get_client_by_user(user_account)
     client.set_bk_api_ver('v2')
-    param = {
-        "bk_biz_id": "2",
-        "task_id": task_id
+    param={
+        'bk_biz_id':'2',
+        'task_id':task_id
     }
-    res = client.sops.get_task_status(param)
-    msg = ''
-    state = res['data']['state']
-    temps = res['data']['children']
-    keys = temps.keys()
-    flag=info['flag']
+    res_temp=client.sops.get_task_status(param)
+    ids=res_temp['data']['children']
+    v2_data=[]
+    state=res_temp['data']['state']
+    for id in ids:
+        temp={}
+        temp['id']=id
+        temp['status']=res_temp['data']['children'][id]['state']
+        v2_data.append(temp)
+    a_url = "http://paas.bk.com/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
+    req = requests.get(url=a_url, headers=headers)
+    req.encoding = req.apparent_encoding
+    req.raise_for_status()
+    res=json.loads(req.text)
+    res1 = json.loads(res['pipeline_tree'])
+    activities = res1['activities']
+    req_data=[]
+    for key in activities:
+        activities1 = {}
+        activities1['id'] = str(activities[key]['id'])
+        activities1['name'] = activities[key]['name']
+        req_data.append(activities1)
+    data=[]
+    for req in req_data:
+        for v2 in v2_data:
+            if req['id']==v2['id']:
+                temp={}
+                temp['name']=req['name']
+                temp['status']=v2['status']
+                data.append(temp)
     task_name=info['task_name']
     gather_data_migrate(item_id=item_id)
-    status=0
     if state == 'FAILED':
-        status = 1
-        if flag:
+        if item_id==0:
             co.delete_task(task_name)
-        for key in keys:
-            if temps[key]['state'] == u'FAILED':
-                msg = temps[key]['id'] + u'节点执行出错，请检查这个节点'
+        for d in data:
+            if d['status'] == u'FAILED':
+                msg = d['name'] + u'节点执行出错，请检查这个节点'
     elif state == 'RUNNING':
-        status = 2
         msg = u'该任务正在执行中'
     elif state == 'SUSPENDED':
-        status = 3
         msg = u'该任务被暂停'
     elif state == 'REVOKED':
-        status = 4
         msg = u'该任务已被终止'
-        if flag:
+        if item_id==0:
             co.delete_task(task_name)
     elif state == 'FINISHED':
-        status = 5
         msg = u'该任务成功执行'
-        if flag:
+        if item_id==0:
             co.delete_task(task_name)
-    for key in keys:
-        models.TDGatherData(item_id=item_id, instance_id=task_id, data_key=key, data_value=temps[key]['state'],
-                            gather_error_log=msg).save()
+    for d in data:
+        s=d['status']
+        if s== 'FAILED':
+            status=0
+        elif s=='RUNNING':
+            status=1
+        elif s=='SUSPENDED':
+            status=2
+        elif s == 'REVOKED':
+            status = 3
+        elif s=='FINISHED':
+            status=4
+        mo.TDGatherData.objects.create(item_id=item_id, instance_id=task_id, data_key=d['name'], data_value=status,gather_error_log=msg)
     if item_id != 0:
         rule_check(item_id)
 
 def start_flow_task(**info):
-    print info
     # 得到client对象，方便调用接口
     user_account = BkUser.objects.filter(id=1).get()
     client = get_client_by_user(user_account)
@@ -278,7 +309,6 @@ def start_flow_task(**info):
             'task_id': task_id,  # 启动流程的任务id
             'node_times': node_times,
             'period': period,
-            'flag':True,
             'task_name':info['template_list']['name'] + '_check_status_test'
         }
         ctime = {

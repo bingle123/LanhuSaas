@@ -305,7 +305,11 @@
             show() {
                 this.isAdd = 2
             },
-
+            get_header_data(){
+            axios.get('/market_day/get_header/').then(function (res) {
+               console.log(res)
+            })
+            },
             hide() {
                 this.isAdd=1
             },
@@ -467,6 +471,7 @@
         }
     });
     ve.conn()
+    ve.get_header_data()
 </script>
 
 </body>

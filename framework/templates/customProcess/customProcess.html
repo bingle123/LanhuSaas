@@ -478,6 +478,11 @@
                     });
                 });
             },
+            get_header_data(){
+            axios.get('/market_day/get_header/').then(function (res) {
+               console.log(res)
+            })
+             },
             //添加节点信息到数据库中
             customProcessSaveNodeInfo: function(formName) {
                 this.$refs[formName].validate((valid) => {
@@ -691,6 +696,7 @@
         },
         mounted(){
             this.customProcessSelectAllNodes();
+            this.get_header_data();
         }
     });
 

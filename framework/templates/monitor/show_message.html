@@ -890,6 +890,11 @@
             basic_width(){
                 $("#text2").css("left",this.basic.width)
             },
+            get_header_data(){
+            axios.get('/market_day/get_header/').then(function (res) {
+               console.log(res)
+            })
+            },
             sycontent(){
                 let tempcontents = vm.basic.contents
                 $("#text2").html("")
@@ -1599,15 +1604,26 @@
                             'constants':vm.constants
                         }
                     }).then(function (res) {
-                        axios({
+                        setInterval(function () {
+                            axios({
                             method:'post',
                             url:'${SITE_URL}monitor/node_state/',
                             data:{
                                 'item_id':res.data
                             }
                         }).then(function (res) {
-                            console.log(res)
+                            len =res.data.message.length
+                                for(var i=1;i<=len-2;i++){
+                                       data_key=res.data.message[i].data_key
+                                    if(data_key == 'RUNNING'){
+                                        $(''+res.data.message[i].data_key+'').find('.node-icon').css('background','#67c23a')
+                                    }else if(data_key == 'FAILED'|| data_key == 'SUSPENDED'){
+                                        $(''+res.data.message[i].data_key+'').find('.node-icon').css('background','#f56c6c')
+                                    }
+                                }
                         })
+                        },13000)
+
                     })
                 }else if(vm.liucheng == 'none'){
 
@@ -2033,6 +2049,7 @@
             },
         },
         mounted() {
+            this.get_header_data()
         },
     });
     vm.show();

@@ -149,7 +149,6 @@ def start_flow_task(**info):
             'task_id': task_id,  # 启动流程的任务id
             'node_times': node_times,
             'period': period,
-            'flag':False,
             'task_name':info['template_list']['name'] + '_check_status_test'
         }
         ctime = {
