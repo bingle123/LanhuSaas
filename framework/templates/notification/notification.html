@@ -286,7 +286,6 @@
                     page: page,
                     limit: 5
                 };
-                alert(this.currentPage);
                 axios({
                     method: 'post',
                     url: '${SITE_URL}notification/select_rules_pagination',
@@ -341,7 +340,7 @@
                     }).then((res) =>{
                         loading.close();
                         if('ok' == res.data.message){
-                            this.alertRulePageChange(res.data.total_pages);
+                            this.alertRulePageChange(this.currentPage);
                             this.$message({
                                 type: 'success',
                                 message: '删除告警规则成功!'
@@ -391,7 +390,7 @@
                 }).then((res) =>{
                     loading.close();
                     if('ok' == res.data.message){
-                        this.alertRulePageChange(res.data.total_pages);
+                        this.alertRulePageChange(this.currentPage);
                         this.$message({
                             type: 'success',
                             message: '删除告警规则成功!'
