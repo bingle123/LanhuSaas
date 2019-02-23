@@ -69,6 +69,7 @@ The guest-additions were then showing as running OK.
         2：手工修改为正常状态，深绿色表示
         -1：连接异常，红色表示
         -2：脚本执行异常
+        -3：参数JSON解析异常
         0/null/或者获取不到数据：尚未采集到，灰色表示
         接口采集时，需采集接口状态
     4. 显示内容：深圳行情文件状态@FILE_EXIST=1@

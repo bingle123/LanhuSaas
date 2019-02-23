@@ -67,7 +67,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
+                <el-pagination :page-count="page_count" :current-page="page" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
             </div>
 
             <!--新增-->
@@ -311,7 +311,8 @@
             })
             },
             hide() {
-                this.isAdd=1
+                this.isAdd=1;
+                ve.conn()
             },
 
             rowClass({row, rowIndex}) {

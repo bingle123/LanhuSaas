@@ -3,20 +3,19 @@ from __future__ import division
 from common.log import logger
 import json
 import requests
-from models import *
+from models import Monitor
 from monitorScene.models import Scene
 from db_connection.models import Conn
-from db_connection import function as f
-import tools
-from django.core.paginator import Paginator
+from monitor import tools
 from django.forms.models import model_to_dict
-from django.db.models import Q
 import pymysql as MySQLdb
 from market_day import function
 from market_day import celery_opt as co
 from db_connection.function import decrypt_str
 from gatherData.function import gather_data
 from gatherData.models import TDGatherData
+import sys
+from logmanagement.function import add_log,make_log_info,get_active_user
 
 
 def unit_show(request):
@@ -25,19 +24,8 @@ def unit_show(request):
         limit = res['limit']
         page = res['page']
         unit = Monitor.objects.all()
-        p=Paginator(unit, limit)    #分页
-        page_count = p.page_range[-1]  #总页数
-        page = p.page(page)        #当前页数据
-        res_list=[]
-        for i in page.object_list:
-            j=model_to_dict(i)
-            j['page_count']=page_count
-            j['edit_time'] = str(i.edit_time)
-            j['create_time'] = str(i.create_time)
-            j['start_time'] = str(i.start_time)
-            j['end_time'] = str(i.end_time)
-            j['status'] = str(i.status)
-            res_list.append(j)
+        page_data, base_page_count = tools.page_paging(unit,limit,page)
+        res_list= tools.obt_dic(page_data,base_page_count)
         param = {
             'bk_username': 'admin',
             "bk_biz_id": 2,
@@ -97,17 +85,8 @@ def select_unit(request):
         limit = res['limit']
         page = res['page']
         unit =  Monitor.objects.filter(Q(monitor_type__icontains = res1)|Q(monitor_name__icontains = res1)| Q(editor__icontains = res1))
-        p = Paginator (unit, limit)  # 分页
-        page_count = p.page_range[-1]  # 总页数
-        page = p.page (page)  # 当前页数据
-        for i in page:
-            j = model_to_dict (i)
-            j['page_count'] = page_count
-            j['edit_time'] = str (i.edit_time)
-            j['create_time'] = str (i.create_time)
-            j['start_time'] = str (i.start_time)
-            j['end_time'] = str (i.end_time)
-            res_list.append (j)
+        page_data, base_page_count = tools.page_paging(unit,limit,page)
+        res_list= tools.obt_dic(page_data,base_page_count)
         return res_list
     except Exception as e:
         return None
@@ -120,11 +99,14 @@ def delete_unit(request):
         monitor_name=res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
         co.delete_task(monitor_name)
-        if Scene.objects.filter(item_id=unit_id).exists():
-            Scene.objects.filter(item_id=unit_id).delete()
         res1 = tools.success_result(None)
+        info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
+        info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
         res1 = tools.error_result(e)
+    add_log(info)
     return res1
 
 
@@ -154,7 +136,11 @@ def add_unit(request):
         Monitor.objects.create(**add_dic)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
+        info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
+        info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
         result = tools.error_result(e)
     return result
 
@@ -179,11 +165,16 @@ def edit_unit(request):
         add_dic['jion_id'] = None
         add_dic['status'] = 0
         add_dic['editor'] = user['data']['bk_username']
-        Monitor.objects.filter(monitor_name=res['monitor_name']).update(**add_dic)
+        Monitor.objects.filter(id=res['unit_id']).update(**add_dic)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
+        info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
+        info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
         result = tools.error_result(e)
+    add_log(info)
     return result
 
 

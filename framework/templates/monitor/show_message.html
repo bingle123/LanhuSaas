@@ -1294,7 +1294,7 @@
                     }
                     if (vm.sql_file_interface == 'file') {
                         vm.sql_file_interface =6;
-                        arr=row.params.split(",");
+                        arr=row.params.split("#");
                         vm.server_url = arr[0];
                         vm.file_param = arr[1];
                         vm.typeid = '2';
@@ -1310,7 +1310,7 @@
                     }
                     if (vm.sql_file_interface == 'interface') {
                         vm.sql_file_interface =9;
-                        arr=row.params.split(",");
+                        arr=row.params.split("#");
                         vm.server_url = arr[0];
                         vm.file_param = arr[1];
                         vm.typeid = '3';

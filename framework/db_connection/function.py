@@ -16,7 +16,8 @@ from django.core.paginator import Paginator
 from monitor.models import *
 from celery.task import periodic_task
 import datetime
-from logmanagement.function import *
+import sys
+from logmanagement.function import add_log,make_log_info,get_active_user
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
@@ -94,17 +95,14 @@ def saveconn_all(request):
         password = encryption_str(res['password'])
         res['password'] = password
         re = Conn(**res).save()
-        info = make_log_info(u'数据库连接配置保存', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '成功', '无')
+        info = make_log_info(u'保存数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功','无')
         add_log(info)
         return tools.success_result(re)
     except Exception as e:
-        info = make_log_info(u'数据库连接配置保存', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        info = make_log_info(u'保存数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败',repr(e))
         add_log(info)
         res1 = tools.error_result(e)
         return res1
-
-
-
 
 
 #修改
@@ -120,9 +118,13 @@ def eidtconnn(request):
         password = encryption_str(res['password'])
         res['password'] = password
         re1 = Conn.objects.filter(id=res['id']).update(**res)
+        info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         return tools.success_result(re1)
     except Exception as e:
         res1 = tools.error_result(e)
+        info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         return res1
 
 
@@ -130,9 +132,15 @@ def eidtconnn(request):
 def delete_conn(request,id):
     try:
         res = Conn.objects.filter(id=id).delete()
+        info = make_log_info(u'删除数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         return tools.success_result(res)
     except Exception as e:
         res1 = tools.error_result(e)
+        info = make_log_info(u'删除数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         return tools.error_result(res1)
 
 
@@ -337,9 +345,15 @@ def addmuenus(request):
     try:
         res = json.loads(request.body)
         re = Muenu(**res).save()
+        info = make_log_info(u'增加菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         return tools.success_result(re)
     except Exception as e:
         res1 = tools.error_result(e)
+        info = make_log_info(u'增加菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'],'失败',repr(e))
+        add_log(info)
         return res1
 
 
@@ -350,10 +364,16 @@ def edit_muenu(request):
         res = json.loads(request.body)
         res.pop('count')
         re1 = Muenu.objects.filter(id=res['id']).update(**res)
+        info = make_log_info(u'修改菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         print tools.success_result(re1)
         return tools.success_result(re1)
     except Exception as e:
         res1 = tools.error_result(e)
+        info = make_log_info(u'修改菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         print res1
         return res1
 
@@ -361,11 +381,23 @@ def edit_muenu(request):
 #删除菜单
 def delete_muenu(request,id):
     try:
-        res1 = Muenu.objects.get(id=id).delete()
-        res2 = rm.objects.get(muenuid=id).delete()
-        if res1 !=None & res2 !=None:
-            return tools.success_result(res1)
+        Muenu.objects.get(id=id).delete()
+        rm.objects.filter(muenuid=id).all().delete()
+        info = make_log_info(u'删除菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
+        info = make_log_info(u'删除菜单', u'业务日志', u'rm', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
+        return tools.success_result(None)
     except Exception as e:
+        info = make_log_info(u'删除菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
+        info = make_log_info(u'删除菜单', u'业务日志', u'rm', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
+        print e
         res3 = tools.error_result(e)
         return tools.error_result(res3)
 
@@ -402,4 +434,50 @@ def checked_menu(request):
         ids.append(temp_id)
     return  ids
 
-#获取所有勾选id
+
+#获取所有节点菜单
+def savemnus(request):
+    ids = json.loads(request.body)
+    x = 0
+    parent_id = []
+    son_id = []
+    data1 = []
+    if isinstance(ids[0],int):
+        print ids
+    else:
+        for i in ids:
+            if ('children' in i) and ('label' in i):
+                data = []
+                for y in i['children']:
+                    x = y['id']/50
+                    x = int(x)
+                    if y['id'] not in son_id:
+                        son_id.append(y['id'])
+                        data.append(y['id'])
+                    if x not in parent_id:
+                        parent_id.append(x)
+                        mdic = {
+                            'rid': x,
+                            'data': data
+                        }
+                    else:
+                        pass
+                print mdic
+            elif ('children' not in i) and ('label' in i):
+                x = i['id'] / 50
+                x = int(x)
+                if i['id'] not in son_id:
+                    son_id.append(i['id'])
+                    data1.append(i['id'])
+                if x not in parent_id:
+                    parent_id.append(x)
+                    zdic = {
+                        'rid': x,
+                        'data': data1
+                    }
+            else:
+                pass
+
+        print zdic
+    # print parent_id
+    # print son_id

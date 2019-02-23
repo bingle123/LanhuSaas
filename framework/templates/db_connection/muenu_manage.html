@@ -64,7 +64,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                <el-pagination :page-count="page_count" :current-page="page" background layout="prev, pager, next" style="float:right"
                                @current-change="current_change1"></el-pagination>
             </div>
 
@@ -109,7 +109,7 @@
                          @check="checked"
                 >
                 </el-tree>
-
+                <el-button type="primary" @click="savemnus()">保存</el-button>
             </div>
 
             <!--编辑-->
@@ -226,7 +226,7 @@
             },
 
             hide() {
-                this.isAdd = 1
+                this.isAdd = 1;
                 ve.select_muenus()
             },
 
@@ -238,9 +238,20 @@
             checked(e, data3) {
                 //this.checkedNames = []
                 this.checkedKeys = data3.checkedNodes
+                ve.checkedKeys = []
+                this.getchekedKeys = data3.checkedNodes
+                //console.log(this.getchekedKeys)
+                console.log(e)
+            },
 
-                console.log(data3.checkedNodes)
-
+            //保存节点
+            savemnus(){
+                if(ve.getchekedKeys ==''){
+                    ve.getchekedKeys = ve.checkedKeys
+                }
+                axios.post('${SITE_URL}db_connection/savemnus/',ve.getchekedKeys).then((res)=>{
+                    //console.log(res)
+                })
             },
 
 
@@ -271,7 +282,7 @@
                         limit: 5,
                     }
                 }).then(function (response) {
-                    ve.tableData = response.data.message
+                    ve.tableData = response.data.message;
                     ve.page_count = response.data.message[0].count;
                 })
             },
@@ -288,7 +299,7 @@
                             '${SITE_URL}db_connection/addmuenus/', this.addmuenus
                         ).then(function (res) {
                             if (res.data.code == 0) {
-                                ve.hide()
+                                ve.hide();
                             }
                         });
                     }
@@ -337,8 +348,8 @@
                             '${SITE_URL}db_connection/delete_muenu/' + id + '/'
                         ).then((res) => {
                             if (res.data.code == 0) {
-                                this.$message('删除成功')
-                                data.splice(index, 1)
+                                this.$message('删除成功');
+                                data.splice(index, 1);
                                 ve.hide()
                             }
                         }),

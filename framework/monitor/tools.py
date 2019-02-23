@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from django.forms import model_to_dict
+
 from blueking.component.shortcuts import get_client_by_request
 from common.log import logger
 import base64
@@ -8,6 +10,7 @@ from gatherData.function import gather_data
 from datetime import datetime
 import time
 import json
+from django.core.paginator import Paginator
 from monitor.models import Job
 from gatherData.function import gather_data_migrate
 from gatherData import models as mo
@@ -49,20 +52,37 @@ def success_result(results):
     return result
 
 
-def page_paging(request, limit):
+def page_paging(abj,limit,page):
     """
-    分页方法
-    :param request:
-    :param limit:   页面容量
-    :return:        页面起始页码
+    :param abj: 对象
+    :param limit: 个数
+    :param page: 页数
+    :return: 当前页数据，总页数
     """
-    click_page_unicode = request.GET.get("clickPage")  # 获取页面页码数
-    if click_page_unicode is None or click_page_unicode == "":  # 页码数是否为空，空时赋值为第一页
-        click_page = 1
-    else:
-        click_page = int(click_page_unicode.encode("utf-8"))  # 对页码进行转码
-    start_page = (click_page - 1) * limit  # 接口参数:数据起始页码
-    return start_page
+    p = Paginator (abj, limit)  # 分页
+    page_count = p.page_range[-1]  # 总页数
+    page_data = p.page(page)  # 当前页数据
+    return page_data,page_count
+
+
+def obt_dic(page_data,page_count):
+    """
+    监控项取值
+    :param page_data:
+    :param page_count:
+    :return: 对应值list
+    """
+    obj_list = []
+    for i in page_data:
+        obj_dic = model_to_dict(i)
+        obj_dic['page_count'] = page_count
+        obj_dic['edit_time'] = str(i.edit_time)
+        obj_dic['create_time'] = str(i.create_time)
+        obj_dic['start_time'] = str(i.start_time)
+        obj_dic['end_time'] = str(i.end_time)
+        obj_dic['status'] = str(i.status)
+        obj_list.append (obj_dic)
+    return obj_list
 
 
 def interface_param(request):
