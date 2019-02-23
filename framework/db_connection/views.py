@@ -36,6 +36,7 @@ def getconn(request):
 # 保存
 def saveconn(request):
     re = function.saveconn_all(request)
+    print re
     return render_json(re)
 
 
@@ -126,4 +127,5 @@ def checked_menu(request):
 # 获取勾选id
 def savemnus(request):
     res = function.savemnus(request)
+    print res
     return render_json(res)

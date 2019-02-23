@@ -360,10 +360,8 @@
                         axios.post(
                         '${SITE_URL}db_connection/saveconn/',this.addconn
                     ).then(function (res) {
-                        if(res.data.code == 0){
-                            ve.page=ve.page_count;
+                            ve.page = res.data.results['page_count']
                             ve.hide()
-                        }
                     });
                     }
                 });
