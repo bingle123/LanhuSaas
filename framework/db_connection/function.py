@@ -381,16 +381,15 @@ def edit_muenu(request):
 #删除菜单
 def delete_muenu(request,id):
     try:
-        res1 = Muenu.objects.get(id=id).delete()
-        res2 = rm.objects.get(muenuid=id).delete()
+        Muenu.objects.get(id=id).delete()
+        rm.objects.filter(muenuid=id).all().delete()
         info = make_log_info(u'删除菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
         add_log(info)
         info = make_log_info(u'删除菜单', u'业务日志', u'rm', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
         add_log(info)
-        if res1 !=None & res2 !=None:
-            return tools.success_result(res1)
+        return tools.success_result(None)
     except Exception as e:
         info = make_log_info(u'删除菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
@@ -398,6 +397,7 @@ def delete_muenu(request,id):
         info = make_log_info(u'删除菜单', u'业务日志', u'rm', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
         add_log(info)
+        print e
         res3 = tools.error_result(e)
         return tools.error_result(res3)
 
