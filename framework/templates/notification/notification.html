@@ -280,19 +280,20 @@
             },
             //告警规则数据分页获取
             alertRulePageChange: function(page){
-                this.currentPage = page;
                 const loading = this.alertRulePopupLoading();
                 var data = {
                     search: this.ruleSearch,
-                    page: this.currentPage,
+                    page: page,
                     limit: 5
                 };
+                alert(this.currentPage);
                 axios({
                     method: 'post',
                     url: '${SITE_URL}notification/select_rules_pagination',
                     data: data
                 }).then((res) => {
                     loading.close();
+                    this.currentPage = page;
                     this.alertRulesCount = res.data.pages;
                     this.alertRuleTableData = res.data.items;
                 }).catch((res) => {
@@ -340,7 +341,7 @@
                     }).then((res) =>{
                         loading.close();
                         if('ok' == res.data.message){
-                            this.alertRulePageChange(this.currentPage);
+                            this.alertRulePageChange(res.data.total_pages);
                             this.$message({
                                 type: 'success',
                                 message: '删除告警规则成功!'
@@ -390,7 +391,7 @@
                 }).then((res) =>{
                     loading.close();
                     if('ok' == res.data.message){
-                        this.alertRulePageChange(this.currentPage);
+                        this.alertRulePageChange(res.data.total_pages);
                         this.$message({
                             type: 'success',
                             message: '删除告警规则成功!'
@@ -433,7 +434,7 @@
                                 if(this.alertRuleTableStatus == 'edit'){
                                     this.alertRulePageChange(this.currentPage);
                                 }else if(this.alertRuleTableStatus == 'add'){
-                                    this.alertRulePageChange(this.alertRulesCount);
+                                    this.alertRulePageChange(res.data.total_pages);
                                 }
                                 this.alertRuleList();
                             }else{
