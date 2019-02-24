@@ -113,7 +113,7 @@ def delete_unit(request):
 def add_unit(request):
     try:
         res = json.loads(request.body)
-        cilent = tools.interface_param (request)
+        cilent = tools.interface_param(request)
         user = cilent.bk_login.get_user({})
         add_dic = res['data']
         monitor_type = res['monitor_type']
