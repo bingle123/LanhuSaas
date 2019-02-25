@@ -113,7 +113,7 @@ def delete_unit(request):
 def add_unit(request):
     try:
         res = json.loads(request.body)
-        cilent = tools.interface_param (request)
+        cilent = tools.interface_param(request)
         user = cilent.bk_login.get_user({})
         add_dic = res['data']
         monitor_type = res['monitor_type']
@@ -305,6 +305,22 @@ def get_desc(request, id):
     req.encoding=req.apparent_encoding
     req.raise_for_status()
     return json.loads(req.text)
+
+def get_flow_desc():
+    headers = {
+        'Content-Type': 'application/json;charset=utf-8',
+        'Cookie': 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
+        'Host': 'paas.bk.com',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3679.0 Safari/537.36',
+        'X-CSRFToken': 'FI1fszvZzgIsYYX8n6aPMduEeAL7qTV3',
+        'X-Requested-With': 'XMLHttpRequest'
+    }
+    csrftoken = request.COOKIES["csrftoken"];
+    Cookie = "keyA=1";
+    for key in request.COOKIES:
+        Cookie = "%s;%s=%s" % (Cookie, key, request.COOKIES[key]);
+    headers['Cookie'] = Cookie;
+    headers['X-CSRFToken'] = csrftoken;
 def flow_change(request):
 
     cilent = tools.interface_param (request)
@@ -389,10 +405,12 @@ def node_state(request):
     res = json.loads(request.body)
     item_id= res['item_id']['message']
     print item_id
-    data = TDGatherData.objects.filter(item_id=item_id)
+    data = TDGatherData.objects.filter(instance_id=item_id)
     data1=[]
     for i in data:
+        print i.data_key
         dic={
+
             'data_key':i.data_key,
             'data_value':i.data_value
         }

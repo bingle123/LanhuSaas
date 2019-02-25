@@ -64,7 +64,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                <el-pagination :page-count="page_count" :current-page="page" background layout="prev, pager, next" style="float:right"
                                @current-change="current_change1"></el-pagination>
             </div>
 
@@ -109,7 +109,7 @@
                          @check="checked"
                 >
                 </el-tree>
-
+                <el-button type="primary" @click="savemnus()">保存</el-button>
             </div>
 
             <!--编辑-->
@@ -169,6 +169,7 @@
             editMuenu: [],
             data3: [],
             checkedKeys: [],
+            getchekedKeys:[],
             addmuenus: {
                 mname: '',
                 url: '',
@@ -203,6 +204,11 @@
                     ve.page_count = res.data.message[0].count;
                 })
             },
+            get_header_data(){
+            axios.get('/market_day/get_header/').then(function (res) {
+               console.log(res)
+            })
+            },
             show() {
                 this.isAdd = 2
             },
@@ -210,18 +216,16 @@
             //获取所有角色对应菜单
             get_roleAmuenus() {
                 axios.post('${SITE_URL}db_connection/get_roleAmuenus/').then((res) => {
-                    //console.log(res)
                     ve.data3 = res.data.message
                 })
                 axios.post('${SITE_URL}db_connection/checked_menu/').then((re) => {
-                    //console.log(re)
                     ve.checkedKeys = re.data.message
                 })
                 this.isAdd = 4
             },
 
             hide() {
-                this.isAdd = 1
+                this.isAdd = 1;
                 ve.select_muenus()
             },
 
@@ -233,9 +237,22 @@
             checked(e, data3) {
                 //this.checkedNames = []
                 this.checkedKeys = data3.checkedNodes
+                ve.getchekedKeys = this.checkedKeys
+            },
 
-                console.log(data3.checkedNodes)
-
+            //保存节点
+            savemnus(){
+                if(ve.getchekedKeys ==''){
+                    ve.getchekedKeys = ve.checkedKeys
+                }
+                axios.post('${SITE_URL}db_connection/savemnus/',ve.getchekedKeys).then((res)=>{
+                    console.log(res)
+                    if (res.data.message == 1){
+                        alert('请进行修改')
+                    } else {
+                        ve.hide()
+                    }
+                })
             },
 
 
@@ -266,7 +283,7 @@
                         limit: 5,
                     }
                 }).then(function (response) {
-                    ve.tableData = response.data.message
+                    ve.tableData = response.data.message;
                     ve.page_count = response.data.message[0].count;
                 })
             },
@@ -283,7 +300,7 @@
                             '${SITE_URL}db_connection/addmuenus/', this.addmuenus
                         ).then(function (res) {
                             if (res.data.code == 0) {
-                                ve.hide()
+                                ve.hide();
                             }
                         });
                     }
@@ -332,8 +349,8 @@
                             '${SITE_URL}db_connection/delete_muenu/' + id + '/'
                         ).then((res) => {
                             if (res.data.code == 0) {
-                                this.$message('删除成功')
-                                data.splice(index, 1)
+                                this.$message('删除成功');
+                                data.splice(index, 1);
                                 ve.hide()
                             }
                         }),
@@ -348,6 +365,7 @@
         }
     });
     ve.select_muenus()
+    ve.get_header_data()
 </script>
 </body>
 </html>

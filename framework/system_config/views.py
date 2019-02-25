@@ -1,6 +1,7 @@
 # encoding:utf-8
 from common.mymako import render_mako_context
 from common.mymako import render_json
+from shell_app import tools
 import json
 import crawl_template
 import function
@@ -139,12 +140,18 @@ def mail_send(request):
 
 def get_scene_type(request):
     """
-    获取所有场景信息
+    获取场景信息
     :param request:
     :return:
     """
-    res = function.get_scene_type('')
-    return render_json(res)
+    if request.body is None or request.body == '':
+        res = function.get_scene_type('')
+        return render_json(res)
+    else:
+        query_name = json.loads(request.body)['query_name']
+        print query_name
+        res = function.get_scene_type(query_name)
+        return render_json(res)
 
 
 def add_scene_type(request):
@@ -153,7 +160,11 @@ def add_scene_type(request):
     :param request:
     :return:
     """
-    res = function.add_scene_type('zork', '夜市')
+    request_body = json.loads(request.body)
+    scene_type_name = request_body['name']
+    client = tools.interface_param(request)
+    user = client.bk_login.get_user({})
+    res = function.add_scene_type(user['data']['bk_username'], scene_type_name)
     return render_json(res)
 
 
@@ -163,15 +174,24 @@ def edit_scene_type_by_uuid(request):
     :param request:
     :return:
     """
-    res = function.edit_scene_type_by_uuid('584fb4cf-366b-11e9-87c6-9c2a708419f2', 'lmt', '开盘')
+    request_body = json.loads(request.body)
+    scene_type_name = request_body['name']
+    uuid = request_body['uuid']
+    client = tools.interface_param(request)
+    user = client.bk_login.get_user({})
+    res = function.edit_scene_type_by_uuid(uuid, user['data']['bk_username'], scene_type_name)
     return render_json(res)
 
 
-def delete_scene_type(request):
+def delete_scene_by_uuid(request):
     """
     删除场景分组
     :param request:
     :return:
     """
-    res = function.delete_scene_by_uuid('584fb4cf-366b-11e9-87c6-9c2a708419f2')
+    print request.body
+    print request
+    request_body = json.loads(request.body)
+    uuid = request_body['uuid']
+    res = function.delete_scene_by_uuid(uuid)
     return render_json(res)

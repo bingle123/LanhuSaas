@@ -72,8 +72,8 @@ def cedemo(req):
     res = client.sops.start_task(param)
     p={"item_id": 51, "node_times": [{"endtime": "16:30", "starttime": "15:30"}, {"endtime": "16:30", "starttime": "15:30"}], "task_id": 31}
     return render_json(res)
-def statusdemo(req):
-    function.add_unit_task()
+def get_data_header(req):
+    function.get_header_data(req)
     return HttpResponse('ok')
 
 

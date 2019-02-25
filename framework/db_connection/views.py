@@ -36,6 +36,7 @@ def getconn(request):
 # 保存
 def saveconn(request):
     re = function.saveconn_all(request)
+    print re
     return render_json(re)
 
 
@@ -121,4 +122,10 @@ def get_roleAmuenus(request):
 # 获取勾选id
 def checked_menu(request):
     res = function.checked_menu(request)
+    return render_json(res)
+
+# 获取勾选id
+def savemnus(request):
+    res = function.savemnus(request)
+    print res
     return render_json(res)

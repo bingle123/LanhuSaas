@@ -8,3 +8,10 @@ class Holiday(models.Model):
         return self.day
     class Meta:
         db_table='holiday'
+
+class HeaderData(models.Model):
+    header=models.TextField()
+    def __unicode__(self):
+        return self.day
+    class Meta:
+        db_table='header_data'

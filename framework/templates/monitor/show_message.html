@@ -890,6 +890,11 @@
             basic_width(){
                 $("#text2").css("left",this.basic.width)
             },
+            get_header_data(){
+            axios.get('/market_day/get_header/').then(function (res) {
+               console.log(res)
+            })
+            },
             sycontent(){
                 let tempcontents = vm.basic.contents
                 $("#text2").html("")
@@ -1214,7 +1219,7 @@
                 }).then(function (res) {
                     console.log(res)
                     vm.sites = res.data.results.res_list;
-                    vm.page_count = res.data.results.res_list[0].page_count;
+                    //vm.page_count = res.data.results.res_list[0].page_count;
                     vm.job2 = res.data.results.job;
                     vm.flow2 = res.data.results.flow;
                 })
@@ -1599,15 +1604,28 @@
                             'constants':vm.constants
                         }
                     }).then(function (res) {
-                        axios({
+                        setInterval(function () {
+                            axios({
                             method:'post',
                             url:'${SITE_URL}monitor/node_state/',
                             data:{
                                 'item_id':res.data
                             }
                         }).then(function (res) {
-                            console.log(res)
+                            len =res.data.message.length
+                                for(var i=0;i<=len-1;i++){
+                                       data_key=res.data.message[i].data_value
+                                    if(data_key == '1'||data_key=='4'){
+                                        alert('绿色')
+                                          $('p:contains('+res.data.message[i].data_key+')').parent().siblings('.node-icon').css('background','#67c23a')
+                                    }else if(data_key == '0'|| data_key == '2'|| data_key == '3'){
+                                        alert('红色')
+                                         $('p:contains('+res.data.message[i].data_key+')').parent().siblings('.node-icon').css('background','#f56c6c')
+                                    }
+                                }
                         })
+                        },13000)
+
                     })
                 }else if(vm.liucheng == 'none'){
 
@@ -2033,6 +2051,7 @@
             },
         },
         mounted() {
+            this.get_header_data()
         },
     });
     vm.show();
