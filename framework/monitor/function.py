@@ -112,50 +112,51 @@ def delete_unit(request):
 
 
 def add_unit(request):
-    # try:
-    res = json.loads(request.body)
-    cilent = tools.interface_param (request)
-    user = cilent.bk_login.get_user({})
-    add_dic = res['data']
-    add_flow_dic = res['flow']
-    monitor_type = res['monitor_type']
-    if res['monitor_type'] == 'first':
-        monitor_type = '基本单元类型'
-    if res['monitor_type'] == 'second':
-        monitor_type = '图表单元类型'
-    if res['monitor_type'] == 'third':
-        monitor_type = '作业单元类型'
-        add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
-        add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
-    if res['monitor_type'] == 'fourth':
-        monitor_type = '流程单元类型'
-        add_dic['jion_id'] = res['flow']['jion_id']
-        add_dic['gather_params'] = add_dic['node_name']
-        add_dic.pop('node_name')
-        start_list = []
-        for i in res['flow']['node_times']:
-            start_list.append(i['endtime'])
-            start_list.append(i['starttime'])
-        add_dic['start_time']=min(start_list)
-        add_dic['end_time'] =max(start_list)
-    add_dic['monitor_name'] = res['monitor_name']
-    add_dic['monitor_type'] = monitor_type
-    add_dic['status'] = 0
-    add_dic['creator'] = user['data']['bk_username']
-    add_dic['editor'] = user['data']['bk_username']
-    print add_dic
-    Monitor.objects.create(**add_dic)
-    if res['monitor_type'] == 'fourth':
-        function.add_unit_task(add_dicx=add_flow_dic)
-    else:
-        function.add_unit_task(add_dicx=add_dic)
-    result = tools.success_result(None)
-    info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                         get_active_user(request)['data']['bk_username'], '成功', '无')
-    # except Exception as e:
-    #     info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    #     result = tools.error_result(e)
+    try:
+        res = json.loads(request.body)
+        cilent = tools.interface_param (request)
+        user = cilent.bk_login.get_user({})
+        add_dic = res['data']
+        add_flow_dic = res['flow']
+        monitor_type = res['monitor_type']
+        if res['monitor_type'] == 'first':
+            monitor_type = '基本单元类型'
+        if res['monitor_type'] == 'second':
+            monitor_type = '图表单元类型'
+        if res['monitor_type'] == 'third':
+            monitor_type = '作业单元类型'
+            add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
+            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+        if res['monitor_type'] == 'fourth':
+            monitor_type = '流程单元类型'
+            add_dic['jion_id'] = res['flow']['jion_id']
+            add_dic['gather_params'] = add_dic['node_name']
+            add_dic.pop('node_name')
+            start_list = []
+            for i in res['flow']['node_times']:
+                start_list.append(i['endtime'])
+                start_list.append(i['starttime'])
+            add_dic['start_time']=min(start_list)
+            add_dic['end_time'] =max(start_list)
+        add_dic['monitor_name'] = res['monitor_name']
+        add_dic['monitor_type'] = monitor_type
+        add_dic['status'] = 0
+        add_dic['creator'] = user['data']['bk_username']
+        add_dic['editor'] = user['data']['bk_username']
+        print add_dic
+        Monitor.objects.create(**add_dic)
+        if res['monitor_type'] == 'fourth':
+            function.add_unit_task(add_dicx=add_flow_dic)
+        else:
+            function.add_unit_task(add_dicx=add_dic)
+        result = tools.success_result(None)
+        info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        result = tools.error_result(e)
+    add_log(info)
     return result
 
 
@@ -222,6 +223,11 @@ def job_test(request):
 
 
 def change_unit_status(req):
+    '''
+    改变监控项的启用状态
+    :param req:
+    :return:
+    '''
     try:
         res=json.loads(req.body)
         schename=res['monitor_name']
@@ -416,11 +422,11 @@ def node_name(request):
 
 def node_state(request):
     res = json.loads(request.body)
-    item_id= '108'
+    item_id= res['item_id']['message']
+    print item_id
     data = TDGatherData.objects.filter(instance_id=item_id)
     data1=[]
     for i in data:
-        print i.data_value
         dic={
 
             'data_key':i.data_key,

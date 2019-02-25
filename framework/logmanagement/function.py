@@ -43,3 +43,61 @@ def get_active_user(request):
     client = tools.interface_param(request)
     res = client.bk_login.get_user({})
     return res
+
+def show_all(request):
+    """
+        显示所有操作日志
+    """
+    res = json.loads(request.body)
+    limit = res['limit']
+    page = res['page']
+    log = Operatelog.objects.all()
+    p = Paginator(log, limit)
+    count = p.page_range
+    pages = count[-1]
+    res_list = []
+    current_page = p.page(page)
+    for x in current_page:
+        dic = {
+            'id': x.id,
+            'log_type': x.log_type,
+            'log_name': x.log_name,
+            'user_name': x.user_name,
+            'class_name': x.class_name,
+            'method': x.method,
+            'create_time': str(x.create_time),
+            'succeed': x.succeed,
+            'message': x.message,
+            'page_count': pages
+        }
+        res_list.append(dic)
+    return  res_list
+
+def select_log(request):
+    res = json.loads(request.body)
+    limit = res['limit']
+    page = res['page']
+    search = res['search']
+    res1 = search
+    res_list = []
+    tmp = Operatelog.objects.all()
+    log = tmp.filter(Q(log_type__icontains=res1) | Q(log_name__icontains=res1)| Q(user_name__icontains=res1)| Q(class_name__icontains=res1)| Q(method__icontains=res1))
+    p = Paginator(log, limit)
+    count = p.page_range
+    pages = count[-1]
+    current_page = p.page(page)
+    for x in current_page:
+        dic = {
+            'id': x.id,
+            'log_type': x.log_type,
+            'log_name': x.log_name,
+            'user_name': x.user_name,
+            'class_name': x.class_name,
+            'method': x.method,
+            'create_time': str(x.create_time),
+            'succeed': x.succeed,
+            'message': x.message,
+            'page_count': pages
+        }
+        res_list.append(dic)
+    return res_list

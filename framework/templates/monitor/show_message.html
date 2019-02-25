@@ -718,8 +718,8 @@
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
                 font_size: '20',                       //字号
-                height: '20',                          //高度
-                width: '20',                            //宽度
+                height: '380',                          //高度
+                width: '580',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
                 period: '10',                          //采集周期
@@ -836,8 +836,8 @@
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
                 font_size: '20',                       //字号
-                height: '20',                          //高度
-                width: '0',                            //宽度
+                height: '380',                          //高度
+                width: '580',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
                 period: '10',                          //采集周期
@@ -1221,7 +1221,7 @@
                 }).then(function (res) {
                     console.log(res)
                     vm.sites = res.data.results.res_list;
-                    //vm.page_count = res.data.results.res_list[0].page_count;
+                    vm.page_count = res.data.results.res_list[0].page_count;
                     vm.job2 = res.data.results.job;
                     vm.flow2 = res.data.results.flow;
                 })
@@ -1349,7 +1349,8 @@
                             url: '${SITE_URL}db_connection/get_conname/',
                             data:row.params,
                         }).then((res)=> {
-                            vm.chart.params = res['data']['results']
+                            vm.chart.params = res['data']['results'];
+                            vm.show_content();
                         }).catch((error) => {
                         alert('拉取数据库失败！')
                         });
@@ -1643,10 +1644,8 @@
                                 for(var i=0;i<=len-1;i++){
                                        data_key=res.data.message[i].data_value
                                     if(data_key == '1'||data_key=='4'){
-                                        alert('绿色')
                                           $('p:contains('+res.data.message[i].data_key+')').parent().siblings('.node-icon').css('background','#67c23a')
                                     }else if(data_key == '0'|| data_key == '2'|| data_key == '3'){
-                                        alert('红色')
                                          $('p:contains('+res.data.message[i].data_key+')').parent().siblings('.node-icon').css('background','#f56c6c')
                                     }
                                 }

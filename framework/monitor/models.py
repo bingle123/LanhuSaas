@@ -8,7 +8,7 @@ class Monitor(models.Model):
     """
     单元信息表
     """
-    monitor_name = models.CharField(verbose_name=u'监控项名称', max_length=50, unique=True)
+    monitor_name = models.CharField(verbose_name=u'监控项名称', max_length=50)
     monitor_type = models.CharField(verbose_name=u'监控项类型',max_length=10)
     jion_id = models.PositiveIntegerField(verbose_name=u'关联ID')
     gather_rule = models.CharField(verbose_name=u'采集规则', max_length=500)
@@ -77,10 +77,12 @@ class Flow_Node(models.Model):
         db_table = 'tb_flow_node'
 
 
-class scene_monitor(models.Model):
+class Scene_monitor(models.Model):
+    scene_id = models.PositiveIntegerField(verbose_name=u'场景ID')
+    item_id = models.PositiveIntegerField (verbose_name=u'监控项ID')
     x = models.PositiveIntegerField(verbose_name=u'x坐标')
     y= models.PositiveIntegerField(verbose_name=u'y坐标')
-    scale = models.PositiveIntegerField(verbose_name=u'比例')
+    scale = models.DecimalField(verbose_name=u'比例', max_digits=4, decimal_places=2)
     score = models.PositiveIntegerField(verbose_name=u'打分')
     order = models.PositiveIntegerField(verbose_name=u'排序')
 
@@ -89,3 +91,16 @@ class scene_monitor(models.Model):
         verbose_name = u'场景监控项'
         verbose_name_plural = u'场景监控项'
         db_table = "tl_scene_monitor"
+
+
+class Scene_node(models.Model):
+    pos_id = models.PositiveIntegerField(verbose_name=u'场景ID')
+    item_id = models.PositiveIntegerField(verbose_name=u'监控项ID')
+    node_id = models.PositiveIntegerField (verbose_name=u'节点ID')
+    score = models.PositiveIntegerField (verbose_name=u'打分')
+
+
+    class Meta:
+        verbose_name = u'节点打分表'
+        verbose_name_plural = u'节点打分'
+        db_table = "td_scene_node"

@@ -27,7 +27,7 @@ urlpatterns = patterns(
     (r'^get_scene_type/$', 'get_scene_type'),                                           # 获取场景类型
     (r'^add_scene_type/$', 'add_scene_type'),                                           # 新增场景类型
     (r'^edit_scene_type_by_uuid/$', 'edit_scene_type_by_uuid'),                         # 修改场景类型
-    (r'^delete_scene_type/$', 'delete_scene_type'),                                     # 删除场景类型
+    (r'^delete_scene_by_uuid/$', 'delete_scene_by_uuid'),                                     # 删除场景类型
     (r'^json_test', 'json_test'),   # 测试专用
 
 )

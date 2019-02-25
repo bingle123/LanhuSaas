@@ -15,5 +15,6 @@ from django.conf.urls import patterns
 urlpatterns = patterns(
     'logmanagement.views',
     (r'^logmanagement/$', 'index'),                                          # 首页--服务器选择页面
-    (r'^add_log/$', 'add_log'),                                              #增加操作日志记录
+    (r'^show_all/$', 'show_all'),                                            #显示所有操作日志
+    (r'^select_log/$', 'select_log'),                                        #日志查询
 )

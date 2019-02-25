@@ -4,6 +4,8 @@ from common.mymako import render_json
 from common.mymako import render_mako_context
 from . import function
 import json
+import sys
+from logmanagement.function import add_log,make_log_info,get_active_user
 
 
 def show_index(request):
@@ -22,21 +24,42 @@ def select_rule(request):
 
 
 def del_rule(request):
-    rule_id = json.loads(request.body)
-    status = function.del_rule(rule_id)
+    try:
+        rule_id = json.loads(request.body)
+        status = function.del_rule(rule_id)
+        info = make_log_info(u'删除告警规则', u'业务日志', u'TbAlertRule', sys._getframe().f_code.co_name,
+                         get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'删除告警规则', u'业务日志', u'TbAlertRule', sys._getframe().f_code.co_name,
+                         get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return render_json(status)
 
 
 def force_del_rule(request):
-    print request.body
-    rule_id = json.loads(request.body)
-    status = function.force_del_rule(rule_id)
+    try:
+        print request.body
+        rule_id = json.loads(request.body)
+        status = function.force_del_rule(rule_id)
+        info = make_log_info(u'强制删除告警规则', u'业务日志', u'TbAlertRule', sys._getframe().f_code.co_name,
+                         get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'强制删除告警规则', u'业务日志', u'TbAlertRule', sys._getframe().f_code.co_name,
+                         get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return render_json(status)
 
 
 def add_rule(request):
     rule_data = json.loads(request.body)
-    status = function.add_rule(rule_data)
+    try:
+        status = function.add_rule(rule_data)
+        info = make_log_info(u'增加或更新告警规则', u'业务日志', u'TbAlertRule', sys._getframe().f_code.co_name,
+                         get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'增加或更新告警规则', u'业务日志', u'TbAlertRule', sys._getframe().f_code.co_name,
+                         get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return render_json(status)
 
 
