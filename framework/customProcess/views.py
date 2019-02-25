@@ -16,8 +16,15 @@ def select_all_nodes(request):
 
 
 def add_node(request):
-    node = json.loads(request.body)
-    status = function.add_node(node)
+    try:
+        node = json.loads(request.body)
+        status = function.add_node(node)
+        info = make_log_info(u'增加或更新自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'增加或更新自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return render_json(status)
 
 
@@ -34,8 +41,15 @@ def change_status_flag(request):
 
 
 def del_node(request):
-    node_id = json.loads(request.body)
-    status = function.del_node(node_id)
+    try:
+        node_id = json.loads(request.body)
+        status = function.del_node(node_id)
+        info = make_log_info(u'删除自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'删除自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return render_json(status)
 
 
@@ -46,7 +60,14 @@ def select_node(request):
 
 
 def truncate_node(request):
-    status = function.truncate_node()
+    try:
+        status = function.truncate_node()
+        info = make_log_info(u'删除所有自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
+                         get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'删除所有自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
+                         get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return render_json(status)
 
 
