@@ -48,7 +48,7 @@ urlpatterns = patterns(
     # 告警规则配置
     url(r'^notification/', include('notification.urls')),
     # 操作日志记录
-    # url(r'^logmanagement/', include('logmanagement.urls')),
+     url(r'^logmanagement/', include('logmanagement.urls')),
 )
 
 

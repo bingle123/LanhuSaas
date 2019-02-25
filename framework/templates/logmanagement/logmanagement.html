@@ -1,10 +1,125 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>操作日志</title>
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- element UI引入样式 -->
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <!-- vue的ajax依赖-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
 </head>
 <body>
+<div class="content">
+        <div class="body">
+        <el-card shadow="always">
+            <div>
+                <div id="pagetitle">
+                    岗位管理
+                </div>
+                <hr id="hr">
+                <el-row type="flex" justify="space-between" align="center" class="row">
+                    <el-col :span="12">
+                        <el-col :span="9">
+                            <el-input v-model="search" placeholder="请输入内容"></el-input>
+                        </el-col>
+                        <el-col :span="3">
+                            <el-button type="primary" icon="el-icon-search" v-on:click="select_log">搜索</el-button>
+                        </el-col>
+                    </el-col>
+                </el-row>
+                <el-table :data="Operatelog"  style="width: 150%">
+                    <el-table-column prop="id" label="id" width="100" align="center">
+                    </el-table-column>
+                    <el-table-column prop="log_type" label="操作类型" width="220" align="center">
+                    </el-table-column>
+                    <el-table-column prop="log_name" label="日志名称" width="150" align="center">
+                    </el-table-column>
+                    <el-table-column prop="user_name" label="用户名称" width="150" align="center">
+                    </el-table-column>
+                    <el-table-column prop="class_name" label="类名称" width="150" align="center">
+                    </el-table-column>
+                    <el-table-column prop="method" label="方法名称" width="150" align="center">
+                    </el-table-column>
+                    <el-table-column prop="create_time" label="创建时间" width="200" align="center">
+                    </el-table-column>
+                    <el-table-column prop="succeed" label="是否成功" width="150" align="center">
+                    </el-table-column>
+                    <el-table-column prop="message" label="备注" width="800" align="center">
+                    </el-table-column>
+                </el-table>
+                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                               @current-change="current_change"></el-pagination>
+            </div>
+        </el-card>
+    </div>
 
+</div>
+<script type="text/javascript">
+let vm = new Vue({
+        el: '.content',
+        data: {
+            page_count: 100,                             //总页码数
+            page: 1,                                   //分页页码数
+            Operatelog:[],
+            search: '',                                 //搜索框
+        },
+        methods: {
+           show() {
+               //显示
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}logmanagement/show_all/',
+                    data: {
+                        page: vm.page,
+                        limit: 10
+                    },
+                }).then(function (res) {
+                    vm.Operatelog = res.data.message;
+                    vm.page_count = res.data.message[0].page_count;
+                })
+            },
+           current_change(value){
+               vm.page = value;
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}logmanagement/select_log/',
+                    data: {
+                        search: this.search,
+                        page: vm.page,
+                        limit: 10
+                    },
+                }).then((res) => {
+                    console.log(res)
+                    vm.Operatelog = res.data.message;
+                    vm.page_count = res.data.message[0].page_count;
+                })
+            },
+           select_log(){
+               vm.page = 1                                             //查询
+                if (this.search.trim() == '') {
+                    vm.show()
+                }
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}logmanagement/select_log/',
+                    data: {
+                        search: this.search,
+                        page: this.page,
+                        limit: 10
+                    },
+                }).then((res) => {
+                    vm.Operatelog = res.data.message;
+                    vm.page_count = res.data.message[0].page_count;
+                })
+           }
+
+        }
+    });
+    vm.show();
+</script>
 </body>
 </html>
