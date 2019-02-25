@@ -9,6 +9,8 @@ from models import position_scene
 from monitor.models import scene_monitor,Monitor
 from monitor import tools
 from position.models import JobInstance
+import sys
+from logmanagement.function import add_log,make_log_info,get_active_user
 
 
 def monitor_show(request):
@@ -39,22 +41,29 @@ def monitor_show(request):
 
 
 def addSence(request):
-   res = request.body
-   senceModel = json.loads(res)
-   senceModel2 = {
-       "scene_name":senceModel['data']['scene_name'],
-       "scene_startTime":senceModel['data']["scene_startTime"],
-       "scene_endTime":senceModel['data']["scene_endTime"],
-       "scene_creator":"admin"
-   }
-   Scene.objects.create(**senceModel2)
-   id = Scene.objects.last()
-   senceModel3 = {
-       "scene":id,
-       "position_id":senceModel['data']["pos_name"]
-   }
-   position_scene.objects.create(**senceModel3)
-   return None
+    try:
+       res = request.body
+       senceModel = json.loads(res)
+       senceModel2 = {
+           "scene_name":senceModel['data']['scene_name'],
+           "scene_startTime":senceModel['data']["scene_startTime"],
+           "scene_endTime":senceModel['data']["scene_endTime"],
+           "scene_creator":"admin"
+       }
+       Scene.objects.create(**senceModel2)
+       id = Scene.objects.last()
+       senceModel3 = {
+           "scene":id,
+           "position_id":senceModel['data']["pos_name"]
+       }
+       position_scene.objects.create(**senceModel3)
+       info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+                            get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
+    return None
 
 
 def select_table(request):
@@ -86,30 +95,51 @@ def select_table(request):
 
 
 def delect(request):
-    Scene.objects.filter(id=request.body).delete()
-    position_scene.objects.filter(scene=request.body).delete()
+    try:
+        Scene.objects.filter(id=request.body).delete()
+        position_scene.objects.filter(scene=request.body).delete()
+        info = make_log_info(u'删除场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'删除场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return ""
 
 
 def editSence(request):
-    model = json.loads(request.body)
-    senceModel2 = {
-        "scene_name": model['data']['scene_name'],
-        "scene_startTime": model['data']["scene_startTime"],
-        "scene_endTime": model['data']["scene_endTime"],
-        "scene_editor":"admin"
-    }
-    Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
-    scene = Scene.objects.get(id=model['data']['id'])
-    scene.save()
-    job =JobInstance.objects.filter(pos_name=model['data']["pos_name"])
-    for j in job:
-        senceModel3 = {
-        "scene_id": model['data']['id'],
-        "position_id": j.id
+    try:
+        model = json.loads(request.body)
+        senceModel2 = {
+            "scene_name": model['data']['scene_name'],
+            "scene_startTime": model['data']["scene_startTime"],
+            "scene_endTime": model['data']["scene_endTime"],
+            "scene_editor":"admin"
         }
-        print senceModel3
-    position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
+        Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
+        info = make_log_info(u'编辑场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
+        scene = Scene.objects.get(id=model['data']['id'])
+        scene.save()
+        job =JobInstance.objects.filter(pos_name=model['data']["pos_name"])
+        for j in job:
+            senceModel3 = {
+            "scene_id": model['data']['id'],
+            "position_id": j.id
+            }
+            print senceModel3
+        position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
+        info2 = make_log_info(u'编辑场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info2)
+    except Exception as e:
+        info = make_log_info(u'编辑场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
+                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
+        info2 = make_log_info(u'编辑场景', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info2)
     return None
 
 
