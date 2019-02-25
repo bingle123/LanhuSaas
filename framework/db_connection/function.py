@@ -85,7 +85,7 @@ def getconn_all(request):
 
 # 保存
 def saveconn_all(request):
-    # try:
+    try:
         res = json.loads(request.body)
         cilent = tools.interface_param(request)
         user = cilent.bk_login.get_user({})
@@ -96,7 +96,6 @@ def saveconn_all(request):
         res['password'] = password
         re = Conn(**res).save()
         status_dic = {}
-        res = json.loads(request.body)
         items_count = Conn.objects.count()
         pages = items_count / 5
         if 0 != items_count % 5:
@@ -107,12 +106,11 @@ def saveconn_all(request):
         info = make_log_info(u'保存数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功','无')
         add_log(info)
         return tools.success_result(status_dic)
-    # except Exception as e:
-    #     info = make_log_info(u'保存数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败',repr(e))
-    #     add_log(info)
-    #     res1 = tools.error_result(e)
-    #     print e
-    #     return res1
+    except Exception as e:
+        info = make_log_info(u'保存数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败',repr(e))
+        add_log(info)
+        res1 = tools.error_result(e)
+        return res1
 
 
 #修改
@@ -128,9 +126,18 @@ def eidtconnn(request):
         password = encryption_str(res['password'])
         res['password'] = password
         re1 = Conn.objects.filter(id=res['id']).update(**res)
+
+        status_dic = {}
+        items_count = Conn.objects.count()
+        pages = items_count / 5
+        if 0 != items_count % 5:
+            pages = pages + 1
+        status_dic['message'] = 'ok'
+        status_dic['page_count'] = pages
+
         info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,get_active_user(request)['data']['bk_username'], '成功', '无')
         add_log(info)
-        return tools.success_result(re1)
+        return tools.success_result(status_dic)
     except Exception as e:
         res1 = tools.error_result(e)
         info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,get_active_user(request)['data']['bk_username'], '失败', repr(e))
