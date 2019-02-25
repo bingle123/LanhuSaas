@@ -336,7 +336,7 @@
                                     <el-input type="textarea" v-model="job.contents"
                                               placeholder="上证指数:3000  深证指数:3000" @change="change_job_contents"></el-input>
                                 </el-form-item>
-                                <el-form-item label="作业模板" prop="gather_params">
+                                <el-form-item label="作业模板" prop="gather_rule">
                                     <el-select v-model="job.gather_rule" placeholder="请选择作业模板">
                                         <el-option v-for="i in job2" :label="i.name" :value="i.id"></el-option>
                                     </el-select>
@@ -416,11 +416,13 @@
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="flow" :rules="rules4" ref="flow" label-width="100px">
-                                <el-form-item label="流程模板" prop="gather_params">
+
+                                <el-form-item label="流程模板" prop="gather_rule">
                                     <el-select v-model="flow.gather_rule" placeholder="请选择模板" @change="flow_change"	>
                                         <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id"></el-option>
                                     </el-select>
                                 </el-form-item>
+
                                 <el-form-item label="节点">
                                         <el-select v-model="flow.node_name" placeholder="请选择节点">
                                           <el-option v-for="i in activities_node_name" :label="i.name" :value="i.name"></el-option>
@@ -808,7 +810,7 @@
                 width: [
                     {required: true, message: '请输入宽度', trigger: 'blur'}
                 ],
-                gather_params: [
+                gather_rule: [
                     {required: true, message: '请选择流程模板', trigger: 'change'}
                 ],
                 period: [
@@ -1407,7 +1409,8 @@
                     vm.result_data = vm.flow;
                     vm.flow.monitor_name = vm.monitor_name;
                     vm.flow.monitor_type = vm.monitor_type;
-                    vm.flow.params = vm.param1 + '+' + vm.param2
+
+
                 }
 
                 if (vm.unit_id > 0) {
@@ -1426,10 +1429,34 @@
                         alert('修改失败！')
                     });
                 } else {
+                    var node_id = ''
+                    var start_time = ''
+                    var end_time = ''
+                    var node_times = []
+                    for (var i = 2; i <= vm.location.length - 1; i++) {
+                        var node_time = {}
+                        node_time.node_id = vm.location[i].id ,
+                        node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
+                        node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
+                        node_time.node_name = $('#' + vm.location[i].id + '').find('.node-title').text()
+                        node_times.push(node_time)
+                    }
+                    var flow = {}
+                    flow.node_times = node_times
+                    flow.monitor_name = vm.monitor_name
+                    flow.monitor_type = vm.monitor_type
+                    flow.jion_id = vm.flow.gather_rule[0].id
+                    flow.font_size = vm.flow.font_size
+                    flow.height = vm.flow.height
+                    flow.width = vm.flow.width
+                    flow.period = vm.flow.period
+                    flow.constants = vm.constants
+                    console.log(flow)
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor/add/',
                         data: {
+                            'flow':flow,
                             data: vm.result_data,
                             monitor_type: vm.monitor_type,
                             monitor_name: vm.monitor_name

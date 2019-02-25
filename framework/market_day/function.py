@@ -7,6 +7,7 @@ from framework.conf import default
 from monitor.models import Monitor
 from django.forms import model_to_dict
 import celery_opt as co
+import json
 import tasks
 
 
@@ -67,7 +68,7 @@ def add_unit_task(add_dicx):
     schename = add_dicx['monitor_name']
     type=add_dicx['monitor_type']
     print type
-    id=Monitor.objects.get(monitor_name=schename).id
+    id=Monitor.objects.filter(monitor_name=schename).last().id
     if type=='基本单元类型' or type=='图表单元类型':
         starthour = str(add_dicx['start_time'])[:2]
         endhour = str(add_dicx['end_time'])[:2]
@@ -103,8 +104,8 @@ def add_unit_task(add_dicx):
             'period':period
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_two', crontab_time=ctime,task_args=info, desc=schename)
-    elif type=='流程单元类型':
-        template_list=add_dicx['template_list']
+    elif type=='fourth':
+        template_list=add_dicx['jion_id']
         period=add_dicx['period']
         node_times=add_dicx['node_times']
         constants=add_dicx['constants']
@@ -117,7 +118,7 @@ def add_unit_task(add_dicx):
         }
         info = {
             'id': id,
-            'template_id': template_id,   #创建任务的模板id
+            'template_id':template_list ,   #创建任务的模板id
             'node_times':node_times,
             'period':period,
             'constants':constants
