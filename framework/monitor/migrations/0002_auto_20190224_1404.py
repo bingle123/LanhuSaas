@@ -12,8 +12,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='monitor',
-            name='monitor_type',
-            field=models.CharField(max_length=10, verbose_name='\u76d1\u63a7\u9879\u7c7b\u578b'),
+            model_name='scene_monitor',
+            name='scale',
+            field=models.DecimalField(verbose_name='\u6bd4\u4f8b', max_digits=4, decimal_places=2),
         ),
     ]

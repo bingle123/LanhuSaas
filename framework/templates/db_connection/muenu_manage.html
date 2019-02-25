@@ -35,7 +35,7 @@
                 <el-row type="flex" justify="space-between" class="row">
                     <el-col :span="12">
                         <el-col :span="9">
-                            <el-input v-model="search" placeholder="请输入内容"></el-input>
+                            <el-input v-model="menusearch" placeholder="请输入内容"></el-input>
                         </el-col>
                         <el-col :span="3">
                             <el-button type="primary" icon="el-icon-search" v-on:click="select_table">搜索</el-button>
@@ -64,8 +64,8 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :page-count="page_count" :current-page="page" background layout="prev, pager, next" style="float:right"
-                               @current-change="current_change1"></el-pagination>
+                <el-pagination :page-count="page_count" :current-page="currentPage" background layout="prev, pager, next" style="float:right"
+                               @current-change="current_change"></el-pagination>
             </div>
 
             <!--新增-->
@@ -105,11 +105,12 @@
                     权限分配
                 </div>
                 <hr id="hr">
-                <el-tree :data="data3" ref="tree" show-checkbox :default-checked-keys="checkedKeys" node-key="id"
+                <el-tree :data="dataCk" ref="tree" show-checkbox :default-checked-keys="checkedKeys" node-key="id"
                          @check="checked"
                 >
                 </el-tree>
                 <el-button type="primary" @click="savemnus()">保存</el-button>
+                <el-button @click="hide()">取消</el-button>
             </div>
 
             <!--编辑-->
@@ -159,15 +160,15 @@
     var ve = new Vue({
         el: '#main',
         data: {
-            search: '',//搜索框的值
+            menusearch: '',//搜索框的值
             page_count: 0,
-            page: 1, //当前页
+            currentPage:1, //当前页
             isAdd: 1,
             tableData: [],
             roles: [],
             dataType: [],
             editMuenu: [],
-            data3: [],
+            dataCk: [],
             checkedKeys: [],
             getchekedKeys:[],
             addmuenus: {
@@ -189,19 +190,27 @@
 
         },
         methods: {
-            current_change1(value) {
+            //搜索
+            select_table() {
+                ve.current_change(1)
+            },
+            current_change(value) {
                 ve.page = value;
                 axios({
                     method: 'post',
                     url: '${SITE_URL}db_connection/selecthor2/',
                     data: {
-                        search: this.search,
+                        search: this.menusearch,
                         page: ve.page,
                         limit: 5,
                     }
                 }).then((res) => {
-                    ve.tableData = res.data.message;
-                    ve.page_count = res.data.message[0].count;
+                    ve.tableData = res.data.items;
+                    ve.page_count = res.data.pages;
+                    this.currentPage = value;
+                    if(value > res.data.pages){
+                        this.currentPage = res.data.pages;
+                    }
                 })
             },
             get_header_data(){
@@ -216,7 +225,7 @@
             //获取所有角色对应菜单
             get_roleAmuenus() {
                 axios.post('${SITE_URL}db_connection/get_roleAmuenus/').then((res) => {
-                    ve.data3 = res.data.message
+                    ve.dataCk = res.data.message
                 })
                 axios.post('${SITE_URL}db_connection/checked_menu/').then((re) => {
                     ve.checkedKeys = re.data.message
@@ -226,7 +235,7 @@
 
             hide() {
                 this.isAdd = 1;
-                ve.select_muenus()
+                ve.current_change(ve.page)
             },
 
             rowClass({row, rowIndex}) {
@@ -234,9 +243,9 @@
             },
 
             //获取选中节点
-            checked(e, data3) {
+            checked(e, dataCk) {
                 //this.checkedNames = []
-                this.checkedKeys = data3.checkedNodes
+                this.checkedKeys = dataCk.checkedNodes
                 ve.getchekedKeys = this.checkedKeys
             },
 
@@ -256,40 +265,8 @@
             },
 
 
-            //搜索
-            select_table() {
-                axios({
-                    method: 'post',
-                    url: '${SITE_URL}db_connection/selecthor2/',
-                    data: {
-                        search: this.search,
-                        page: 1,
-                        limit: 5,
-                    }
-                }).then((res) => {
-                    ve.tableData = res.data.message;
-                    ve.page_count = res.data.message[0].count;
-                })
-            },
 
-            //查询所有
-            select_muenus() {
-                axios({
-                    method: 'post',
-                    url: '${SITE_URL}db_connection/get_all_muenu/',
-                    data: {
-                        search: this.search,
-                        page: ve.page,
-                        limit: 5,
-                    }
-                }).then(function (response) {
-                    ve.tableData = response.data.message;
-                    ve.page_count = response.data.message[0].count;
-                })
-            },
-
-
-            //保存
+            //保存菜单
             savemuenu(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
@@ -299,9 +276,10 @@
                         axios.post(
                             '${SITE_URL}db_connection/addmuenus/', this.addmuenus
                         ).then(function (res) {
-                            if (res.data.code == 0) {
-                                ve.hide();
-                            }
+                            if(ve.page < res.data.results['page_count']){
+                            ve.page = res.data.results['page_count']
+                            ve.hide()
+                        }
                         });
                     }
                 });
@@ -364,7 +342,7 @@
             },
         }
     });
-    ve.select_muenus()
+    ve.current_change(1)
     ve.get_header_data()
 </script>
 </body>

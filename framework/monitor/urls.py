@@ -28,7 +28,7 @@ urlpatterns = patterns(
     (r'^change_status/$', 'change_status'),                 #改变监控项的启用状态
     (r'^flow_change/$', 'flow_change'),
     (r'^node_name/$', 'node_name'),
-    # (r'^flow_gather_test/$', 'flow_gather_test'),
+    (r'^flow_gather_test/$', 'flow_gather_test'),
     (r'^start_flow_task/$', 'start_flow_task'),
     (r'^node_state/$', 'node_state'),
 )

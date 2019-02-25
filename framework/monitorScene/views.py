@@ -44,9 +44,46 @@ def paging(request):
     return  render_json(res)
 
 
+# 场景编排展示
 def scene_show(request):
 
     param = json.loads(request.body)
     print param
     res = function.scene_show(param)
     return  render_json(res)
+
+
+# 场景编排新增
+def add_scene(request):
+
+    param1 = [{
+        'scene_id': 2,
+        'item_id': 75,
+        'x':165,
+        'y':169,
+        'scale':3.75,
+        'score':12,
+        'order':'1'
+        },
+        {
+            'scene_id': 2,
+            'item_id': 76,
+            'x': 165,
+            'y': 169,
+            'scale': 3.75,
+            'score': 13,
+            'order': '2'
+        },
+        {
+            'scene_id': 2,
+            'item_id': 77,
+            'x': 165,
+            'y': 169,
+            'scale': 3.75,
+            'score': 20,
+            'order': '3'
+        },
+    ]
+
+    res = function.add_scene(param1)
+    return render_json(res)
