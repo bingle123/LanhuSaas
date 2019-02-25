@@ -154,6 +154,7 @@ def add_rule(rule_data):
         pages = pages + 1
     status_dic['message'] = 'ok'
     status_dic['total_pages'] = pages
+    print 'PAGES: %s' % pages
     return status_dic
 
 

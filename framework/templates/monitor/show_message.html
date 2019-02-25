@@ -1219,7 +1219,7 @@
                 }).then(function (res) {
                     console.log(res)
                     vm.sites = res.data.results.res_list;
-                    vm.page_count = res.data.results.res_list[0].page_count;
+                    //vm.page_count = res.data.results.res_list[0].page_count;
                     vm.job2 = res.data.results.job;
                     vm.flow2 = res.data.results.flow;
                 })
@@ -1613,12 +1613,14 @@
                             }
                         }).then(function (res) {
                             len =res.data.message.length
-                                for(var i=1;i<=len-2;i++){
-                                       data_key=res.data.message[i].data_key
-                                    if(data_key == 'RUNNING'){
-                                        $(''+res.data.message[i].data_key+'').find('.node-icon').css('background','#67c23a')
-                                    }else if(data_key == 'FAILED'|| data_key == 'SUSPENDED'){
-                                        $(''+res.data.message[i].data_key+'').find('.node-icon').css('background','#f56c6c')
+                                for(var i=0;i<=len-1;i++){
+                                       data_key=res.data.message[i].data_value
+                                    if(data_key == '1'||data_key=='4'){
+                                        alert('绿色')
+                                          $('p:contains('+res.data.message[i].data_key+')').parent().siblings('.node-icon').css('background','#67c23a')
+                                    }else if(data_key == '0'|| data_key == '2'|| data_key == '3'){
+                                        alert('红色')
+                                         $('p:contains('+res.data.message[i].data_key+')').parent().siblings('.node-icon').css('background','#f56c6c')
                                     }
                                 }
                         })

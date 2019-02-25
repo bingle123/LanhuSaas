@@ -354,7 +354,7 @@ def edit_scene_type_by_uuid(scene_type_id, edit_user, scene_type_name):
     :return:
     """
     scene_type = SceneType.objects.filter(scene_type_name=scene_type_name)
-    if scene_type is None:
+    if scene_type.__len__() == 0:
         try:
             with transaction.atomic():
                 SceneType.objects.filter(scene_type_id=scene_type_id).update(update_user=edit_user,
@@ -377,12 +377,15 @@ def add_scene_type(create_user, scene_type_name):
     # 生成UUID
     scene_type_id = uuid.uuid1()
     scene_type = SceneType.objects.filter(scene_type_name=scene_type_name)
-    if scene_type is None:
+    print scene_type
+    print type(scene_type)
+    print (scene_type is None)
+    if scene_type.__len__() == 0:
         try:
             with transaction.atomic():
                 SceneType.objects.create(scene_type_id=scene_type_id, create_user=create_user,
                                          scene_type_name=scene_type_name, update_user=create_user)
-                return success_result('新增场景类型成功')
+                return success_result(u'新增场景类型成功')
         except Exception as e:
             return error_result(e)
     else:
