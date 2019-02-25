@@ -26,13 +26,6 @@ def selecthor2(request):
     return render_json(res)
 
 
-#查询所有
-def getconn(request):
-
-    connall = function.getconn_all(request)
-    return render_json(connall)
-
-
 # 保存
 def saveconn(request):
     re = function.saveconn_all(request)
@@ -40,8 +33,8 @@ def saveconn(request):
 
 
 # 修改
-def eidtconnn(request):
-    re = function.eidtconnn(request)
+def editconn(request):
+    re = function.editconn(request)
     return render_json(re)
 
 

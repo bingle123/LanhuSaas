@@ -36,7 +36,7 @@
 
                     <el-col :span="12">
                         <el-col :span="9">
-                            <el-input v-model="search" placeholder="请输入内容"></el-input>
+                            <el-input v-model="connsearch" placeholder="请输入内容"></el-input>
                         </el-col>
                         <el-col :span="3">
                             <el-button type="primary" icon="el-icon-search" v-on:click="select_table">搜索</el-button>
@@ -67,7 +67,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :page-count="page_count" :current-page="page" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
+                <el-pagination :page-count="page_count" :current-page="currentPage" background layout="prev, pager, next" style="float:right" @current-change="current_change"></el-pagination>
             </div>
 
             <!--新增-->
@@ -237,9 +237,9 @@
     var ve = new Vue({
         el: '#main',
         data: {
-            search:'',//搜索框的值
+            connsearch:'',//搜索框的值
             page_count:0,
-            page:1, //当前页
+            currentPage:1, //当前页
             isAdd: 1,
             tableData: [],
             dataType:[],
@@ -287,19 +287,27 @@
 
         },
         methods: {
-            current_change1(value) {
+            //搜索
+            select_table() {
+                ve.current_change(1)
+            },
+            current_change(value) {
                 ve.page = value;
                 axios({
                     method: 'post',
                     url: '${SITE_URL}db_connection/selecthor/',
                     data: {
-                        search:this.search,
+                        search:this.connsearch,
                         page:ve.page,
                         limit:5,
                     }
                 }).then((res) => {
-                    ve.tableData = res.data.message;
-                    ve.page_count = res.data.message[0].count;
+                    ve.tableData = res.data.items;
+                    ve.page_count = res.data.pages;
+                    this.currentPage = value;
+                    if(value > res.data.pages){
+                        this.currentPage = res.data.pages;
+                    }
                 })
                 },
             show() {
@@ -312,44 +320,11 @@
             },
             hide() {
                 this.isAdd=1;
-                ve.conn()
+                ve.current_change(ve.page)
             },
 
             rowClass({row, rowIndex}) {
                 return 'background:#F7F7F7'
-            },
-
-
-            //搜索
-
-            select_table() {
-                axios({
-                    method: 'post',
-                    url: '${SITE_URL}db_connection/selecthor/',
-                    data: {
-                        search:this.search,
-                        page:1,
-                        limit:5,
-                    }
-                }).then((res) => {
-                    ve.tableData = res.data.message;
-                    ve.page_count = res.data.message[0].count;
-                })
-            },
-            //查询所有
-            conn(){
-                 axios({
-                    method: 'post',
-                    url: '${SITE_URL}db_connection/getall/',
-                    data:{
-                        search:this.search,
-                        page:ve.page,
-                        limit:5,
-                    }
-                }).then(function(response) {
-                    ve.tableData = response.data.message
-                    ve.page_count = response.data.message[0].count;
-                })
             },
 
 
@@ -364,8 +339,10 @@
                         axios.post(
                         '${SITE_URL}db_connection/saveconn/',this.addconn
                     ).then(function (res) {
+                        if(ve.page < res.data.results['page_count']){
                             ve.page = res.data.results['page_count']
                             ve.hide()
+                        }
                     });
                     }
                 });
@@ -387,10 +364,10 @@
                     }else {
                         axios.post(
                             '${SITE_URL}db_connection/editconn/',this.editDataBase
-                        ).then(function(res){
-                            ve.page = res.data.results['page_count']
+                        ).then(((res)=>{
+                            console.log(res)
                             ve.hide()
-                    })
+                    }))
                     }
                 })
             },
@@ -469,7 +446,7 @@
             },
         }
     });
-    ve.conn()
+    ve.current_change(1)
     ve.get_header_data()
 </script>
 
