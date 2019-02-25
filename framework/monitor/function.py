@@ -142,6 +142,7 @@ def add_unit(request):
         info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
         result = tools.error_result(e)
+    add_log(info)
     return result
 
 
