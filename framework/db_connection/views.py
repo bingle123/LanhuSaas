@@ -73,13 +73,6 @@ def get_user_muenu(request):
 
 
 
-#获取所有菜单
-def get_all_muenu(request):
-    res = function.get_all_muenu(request)
-    return render_json(res)
-
-
-
 
 #新增菜单
 def addmuenus(request):

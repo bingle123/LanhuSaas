@@ -113,18 +113,10 @@ def editconn(request):
         res['password'] = password
         re1 = Conn.objects.filter(id=res['id']).update(**res)
 
-        status_dic = {}
-        items_count = Conn.objects.count()
-
-        pages = items_count / 5
-        if 0 != items_count % 5:
-            pages = pages + 1
-        status_dic['message'] = 'ok'
-        status_dic['page_count'] = pages
 
         info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,get_active_user(request)['data']['bk_username'], '成功', '无')
         add_log(info)
-        return tools.success_result(status_dic)
+        return tools.success_result(re1)
     except Exception as e:
         res1 = tools.error_result(e)
         info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,get_active_user(request)['data']['bk_username'], '失败', repr(e))
@@ -293,21 +285,28 @@ def get_flowStatus(request):
 #菜单模糊查询
 def selecthor2(request):
     res = json.loads(request.body)
+    result_dict = dict()
+    list_set = list()
     search = res['search']
     page = res['page']
     limit = res['limit']
-    sciencenews = Muenu.objects.filter(Q(mname__contains=search)|Q(url__contains=search)).exclude(url ='db_connection/muenu_manage/')
+    if None is not search and '' != search:
+        sciencenews = Muenu.objects.filter(Q(mname__contains=search)|Q(url__contains=search)).exclude(url ='db_connection/muenu_manage/')
+    else:
+        sciencenews = Muenu.objects.all()
     p = Paginator(sciencenews, limit)
-    count = p.page_range
-    pages = count[-1]
 
-    curren_page = p.page(page)
-    objs = []
-    for cur in curren_page.object_list:
-        muenu = model_to_dict(cur)
-        muenu['count'] = pages
-        objs.append(muenu)
-    return objs
+    try:
+        selected_set = p.page(page) #获取第page页的数据
+    except EmptyPage:
+        selected_set = p.page(p.num_pages)
+    for selected_data in selected_set:
+        menus = model_to_dict(selected_data)
+        list_set.append(menus)
+    result_dict['items'] = list_set
+    result_dict['pages'] = p.num_pages
+    return result_dict
+
 
 #获取角色对应的菜单名和Url
 def get_user_muenu(request):
@@ -327,34 +326,13 @@ def get_user_muenu(request):
 
 
 
-
-
-#获取所有菜单
-def get_all_muenu(request):
-    res = json.loads(request.body)
-    page = res['page']
-    limit = res['limit']
-    muenus = Muenu.objects.all().exclude(url ='db_connection/muenu_manage/')
-    p = Paginator(muenus, limit)
-    count = p.page_range
-    pages = count[-1]
-    objs = []
-    current_page = p.page(page)
-    for cur in current_page.object_list:
-        muenus = model_to_dict(cur)
-        muenus['count'] = pages
-        objs.append(muenus)
-    return objs
-
-
-
-
 #增加菜单
 def addmuenus(request):
     try:
         status_dic ={}
         res = json.loads(request.body)
         re = Muenu(**res).save()
+
         items_count = Muenu.objects.count()
         pages = items_count / 5
         if 0 != items_count % 5:
@@ -379,11 +357,11 @@ def addmuenus(request):
 def edit_muenu(request):
     try:
         res = json.loads(request.body)
-        res.pop('count')
         re1 = Muenu.objects.filter(id=res['id']).update(**res)
         info = make_log_info(u'修改菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
         add_log(info)
+
         return tools.success_result(re1)
     except Exception as e:
         res1 = tools.error_result(e)

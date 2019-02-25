@@ -365,8 +365,9 @@
                         axios.post(
                             '${SITE_URL}db_connection/editconn/',this.editDataBase
                         ).then(((res)=>{
-                            console.log(res)
-                            ve.hide()
+                            if (res.data.code == 0) {
+                                ve.hide()
+                            }
                     }))
                     }
                 })
