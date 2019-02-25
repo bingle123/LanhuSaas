@@ -36,7 +36,6 @@ def getconn(request):
 # 保存
 def saveconn(request):
     re = function.saveconn_all(request)
-    print re
     return render_json(re)
 
 

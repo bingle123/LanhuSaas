@@ -388,9 +388,8 @@
                         axios.post(
                             '${SITE_URL}db_connection/editconn/',this.editDataBase
                         ).then(function(res){
-                            if(res.data.code == 0){
-                                ve.hide()
-                            }
+                            ve.page = res.data.results['page_count']
+                            ve.hide()
                     })
                     }
                 })
