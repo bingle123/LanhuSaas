@@ -54,10 +54,10 @@ def add_rule(request):
     rule_data = json.loads(request.body)
     try:
         status = function.add_rule(rule_data)
-        info = make_log_info(u'告警规则添加或更新', u'业务日志', u'TbAlertRule', sys._getframe().f_code.co_name,
+        info = make_log_info(u'增加或更新告警规则', u'业务日志', u'TbAlertRule', sys._getframe().f_code.co_name,
                          get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
-        info = make_log_info(u'告警规则添加或更新', u'业务日志', u'TbAlertRule', sys._getframe().f_code.co_name,
+        info = make_log_info(u'增加或更新告警规则', u'业务日志', u'TbAlertRule', sys._getframe().f_code.co_name,
                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
     add_log(info)
     return render_json(status)
