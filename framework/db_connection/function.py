@@ -103,11 +103,11 @@ def saveconn_all(request):
         status_dic['message'] = 'ok'
         status_dic['page_count'] = pages
 
-        info = make_log_info(u'保存数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功','无')
+        info = make_log_info(u'增加数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功','无')
         add_log(info)
         return tools.success_result(status_dic)
     except Exception as e:
-        info = make_log_info(u'保存数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败',repr(e))
+        info = make_log_info(u'增加数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败',repr(e))
         add_log(info)
         res1 = tools.error_result(e)
         return res1
