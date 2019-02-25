@@ -9,6 +9,9 @@ from django.views.decorators.cache import cache_page
 import tasks
 from monitor import tools
 import os
+import sys
+from logmanagement.function import add_log,make_log_info,get_active_user
+
 def get_holiday(req):
     days=function.get_holiday(req)
     return render_json(days)
@@ -21,15 +24,36 @@ def send_demo(req,email):
     tasks.sendemail.delay(email)
     return HttpResponse('success')
 def delall(req):
-    flag=function.delall(req)
+    try:
+        flag=function.delall(req)
+        info = make_log_info(u'删除全部交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
+                             get_active_user(req)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'删除全部交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
+                             get_active_user(req)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return render_json(flag)
 
 def delone(req,date):
-    flag=function.delone(req,date)
+    try:
+        flag=function.delone(req,date)
+        info = make_log_info(u'变更为交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
+                             get_active_user(req)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'变更为交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
+                             get_active_user(req)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return render_json(flag)
 
 def addone(req,date):
-    flag=function.addone(req,date)
+    try:
+        flag=function.addone(req,date)
+        info = make_log_info(u'取消交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
+                             get_active_user(req)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'取消交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
+                             get_active_user(req)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return render_json(flag)
 
 def cedemo(req):
