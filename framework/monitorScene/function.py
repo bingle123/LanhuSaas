@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.forms import model_to_dict
 from models import Scene
 from models import position_scene
-from monitor.models import scene_monitor,Monitor
+from monitor.models import Scene_monitor,Monitor
 from monitor import tools
 from position.models import JobInstance
 import sys
@@ -243,3 +243,11 @@ def scene_show(res):
         }
     result = tools.success_result(res_dic)
     return result
+
+
+def add_scene(res1):
+
+    for i in res1:
+        Scene_monitor.objects.create(**i)
+    res_dic = tools.success_result(None)
+    return res_dic
