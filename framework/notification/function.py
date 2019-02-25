@@ -7,7 +7,7 @@ from db_connection.function import *
 from django.core.paginator import *
 import MySQLdb
 from gatherData.models import *
-from jobManagement.models import Localuser
+from position.models import Localuser
 from system_config.function import *
 
 
@@ -145,8 +145,17 @@ def force_del_rule(rule_data):
 
 # 告警规则添加
 def add_rule(rule_data):
+    status_dic = dict()
+    print rule_data
     TbAlertRule(**rule_data).save()
-    return "ok"
+    items_count = TbAlertRule.objects.count()
+    pages = items_count / 5
+    if 0 != items_count % 5:
+        pages = pages + 1
+    status_dic['message'] = 'ok'
+    status_dic['total_pages'] = pages
+    print 'PAGES: %s' % pages
+    return status_dic
 
 
 def rule_check(monitor_id):

@@ -201,7 +201,9 @@
             //当前告警规则Table所使用的数据集
             alertRuleTableData: null,
             //当前正在添加或修改的告警规则的保存对象
-            alertRuleData: {},
+            alertRuleData: {
+
+            },
             //告警规则名称搜索
             ruleSearch: '',
             //当前有多少页
@@ -253,6 +255,11 @@
                     this.alertRulePopupErrorMessage(msg);
                 });
             },
+            get_header_data(){
+            axios.get('/market_day/get_header/').then(function (res) {
+               console.log(res)
+            })
+            },
             //弹出错误信息
             alertRulePopupErrorMessage: function(msg) {
                 this.$notify.error({
@@ -280,11 +287,10 @@
             },
             //告警规则数据分页获取
             alertRulePageChange: function(page){
-                this.currentPage = page;
                 const loading = this.alertRulePopupLoading();
                 var data = {
                     search: this.ruleSearch,
-                    page: this.currentPage,
+                    page: page,
                     limit: 5
                 };
                 axios({
@@ -293,8 +299,12 @@
                     data: data
                 }).then((res) => {
                     loading.close();
-                    this.alertRulesCount = res.data.pages;
                     this.alertRuleTableData = res.data.items;
+                    this.alertRulesCount = res.data.pages;
+                    this.currentPage = page;
+                    if(page > res.data.pages){
+                        this.currentPage = res.data.pages;
+                    }
                 }).catch((res) => {
                     loading.close();
                     var msg = '告警规则信息加载失败！';
@@ -323,13 +333,13 @@
             },
             //告警规则删除
             alertRuleDelete: function(id){
+                const loading = this.alertRulePopupLoading();
                 this.$confirm('确认删除当前告警规则吗?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning',
                     center: true
                 }).then(() => {
-                    const loading = this.alertRulePopupLoading();
                     var url = '${SITE_URL}notification/del_rule';
                     var delData = {};
                     delData.id = id;
@@ -417,9 +427,21 @@
                             this.alertRuleData.creator = 'lhAdmin';
                             this.alertRuleData.edit_time = this.dataToString('yyyy-MM-dd hh:mm:ss', new Date());
                             this.alertRuleData.editor = 'lhAdmin';
+                            if('' == this.alertRuleData.upper_limit){
+                                this.alertRuleData.upper_limit = null;
+                            }
+                            if('' == this.alertRuleData.lower_limit){
+                                this.alertRuleData.lower_limit = null;
+                            }
                         }else if(this.alertRuleTableStatus == 'edit'){
                             this.alertRuleData.edit_time = this.dataToString('yyyy-MM-dd hh:mm:ss', new Date());
                             this.alertRuleData.editor = 'lhAdmin';
+                            if('' == this.alertRuleData.upper_limit){
+                                this.alertRuleData.upper_limit = null;
+                            }
+                            if('' == this.alertRuleData.lower_limit){
+                                this.alertRuleData.lower_limit = null;
+                            }
                         }
                         const loading = this.alertRulePopupLoading();
                         var url = '${SITE_URL}notification/add_rule';
@@ -430,7 +452,11 @@
                         }).then((res) =>{
                             loading.close();
                             if('ok' == res.data.message){
-                                this.alertRulePageChange(this.alertRulesCount);
+                                if(this.alertRuleTableStatus == 'edit'){
+                                    this.alertRulePageChange(this.currentPage);
+                                }else if(this.alertRuleTableStatus == 'add'){
+                                    this.alertRulePageChange(res.data.total_pages);
+                                }
                                 this.alertRuleList();
                             }else{
                                 var msg = '请求添加/修改告警规则失败！';
@@ -471,6 +497,7 @@
         mounted(){
             //this.loadAlertRuleInfo();
             this.alertRulePageChange(1);
+            this.get_header_data()
         }
     });
 </script>

@@ -201,6 +201,11 @@ var vm = new Vue({
                 vm.loadingfinsh()
             })
         },
+        get_header_data(){
+            axios.get('/market_day/get_header/').then(function (res) {
+               console.log(res)
+            })
+        },
         upsuccess() {
             this.$message({
                 message: '节假日导入成功!',
@@ -238,6 +243,7 @@ var vm = new Vue({
     mounted() {
         this.addarrs();
         this.getList(this.myDate);
+        this.get_header_data()
     },
     watch: {
         markDate: {

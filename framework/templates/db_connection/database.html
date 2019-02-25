@@ -67,7 +67,7 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
+                <el-pagination :page-count="page_count" :current-page="page" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
             </div>
 
             <!--新增-->
@@ -305,9 +305,14 @@
             show() {
                 this.isAdd = 2
             },
-
+            get_header_data(){
+            axios.get('/market_day/get_header/').then(function (res) {
+               console.log(res)
+            })
+            },
             hide() {
-                this.isAdd=1
+                this.isAdd=1;
+                ve.conn()
             },
 
             rowClass({row, rowIndex}) {
@@ -359,9 +364,8 @@
                         axios.post(
                         '${SITE_URL}db_connection/saveconn/',this.addconn
                     ).then(function (res) {
-                        if(res.data.code == 0){
+                            ve.page = res.data.results['page_count']
                             ve.hide()
-                        }
                     });
                     }
                 });
@@ -384,9 +388,8 @@
                         axios.post(
                             '${SITE_URL}db_connection/editconn/',this.editDataBase
                         ).then(function(res){
-                            if(res.data.code == 0){
-                                ve.hide()
-                            }
+                            ve.page = res.data.results['page_count']
+                            ve.hide()
                     })
                     }
                 })
@@ -467,6 +470,7 @@
         }
     });
     ve.conn()
+    ve.get_header_data()
 </script>
 
 </body>

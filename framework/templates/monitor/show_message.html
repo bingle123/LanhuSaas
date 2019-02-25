@@ -890,6 +890,11 @@
             basic_width(){
                 $("#text2").css("left",this.basic.width)
             },
+            get_header_data(){
+            axios.get('/market_day/get_header/').then(function (res) {
+               console.log(res)
+            })
+            },
             sycontent(){
                 let tempcontents = vm.basic.contents
                 $("#text2").html("")
@@ -1015,7 +1020,7 @@
                      params = vm.sql_id
                 }
                 if (vm.sql_file_interface == 6  || vm.sql_file_interface == 9) {
-                     params = vm.server_url +','+ vm.file_param
+                     params = vm.server_url +'#'+ vm.file_param
                 }
                 axios({
                     method: 'post',
@@ -1214,7 +1219,7 @@
                 }).then(function (res) {
                     console.log(res)
                     vm.sites = res.data.results.res_list;
-                    vm.page_count = res.data.results.res_list[0].page_count;
+                    //vm.page_count = res.data.results.res_list[0].page_count;
                     vm.job2 = res.data.results.job;
                     vm.flow2 = res.data.results.flow;
                 })
@@ -1289,7 +1294,7 @@
                     }
                     if (vm.sql_file_interface == 'file') {
                         vm.sql_file_interface =6;
-                        arr=row.params.split(",");
+                        arr=row.params.split("#");
                         vm.server_url = arr[0];
                         vm.file_param = arr[1];
                         vm.typeid = '2';
@@ -1305,7 +1310,7 @@
                     }
                     if (vm.sql_file_interface == 'interface') {
                         vm.sql_file_interface =9;
-                        arr=row.params.split(",");
+                        arr=row.params.split("#");
                         vm.server_url = arr[0];
                         vm.file_param = arr[1];
                         vm.typeid = '3';
@@ -1386,7 +1391,7 @@
                     if (vm.file_param == '') {
                         vm.basic.params = vm.server_url
                     } else {
-                        vm.basic.params = vm.server_url + ',' + vm.file_param;
+                        vm.basic.params = vm.server_url + '#' + vm.file_param;
                     }
                     vm.basic.monitor_name = vm.monitor_name;
                     vm.basic.monitor_type = vm.monitor_type
@@ -1572,7 +1577,56 @@
             },
             canvas_new() {
                 if(vm.liucheng == 'block'){
+                    var node_id=''
+                    var start_time=''
+                    var end_time=''
+                    var node_times=[]
+                    for(var i=2;i<=vm.location.length-1;i++){
+                            var node_time={}
+                            node_time.node_id= vm.location[i].id ,
+                            node_time.starttime= $('#' + vm.location[i].id + '').find('.start_time').text(),
+                             node_time.endtime= $('#' + vm.location[i].id + '').find('.end_time').text()
+                            node_time.node_name=   $('#' + vm.location[i].id + '').find('.node-title').text()
+                            node_times.push(node_time)
 
+                    }
+                    var period = $('#period').val()
+                    var template_list = vm.template_list
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}monitor/start_flow_task/',
+                        data: {
+                            'period': period,
+                            'template_list': template_list,
+                            'node_times': node_times,
+                            'monitor_name':vm.monitor_name,
+                            'monitor_type':vm.monitor_type,
+                            'constants':vm.constants
+                        }
+                    }).then(function (res) {
+                        setInterval(function () {
+                            axios({
+                            method:'post',
+                            url:'${SITE_URL}monitor/node_state/',
+                            data:{
+                                'item_id':res.data
+                            }
+                        }).then(function (res) {
+                            len =res.data.message.length
+                                for(var i=0;i<=len-1;i++){
+                                       data_key=res.data.message[i].data_value
+                                    if(data_key == '1'||data_key=='4'){
+                                        alert('绿色')
+                                          $('p:contains('+res.data.message[i].data_key+')').parent().siblings('.node-icon').css('background','#67c23a')
+                                    }else if(data_key == '0'|| data_key == '2'|| data_key == '3'){
+                                        alert('红色')
+                                         $('p:contains('+res.data.message[i].data_key+')').parent().siblings('.node-icon').css('background','#f56c6c')
+                                    }
+                                }
+                        })
+                        },13000)
+
+                    })
                 }else if(vm.liucheng == 'none'){
 
                     var period = $('#period').val()
@@ -1646,35 +1700,6 @@
             change3(value) {
                 if (value == 1) {
                     vm.liucheng = 'block';
-                    var node_id=''
-                    var start_time=''
-                    var end_time=''
-                    var node_times=[]
-                    for(var i=2;i<=vm.location.length-1;i++){
-                            var node_time={}
-                            node_time.node_id= vm.location[i].id ,
-                            node_time.starttime= $('#' + vm.location[i].id + '').find('.start_time').text(),
-                             node_time.endtime= $('#' + vm.location[i].id + '').find('.end_time').text()
-                            node_time.node_name=   $('#' + vm.location[i].id + '').find('.node-title').text()
-                            node_times.push(node_time)
-
-                    }
-                    var period = $('#period').val()
-                    var template_list = vm.template_list
-                    axios({
-                        method: 'post',
-                        url: '${SITE_URL}monitor/start_flow_task/',
-                        data: {
-                            'period': period,
-                            'template_list': template_list,
-                            'node_times': node_times,
-                            'monitor_name':vm.monitor_name,
-                            'monitor_type':vm.monitor_type,
-                            'constants':vm.constants
-                        }
-                    }).then(function (res) {
-                        console.log(res)
-                    })
                 } else {
                     vm.liucheng = 'none';
                 }
@@ -2026,6 +2051,7 @@
             },
         },
         mounted() {
+            this.get_header_data()
         },
     });
     vm.show();

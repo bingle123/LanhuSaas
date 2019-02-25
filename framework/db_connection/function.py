@@ -16,6 +16,8 @@ from django.core.paginator import Paginator
 from monitor.models import *
 from celery.task import periodic_task
 import datetime
+import sys
+from logmanagement.function import add_log,make_log_info,get_active_user
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
@@ -93,8 +95,20 @@ def saveconn_all(request):
         password = encryption_str(res['password'])
         res['password'] = password
         re = Conn(**res).save()
-        return tools.success_result(re)
+        status_dic = {}
+        items_count = Conn.objects.count()
+        pages = items_count / 5
+        if 0 != items_count % 5:
+            pages = pages + 1
+        status_dic['message'] = 'ok'
+        status_dic['page_count'] = pages
+
+        info = make_log_info(u'保存数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功','无')
+        add_log(info)
+        return tools.success_result(status_dic)
     except Exception as e:
+        info = make_log_info(u'保存数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败',repr(e))
+        add_log(info)
         res1 = tools.error_result(e)
         return res1
 
@@ -112,9 +126,22 @@ def eidtconnn(request):
         password = encryption_str(res['password'])
         res['password'] = password
         re1 = Conn.objects.filter(id=res['id']).update(**res)
-        return tools.success_result(re1)
+
+        status_dic = {}
+        items_count = Conn.objects.count()
+        pages = items_count / 5
+        if 0 != items_count % 5:
+            pages = pages + 1
+        status_dic['message'] = 'ok'
+        status_dic['page_count'] = pages
+
+        info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
+        return tools.success_result(status_dic)
     except Exception as e:
         res1 = tools.error_result(e)
+        info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         return res1
 
 
@@ -122,9 +149,15 @@ def eidtconnn(request):
 def delete_conn(request,id):
     try:
         res = Conn.objects.filter(id=id).delete()
+        info = make_log_info(u'删除数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         return tools.success_result(res)
     except Exception as e:
         res1 = tools.error_result(e)
+        info = make_log_info(u'删除数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         return tools.error_result(res1)
 
 
@@ -157,7 +190,6 @@ def testConn(request):
         else:
             db = pymssql.connect(host=ip+r':'+port, user=username, password=password, database=databasename)
         cursor = db.cursor()
-        # print cursor
         if cursor != '':
             cursor.close()
             db.close()
@@ -222,7 +254,6 @@ def get_flowStatus(request):
     for x in flow:
         flow_list.append(model_to_dict(x)['jion_id'])
     for y in flow_list:
-        print y
         flows = Flow.objects.filter(flow_id=y)
         for i in flows:
 
@@ -288,7 +319,6 @@ def get_user_muenu(request):
     cilent = tools.interface_param(request)
     user = cilent.bk_login.get_user({})
     bk_roleid = user['data']['bk_role']
-    print bk_roleid
     role_muenus = rm.objects.filter(roleid=bk_roleid)
     temp_list = []
     for i in role_muenus:
@@ -327,11 +357,25 @@ def get_all_muenu(request):
 #增加菜单
 def addmuenus(request):
     try:
+        status_dic ={}
         res = json.loads(request.body)
         re = Muenu(**res).save()
-        return tools.success_result(re)
+        items_count = Muenu.objects.count()
+        pages = items_count / 5
+        if 0 != items_count % 5:
+            pages = pages + 1
+        status_dic['message'] = 'ok'
+        status_dic['page_count'] = pages
+
+        info = make_log_info(u'增加菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
+        return tools.success_result(status_dic)
     except Exception as e:
         res1 = tools.error_result(e)
+        info = make_log_info(u'增加菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'],'失败',repr(e))
+        add_log(info)
         return res1
 
 
@@ -342,22 +386,38 @@ def edit_muenu(request):
         res = json.loads(request.body)
         res.pop('count')
         re1 = Muenu.objects.filter(id=res['id']).update(**res)
-        print tools.success_result(re1)
+        info = make_log_info(u'修改菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         return tools.success_result(re1)
     except Exception as e:
         res1 = tools.error_result(e)
-        print res1
+        info = make_log_info(u'修改菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         return res1
 
 
 #删除菜单
 def delete_muenu(request,id):
     try:
-        res1 = Muenu.objects.get(id=id).delete()
-        res2 = rm.objects.get(muenuid=id).delete()
-        if res1 !=None & res2 !=None:
-            return tools.success_result(res1)
+        Muenu.objects.get(id=id).delete()
+        rm.objects.filter(muenuid=id).all().delete()
+        info = make_log_info(u'删除菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
+        info = make_log_info(u'删除菜单', u'业务日志', u'rm', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
+        return tools.success_result(None)
     except Exception as e:
+        info = make_log_info(u'删除菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
+        info = make_log_info(u'删除菜单', u'业务日志', u'rm', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
+        print e
         res3 = tools.error_result(e)
         return tools.error_result(res3)
 
@@ -378,7 +438,6 @@ def get_roleAmuenus(request):
             childrens.append(chi)
         temp['children']=childrens
         tree.append(temp)
-    print tree
     return tree
 
 #获取已经勾选Id
@@ -394,4 +453,33 @@ def checked_menu(request):
         ids.append(temp_id)
     return  ids
 
-#获取所有勾选id
+
+#获取所有节点菜单
+def savemnus(request):
+    ids = json.loads(request.body)
+    print ids[1:]
+    res = rm.objects.all()
+    ms = res
+    x = 0
+    z = 0
+    parent_id = []
+    son_id = []
+    if isinstance(ids[0],int):
+        return 1
+    else:
+        if res is not None:
+            de = rm.objects.all().delete()
+            try:
+                for i in ids:
+                    if ('children' not in i) and ('label' in i):
+                        x = i['id'] / 50
+                        z = i['id'] % 50
+                        x = int(x)
+                        res1 = rm.objects.create(roleid=x, muenuid=z)
+                    else:
+                        pass
+            except Exception as e:
+                for i in ms:
+                    rm.objects.create(roleid=model_to_dict(i)['roleid'],muenuid=model_to_dict(i)['muenuid'])
+                return tools.error_result(e)
+

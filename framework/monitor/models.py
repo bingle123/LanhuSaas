@@ -83,8 +83,8 @@ class scene_monitor(models.Model):
     scale = models.PositiveIntegerField(verbose_name=u'比例')
     score = models.PositiveIntegerField(verbose_name=u'打分')
     order = models.PositiveIntegerField(verbose_name=u'排序')
-    item = models.ForeignKey(Monitor, on_delete=models.CASCADE)
-    pos = models.ForeignKey(Scene,on_delete=models.CASCADE)
+
+
     class Meta:
         verbose_name = u'场景监控项'
         verbose_name_plural = u'场景监控项'

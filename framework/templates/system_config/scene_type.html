@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%">
+<head>
+    <meta charset="UTF-8">
+    <title>场景分组</title>
+
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- vue的ajax依赖-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <!-- element UI引入样式 -->
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script src='${STATIC_URL}js/jquery.min.js'></script>
+    <script src='${STATIC_URL}js/jquery-ui.js'></script>
+    <!--jQuery库使用时请使用标准jQuery语法-->
+    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
+    <!--页面初始化css(Tencent)-->
+    <link href="${STATIC_URL}css/init.css" rel="stylesheet">
+
+</head>
+<body style="height: 100%">
+<div id="app" style="height: 100%;">
+    <!--start 面包屑-->
+    <el-breadcrumb separator-class="el-icon-arrow-right" separator="/" style="margin: 20px;">
+        <el-breadcrumb-item><a href="/">系统配置</a></el-breadcrumb-item>
+        <el-breadcrumb-item>场景分组配置</el-breadcrumb-item>
+        <el-breadcrumb-item>抓取配置</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!--end 面包屑-->
+
+    <!--start 卡片 列表页-->
+    <el-card class="box-card" style="margin: 20px;" style="height: 100%">
+        <div slot="header" class="clearfix">
+            <div class="grid-content bg-purple"><h2>场景分组配置</h2></div>
+            <br>
+            <el-row :gutter="20">
+                <el-col :span="20">
+                    <el-form :inline="true" class="demo-form-inline">
+                        <el-form-item label="场景分组名称：">
+                            <el-input placeholder="请输入场景分组名称" v-model="query_name"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="query_scene_type">查询</el-button>
+                        </el-form-item>
+
+                    </el-form>
+                </el-col>
+                <el-col :span="4" style="float: right">
+                    <div class="grid-content bg-purple">
+                        <el-button type="primary" @click="dialogFormVisible = true">新增爬虫信息</el-button>
+                    </div>
+                </el-col>
+            </el-row>
+        </div>
+        <template>
+            <el-table
+                    :data="tableData"
+                    stripe
+                    style="width: 100%">
+                <el-table-column
+                        prop="id"
+                        label="ID"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="scene_type_id"
+                        label="ID"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="scene_type_name"
+                        label="场景类型名称"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="create_user"
+                        label="创建人">
+                </el-table-column>
+                <el-table-column
+                        prop="create_time"
+                        label="创建时间">
+                </el-table-column>
+                <el-table-column
+                        prop="update_user"
+                        label="最后修改人">
+                </el-table-column>
+                <el-table-column
+                        prop="update_time"
+                        label="最后修改时间">
+                </el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <el-button size="mini" type="text" v-on:click="edit_scene_type_by_uuid(scope.row.scene_type_id,scope.row.scene_type_name)">编辑
+                        </el-button>
+                        <el-button size="mini" type="text" v-on:click="delete_scene_by_uuid(scope.row.scene_type_id)">
+                            删除
+                        </el-button>
+                        </el-tooltip>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </template>
+
+    </el-card>
+    <!--end 卡片 列表页-->
+    <el-dialog title="新增场景分组" :visible.sync="dialogFormVisible">
+        <el-form>
+            <el-form-item label="场景分组名称">
+                <el-input v-model="form.name"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="add_scene_type">确 定</el-button>
+        </div>
+    </el-dialog>
+    <el-dialog title="修改场景分组名称" :visible.sync="dialogFormVisible_edit">
+        <el-form>
+            <el-form-item label="场景分组名称">
+                <el-input v-model="form.name"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible_edit = false">取 消</el-button>
+            <el-button type="primary" @click="edit_scene_type">确 定</el-button>
+        </div>
+    </el-dialog>
+</div>
+
+
+<script>
+    //csrf验证
+    axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
+
+    let vm = new Vue({
+        el: '#app',
+        data: {
+            showDiaLog: true,
+            tableData: [],
+            dialogFormVisible: false,
+            dialogFormVisible_edit: false,
+            form:{
+                name:'',
+                uuid:'',
+            },
+            query_name:'',
+        },
+        methods: {
+            get_scene_type() {
+                axios({
+                    url: '${SITE_URL}system_config/get_scene_type/'
+                }).then((res) => {
+                    console.log(res);
+                    vm.tableData = res.data.results;
+                }).catch((res) => {
+                    console.log(res)
+                })
+            },
+            delete_scene_by_uuid(uuid) {
+                console.log(uuid);
+                this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    axios({
+                        url: '${SITE_URL}system_config/delete_scene_by_uuid/',
+                        method: 'post',
+                        data: {'uuid': uuid}
+                    }).then((res) => {
+                        console.log(uuid);
+                        console.log(res.data.code);
+                        if (res.data.code == 0) {
+                            vm.$message.info('删除成功');
+                            vm.get_scene_type();
+                        } else {
+                            vm.$message.error('删除失败');
+                        }
+                    }).catch((res) => {
+                        vm.$message.error('删除失败');
+                        console.log(res);
+                    })
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+
+            },
+            edit_scene_type_by_uuid(uuid, scene_type_name) {
+                vm.dialogFormVisible_edit = true;
+                vm.form.name = scene_type_name;
+                vm.form.uuid = uuid
+            },
+            add_scene_type() {
+                axios({
+                    url: '${SITE_URL}system_config/add_scene_type/',
+                    method: 'post',
+                    data: vm.form,
+                }).then((res) => {
+                    console.log(vm.form)
+                    console.log(res);
+                    if (res.data.code == 0){
+                        vm.$message.info('新增场景类型成功');
+                        vm.get_scene_type();
+                        vm.dialogFormVisible = false;
+                        vm.form.name = '';
+                    }else {
+                        vm.$message.error('新增场景类型失败'+res.data.message)
+                    }
+                }).catch((res) => {
+                    console.log(res);
+                    vm.$message.error('请求错误，新增场景类型失败')
+                })
+            },
+            edit_scene_type() {
+                axios({
+                    url: '${SITE_URL}system_config/edit_scene_type_by_uuid/',
+                    method: 'post',
+                    data: {name:vm.form.name,uuid:vm.form.uuid}
+                }).then((res) => {
+                    console.log(res);
+                    if (res.data.code == 0){
+                        vm.$message.info('修改成功');
+                        vm.get_scene_type();
+                        vm.dialogFormVisible_edit = false;
+                    }else {
+                        vm.$message.error('修改失败'+ res.data.message)
+                    }
+                }).catch((res) => {
+                    vm.$message.error('删除失败'+res);
+                    console.log(res);
+                })
+            },
+            query_scene_type() {
+                axios({
+                    url: '${SITE_URL}system_config/get_scene_type/',
+                    method:'post',
+                    data:{query_name:vm.query_name}
+                }).then((res) => {
+                    console.log(res);
+                    vm.tableData = res.data.results;
+                }).catch((res) => {
+                    console.log(res)
+                })
+            }
+        }
+    });
+    vm.get_scene_type();
+</script>
+</body>
+</html>

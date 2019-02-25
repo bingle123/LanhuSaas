@@ -1,6 +1,6 @@
 #!usr/bin/ebv python
 # -*- coding:utf-8 -*-
-from models import Holiday
+from models import Holiday,HeaderData
 import os
 from xlrd import open_workbook
 from framework.conf import default
@@ -104,7 +104,8 @@ def add_unit_task(add_dicx):
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_two', crontab_time=ctime,task_args=info, desc=schename)
     elif type=='流程单元类型':
-        template_id=add_dicx['template_id']
+        template_list=add_dicx['template_list']
+        period=add_dicx['period']
         node_times=add_dicx['node_times']
         constants=add_dicx['constants']
         print node_times[-1]
@@ -122,3 +123,22 @@ def add_unit_task(add_dicx):
             'constants':constants
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.start_flow_task', crontab_time=ctime,task_args=info, desc=schename)
+
+def get_header_data(request):
+    h,flag=HeaderData.objects.get_or_create(id=1)
+    headers = {
+        "Content-Type": 'application/json;charset=utf-8',
+        "Cookie": 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
+        "Host": 'paas.bk.com',
+        "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3679.0 Safari/537.36',
+        "X-CSRFToken": 'FI1fszvZzgIsYYX8n6aPMduEeAL7qTV3',
+        "X-Requested-With": 'XMLHttpRequest'
+    }
+    csrftoken = request.COOKIES["csrftoken"];
+    Cookie = "keyA=1";
+    for key in request.COOKIES:
+        Cookie = "%s;%s=%s" % (Cookie, key, request.COOKIES[key]);
+    headers["Cookie"] = Cookie;
+    headers["X-CSRFToken"] = csrftoken;
+    h.header=json.dumps(headers, ensure_ascii=False)
+    h.save()

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from django.forms import model_to_dict
+
 from blueking.component.shortcuts import get_client_by_request
 from common.log import logger
 import base64
@@ -7,13 +9,17 @@ from blueking.component.shortcuts import *
 from gatherData.function import gather_data
 from datetime import datetime
 import time
+import json
+from django.core.paginator import Paginator
 from monitor.models import Job
 from gatherData.function import gather_data_migrate
-from gatherData import models
+from gatherData import models as mo
 from notification.function import rule_check
 from market_day import celery_opt as co
+from market_day.models import HeaderData as hd
 from djcelery import models as celery_models
 from models import *
+import requests
 
 
 def error_result(e):
@@ -46,20 +52,37 @@ def success_result(results):
     return result
 
 
-def page_paging(request, limit):
+def page_paging(abj,limit,page):
     """
-    分页方法
-    :param request:
-    :param limit:   页面容量
-    :return:        页面起始页码
+    :param abj: 对象
+    :param limit: 个数
+    :param page: 页数
+    :return: 当前页数据，总页数
     """
-    click_page_unicode = request.GET.get("clickPage")  # 获取页面页码数
-    if click_page_unicode is None or click_page_unicode == "":  # 页码数是否为空，空时赋值为第一页
-        click_page = 1
-    else:
-        click_page = int(click_page_unicode.encode("utf-8"))  # 对页码进行转码
-    start_page = (click_page - 1) * limit  # 接口参数:数据起始页码
-    return start_page
+    p = Paginator (abj, limit)  # 分页
+    page_count = p.page_range[-1]  # 总页数
+    page_data = p.page(page)  # 当前页数据
+    return page_data,page_count
+
+
+def obt_dic(page_data,page_count):
+    """
+    监控项取值
+    :param page_data:
+    :param page_count:
+    :return: 对应值list
+    """
+    obj_list = []
+    for i in page_data:
+        obj_dic = model_to_dict(i)
+        obj_dic['page_count'] = page_count
+        obj_dic['edit_time'] = str(i.edit_time)
+        obj_dic['create_time'] = str(i.create_time)
+        obj_dic['start_time'] = str(i.start_time)
+        obj_dic['end_time'] = str(i.end_time)
+        obj_dic['status'] = str(i.status)
+        obj_list.append (obj_dic)
+    return obj_list
 
 
 def interface_param(request):
@@ -189,50 +212,79 @@ def job_interface(res):
 def flow_gather_task(**info):
     task_id = info['task_id']
     item_id = info['item_id']
+    mess=hd.objects.get(id=1).header
+    headers=json.loads(mess.decode('utf-8').replace("'", "\""))
     node_times = info['node_times']
     user_account = BkUser.objects.filter(id=1).get()
-    # 根据id为1的用户获取客户端操作快速执行脚本
     client = get_client_by_user(user_account)
     client.set_bk_api_ver('v2')
-    param = {
-        "bk_biz_id": "2",
-        "task_id": task_id
+    param={
+        'bk_biz_id':'2',
+        'task_id':task_id
     }
-    res = client.sops.get_task_status(param)
-    msg = ''
-    state = res['data']['state']
-    temps = res['data']['children']
-    keys = temps.keys()
-    flag=info['flag']
+    res_temp=client.sops.get_task_status(param)
+    ids=res_temp['data']['children']
+    v2_data=[]
+    state=res_temp['data']['state']
+    for id in ids:
+        temp={}
+        temp['id']=id
+        temp['status']=res_temp['data']['children'][id]['state']
+        v2_data.append(temp)
+    a_url = "http://paas.bk.com/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
+    req = requests.get(url=a_url, headers=headers)
+    req.encoding = req.apparent_encoding
+    req.raise_for_status()
+    res=json.loads(req.text)
+    res1 = json.loads(res['pipeline_tree'])
+    activities = res1['activities']
+    req_data=[]
+    for key in activities:
+        activities1 = {}
+        activities1['id'] = str(activities[key]['id'])
+        activities1['name'] = activities[key]['name']
+        req_data.append(activities1)
+    data=[]
+    for req in req_data:
+        for v2 in v2_data:
+            if req['id']==v2['id']:
+                temp={}
+                temp['name']=req['name']
+                temp['status']=v2['status']
+                data.append(temp)
     task_name=info['task_name']
     gather_data_migrate(item_id=item_id)
-    status=0
     if state == 'FAILED':
-        status = 1
-        if flag:
+        if item_id==0:
             co.delete_task(task_name)
-        for key in keys:
-            if temps[key]['state'] == u'FAILED':
-                msg = temps[key]['id'] + u'节点执行出错，请检查这个节点'
+        for d in data:
+            if d['status'] == u'FAILED':
+                msg = d['name'] + u'节点执行出错，请检查这个节点'
     elif state == 'RUNNING':
-        status = 2
         msg = u'该任务正在执行中'
     elif state == 'SUSPENDED':
-        status = 3
         msg = u'该任务被暂停'
     elif state == 'REVOKED':
-        status = 4
         msg = u'该任务已被终止'
-        if flag:
+        if item_id==0:
             co.delete_task(task_name)
     elif state == 'FINISHED':
-        status = 5
         msg = u'该任务成功执行'
-        if flag:
+        if item_id==0:
             co.delete_task(task_name)
-    for key in keys:
-        models.TDGatherData(item_id=item_id, instance_id=task_id, data_key=key, data_value=temps[key]['state'],
-                            gather_error_log=msg).save()
+    for d in data:
+        s=d['status']
+        if s== 'FAILED':
+            status=0
+        elif s=='RUNNING':
+            status=1
+        elif s=='SUSPENDED':
+            status=2
+        elif s == 'REVOKED':
+            status = 3
+        elif s=='FINISHED':
+            status=4
+        mo.TDGatherData.objects.create(item_id=item_id, instance_id=task_id, data_key=d['name'], data_value=status,gather_error_log=msg)
     if item_id != 0:
         rule_check(item_id)
 
@@ -277,7 +329,6 @@ def start_flow_task(**info):
             'task_id': task_id,  # 启动流程的任务id
             'node_times': node_times,
             'period': period,
-            'flag':True,
             'task_name':info['template_list']['name'] + '_check_status_test'
         }
         ctime = {
