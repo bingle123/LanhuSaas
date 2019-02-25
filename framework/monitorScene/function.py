@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.forms import model_to_dict
 from models import Scene
 from models import position_scene
-from monitor.models import scene_monitor,Monitor
+from monitor.models import Scene_monitor,Monitor
 from monitor import tools
 from position.models import JobInstance
 import sys
@@ -190,56 +190,68 @@ def paging(request):
 
 
 def scene_show(res):
-
-    type = res['type']
-    limit = res['limit']
-    page = res['page']
-    if type == 0:
-        base_unit = Monitor.objects.filter(monitor_type='基本单元类型')
-        base_page_data, base_page_count = tools.page_paging(base_unit,limit,page)
-        chart_unit = Monitor.objects.filter (monitor_type='图表单元类型')
-        chart_page_data, chart_page_count = tools.page_paging (chart_unit, limit, page)
-        job_unit = Monitor.objects.filter (monitor_type='作业单元类型')
-        job_page_data, job_page_count = tools.page_paging (job_unit, limit, page)
-        flow_unit = Monitor.objects.filter (monitor_type='流程单元类型')
-        flow_page_data, flow_page_count = tools.page_paging (flow_unit, limit, page)
-        base_list = tools.obt_dic (base_page_data, base_page_count)
-        chart_list = tools.obt_dic (chart_page_data, chart_page_count)
-        job_list = tools.obt_dic (job_page_data, job_page_count)
-        flow_list = tools.obt_dic (flow_page_data, flow_page_count)
-        res_dic = {
-            'base_list': base_list,
-            'chart_list': chart_list,
-            'job_list': job_list,
-            'flow_list': flow_list,
-        }
-    elif type == 1:
-        base_unit = Monitor.objects.filter (monitor_type='基本单元类型')
-        base_page_data, base_page_count = tools.page_paging (base_unit, limit, page)
-        base_list = tools.obt_dic (base_page_data, base_page_count)
-        res_dic = {
-            'base_list': base_list,
-        }
-    elif type == 2:
-        chart_unit = Monitor.objects.filter (monitor_type='图表单元类型')
-        chart_page_data, chart_page_count = tools.page_paging (chart_unit, limit, page)
-        chart_list = tools.obt_dic (chart_page_data, chart_page_count)
-        res_dic = {
-            'chart_list': chart_list,
-        }
-    elif type == 3:
-        job_unit = Monitor.objects.filter (monitor_type='作业单元类型')
-        job_page_data, job_page_count = tools.page_paging (job_unit, limit, page)
-        job_list = tools.obt_dic (job_page_data, job_page_count)
-        res_dic = {
-            'job_list': job_list,
-        }
-    elif type == 4:
-        flow_unit = Monitor.objects.filter (monitor_type='流程单元类型')
-        flow_page_data, flow_page_count = tools.page_paging (flow_unit, limit, page)
-        flow_list = tools.obt_dic (flow_page_data, flow_page_count)
-        res_dic = {
-            'flow_list': flow_list,
-        }
-    result = tools.success_result(res_dic)
+    try:
+        type = res['type']
+        limit = res['limit']
+        page = res['page']
+        if type == 0:
+            base_unit = Monitor.objects.filter(monitor_type='基本单元类型')
+            base_page_data, base_page_count = tools.page_paging(base_unit,limit,page)
+            chart_unit = Monitor.objects.filter (monitor_type='图表单元类型')
+            chart_page_data, chart_page_count = tools.page_paging (chart_unit, limit, page)
+            job_unit = Monitor.objects.filter (monitor_type='作业单元类型')
+            job_page_data, job_page_count = tools.page_paging (job_unit, limit, page)
+            flow_unit = Monitor.objects.filter (monitor_type='流程单元类型')
+            flow_page_data, flow_page_count = tools.page_paging (flow_unit, limit, page)
+            base_list = tools.obt_dic (base_page_data, base_page_count)
+            chart_list = tools.obt_dic (chart_page_data, chart_page_count)
+            job_list = tools.obt_dic (job_page_data, job_page_count)
+            flow_list = tools.obt_dic (flow_page_data, flow_page_count)
+            res_dic = {
+                'base_list': base_list,
+                'chart_list': chart_list,
+                'job_list': job_list,
+                'flow_list': flow_list,
+            }
+        elif type == 1:
+            base_unit = Monitor.objects.filter (monitor_type='基本单元类型')
+            base_page_data, base_page_count = tools.page_paging (base_unit, limit, page)
+            base_list = tools.obt_dic (base_page_data, base_page_count)
+            res_dic = {
+                'base_list': base_list,
+            }
+        elif type == 2:
+            chart_unit = Monitor.objects.filter (monitor_type='图表单元类型')
+            chart_page_data, chart_page_count = tools.page_paging (chart_unit, limit, page)
+            chart_list = tools.obt_dic (chart_page_data, chart_page_count)
+            res_dic = {
+                'chart_list': chart_list,
+            }
+        elif type == 3:
+            job_unit = Monitor.objects.filter (monitor_type='作业单元类型')
+            job_page_data, job_page_count = tools.page_paging (job_unit, limit, page)
+            job_list = tools.obt_dic (job_page_data, job_page_count)
+            res_dic = {
+                'job_list': job_list,
+            }
+        elif type == 4:
+            flow_unit = Monitor.objects.filter (monitor_type='流程单元类型')
+            flow_page_data, flow_page_count = tools.page_paging (flow_unit, limit, page)
+            flow_list = tools.obt_dic (flow_page_data, flow_page_count)
+            res_dic = {
+                'flow_list': flow_list,
+            }
+        result = tools.success_result(res_dic)
+    except Exception as e:
+        result = tools.error_result(e)
     return result
+
+
+def add_scene(res1):
+    try:
+        for i in res1:
+            Scene_monitor.objects.create(**i)
+        res_dic = tools.success_result(None)
+    except Exception as e:
+        res_dic = tools.error_result(e)
+    return res_dic

@@ -341,6 +341,6 @@ def start_flow_task(**info):
         status=1
         for time in node_times:
             Flow_Node(flow_id=item_id,node_name=time['node_name'],start_time=time['starttime'], end_time=time['endtime']).save()
-    Flow(instance_id=task_id, status=flag, test_flag=1, flow_id=item_id).save()
+    Flow(instance_id=task_id, status=flag, test_flag=1, flow_id=template_id).save()
     return task_id
 

@@ -293,7 +293,7 @@ def selecthor2(request):
     if None is not search and '' != search:
         sciencenews = Muenu.objects.filter(Q(mname__contains=search)|Q(url__contains=search)).exclude(url ='db_connection/muenu_manage/')
     else:
-        sciencenews = Muenu.objects.all()
+        sciencenews = Muenu.objects.all().exclude(url ='db_connection/muenu_manage/')
     p = Paginator(sciencenews, limit)
 
     try:
@@ -332,7 +332,6 @@ def addmuenus(request):
         status_dic ={}
         res = json.loads(request.body)
         re = Muenu(**res).save()
-
         items_count = Muenu.objects.count()
         pages = items_count / 5
         if 0 != items_count % 5:
@@ -393,19 +392,20 @@ def delete_muenu(request,id):
         res3 = tools.error_result(e)
         return tools.error_result(res3)
 
+
 def get_roleAmuenus(request):
     roles = Role.objects.all()
     menus = Muenu.objects.all()
     tree=[]
     for x in roles:
         temp = {}
-        muenu_ids = rm.objects.filter(roleid=x.id)
+        muenu_ids = rm.objects.filter(roleid=x.rid)
         temp['label']=x.rname
-        temp['id']=x.id
+        temp['id']=x.rid
         childrens=[]
         for menu in menus:
             chi={}
-            chi['id']=(x.id)*50+menu.id
+            chi['id']=(x.rid+1)*100+menu.id
             chi['label']=menu.mname
             childrens.append(chi)
         temp['children']=childrens
@@ -415,13 +415,9 @@ def get_roleAmuenus(request):
 #获取已经勾选Id
 def checked_menu(request):
     objs=rm.objects.all()
-    roles = Role.objects.all()
-    rolelen = roles.__len__()
-    menus = Muenu.objects.all()
-    menuslen = menus.__len__()
     ids=[]
     for obj in objs:
-        temp_id=(obj.roleid)*50+obj.muenuid
+        temp_id=(obj.roleid+1)*100+obj.muenuid
         ids.append(temp_id)
     return  ids
 
@@ -443,10 +439,10 @@ def savemnus(request):
             try:
                 for i in ids:
                     if ('children' not in i) and ('label' in i):
-                        x = i['id'] / 50
-                        z = i['id'] % 50
+                        x = i['id'] / 100
+                        z = i['id'] % 100
                         x = int(x)
-                        res1 = rm.objects.create(roleid=x, muenuid=z)
+                        res1 = rm.objects.create(roleid=x-1, muenuid=z)
                     else:
                         pass
             except Exception as e:
