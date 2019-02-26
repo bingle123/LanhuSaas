@@ -104,7 +104,7 @@
                         <el-button type="button" @click="dialogFormVisible3 = true">新增岗位</el-button>
                     </el-col>
                 </el-row>
-                <el-table :data="jobInstance" :header-cell-style="rowClass" style="width: 100%;margin-top: 20px">
+                <el-table :data="jobInstance" style="width: 100%;margin-top: 20px">
                     <el-table-column prop="pos_name" label="岗位名称" style="width: 20%">
                     </el-table-column>
                     <el-table-column prop="user_name" label="岗位人员" style="width: 20%;">
@@ -215,7 +215,6 @@
                         limit: 10
                     },
                 }).then((res) => {
-                    console.log(res)
                     vm.jobInstance = res.data.message;
                     vm.page_count = res.data.message[0].page_count;
                 })
@@ -227,7 +226,7 @@
                 })
             },
             show() {
-                console.log(vm.page)//显示首页
+                //显示首页
                 axios({
                     method: 'post',
                     url: '${SITE_URL}position/show/',
@@ -247,19 +246,26 @@
                     type: 'warning',
                     center: true
                 }).then(() => {
-                    this.$message({
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}position/delete/',
+                        data: {
+                            id: row,
+                        }
+                    }).then((res) => {
+                        if(res.data.result){
+                            this.$message({
                             type: 'success',
-                            message: '删除成功!',
-                        },
-                        axios({
-                            method: 'post',
-                            url: '${SITE_URL}position/delete/',
-                            data: {
-                                id: row,
-                            }
-                        }).then((res) => {
-                            vm.show();
-                        }),);
+                            message: '删除成功!',})
+                        }
+                        else{
+                            this.$message({
+                            type: 'success',
+                            message: '删除失败!请先移除该岗位的所有人员！',})
+                        }
+
+                        vm.show();
+                    })
                 }).catch(() => {
                     this.$message({
                         type: 'info',

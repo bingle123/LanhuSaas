@@ -53,6 +53,9 @@ def get_chart_data(req,id):
     res=function.get_chart_data(id)
     return render_json(res)
 
+def get_basic_data(req,id):
+    res=function.get_basic_data(id)
+    return render_json(res)
 
 # 场景编排新增
 def add_scene(request):

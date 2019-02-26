@@ -275,3 +275,10 @@ def get_chart_data(id):
         }
         datas.append(temp)
     return datas
+
+def get_basic_data(id):
+    datas={}
+    data=TDGatherData.objects.filter(item_id=id)
+    for d in data:
+        datas[d.data_key]=d.data_value
+    return datas
