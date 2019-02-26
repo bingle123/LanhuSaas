@@ -19,7 +19,7 @@ function chart_monitor(item_id,chart_type,height,width) {
     var barCount=[]
     var person_count=''
     var chartdata=[]
-    $.post("/monitorScene/get_chart_data/"+item_id,function (res) {
+    $.get("/monitorScene/get_chart_data/"+item_id,function (res) {
         res=res.message
        for(r in res){
            if(isNotANumber(res[r].values[0])){
