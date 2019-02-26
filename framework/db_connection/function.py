@@ -54,7 +54,7 @@ def selecthor(request):
                                       |Q(port__contains=search)|Q(username__contains=search)|Q(databasename__contains=search))
     else:
         sciencenews = Conn.objects.all()
-        p = Paginator(sciencenews, limit)
+    p = Paginator(sciencenews, limit)
     try:
         selected_set = p.page(page) #获取第page页的数据
     except EmptyPage:
