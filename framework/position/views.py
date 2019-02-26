@@ -24,8 +24,8 @@ def select_job(request):
 
 @csrf_exempt
 def delete_job(request):
-    function.delete_job(request)
-    return render_json(None)
+    res = function.delete_job(request)
+    return render_json(res)
 
 @csrf_exempt
 def add_job(request):
