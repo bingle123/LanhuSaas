@@ -1019,7 +1019,7 @@
             basic_test(){
                 let params = '';
                 if (vm.sql_file_interface == 3) {
-                     params = vm.sql_id
+                     params = vm.server_url
                 }
                 if (vm.sql_file_interface == 6  || vm.sql_file_interface == 9) {
                      params = vm.server_url +'#'+ vm.file_param
@@ -1281,6 +1281,7 @@
                             console.log(res)
                             vm.server_url = res['data']['results']['connname'];
                             vm.sql_id = res['data']['results']['id'];
+                            vm.server_url = vm.sql_id;
                             vm.get_db_connections();
                             vm.basic_size();
                             vm.basic_height();
