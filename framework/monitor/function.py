@@ -232,9 +232,9 @@ def job_test(request):
 def change_unit_status(req):
     try:
         res=json.loads(req.body)
-        schename=res['monitor_name']
         flag=int(res['flag'])
         unit_id=res['id']
+        schename=str(unit_id)
         mon=Monitor.objects.get(id=unit_id)
         mon.status=flag
         mon.save()
