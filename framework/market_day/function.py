@@ -67,6 +67,7 @@ def addperdic_task():
 
 def add_unit_task(add_dicx):
     type=add_dicx['monitor_type']
+    schename = add_dicx['monitor_name']
     print type
     id=Monitor.objects.filter(monitor_name=schename).last().id
     schename=str(id)

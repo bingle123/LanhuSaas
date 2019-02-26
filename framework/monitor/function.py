@@ -118,6 +118,7 @@ def add_unit(request):
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
         add_dic = res['data']
+        print add_dic
         add_flow_dic = res['flow']
         monitor_type = res['monitor_type']
         if res['monitor_type'] == 'first':
@@ -127,12 +128,12 @@ def add_unit(request):
         if res['monitor_type'] == 'third':
             monitor_type = '作业单元类型'
             add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
-            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
         if res['monitor_type'] == 'fourth':
             monitor_type = '流程单元类型'
             add_dic['jion_id'] = res['flow']['jion_id']
             add_dic['gather_params'] = add_dic['node_name']
             add_dic.pop('node_name')
+            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
             start_list = []
             for i in res['flow']['node_times']:
                 start_list.append(i['endtime'])
@@ -177,6 +178,7 @@ def edit_unit(request):
             monitor_type = '流程单元类型'
             add_dic['jion_id'] = res['flow']['jion_id']
             add_dic['gather_params'] = add_dic['node_name']
+            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
             add_dic.pop('node_name')
             start_list = []
             for i in res['flow']['node_times']:
@@ -232,9 +234,9 @@ def job_test(request):
 def change_unit_status(req):
     try:
         res=json.loads(req.body)
-        schename=res['monitor_name']
         flag=int(res['flag'])
         unit_id=res['id']
+        schename=str(unit_id)
         mon=Monitor.objects.get(id=unit_id)
         mon.status=flag
         mon.save()
