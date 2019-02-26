@@ -1448,12 +1448,11 @@
                     }
                     var reg =/^(?:(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:1[0-9][0-9]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:2[0-4][0-9])|(?:25[0-5])|(?:1[0-9][0-9])|(?:[1-9][0-9])|(?:[0-9]))$/;
                     var re = new RegExp(reg);
-                    var ip = $("#ip").val();
                     if(vm.job.params==null || vm.job.params==''){
                         vm.unit_id = -1;
                         vm.message = "IP不可为空!";
                     }
-                    if(!re.test(ip)) {
+                    if(!re.test(vm.job.params)) {
                         vm.unit_id = -1;
                         vm.message = "请填写有效的IP地址!";
                     }
