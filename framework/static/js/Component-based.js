@@ -210,7 +210,6 @@ function base_monitor(item_id,font_size,height,width) {
         'text-align':'center',
         'width': '100%',
         'height': '40%',
-        'background-color': 'whitesmoke',
     })
     $('[type='+selector_id+']').find("*").css("font-size",font_size)
     $('[type='+selector_id+']').css('height',height);
@@ -224,29 +223,23 @@ function font_size(id,value) {
      $("#"+id+"").find('*').css("height", value)
      $("#"+id+"").find('*').css("width", value)
 }
-function flow_change(value){
+function flow_monitor(value1,value2){
+                var selector_id='flow'+value2;
+                var selector_type='flow_monitor'+value2
+                var selector_canvas='canvas'+value2
+                var selector_template='template'+value2
                 var location ='';
                 var line='';
                 var template_list={};
                 var constants='';
-                axios({
-                    method:'post',
-                    url:'${SITE_URL}monitor/flow_change/',
-                    data: {
-                        template_id:value
-                    }
-                }).then(function (res) {
-                    {
-                        template_list.id=res.data.template_id[0].id
-                        template_list.name=res.data.template_id[0].name
-                        constants = res.data.constants
-                        var aa=" <div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width: 100%;position: relative;\">\n" +
+                var cc=" <div id=\"flow_canvas\" style=\"text-align:center;width: 300px;height: 200px;background-color: whitesmoke;\">\n" +
+                            "                                <div id=\""+selector_id+"\" class=\"clearfix workflow-box\" style=\"width: 100%;position: relative;\">\n" +
                             "\n" +
                             "                                        <div class=\"workflow-canvas\" style=\"margin-left: 0px;padding-left: 0px\">\n" +
                             "                                            <!-- 画布模板 start -->\n" +
                             "                                            <div class=\"jtk-content\">\n" +
                             "                                                <div class=\"jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan\"\n" +
-                            "                                                     id=\"canvas\" style=\"height:500px\">\n" +
+                            "                                                     id=\""+selector_canvas+"\" style=\"height:500px\">\n" +
                             "                                                    <!-- 流程 -->\n" +
                             "                                                </div>\n" +
                             "                                            </div>\n" +
@@ -256,7 +249,7 @@ function flow_change(value){
                             "\n" +
                             "    <!-- template 模板-->\n" +
                             "                                        <div class=\"jtk-delete jtk-none \">删除节点</div>\n" +
-                            "                                        <div id=\"template\" class=\"jtk-none\">\n" +
+                            "                                        <div id=\""+selector_template+"\" class=\"jtk-none\">\n" +
                             "                                            <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\"\n" +
                             "                                                 data-type=\"EmptyEndEvent\">\n" +
                             "                                                <div class=\"node-wrapper\">\n" +
@@ -311,28 +304,34 @@ function flow_change(value){
                             "                                                </div>\n" +
                             "                                            </div>\n" +
                             "                                        </div>\n" +
-                            "                                    </div>"
-                        $('#flow_canvas').html(aa)
+                            "                                    </div>\n" +
+                            "                            </div>";
+                        $('[type='+selector_type+']').html(cc);
+                axios({
+                    method:'post',
+                    url:'/monitor/flow_change/',
+                    data: {
+                        template_id:value1
+                    }
+                }).then(function (res) {
+                    {
+                        console.log(res);
                         location = res.data.activities
                         line = res.data.flows
                         //显示流程单元中的预览图
-                        $('#flow1').dataflow({
+                        $('#'+selector_id).dataflow({
 
                             el: '.tool', //流程拖动源
-                            canvas: '#canvas', //画布
+                            canvas: '#'+selector_canvas, //画布
                             arrowWidth: 8,
                             arrowHeight: 10,
-                            template: '#template',
+                            template: '#'+selector_template,
                             data:
                                 {
                                     "line": line, "location": location
 
                                 }
                         });
-
-                        $('.node-icon').css('top','-7px')
-                        let old_html  = $('#canvas').html()
-                        $('#canvas').html('<div style="transform: scale(0.65)">'+old_html+'</div>')
                     }
                 })
 
