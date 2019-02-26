@@ -344,7 +344,7 @@
                                 <el-form-item label="脚本参数" style="width: 96%">
                                     <el-input v-model="job.gather_params" placeholder="多个参数空格分开"></el-input>
                                 </el-form-item>
-                                <el-form-item label="执行服务器" style="width: 96%">
+                                <el-form-item label="执行服务器IP" style="width: 96%">
                                     <el-input v-model="job.params" placeholder="请输入服务器地址"></el-input>
                                 </el-form-item>
                                 <el-form-item label="采集时间段:" style="width: 96%">
@@ -633,7 +633,7 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            message: '',                                           //弹框提示信息
+            message: '保存成功!',                                           //弹框提示信息
             constants:'',
             location : '',
             line:'',
@@ -895,7 +895,6 @@
             },
             get_header_data(){
             axios.get('/market_day/get_header/').then(function (res) {
-               console.log(res)
             })
             },
             sycontent(){
@@ -1220,7 +1219,6 @@
                         limit: 10
                     },
                 }).then(function (res) {
-                    console.log(res)
                     vm.sites = res.data.results.res_list;
                     vm.page_count = res.data.results.res_list[0].page_count;
                     vm.job2 = res.data.results.job;
@@ -1353,7 +1351,7 @@
                             vm.chart.params = res['data']['results'];
                             vm.show_content();
                         }).catch((error) => {
-                        alert('拉取数据库失败！')
+                            alert('拉取数据库失败！')
                         });
                 }
                 if (row.monitor_type == '作业单元类型') {
@@ -1390,9 +1388,10 @@
             //保存数据处理
             edit1() {
                 vm.centerDialogVisible = false;
+                vm.message = '保存成功!';
+                var node_time = {};
                 if (vm.monitor_type == 'first') {
                     vm.result_data = vm.basic;
-                    console.log(vm.result_data )
                     if (vm.file_param == undefined) {
                         vm.basic.params = vm.sql_id
                     } else {
@@ -1400,54 +1399,109 @@
                     }
                     vm.basic.monitor_name = vm.monitor_name;
                     vm.basic.monitor_type = vm.monitor_type
+                    if (vm.server_url == '') {
+                        vm.unit_id = -1;
+                        vm.message = '请选择数据库或者填写服务器和url!'
+                    }
+                    if (vm.basic.gather_rule == ''){
+                        vm.unit_id = -1;
+                        vm.message = '请输入数据采集规则!'
+                    }
+                    if (vm.basic.start_time == ''){
+                        vm.unit_id = -1;
+                        vm.message = '请选择开始时间!'
+                    }
+                    if (vm.basic.end_time == ''){
+                        vm.unit_id = -1;
+                        vm.message = '请选择结束时间!'
+                    }
                 } else if (vm.monitor_type == 'second') {
                     vm.result_data = vm.chart;
                     vm.chart.monitor_name = vm.monitor_name;
-                    vm.chart.monitor_type = vm.monitor_type
+                    vm.chart.monitor_type = vm.monitor_type;
+                    if (vm.chart.params == ''){
+                        vm.unit_id = -1;
+                        vm.message = '请选择数据库!'
+                    }
+                    if (vm.chart.gather_rule == ''){
+                        vm.unit_id = -1;
+                        vm.message = '请输入采集规则!'
+                    }
+                    if (vm.chart.start_time == ''){
+                        vm.unit_id = -1;
+                        vm.message = '请选择开始时间!'
+                    }
+                    if (vm.chart.end_time == ''){
+                        vm.unit_id = -1;
+                        vm.message = '请选择结束时间!'
+                    }
                 } else if (vm.monitor_type == 'third') {
                     vm.result_data = vm.job;
                     vm.job.monitor_name = vm.monitor_name;
                     vm.job.monitor_type = vm.monitor_type
+                    if (vm.job.gather_rule == ''){
+                        vm.unit_id = -1;
+                        vm.message = '请选择作业模板!'
+                    }
+                    var reg =/^(?:(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:1[0-9][0-9]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:2[0-4][0-9])|(?:25[0-5])|(?:1[0-9][0-9])|(?:[1-9][0-9])|(?:[0-9]))$/;
+                    var re = new RegExp(reg);
+                    var ip = $("#ip").val();
+                    if(vm.job.params==null || vm.job.params==''){
+                        vm.unit_id = -1;
+                        vm.message = "IP不可为空!";
+                    }
+                    if(!re.test(ip)) {
+                        vm.unit_id = -1;
+                        vm.message = "请填写有效的IP地址!";
+                    }
+
+                    if (vm.job.start_time == ''){
+                        vm.unit_id = -1;
+                        vm.message = '请选择开始时间!'
+                    }
+                    if (vm.job.end_time == ''){
+                        vm.unit_id = -1;
+                        vm.message = '请选择结束时间!'
+                    }
                 } else if (vm.monitor_type == 'fourth') {
                     vm.result_data = vm.flow;
                     vm.flow.monitor_name = vm.monitor_name;
                     vm.flow.monitor_type = vm.monitor_type;
-
-
-                }
-
-                if (vm.unit_id > 0) {
-                    var node_id = ''
-                    var start_time = ''
-                    var end_time = ''
-                    var node_times = []
-                    for (var i = 2; i <= vm.location.length - 1; i++) {
-                        var node_time = {}
-                        node_time.node_id = vm.location[i].id ,
-                        node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
-                        node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
-                        node_time.node_name = $('#' + vm.location[i].id + '').find('.node-title').text()
-                        if(node_time.starttime == ""){
-                            alert('请配置每个节点的开始时间')
-                            return
-                        }else  if(node_time.endtime == ""){
-                            alert('请配置每个节点的结束时间')
-                            return
-                        }
-
-                        node_times.push(node_time)
+                    if (vm.flow.gather_rule == ''){
+                        vm.unit_id = -1;
+                        vm.message = '请选择流程模板!'
                     }
-                    var flow = {}
-                    flow.node_times = node_times
-                    flow.monitor_name = vm.monitor_name
-                    flow.monitor_type = vm.monitor_type
-                    flow.jion_id = vm.flow.gather_rule[0].id
-                    flow.font_size = vm.flow.font_size
-                    flow.height = vm.flow.height
-                    flow.width = vm.flow.width
-                    flow.period = vm.flow.period
-                    flow.constants = vm.constants
-                    console.log(flow)
+                    var node_times = [];
+                    for (var i = 2; i <= vm.location.length - 1; i++) {
+                        node_time.node_id = vm.location[i].id ,
+                            node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
+                            node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
+                        node_time.node_name = $('#' + vm.location[i].id + '').find('.node-title').text()
+                        if (node_time.starttime == "") {
+                            vm.unit_id = -1;
+                            vm.message = '请配置每个节点的开始时间';
+                        } else if (node_time.endtime == "") {
+                            vm.unit_id = -1;
+                            vm.message = '请配置每个节点的结束时间';
+                        }
+                    }
+                        node_times.push(node_time)
+                    var flow = {};
+                    flow.node_times = node_times;
+                    flow.monitor_name = vm.monitor_name;
+                    flow.monitor_type = vm.monitor_type;
+                    flow.jion_id = vm.flow.gather_rule[0].id;
+                    flow.font_size = vm.flow.font_size;
+                    flow.height = vm.flow.height;
+                    flow.width = vm.flow.width;
+                    flow.period = vm.flow.period;
+                    flow.constants = vm.constants;
+                }
+                if (vm.monitor_name == ''){
+                    vm.message = '请输入监控项名称!';
+                    vm.unit_id = -1;
+                }
+                if (vm.unit_id > 0) {
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor/edit/',
@@ -1460,44 +1514,13 @@
                         }
                     }).then((res) => {
                         vm.show()
-                       if (res['data']['code'] == 1)
-                            alert('保存失败！');
-                        else alert('保存成功！');
+                        if (res['data']['code'] == 1)
+                            alert(vm.message);
+                        else alert(vm.message);
                     }).catch((error) => {
-                        alert('修改失败！')
+                        alert(vm.message)
                     });
-                } else {
-                    var node_id = ''
-                    var start_time = ''
-                    var end_time = ''
-                    var node_times = []
-                    for (var i = 2; i <= vm.location.length - 1; i++) {
-                        var node_time = {}
-                        node_time.node_id = vm.location[i].id ,
-                        node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
-                        node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
-                        node_time.node_name = $('#' + vm.location[i].id + '').find('.node-title').text()
-                        if(node_time.starttime == ""){
-                            alert('请配置每个节点的开始时间')
-                            return
-                        }else  if(node_time.endtime == ""){
-                            alert('请配置每个节点的结束时间')
-                            return
-                        }
-
-                        node_times.push(node_time)
-                    }
-                    var flow = {}
-                    flow.node_times = node_times
-                    flow.monitor_name = vm.monitor_name
-                    flow.monitor_type = vm.monitor_type
-                    flow.jion_id = vm.flow.gather_rule[0].id
-                    flow.font_size = vm.flow.font_size
-                    flow.height = vm.flow.height
-                    flow.width = vm.flow.width
-                    flow.period = vm.flow.period
-                    flow.constants = vm.constants
-                    console.log(flow)
+                } else if (vm.unit_id == 0) {
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor/add/',
@@ -1509,12 +1532,16 @@
                         },
                     }).then((res) => {
                         if (res['data']['code'] == 1)
-                            alert('保存失败！');
-                        else alert('保存成功！');
+                            alert(vm.message);
+                        else alert(vm.message);
                         vm.show()
                     }).catch((error) => {
-                        alert('保存失败！')
+                        alert(vm.message)
                     });
+                }
+                else {
+                    alert(vm.message)
+                    vm.unit_id = 1
                 }
             },
             flow_change(value){
@@ -1529,7 +1556,6 @@
                     }
                 }).then(function (res) {
                     {
-                        console.log(res.data.template_id[0])
                         vm.template_list.id=res.data.template_id[0].id
                         vm.template_list.name=res.data.template_id[0].name
                         vm.constants = res.data.constants
@@ -1898,6 +1924,7 @@
                 Object.assign(vm.chart, vm.chart1);
                 vm.server_url = '';
                 vm.file_param = '';
+                vm.sql_file_interface = 3
             },
             //显示图标
             show_chart() {
@@ -2077,7 +2104,6 @@
                         sql:vm.chart.gather_rule,
                     },
                 }).then((res) => {
-                    console.log(res)
                     if(res.data.result){
                         this.$message({
                             message:'数据采集成功，请选择图表类型进行查看！',
@@ -2107,7 +2133,6 @@
                 $('#maintenanceIndex').find("canvas").css('width',vm.chart.width)
             },
             switch_change(value){
-                console.log(value);
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor/change_status/',

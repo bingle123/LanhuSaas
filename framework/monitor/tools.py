@@ -107,6 +107,7 @@ def user_interface_param():
     client.set_bk_api_ver ('v2')                                    # 以v2版本调用接口
     return client
 
+
 def job_interface(res):
     try:
         params = res['params']  # ip
