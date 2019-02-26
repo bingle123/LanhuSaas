@@ -23,7 +23,7 @@ urlpatterns = patterns(
     (r'^pos_name/$', 'pos_name'),
     (r'^paging/$', 'paging'),
     (r'^scene_show/$', 'scene_show'),                        #场景展示
-    (r'^add_scene/$', 'add_scene')                           #场景保存
+    (r'^add_scene/$', 'add_scene'),                         #场景保存
     (r'^scene_show/$', 'scene_show'),#场景展示
     (r'get_chart_data/(.+)$','get_chart_data'),
 )
