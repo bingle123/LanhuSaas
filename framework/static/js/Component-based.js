@@ -1,17 +1,18 @@
 function job_monitor(job_params){
-    selector_id='job_'+job_params.id
+    console.log(job_params);
+    selector_id=job_params.job_id
     var status=job_params.status
     if(status==0){
-        $('#'+selector_id).append($('<div class="unexecuted" style="color: grey;"><h1>作业未执行</h1><i class="el-icon-error" style="color: grey;font-size: 30px;margin-top: 20px;"></i></div>'))
+        $('[type='+selector_id+']').html($('<div class="unexecuted" style="background: beige;color: grey;"><h1>作业未执行</h1><i class="el-icon-error" style="color: grey;font-size: 30px;margin-top: 20px;"></i></div>'))
     }else if(status==1){
-        $('#'+selector_id).append($('<div class="success" style="color: green;display: none"><h1>作业执行成功</h1><i class="el-icon-success" style="color: green;font-size: 30px;margin-top: 20px;"></i></div>'))
+        $('[type='+selector_id+']').html($('<div class="success" style="background: beige;color: green;"><h1>作业执行成功</h1><i class="el-icon-success" style="color: green;font-size: 30px;margin-top: 20px;"></i></div>'))
     }else if(status==2){
-        $('#'+selector_id).append($('<div class="loading" style="color: orange;"><h1>正在执行</h1><i class="el-icon-loading" style="color: orange;font-size: 30px;margin-top: 20px;"></i></div>'))
+        $('[type='+selector_id+']').html($('<div class="loading" style="background: beige;color: orange;"><h1>正在执行</h1><i class="el-icon-loading" style="color: orange;font-size: 30px;margin-top: 20px;"></i></div>'))
     }else if(status==-1){
-        $('#'+selector_id).append($('<div class="error" style="color: red;"><h1>作业执行失败</h1><i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i></div>'))
+        $('[type='+selector_id+']').html($('<div class="error" style="background: beige;color: red;"><h1>作业执行失败</h1><i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i></div>'))
     }
-    $('#'+selector_id).css('height',job_params.height);
-    $('#'+selector_id).css('width',job_params.width);
+    $('[type='+selector_id+']').css('height',job_params.height);
+    $('[type='+selector_id+']').css('width',job_params.width);
 }
 function chart_monitor(item_id,chart_type,height,width) {
     new_res=[]
@@ -40,7 +41,7 @@ function chart_monitor(item_id,chart_type,height,width) {
             chartdata.push(temp)
         }
         console.log(chartdata)
-        show_chart(barX,barCount,person_count,chartdata,chart_type,height,width)
+        show_chart(item_id,barX,barCount,person_count,chartdata,chart_type,height,width)
     },dataType='json')
 }
 function isNotANumber(inputData) {
@@ -53,10 +54,11 @@ function isNotANumber(inputData) {
 　　}
 }
 
-function show_chart(barX,barCount,person_count,chartData,chart_type,height,width) {
+function show_chart(item_id,barX,barCount,person_count,chartData,chart_type,height,width) {
         console.log(chartData)
+        console.log(item_id)
         if (chart_type == "饼图") {
-            myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
+            myChart = echarts.init(document.getElementById(item_id), 'macarons');
             console.log(myChart)
             option = {
                 tooltip: {
@@ -108,7 +110,7 @@ function show_chart(barX,barCount,person_count,chartData,chart_type,height,width
 
         if (chart_type == "柱状图") {
 
-            var myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
+            var myChart = echarts.init(document.getElementById(item_id), 'macarons');
             option = {
                 tooltip: {
                     trigger: 'axis',
@@ -148,7 +150,7 @@ function show_chart(barX,barCount,person_count,chartData,chart_type,height,width
         }
         if (chart_type == "折线图") {
             console.log(barCount)
-            myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
+            myChart = echarts.init(document.getElementById(item_id), 'macarons');
             option = {
                 tooltip: {
                     trigger: 'axis'

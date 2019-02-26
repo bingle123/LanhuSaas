@@ -25,22 +25,10 @@
           href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css"/>
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
     <style>
         .Drigging {
-
-            width: 200px;
-
-            background: #CCC;
-
-            border: solid 1px #666;
-
-            height: 80px;
-
-            line-height: 80px;
-
-            text-align: center;
-
-            position: absolute;
+            position:absolute;
         }
         .monitor_type{
             line-height: 48px;
@@ -82,7 +70,7 @@
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in base_monitor" :key="index">
-                        <div @click="add_monitor(i)">
+                        <div @click="add_base_monitor(i)">
                             <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-monitors"></i>
                         </div>
@@ -98,7 +86,7 @@
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in chart_monitor" :key="index">
-                        <div @click="add_monitor(i)">
+                        <div @click="add_chart_monitor(i)">
                             <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-panel-permission"></i>
                         </div>
@@ -114,7 +102,7 @@
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in job_monitor" :key="index">
-                        <div @click="add_monitor(i)">
+                        <div @click="add_job_monitor(i)">
                             <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-monitors"></i>
                         </div>
@@ -130,7 +118,7 @@
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in flow_monitor" :key="index">
-                        <div @click="add_monitor(i)">
+                        <div @click="add_flow_monitor(i)">
                             <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-monitors"></i>
                         </div>
@@ -200,8 +188,46 @@
                 vm.page=1;
                 vm.show();
             },
-            add_monitor(i){
-                $('.monitor_content').append('<div class=\"Drigging\" type=\"'+i.id+'\" id=\"'+vm.drigging_id+'\">123</div>')
+            add_base_monitor(i){
+                console.log(i);
+                var job_params={
+                    'job_id':i.id,
+                    'width' :i.width,
+                    'height':i.height,
+                    'status':-1,
+                }
+                $('.monitor_content').append('<div class=\"Drigging\" type=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
+                job_monitor(job_params)
+                vm.drigging_id++
+            },
+            add_chart_monitor(i){
+                console.log(i);
+                $('.monitor_content').append('<div class=\"Drigging\" id=\"'+vm.drigging_id+'\"><div id=\"'+i.id+'\" style=\"width:'+i.height+'px;height:'+i.width+'px\"></div></div>')
+                chart_monitor(i.id,i.gather_params,i.height,i.width);
+                vm.drigging_id++
+            },
+            add_job_monitor(i){
+                console.log(i);
+                var job_params={
+                    'job_id':i.id,
+                    'width' :i.width,
+                    'height':i.height,
+                    'status':-1,
+                }
+                $('.monitor_content').append('<div class=\"Drigging\" type=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
+                job_monitor(job_params)
+                vm.drigging_id++
+            },
+            add_flow_monitor(i){
+                console.log(i);
+                var job_params={
+                    'job_id':i.id,
+                    'width' :i.width,
+                    'height':i.height,
+                    'status':-1,
+                }
+                $('.monitor_content').append('<div class=\"Drigging\" type=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
+                job_monitor(job_params)
                 vm.drigging_id++
             },
             current_change1(value) {
@@ -261,6 +287,7 @@
         $(document).mousemove(function (e) {
             if (!flag)//如果flag为false则返回
                 return;//当flag为true的时候执行下面的代码
+            e.preventDefault();
             var e=window.event||e;
             var _x = e.clientX - x + offsetLeft;
             //event.clientX得到鼠标相对于客户端正文区域的偏移
