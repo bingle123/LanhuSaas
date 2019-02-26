@@ -463,7 +463,22 @@ def savemnus(request):
                 return tools.error_result(e)
 
 #获得数据库连接对象
-def get_db():
-    db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306, charset='utf8')
+def get_db(id):
+    res = Conn.objects.get(id = id)
+    conn = model_to_dict(res)
+    print conn
+    ip = str(conn['ip'])
+    port = conn['port']
+    username = conn['username']
+    password = decrypt_str(conn['password'])
+
+    databasename = conn['databasename']
+    if conn['type'] == 'MySQL':
+        db = MySQLdb.connect(host=ip, user=username, passwd=password, db=databasename, port=int(port))
+    elif conn['type'] == 'Oracle':
+        sql = r'%s/%s@%s/%s' % (username, password, ip, databasename)
+        db = cx_Oracle.connect(sql)
+    else:
+        db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename)
     return db
 

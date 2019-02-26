@@ -1278,7 +1278,9 @@
                             url: '${SITE_URL}db_connection/get_conname/',
                             data:row.params,
                         }).then((res)=> {
+                            console.log(res)
                             vm.server_url = res['data']['results']['connname'];
+                            vm.sql_id = res['data']['results']['id'];
                             vm.get_db_connections();
                             vm.basic_size();
                             vm.basic_height();
