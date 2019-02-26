@@ -464,6 +464,6 @@ def savemnus(request):
 
 #获得数据库连接对象
 def get_db():
-    db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306, charset='utf8')
+    db = MySQLdb.connect('192.168.1.25', 'root', '12345678', 'mydjango1',charset='utf8')
     return db
 

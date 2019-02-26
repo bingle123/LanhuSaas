@@ -234,7 +234,7 @@ def scene_show(res):
             job_status_list = []
             for i in job_list:
                 try:
-                    job_status = Job.objects.filter(job_id=i['jion_id']).last().status
+                    job_status = Job.objects.filter(job_id=i['jion_id']).last()
                 except Exception as e:
                     job_status = 0
                 job_status_list.append(job_status)
@@ -282,3 +282,21 @@ def get_basic_data(id):
     for d in data:
         datas[d.data_key]=d.data_value
     return datas
+
+
+def getBySceneId(request,id):
+    scene = Scene.objects.get(id=id)
+    scenes = model_to_dict(scene)
+    scenes['scene_startTime']=str(scene.scene_startTime)
+    scenes['scene_endTime'] = str(scene.scene_endTime)
+    scenes['scene_creator_time'] = str(scene.scene_creator_time)
+    scenes['scene_editor_time'] = str(scene.scene_editor_time)
+    positons = position_scene.objects.filter(scene=id)
+    list_poid = list()
+
+    for i in positons:
+        list_poid.append(model_to_dict(i)['position_id'])
+    scenes['pdis'] = list_poid
+
+    return scenes
+

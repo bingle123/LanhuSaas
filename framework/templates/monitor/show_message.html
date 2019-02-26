@@ -1020,7 +1020,7 @@
             basic_test(){
                 let params = '';
                 if (vm.sql_file_interface == 3) {
-                     params = vm.sql_id
+                     params = vm.server_url
                 }
                 if (vm.sql_file_interface == 6  || vm.sql_file_interface == 9) {
                      params = vm.server_url +'#'+ vm.file_param
@@ -1280,8 +1280,10 @@
                             url: '${SITE_URL}db_connection/get_conname/',
                             data:row.params,
                         }).then((res)=> {
+                            console.log(res)
                             vm.server_url = res['data']['results']['connname'];
-                            vm.get_db_connections();
+                            vm.sql_id = res['data']['results']['id'];
+                            vm.server_url = vm.sql_id;
                             vm.basic_size();
                             vm.basic_height();
                             vm.basic_width();
@@ -1385,6 +1387,13 @@
                     vm.flow.start_time = row.start_time;
                     vm.flow.end_time = row.end_time;
                     vm.flow.period = row.period
+                    vm.flow.node_name = row.gather_params
+                    vm.flow.gather_rule = row.gather_rule
+                    var id1=row.jion_id
+                    var id={
+                        'template_id':id1
+                    }
+                    vm.flow_change(id)
                 }
             },
             //保存数据处理
@@ -1394,7 +1403,7 @@
                     vm.result_data = vm.basic;
                     console.log(vm.result_data )
                     if (vm.file_param == undefined) {
-                        vm.basic.params = vm.sql_id
+                        vm.basic.params = vm.server_url
                     } else {
                         vm.basic.params = vm.server_url
                     }
@@ -1441,7 +1450,7 @@
                     flow.node_times = node_times
                     flow.monitor_name = vm.monitor_name
                     flow.monitor_type = vm.monitor_type
-                    flow.jion_id = vm.flow.gather_rule[0].id
+                    //flow.jion_id = vm.flow.gather_rule[0].id
                     flow.font_size = vm.flow.font_size
                     flow.height = vm.flow.height
                     flow.width = vm.flow.width
@@ -1521,6 +1530,7 @@
                 vm.node_name(value)
                 vm.location =''
                 vm.line=''
+
                 axios({
                     method:'post',
                     url:'${SITE_URL}monitor/flow_change/',

@@ -8,12 +8,14 @@
     <script type="text/javascript" src="${STATIC_URL}js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/echarts/echarts.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/echarts/macarons.js"></script>
     <script type="text/javascript" src="${STATIC_URL}js/maintenanceIndex/maintenanceIndex.js"></script>
 </head>
 <body>
-    <div id="maintenanceIndex">
+<div id="maintenanceIndex">
+    <div v-if="isfram == 1">
         <el-row>
             <el-col :span="24">
                 <div id="maintenanceTitle">
@@ -61,7 +63,29 @@
                     <el-row>
                         <el-col :span="20">
                             <div class="maintenanceStepBarDiv">
-                                <el-steps class="maintenanceStepBar" space=100% :active="1" finish-status="success" process-status="finish">
+                                <el-steps class="maintenanceStepBar" space=100% :active="1" finish-status="success"
+                                          process-status="finish">
+                                    <el-step title="节点1"></el-step>
+                                    <el-step title="节点2"></el-step>
+                                    <el-step title="节点3"></el-step>
+                                    <el-step title="节点4"></el-step>
+                                    <el-step title="节点5"></el-step>
+                                    <el-step title="节点6"></el-step>
+                                </el-steps>
+                            </div>
+                            <el-button type="primary" @click="scene">点击事件</el-button>
+                        </el-col>
+                        <el-col :span="4">
+                            <div class="maintenancePointDiv">
+                                <span class="maintenancePoint">90</span>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="20">
+                            <div class="maintenanceStepBarDiv">
+                                <el-steps class="maintenanceStepBar" space=100% :active="1" finish-status="success"
+                                          process-status="finish">
                                     <el-step title="节点1"></el-step>
                                     <el-step title="节点2"></el-step>
                                     <el-step title="节点3"></el-step>
@@ -80,26 +104,8 @@
                     <el-row>
                         <el-col :span="20">
                             <div class="maintenanceStepBarDiv">
-                                <el-steps class="maintenanceStepBar" space=100% :active="1" finish-status="success" process-status="finish">
-                                    <el-step title="节点1"></el-step>
-                                    <el-step title="节点2"></el-step>
-                                    <el-step title="节点3"></el-step>
-                                    <el-step title="节点4"></el-step>
-                                    <el-step title="节点5"></el-step>
-                                    <el-step title="节点6"></el-step>
-                                </el-steps>
-                            </div>
-                        </el-col>
-                        <el-col :span="4">
-                            <div class="maintenancePointDiv">
-                                <span class="maintenancePoint">90</span>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="20">
-                            <div class="maintenanceStepBarDiv">
-                                <el-steps class="maintenanceStepBar" space=100% :active="1" finish-status="success" process-status="finish">
+                                <el-steps class="maintenanceStepBar" space=100% :active="1" finish-status="success"
+                                          process-status="finish">
                                     <el-step title="节点1"></el-step>
                                     <el-step title="节点2"></el-step>
                                     <el-step title="节点3"></el-step>
@@ -128,11 +134,16 @@
                             <el-row>
                                 <el-col :span="24">
                                     <div class="maintenanceVerticalDoneDiv">
-                                        <el-steps class="maintenanceVertical" direction="vertical" :active="1" finish-status="success" process-status="finish">
-                                            <el-step class="maintenanceVerticalDone" title="2019-01-16 06:00:00"></el-step>
-                                            <el-step class="maintenanceVerticalDone" title="2019-01-16 07:00:00"></el-step>
-                                            <el-step class="maintenanceVerticalDone" title="2019-01-16 08:00:00"></el-step>
-                                            <el-step class="maintenanceVerticalDone" title="2019-01-16 09:00:00"></el-step>
+                                        <el-steps class="maintenanceVertical" direction="vertical" :active="1"
+                                                  finish-status="success" process-status="finish">
+                                            <el-step class="maintenanceVerticalDone"
+                                                     title="2019-01-16 06:00:00"></el-step>
+                                            <el-step class="maintenanceVerticalDone"
+                                                     title="2019-01-16 07:00:00"></el-step>
+                                            <el-step class="maintenanceVerticalDone"
+                                                     title="2019-01-16 08:00:00"></el-step>
+                                            <el-step class="maintenanceVerticalDone"
+                                                     title="2019-01-16 09:00:00"></el-step>
                                         </el-steps>
                                     </div>
                                 </el-col>
@@ -150,11 +161,16 @@
                             <el-row>
                                 <el-col :span="24">
                                     <div class="maintenanceVerticalUnexecDiv">
-                                        <el-steps class="maintenanceVertical" direction="vertical" :active="1" finish-status="success" process-status="finish">
-                                            <el-step class="maintenanceVerticalUnexec" title="2019-01-16 10:00:00"></el-step>
-                                            <el-step class="maintenanceVerticalUnexec" title="2019-01-16 11:00:00"></el-step>
-                                            <el-step class="maintenanceVerticalUnexec" title="2019-01-16 12:00:00"></el-step>
-                                            <el-step class="maintenanceVerticalUnexec" title="2019-01-16 13:00:00"></el-step>
+                                        <el-steps class="maintenanceVertical" direction="vertical" :active="1"
+                                                  finish-status="success" process-status="finish">
+                                            <el-step class="maintenanceVerticalUnexec"
+                                                     title="2019-01-16 10:00:00"></el-step>
+                                            <el-step class="maintenanceVerticalUnexec"
+                                                     title="2019-01-16 11:00:00"></el-step>
+                                            <el-step class="maintenanceVerticalUnexec"
+                                                     title="2019-01-16 12:00:00"></el-step>
+                                            <el-step class="maintenanceVerticalUnexec"
+                                                     title="2019-01-16 13:00:00"></el-step>
                                         </el-steps>
                                     </div>
                                 </el-col>
@@ -165,9 +181,22 @@
             </el-col>
         </el-row>
     </div>
+    <div v-else-if="isfram == 2">
+        <div id='pagetitle' style="margin-bottom: 10px">
+            场景详情
+        </div>
+        <hr id="hr">
+        <div style="margin-top: 20px">
+            <div v-for="(i,index) in scenes.pdis" :key="index" class="text item">
+                <a>{{ i}}</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
 </body>
-<script>
-    new Vue({
+<script type="text/javascript">
+    var ve = new Vue({
         el: '#maintenanceIndex',
         data: {
             maintenanceTableData: [{
@@ -177,8 +206,23 @@
                 error: 6,
                 errorRate: '10.71%',
                 doing: 10,
-                unexec: 32
-            }]
+                unexec: 32,
+
+            }],
+            x: 6,
+            isfram: 1,
+            scenes: {},
+        },
+        methods: {
+            scene() {
+                axios.get('${SITE_URL}monitorScene/getSceneByid/' + ve.x + '/',)
+                    .then((res) => {
+                            this.isfram = 2
+                            scenes = res.data
+                            console.log(scenes)
+                        }
+                    )
+            },
         }
     });
 </script>
