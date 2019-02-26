@@ -1,3 +1,9 @@
+axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
 function job_monitor(job_params){
     selector_id='job_'+job_params.id
     var status=job_params.status
@@ -10,6 +16,7 @@ function job_monitor(job_params){
     }else if(status==-1){
         $('#'+selector_id).append($('<div class="error" style="color: red;"><h1>作业执行失败</h1><i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i></div>'))
     }
+    $('#'+selector_id).find("*").css('font-size',job_params.font_size);
     $('#'+selector_id).css('height',job_params.height);
     $('#'+selector_id).css('width',job_params.width);
 }
@@ -28,7 +35,6 @@ function chart_monitor(item_id,chart_type,height,width) {
                 new_res[0]=res[r]
            }
        }
-       console.log(new_res)
         barX=new_res[0].values
         barCount=new_res[1].values
         person_count=new_res[1].key
@@ -54,7 +60,6 @@ function isNotANumber(inputData) {
 }
 
 function show_chart(barX,barCount,person_count,chartData,chart_type,height,width) {
-        console.log(chartData)
         if (chart_type == "饼图") {
             myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
             console.log(myChart)
@@ -184,3 +189,30 @@ function show_chart(barX,barCount,person_count,chartData,chart_type,height,width
         $('#maintenanceIndex').find("canvas").css('height',height);
         $('#maintenanceIndex').find("canvas").css('width',width)
 }
+function base_monitor(item_id,font_size,height,width) {
+    $.get("/monitorScene/get_basic_data/"+item_id,function (res){
+        console.log(res)
+        var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var content=''
+        for(key in res){
+            if(key=='DB_CONNECTION'){
+                content+='<div>'+'数据库连接状态:'+cricle+'</div>'
+            }else{
+                 content+='<div>'+key+':'+res[key]+'</div>'
+            }
+        }
+        console.log(content)
+        $('#basic'+item_id).html(content)
+        $('#basic'+item_id).css({
+        'text-align':'center',
+        'width': '100%',
+        'height': '40%',
+        'background-color': 'whitesmoke',
+        'position': 'relative'
+    })
+    $("#basic"+item_id).find("*").css("font-size",font_size)
+    $('#basic'+item_id).css('height',height);
+    $('#basic'+item_id).css('width',width);
+    },dataType='json')
+}
+
