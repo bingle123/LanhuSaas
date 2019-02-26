@@ -190,12 +190,11 @@ function show_chart(item_id,barX,barCount,person_count,chartData,chart_type,heig
             };
             myChart.setOption(option);
         }
-        $('#maintenanceIndex').find("canvas").css('height',height);
-        $('#maintenanceIndex').find("canvas").css('width',width)
 }
 function base_monitor(item_id,font_size,height,width) {
     $.get("/monitorScene/get_basic_data/"+item_id,function (res){
         console.log(res)
+        var selector_id='basic'+item_id
         var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
         var content=''
         for(key in res){
@@ -206,17 +205,16 @@ function base_monitor(item_id,font_size,height,width) {
             }
         }
         console.log(content)
-        $('#basic'+item_id).html(content)
-        $('#basic'+item_id).css({
+        $('[type='+selector_id+']').html(content)
+        $('[type='+selector_id+']').css({
         'text-align':'center',
         'width': '100%',
         'height': '40%',
         'background-color': 'whitesmoke',
-        'position': 'relative'
     })
-    $("#basic"+item_id).find("*").css("font-size",font_size)
-    $('#basic'+item_id).css('height',height);
-    $('#basic'+item_id).css('width',width);
+    $('[type='+selector_id+']').find("*").css("font-size",font_size)
+    $('[type='+selector_id+']').css('height',height);
+    $('[type='+selector_id+']').css('width',width);
     },dataType='json')
 }
 
