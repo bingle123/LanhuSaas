@@ -272,3 +272,21 @@ def get_chart_data(id):
         }
         datas.append(temp)
     return datas
+
+
+def getBySceneId(request,id):
+    scene = Scene.objects.get(id=id)
+    scenes = model_to_dict(scene)
+    scenes['scene_startTime']=str(scene.scene_startTime)
+    scenes['scene_endTime'] = str(scene.scene_endTime)
+    scenes['scene_creator_time'] = str(scene.scene_creator_time)
+    scenes['scene_editor_time'] = str(scene.scene_editor_time)
+    positons = position_scene.objects.filter(scene=id)
+    list_poid = list()
+
+    for i in positons:
+        list_poid.append(model_to_dict(i)['position_id'])
+    scenes['pdis'] = list_poid
+
+    return scenes
+
