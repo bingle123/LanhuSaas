@@ -6,9 +6,10 @@ from django.core.paginator import Paginator
 from django.forms import model_to_dict
 from models import Scene
 from models import position_scene
-from monitor.models import Scene_monitor,Monitor
+from monitor.models import Scene_monitor,Monitor,Job
 from monitor import tools
 from position.models import JobInstance
+from gatherData.models import TDGatherData
 import sys
 from logmanagement.function import add_log,make_log_info,get_active_user
 
@@ -105,7 +106,6 @@ def delect(request):
                               get_active_user(request)['data']['bk_username'], '失败', repr(e))
     add_log(info)
     return ""
-
 
 def editSence(request):
     try:
@@ -231,6 +231,12 @@ def scene_show(res):
             job_unit = Monitor.objects.filter (monitor_type='作业单元类型')
             job_page_data, job_page_count = tools.page_paging (job_unit, limit, page)
             job_list = tools.obt_dic (job_page_data, job_page_count)
+            for i in job_list:
+                try:
+                    job_status = Job.objects.filter(job_id=i['jion_id']).last()
+                except Exception as e:
+                    job_status = 0
+                i['job_status'] = job_status
             res_dic = {
                 'job_list': job_list,
             }
@@ -255,3 +261,14 @@ def add_scene(res1):
     except Exception as e:
         res_dic = tools.error_result(e)
     return res_dic
+#获得图标监控项的数据
+def get_chart_data(id):
+    datas=[]
+    data=TDGatherData.objects.filter(item_id=id)
+    for d in data:
+        temp={
+            'key':d.data_key,
+            'values':d.data_value.split(',')
+        }
+        datas.append(temp)
+    return datas

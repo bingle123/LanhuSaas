@@ -14,7 +14,8 @@ from django.conf.urls import patterns
 
 urlpatterns = patterns(
     'monitorScene.views',
-    (r'^$', 'index'),                                         # 首页--服务器选择页面
+    (r'^$', 'index'),# 首页--服务器选择页面
+    (r'demo', 'demo'),
     (r'^monitor_show/$', 'monitor_show'),
     (r'^addSence/$', 'addSence'),
     (r'^select_table/$', 'select_table'),
@@ -23,5 +24,7 @@ urlpatterns = patterns(
     (r'^pos_name/$', 'pos_name'),
     (r'^paging/$', 'paging'),
     (r'^scene_show/$', 'scene_show'),                        #场景展示
-    (r'^add_scene/$', 'add_scene')                           #场景保存
+    (r'^add_scene/$', 'add_scene'),                         #场景保存
+    (r'^scene_show/$', 'scene_show'),#场景展示
+    (r'get_chart_data/(.+)$','get_chart_data'),
 )
