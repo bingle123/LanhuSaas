@@ -195,11 +195,25 @@ function base_monitor(item_id,font_size,height,width) {
     $.get("/monitorScene/get_basic_data/"+item_id,function (res){
         console.log(res)
         var selector_id='basic'+item_id
-        var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var cricle1='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var cricle2='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:red;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var cricle3='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var cricle4='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:black;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
         var content=''
         for(key in res){
             if(key=='DB_CONNECTION'){
-                content+='<div>'+'数据库连接状态:'+cricle+'</div>'
+                if(res.DB_CONNECTION==0){
+                    content+='<div>'+'数据库连接状态:'+cricle3+'</div>'
+                }
+                if(res.DB_CONNECTION==1){
+                    content+='<div>'+'数据库连接状态:'+cricle1+'</div>'
+                }
+                if(res.DB_CONNECTION==-1){
+                    content+='<div>'+'数据库连接状态:'+cricle2+'</div>'
+                }
+                if(res.DB_CONNECTION==-2){
+                    content+='<div>'+'数据库连接状态:'+cricle4+'</div>'
+                }
             }else{
                  content+='<div>'+key+':'+res[key]+'</div>'
             }
