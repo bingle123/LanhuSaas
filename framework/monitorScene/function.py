@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.forms import model_to_dict
 from models import Scene
 from models import position_scene
-from monitor.models import Scene_monitor,Monitor
+from monitor.models import Scene_monitor,Monitor,Job
 from monitor import tools
 from position.models import JobInstance
 from gatherData.models import TDGatherData
@@ -231,6 +231,15 @@ def scene_show(res):
             job_unit = Monitor.objects.filter (monitor_type='作业单元类型')
             job_page_data, job_page_count = tools.page_paging (job_unit, limit, page)
             job_list = tools.obt_dic (job_page_data, job_page_count)
+            job_status_list = []
+            for i in job_list:
+                try:
+                    job_status = Job.objects.filter(job_id=i['jion_id']).last().status
+                except Exception as e:
+                    job_status = 0
+                job_status_list.append(job_status)
+            for i in range(0,len(job_status_list)):
+                job_list[i]['job_status'] = job_status_list[i]
             res_dic = {
                 'job_list': job_list,
             }
