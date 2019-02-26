@@ -53,6 +53,9 @@ def get_chart_data(req,id):
     res=function.get_chart_data(id)
     return render_json(res)
 
+def get_basic_data(req,id):
+    res=function.get_basic_data(id)
+    return render_json(res)
 
 # 场景编排新增
 def add_scene(request):
@@ -85,6 +88,9 @@ def add_scene(request):
             'order': '3'
         },
     ]
-
     res = function.add_scene(param1)
+    return render_json(res)
+
+def getBySceneId(request,id):
+    res = function.getBySceneId(request,id)
     return render_json(res)
