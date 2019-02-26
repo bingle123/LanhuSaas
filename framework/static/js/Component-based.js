@@ -1,6 +1,6 @@
 function job_monitor(job_params){
     console.log(job_params);
-    selector_id=job_params.job_id
+    selector_id='job'+job_params.job_id
     var status=job_params.status
     if(status==0){
         $('[type='+selector_id+']').html($('<div class="unexecuted" style="background: beige;color: grey;"><h1>作业未执行</h1><i class="el-icon-error" style="color: grey;font-size: 30px;margin-top: 20px;"></i></div>'))
@@ -14,7 +14,7 @@ function job_monitor(job_params){
     $('[type='+selector_id+']').css('height',job_params.height);
     $('[type='+selector_id+']').css('width',job_params.width);
 }
-function chart_monitor(item_id,chart_type,height,width) {
+function chart_monitor(item_id,chart_type,height,width,drigging_id) {
     new_res=[]
     var barX=[]
     var barCount=[]
@@ -41,7 +41,7 @@ function chart_monitor(item_id,chart_type,height,width) {
             chartdata.push(temp)
         }
         console.log(chartdata)
-        show_chart(item_id,barX,barCount,person_count,chartdata,chart_type,height,width)
+        show_chart(item_id,barX,barCount,person_count,chartdata,chart_type,height,width,drigging_id)
     },dataType='json')
 }
 function isNotANumber(inputData) {
@@ -54,7 +54,10 @@ function isNotANumber(inputData) {
 　　}
 }
 
-function show_chart(item_id,barX,barCount,person_count,chartData,chart_type,height,width) {
+function show_chart(item_id,barX,barCount,person_count,chartData,chart_type,height,width,drigging_id) {
+        if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
+                this.myChart.dispose();
+            }
         console.log(chartData)
         console.log(item_id)
         if (chart_type == "饼图") {
@@ -150,7 +153,7 @@ function show_chart(item_id,barX,barCount,person_count,chartData,chart_type,heig
         }
         if (chart_type == "折线图") {
             console.log(barCount)
-            myChart = echarts.init(document.getElementById(item_id), 'macarons');
+            myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
             option = {
                 tooltip: {
                     trigger: 'axis'

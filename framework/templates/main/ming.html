@@ -215,8 +215,8 @@
             },
             add_chart_monitor(i){
                 console.log(i);
-                $('.monitor_content').append('<div class=\"Drigging\" id=\"'+vm.drigging_id+'\"><div id=\"'+i.id+'\" style=\"width:'+i.height+'px;height:'+i.width+'px\"></div></div>')
-                chart_monitor(i.id,i.gather_params,i.height,i.width);
+                $('.monitor_content').append('<div class=\"Drigging\" id=\"'+vm.drigging_id+'\"><div id=\"chart'+i.id+'\" style=\"width:'+i.height+'px;height:'+i.width+'px\"></div></div>')
+                chart_monitor(i.id,i.gather_params,i.height,i.width,vm.drigging_id);
                 vm.drigging_id++
             },
             add_job_monitor(i){
@@ -225,9 +225,9 @@
                     'job_id':i.id,
                     'width' :i.width,
                     'height':i.height,
-                    'status':-1,
+                    'status':i.job_status
                 }
-                $('.monitor_content').append('<div class=\"Drigging\" type=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" type=\"job'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
                 job_monitor(job_params)
                 vm.drigging_id++
             },
