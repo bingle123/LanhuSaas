@@ -71,7 +71,7 @@ def delete_job(request):
     try:
         res = json.loads(request.body)
         id = res['id']
-        res1 = JobInstance.objects.filter(id=id).delete()
+        res1 = JobInstance.objects.get(id=id).delete()
         info = make_log_info(u'删除岗位', u'业务日志', u'JobInstance', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
         res1 = tools.error_result(e)
