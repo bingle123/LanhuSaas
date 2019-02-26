@@ -1390,6 +1390,7 @@
                 vm.centerDialogVisible = false;
                 vm.message = '保存成功!';
                 var node_time = {};
+                var flow = {};
                 if (vm.monitor_type == 'first') {
                     vm.result_data = vm.basic;
                     if (vm.file_param == undefined) {
@@ -1485,8 +1486,7 @@
                             vm.message = '请配置每个节点的结束时间';
                         }
                     }
-                        node_times.push(node_time)
-                    var flow = {};
+                    node_times.push(node_time)
                     flow.node_times = node_times;
                     flow.monitor_name = vm.monitor_name;
                     flow.monitor_type = vm.monitor_type;
@@ -1540,7 +1540,7 @@
                     });
                 }
                 else {
-                    alert(vm.message)
+                    alert(vm.message);
                     vm.unit_id = 1
                 }
             },
