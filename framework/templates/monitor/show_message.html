@@ -1403,7 +1403,7 @@
                     vm.result_data = vm.basic;
                     console.log(vm.result_data )
                     if (vm.file_param == undefined) {
-                        vm.basic.params = vm.sql_id
+                        vm.basic.params = vm.server_url
                     } else {
                         vm.basic.params = vm.server_url
                     }
@@ -1450,7 +1450,7 @@
                     flow.node_times = node_times
                     flow.monitor_name = vm.monitor_name
                     flow.monitor_type = vm.monitor_type
-                    flow.jion_id = vm.flow.gather_rule[0].id
+                    //flow.jion_id = vm.flow.gather_rule[0].id
                     flow.font_size = vm.flow.font_size
                     flow.height = vm.flow.height
                     flow.width = vm.flow.width

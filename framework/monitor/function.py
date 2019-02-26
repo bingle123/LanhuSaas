@@ -187,6 +187,7 @@ def edit_unit(request):
             add_dic['start_time']=min(start_list)
             add_dic['end_time'] =max(start_list)
         add_dic['monitor_name'] = res['monitor_name']
+        add_dic['status'] = '0'
         add_dic['monitor_type'] = monitor_type
         add_dic['editor'] = user['data']['bk_username']
         Monitor.objects.filter(id=res['unit_id']).update(**add_dic)
