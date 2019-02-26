@@ -143,7 +143,6 @@ def add_unit(request):
         add_dic['status'] = 0
         add_dic['creator'] = user['data']['bk_username']
         add_dic['editor'] = user['data']['bk_username']
-        print add_dic
         Monitor.objects.create(**add_dic)
         if res['monitor_type'] == 'fourth':
             function.add_unit_task(add_dicx=add_flow_dic)
@@ -166,6 +165,7 @@ def edit_unit(request):
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
         monitor_type = res['monitor_type']
+        add_dic = res['data']
         if res['monitor_type'] == 'first':
             monitor_type = '基本单元类型'
         if res['monitor_type'] == 'second':
@@ -173,8 +173,16 @@ def edit_unit(request):
         if res['monitor_type'] == 'third':
             monitor_type = '作业单元类型'
         if res['monitor_type'] == 'fourth':
-            monitor_type = '流程元类型'
-        add_dic = res['data']
+            monitor_type = '流程单元类型'
+            add_dic['jion_id'] = res['flow']['jion_id']
+            add_dic['gather_params'] = add_dic['node_name']
+            add_dic.pop('node_name')
+            start_list = []
+            for i in res['flow']['node_times']:
+                start_list.append(i['endtime'])
+                start_list.append(i['starttime'])
+            add_dic['start_time']=min(start_list)
+            add_dic['end_time'] =max(start_list)
         add_dic['monitor_name'] = res['monitor_name']
         add_dic['monitor_type'] = monitor_type
         add_dic['jion_id'] = None
@@ -223,11 +231,6 @@ def job_test(request):
 
 
 def change_unit_status(req):
-    '''
-    改变监控项的启用状态
-    :param req:
-    :return:
-    '''
     try:
         res=json.loads(req.body)
         schename=res['monitor_name']

@@ -167,19 +167,5 @@ def start_flow_task(**info):
 def count_time(**i):
     return i['x'] * i['y']
 
-# 每十秒检查监控项的状态
-# @periodic_task(run_every=10)
-# def check_gather_status():
-#     monitors = Monitor.objects.all()
-#     for monitor in monitors:
-#         if (time.strftime('%H:%M:%S',time.localtime(time.time()))>str(monitor.start_time))&(time.strftime('%H:%M:%S',time.localtime(time.time()))<str(monitor.end_time)):
-#             if(monitor.status!=2):
-#                 monitor.status=0
-#         else:
-#             monitor.status=1
-#         monitor.save()
 
-@periodic_task(run_every=crontab(minute='*',hour='8-10'))
-def taskdemo():
-    print u'每天8点到10点每分钟执行一次'
-    return '11111'
+

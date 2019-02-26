@@ -47,13 +47,15 @@ def paging(request):
 def scene_show(request):
 
     param = json.loads(request.body)
-    print param
     res = function.scene_show(param)
     return  render_json(res)
 def get_chart_data(req,id):
     res=function.get_chart_data(id)
     return render_json(res)
 
+def get_basic_data(req,id):
+    res=function.get_basic_data(id)
+    return render_json(res)
 
 # 场景编排新增
 def add_scene(request):
