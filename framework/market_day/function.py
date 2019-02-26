@@ -66,10 +66,10 @@ def addperdic_task():
     return flag
 
 def add_unit_task(add_dicx):
-    schename = add_dicx['monitor_name']
     type=add_dicx['monitor_type']
     print type
     id=Monitor.objects.filter(monitor_name=schename).last().id
+    schename=str(id)
     if type=='基本单元类型' or type=='图表单元类型':
         starthour = str(add_dicx['start_time'])[:2]
         endhour = str(add_dicx['end_time'])[:2]

@@ -1,19 +1,27 @@
+axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
 function job_monitor(job_params){
-    selector_id='job_'+job_params.id
+    console.log(job_params);
+    selector_id='job'+job_params.job_id
     var status=job_params.status
     if(status==0){
-        $('#'+selector_id).append($('<div class="unexecuted" style="color: grey;"><h1>作业未执行</h1><i class="el-icon-error" style="color: grey;font-size: 30px;margin-top: 20px;"></i></div>'))
+        $('[type='+selector_id+']').html($('<div class="unexecuted" style="background: beige;color: grey;"><h1>作业未执行</h1><i class="el-icon-error" style="color: grey;font-size: 30px;margin-top: 20px;"></i></div>'))
     }else if(status==1){
-        $('#'+selector_id).append($('<div class="success" style="color: green;display: none"><h1>作业执行成功</h1><i class="el-icon-success" style="color: green;font-size: 30px;margin-top: 20px;"></i></div>'))
+        $('[type='+selector_id+']').html($('<div class="success" style="background: beige;color: green;"><h1>作业执行成功</h1><i class="el-icon-success" style="color: green;font-size: 30px;margin-top: 20px;"></i></div>'))
     }else if(status==2){
-        $('#'+selector_id).append($('<div class="loading" style="color: orange;"><h1>正在执行</h1><i class="el-icon-loading" style="color: orange;font-size: 30px;margin-top: 20px;"></i></div>'))
+        $('[type='+selector_id+']').html($('<div class="loading" style="background: beige;color: orange;"><h1>正在执行</h1><i class="el-icon-loading" style="color: orange;font-size: 30px;margin-top: 20px;"></i></div>'))
     }else if(status==-1){
-        $('#'+selector_id).append($('<div class="error" style="color: red;"><h1>作业执行失败</h1><i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i></div>'))
+        $('[type='+selector_id+']').html($('<div class="error" style="background: beige;color: red;"><h1>作业执行失败</h1><i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i></div>'))
     }
-    $('#'+selector_id).css('height',job_params.height);
-    $('#'+selector_id).css('width',job_params.width);
+    $('[type='+selector_id+']').css('height',job_params.height);
+    $('[type='+selector_id+']').css('width',job_params.width);
+    $('[type='+selector_id+']').find("*").css('font-size',job_params.font_size);
 }
-function chart_monitor(item_id,chart_type,height,width) {
+function chart_monitor(item_id,chart_type,height,width,drigging_id) {
     new_res=[]
     var barX=[]
     var barCount=[]
@@ -28,7 +36,6 @@ function chart_monitor(item_id,chart_type,height,width) {
                 new_res[0]=res[r]
            }
        }
-       console.log(new_res)
         barX=new_res[0].values
         barCount=new_res[1].values
         person_count=new_res[1].key
@@ -40,7 +47,7 @@ function chart_monitor(item_id,chart_type,height,width) {
             chartdata.push(temp)
         }
         console.log(chartdata)
-        show_chart(barX,barCount,person_count,chartdata,chart_type,height,width)
+        show_chart(item_id,barX,barCount,person_count,chartdata,chart_type,height,width,drigging_id)
     },dataType='json')
 }
 function isNotANumber(inputData) {
@@ -53,10 +60,12 @@ function isNotANumber(inputData) {
 　　}
 }
 
-function show_chart(barX,barCount,person_count,chartData,chart_type,height,width) {
-        console.log(chartData)
+function show_chart(item_id,barX,barCount,person_count,chartData,chart_type,height,width,drigging_id) {
+        if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
+                this.myChart.dispose();
+            }
         if (chart_type == "饼图") {
-            myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
+            myChart = echarts.init(document.getElementById(item_id), 'macarons');
             console.log(myChart)
             option = {
                 tooltip: {
@@ -108,7 +117,7 @@ function show_chart(barX,barCount,person_count,chartData,chart_type,height,width
 
         if (chart_type == "柱状图") {
 
-            var myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
+            var myChart = echarts.init(document.getElementById(item_id), 'macarons');
             option = {
                 tooltip: {
                     trigger: 'axis',
@@ -148,7 +157,7 @@ function show_chart(barX,barCount,person_count,chartData,chart_type,height,width
         }
         if (chart_type == "折线图") {
             console.log(barCount)
-            myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
+            myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
             option = {
                 tooltip: {
                     trigger: 'axis'
@@ -184,6 +193,34 @@ function show_chart(barX,barCount,person_count,chartData,chart_type,height,width
         $('#maintenanceIndex').find("canvas").css('height',height);
         $('#maintenanceIndex').find("canvas").css('width',width)
 }
+function base_monitor(item_id,font_size,height,width) {
+    $.get("/monitorScene/get_basic_data/"+item_id,function (res){
+        console.log(res)
+        var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var content=''
+        for(key in res){
+            if(key=='DB_CONNECTION'){
+                content+='<div>'+'数据库连接状态:'+cricle+'</div>'
+            }else{
+                 content+='<div>'+key+':'+res[key]+'</div>'
+            }
+        }
+        console.log(content)
+        $('#basic'+item_id).html(content)
+        $('#basic'+item_id).css({
+        'text-align':'center',
+        'width': '100%',
+        'height': '40%',
+        'background-color': 'whitesmoke',
+        'position': 'relative'
+    })
+    $("#basic"+item_id).find("*").css("font-size",font_size)
+    $('#basic'+item_id).css('height',height);
+    $('#basic'+item_id).css('width',width);
+    },dataType='json')
+}
+
+
 function font_size(id,value) {
      $("#"+id+"").find('*').css("font-size", value)
      $("#"+id+"").find('*').css("height", value)
