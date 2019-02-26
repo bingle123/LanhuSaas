@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 import function
 from common.mymako import render_json, render_mako_context
+from django.views.decorators.csrf import csrf_exempt
 import json
 
 # Create your views here.
 
 def index(request):
-
     return render_mako_context(request, './monitorScene/senceSet.html')
-
-
-
+def demo(request):
+    return render_mako_context(request, './Demo.html')
 def monitor_show(request):
     res = function.monitor_show(request)
     return render_json(res)
@@ -51,6 +50,9 @@ def scene_show(request):
     print param
     res = function.scene_show(param)
     return  render_json(res)
+def get_chart_data(req,id):
+    res=function.get_chart_data(id)
+    return render_json(res)
 
 
 # 场景编排新增

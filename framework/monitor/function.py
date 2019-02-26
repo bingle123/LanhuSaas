@@ -12,7 +12,7 @@ import pymysql as MySQLdb
 from market_day import function
 from market_day import celery_opt as co
 from db_connection.function import decrypt_str
-from gatherData.function import gather_data
+from gatherData.function import gather_data,get_db
 from gatherData.models import TDGatherData
 import sys
 from logmanagement.function import add_log,make_log_info,get_active_user
@@ -198,7 +198,7 @@ def basic_test(request):
     result = []
     gather_data(info)
     gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
-    db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306,charset='utf8')
+    db = get_db()
     cursor = db.cursor()
     cursor.execute(gather_rule2)
     results = cursor.fetchall()

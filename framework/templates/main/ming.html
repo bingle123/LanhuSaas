@@ -53,6 +53,9 @@
         .monitor_list div{
             text-align: center;
         }
+        .monitor_content{
+            position:relative;
+        }
         .el-row{
             border: 1px solid #ffffff;
         }
@@ -85,47 +88,58 @@
                         </div>
 
                     </el-col>
-                    <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
-                           @current-change="current_change1"></el-pagination>
+                    <el-col :span="24">
+                        <el-pagination :page-count="base_page_count" background layout="prev, pager, next" style="float:right"
+                               @current-change="current_change1"></el-pagination>
+                    </el-col>
                 </div>
                 <el-col :span="24">
                         <h3 class="monitor_type" @click="show_first">图表监控项</h3>
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in chart_monitor" :key="index">
-                        <div>
+                        <div @click="add_monitor(i)">
                             <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-panel-permission"></i>
                         </div>
                     </el-col>
-                    <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                    <el-col :span="24">
+                        <el-pagination :page-count="chart_page_count" background layout="prev, pager, next" style="float:right"
                            @current-change="current_change2"></el-pagination>
+                    </el-col>
+
                 </div>
                 <el-col :span="24">
                         <h3 class="monitor_type" @click="show_first">作业监控项</h3>
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in job_monitor" :key="index">
-                        <div>
+                        <div @click="add_monitor(i)">
                             <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-monitors"></i>
                         </div>
                     </el-col>
-                    <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                    <el-col :span="24">
+                        <el-pagination :page-count="job_page_count" background layout="prev, pager, next" style="float:right"
                            @current-change="current_change3"></el-pagination>
+                    </el-col>
+
                 </div>
                 <el-col :span="24">
                         <h3 class="monitor_type" @click="show_first">流程监控项</h3>
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in flow_monitor" :key="index">
-                        <div>
+                        <div @click="add_monitor(i)">
                             <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-monitors"></i>
                         </div>
                     </el-col>
-                    <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                    <el-col :span="24">
+                        <el-pagination :page-count="flow_page_count" background layout="prev, pager, next" style="float:right"
                            @current-change="current_change4"></el-pagination>
+                    </el-col>
+
                 </div>
             </div>
         </el-col>
@@ -147,7 +161,10 @@
     var vm = new Vue({
         el: '#app',
         data:{
-            page_count:100,
+            base_page_count:0,
+            chart_page_count:0,
+            job_page_count:0,
+            flow_page_count:0,
             page:1,
             monitor_type:0,
             limit:4,
@@ -172,6 +189,10 @@
                     vm.chart_monitor=res.data.results.chart_list;
                     vm.job_monitor=res.data.results.job_list;
                     vm.flow_monitor=res.data.results.flow_list;
+                    vm.base_page_count=res.data.results.base_list[0].page_count;
+                    vm.chart_page_count=res.data.results.chart_list[0].page_count;
+                    vm.job_page_count=res.data.results.job_list[0].page_count;
+                    vm.flow_page_count=res.data.results.flow_list[0].page_count;
                 });
             },
             show_first(){
@@ -180,7 +201,7 @@
                 vm.show();
             },
             add_monitor(i){
-                $('.monitor_content').append('<div class=\"Drigging\" type=\"'+i+'\" id=\"'+vm.drigging_id+'\">123</div>')
+                $('.monitor_content').append('<div class=\"Drigging\" type=\"'+i.id+'\" id=\"'+vm.drigging_id+'\">123</div>')
                 vm.drigging_id++
             },
             current_change1(value) {
@@ -215,38 +236,58 @@
             height:"hide"
         });
     });
-    $(function () {
+        $(function () {
+        var obox=$('.monitor_content');
         var selector = '';
-        var bool = false; //标识是否移动元素
-        var offsetX = 0; //声明p在当前窗口的Left值
-        var offsetY = 0; //声明p在当前窗口的Top值
+        var flag=false;
+        var x,y;
+        var offsetLeft,offsetTop;
         $(document).on("mouseover", ".Drigging", function () {
             $(this).css('cursor', 'pointer');//当鼠标移动到拖拽的p上的时候，将鼠标的样式设置为移动(move)
         });
-        $(document).on("mousedown", ".Drigging", function () {
+        $(document).on("mousedown", ".Drigging", function (e) {
+            var e=window.event||e;
             selector = '#' + this.id;
-            bool = true;//当鼠标在移动元素按下的时候将bool设定为true
-            offsetX = event.offsetX;//获取鼠标在当前窗口的相对偏移位置的Left值并赋值给offsetX
-            offsetY = event.offsetY;//获取鼠在当前窗口的相对偏移位置的Top值并赋值给offsetY
+            flag = true;//当鼠标在移动元素按下的时候将flag设定为true
+            x = e.clientX;//获取鼠标在当前窗口的相对偏移位置的Left值并赋值给x
+            y = e.clientY;//获取鼠在当前窗口的相对偏移位置的Top值并赋值给y
+            offsetLeft = $(selector).position().left;
+            offsetTop = $(selector).position().top;
             $(this).css('cursor', 'pointer');
         });
         $(document).on("mouseup", ".Drigging", function () {
-            bool = false;//当鼠标在移动元素起来的时候将bool设定为false
+            flag = false;//当鼠标在移动元素起来的时候将flag设定为false
         });
-        $(document).mousemove(function () {
-            if (!bool)//如果bool为false则返回
-                return;//当bool为true的时候执行下面的代码
-            var x = event.clientX - offsetX;
+        $(document).mousemove(function (e) {
+            if (!flag)//如果flag为false则返回
+                return;//当flag为true的时候执行下面的代码
+            var e=window.event||e;
+            var _x = e.clientX - x + offsetLeft;
             //event.clientX得到鼠标相对于客户端正文区域的偏移
             //然后减去offsetX即得到当前推拽元素相对于当前窗口的X值
             //（减去鼠标刚开始拖动的时候在当前窗口的偏移X）
-            var y = event.clientY - offsetY;
+            var _y = e.clientY - y + offsetTop;
             //event.clientY得到鼠标相对于客户端正文区域的偏移
             //然后减去offsetX即得到当前推拽元素相对于当前窗口的Y值
             //（减去鼠标刚开始拖动的时候在当前窗口的偏移Y）
-            $(selector).css("left", x);
-            $(selector).css("top", y);
+            if(_x<0){
+                _x=0;
+            }
+            if(_y<0){
+                _y=0;
+            }
+            if(_x>obox.width()-$(selector).width()){
+
+                _x=obox.width()-$(selector).width();
+            }
+            if(_y>obox.height()-$(selector).height()){
+                _y=obox.height()-$(selector).height();
+            }
+            $(selector).css("left", _x);
+            $(selector).css("top", _y);
             $(selector).css('cursor', 'pointer');
+
+
         });
         $(document).on("mousedown", ".Drigging", function (e) {
             if (3 == e.which) {
