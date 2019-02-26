@@ -143,7 +143,6 @@ def add_unit(request):
         add_dic['status'] = 0
         add_dic['creator'] = user['data']['bk_username']
         add_dic['editor'] = user['data']['bk_username']
-        print add_dic
         Monitor.objects.create(**add_dic)
         if res['monitor_type'] == 'fourth':
             function.add_unit_task(add_dicx=add_flow_dic)

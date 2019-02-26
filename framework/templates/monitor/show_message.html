@@ -1280,15 +1280,15 @@
                             url: '${SITE_URL}db_connection/get_conname/',
                             data:row.params,
                         }).then((res)=> {
-                            vm.server_url = res['data']['results']['connname']
-                            vm.sql_id = res['data']['results']['id']
+                            vm.server_url = res['data']['results']['connname'];
+                            vm.get_db_connections();
                             vm.basic_size();
                             vm.basic_height();
                             vm.basic_width();
                             vm.sycontent();
                             vm.basic_test()
                         }).catch((error) => {
-                        alert('拉取数据库失败！')
+                            alert('拉取数据库失败！')
                         });
                         vm.sql1 = 'block';
                         vm.file1 = 'none';

@@ -47,7 +47,6 @@ def paging(request):
 def scene_show(request):
 
     param = json.loads(request.body)
-    print param
     res = function.scene_show(param)
     return  render_json(res)
 def get_chart_data(req,id):
