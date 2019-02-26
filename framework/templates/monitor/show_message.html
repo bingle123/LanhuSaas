@@ -633,6 +633,7 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            message: '',                                           //弹框提示信息
             constants:'',
             location : '',
             line:'',
@@ -1279,15 +1280,15 @@
                             url: '${SITE_URL}db_connection/get_conname/',
                             data:row.params,
                         }).then((res)=> {
-                            vm.server_url = res['data']['results']['connname']
-                            vm.sql_id = res['data']['results']['id']
+                            vm.server_url = res['data']['results']['connname'];
+                            vm.get_db_connections();
                             vm.basic_size();
                             vm.basic_height();
                             vm.basic_width();
                             vm.sycontent();
                             vm.basic_test()
                         }).catch((error) => {
-                        alert('拉取数据库失败！')
+                            alert('拉取数据库失败！')
                         });
                         vm.sql1 = 'block';
                         vm.file1 = 'none';
@@ -1391,8 +1392,9 @@
                 vm.centerDialogVisible = false;
                 if (vm.monitor_type == 'first') {
                     vm.result_data = vm.basic;
-                    if (vm.file_param == '') {
-                        vm.basic.params = vm.server_url
+                    console.log(vm.result_data )
+                    if (vm.file_param == undefined) {
+                        vm.basic.params = vm.sql_id
                     } else {
                         vm.basic.params = vm.server_url
                     }
@@ -1440,6 +1442,14 @@
                         node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
                         node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
                         node_time.node_name = $('#' + vm.location[i].id + '').find('.node-title').text()
+                        if(node_time.starttime == ""){
+                            alert('请配置每个节点的开始时间')
+                            return
+                        }else  if(node_time.endtime == ""){
+                            alert('请配置每个节点的结束时间')
+                            return
+                        }
+
                         node_times.push(node_time)
                     }
                     var flow = {}

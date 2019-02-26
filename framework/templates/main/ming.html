@@ -66,7 +66,7 @@
             <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245)">
                 <h2 class="monitor_title" style="line-height:48px;background:#283593;text-align: center;color: #ffffff">监控项</h2>
                 <el-col :span="24">
-                        <h3 class="monitor_type" @click="show_first">基本监控项</h3>
+                        <h3 @click="monitor_type_switch(1)" class="monitor_type" >基本监控项</h3>
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in base_monitor" :key="index">
@@ -82,7 +82,7 @@
                     </el-col>
                 </div>
                 <el-col :span="24">
-                        <h3 class="monitor_type" @click="show_first">图表监控项</h3>
+                        <h3 @click="monitor_type_switch(2)" class="monitor_type">图表监控项</h3>
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in chart_monitor" :key="index">
@@ -98,7 +98,7 @@
 
                 </div>
                 <el-col :span="24">
-                        <h3 class="monitor_type" @click="show_first">作业监控项</h3>
+                        <h3 @click="monitor_type_switch(3)" class="monitor_type">作业监控项</h3>
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in job_monitor" :key="index">
@@ -114,7 +114,7 @@
 
                 </div>
                 <el-col :span="24">
-                        <h3 class="monitor_type" @click="show_first">流程监控项</h3>
+                        <h3 @click="monitor_type_switch(4)" class="monitor_type">流程监控项</h3>
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in flow_monitor" :key="index">
@@ -173,20 +173,33 @@
                         page:vm.page
                     },
                 }).then((res)=> {
-                    vm.base_monitor=res.data.results.base_list;
-                    vm.chart_monitor=res.data.results.chart_list;
-                    vm.job_monitor=res.data.results.job_list;
-                    vm.flow_monitor=res.data.results.flow_list;
-                    vm.base_page_count=res.data.results.base_list[0].page_count;
-                    vm.chart_page_count=res.data.results.chart_list[0].page_count;
-                    vm.job_page_count=res.data.results.job_list[0].page_count;
-                    vm.flow_page_count=res.data.results.flow_list[0].page_count;
+                    if (vm.monitor_type == 0){
+                        vm.base_monitor=res.data.results.base_list;
+                        vm.chart_monitor=res.data.results.chart_list;
+                        vm.job_monitor=res.data.results.job_list;
+                        vm.flow_monitor=res.data.results.flow_list;
+                        vm.base_page_count=res.data.results.base_list[0].page_count;
+                        vm.chart_page_count=res.data.results.chart_list[0].page_count;
+                        vm.job_page_count=res.data.results.job_list[0].page_count;
+                        vm.flow_page_count=res.data.results.flow_list[0].page_count;
+                    }
+                    else if (vm.monitor_type == 1) {
+                        vm.base_monitor=res.data.results.base_list;
+                        vm.base_page_count=res.data.results.base_list[0].page_count;
+                    }
+                    else if (vm.monitor_type == 2) {
+                        vm.chart_monitor=res.data.results.chart_list;
+                        vm.chart_page_count=res.data.results.chart_list[0].page_count;
+                    }
+                    else if (vm.monitor_type == 3) {
+                        vm.job_monitor=res.data.results.job_list;
+                        vm.job_page_count=res.data.results.job_list[0].page_count;
+                    }
+                    else if (vm.monitor_type == 4) {
+                        vm.flow_monitor=res.data.results.flow_list;
+                        vm.flow_page_count=res.data.results.flow_list[0].page_count;
+                    }
                 });
-            },
-            show_first(){
-                vm.monitor_type=0;
-                vm.page=1;
-                vm.show();
             },
             add_base_monitor(i){
                 console.log(i);
@@ -250,7 +263,10 @@
                 vm.monitor_type=4;
                 vm.show();
             },
-
+            monitor_type_switch(value){
+                vm.monitor_type = value;
+                vm.show()
+            },
         }
     });
     vm.show();

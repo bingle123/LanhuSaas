@@ -54,7 +54,7 @@ def selecthor(request):
                                       |Q(port__contains=search)|Q(username__contains=search)|Q(databasename__contains=search))
     else:
         sciencenews = Conn.objects.all()
-        p = Paginator(sciencenews, limit)
+    p = Paginator(sciencenews, limit)
     try:
         selected_set = p.page(page) #获取第page页的数据
     except EmptyPage:
@@ -235,49 +235,55 @@ def get_jobInstance(request):
 # 获取流程节点状态并实时更新
 @periodic_task(run_every=5)
 def get_flowStatus(request):
-    flow = Monitor.objects.filter(status=0, monitor_type='流程元类型')
-    flow_list = []
-    dic = []
-    for x in flow:
-        flow_list.append(model_to_dict(x)['jion_id'])
-    for y in flow_list:
-        flows = Flow.objects.filter(flow_id=y)
-        for i in flows:
+    try:
+        flow = Monitor.objects.filter(status=0, monitor_type='流程元类型')
+        flow_list = []
+        dic = []
+        for x in flow:
+            flow_list.append(model_to_dict(x)['jion_id'])
+        for y in flow_list:
+            flows = Flow.objects.filter(flow_id=y)
+            for i in flows:
 
-            cilent = tools.interface_param(request)
-            res = cilent.sops.get_task_status({
-                "bk_app_code": "mydjango1",
-                "bk_app_secret": "99d97ec5-4864-4716-a877-455a6a8cf9ef",
-                "bk_biz_id": "2",
-                "task_id": y,  # task_id
-            })
-            res1 = cilent.sops.create_task({
-                "bk_app_code": "mydjango1",
-                "bk_app_secret": "99d97ec5-4864-4716-a877-455a6a8cf9ef",
-                "bk_biz_id": "2",
-                "template_id": "5",
-                "name": "zz",
-                "flow_type": "common"
-            })
-            task_id = res1['data']['task_id']
-            time = datetime.datetime.now()
-            #创建节点
-            Flow.objects.create(instance_id=task_id, status=0, start_time=None, test_flag=1, flow_id=y)
-            status = 0
-            if res['data']['state'] == 'RUNNING':
-                status = 2
-                r = Flow.objects.filter(instance_id=task_id).update(status=status,start_time=time)
-            elif res['data']['state'] == 'FAILED':
-                status = 3
-            elif res['data']['state'] == 'SUSPENDED':
-                status = 4
-            elif res['data']['state'] == 'REVOKED':
-                status = 5
-            elif res['data']['state'] == 'FINISHED':
-                status = 6
-
-            r = Flow.objects.filter(instance_id=task_id).update(status=status)
-            return r
+                cilent = tools.interface_param(request)
+                res = cilent.sops.get_task_status({
+                    "bk_app_code": "mydjango1",
+                    "bk_app_secret": "99d97ec5-4864-4716-a877-455a6a8cf9ef",
+                    "bk_biz_id": "2",
+                    "task_id": y,  # task_id
+                })
+                res1 = cilent.sops.create_task({
+                    "bk_app_code": "mydjango1",
+                    "bk_app_secret": "99d97ec5-4864-4716-a877-455a6a8cf9ef",
+                    "bk_biz_id": "2",
+                    "template_id": "5",
+                    "name": "zz",
+                    "flow_type": "common"
+                })
+                task_id = res1['data']['task_id']
+                time = datetime.datetime.now()
+                #创建节点
+                Flow.objects.create(instance_id=task_id, status=0, start_time=None, test_flag=1, flow_id=y)
+                status = 0
+                if res['data']['state'] == 'RUNNING':
+                    status = 2
+                    r = Flow.objects.filter(instance_id=task_id).update(status=status,start_time=time)
+                elif res['data']['state'] == 'FAILED':
+                    status = 3
+                elif res['data']['state'] == 'SUSPENDED':
+                    status = 4
+                elif res['data']['state'] == 'REVOKED':
+                    status = 5
+                elif res['data']['state'] == 'FINISHED':
+                    status = 6
+        info = make_log_info(u'增加节点', u'业务日志', u'Flow', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'增加节点', u'业务日志', u'Flow', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
+    r = Flow.objects.filter(instance_id=task_id).update(status=status)
+    return r
 
 
 ############################菜单#########################
@@ -445,12 +451,18 @@ def savemnus(request):
                         res1 = rm.objects.create(roleid=x-1, muenuid=z)
                     else:
                         pass
+                info = make_log_info(u'逐条增加菜单与角色中间表', u'业务日志', u'rm', sys._getframe().f_code.co_name,
+                                     get_active_user(request)['data']['bk_username'], '成功', '无')
+                add_log(info)
             except Exception as e:
                 for i in ms:
                     rm.objects.create(roleid=model_to_dict(i)['roleid'],muenuid=model_to_dict(i)['muenuid'])
+                info = make_log_info(u'逐条增加菜单与角色中间表', u'业务日志', u'rm', sys._getframe().f_code.co_name,
+                                     get_active_user(request)['data']['bk_username'], '失败',repr(e))
+                add_log(info)
                 return tools.error_result(e)
 
-
+#获得数据库连接对象
 def get_db():
     db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306, charset='utf8')
     return db

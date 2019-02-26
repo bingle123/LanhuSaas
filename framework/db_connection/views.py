@@ -109,7 +109,7 @@ def checked_menu(request):
     res = function.checked_menu(request)
     return render_json(res)
 
-# 获取勾选id
+# 保存勾选id
 def savemnus(request):
     res = function.savemnus(request)
     print res
