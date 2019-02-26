@@ -332,6 +332,15 @@ function flow_monitor(value1,value2){
                         console.log(res);
                         location = res.data.activities
                         line = res.data.flows
+                        console.log(line[0]['source']['id'])
+                        for(var i=0;i<line.length;i++){
+                           line[i].source.id =line[i].source.id+value2
+                           line[i].target.id =line[i].target.id+value2
+                        }
+                        console.log(line)
+                        for(var i=0;i<location.length;i++){
+                           location[i]['id'] = location[i]['id']+value2
+                        }
                         //显示流程单元中的预览图
                         $('#'+selector_id).dataflow({
 
