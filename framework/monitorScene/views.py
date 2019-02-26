@@ -8,9 +8,8 @@ import json
 
 def index(request):
     return render_mako_context(request, './monitorScene/senceSet.html')
-
-
-
+def demo(request):
+    return render_mako_context(request, './Demo.html')
 def monitor_show(request):
     res = function.monitor_show(request)
     return render_json(res)
@@ -51,7 +50,6 @@ def scene_show(request):
     print param
     res = function.scene_show(param)
     return  render_json(res)
-@csrf_exempt
 def get_chart_data(req,id):
     res=function.get_chart_data(id)
     return render_json(res)
