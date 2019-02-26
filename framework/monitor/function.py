@@ -134,6 +134,7 @@ def add_unit(request):
             add_dic['gather_params'] = add_dic['node_name']
             add_dic.pop('node_name')
             add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+            add_dic['params']=res['flow']['constants']
             start_list = []
             for i in res['flow']['node_times']:
                 start_list.append(i['endtime'])
@@ -186,10 +187,11 @@ def edit_unit(request):
                 start_list.append(i['starttime'])
             add_dic['start_time']=min(start_list)
             add_dic['end_time'] =max(start_list)
+            add_dic['status']=0
         add_dic['monitor_name'] = res['monitor_name']
-        add_dic['status'] = '0'
         add_dic['monitor_type'] = monitor_type
         add_dic['editor'] = user['data']['bk_username']
+        print add_dic
         Monitor.objects.filter(id=res['unit_id']).update(**add_dic)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
@@ -208,7 +210,7 @@ def basic_test(request):
     result = []
     gather_data(info)
     gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
-    db = get_db()
+    db = get_db(info['params'])
     cursor = db.cursor()
     cursor.execute(gather_rule2)
     results = cursor.fetchall()
