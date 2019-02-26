@@ -9,6 +9,7 @@ from models import position_scene
 from monitor.models import Scene_monitor,Monitor
 from monitor import tools
 from position.models import JobInstance
+from gatherData.models import TDGatherData
 import sys
 from logmanagement.function import add_log,make_log_info,get_active_user
 
@@ -105,7 +106,6 @@ def delect(request):
                               get_active_user(request)['data']['bk_username'], '失败', repr(e))
     add_log(info)
     return ""
-
 
 def editSence(request):
     try:
@@ -255,3 +255,14 @@ def add_scene(res1):
     except Exception as e:
         res_dic = tools.error_result(e)
     return res_dic
+#获得图标监控项的数据
+def get_chart_data(id):
+    datas=[]
+    data=TDGatherData.objects.filter(item_id=id)
+    for d in data:
+        temp={
+            'key':d.data_key,
+            'values':d.data_value.split(',')
+        }
+        datas.append(temp)
+    return datas

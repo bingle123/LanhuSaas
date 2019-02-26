@@ -25,7 +25,7 @@ def get_file(req):
         try:
             obj = req.FILES.get('file')
             filename = obj.name
-            path = os.getcwd() + r'\\static\\dateTxt\\' + filename
+            path = os.getcwd() + r'\\static\\' + filename
             if not os.path.exists(path):
                 with open(path, 'wb')as f:
                     for chunk in obj.chunks():
