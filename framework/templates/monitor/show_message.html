@@ -1440,6 +1440,14 @@
                         node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
                         node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
                         node_time.node_name = $('#' + vm.location[i].id + '').find('.node-title').text()
+                        if(node_time.starttime == ""){
+                            alert('请配置每个节点的开始时间')
+                            return
+                        }else  if(node_time.endtime == ""){
+                            alert('请配置每个节点的结束时间')
+                            return
+                        }
+
                         node_times.push(node_time)
                     }
                     var flow = {}
