@@ -450,3 +450,8 @@ def savemnus(request):
                     rm.objects.create(roleid=model_to_dict(i)['roleid'],muenuid=model_to_dict(i)['muenuid'])
                 return tools.error_result(e)
 
+
+def get_db():
+    db = MySQLdb.connect(host='192.168.1.25', user='root', passwd='12345678', db='mydjango1', port=3306, charset='utf8')
+    return db
+
