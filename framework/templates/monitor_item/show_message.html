@@ -1026,7 +1026,7 @@
                 }
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}monitor/basic_test/',
+                    url: '${SITE_URL}monitor_item/basic_test/',
                     data: {
                         id:vm.unit_id,
                         params:params,
@@ -1194,7 +1194,7 @@
                         },
                         axios({
                             method: 'post',
-                            url: '${SITE_URL}monitor/delete/',
+                            url: '${SITE_URL}monitor_item/delete/',
                             data: {
                                 unit_id: row.id,
                                 monitor_name:row.monitor_name,
@@ -1213,7 +1213,7 @@
             show() {
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}monitor/show/',
+                    url: '${SITE_URL}monitor_item/show/',
                     data: {
                         page: vm.page,
                         limit: 10
@@ -1233,7 +1233,7 @@
                 } else {
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}monitor/select/',
+                        url: '${SITE_URL}monitor_item/select/',
                         data: {
                             data: this.contents,
                             page: vm.page,
@@ -1518,7 +1518,7 @@
                 if (vm.unit_id > 0) {
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}monitor/edit/',
+                        url: '${SITE_URL}monitor_item/edit/',
                         data: {
                             'flow':flow,
                             data: vm.result_data,
@@ -1542,7 +1542,7 @@
                 } else if (vm.unit_id == 0) {
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}monitor/add/',
+                        url: '${SITE_URL}monitor_item/add/',
                         data: {
                             'flow':flow,
                             data: vm.result_data,
@@ -1578,7 +1578,7 @@
                 vm.line=''
                 axios({
                     method:'post',
-                    url:'${SITE_URL}monitor/flow_change/',
+                    url:'${SITE_URL}monitor_item/flow_change/',
                     data: {
                         template_id:value
                     }
@@ -1687,7 +1687,7 @@
             node_name(value){
                 axios({
                     method:'post',
-                    url:'${SITE_URL}monitor/node_name/',
+                    url:'${SITE_URL}monitor_item/node_name/',
                     data:{
                         'id':value
                     }
@@ -1721,7 +1721,7 @@
                     var template_list = vm.template_list
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}monitor/start_flow_task/',
+                        url: '${SITE_URL}monitor_item/start_flow_task/',
                         data: {
                             'period': period,
                             'template_list': template_list,
@@ -1734,7 +1734,7 @@
                         setInterval(function () {
                             axios({
                             method:'post',
-                            url:'${SITE_URL}monitor/node_state/',
+                            url:'${SITE_URL}monitor_item/node_state/',
                             data:{
                                 'item_id':res.data
                             }
@@ -1759,7 +1759,7 @@
 
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}monitor/flow_gather_test/',
+                        url: '${SITE_URL}monitor_item/flow_gather_test/',
                         data: {}
                     }).then(function () {
 
@@ -1883,7 +1883,7 @@
                 $('.error').css('display','none');
                 $('.loading').css('display','block');
                 axios({
-                    url:'${SITE_URL}monitor/job_test/',
+                    url:'${SITE_URL}monitor_item/job_test/',
                     method:'post',
                     data: {
 
@@ -2125,7 +2125,7 @@
             },
             chart_get_test(){
                 axios({
-                    url:'${SITE_URL}monitor/chart_get_test/',
+                    url:'${SITE_URL}monitor_item/chart_get_test/',
                     method:'post',
                     data:{
                         database_id:vm.chart.params,
@@ -2163,7 +2163,7 @@
             switch_change(value){
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}monitor/change_status/',
+                    url: '${SITE_URL}monitor_item/change_status/',
                     data: {
                         flag: value.status,
                         id: value.id,
