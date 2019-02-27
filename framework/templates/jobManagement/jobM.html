@@ -186,7 +186,7 @@
             data2: '',
             value2: '',
             filterText: '',
-            data3: "",
+            data3: [],
             defaultProps: {
                 children: 'children',
                 label: 'label'
@@ -202,7 +202,6 @@
                     url: '${SITE_URL}position/get_tree/',
                 }).then(function (res) {
                     vm.data3 = res.data.message;
-                    console.log(res.data.message)
                 })
             },
             ref() {
