@@ -126,7 +126,7 @@
                         <el-col :span="9">
                             <div id="son">
                                 <el-form-item label="密码：" prop="password">
-                                    <el-input v-model="addconn.password" type="password"></el-input>
+                                    <el-input v-model="addconn.password" type="password" autocomplete = "off"></el-input>
                                 </el-form-item>
                             </div>
                         </el-col>
@@ -244,15 +244,7 @@
             tableData: [],
             dataType:[],
             editDataBase:[],
-            addconn: {
-                connname:'',
-                type:'',
-                ip: '',
-                port: '',
-                username:'',
-                password:'',
-                databasename:'',
-            },
+            addconn: {},
             rules: {
                 connname: [
                     { required: true, message: '请输入连接名称', trigger: 'blur' },
@@ -365,9 +357,9 @@
                         axios.post(
                             '${SITE_URL}db_connection/editconn/',this.editDataBase
                         ).then(((res)=>{
-                            if (res.data.code == 0) {
-                                ve.hide()
-                            }
+                            console.log(res)
+                            ve.hide()
+
                     }))
                     }
                 })
@@ -393,6 +385,7 @@
                        this.$message('删除成功')
                        data.splice(index,1)
                        ve.hide()
+
                    }
                     })
                     ,

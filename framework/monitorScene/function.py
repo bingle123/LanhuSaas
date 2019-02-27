@@ -292,11 +292,15 @@ def getBySceneId(request,id):
     scenes['scene_creator_time'] = str(scene.scene_creator_time)
     scenes['scene_editor_time'] = str(scene.scene_editor_time)
     positons = position_scene.objects.filter(scene=id)
-    list_poid = list()
+
+    list_pname = []
 
     for i in positons:
-        list_poid.append(model_to_dict(i)['position_id'])
-    scenes['pdis'] = list_poid
+        job = JobInstance.objects.get(id = model_to_dict(i)['position_id'])
+        pname = model_to_dict(job)['pos_name']
+        list_pname.append(pname)
+    scenes['pname'] = list_pname
 
+    print scenes
     return scenes
 

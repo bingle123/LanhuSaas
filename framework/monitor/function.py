@@ -206,10 +206,12 @@ def edit_unit(request):
 
 def basic_test(request):
     info = json.loads(request.body)
+    print "aaaaaaaaa"
+    print info
     result = []
     gather_data(info)
     gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
-    db = get_db(info['params'])
+    db = get_db()
     cursor = db.cursor()
     cursor.execute(gather_rule2)
     results = cursor.fetchall()
