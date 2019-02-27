@@ -245,7 +245,7 @@ var vm = new Vue({
                         type: 'success',
                         message: '删除成功!'
                     });
-                    window.location.reload()
+                    vm.markDate=[]
                 })
             }).catch(() => {
                 vm.$message({
