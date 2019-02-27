@@ -13,6 +13,14 @@
     <script type="text/javascript" src="${STATIC_URL}assets/echarts/macarons.js"></script>
     <script type="text/javascript" src="${STATIC_URL}js/maintenanceIndex/maintenanceIndex.js"></script>
 </head>
+<style>
+    .key{
+        line-height: 40px;
+    }
+    ul{
+        list-style: none;
+    }
+</style>
 <body>
 <div id="maintenanceIndex">
     <div v-if="isfram == 1">
@@ -187,9 +195,35 @@
         </div>
         <hr id="hr">
         <div style="margin-top: 20px">
-            <div v-for="(i,index) in scenes.pdis" :key="index" class="text item">
-                <a>{{ i}}</a>
-            </div>
+            <el-card class="box-card">
+                <ul>
+                    <li>
+                        <span class="key">场景名称:</span>
+                        <span class="val">{{ scenes.scene_name }}</span>
+                    </li>
+                    <li>
+                        <span class="key">创建时间:</span>
+                        <span class="val">{{ scenes.scene_creator_time }}</span>
+                    </li>
+                    <li>
+                        <span class="key">开始时间:</span>
+                        <span class="val">{{ scenes.scene_startTime }}</span>
+                    </li>
+                    <li>
+                        <span class="key">结束时间:</span>
+                        <span class="val">{{ scenes.scene_endTime }}</span>
+                    </li>
+                    <li>
+                        <span class="key">适用岗位:</span>
+                        <span class="val">{{ scenes.pname }}</span>
+                    </li>
+                </ul>
+
+                    <el-button @click="hiden">
+                    取消
+                </el-button>
+
+            </el-card>
         </div>
     </div>
 </div>
@@ -207,19 +241,21 @@
                 errorRate: '10.71%',
                 doing: 10,
                 unexec: 32,
-
             }],
             x: 6,
             isfram: 1,
             scenes: {},
         },
         methods: {
+            hiden(){
+                ve.isfram = 1
+            },
             scene() {
                 axios.get('${SITE_URL}monitorScene/getSceneByid/' + ve.x + '/',)
                     .then((res) => {
                             this.isfram = 2
-                            scenes = res.data
-                            console.log(scenes)
+                            ve.scenes = res.data
+                            console.log(scenes.scene_endTime)
                         }
                     )
             },
