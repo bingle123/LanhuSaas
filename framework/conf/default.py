@@ -134,7 +134,7 @@ INSTALLED_APPS = (
     'news',
     'shell_app',
     'guotai',
-    'monitor',
+    'monitor_item',
     'db_connection_manage',
     'monitorScene',
     'system_config',

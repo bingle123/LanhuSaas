@@ -13,7 +13,7 @@ import base64
 import pyDes
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage
-from monitor.models import *
+from monitor_item.models import *
 from celery.task import periodic_task
 import datetime
 import sys

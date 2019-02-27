@@ -11,7 +11,7 @@ from datetime import datetime
 import time
 import json
 from django.core.paginator import Paginator
-from monitor.models import Job
+from monitor_item.models import Job
 from gatherData.function import gather_data_migrate
 from gatherData import models as mo
 from notification.function import rule_check
