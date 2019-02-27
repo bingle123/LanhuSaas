@@ -40,7 +40,7 @@ class Monitor(models.Model):
 class Job(models.Model):
     job_id = models.PositiveIntegerField(verbose_name=u'关联ID')
     instance_id = models.PositiveIntegerField(verbose_name=u'作业实列ID')
-    status = models.PositiveIntegerField(verbose_name=u'作业状态')
+    status = models.IntegerField(verbose_name=u'作业状态')
     test_flag = models.PositiveIntegerField(verbose_name=u'测试标识')
     start_time = models.TimeField(verbose_name=u'开始时间',auto_now_add=True)
     job_log = models.CharField(verbose_name=u'作业日志', max_length=5000)
