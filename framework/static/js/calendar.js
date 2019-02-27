@@ -23,7 +23,8 @@ var vm = new Vue({
           value: 3,
           area: '日本'
         }],
-        area:1
+        area:1,
+        file_url:'/market_day/get_file/1'
     },
     props: {
         markDate: {
@@ -69,7 +70,6 @@ var vm = new Vue({
         },
         clickDay: function (item, index) {
             var vm=this
-            console.log(item.date)
             if (item.isMark) {
                 vm.$confirm('此操作将删除当前节假日, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -222,7 +222,11 @@ var vm = new Vue({
                 message: '节假日导入成功!',
                 type: 'success'
             })
-            window.location.reload()
+            vm.markDate=[]
+            vm.addarrs()
+        },
+        get_file_url(){
+          return vm.file_url
         },
         err() {
             this.$message({
@@ -292,7 +296,9 @@ var vm = new Vue({
         },
         area:{
             handler(val, oldVal) {
-                addarrs()
+                vm.file_url='/market_day/get_file/'+val
+                vm.markDate=[]
+                this.addarrs()
             },
             deep: true
         }
