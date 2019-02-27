@@ -190,33 +190,52 @@ function show_chart(item_id,barX,barCount,person_count,chartData,chart_type,heig
             };
             myChart.setOption(option);
         }
-        $('#maintenanceIndex').find("canvas").css('height',height);
-        $('#maintenanceIndex').find("canvas").css('width',width)
 }
 function base_monitor(item_id,font_size,height,width) {
     $.get("/monitorScene/get_basic_data/"+item_id,function (res){
         console.log(res)
-        var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var selector_id='basic'+item_id
+        var cricle1='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var cricle2='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:red;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var cricle3='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var cricle4='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:black;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
         var content=''
         for(key in res){
-            if(key=='DB_CONNECTION'){
-                content+='<div>'+'数据库连接状态:'+cricle+'</div>'
-            }else{
+            if(key!='DB_CONNECTION'&&key!='URL_CONNECTION'&&key!='FILE_EXIST'){
                  content+='<div>'+key+':'+res[key]+'</div>'
             }
         }
-        console.log(content)
-        $('#basic'+item_id).html(content)
-        $('#basic'+item_id).css({
+        var status=1
+        for(key in res){
+            if(key=='DB_CONNECTION'){
+                status=res[key]
+                content+='<div>'+'行情数据库连接状态:'+cricle+'</div>'
+            }else if(key=='URL_CONNECTION'){
+                    status=res[key]
+                 content+='<div>'+'行情接口状态:'+cricle+'</div>'
+            }else if(key=='FILE_EXIST'){
+                    status=res[key]
+                 content+='<div>'+'深圳行情文件状态:'+cricle+'</div>'
+            }
+        }
+        $('[type='+selector_id+']').html(content)
+        $('[type='+selector_id+']').css({
         'text-align':'center',
         'width': '100%',
         'height': '40%',
         'background-color': 'whitesmoke',
         'position': 'relative'
     })
-    $("#basic"+item_id).find("*").css("font-size",font_size)
-    $('#basic'+item_id).css('height',height);
-    $('#basic'+item_id).css('width',width);
+        if(status==2){
+            $("#status").css('background-color','darkgreen')
+        }else if(status==-1){
+            $("#status").css('background-color','red')
+        }else if(status==0){
+            $("#status").css('background-color','grey')
+        }
+    $('[type='+selector_id+']').find("*").css("font-size",font_size)
+    $('[type='+selector_id+']').css('height',height);
+    $('[type='+selector_id+']').css('width',width);
     },dataType='json')
 }
 
@@ -226,29 +245,23 @@ function font_size(id,value) {
      $("#"+id+"").find('*').css("height", value)
      $("#"+id+"").find('*').css("width", value)
 }
-function flow_change(value){
+function flow_monitor(value1,value2){
+                var selector_id='flow'+value2;
+                var selector_type='flow_monitor'+value2
+                var selector_canvas='canvas'+value2
+                var selector_template='template'+value2
                 var location ='';
                 var line='';
                 var template_list={};
                 var constants='';
-                axios({
-                    method:'post',
-                    url:'${SITE_URL}monitor/flow_change/',
-                    data: {
-                        template_id:value
-                    }
-                }).then(function (res) {
-                    {
-                        template_list.id=res.data.template_id[0].id
-                        template_list.name=res.data.template_id[0].name
-                        constants = res.data.constants
-                        var aa=" <div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width: 100%;position: relative;\">\n" +
+                var cc=" <div id=\"flow_canvas\" style=\"text-align:center;width: 300px;height: 200px;background-color: whitesmoke;\">\n" +
+                            "                                <div id=\""+selector_id+"\" class=\"clearfix workflow-box\" style=\"width: 100%;position: relative;\">\n" +
                             "\n" +
                             "                                        <div class=\"workflow-canvas\" style=\"margin-left: 0px;padding-left: 0px\">\n" +
                             "                                            <!-- 画布模板 start -->\n" +
                             "                                            <div class=\"jtk-content\">\n" +
                             "                                                <div class=\"jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan\"\n" +
-                            "                                                     id=\"canvas\" style=\"height:500px\">\n" +
+                            "                                                     id=\""+selector_canvas+"\" style=\"height:500px\">\n" +
                             "                                                    <!-- 流程 -->\n" +
                             "                                                </div>\n" +
                             "                                            </div>\n" +
@@ -258,7 +271,7 @@ function flow_change(value){
                             "\n" +
                             "    <!-- template 模板-->\n" +
                             "                                        <div class=\"jtk-delete jtk-none \">删除节点</div>\n" +
-                            "                                        <div id=\"template\" class=\"jtk-none\">\n" +
+                            "                                        <div id=\""+selector_template+"\" class=\"jtk-none\">\n" +
                             "                                            <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\"\n" +
                             "                                                 data-type=\"EmptyEndEvent\">\n" +
                             "                                                <div class=\"node-wrapper\">\n" +
@@ -313,28 +326,43 @@ function flow_change(value){
                             "                                                </div>\n" +
                             "                                            </div>\n" +
                             "                                        </div>\n" +
-                            "                                    </div>"
-                        $('#flow_canvas').html(aa)
+                            "                                    </div>\n" +
+                            "                            </div>";
+                        $('[type='+selector_type+']').html(cc);
+                axios({
+                    method:'post',
+                    url:'/monitor/flow_change/',
+                    data: {
+                        template_id:value1
+                    }
+                }).then(function (res) {
+                    {
+                        console.log(res);
                         location = res.data.activities
                         line = res.data.flows
+                        console.log(line[0]['source']['id'])
+                        for(var i=0;i<line.length;i++){
+                           line[i].source.id =line[i].source.id+value2
+                           line[i].target.id =line[i].target.id+value2
+                        }
+                        console.log(line)
+                        for(var i=0;i<location.length;i++){
+                           location[i]['id'] = location[i]['id']+value2
+                        }
                         //显示流程单元中的预览图
-                        $('#flow1').dataflow({
+                        $('#'+selector_id).dataflow({
 
                             el: '.tool', //流程拖动源
-                            canvas: '#canvas', //画布
+                            canvas: '#'+selector_canvas, //画布
                             arrowWidth: 8,
                             arrowHeight: 10,
-                            template: '#template',
+                            template: '#'+selector_template,
                             data:
                                 {
                                     "line": line, "location": location
 
                                 }
                         });
-
-                        $('.node-icon').css('top','-7px')
-                        let old_html  = $('#canvas').html()
-                        $('#canvas').html('<div style="transform: scale(0.65)">'+old_html+'</div>')
                     }
                 })
 

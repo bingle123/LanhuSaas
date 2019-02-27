@@ -15,6 +15,8 @@ from django.conf import settings
 from market_day import celery_opt as co
 from django.forms.models import model_to_dict
 import uuid
+import sys
+from logmanagement.function import add_log,make_log_info,get_active_user
 
 
 def crawl_manage(request):
@@ -48,8 +50,14 @@ def crawl_manage(request):
                                                total_xpath=total_xpath, title_xpath=title_xpath, time_xpath=time_xpath,
                                                url_xpath=url_xpath, create_user=create_user, update_user=create_user,
                                                receivers=receivers, url_pre=url_pre)
+            info = make_log_info(u'增加爬虫配置', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
+                                 get_active_user(request)['data']['bk_username'], '成功', '无')
+            add_log(info)
             return success_result('新增爬虫配置成功')
         except Exception as e:
+            info = make_log_info(u'增加爬虫配置', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
+                                 get_active_user(request)['data']['bk_username'], '失败', repr(e))
+            add_log(info)
             return error_result('新增爬虫配置信息失败' + e)
     # 修改
     else:
@@ -66,8 +74,14 @@ def crawl_manage(request):
                                                                    update_user=update_user,
                                                                    receivers=receivers, url_pre=url_pre,
                                                                    update_time=datetime.datetime.now())
+            info = make_log_info(u'编辑爬虫配置', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
+                                 get_active_user(request)['data']['bk_username'], '成功', '无')
+            add_log(info)
             return success_result('修改爬虫配置成功')
         except Exception as e:
+            info = make_log_info(u'编辑爬虫配置', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
+                                 get_active_user(request)['data']['bk_username'], '失败', repr(e))
+            add_log(info)
             return error_result(e)
 
 
@@ -121,8 +135,14 @@ def delete_crawl_config_id(request):
     crawl_id = request_body['id']
     try:
         res = CrawlerConfig.objects.filter(id=crawl_id).delete()
+        info = make_log_info(u'删除爬虫配置', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+        add_log(info)
         return success_result('删除爬虫配置信息成功')
     except Exception as e:
+        info = make_log_info(u'删除爬虫配置', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         return error_result('删除爬虫配置信息失败' + e)
 
 
@@ -265,7 +285,13 @@ def add_crawl_message(request):
                     result_all.append(
                         {'time_content': time_content, 'resource': resource, 'title_content': title_content,
                          'receivers': receivers})
+                info = make_log_info(u'增加爬虫信息', u'业务日志', u'CrawlContent', sys._getframe().f_code.co_name,
+                                     get_active_user(request)['data']['bk_username'], '成功', '无')
+                add_log(info)
             except Exception as e:
+                info = make_log_info(u'增加爬虫信息', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
+                                     get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                add_log(info)
                 return error_result(e)
     if len(result_all) == 0:
         result_all = u'没要需要保存的信息'
@@ -340,8 +366,14 @@ def delete_scene_by_uuid(scene_type_id):
     try:
         with transaction.atomic():
             SceneType.objects.filter(scene_type_id=scene_type_id).delete()
+            info = make_log_info(u'删除场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+                                 get_active_user(request)['data']['bk_username'], '成功', '无')
+            add_log(info)
             return success_result('删除成功')
     except Exception as e:
+        info = make_log_info(u'删除场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        add_log(info)
         return error_result(e)
 
 
@@ -360,8 +392,14 @@ def edit_scene_type_by_uuid(scene_type_id, edit_user, scene_type_name):
                 SceneType.objects.filter(scene_type_id=scene_type_id).update(update_user=edit_user,
                                                                              scene_type_name=scene_type_name,
                                                                              update_time=datetime.datetime.now())
+                info = make_log_info(u'编辑场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+                                     get_active_user(request)['data']['bk_username'], '成功', '无')
+                add_log(info)
                 return success_result({})
         except Exception as e:
+            info = make_log_info(u'编辑场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+                                 get_active_user(request)['data']['bk_username'], '失败', repr(e))
+            add_log(info)
             return error_result(e)
     else:
         return error_result(u'场景类型已经存在')
@@ -385,8 +423,14 @@ def add_scene_type(create_user, scene_type_name):
             with transaction.atomic():
                 SceneType.objects.create(scene_type_id=scene_type_id, create_user=create_user,
                                          scene_type_name=scene_type_name, update_user=create_user)
+                info = make_log_info(u'增加场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+                                     get_active_user(request)['data']['bk_username'], '成功', '无')
+                add_log(info)
                 return success_result(u'新增场景类型成功')
         except Exception as e:
+            info = make_log_info(u'增加场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+                                 get_active_user(request)['data']['bk_username'], '失败', repr(e))
+            add_log(info)
             return error_result(e)
     else:
         return error_result(u'场景类型已经存在')

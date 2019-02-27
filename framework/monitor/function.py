@@ -133,6 +133,8 @@ def add_unit(request):
             add_dic['jion_id'] = res['flow']['jion_id']
             add_dic['gather_params'] = add_dic['node_name']
             add_dic.pop('node_name')
+            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+            add_dic['params']=res['flow']['constants']
             start_list = []
             for i in res['flow']['node_times']:
                 start_list.append(i['endtime'])
@@ -163,6 +165,7 @@ def add_unit(request):
 def edit_unit(request):
     try:
         res = json.loads (request.body)
+        id = res['unit_id']
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
         monitor_type = res['monitor_type']
@@ -177,6 +180,7 @@ def edit_unit(request):
             monitor_type = '流程单元类型'
             add_dic['jion_id'] = res['flow']['jion_id']
             add_dic['gather_params'] = add_dic['node_name']
+            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
             add_dic.pop('node_name')
             start_list = []
             for i in res['flow']['node_times']:
@@ -187,7 +191,7 @@ def edit_unit(request):
         add_dic['monitor_name'] = res['monitor_name']
         add_dic['monitor_type'] = monitor_type
         add_dic['editor'] = user['data']['bk_username']
-        Monitor.objects.filter(id=res['unit_id']).update(**add_dic)
+        Monitor.objects.filter(id=id).update(**add_dic)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
@@ -205,7 +209,7 @@ def basic_test(request):
     result = []
     gather_data(info)
     gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
-    db = get_db(info['params'])
+    db = get_db()
     cursor = db.cursor()
     cursor.execute(gather_rule2)
     results = cursor.fetchall()
@@ -232,9 +236,9 @@ def job_test(request):
 def change_unit_status(req):
     try:
         res=json.loads(req.body)
-        schename=res['monitor_name']
         flag=int(res['flag'])
         unit_id=res['id']
+        schename=str(unit_id)
         mon=Monitor.objects.get(id=unit_id)
         mon.status=flag
         mon.save()

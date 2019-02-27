@@ -61,7 +61,6 @@
                 <el-table-column prop="edit_time" label="修改时间" sortable></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
                         <el-button size="mini" type="text" v-on:click="edit_unit(scope.row)">编辑</el-button>
                         <el-button size="mini" type="text" v-on:click="delete_unit(scope.row)">删除</el-button>
                         <el-tooltip :content="scope.row.status" placement="top">
@@ -633,8 +632,9 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            message: '保存成功!',                                           //弹框提示信息
+            message: '',                                           //弹框提示信息
             constants:'',
+            unit_id1:0,
             location : '',
             line:'',
             old_html:'',
@@ -1019,7 +1019,7 @@
             basic_test(){
                 let params = '';
                 if (vm.sql_file_interface == 3) {
-                     params = vm.sql_id
+                     params = vm.server_url
                 }
                 if (vm.sql_file_interface == 6  || vm.sql_file_interface == 9) {
                      params = vm.server_url +'#'+ vm.file_param
@@ -1281,7 +1281,7 @@
                             console.log(res)
                             vm.server_url = res['data']['results']['connname'];
                             vm.sql_id = res['data']['results']['id'];
-                            vm.get_db_connections();
+                            vm.server_url = vm.sql_id;
                             vm.basic_size();
                             vm.basic_height();
                             vm.basic_width();
@@ -1384,19 +1384,28 @@
                     vm.flow.width = row.width;
                     vm.flow.start_time = row.start_time;
                     vm.flow.end_time = row.end_time;
+                    vm.flow.period = row.period;
+                    vm.flow.status = row.status;
+                    vm.flow.jion_id = row.jion_id;
                     vm.flow.period = row.period
+                    vm.flow.node_name = row.gather_params
+                    vm.flow.gather_rule = row.gather_rule
+                    var id1=row.jion_id
+                    var id={
+                        'template_id':id1
+                    }
+                    vm.flow_change(id)
                 }
             },
             //保存数据处理
             edit1() {
-                vm.centerDialogVisible = false;
                 vm.message = '保存成功!';
                 var node_time = {};
                 var flow = {};
                 if (vm.monitor_type == 'first') {
                     vm.result_data = vm.basic;
                     if (vm.file_param == undefined) {
-                        vm.basic.params = vm.sql_id
+                        vm.basic.params = vm.server_url
                     } else {
                         vm.basic.params = vm.server_url
                     }
@@ -1448,12 +1457,11 @@
                     }
                     var reg =/^(?:(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:1[0-9][0-9]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:2[0-4][0-9])|(?:25[0-5])|(?:1[0-9][0-9])|(?:[1-9][0-9])|(?:[0-9]))$/;
                     var re = new RegExp(reg);
-                    var ip = $("#ip").val();
                     if(vm.job.params==null || vm.job.params==''){
                         vm.unit_id = -1;
                         vm.message = "IP不可为空!";
                     }
-                    if(!re.test(ip)) {
+                    if(!re.test(vm.job.params)) {
                         vm.unit_id = -1;
                         vm.message = "请填写有效的IP地址!";
                     }
@@ -1516,9 +1524,14 @@
                         }
                     }).then((res) => {
                         vm.show()
-                        if (res['data']['code'] == 1)
+                        if (res['data']['code'] == 1) {
                             alert(vm.message);
-                        else alert(vm.message);
+                            vm.centerDialogVisible = true;
+                        }
+                        else {
+                            alert(vm.message);
+                            vm.centerDialogVisible = false;
+                        }
                     }).catch((error) => {
                         alert(vm.message)
                     });
@@ -1533,9 +1546,12 @@
                             monitor_name: vm.monitor_name
                         },
                     }).then((res) => {
-                        if (res['data']['code'] == 1)
-                            alert(vm.message);
+                        if (res['data']['code'] == 1) {
+                        alert("保存失败!");
+                        vm.centerDialogVisible = true;
+                    }
                         else alert(vm.message);
+                        vm.centerDialogVisible = false;
                         vm.show()
                     }).catch((error) => {
                         alert(vm.message)
@@ -1543,7 +1559,13 @@
                 }
                 else {
                     alert(vm.message);
-                    vm.unit_id = 1
+                    vm.centerDialogVisible = true;
+                    if (vm.add_pamas == 0){
+                        vm.unit_id = 0
+                    }
+                    else{
+                        vm.unit_id = vm.unit_id1
+                    }
                 }
             },
             flow_change(value){
