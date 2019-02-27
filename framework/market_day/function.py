@@ -68,7 +68,7 @@ def add_unit_task(add_dicx):
     print type
     id=Monitor.objects.filter(monitor_name=schename).last().id
     schename=str(id)
-    if type=='基本单元类型' or type=='图表单元类型':
+    if type=='基本单元类型':
         starthour = str(add_dicx['start_time'])[:2]
         endhour = str(add_dicx['end_time'])[:2]
         period = int(add_dicx['period'])
@@ -84,6 +84,24 @@ def add_unit_task(add_dicx):
             'period':period
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,task_args=info, desc=schename)
+    elif type=='图表单元类型':
+        starthour = str(add_dicx['start_time'])[:2]
+        endhour = str(add_dicx['end_time'])[:2]
+        period = int(add_dicx['period'])
+        ctime = {
+            'hour': starthour + '-' + endhour,
+            'minute': '*/1',
+        }
+        info = {
+            'id': id,
+            'gather_params': 'sql',
+            'params': add_dicx['params'],
+            'gather_rule': add_dicx['gather_rule'],
+            'period': period
+        }
+        co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,
+                               task_args=info, desc=schename)
+
     elif type=='作业单元类型':
         starthour = str(add_dicx['start_time'])[:2]
         endhour = str(add_dicx['end_time'])[:2]

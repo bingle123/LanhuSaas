@@ -185,7 +185,7 @@ def fi_kv_process(json_dict):
 
 
 # 采集方法，返回参数gather_status为ok采集正常，返回empty采集结果为空，返回error采集规则错误
-def gather_data(info):
+def gather_data(**info):
 
     global GATHER_TIME
     # 采集测试参数初始化，实际使用时关闭
