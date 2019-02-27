@@ -13,7 +13,7 @@ from django.conf.urls import patterns
 
 
 urlpatterns = patterns(
-    'monitor.views',
+    'monitor_item.views',
     (r'^$', 'index'),                                         # 首页--服务器选择页面
     (r'^show/$', 'unit_show'),
     (r'^show_message$', 'index'),

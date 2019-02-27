@@ -9,7 +9,7 @@ import json
 
 def index(request):
 
-    return render_mako_context(request, './monitor/show_message.html')
+    return render_mako_context(request, './monitor_item/show_message.html')
 
 
 def index1(request):

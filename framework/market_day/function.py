@@ -4,7 +4,7 @@ from models import Holiday,HeaderData
 import os
 from xlrd import open_workbook
 from framework.conf import default
-from monitor.models import Monitor
+from monitor_item.models import Monitor
 from django.forms import model_to_dict
 import celery_opt as co
 import json

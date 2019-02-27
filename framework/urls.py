@@ -31,7 +31,7 @@ urlpatterns = patterns(
     # shell_app主页
     url(r'^', include('shell_app.urls')),
     # 监控项_APP_URL
-    url(r'^monitor/', include('monitor.urls')),
+    url(r'^monitor/', include('monitor_item.urls')),
     # 数据库连接_APP_URL
     url(r'^db_connection_manage/', include('db_connection_manage.urls')),
     # 系统设置

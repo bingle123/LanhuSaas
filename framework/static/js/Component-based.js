@@ -331,7 +331,7 @@ function flow_monitor(value1,value2){
                         $('[type='+selector_type+']').html(cc);
                 axios({
                     method:'post',
-                    url:'/monitor/flow_change/',
+                    url:'/monitor_item/flow_change/',
                     data: {
                         template_id:value1
                     }
