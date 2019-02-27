@@ -118,7 +118,6 @@ def add_unit(request):
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
         add_dic = res['data']
-        print add_dic
         add_flow_dic = res['flow']
         monitor_type = res['monitor_type']
         if res['monitor_type'] == 'first':
@@ -128,6 +127,7 @@ def add_unit(request):
         if res['monitor_type'] == 'third':
             monitor_type = '作业单元类型'
             add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
+            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
         if res['monitor_type'] == 'fourth':
             monitor_type = '流程单元类型'
             add_dic['jion_id'] = res['flow']['jion_id']
@@ -165,6 +165,7 @@ def add_unit(request):
 def edit_unit(request):
     try:
         res = json.loads (request.body)
+        id = res['unit_id']
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
         monitor_type = res['monitor_type']
@@ -187,12 +188,10 @@ def edit_unit(request):
                 start_list.append(i['starttime'])
             add_dic['start_time']=min(start_list)
             add_dic['end_time'] =max(start_list)
-            add_dic['status']=0
         add_dic['monitor_name'] = res['monitor_name']
         add_dic['monitor_type'] = monitor_type
         add_dic['editor'] = user['data']['bk_username']
-        print add_dic
-        Monitor.objects.filter(id=res['unit_id']).update(**add_dic)
+        Monitor.objects.filter(id=id).update(**add_dic)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,

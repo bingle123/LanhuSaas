@@ -12,20 +12,20 @@ import os
 import sys
 from logmanagement.function import add_log,make_log_info,get_active_user
 
-def get_holiday(req):
-    days=function.get_holiday(req)
+def get_holiday(req,area):
+    days=function.get_holiday(req,area)
     return render_json(days)
 @csrf_exempt
-def get_file(req):
-    path=function.get_file(req)
+def get_file(req,area):
+    path=function.get_file(req,area)
     return HttpResponse('ok')
 def send_demo(req,email):
     print email
     tasks.sendemail.delay(email)
     return HttpResponse('success')
-def delall(req):
+def delall(req,area):
     try:
-        flag=function.delall(req)
+        flag=function.delall(req,area)
         info = make_log_info(u'删除全部交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
                              get_active_user(req)['data']['bk_username'], '成功', '无')
     except Exception as e:
@@ -34,9 +34,9 @@ def delall(req):
     add_log(info)
     return render_json(flag)
 
-def delone(req,date):
+def delone(req,date,area):
     try:
-        flag=function.delone(req,date)
+        flag=function.delone(req,date,area)
         info = make_log_info(u'变更为交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
                              get_active_user(req)['data']['bk_username'], '成功', '无')
     except Exception as e:
@@ -45,9 +45,9 @@ def delone(req,date):
     add_log(info)
     return render_json(flag)
 
-def addone(req,date):
+def addone(req,date,area):
     try:
-        flag=function.addone(req,date)
+        flag=function.addone(req,date,area)
         info = make_log_info(u'取消交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
                              get_active_user(req)['data']['bk_username'], '成功', '无')
     except Exception as e:
