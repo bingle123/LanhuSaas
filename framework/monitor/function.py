@@ -133,6 +133,8 @@ def add_unit(request):
             add_dic['jion_id'] = res['flow']['jion_id']
             add_dic['gather_params'] = add_dic['node_name']
             add_dic.pop('node_name')
+            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+            add_dic['params']=res['flow']['constants']
             start_list = []
             for i in res['flow']['node_times']:
                 start_list.append(i['endtime'])
@@ -178,6 +180,7 @@ def edit_unit(request):
             monitor_type = '流程单元类型'
             add_dic['jion_id'] = res['flow']['jion_id']
             add_dic['gather_params'] = add_dic['node_name']
+            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
             add_dic.pop('node_name')
             start_list = []
             for i in res['flow']['node_times']:

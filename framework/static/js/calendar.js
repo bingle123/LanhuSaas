@@ -12,7 +12,18 @@ var vm = new Vue({
         list: [],
         historyChose: [],
         dateTop: '',
-        loading2: true
+        loading2: true,
+        options: [{
+          value: 1,
+          area: '中国'
+        }, {
+          value: 2,
+          area: '美国'
+        }, {
+          value: 3,
+          area: '日本'
+        }],
+        area:1
     },
     props: {
         markDate: {
@@ -65,7 +76,7 @@ var vm = new Vue({
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.post('/market_day/delone/' + item.date).then(function (resp) {
+                    axios.post('/market_day/delone/' + item.date+'/'+vm.area).then(function (resp) {
                         vm.$message({
                             type: 'success',
                             message: '删除成功!'
@@ -88,7 +99,7 @@ var vm = new Vue({
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.post('/market_day/addone/' + item.date).then(function (resp) {
+                    axios.post('/market_day/addone/' + item.date+'/'+vm.area).then(function (resp) {
                         vm.$message({
                             type: 'success',
                             message: '添加成功!'
@@ -193,8 +204,8 @@ var vm = new Vue({
         addarrs() {
             year = new Date().getFullYear()
             var vm=this
-            axios.get('/market_day/get_holiday/').then(function (res) {
-                console.log(res.data.message)
+            console.log(vm.area)
+            axios.get('/market_day/get_holiday/'+vm.area).then(function (res) {
                 for (var i = 0; i < res.data.message.length; i++) {
                     vm.markDate.push(res.data.message[i])
                 }
@@ -225,7 +236,7 @@ var vm = new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                axios.post('/market_day/delall/').then(function (resp) {
+                axios.post('/market_day/delall/'+vm.area).then(function (resp) {
                     vm.$message({
                         type: 'success',
                         message: '删除成功!'
@@ -276,6 +287,12 @@ var vm = new Vue({
             handler(val, oldVal) {
                 this.intStart();
                 this.getList(this.myDate);
+            },
+            deep: true
+        },
+        area:{
+            handler(val, oldVal) {
+                addarrs()
             },
             deep: true
         }

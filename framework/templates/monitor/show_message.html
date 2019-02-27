@@ -632,7 +632,7 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            message: '保存成功!',                                           //弹框提示信息
+            message: '',                                           //弹框提示信息
             constants:'',
             unit_id1:0,
             location : '',
@@ -1019,7 +1019,7 @@
             basic_test(){
                 let params = '';
                 if (vm.sql_file_interface == 3) {
-                     params = vm.sql_id
+                     params = vm.server_url
                 }
                 if (vm.sql_file_interface == 6  || vm.sql_file_interface == 9) {
                      params = vm.server_url +'#'+ vm.file_param
@@ -1256,7 +1256,6 @@
                 vm.disabled4 = true;
                 vm.disabled5 = true;
                 vm.unit_id = row.id;
-                vm.unit_id1 = row.id;
                 vm.monitor_name = row.monitor_name;
                 if (row.monitor_type == '基本单元类型') {
                     vm.monitor_type = 'first';
@@ -1272,7 +1271,6 @@
                     vm.basic.end_time = row.end_time;
                     vm.basic.gather_rule = row.gather_rule;
                     vm.basic.contents = row.contents;
-                    vm.basic.status = row.status;
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface =3;
                         axios({
@@ -1283,7 +1281,7 @@
                             console.log(res)
                             vm.server_url = res['data']['results']['connname'];
                             vm.sql_id = res['data']['results']['id'];
-                            vm.get_db_connections();
+                            vm.server_url = vm.sql_id;
                             vm.basic_size();
                             vm.basic_height();
                             vm.basic_width();
@@ -1347,7 +1345,6 @@
                     vm.chart.start_time = row.start_time;
                     vm.chart.end_time = row.end_time;
                     vm.chart.gather_rule = row.gather_rule;
-                    vm.chart.status = row.status;
                     axios({
                             method: 'post',
                             url: '${SITE_URL}db_connection/get_conname/',
@@ -1375,8 +1372,6 @@
                     vm.job.gather_rule = row.gather_rule;
                     vm.job.gather_params = row.gather_params;
                     vm.job.params = row.params;
-                    vm.job.status = row.status;
-                    vm.job.jion_id = row.jion_id;
                 }
                 if (row.monitor_type == '流程单元类型') {
                     vm.disabled2 = true;
@@ -1392,6 +1387,14 @@
                     vm.flow.period = row.period;
                     vm.flow.status = row.status;
                     vm.flow.jion_id = row.jion_id;
+                    vm.flow.period = row.period
+                    vm.flow.node_name = row.gather_params
+                    vm.flow.gather_rule = row.gather_rule
+                    var id1=row.jion_id
+                    var id={
+                        'template_id':id1
+                    }
+                    vm.flow_change(id)
                 }
             },
             //保存数据处理
@@ -1402,7 +1405,7 @@
                 if (vm.monitor_type == 'first') {
                     vm.result_data = vm.basic;
                     if (vm.file_param == undefined) {
-                        vm.basic.params = vm.sql_id
+                        vm.basic.params = vm.server_url
                     } else {
                         vm.basic.params = vm.server_url
                     }

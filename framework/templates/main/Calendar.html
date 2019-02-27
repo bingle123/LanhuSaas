@@ -15,6 +15,14 @@
 <body>
 <div id="app">
     <section class="wh_container">
+        <el-select v-model="area" placeholder="请选择日历的地区">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.area"
+              :value="item.value">
+            </el-option>
+          </el-select>
         <div class="wh_content_all" v-loading="loading2" element-loading-text="拼命加载中"
              element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
             <div class="wh_top_changge">
@@ -63,5 +71,4 @@
 </div>
 <script src="${STATIC_URL}js/calendar.js" type="text/javascript" charset="utf-8"></script>
 </body>
-
 </html>
