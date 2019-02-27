@@ -29,4 +29,5 @@ urlpatterns = patterns(
     (r'get_chart_data/(.+)$','get_chart_data'),
     (r'^getSceneByid/(.+)/$','getBySceneId'),   #根据Id获取场景详情
     (r'get_basic_data/(.+)$','get_basic_data'),
+    (r'^get_scenes/$', 'get_scenes'),
 )

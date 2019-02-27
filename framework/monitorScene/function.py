@@ -6,9 +6,9 @@ from django.core.paginator import Paginator
 from django.forms import model_to_dict
 from models import Scene
 from models import position_scene
-from monitor_item.models import Scene_monitor,Monitor,Job
-from monitor_item import tools
-from position.models import JobInstance
+from monitor.models import Scene_monitor,Monitor,Job
+from monitor import tools
+from position.models import JobInstance,Localuser
 from gatherData.models import TDGatherData
 import sys
 from logmanagement.function import add_log,make_log_info,get_active_user
@@ -303,4 +303,18 @@ def getBySceneId(request,id):
 
     print scenes
     return scenes
+
+def get_scenes(request):
+    res_list = []
+    user_name = get_active_user(request)['data']['bk_username']
+    pos_id = Localuser.objects.get(user_name=user_name).user_pos_id
+    temp = position_scene.objects.filter(position_id = pos_id)
+    print temp
+    for i in temp:
+        imgList = {
+            'id':i.scene_id,
+            'idView': '${STATIC_URL}img/slide1.png'
+        }
+        res_list.append(imgList)
+    return res_list
 
