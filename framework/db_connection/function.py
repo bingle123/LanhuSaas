@@ -467,3 +467,21 @@ def get_db():
     db = MySQLdb.connect('192.168.1.25', 'root', '12345678', 'mydjango1',charset='utf8')
     return db
 
+#通用数据库连接对象
+def getAny_db(id):
+    res = Conn.objects.get(id = id)
+    conn = model_to_dict(res)
+    ip = str(conn['ip'])
+    port = conn['port']
+    username = conn['username']
+    password = decrypt_str(conn['password'])
+
+    databasename = conn['databasename']
+    if conn['type'] == 'MySQL':
+        db = MySQLdb.connect(host=ip, user=username, passwd=password, db=databasename, port=int(port))
+    elif conn['type'] == 'Oracle':
+        sql = r'%s/%s@%s/%s' % (username, password, ip, databasename)
+        db = cx_Oracle.connect(sql)
+    else:
+        db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename)
+    return db

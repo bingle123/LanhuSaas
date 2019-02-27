@@ -210,7 +210,9 @@ def gather_data(info):
         conn_params = gather_params['extra_param']['connection_param']
         # 连接指定数据库
         try:
-            conn = MySQLdb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
+            print 'DB_ID: %s' % conn_params.id
+            conn = getAny_db(conn_params.id)
+            # conn = MySQLdb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
         except Exception as e:
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-1',gather_error_log=str(e)).save()
             return "error"
