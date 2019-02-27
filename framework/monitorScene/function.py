@@ -234,7 +234,7 @@ def scene_show(res):
             job_status_list = []
             for i in job_list:
                 try:
-                    job_status = Job.objects.filter(job_id=i['jion_id']).last()
+                    job_status = Job.objects.filter(job_id=i['jion_id']).last().status
                 except Exception as e:
                     job_status = 0
                 job_status_list.append(job_status)
