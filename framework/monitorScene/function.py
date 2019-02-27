@@ -309,7 +309,6 @@ def get_scenes(request):
     user_name = get_active_user(request)['data']['bk_username']
     pos_id = Localuser.objects.get(user_name=user_name).user_pos_id
     temp = position_scene.objects.filter(position_id = pos_id)
-    print temp
     for i in temp:
         imgList = {
             'id':i.scene_id,
