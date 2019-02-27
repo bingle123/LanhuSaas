@@ -198,13 +198,23 @@ function base_monitor(item_id,font_size,height,width) {
         var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
         var content=''
         for(key in res){
-            if(key=='DB_CONNECTION'){
-                content+='<div>'+'数据库连接状态:'+cricle+'</div>'
-            }else{
+            if(key!='DB_CONNECTION'&&key!='URL_CONNECTION'&&key!='FILE_EXIST'){
                  content+='<div>'+key+':'+res[key]+'</div>'
             }
         }
-        console.log(content)
+        var status=1
+        for(key in res){
+            if(key=='DB_CONNECTION'){
+                status=res[key]
+                content+='<div>'+'行情数据库连接状态:'+cricle+'</div>'
+            }else if(key=='URL_CONNECTION'){
+                    status=res[key]
+                 content+='<div>'+'行情接口状态:'+cricle+'</div>'
+            }else if(key=='FILE_EXIST'){
+                    status=res[key]
+                 content+='<div>'+'深圳行情文件状态:'+cricle+'</div>'
+            }
+        }
         $('#basic'+item_id).html(content)
         $('#basic'+item_id).css({
         'text-align':'center',
@@ -213,6 +223,13 @@ function base_monitor(item_id,font_size,height,width) {
         'background-color': 'whitesmoke',
         'position': 'relative'
     })
+        if(status==2){
+            $("#status").css('background-color','darkgreen')
+        }else if(status==-1){
+            $("#status").css('background-color','red')
+        }else if(status==0){
+            $("#status").css('background-color','grey')
+        }
     $("#basic"+item_id).find("*").css("font-size",font_size)
     $('#basic'+item_id).css('height',height);
     $('#basic'+item_id).css('width',width);
