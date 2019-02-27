@@ -366,14 +366,8 @@ def delete_scene_by_uuid(scene_type_id):
     try:
         with transaction.atomic():
             SceneType.objects.filter(scene_type_id=scene_type_id).delete()
-            info = make_log_info(u'删除场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
-                                 get_active_user(request)['data']['bk_username'], '成功', '无')
-            add_log(info)
             return success_result('删除成功')
     except Exception as e:
-        info = make_log_info(u'删除场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        add_log(info)
         return error_result(e)
 
 
@@ -392,14 +386,8 @@ def edit_scene_type_by_uuid(scene_type_id, edit_user, scene_type_name):
                 SceneType.objects.filter(scene_type_id=scene_type_id).update(update_user=edit_user,
                                                                              scene_type_name=scene_type_name,
                                                                              update_time=datetime.datetime.now())
-                info = make_log_info(u'编辑场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
-                                     get_active_user(request)['data']['bk_username'], '成功', '无')
-                add_log(info)
                 return success_result({})
         except Exception as e:
-            info = make_log_info(u'编辑场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
-                                 get_active_user(request)['data']['bk_username'], '失败', repr(e))
-            add_log(info)
             return error_result(e)
     else:
         return error_result(u'场景类型已经存在')
@@ -423,14 +411,8 @@ def add_scene_type(create_user, scene_type_name):
             with transaction.atomic():
                 SceneType.objects.create(scene_type_id=scene_type_id, create_user=create_user,
                                          scene_type_name=scene_type_name, update_user=create_user)
-                info = make_log_info(u'增加场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
-                                     get_active_user(request)['data']['bk_username'], '成功', '无')
-                add_log(info)
                 return success_result(u'新增场景类型成功')
         except Exception as e:
-            info = make_log_info(u'增加场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
-                                 get_active_user(request)['data']['bk_username'], '失败', repr(e))
-            add_log(info)
             return error_result(e)
     else:
         return error_result(u'场景类型已经存在')
