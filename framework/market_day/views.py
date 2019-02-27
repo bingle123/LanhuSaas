@@ -47,14 +47,14 @@ def delone(req,date,area):
 
 def addone(req,date,area):
     try:
-        flag=function.addone(req,date,area)
+        function.addone(req,date,area)
         info = make_log_info(u'取消交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
                              get_active_user(req)['data']['bk_username'], '成功', '无')
     except Exception as e:
         info = make_log_info(u'取消交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
                              get_active_user(req)['data']['bk_username'], '失败', repr(e))
     add_log(info)
-    return render_json(flag)
+    return render_json('ok')
 
 def cedemo(req):
     user_account = BkUser.objects.filter(id=1).get()

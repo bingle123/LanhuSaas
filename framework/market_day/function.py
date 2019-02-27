@@ -6,6 +6,7 @@ from xlrd import open_workbook
 from framework.conf import default
 from monitor.models import Monitor
 from django.forms import model_to_dict
+from django.db.models import Q
 import celery_opt as co
 import json
 import tasks
@@ -13,7 +14,7 @@ import json
 
 
 def get_holiday(req,area):
-    dates = Holiday.objects.filter(flag=0,area=int(area)).values('day')
+    dates = Holiday.objects.filter(Q(flag=0)&Q(area=int(area))).values('day')
     days = []
     for date in dates:
         days.append(date['day'])
@@ -44,17 +45,17 @@ def get_file(req,area):
 
 
 def delall(req,area):
-    flag = Holiday.objects.filter(area=area).delete()
+    flag = Holiday.objects.filter(area=int(area)).delete()
     return flag
 
 
 def delone(req, date,area):
-    flag = Holiday.objects.filter(day=date,area=area).update(flag=1)
+    flag = Holiday.objects.filter(Q(day=date)& Q(area=int(area))).update(flag=1)
     return flag
 
 
 def addone(req, date):
-    flag = Holiday.objects.filter(day=date,area=area).update(flag=0)
+    flag = Holiday.objects.filter(Q(day=date)& Q(area=int(area))).update(flag=0)
     return flag
 
 
