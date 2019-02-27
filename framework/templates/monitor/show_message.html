@@ -1527,15 +1527,15 @@
                             unit_id: vm.unit_id,
                         }
                     }).then((res) => {
-                        vm.show()
                         if (res['data']['code'] == 1) {
-                            alert(vm.message);
+                            alert("保存失败!");
                             vm.centerDialogVisible = true;
                         }
                         else {
                             alert(vm.message);
                             vm.centerDialogVisible = false;
                         }
+                        vm.show();
                     }).catch((error) => {
                         alert(vm.message)
                     });
