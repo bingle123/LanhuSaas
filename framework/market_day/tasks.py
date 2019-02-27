@@ -89,6 +89,7 @@ def crawl_task(**i):
 @task
 def gather_data_task_one(**i):
     print '采集开始'
+    print i['gather_rule']
     # 调用基本监控项和图标监控项数据采集的方法
     function.gather_data(**i)
     return '采集成功'
