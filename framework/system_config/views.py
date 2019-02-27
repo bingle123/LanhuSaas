@@ -5,6 +5,8 @@ from shell_app import tools
 import json
 import crawl_template
 import function
+import sys
+from logmanagement.function import add_log,make_log_info,get_active_user
 
 
 # Create your views here.
@@ -160,11 +162,18 @@ def add_scene_type(request):
     :param request:
     :return:
     """
-    request_body = json.loads(request.body)
-    scene_type_name = request_body['name']
-    client = tools.interface_param(request)
-    user = client.bk_login.get_user({})
-    res = function.add_scene_type(user['data']['bk_username'], scene_type_name)
+    try:
+        request_body = json.loads(request.body)
+        scene_type_name = request_body['name']
+        client = tools.interface_param(request)
+        user = client.bk_login.get_user({})
+        res = function.add_scene_type(user['data']['bk_username'], scene_type_name)
+        info = make_log_info(u'增加场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'增加场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return render_json(res)
 
 
@@ -174,12 +183,19 @@ def edit_scene_type_by_uuid(request):
     :param request:
     :return:
     """
-    request_body = json.loads(request.body)
-    scene_type_name = request_body['name']
-    uuid = request_body['uuid']
-    client = tools.interface_param(request)
-    user = client.bk_login.get_user({})
-    res = function.edit_scene_type_by_uuid(uuid, user['data']['bk_username'], scene_type_name)
+    try:
+        request_body = json.loads(request.body)
+        scene_type_name = request_body['name']
+        uuid = request_body['uuid']
+        client = tools.interface_param(request)
+        user = client.bk_login.get_user({})
+        res = function.edit_scene_type_by_uuid(uuid, user['data']['bk_username'], scene_type_name)
+        info = make_log_info(u'编辑场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'编辑场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return render_json(res)
 
 
@@ -189,9 +205,16 @@ def delete_scene_by_uuid(request):
     :param request:
     :return:
     """
-    print request.body
-    print request
-    request_body = json.loads(request.body)
-    uuid = request_body['uuid']
-    res = function.delete_scene_by_uuid(uuid)
+    try:
+        print request.body
+        print request
+        request_body = json.loads(request.body)
+        uuid = request_body['uuid']
+        res = function.delete_scene_by_uuid(uuid)
+        info = make_log_info(u'删除场景分组', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+                         get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'删除场景分组', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return render_json(res)
