@@ -1271,6 +1271,7 @@
                     vm.basic.end_time = row.end_time;
                     vm.basic.gather_rule = row.gather_rule;
                     vm.basic.contents = row.contents;
+                    vm.basic.status = row.status;
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface =3;
                         axios({
@@ -1345,12 +1346,14 @@
                     vm.chart.start_time = row.start_time;
                     vm.chart.end_time = row.end_time;
                     vm.chart.gather_rule = row.gather_rule;
+                    vm.chart.status = row.status;
                     axios({
                             method: 'post',
                             url: '${SITE_URL}db_connection/get_conname/',
                             data:row.params,
                         }).then((res)=> {
-                            vm.chart.params = res['data']['results'];
+
+                            vm.chart.params = res['data']['results']['connname'];
                             vm.show_content();
                         }).catch((error) => {
                             alert('拉取数据库失败！')
@@ -1372,6 +1375,7 @@
                     vm.job.gather_rule = row.gather_rule;
                     vm.job.gather_params = row.gather_params;
                     vm.job.params = row.params;
+                    vm.job.status = row.status;
                 }
                 if (row.monitor_type == '流程单元类型') {
                     vm.disabled2 = true;
@@ -1387,9 +1391,9 @@
                     vm.flow.period = row.period;
                     vm.flow.status = row.status;
                     vm.flow.jion_id = row.jion_id;
-                    vm.flow.period = row.period
-                    vm.flow.node_name = row.gather_params
-                    vm.flow.gather_rule = row.gather_rule
+                    vm.flow.period = row.period;
+                    vm.flow.node_name = row.gather_params;
+                    vm.flow.gather_rule = row.gather_rule;
                     var id1=row.jion_id
                     var id={
                         'template_id':id1
