@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Holiday(models.Model):
-    day=models.CharField(max_length=30,primary_key=True)
+    day=models.CharField(max_length=30)
     flag=models.IntegerField(null=True)
     area=models.IntegerField(null=True)
     def __unicode__(self):

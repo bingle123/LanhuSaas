@@ -10,10 +10,10 @@ from djcelery import models as celery_models
 import logging
 import time
 from gatherData import function
-from monitor.models import Monitor
+from monitor_item.models import Monitor
 from django.db.models import Q
 from django.forms import model_to_dict
-from monitor import tools
+from monitor_item import tools
 from celery.schedules import crontab
 import market_day.celery_opt as co
 from account.models import BkUser
@@ -89,6 +89,7 @@ def crawl_task(**i):
 @task
 def gather_data_task_one(**i):
     print '采集开始'
+    print i['gather_rule']
     # 调用基本监控项和图标监控项数据采集的方法
     function.gather_data(**i)
     return '采集成功'

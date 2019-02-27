@@ -1026,7 +1026,7 @@
                 }
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}monitor/basic_test/',
+                    url: '${SITE_URL}monitor_item/basic_test/',
                     data: {
                         id:vm.unit_id,
                         params:params,
@@ -1194,7 +1194,7 @@
                         },
                         axios({
                             method: 'post',
-                            url: '${SITE_URL}monitor/delete/',
+                            url: '${SITE_URL}monitor_item/delete/',
                             data: {
                                 unit_id: row.id,
                                 monitor_name:row.monitor_name,
@@ -1213,7 +1213,7 @@
             show() {
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}monitor/show/',
+                    url: '${SITE_URL}monitor_item/show/',
                     data: {
                         page: vm.page,
                         limit: 10
@@ -1233,7 +1233,7 @@
                 } else {
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}monitor/select/',
+                        url: '${SITE_URL}monitor_item/select/',
                         data: {
                             data: this.contents,
                             page: vm.page,
@@ -1271,6 +1271,7 @@
                     vm.basic.end_time = row.end_time;
                     vm.basic.gather_rule = row.gather_rule;
                     vm.basic.contents = row.contents;
+                    vm.basic.status = row.status;
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface =3;
                         axios({
@@ -1345,12 +1346,14 @@
                     vm.chart.start_time = row.start_time;
                     vm.chart.end_time = row.end_time;
                     vm.chart.gather_rule = row.gather_rule;
+                    vm.chart.status = row.status;
                     axios({
                             method: 'post',
                             url: '${SITE_URL}db_connection/get_conname/',
                             data:row.params,
                         }).then((res)=> {
-                            vm.chart.params = res['data']['results'];
+
+                            vm.chart.params = res['data']['results']['connname'];
                             vm.show_content();
                         }).catch((error) => {
                             alert('拉取数据库失败！')
@@ -1372,6 +1375,7 @@
                     vm.job.gather_rule = row.gather_rule;
                     vm.job.gather_params = row.gather_params;
                     vm.job.params = row.params;
+                    vm.job.status = row.status;
                 }
                 if (row.monitor_type == '流程单元类型') {
                     vm.disabled2 = true;
@@ -1387,9 +1391,9 @@
                     vm.flow.period = row.period;
                     vm.flow.status = row.status;
                     vm.flow.jion_id = row.jion_id;
-                    vm.flow.period = row.period
-                    vm.flow.node_name = row.gather_params
-                    vm.flow.gather_rule = row.gather_rule
+                    vm.flow.period = row.period;
+                    vm.flow.node_name = row.gather_params;
+                    vm.flow.gather_rule = row.gather_rule;
                     var id1=row.jion_id
                     var id={
                         'template_id':id1
@@ -1514,7 +1518,7 @@
                 if (vm.unit_id > 0) {
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}monitor/edit/',
+                        url: '${SITE_URL}monitor_item/edit/',
                         data: {
                             'flow':flow,
                             data: vm.result_data,
@@ -1523,22 +1527,22 @@
                             unit_id: vm.unit_id,
                         }
                     }).then((res) => {
-                        vm.show()
                         if (res['data']['code'] == 1) {
-                            alert(vm.message);
+                            alert("保存失败!");
                             vm.centerDialogVisible = true;
                         }
                         else {
                             alert(vm.message);
                             vm.centerDialogVisible = false;
                         }
+                        vm.show();
                     }).catch((error) => {
                         alert(vm.message)
                     });
                 } else if (vm.unit_id == 0) {
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}monitor/add/',
+                        url: '${SITE_URL}monitor_item/add/',
                         data: {
                             'flow':flow,
                             data: vm.result_data,
@@ -1574,7 +1578,7 @@
                 vm.line=''
                 axios({
                     method:'post',
-                    url:'${SITE_URL}monitor/flow_change/',
+                    url:'${SITE_URL}monitor_item/flow_change/',
                     data: {
                         template_id:value
                     }
@@ -1683,7 +1687,7 @@
             node_name(value){
                 axios({
                     method:'post',
-                    url:'${SITE_URL}monitor/node_name/',
+                    url:'${SITE_URL}monitor_item/node_name/',
                     data:{
                         'id':value
                     }
@@ -1717,7 +1721,7 @@
                     var template_list = vm.template_list
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}monitor/start_flow_task/',
+                        url: '${SITE_URL}monitor_item/start_flow_task/',
                         data: {
                             'period': period,
                             'template_list': template_list,
@@ -1730,7 +1734,7 @@
                         setInterval(function () {
                             axios({
                             method:'post',
-                            url:'${SITE_URL}monitor/node_state/',
+                            url:'${SITE_URL}monitor_item/node_state/',
                             data:{
                                 'item_id':res.data
                             }
@@ -1755,7 +1759,7 @@
 
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}monitor/flow_gather_test/',
+                        url: '${SITE_URL}monitor_item/flow_gather_test/',
                         data: {}
                     }).then(function () {
 
@@ -1879,7 +1883,7 @@
                 $('.error').css('display','none');
                 $('.loading').css('display','block');
                 axios({
-                    url:'${SITE_URL}monitor/job_test/',
+                    url:'${SITE_URL}monitor_item/job_test/',
                     method:'post',
                     data: {
 
@@ -2121,7 +2125,7 @@
             },
             chart_get_test(){
                 axios({
-                    url:'${SITE_URL}monitor/chart_get_test/',
+                    url:'${SITE_URL}monitor_item/chart_get_test/',
                     method:'post',
                     data:{
                         database_id:vm.chart.params,
@@ -2159,7 +2163,7 @@
             switch_change(value){
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}monitor/change_status/',
+                    url: '${SITE_URL}monitor_item/change_status/',
                     data: {
                         flag: value.status,
                         id: value.id,
