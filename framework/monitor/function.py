@@ -163,6 +163,7 @@ def add_unit(request):
 def edit_unit(request):
     try:
         res = json.loads (request.body)
+        id = res['unit_id']
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
         monitor_type = res['monitor_type']
@@ -187,7 +188,7 @@ def edit_unit(request):
         add_dic['monitor_name'] = res['monitor_name']
         add_dic['monitor_type'] = monitor_type
         add_dic['editor'] = user['data']['bk_username']
-        Monitor.objects.filter(id=res['unit_id']).update(**add_dic)
+        Monitor.objects.filter(id=id).update(**add_dic)
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,

@@ -61,7 +61,6 @@
                 <el-table-column prop="edit_time" label="修改时间" sortable></el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
                         <el-button size="mini" type="text" v-on:click="edit_unit(scope.row)">编辑</el-button>
                         <el-button size="mini" type="text" v-on:click="delete_unit(scope.row)">删除</el-button>
                         <el-tooltip :content="scope.row.status" placement="top">
@@ -635,6 +634,7 @@
         data: {
             message: '保存成功!',                                           //弹框提示信息
             constants:'',
+            unit_id1:0,
             location : '',
             line:'',
             old_html:'',
@@ -1256,6 +1256,7 @@
                 vm.disabled4 = true;
                 vm.disabled5 = true;
                 vm.unit_id = row.id;
+                vm.unit_id1 = row.id;
                 vm.monitor_name = row.monitor_name;
                 if (row.monitor_type == '基本单元类型') {
                     vm.monitor_type = 'first';
@@ -1271,6 +1272,7 @@
                     vm.basic.end_time = row.end_time;
                     vm.basic.gather_rule = row.gather_rule;
                     vm.basic.contents = row.contents;
+                    vm.basic.status = row.status;
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface =3;
                         axios({
@@ -1345,6 +1347,7 @@
                     vm.chart.start_time = row.start_time;
                     vm.chart.end_time = row.end_time;
                     vm.chart.gather_rule = row.gather_rule;
+                    vm.chart.status = row.status;
                     axios({
                             method: 'post',
                             url: '${SITE_URL}db_connection/get_conname/',
@@ -1372,6 +1375,8 @@
                     vm.job.gather_rule = row.gather_rule;
                     vm.job.gather_params = row.gather_params;
                     vm.job.params = row.params;
+                    vm.job.status = row.status;
+                    vm.job.jion_id = row.jion_id;
                 }
                 if (row.monitor_type == '流程单元类型') {
                     vm.disabled2 = true;
@@ -1384,12 +1389,13 @@
                     vm.flow.width = row.width;
                     vm.flow.start_time = row.start_time;
                     vm.flow.end_time = row.end_time;
-                    vm.flow.period = row.period
+                    vm.flow.period = row.period;
+                    vm.flow.status = row.status;
+                    vm.flow.jion_id = row.jion_id;
                 }
             },
             //保存数据处理
             edit1() {
-                vm.centerDialogVisible = false;
                 vm.message = '保存成功!';
                 var node_time = {};
                 var flow = {};
@@ -1515,9 +1521,14 @@
                         }
                     }).then((res) => {
                         vm.show()
-                        if (res['data']['code'] == 1)
+                        if (res['data']['code'] == 1) {
                             alert(vm.message);
-                        else alert(vm.message);
+                            vm.centerDialogVisible = true;
+                        }
+                        else {
+                            alert(vm.message);
+                            vm.centerDialogVisible = false;
+                        }
                     }).catch((error) => {
                         alert(vm.message)
                     });
@@ -1532,9 +1543,12 @@
                             monitor_name: vm.monitor_name
                         },
                     }).then((res) => {
-                        if (res['data']['code'] == 1)
-                            alert(vm.message);
+                        if (res['data']['code'] == 1) {
+                        alert("保存失败!");
+                        vm.centerDialogVisible = true;
+                    }
                         else alert(vm.message);
+                        vm.centerDialogVisible = false;
                         vm.show()
                     }).catch((error) => {
                         alert(vm.message)
@@ -1542,7 +1556,13 @@
                 }
                 else {
                     alert(vm.message);
-                    vm.unit_id = 1
+                    vm.centerDialogVisible = true;
+                    if (vm.add_pamas == 0){
+                        vm.unit_id = 0
+                    }
+                    else{
+                        vm.unit_id = vm.unit_id1
+                    }
                 }
             },
             flow_change(value){
