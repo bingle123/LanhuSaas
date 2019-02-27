@@ -44,18 +44,27 @@
 </div>
 
 <script>
+    axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
     let vm = new Vue({
         el: "#main",
         data: {
-            imgList: [
-                {id: 0, idView: '${STATIC_URL}img/slide1.png'},
-                {id: 1, name: '详情', idView: '${STATIC_URL}img/slide1.png'},
-                {id: 2, name: '推荐', idView: '${STATIC_URL}img/slide1.png'}
-            ],
+            imgList: [],
             imgHeight: ''+document.documentElement.clientHeight+'px',
         },
         methods: {
-
+            get_scenes(){
+                 axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitorScene/get_scenes/',
+                }).then((res)=> {
+                     vm.imgList = res.data.message;
+                })
+                 }
         },
         mounted() {
             //const that = this
@@ -83,7 +92,7 @@
             },
         }
     });
-
+    vm.get_scenes()
 
 </script>
 
