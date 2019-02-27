@@ -6,7 +6,7 @@ axios.interceptors.request.use((config) => {
     });
 function job_monitor(job_params){
     console.log(job_params);
-    selector_id=job_params.job_id
+    selector_id='job'+job_params.job_id
     var status=job_params.status
     if(status==0){
         $('[type='+selector_id+']').html($('<div class="unexecuted" style="background: beige;color: grey;"><h1>作业未执行</h1><i class="el-icon-error" style="color: grey;font-size: 30px;margin-top: 20px;"></i></div>'))
@@ -19,11 +19,9 @@ function job_monitor(job_params){
     }
     $('[type='+selector_id+']').css('height',job_params.height);
     $('[type='+selector_id+']').css('width',job_params.width);
-    $('#'+selector_id).find("*").css('font-size',job_params.font_size);
-    $('#'+selector_id).css('height',job_params.height);
-    $('#'+selector_id).css('width',job_params.width);
+    $('[type='+selector_id+']').find("*").css('font-size',job_params.font_size);
 }
-function chart_monitor(item_id,chart_type,height,width) {
+function chart_monitor(item_id,chart_type,height,width,drigging_id) {
     new_res=[]
     var barX=[]
     var barCount=[]
@@ -49,7 +47,7 @@ function chart_monitor(item_id,chart_type,height,width) {
             chartdata.push(temp)
         }
         console.log(chartdata)
-        show_chart(item_id,barX,barCount,person_count,chartdata,chart_type,height,width)
+        show_chart(item_id,barX,barCount,person_count,chartdata,chart_type,height,width,drigging_id)
     },dataType='json')
 }
 function isNotANumber(inputData) {
@@ -62,7 +60,10 @@ function isNotANumber(inputData) {
 　　}
 }
 
-function show_chart(barX,barCount,person_count,chartData,chart_type,height,width) {
+function show_chart(item_id,barX,barCount,person_count,chartData,chart_type,height,width,drigging_id) {
+        if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
+                this.myChart.dispose();
+            }
         if (chart_type == "饼图") {
             myChart = echarts.init(document.getElementById(item_id), 'macarons');
             console.log(myChart)
@@ -156,7 +157,7 @@ function show_chart(barX,barCount,person_count,chartData,chart_type,height,width
         }
         if (chart_type == "折线图") {
             console.log(barCount)
-            myChart = echarts.init(document.getElementById(item_id), 'macarons');
+            myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
             option = {
                 tooltip: {
                     trigger: 'axis'
@@ -189,13 +190,15 @@ function show_chart(barX,barCount,person_count,chartData,chart_type,height,width
             };
             myChart.setOption(option);
         }
-        $('#maintenanceIndex').find("canvas").css('height',height);
-        $('#maintenanceIndex').find("canvas").css('width',width)
 }
 function base_monitor(item_id,font_size,height,width) {
     $.get("/monitorScene/get_basic_data/"+item_id,function (res){
         console.log(res)
-        var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var selector_id='basic'+item_id
+        var cricle1='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var cricle2='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:red;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var cricle3='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+        var cricle4='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:black;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
         var content=''
         for(key in res){
             if(key!='DB_CONNECTION'&&key!='URL_CONNECTION'&&key!='FILE_EXIST'){
@@ -215,8 +218,8 @@ function base_monitor(item_id,font_size,height,width) {
                  content+='<div>'+'深圳行情文件状态:'+cricle+'</div>'
             }
         }
-        $('#basic'+item_id).html(content)
-        $('#basic'+item_id).css({
+        $('[type='+selector_id+']').html(content)
+        $('[type='+selector_id+']').css({
         'text-align':'center',
         'width': '100%',
         'height': '40%',
@@ -230,9 +233,137 @@ function base_monitor(item_id,font_size,height,width) {
         }else if(status==0){
             $("#status").css('background-color','grey')
         }
-    $("#basic"+item_id).find("*").css("font-size",font_size)
-    $('#basic'+item_id).css('height',height);
-    $('#basic'+item_id).css('width',width);
+    $('[type='+selector_id+']').find("*").css("font-size",font_size)
+    $('[type='+selector_id+']').css('height',height);
+    $('[type='+selector_id+']').css('width',width);
     },dataType='json')
 }
 
+
+function font_size(id,value) {
+     $("#"+id+"").find('*').css("font-size", value)
+     $("#"+id+"").find('*').css("height", value)
+     $("#"+id+"").find('*').css("width", value)
+}
+function flow_monitor(value1,value2){
+                var selector_id='flow'+value2;
+                var selector_type='flow_monitor'+value2
+                var selector_canvas='canvas'+value2
+                var selector_template='template'+value2
+                var location ='';
+                var line='';
+                var template_list={};
+                var constants='';
+                var cc=" <div id=\"flow_canvas\" style=\"text-align:center;width: 300px;height: 200px;background-color: whitesmoke;\">\n" +
+                            "                                <div id=\""+selector_id+"\" class=\"clearfix workflow-box\" style=\"width: 100%;position: relative;\">\n" +
+                            "\n" +
+                            "                                        <div class=\"workflow-canvas\" style=\"margin-left: 0px;padding-left: 0px\">\n" +
+                            "                                            <!-- 画布模板 start -->\n" +
+                            "                                            <div class=\"jtk-content\">\n" +
+                            "                                                <div class=\"jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan\"\n" +
+                            "                                                     id=\""+selector_canvas+"\" style=\"height:500px\">\n" +
+                            "                                                    <!-- 流程 -->\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "                                            <!-- 画布模板 end -->\n" +
+                            "\n" +
+                            "                                        </div>\n" +
+                            "\n" +
+                            "    <!-- template 模板-->\n" +
+                            "                                        <div class=\"jtk-delete jtk-none \">删除节点</div>\n" +
+                            "                                        <div id=\""+selector_template+"\" class=\"jtk-none\">\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\"\n" +
+                            "                                                 data-type=\"EmptyEndEvent\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-icon-start\">\n" +
+                            "                                                        <i class=\"bk-icon icon-star-shape\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "                                             <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\"\n" +
+                            "                                                  data-type=\"EmptyStartEvent\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-icon-start\">\n" +
+                            "                                                        <i class=\"bk-icon icon-star-shape\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node database-node\" id=\"{charts}\"\n" +
+                            "                                                 data-type=\"ServiceActivity\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-content\" style=\"position: relative\">\n" +
+                            "                                                        <div class=\"start_time\" style=\"position: absolute;width: 70px;height: 20px;top: -26px;left: 0px;\"></div>\n" +
+                            "                                                        <div class=\"end_time\" style=\"position: absolute;width: 70px;height: 20px;top: -26px;right: 0px;\"></div>\n" +
+                            "                                                        <p class=\"node-title\"></p>\n" +
+                            "                                                    </div>\n" +
+                            "                                                    <div class=\"node-icon\">\n" +
+                            "                                                        <i class=\"bk-icon icon-data\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node cog-node\" id=\"{charts}\"\n" +
+                            "                                                 data-type=\"dataCog\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-content\">\n" +
+                            "                                                        <p class=\"node-title\"></p>\n" +
+                            "                                                    </div>\n" +
+                            "                                                    <div class=\"node-icon\">\n" +
+                            "                                                        <i class=\"bk-icon icon-cog\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node filter-node\" id=\"{charts}\"\n" +
+                            "                                                 data-type=\"dataFilter\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <div class=\"node-content\">\n" +
+                            "                                                        <p class=\"node-title\"></p>\n" +
+                            "                                                    </div>\n" +
+                            "                                                    <div class=\"node-icon\">\n" +
+                            "                                                        <i class=\"bk-icon icon-circle\"></i>\n" +
+                            "                                                    </div>\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "                                        </div>\n" +
+                            "                                    </div>\n" +
+                            "                            </div>";
+                        $('[type='+selector_type+']').html(cc);
+                axios({
+                    method:'post',
+                    url:'/monitor/flow_change/',
+                    data: {
+                        template_id:value1
+                    }
+                }).then(function (res) {
+                    {
+                        console.log(res);
+                        location = res.data.activities
+                        line = res.data.flows
+                        console.log(line[0]['source']['id'])
+                        for(var i=0;i<line.length;i++){
+                           line[i].source.id =line[i].source.id+value2
+                           line[i].target.id =line[i].target.id+value2
+                        }
+                        console.log(line)
+                        for(var i=0;i<location.length;i++){
+                           location[i]['id'] = location[i]['id']+value2
+                        }
+                        //显示流程单元中的预览图
+                        $('#'+selector_id).dataflow({
+
+                            el: '.tool', //流程拖动源
+                            canvas: '#'+selector_canvas, //画布
+                            arrowWidth: 8,
+                            arrowHeight: 10,
+                            template: '#'+selector_template,
+                            data:
+                                {
+                                    "line": line, "location": location
+
+                                }
+                        });
+                    }
+                })
+
+            }

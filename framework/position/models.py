@@ -23,7 +23,7 @@ class Localuser(models.Model):
         本地用户表
     """
     user_name = models.CharField(verbose_name=u'用户名称', max_length=50,)
-    user_pos = models.ForeignKey('JobInstance',on_delete=models.CASCADE)
+    user_pos = models.ForeignKey('JobInstance',on_delete=models.PROTECT)
     mobile_no = models.CharField(verbose_name=u'用户手机', max_length=20,)
     email = models.CharField(verbose_name=u'用户邮箱', max_length=50,)
     open_id = models.CharField(verbose_name=u'微信openid', max_length=50,)

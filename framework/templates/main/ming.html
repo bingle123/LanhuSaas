@@ -23,7 +23,7 @@
             src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
     <link rel="stylesheet"
           href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css"/>
-    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
     <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
     <style>
@@ -203,20 +203,14 @@
             },
             add_base_monitor(i){
                 console.log(i);
-                var job_params={
-                    'job_id':i.id,
-                    'width' :i.width,
-                    'height':i.height,
-                    'status':-1,
-                }
-                $('.monitor_content').append('<div class=\"Drigging\" type=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
-                job_monitor(job_params)
+                $('.monitor_content').append('<div class=\"Drigging\" type=\"basic'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
+                base_monitor(i.id,i.font_size,i.height,i.width)
                 vm.drigging_id++
             },
             add_chart_monitor(i){
                 console.log(i);
-                $('.monitor_content').append('<div class=\"Drigging\" id=\"'+vm.drigging_id+'\"><div id=\"'+i.id+'\" style=\"width:'+i.height+'px;height:'+i.width+'px\"></div></div>')
-                chart_monitor(i.id,i.gather_params,i.height,i.width);
+                $('.monitor_content').append('<div class=\"Drigging\" id=\"'+vm.drigging_id+'\"><div id=\"chart'+i.id+'\" style=\"width:'+i.height+'px;height:'+i.width+'px\"></div></div>')
+                chart_monitor(i.id,i.gather_params,i.height,i.width,vm.drigging_id);
                 vm.drigging_id++
             },
             add_job_monitor(i){
@@ -225,22 +219,19 @@
                     'job_id':i.id,
                     'width' :i.width,
                     'height':i.height,
-                    'status':-1,
+                    'status':i.job_status
                 }
-                $('.monitor_content').append('<div class=\"Drigging\" type=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" type=\"job'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
                 job_monitor(job_params)
                 vm.drigging_id++
             },
             add_flow_monitor(i){
                 console.log(i);
-                var job_params={
-                    'job_id':i.id,
-                    'width' :i.width,
-                    'height':i.height,
-                    'status':-1,
-                }
-                $('.monitor_content').append('<div class=\"Drigging\" type=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
-                job_monitor(job_params)
+                let jion_id=[{
+                    "id":i.jion_id
+                }]
+                $('.monitor_content').append('<div class=\"Drigging\" id=\"'+vm.drigging_id+'\"><div type=\"flow_monitor'+vm.drigging_id+'\"></div></div>')
+                flow_monitor(jion_id,vm.drigging_id)
                 vm.drigging_id++
             },
             current_change1(value) {
@@ -285,7 +276,7 @@
         var x,y;
         var offsetLeft,offsetTop;
         $(document).on("mouseover", ".Drigging", function () {
-            $(this).css('cursor', 'pointer');//当鼠标移动到拖拽的p上的时候，将鼠标的样式设置为移动(move)
+            $(this).css('cursor', 'pointer');//当鼠标移动到拖拽目标上的时候，将鼠标的样式设置为移动(move)
         });
         $(document).on("mousedown", ".Drigging", function (e) {
             var e=window.event||e;
@@ -331,11 +322,6 @@
             $(selector).css('cursor', 'pointer');
 
 
-        });
-        $(document).on("mousedown", ".Drigging", function (e) {
-            if (3 == e.which) {
-                alert('这 是右键单击事件');
-            }
         });
     });
     //$('.tool-title').click(function () {
