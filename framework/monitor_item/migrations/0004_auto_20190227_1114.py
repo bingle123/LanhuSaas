@@ -7,13 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('monitor', '0001_initial'),
+        ('monitor_item', '0003_auto_20190225_1538'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='scene_monitor',
-            name='scale',
-            field=models.DecimalField(verbose_name='\u6bd4\u4f8b', max_digits=4, decimal_places=2),
+            model_name='job',
+            name='status',
+            field=models.IntegerField(verbose_name='\u4f5c\u4e1a\u72b6\u6001'),
         ),
     ]

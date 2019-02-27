@@ -333,7 +333,7 @@ function flow_monitor(value1,value2){
                         $('[type='+selector_type+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
                 axios({
                     method:'post',
-                    url:'/monitor/flow_change/',
+                    url:'/monitor_item/flow_change/',
                     data: {
                         template_id:value1
                     }

@@ -129,6 +129,12 @@
              :filter-node-method="filterNode" ref="tree2"></el-tree>
 </div>
 <script type="text/javascript">
+    axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
     let vm = new Vue({
         el: '.content',
         data: {
@@ -180,7 +186,7 @@
             data2: '',
             value2: '',
             filterText: '',
-            data3: "",
+            data3: [],
             defaultProps: {
                 children: 'children',
                 label: 'label'
@@ -196,7 +202,6 @@
                     url: '${SITE_URL}position/get_tree/',
                 }).then(function (res) {
                     vm.data3 = res.data.message;
-                    console.log(res.data.message)
                 })
             },
             ref() {
