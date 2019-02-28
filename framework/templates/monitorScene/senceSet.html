@@ -583,6 +583,7 @@
                 ]
             },
             result_list:[],
+            result_list_edit:[],
             base_page_count:0,
             chart_page_count:0,
             job_page_count:0,
@@ -696,7 +697,8 @@
                     url:'${SITE_URL}monitorScene/scene_data/',
                     data:value,
                 }).then(function (res) {
-                    console.log(res);
+                    vm.result_list_edit=res.data.results;
+
                 })
             },
             hide() {
@@ -707,7 +709,16 @@
                 $('.monitor_edit').css('display','block');
                 vm.show_num=vm.isAdd;
                 vm.isAdd=0;
-                console.log(vm.result_list);
+                let result_list_edit=vm.result_list_edit;
+                let max=0;
+                for(var i=0;i<result_list_edit.length;i++){
+                    if(max<result_list_edit[i].order){
+                        max=result_list_edit[i].order;
+                    }
+                    $('.monitor_content').append('123')
+                }
+                vm.drigging_id=max+1;
+
             },
             monitor_edit_close(){
                 $('.monitor_edit').css('display','none');
