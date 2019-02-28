@@ -17,7 +17,7 @@ from django.forms.models import model_to_dict
 import uuid
 import sys
 import math
-from logmanagement.function import add_log,make_log_info,get_active_user
+from logmanagement.function import add_log, make_log_info, get_active_user
 
 
 def crawl_manage(request):
@@ -97,9 +97,9 @@ def get_crawls_config(request):
     limit = request_body['limit']
     count = CrawlerConfig.objects.all()
     page_count = int(math.ceil(len(count) / limit))
-    start_page = (page-1)*limit
+    start_page = (page - 1) * limit
     try:
-        res = CrawlerConfig.objects.all().order_by('-update_time').values()[start_page:start_page+limit]
+        res = CrawlerConfig.objects.all().order_by('-update_time').values()[start_page:start_page + limit]
         result_list = []
         for i in res:
             i['create_time'] = i['create_time'].strftime("%Y-%m-%d %H:%M:%S")
@@ -119,16 +119,23 @@ def get_crawl_by_name(request):
     :param request:
     :return:
     """
-    if request.body is None or request.body == '':
-        keyword = ''
-    else:
-        keyword = request.body
+    request_body = json.loads(request.body)
+    page = request_body['page']
+    limit = request_body['limit']
+    keyword = request_body['keyword']
+    count = CrawlerConfig.objects.filter(Q(crawl_name__contains=keyword))
+    page_count = int(math.ceil(len(count) / limit))
+    start_page = (page - 1) * limit
     try:
-        res = CrawlerConfig.objects.filter(Q(crawl_name__contains=keyword)).order_by('-update_time').values()
+
+        res = CrawlerConfig.objects.filter(Q(crawl_name__contains=keyword)).order_by('-update_time').values()[
+              start_page:start_page + limit]
         result_list = []
         for i in res:
             i['create_time'] = i['create_time'].strftime("%Y-%m-%d %H:%M:%S")
             i['update_time'] = i['update_time'].strftime("%Y-%m-%d %H:%M:%S")
+            i['page'] = page
+            i['page_count'] = page_count
             result_list.append(i)
         return success_result(result_list)
     except Exception as e:
@@ -146,14 +153,14 @@ def delete_crawl_config_id(request):
     try:
         res = CrawlerConfig.objects.filter(id=crawl_id).delete()
         info = make_log_info(u'删除爬虫配置', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             get_active_user(request)['data']['bk_username'], u'成功', u'无')
         add_log(info)
-        return success_result('删除爬虫配置信息成功')
+        return success_result(u'删除爬虫配置信息成功')
     except Exception as e:
         info = make_log_info(u'删除爬虫配置', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             get_active_user(request)['data']['bk_username'], u'失败', repr(e))
         add_log(info)
-        return error_result('删除爬虫配置信息失败' + e)
+        return error_result(u'删除爬虫配置信息失败' + e)
 
 
 def start_crawl(request):

@@ -15,14 +15,42 @@
 <body>
 <div id="app">
     <section class="wh_container">
-        <el-select v-model="area" placeholder="请选择日历的地区">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.area"
-              :value="item.value">
-            </el-option>
+        <el-row type="flex" jusitify="left">
+            <el-col>
+                <el-select v-model="area" placeholder="请选择日历的地区">
+                <el-option
+                  v-for="item in areas"
+                  :key="item.value"
+                  :label="item.area"
+                  :value="item.value">
+                </el-option>
           </el-select>
+            </el-col>
+            <el-col>
+                <el-input
+              placeholder="请输入国家"
+              v-model="country"
+              clearable>
+                </el-input>
+            </el-col>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <el-col>
+                <el-select v-model="zone" placeholder="请选择国家的时区">
+                <el-option
+                  v-for="item in zones"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+          </el-select>
+            </el-col>
+            <el-col>
+                <el-button type="success" icon="el-icon-check" @click="add_area" circle></el-button>
+            </el-col>
+            <el-col>
+                <el-button type="danger" icon="el-icon-delete" @click="del_area" circle></el-button>
+            </el-col>
+        </el-row>
         <div class="wh_content_all" v-loading="loading2" element-loading-text="拼命加载中"
              element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">
             <div class="wh_top_changge">
@@ -49,7 +77,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </el-row>
         <div>
             <el-button type="danger" icon="el-icon-delete" circle @click="deleteallday"></el-button>
             &nbsp;&nbsp;&nbsp;&nbsp;
