@@ -696,12 +696,13 @@
                 $('.monitor_edit').css('display','block');
                 vm.show_num=vm.isAdd;
                 vm.isAdd=0;
+                console.log(vm.result_list);
             },
             monitor_edit_close(){
                 $('.monitor_edit').css('display','none');
                 vm.isAdd=vm.show_num;
                 vm.show_num=0;
-
+                $('.monitor_content').html('');
             },
             a(){
                 scene_name: ''//场景名称
