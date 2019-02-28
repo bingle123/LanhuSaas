@@ -6,12 +6,14 @@ from django.core.paginator import Paginator
 from django.forms import model_to_dict
 from models import Scene
 from models import position_scene
-from monitor.models import Scene_monitor,Monitor,Job
-from monitor import tools
-from position.models import JobInstance
+from monitor_item.models import Scene_monitor,Monitor,Job
+from monitor_item import tools
+from position.models import JobInstance,Localuser
 from gatherData.models import TDGatherData
 import sys
 from logmanagement.function import add_log,make_log_info,get_active_user
+from db_connection.function import get_db
+from gatherData.function import gather_data
 
 
 def monitor_show(request):
@@ -296,3 +298,74 @@ def getBySceneId(request,id):
         dic_data.append(item)
     print dic_data
 
+
+def get_scenes(request):
+    res_list = []
+    scenes = []
+    # 获取当前用户
+    user_name = get_active_user(request)['data']['bk_username']
+    # 获取当前用户的岗位
+    pos_id = Localuser.objects.get(user_name = user_name).user_pos_id
+    # 获取岗位对应的场景
+    scene = position_scene.objects.filter(position_id = pos_id)
+    for x in scene:
+        scenes.append(x.scene_id)
+    #遍历scenes,获取每个场景对应的监控项
+    for i in scenes:
+        # 初始化
+        base_list = []
+        chart_list = []
+        flow_list = []
+        job_list = []
+        #场景对应的监控项id暂时无法获取,模拟数据
+        items_id = [8,17,4,15,68]
+        #遍历场景的监控项ID
+        for j in items_id:
+            #获取基本数据
+            item = Monitor.objects.get(id = j)
+            #转成字典
+            item_dict = model_to_dict(item)
+            #把时间类型转换为String
+            item_dict['start_time'] = str(item.start_time)
+            item_dict['end_time'] = str(item.end_time)
+            item_dict['create_time'] = str(item.create_time)
+            item_dict['edit_time'] = str(item.edit_time)
+            #采集数据
+            info = {
+                'id':item.id,
+                'params':item.params,
+                'gather_rule':item.gather_rule,
+                'gather_params':item.gather_params,
+            }
+            gather_data(**info)
+            gather_rule = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(j)
+            db = get_db()
+            cursor = db.cursor()
+            cursor.execute(gather_rule)
+            results = cursor.fetchall()
+            dic = {}
+            for i in results:
+                dic1 = {
+                    i[0]: i[1],
+                    'gather_status': i[2]
+                }
+                dic = dict(dic, **dic1)
+            #拼接监控项基础数据和采集数据
+            item_dict = dict(item_dict, **dic)
+            #按不同的监控项类型保存
+            if u'基本单元类型' == item.monitor_type:
+                base_list.append(item_dict)
+            if u'图表单元类型' == item.monitor_type:
+                chart_list.append(item_dict)
+            if u'流程单元类型' == item.monitor_type:
+                flow_list.append(item_dict)
+            if u'作业单元类型' == item.monitor_type:
+                job_list.append(item_dict)
+        data = {
+            'base_list':base_list,
+            'chart_list': chart_list,
+            'flow_list': flow_list,
+            'job_list': job_list,
+        }
+        res_list.append(data)
+    return res_list

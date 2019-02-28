@@ -133,6 +133,7 @@
                     method: 'post',
                     url: '${SITE_URL}monitorScene/get_scenes/',
                 }).then((res)=> {
+                    console.log(res)
                      vm.imgList = res.data.message;
                 })
                  }
