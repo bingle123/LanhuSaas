@@ -158,6 +158,16 @@ def editSence(request):
     return None
 
 
+def scene_data(id):
+
+    obj = Scene_monitor.objects.filter(scene_id=id)
+    data_list = []
+    for i in obj:
+        data_list.append(i)
+    res = tools.success_result(data_list)
+    return res
+
+
 def pos_name(request):
     job = JobInstance.objects.all ()
     res_list = []
