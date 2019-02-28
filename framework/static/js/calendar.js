@@ -17,83 +17,7 @@ var vm = new Vue({
         area:1,
         country:'',
         file_url:'/market_day/get_file/1',
-        zones:[
-            {
-                value:'UTC+12',
-                label:'东西十二区'
-            },
-            {
-                value:'UTC+11',
-                label:'东十一区'
-            },{
-                value:'UTC+10',
-                label:'东十区'
-            },{
-                value:'UTC+9',
-                label:'东九区'
-            },{
-                value:'UTC+8',
-                label:'东八区'
-            },{
-                value:'UTC+7',
-                label:'东七区'
-            },{
-                value:'UTC+6',
-                label:'东六区'
-            },{
-                value:'UTC+5',
-                label:'东五区'
-            },{
-                value:'UTC+4',
-                label:'东四区'
-            },{
-                value:'UTC+3',
-                label:'东三区'
-            },{
-                value:'UTC+2',
-                label:'东二区'
-            },{
-                value:'UTC+1',
-                label:'东一区'
-            },{
-                value:'UTC+0',
-                label:'中时区'
-            },
-            {
-                value:'UTC-11',
-                label:'西十一区'
-            },{
-                value:'UTC-10',
-                label:'西十区'
-            },{
-                value:'UTC-9',
-                label:'西九区'
-            },{
-                value:'UTC-8',
-                label:'西八区'
-            },{
-                value:'UTC-7',
-                label:'西七区'
-            },{
-                value:'UTC-6',
-                label:'西六区'
-            },{
-                value:'UTC-5',
-                label:'西五区'
-            },{
-                value:'UTC-4',
-                label:'西四区'
-            },{
-                value:'UTC-3',
-                label:'西三区'
-            },{
-                value:'UTC-2',
-                label:'西二区'
-            },{
-                value:'UTC-1',
-                label:'西一区'
-            }
-            ],
+        zones:[],
         zone:''
     },
     props: {
@@ -384,6 +308,20 @@ var vm = new Vue({
                     message: '已取消删除'
                 });
             })
+        },get_all_timezone(){
+            axios({
+                method:'get',
+                url:'/market_day/get_all_timezone'
+            }).then(function (res) {
+                res=res.data.message
+                for (var i=0;i<res.length;i++){
+                    temp={
+                        'value':res[i],
+                        'label':res[i]
+                    }
+                    vm.zones.push(temp)
+                }
+            })
         }
     },
     mounted() {
@@ -391,6 +329,7 @@ var vm = new Vue({
         this.getList(this.myDate);
         this.get_header_data()
         this.get_all_area()
+        this.get_all_timezone()
     },
     watch: {
         markDate: {
