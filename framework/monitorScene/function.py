@@ -164,7 +164,7 @@ def scene_data(id):
         data_list = []
         for i in obj:
             data_dic = model_to_dict(i)
-            data_dic['scale'] = int(i.scale)
+            data_dic['scale'] = str(i.scale)
             data_list.append(data_dic)
         res = tools.success_result(data_list)
     except Exception as e:
