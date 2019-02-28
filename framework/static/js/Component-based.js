@@ -6,237 +6,401 @@ axios.interceptors.request.use((config) => {
     });
 function job_monitor(job_params){
     console.log(job_params);
-    selector_id='job'+job_params.job_id;
-    var status=job_params.status;
-    if(status==0){
+    selector_id='job'+job_params.job_id
+    // var status=job_params.status
+    // if(status==0){
         $('[type='+selector_id+']').html($('<div class="unexecuted" style="background: beige;color: grey;"><h1>作业未执行</h1><i class="el-icon-error" style="color: grey;font-size: 30px;margin-top: 20px;"></i></div>'))
-    }else if(status==1){
-        $('[type='+selector_id+']').html($('<div class="success" style="background: beige;color: green;"><h1>作业执行成功</h1><i class="el-icon-success" style="color: green;font-size: 30px;margin-top: 20px;"></i></div>'))
-    }else if(status==2){
-        $('[type='+selector_id+']').html($('<div class="loading" style="background: beige;color: orange;"><h1>正在执行</h1><i class="el-icon-loading" style="color: orange;font-size: 30px;margin-top: 20px;"></i></div>'))
-    }else if(status==-1){
-        $('[type='+selector_id+']').html($('<div class="error" style="background: beige;color: red;"><h1>作业执行失败</h1><i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i></div>'))
-    }
+    // }else if(status==1){
+    //     $('[type='+selector_id+']').html($('<div class="success" style="background: beige;color: green;"><h1>作业执行成功</h1><i class="el-icon-success" style="color: green;font-size: 30px;margin-top: 20px;"></i></div>'))
+    // }else if(status==2){
+    //     $('[type='+selector_id+']').html($('<div class="loading" style="background: beige;color: orange;"><h1>正在执行</h1><i class="el-icon-loading" style="color: orange;font-size: 30px;margin-top: 20px;"></i></div>'))
+    // }else if(status==-1){
+    //     $('[type='+selector_id+']').html($('<div class="error" style="background: beige;color: red;"><h1>作业执行失败</h1><i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i></div>'))
+    // }
+    // }else if(status==1){
+    //     $('[type='+selector_id+']').html($('<div class="success" style="background: beige;color: green;"><h1>作业执行成功</h1><i class="el-icon-success" style="color: green;font-size: 30px;margin-top: 20px;"></i></div>'))
+    // }else if(status==2){
+    //     $('[type='+selector_id+']').html($('<div class="loading" style="background: beige;color: orange;"><h1>正在执行</h1><i class="el-icon-loading" style="color: orange;font-size: 30px;margin-top: 20px;"></i></div>'))
+    // }else if(status==-1){
+    //     $('[type='+selector_id+']').html($('<div class="error" style="background: beige;color: red;"><h1>作业执行失败</h1><i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i></div>'))
+    // }
     $('[type='+selector_id+']').append('<input class="score_input" type="text">');
     $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
     $('[type='+selector_id+']').css('height',job_params.height);
     $('[type='+selector_id+']').css('width',job_params.width);
     $('[type='+selector_id+']').find("*").css('font-size',job_params.font_size);
 }
-function chart_monitor(item_id,chart_type,height,width,drigging_id) {
-    new_res=[];
-    var barX=[];
-    var barCount=[];
-    var person_count='';
-    var chartdata=[];
-    $.get("/monitorScene/get_chart_data/"+item_id,function (res) {
-        res=res.message;
-        console.log(res);
-       for(r in res){
-           if(isNotANumber(res[r].values[0])){
-               new_res[1]=res[r]
-           }else{
-                new_res[0]=res[r]
-           }
-       }
-        barX=new_res[0].values;
-        barCount=new_res[1].values;
-        person_count=new_res[1].key;
-        for(var i=0;i<new_res[0].values.length;i++){
-            temp={
-                'name':new_res[0].values[i],
-                'value':new_res[1].values[i]
-            }
-            chartdata.push(temp)
-        }
-        show_chart(item_id,barX,barCount,person_count,chartdata,chart_type,height,width,drigging_id)
-    },dataType='json')
-}
-function isNotANumber(inputData) {
-　　//isNaN(inputData)不能判断空串或一个空格
-　　//如果是一个空串或是一个空格，而isNaN是做为数字0进行处理的，而parseInt与parseFloat是返回一个错误消息，这个isNaN检查不严密而导致的。
-　　if (parseFloat(inputData).toString() == "NaN") {
-　　　　return false;
-　　} else {
-　　　　return true;
-　　}
-}
+// function chart_monitor(item_id,chart_type,height,width,drigging_id){
+//     new_res=[]
+//     var barX=[]
+//     var barCount=[]
+//     var person_count=''
+//     var chartdata=[]
+//     $.get("/monitorScene/get_chart_data/"+item_id,function (res) {
+//         res=res.message
+//        for(r in res){
+//            if(isNotANumber(res[r].values[0])){
+//                new_res[1]=res[r]
+//            }else{
+//                 new_res[0]=res[r]
+//            }
+//        }
+//         barX=new_res[0].values
+//         barCount=new_res[1].values
+//         person_count=new_res[1].key
+//         for(var i=0;i<new_res[0].values.length;i++){
+//             temp={
+//                 'name':new_res[0].values[i],
+//                 'value':new_res[1].values[i]
+//             }
+//             chartdata.push(temp)
+//         }
+//         console.log(chartdata)
+//         show_chart(item_id,barX,barCount,person_count,chartdata,chart_type,height,width,drigging_id)
+//     },dataType='json')
+// }
+// function isNotANumber(inputData) {
+// 　　//isNaN(inputData)不能判断空串或一个空格
+// 　　//如果是一个空串或是一个空格，而isNaN是做为数字0进行处理的，而parseInt与parseFloat是返回一个错误消息，这个isNaN检查不严密而导致的。
+// 　　if (parseFloat(inputData).toString() == "NaN") {
+// 　　　　return false;
+// 　　} else {
+// 　　　　return true;
+// 　　}
+// }
 
-function show_chart(item_id,barX,barCount,person_count,chartData,chart_type,height,width,drigging_id) {
-    if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
-            this.myChart.dispose();
+function show_chart(item_id,chart_type,height,width,drigging_id,content) {
+                var content=content;
+                var obj = JSON.parse(content);
+                var chartData = [];
+                for(let i=0;i<obj.X.v.length;i++){
+                    var obj_1={};
+                    obj_1.name=obj.X.v[i];
+                    obj_1.value=obj.Y.v[i];
+                    chartData.push(obj_1)
+                }
+                person_count=obj.Y.k
+                var barX=[];
+                        var barCount=[];
+                        for(var i=0;i<chartData.length;i++){
+                            barX.push(chartData[i].name)
+                            barCount.push(chartData[i].value)
+                        }
+        if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
+                this.myChart.dispose();
         }
-    if (chart_type == "饼图") {
-        myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
-        option = {
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a} <br/>{b} : {c} ({d}%)"
-            },
-            legend: {
-                type: 'scroll',
-                orient: 'vertical',
-                right: 10,
-                bottom: 50,
-                data: barX
-            },
-            series: [
-                {
-                    name: person_count,
-                    type: 'pie',
-                    radius: '50%',
-                    center: ['80%', '30%'],
-                    data: chartData,
-                    itemStyle: {
-                        emphasis: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    },
-                    avoidLabelOverlap: false,
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'inside',
-                            formatter: '{c}'
-                        }
-                    },
-                    labelLine: {
-                        normal: {
-                            show: true
+        if (chart_type == "饼图") {
+            myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
+            var legendData = [];
+                    for(var i=0;i<chartData.length;i++){
+                        legendData.push(chartData[i].name)
+                    }
+                    option = {
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
                         },
-                        emphasis: {
-                            show: true
-                        }
+                        legend: {
+                            type: 'scroll',
+                            orient: 'vertical',
+                            right: 10,
+                            bottom: 50,
+                            data: legendData
+                        },
+                        series: [
+                            {
+                                name:person_count,
+                                type: 'pie',
+                                radius: '50%',
+                                center: ['50%', '30%'],
+                                data: chartData,
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                },
+                                avoidLabelOverlap: false,
+                                label: {
+                                    normal: {
+                                        show: true,
+                                        position: 'inside',
+                                        formatter: '{c}'
+                                    }
+                                },
+                                labelLine: {
+                                    normal: {
+                                        show: false
+                                    },
+                                    emphasis: {
+                                        show: true
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                myChart.setOption(option);
+        }
+
+        if (chart_type == "柱状图") {
+            var myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
+            option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                barWidth: 15,
+                legend: {
+                    data: ['已执行'],
+                    bottom: 10,
+                    right: 30
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    top: 10,
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    data: barX
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [
+                    {
+                        name: person_count,
+                        type: 'bar',
+                        stack: 'data',
+                        data: barCount
+                    },
+                ]
+            };
+            myChart.setOption(option);
+        }
+        if (chart_type == "折线图") {
+            myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
+            option = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: [person_count]
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: barX
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: person_count,
+                        type: 'line',
+                        smooth: true,
+                        itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                        data: barCount,
+                    },
+                ]
+            };
+            myChart.setOption(option);
+        }
+}
+function base_monitor(item_id,font_size,height,width,content) {
+    selector_id='basic'+item_id
+    var circle1='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+    var circle4='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:red;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+    var circle3='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+    var circle2='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:darkgreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+    var asd='<div class="display: inline-block;">'
+    // $.get("/monitorScene/get_basic_data/"+item_id,function (res){
+    //     console.log(res)
+    //     var selector_id='basic'+item_id
+    //     var cricle1='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+    //     var cricle2='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:red;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+    //     var cricle3='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+    //     var cricle4='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:black;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+    //     var content=''
+    //     for(key in res){
+    //         if(key!='DB_CONNECTION'&&key!='URL_CONNECTION'&&key!='FILE_EXIST'){
+    //              content+='<div>'+key+':'+res[key]+'</div>'
+    //         }
+    //     }
+    //     var status=1
+    //     for(key in res){
+    //         if(key=='DB_CONNECTION'){
+    //             status=res[key]
+    //             content+='<div>'+'行情数据库连接状态:'+cricle+'</div>'
+    //         }else if(key=='URL_CONNECTION'){
+    //                 status=res[key]
+    //              content+='<div>'+'行情接口状态:'+cricle+'</div>'
+    //         }else if(key=='FILE_EXIST'){
+    //                 status=res[key]
+    //              content+='<div>'+'深圳行情文件状态:'+cricle+'</div>'
+    //         }
+    //     }
+    //     $('[type='+selector_id+']').html(content)
+    //     $('[type='+selector_id+']').css({
+    //     'text-align':'center',
+    //     'width': '100%',
+    //     'height': '40%',
+    //     'background-color': 'whitesmoke',
+    //     'position': 'relative'
+    // })
+    //     if(status==2){
+    //         $("#status").css('background-color','darkgreen')
+    //     }else if(status==-1){
+    //         $("#status").css('background-color','red')
+    //     }else if(status==0){
+    //         $("#status").css('background-color','grey')
+    //     }
+    // $('[type='+selector_id+']').find("*").css("font-size",font_size)
+    // $('[type='+selector_id+']').css('height',height);
+    // $('[type='+selector_id+']').css('width',width);
+    // },dataType='json')
+        $('[type='+selector_id+']').html("");
+        $('[type='+selector_id+']').append("<div>"+content +"</div>");
+        $('[type='+selector_id+']').append('<input class="score_input" type="text">');
+        $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
+        $('[type='+selector_id+']').css('height',height+'px');
+        $('[type='+selector_id+']').css('width',width+'px');
+        // if(content.indexOf("#") > -1 && content.indexOf('@') == -1){
+        //     var temp1 = content.split("#");
+        //     var temp2=[];
+        //     var temp3=[];
+        //     var temp4=[];
+        //     var str=[];
+        //     for(var i=1;i<temp1.length;i=i+2){
+        //         temp2.push(temp1[i]);
+        //     }
+        //     for(var i=0;i<temp2.length;i++){
+        //         temp3.push(temp2[i].split("="))
+        //     }
+        //     for(var i=0;i<temp3.length;i++){
+        //         temp4.push(temp3[i][1])
+        //     }
+        //     for(i=0;i<temp2.length;i++){
+        //         str[i]='#'+temp2[i]+'#'
+        //     }
+        //     $('[type='+selector_id+']').html("")
+        //      for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
+        //          if(j<temp4.length){
+        //              $('[type='+selector_id+']').append("<div>" + temp1[i] + temp4[j]+ "</div>");
+        //          }
+        //          else{
+        //               $('[type='+selector_id+']').append("<div>" + temp1[i]+ "</div>");
+        //          }
+        //      }
+        //   }
+        if(content.indexOf('@') > -1 && content.indexOf("#") == -1){
+            var icon1 = content.split("@");
+            var icon2=[];
+            var icon3=[];
+            var icon4=[-2];
+            var icon=[];
+            console.log(icon1)
+            for(var i=1;i<icon1.length;i=i+2){
+                icon2.push(icon1[i]);
+            }
+            for(var i=0;i<icon2.length;i++){
+                icon3.push(icon2[i].split("="));
+            }
+            for(var i=0;i<icon3.length;i++){
+                icon4.pop();
+                icon4.push(icon3[i][1]);
+            }
+            $('[type='+selector_id+']').html("")
+            $('[type='+selector_id+']').append('<input class="score_input" type="text">');
+            $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
+            $('[type='+selector_id+']').append(asd);
+            if(icon4 ){
+                icon4.push("-2")
+             }
+            if (icon4[0] == 1) {
+                 $('[type='+selector_id+']').append(circle1);
+             }
+             if (icon4[0] == 2) {
+                 $('[type='+selector_id+']').append(circle2);
+             }
+             if (icon4[0] == 0) {
+                 // $('[type='+selector_id+']').append(circle4);
+             }
+             if (icon4[0] == -1 || icon4 == -2) {
+                 $('[type='+selector_id+']').append(circle3);
+             }
+         }
+        if(content.indexOf("#") > -1 && content.indexOf('@') > -1) {
+            var temp1 = content.split("#");
+            var temp2 = [];
+            var temp3 = [];
+            var temp4 = [];
+            for (var i = 1; i < temp1.length; i = i + 2) {
+                temp2.push(temp1[i]);
+            }
+            for (var i = 0; i < temp2.length; i++) {
+                temp3.push(temp2[i].split("="))
+            }
+            for (var i = 0; i < temp3.length; i++) {
+                temp4.push(temp3[i][1])
+            }
+            var icon1 = [];
+            var icon2 = [];
+            var icon3 = [];
+            var icon4 = '';
+            var flag2 = 0;
+            for (var i = 0; i < temp1.length; i = i + 2) {
+                if (temp1[i].indexOf("@") > -1) {
+                    icon1 = temp1[i].split("@")
+                    flag2 = i
+                    for (var k = 0; k < icon1.length; k++) {
+                        icon2.push(icon1[k])
                     }
                 }
-            ]
-        };
-        myChart.setOption(option);
-    }
-    if (chart_type == "柱状图") {
-
-        var myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
-        option = {
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                }
-            },
-            barWidth: 15,
-            legend: {
-                data: ['已执行'],
-                bottom: 10,
-                right: 30
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                top: 10,
-                containLabel: true
-            },
-            xAxis: {
-                type: 'category',
-                data: barX
-            },
-            yAxis: {
-                type: 'value'
-            },
-            series: [
-                {
-                    name: person_count,
-                    type: 'bar',
-                    stack: 'data',
-                    data: barCount
-                },
-            ]
-        };
-        myChart.setOption(option);
-    }
-    if (chart_type == "折线图") {
-        console.log(barCount)
-        myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
-        option = {
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data: [person_count]
-            },
-            calculable: true,
-            xAxis: [
-                {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: barX
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            series: [
-                {
-                    name: person_count,
-                    type: 'line',
-                    smooth: true,
-                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                    data: barCount,
-                },
-            ]
-        };
-        myChart.setOption(option);
-    }
-
-
-}
-function base_monitor(item_id,font_size,height,width) {
-    $.get("/monitorScene/get_basic_data/"+item_id,function (res){
-        console.log(res)
-        var selector_id='basic'+item_id
-        var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:64px;height:64px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
-        var content=''
-        for(key in res){
-            if(key!='DB_CONNECTION'&&key!='URL_CONNECTION'&&key!='FILE_EXIST'){
-                 content+='<div>'+key+':'+res[key]+'</div>'
             }
-        }
-        var status=1
-        for(key in res){
-            if(key=='DB_CONNECTION'){
-                status=res[key]
-                content+='<div>'+'行情数据库连接状态:'+cricle+'</div>'
-            }else if(key=='URL_CONNECTION'){
-                    status=res[key]
-                 content+='<div>'+'行情接口状态:'+cricle+'</div>'
-            }else if(key=='FILE_EXIST'){
-                    status=res[key]
-                 content+='<div>'+'深圳行情文件状态:'+cricle+'</div>'
+            icon3 = icon2[1].split("=")
+            icon4 = icon3[1]
+            $('[type='+selector_id+']').html("")
+            $('[type='+selector_id+']').append('<input class="score_input" type="text">');
+            $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
+            for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
+                if (i == flag2) {
+                    $('[type='+selector_id+']').append(asd);
+                    if (icon4 == 1) {
+                        $('[type='+selector_id+']').append(icon1[0])
+                        $('[type='+selector_id+']').append(circle1);
+                    }
+                    if (icon4 == 2) {
+                        $('[type='+selector_id+']').append(icon1[0])
+                        $('[type='+selector_id+']').append(circle2);
+                    }
+                    if (icon4 == 0) {
+                        $('[type='+selector_id+']').append(icon1[0])
+                        $('[type='+selector_id+']').append(circle4);
+                    }
+                    if (icon4 == -1 || icon4 == -2) {
+                        $('[type='+selector_id+']').append(icon1[0])
+                        $('[type='+selector_id+']').append(circle3);
+                    }
+                } else {
+                    $('[type='+selector_id+']').append("<div>" + temp1[i] + temp4[j] + "</div>");
+                }
             }
+            $('[type='+selector_id+']').find("*").css("font-size",font_size)
+            $('[type='+selector_id+']').css('height',height);
+            $('[type='+selector_id+']').css('width',width);
         }
-        $('[type='+selector_id+']').html(content)
-        $('[type='+selector_id+']').append('<input class="score_input" type="text">')
-        $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>')
-        $('[type='+selector_id+']').css({
-        'text-align':'center',
-        'width': '100%',
-        'height': '40%',
-        'background-color': 'whitesmoke',
-    })
-        if(status==2){
-            $("#status").css('background-color','darkgreen')
-        }else if(status==-1){
-            $("#status").css('background-color','red')
-        }else if(status==0){
-            $("#status").css('background-color','grey')
-        }
-    $('[type='+selector_id+']').find("*").css("font-size",font_size)
-    $('[type='+selector_id+']').css('height',height);
-    $('[type='+selector_id+']').css('width',width);
-    },dataType='json')
+
 }
 
 
@@ -254,14 +418,14 @@ function flow_monitor(value1,value2){
                 var line='';
                 var template_list={};
                 var constants='';
-                var cc=" <div id=\"flow_canvas\" style=\"text-align:center;width: 648px;height: 500px;background-color: whitesmoke;\">\n" +
+                var cc=" <div id=\"flow_canvas\" style=\"text-align:center;background-color: whitesmoke;\">\n" +
                             "                                <div id=\""+selector_id+"\" class=\"clearfix workflow-box\" style=\"width: 100%;position: relative;\">\n" +
                             "\n" +
                             "                                        <div class=\"workflow-canvas\" style=\"margin-left: 0px;padding-left: 0px\">\n" +
                             "                                            <!-- 画布模板 start -->\n" +
                             "                                            <div class=\"jtk-content\">\n" +
                             "                                                <div class=\"jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan\"\n" +
-                            "                                                     id=\""+selector_canvas+"\" style=\"height:500px\">\n" +
+                            "                                                     id=\""+selector_canvas+"\" style=\"width: 585px;height: 420px;\">\n" +
                             "                                                    <!-- 流程 -->\n" +
                             "                                                </div>\n" +
                             "                                            </div>\n" +

@@ -19,6 +19,8 @@ import market_day.celery_opt as co
 from account.models import BkUser
 from blueking.component.shortcuts import get_client_by_user
 from datetime import datetime
+from customProcess.function import clear_execute_status
+from function import check_jobday
 
 @task
 def crawl_task(**i):
@@ -88,85 +90,102 @@ def crawl_task(**i):
 #基本监控项和图标监控项的采集task
 @task
 def gather_data_task_one(**i):
-    print '采集开始'
-    print i['gather_rule']
     # 调用基本监控项和图标监控项数据采集的方法
-    function.gather_data(**i)
-    return '采集成功'
+    area_id=i['area_id']
+    if check_jobday(area_id):
+        function.gather_data(**i)
+    else:
+        pass
 
 #作业监控项的采集task
 @task
 def gather_data_task_two(**i):
     print '采集开始'
     # 调用作业监控项数据采集的方法
-    tools.job_interface(res=i)
-    return '采集成功'
+    if check_jobday(area_id):
+        tools.job_interface(res=i)
+    else:
+        pass
 
 #流程监控项的采集task
 @task
 def gather_data_task_thrid(**i):
     print '采集开始'
     # 调用流程监控项数据采集的方法
-    tools.flow_gather_task(**i)
-    return '采集成功'
+    if check_jobday(area_id):
+        tools.flow_gather_task(**i)
+    else:
+        pass
 @task
 def start_flow_task(**info):
     #得到client对象，方便调用接口
-    user_account = BkUser.objects.filter(id=1).get()
-    client = get_client_by_user(user_account)
-    client.set_bk_api_ver('v2')
-    template_id=info['template_list']['id']
-    constants_temp = info['constants']
-    constants = {}
-    for temp in constants_temp:
-        constants[temp['key']] = temp['value']
-    strnow = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
-    name=info['template_list']['name']+strnow
-    param = {
-        "bk_biz_id": "2",
-        "template_id": template_id,
-        'name': name,
-        'constants':constants
-    }
-    res=client.sops.create_task(param)
-    #调用接口创建任务并得到任务的id
-    task_id=res['data']['task_id']
-    #调用接口启动任务，开始执行任务
-    param = {
-        "bk_biz_id": "2",
-        'task_id':task_id
-    }
-    res=client.sops.start_task(param)
-    flag=res['result']
-    status=0
-    #如果启动任务成功创建一个定时查看节点状态的任务
-    if flag:
-        node_times = info['node_times']
-        starthour = str(node_times[-1]['starttime']).split(':')[0]
-        endhour = str(node_times[0]['endtime'])[:2].split(':')[0]
-        period=info['period']
-        args = {
-            'item_id': info['id'],
-            'task_id': task_id,  # 启动流程的任务id
-            'node_times': node_times,
-            'period': period,
-            'task_name':info['template_list']['name'] + '_check_status_test'
+    if check_jobday(area_id):
+        user_account = BkUser.objects.filter(id=1).get()
+        client = get_client_by_user(user_account)
+        client.set_bk_api_ver('v2')
+        template_id=info['template_list']['id']
+        constants_temp = info['constants']
+        constants = {}
+        for temp in constants_temp:
+            constants[temp['key']] = temp['value']
+        strnow = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
+        name=info['template_list']['name']+strnow
+        param = {
+            "bk_biz_id": "2",
+            "template_id": template_id,
+            'name': name,
+            'constants':constants
         }
-        ctime = {
-            'hour': starthour + '-' + endhour,
-            'minute': '*/1',
+        res=client.sops.create_task(param)
+        #调用接口创建任务并得到任务的id
+        task_id=res['data']['task_id']
+        #调用接口启动任务，开始执行任务
+        param = {
+            "bk_biz_id": "2",
+            'task_id':task_id
         }
-        co.create_task_crontab(name=info['template_list']['name']+'_check_status', task='market_day.tasks.gather_data_task_thrid', crontab_time=ctime,
-                               task_args=args, desc=name)
-        status=1
-        for time in node_times:
-            Flow_Node(flow_id=item_id, node_name=time['node_name'], start_time=time['starttime'],
-                      end_time=time['endtime']).save()
-    Flow(instance_id=task_id, status=flag, test_flag=0, flow_id=item_id).save()
+        res=client.sops.start_task(param)
+        flag=res['result']
+        status=0
+        #如果启动任务成功创建一个定时查看节点状态的任务
+        if flag:
+            node_times = info['node_times']
+            starthour = str(node_times[-1]['starttime']).split(':')[0]
+            endhour = str(node_times[0]['endtime'])[:2].split(':')[0]
+            period=info['period']
+            args = {
+                'item_id': info['id'],
+                'task_id': task_id,  # 启动流程的任务id
+                'node_times': node_times,
+                'period': period,
+                'task_name':info['template_list']['name'] + '_check_status_test'
+            }
+            ctime = {
+                'hour': starthour + '-' + endhour,
+                'minute': '*/1',
+            }
+            co.create_task_crontab(name=info['template_list']['name']+'_check_status', task='market_day.tasks.gather_data_task_thrid', crontab_time=ctime,
+                                   task_args=args, desc=name)
+            status=1
+            for time in node_times:
+                Flow_Node(flow_id=item_id, node_name=time['node_name'], start_time=time['starttime'],
+                          end_time=time['endtime']).save()
+        Flow(instance_id=task_id, status=flag, test_flag=0, flow_id=item_id).save()
+    else:
+        pass
 # 定时任务测试
 @task
 def count_time(**i):
     return i['x'] * i['y']
+
+@periodic_task(run_every=crontab(hour=0,minute=0))
+def clear_status_task():
+    print '开始清理状态'
+    if check_jobday(area_id):
+        clear_execute_status()
+    else:
+        pass
+
 
 
 

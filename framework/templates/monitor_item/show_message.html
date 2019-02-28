@@ -187,8 +187,8 @@
                                 <h2>预览</h2>
                             </div>
                             <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke; position: relative" id="text1">
-
-                                <div id = "text2" style="position:absolute;left:230px;top:150px;">
+                                <!--<div id = "text2" style="position:absolute;left:230px;top:150px;"> -->
+                                <div id="text2" style="margin:auto;position:absolute;left:25%;top:50%;margin-left: -50px;margin-top:-50px;">
                                 </div>
                             </div>
                             <div style="padding: 0px 20%">
@@ -888,10 +888,10 @@
               $("#text2").find("*").css("font-size",this.basic.font_size)
             },
             basic_height(){
-                $('#text2').css('top',this.basic.height)
+                $('#text2').css('height',this.basic.height)
             },
             basic_width(){
-                $("#text2").css("left",this.basic.width)
+                $("#text2").css("width",this.basic.width)
             },
             get_header_data(){
             axios.get('/market_day/get_header/').then(function (res) {
@@ -1280,7 +1280,7 @@
                             data:row.params,
                         }).then((res)=> {
                             console.log(res)
-                            vm.server_url = res['data']['results']['connname'];
+                            //vm.server_url = res['data']['results']['connname'];
                             vm.sql_id = res['data']['results']['id'];
                             vm.server_url = vm.sql_id;
                             vm.basic_size();
@@ -1411,7 +1411,7 @@
                     if (vm.file_param == undefined) {
                         vm.basic.params = vm.server_url
                     } else {
-                        vm.basic.params = vm.server_url
+                        vm.basic.params = vm.server_url +'#'+ vm.file_param
                     }
                     vm.basic.monitor_name = vm.monitor_name;
                     vm.basic.monitor_type = vm.monitor_type

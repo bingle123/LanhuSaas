@@ -37,6 +37,11 @@ def pos_name(request):
     res=function.pos_name(request)
     return  render_json(res)
 
+# 提取编排数据
+def scene_data(request):
+    id = request.body
+    res = function.scene_data(id)
+    return render_json(res)
 
 def paging(request):
     res=function.paging(request)
@@ -48,48 +53,16 @@ def scene_show(request):
 
     param = json.loads(request.body)
     res = function.scene_show(param)
-    return  render_json(res)
+    return render_json(res)
 def get_chart_data(req,id):
     res=function.get_chart_data(id)
     return render_json(res)
+
 
 def get_basic_data(req,id):
     res=function.get_basic_data(id)
     return render_json(res)
 
-# 场景编排新增
-def add_scene(request):
-
-    param1 = [{
-        'scene_id': 2,
-        'item_id': 75,
-        'x':165,
-        'y':169,
-        'scale':3.75,
-        'score':12,
-        'order':'1'
-        },
-        {
-            'scene_id': 2,
-            'item_id': 76,
-            'x': 165,
-            'y': 169,
-            'scale': 3.75,
-            'score': 13,
-            'order': '2'
-        },
-        {
-            'scene_id': 2,
-            'item_id': 77,
-            'x': 165,
-            'y': 169,
-            'scale': 3.75,
-            'score': 20,
-            'order': '3'
-        },
-    ]
-    res = function.add_scene(param1)
-    return render_json(res)
 
 def getBySceneId(request,id):
     res = function.getBySceneId(request,id)
