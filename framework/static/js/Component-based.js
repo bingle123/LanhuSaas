@@ -59,15 +59,15 @@ function job_monitor(job_params){
 //         show_chart(item_id,barX,barCount,person_count,chartdata,chart_type,height,width,drigging_id)
 //     },dataType='json')
 // }
-function isNotANumber(inputData) {
-　　//isNaN(inputData)不能判断空串或一个空格
-　　//如果是一个空串或是一个空格，而isNaN是做为数字0进行处理的，而parseInt与parseFloat是返回一个错误消息，这个isNaN检查不严密而导致的。
-　　if (parseFloat(inputData).toString() == "NaN") {
-　　　　return false;
-　　} else {
-　　　　return true;
-　　}
-}
+// function isNotANumber(inputData) {
+// 　　//isNaN(inputData)不能判断空串或一个空格
+// 　　//如果是一个空串或是一个空格，而isNaN是做为数字0进行处理的，而parseInt与parseFloat是返回一个错误消息，这个isNaN检查不严密而导致的。
+// 　　if (parseFloat(inputData).toString() == "NaN") {
+// 　　　　return false;
+// 　　} else {
+// 　　　　return true;
+// 　　}
+// }
 
 function show_chart(item_id,chart_type,height,width,drigging_id,content) {
                 var content=content;
@@ -90,7 +90,7 @@ function show_chart(item_id,chart_type,height,width,drigging_id,content) {
                 this.myChart.dispose();
         }
         if (chart_type == "饼图") {
-            myChart = echarts.init(document.getElementById(item_id), 'macarons');
+            myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
             var legendData = [];
                     for(var i=0;i<chartData.length;i++){
                         legendData.push(chartData[i].name)
@@ -144,7 +144,7 @@ function show_chart(item_id,chart_type,height,width,drigging_id,content) {
         }
 
         if (chart_type == "柱状图") {
-            var myChart = echarts.init(document.getElementById(item_id), 'macarons');
+            var myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
             option = {
                 tooltip: {
                     trigger: 'axis',
@@ -409,14 +409,14 @@ function flow_monitor(value1,value2){
                 var line='';
                 var template_list={};
                 var constants='';
-                var cc=" <div id=\"flow_canvas\" style=\"text-align:center;width: 300px;height: 200px;background-color: whitesmoke;\">\n" +
+                var cc=" <div id=\"flow_canvas\" style=\"text-align:center;background-color: whitesmoke;\">\n" +
                             "                                <div id=\""+selector_id+"\" class=\"clearfix workflow-box\" style=\"width: 100%;position: relative;\">\n" +
                             "\n" +
                             "                                        <div class=\"workflow-canvas\" style=\"margin-left: 0px;padding-left: 0px\">\n" +
                             "                                            <!-- 画布模板 start -->\n" +
                             "                                            <div class=\"jtk-content\">\n" +
                             "                                                <div class=\"jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan\"\n" +
-                            "                                                     id=\""+selector_canvas+"\" style=\"height:500px\">\n" +
+                            "                                                     id=\""+selector_canvas+"\" style=\"width: 585px;height: 420px;\">\n" +
                             "                                                    <!-- 流程 -->\n" +
                             "                                                </div>\n" +
                             "                                            </div>\n" +

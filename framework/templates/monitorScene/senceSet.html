@@ -838,13 +838,13 @@
             add_base_monitor(i){
                 console.log(i);
                 $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"basic'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>');
-                base_monitor(i.id,i.font_size,i.height,i.width);
+                base_monitor(i.id,i.font_size,i.height,i.width,i.contents);
                 vm.drigging_id++
             },
             add_chart_monitor(i){
                 console.log(i);
                 $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+i.height+'px;width:'+i.width+'px\"></div><input class="score_input" type="text"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
-                chart_monitor(i.id,i.gather_params,i.height,i.width,vm.drigging_id);
+                show_chart(i.id,i.gather_params,i.height,i.width,vm.drigging_id,i.contents);
                 vm.drigging_id++
             },
             add_job_monitor(i){
@@ -853,7 +853,8 @@
                     'job_id':i.id,
                     'width' :i.width,
                     'height':i.height,
-                    'status':i.job_status
+                    'status':i.job_status,
+                    'contents':i.contents
                 }
                 $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"job'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
                 job_monitor(job_params)
