@@ -60,6 +60,17 @@ def addSence(request):
            "position_id":senceModel['data']["pos_name"]
        }
        position_scene.objects.create(**senceModel3)
+       for i in senceModel['monitor_data']:
+           monitor_data = {
+               'scene_id': id,
+                'item_id': i['item_id'],
+                'x':i['x'],
+                'y':i['y'],
+                'scale':i['scale'],
+                'score':i['score'],
+                'order':i['order']
+           }
+           Scene_monitor.objects.create(**monitor_data)
        info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
                             get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
