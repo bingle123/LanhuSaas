@@ -159,12 +159,16 @@ def editSence(request):
 
 
 def scene_data(id):
-
-    obj = Scene_monitor.objects.filter(scene_id=id)
-    data_list = []
-    for i in obj:
-        data_list.append(i)
-    res = tools.success_result(data_list)
+    try:
+        obj = Scene_monitor.objects.filter(scene_id=id)
+        data_list = []
+        for i in obj:
+            data_dic = model_to_dict(i)
+            data_dic['scale'] = int(i.scale)
+            data_list.append(data_dic)
+        res = tools.success_result(data_list)
+    except Exception as e:
+        res = tools.error_result(e)
     return res
 
 
