@@ -25,9 +25,9 @@ urlpatterns = patterns(
     (r'^paging/$', 'paging'),
     (r'^scene_show/$', 'scene_show'),                        #场景展示
     (r'^add_scene/$', 'add_scene'),                         #场景保存
-    (r'^scene_show/$', 'scene_show'),#场景展示
     (r'get_chart_data/(.+)$','get_chart_data'),
     (r'^getSceneByid/(.+)/$','getBySceneId'),   #根据Id获取场景详情
     (r'get_basic_data/(.+)$','get_basic_data'),
     (r'^get_scenes/$', 'get_scenes'),
+    (r'^scene_data/$', 'scene_data'),
 )

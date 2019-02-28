@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.forms import model_to_dict
 from models import Scene
 from models import position_scene
-from monitor_item.models import Scene_monitor, Monitor, Job
+from monitor_item.models import Scene_monitor, Monitor, Job,Scene_monitor
 from monitor_item import tools
 from position.models import JobInstance, Localuser
 from gatherData.models import TDGatherData
@@ -156,6 +156,20 @@ def editSence(request):
                                get_active_user (request)['data']['bk_username'], '失败', repr (e))
         add_log (info2)
     return None
+
+
+def scene_data(id):
+    try:
+        obj = Scene_monitor.objects.filter(scene_id=id)
+        data_list = []
+        for i in obj:
+            data_dic = model_to_dict(i)
+            data_dic['scale'] = int(i.scale)
+            data_list.append(data_dic)
+        res = tools.success_result(data_list)
+    except Exception as e:
+        res = tools.error_result(e)
+    return res
 
 
 def pos_name(request):
@@ -333,11 +347,15 @@ def get_scenes(request):
         chart_list = []
         flow_list = []
         job_list = []
-        # 场景对应的监控项id暂时无法获取,模拟数据
-        items_id = [8, 17, 4, 15, 68]
+        items_id = []
+        # 场景对应的监控项id
+        scene_monitor = Scene_monitor.objects.filter(scene_id = i)
+        for k in scene_monitor:
+            items_id.append(k.item_id)
         # 遍历场景的监控项ID
         for j in items_id:
             # 获取基本数据
+            print j
             item = Monitor.objects.get (id=j)
             # 转成字典
             item_dict = model_to_dict (item)
