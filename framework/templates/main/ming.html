@@ -53,6 +53,27 @@
         p,i{
             text-align: center;
         }
+        .score_input{
+            font-size: 16px;
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            top: -36px;
+            left: 0;
+            width: 50px;
+            height: 36px;
+            display: none;
+        }
+        .right_click{
+            position: absolute;
+            width: 100px;
+            display: none;
+        }
+        .right_click span{
+            width: 100px;
+            display: inline-block;
+            font-size: 16px;
+            line-height: 36px;
+        }
     </style>
 </head>
 
@@ -63,7 +84,7 @@
             <h1 style="rgba(40, 147, 108, 0.45);line-height: 60px;text-align: center">场景编排</h1>
         </el-col>
         <el-col :span="6">
-            <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245)">
+            <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245);position: relative">
                 <h2 class="monitor_title" style="line-height:48px;background:#283593;text-align: center;color: #ffffff">监控项</h2>
                 <el-col :span="24">
                         <h3 @click="monitor_type_switch(1)" class="monitor_type" >基本监控项</h3>
@@ -129,7 +150,12 @@
                     </el-col>
 
                 </div>
+                <div style="position: absolute;bottom: 0;right: 0;font-size:30px;width: 100%">
+                    <i class="el-icon-circle-plus-outline"></i>
+                    <i class="el-icon-remove-outline"></i>
+                </div>
             </div>
+
         </el-col>
         <el-col :span="18">
             <div class="monitor_content" style="min-height: 600px;background: rgb(244, 244, 245)">
@@ -203,13 +229,13 @@
             },
             add_base_monitor(i){
                 console.log(i);
-                $('.monitor_content').append('<div class=\"Drigging\" type=\"basic'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
-                base_monitor(i.id,i.font_size,i.height,i.width)
+                $('.monitor_content').append('<div class=\"Drigging\" type=\"basic'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>');
+                base_monitor(i.id,i.font_size,i.height,i.width);
                 vm.drigging_id++
             },
             add_chart_monitor(i){
                 console.log(i);
-                $('.monitor_content').append('<div class=\"Drigging\" id=\"'+vm.drigging_id+'\"><div id=\"chart'+i.id+'\" style=\"width:'+i.height+'px;height:'+i.width+'px\"></div></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" id=\"'+vm.drigging_id+'\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+i.height+'px;width:'+i.width+'px\"></div><input class="score_input" type="text"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
                 chart_monitor(i.id,i.gather_params,i.height,i.width,vm.drigging_id);
                 vm.drigging_id++
             },
@@ -269,71 +295,120 @@
             height:"hide"
         });
     });
-        $(function () {
-        var obox=$('.monitor_content');
-        var selector = '';
-        var flag=false;
-        var x,y;
-        var offsetLeft,offsetTop;
-        $(document).on("mouseover", ".Drigging", function () {
-            $(this).css('cursor', 'pointer');//当鼠标移动到拖拽目标上的时候，将鼠标的样式设置为移动(move)
-        });
-        $(document).on("mousedown", ".Drigging", function (e) {
-            var e=window.event||e;
-            selector = '#' + this.id;
-            flag = true;//当鼠标在移动元素按下的时候将flag设定为true
-            x = e.clientX;//获取鼠标在当前窗口的相对偏移位置的Left值并赋值给x
-            y = e.clientY;//获取鼠在当前窗口的相对偏移位置的Top值并赋值给y
-            offsetLeft = $(selector).position().left;
-            offsetTop = $(selector).position().top;
-            $(this).css('cursor', 'pointer');
-        });
-        $(document).on("mouseup", ".Drigging", function () {
-            flag = false;//当鼠标在移动元素起来的时候将flag设定为false
-        });
-        $(document).mousemove(function (e) {
-            if (!flag)//如果flag为false则返回
-                return;//当flag为true的时候执行下面的代码
-            e.preventDefault();
-            var e=window.event||e;
-            var _x = e.clientX - x + offsetLeft;
-            //event.clientX得到鼠标相对于客户端正文区域的偏移
-            //然后减去offsetX即得到当前推拽元素相对于当前窗口的X值
-            //（减去鼠标刚开始拖动的时候在当前窗口的偏移X）
-            var _y = e.clientY - y + offsetTop;
-            //event.clientY得到鼠标相对于客户端正文区域的偏移
-            //然后减去offsetX即得到当前推拽元素相对于当前窗口的Y值
-            //（减去鼠标刚开始拖动的时候在当前窗口的偏移Y）
-            if(_x<0){
-                _x=0;
-            }
-            if(_y<0){
-                _y=0;
-            }
-            if(_x>obox.width()-$(selector).width()){
-
-                _x=obox.width()-$(selector).width();
-            }
-            if(_y>obox.height()-$(selector).height()){
-                _y=obox.height()-$(selector).height();
-            }
-            $(selector).css("left", _x);
-            $(selector).css("top", _y);
-            $(selector).css('cursor', 'pointer');
-
-
-        });
+    document.oncontextmenu = function(){
+    　　return false;
+    }
+    $(function () {
+    var obox=$('.monitor_content');
+    var selector = '';
+    var flag=false;
+    var x,y;
+    var offsetLeft,offsetTop;
+    var proportion=1;
+    var Multiple = 0;
+    $(document).on("mouseover", ".Drigging", function () {
+        $(this).css('cursor', 'pointer');//当鼠标移动到拖拽目标上的时候，将鼠标的样式设置为移动(move)
     });
-    //$('.tool-title').click(function () {
-    //$(this).next('.tool-list').animate({
-    //    height:'toggle'
-    //});
-    //$(this).parent().siblings().children('.tool-list').animate({
-    //    height:"hide"
-    //});
-    //});
-    //<p id="Drigging" class="Drigging" style="float:left">拖拽层</p>
-    //<p id="Drigging1" class="Drigging" style="position: absolute;top: 150px;">拖拽层1</p>
+    $(document).on("mousedown", ".Drigging", function (e) {
+        var e=window.event||e;
+        selector = '#' + this.id;
+        flag = true;//当鼠标在移动元素按下的时候将flag设定为true
+        x = e.clientX;//获取鼠标在当前窗口的相对偏移位置的Left值并赋值给x
+        y = e.clientY;//获取鼠在当前窗口的相对偏移位置的Top值并赋值给y
+        offsetLeft = $(selector).position().left;
+        offsetTop = $(selector).position().top;
+        $(this).css('cursor', 'pointer');
+        console.log(x,y,e.clientX,e.clientY,obox.width(),obox.height(),$(selector).width(),$(selector).height(),offsetLeft,offsetTop);
+    });
+    $(document).on("mouseup", ".Drigging", function () {
+        flag = false;//当鼠标在移动元素起来的时候将flag设定为false
+    });
+    $(document).on("mousedown", ".Drigging", function (e) {//监控项右击显示打分输入框
+        if(e.button == 2){
+            e.preventDefault();
+            var x = e.offsetX + 10;
+            var y = e.offsetY + 10;
+            $(this).find('.right_click').css({
+                left: x,
+                top: y,
+                display: 'block'
+            });
+            $(this).find('.right_click').off();
+            $(this).find('.score').on('click', function(e) {
+                e.stopPropagation();
+                $(selector+' .score_input').css('display', 'block');
+                $('.right_click').css('display', 'none');
+            })
+            $(this).find('.delete').on('click', function(e) {
+                e.stopPropagation();
+                $(this).parent().parent().remove();
+
+            })
+
+        }
+    });
+    $(document).on("blur", ".score_input", function(){//打分输入框失去焦点隐藏
+       $('.score_input').css('display','none');
+    });
+    $(document).mousemove(function (e) {
+        if (!flag)//如果flag为false则返回
+            return;//当flag为true的时候执行下面的代码
+        e.preventDefault();
+        var e=window.event||e;
+        var _x = e.clientX - x + offsetLeft+Math.abs(Multiple)*$(selector).width()*(proportion-1)/2;
+        //event.clientX得到鼠标相对于客户端正文区域的偏移
+        //然后减去offsetX即得到当前推拽元素相对于当前窗口的X值
+        //（减去鼠标刚开始拖动的时候在当前窗口的偏移X）
+        var _y = e.clientY - y + offsetTop+Math.abs(Multiple)*$(selector).height()*(proportion-1)/2;
+        //event.clientY得到鼠标相对于客户端正文区域的偏移
+        //然后减去offsetX即得到当前推拽元素相对于当前窗口的Y值
+        //（减去鼠标刚开始拖动的时候在当前窗口的偏移Y）
+        console.log(_x,_y);
+        if(_x<0){
+            _x=0+$(selector).width()*(proportion-1)/2;
+        }
+        if(_y<0){
+            _y=0+$(selector).height()*(proportion-1)/2;
+        }
+        if(_x>obox.width()-$(selector).width()){
+
+            //_x=obox.width()-$(selector).width();
+            _x=obox.width()-($(selector).width()*(proportion-1)/2+$(selector).width());
+        }
+        if(_y>obox.height()-$(selector).height()){
+            //_y=obox.height()-$(selector).height();
+            _y=obox.height()-($(selector).height()*(proportion-1)/2+$(selector).height());
+        }
+        $(selector).css("left", _x);
+        $(selector).css("top", _y);
+        $(selector).css('cursor', 'pointer');
+
+
+    });
+    $('.el-icon-circle-plus-outline').click(function () {
+        if(Multiple<2) {
+            proportion = proportion + 0.1;
+            $('.monitor_content').find('.Drigging').css('transform', 'scale(' + proportion + ')');
+            Multiple++;
+            console.log(proportion, Multiple);
+        }else {
+            return
+        }
+    });
+    $('.el-icon-remove-outline').click(function () {
+        if(Multiple>-2){
+           proportion=proportion-0.1;
+        $('.monitor_content').find('.Drigging').css('transform','scale('+proportion+')');
+        $('.monitor_content').find('canvas').css('transform','scale('+proportion+')');
+        Multiple--;
+        console.log(proportion,Multiple);
+        }else {
+            return
+        }
+
+    });
+});
+
 </script>
 
 </body>
