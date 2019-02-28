@@ -8,7 +8,7 @@ from models import Scene
 from models import position_scene
 from monitor.models import Scene_monitor,Monitor,Job
 from monitor import tools
-from position.models import JobInstance,Localuser
+from position.models import JobInstance
 from gatherData.models import TDGatherData
 import sys
 from logmanagement.function import add_log,make_log_info,get_active_user
@@ -285,35 +285,14 @@ def get_basic_data(id):
 
 
 def getBySceneId(request,id):
-    scene = Scene.objects.get(id=id)
-    scenes = model_to_dict(scene)
-    scenes['scene_startTime']=str(scene.scene_startTime)
-    scenes['scene_endTime'] = str(scene.scene_endTime)
-    scenes['scene_creator_time'] = str(scene.scene_creator_time)
-    scenes['scene_editor_time'] = str(scene.scene_editor_time)
-    positons = position_scene.objects.filter(scene=id)
-
-    list_pname = []
-
-    for i in positons:
-        job = JobInstance.objects.get(id = model_to_dict(i)['position_id'])
-        pname = model_to_dict(job)['pos_name']
-        list_pname.append(pname)
-    scenes['pname'] = list_pname
-
-    print scenes
-    return scenes
-
-def get_scenes(request):
-    res_list = []
-    user_name = get_active_user(request)['data']['bk_username']
-    pos_id = Localuser.objects.get(user_name=user_name).user_pos_id
-    temp = position_scene.objects.filter(position_id = pos_id)
-    for i in temp:
-        imgList = {
-            'id':i.scene_id,
-            'idView': '${STATIC_URL}img/slide1.png'
-        }
-        res_list.append(imgList)
-    return res_list
+    sm = Scene_monitor.objects.filter(scene_id = id)
+    dic_data = []
+    for s in model_to_dict(sm):
+        itemId = s['item_id']
+        monitor = Monitor.objects.get(id = itemId)
+        item = model_to_dict(monitor)
+        item['x'] = s['x']
+        item['y'] = s['y']
+        dic_data.append(item)
+    print dic_data
 
