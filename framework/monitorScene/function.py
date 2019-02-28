@@ -287,79 +287,14 @@ def get_basic_data(id):
 
 
 def getBySceneId(request,id):
-    scene = Scene.objects.get(id=id)
-    scenes = model_to_dict(scene)
-    scenes['scene_startTime']=str(scene.scene_startTime)
-    scenes['scene_endTime'] = str(scene.scene_endTime)
-    scenes['scene_creator_time'] = str(scene.scene_creator_time)
-    scenes['scene_editor_time'] = str(scene.scene_editor_time)
-    positons = position_scene.objects.filter(scene=id)
-
-    list_pname = []
-
-    for i in positons:
-        job = JobInstance.objects.get(id = model_to_dict(i)['position_id'])
-        pname = model_to_dict(job)['pos_name']
-        list_pname.append(pname)
-    scenes['pname'] = list_pname
-
-    print scenes
-    return scenes
-
-def get_scenes(request):
-    res_list = []
-    scenes = []
-    base_list = []
-    chart_list = []
-    flow_list = []
-    job_list = []
-    user_name = get_active_user(request)['data']['bk_username']                             #获取当前用户
-    pos_id = Localuser.objects.get(user_name=user_name).user_pos_id                         #获取当前用户的岗位
-    temp = position_scene.objects.filter(position_id = pos_id)
-    for i in temp:
-        scenes.append(i.scene_id)                                                           #当前用户的岗位的场景
-    db = get_db()
-    for x in scenes:
-        items_id = [8,17,4,15,68]                                                           #暂时取不到，模拟数据
-        for i in items_id:
-            item = Monitor.objects.get(id=i)
-            info = {
-                'id': item.id,
-                'params': item.params,
-                'gather_rule': item.gather_rule,
-                'gather_params': item.gather_params,
-            }
-            gather_data(**info)                                                                 #采集数据
-            gather_rule = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(i)
-            cursor = db.cursor()
-            cursor.execute(gather_rule)
-            results = cursor.fetchall()
-            dic = {}
-            for i in results:
-                dic1 = {
-                    i[0]: i[1],
-                }
-                dic = dict(dic, **dic1)
-            item_dict = model_to_dict(item)
-            item_dict['start_time'] = str(item.start_time)
-            item_dict['end_time'] = str(item.end_time)
-            item_dict['create_time'] = str(item.create_time)
-            item_dict['edit_time'] = str(item.edit_time)
-            item_dict = dict(item_dict, **dic)                                                    #监控项基本数据和采集数据拼接成一个字典
-            if u'基本单元类型' == item.monitor_type:                                              #按照不同的监控项类型分类
-                base_list.append(item_dict)
-            if u'图表单元类型' == item.monitor_type:
-                chart_list.append(item_dict)
-            if u'流程单元类型' == item.monitor_type:
-                flow_list.append(item_dict)
-            if u'作业单元类型' == item.monitor_type:
-                job_list.append(item_dict)
-        data = {                                                                                   #多个监控项拼接成场景
-            'base_list':base_list,
-            'chart_list': chart_list,
-            'flow_list': flow_list,
-            'job_list': job_list,
-        }
-        res_list.append(data)                                                                     #多个场景传到前台
-    return res_list
+    sm = Scene_monitor.objects.filter(scene_id = id)
+    dic_data = []
+    for s in model_to_dict(sm):
+        itemId = s['item_id']
+        monitor = Monitor.objects.get(id = itemId)
+        item = model_to_dict(monitor)
+        item['x'] = s['x']
+        item['y'] = s['y']
+        dic_data.append(item)
+    print dic_data
 
