@@ -48,7 +48,7 @@ def scene_show(request):
 
     param = json.loads(request.body)
     res = function.scene_show(param)
-    return  render_json(res)
+    return render_json(res)
 def get_chart_data(req,id):
     res=function.get_chart_data(id)
     return render_json(res)
