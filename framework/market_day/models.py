@@ -19,3 +19,11 @@ class HeaderData(models.Model):
         return self.day
     class Meta:
         db_table='header_data'
+
+class Area(models.Model):
+    country=models.CharField(u'国家',max_length=30)
+    timezone=models.CharField(u'时区',max_length=30)
+    def __unicode__(self):
+        return self.day
+    class Meta:
+        db_table='area'

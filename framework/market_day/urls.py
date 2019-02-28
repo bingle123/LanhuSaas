@@ -8,8 +8,11 @@ urlpatterns = patterns(
     url(r'get_holiday/(.+)',views.get_holiday),
     url(r'get_file/(.+)',views.get_file),
     url(r'delall/(.+)',views.delall),
-    url(r'delone/(.+)/(.+)',views.delone),
-    url(r'addone/(.+)/(.+)',views.addone),
-    url(r'get_header',views.get_data_header)
+    url(r'delone',views.delone),
+    url(r'addone',views.addone),
+    url(r'get_header',views.get_data_header),
+    url(r'add_area',views.add_area),
+    url(r'get_all_area',views.get_all_area),
+    url(r'del_area/(.+)',views.del_area)
 )
 
