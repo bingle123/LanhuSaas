@@ -212,7 +212,7 @@
         <hr id="hr">
         <div style="margin-top: 20px">
             <el-card class="box-card">
-                <el-row>
+                <!--<el-row>
                     <ul>
                         <li>
                             <span class="key">场景名称:</span>
@@ -235,22 +235,21 @@
                             <span>{{ scenes.pname }}</span>
                         </li>
                     </ul>
-                </el-row>
+                </el-row>-->
                 <el-row>
-                    <div id="flow1" class="clearfix workflow-box" style="width: 100%">
 
+                    <!--画画开始-->
+                    <div id="flow1" class="clearfix workflow-box" style="width: 100%">
+                        <!-- 画布模板 start -->
                         <div class="workflow-canvas" style="margin-left: 0px;padding-left: 0px">
-                            <!-- 画布模板 start -->
                             <div class="jtk-content">
                                 <div class="jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan"
                                      id="canvas" style="height:370px;">
                                     <!-- 流程 -->
                                 </div>
                             </div>
-                            <!-- 画布模板 end -->
-
                         </div>
-
+                         <!-- 画布模板 end -->
                         <!-- template 模板-->
                         <div class="jtk-delete jtk-none ">删除节点</div>
                         <div id="template" class="jtk-none">
@@ -302,6 +301,8 @@
                             </div>
                         </div>
                     </div>
+                     <!-- template 模板-->
+
                 </el-row>
                 <el-row>
                     <el-button @click="hiden">取消</el-button>
@@ -332,13 +333,13 @@
                 doing: 10,
                 unexec: 32,
             }],
-            x: 7,
+            x: 2,
             isfram: 1,
             scenes: '',
         },
         methods: {
             hiden() {
-                ve.isfram = 1
+                window.location.reload()
             },
             scene() {
                 axios.post('${SITE_URL}monitorScene/getSceneByid/' + ve.x + '/',)
@@ -346,8 +347,8 @@
                             this.isfram = 2
                             ve.scenes = res.data
                         }
-                    )
-            },
+                    );}
+
         }
     });
 </script>
@@ -472,11 +473,7 @@
         $('#resetCanvas').click(function () {
             $('#flow1').data('dataflow').resetCanvas();
         });
-        //flow1_js_end
-        // $('.node-wrapper').click(function () {
-        //
-        //     $(this).find(".node-title").attr('contenteditable','plaintext-only');
-        // })
+
         //节点抽屉
         $('.tool-title').click(function () {
             $(this).next('.tool-list').animate({

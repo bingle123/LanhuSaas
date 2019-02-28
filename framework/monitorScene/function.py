@@ -12,6 +12,8 @@ from position.models import JobInstance,Localuser
 from gatherData.models import TDGatherData
 import sys
 from logmanagement.function import add_log,make_log_info,get_active_user
+from db_connection.function import get_db
+from gatherData.function import gather_data
 
 
 def monitor_show(request):
@@ -285,35 +287,85 @@ def get_basic_data(id):
 
 
 def getBySceneId(request,id):
-    scene = Scene.objects.get(id=id)
-    scenes = model_to_dict(scene)
-    scenes['scene_startTime']=str(scene.scene_startTime)
-    scenes['scene_endTime'] = str(scene.scene_endTime)
-    scenes['scene_creator_time'] = str(scene.scene_creator_time)
-    scenes['scene_editor_time'] = str(scene.scene_editor_time)
-    positons = position_scene.objects.filter(scene=id)
+    sm = Scene_monitor.objects.filter(scene_id = id)
+    dic_data = []
+    for s in model_to_dict(sm):
+        itemId = s['item_id']
+        monitor = Monitor.objects.get(id = itemId)
+        item = model_to_dict(monitor)
+        item['x'] = s['x']
+        item['y'] = s['y']
+        dic_data.append(item)
+    print dic_data
 
-    list_pname = []
-
-    for i in positons:
-        job = JobInstance.objects.get(id = model_to_dict(i)['position_id'])
-        pname = model_to_dict(job)['pos_name']
-        list_pname.append(pname)
-    scenes['pname'] = list_pname
-
-    print scenes
-    return scenes
 
 def get_scenes(request):
     res_list = []
+    scenes = []
+    # 获取当前用户
     user_name = get_active_user(request)['data']['bk_username']
-    pos_id = Localuser.objects.get(user_name=user_name).user_pos_id
-    temp = position_scene.objects.filter(position_id = pos_id)
-    for i in temp:
-        imgList = {
-            'id':i.scene_id,
-            'idView': '${STATIC_URL}img/slide1.png'
+    # 获取当前用户的岗位
+    pos_id = Localuser.objects.get(user_name = user_name).user_pos_id
+    # 获取岗位对应的场景
+    scene = position_scene.objects.filter(position_id = pos_id)
+    for x in scene:
+        scenes.append(x.scene_id)
+    #遍历scenes,获取每个场景对应的监控项
+    for i in scenes:
+        # 初始化
+        base_list = []
+        chart_list = []
+        flow_list = []
+        job_list = []
+        #场景对应的监控项id暂时无法获取,模拟数据
+        items_id = [8,17,4,15,68]
+        #遍历场景的监控项ID
+        for j in items_id:
+            #获取基本数据
+            item = Monitor.objects.get(id = j)
+            #转成字典
+            item_dict = model_to_dict(item)
+            #把时间类型转换为String
+            item_dict['start_time'] = str(item.start_time)
+            item_dict['end_time'] = str(item.end_time)
+            item_dict['create_time'] = str(item.create_time)
+            item_dict['edit_time'] = str(item.edit_time)
+            #采集数据
+            info = {
+                'id':item.id,
+                'params':item.params,
+                'gather_rule':item.gather_rule,
+                'gather_params':item.gather_params,
+            }
+            gather_data(**info)
+            gather_rule = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(j)
+            db = get_db()
+            cursor = db.cursor()
+            cursor.execute(gather_rule)
+            results = cursor.fetchall()
+            dic = {}
+            for i in results:
+                dic1 = {
+                    i[0]: i[1],
+                    'gather_status': i[2]
+                }
+                dic = dict(dic, **dic1)
+            #拼接监控项基础数据和采集数据
+            item_dict = dict(item_dict, **dic)
+            #按不同的监控项类型保存
+            if u'基本单元类型' == item.monitor_type:
+                base_list.append(item_dict)
+            if u'图表单元类型' == item.monitor_type:
+                chart_list.append(item_dict)
+            if u'流程单元类型' == item.monitor_type:
+                flow_list.append(item_dict)
+            if u'作业单元类型' == item.monitor_type:
+                job_list.append(item_dict)
+        data = {
+            'base_list':base_list,
+            'chart_list': chart_list,
+            'flow_list': flow_list,
+            'job_list': job_list,
         }
-        res_list.append(imgList)
+        res_list.append(data)
     return res_list
-
