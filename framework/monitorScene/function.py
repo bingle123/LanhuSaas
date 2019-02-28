@@ -6,8 +6,8 @@ from django.core.paginator import Paginator
 from django.forms import model_to_dict
 from models import Scene
 from models import position_scene
-from monitor.models import Scene_monitor,Monitor,Job
-from monitor import tools
+from monitor_item.models import Scene_monitor,Monitor,Job
+from monitor_item import tools
 from position.models import JobInstance,Localuser
 from gatherData.models import TDGatherData
 import sys

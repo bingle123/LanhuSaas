@@ -22,9 +22,78 @@
     <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
     <script type="text/javascript" src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
     <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
-    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
      <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
-
+    <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
+    <style>
+        .content{
+            position: relative;
+        }
+        .monitor_edit{
+            display: none;
+            position: absolute;
+            top: 65px;
+            left:0;
+            width: 100%;
+        }
+        .Drigging {
+            position:absolute;
+        }
+        .monitor_type{
+            line-height: 48px;
+            background: #28359324;
+            text-align: center;
+        }
+        .monitor_list{
+            display: none;
+        }
+        .monitor_list div{
+            text-align: center;
+        }
+        .monitor_content{
+            position:relative;
+        }
+        .el-row{
+            border: 1px solid #ffffff;
+        }
+        .el-col{
+            border: 1px solid #ffffff;
+        }
+        p,i{
+            text-align: center;
+        }
+        .score_input{
+            font-size: 16px;
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            top: -36px;
+            left: 0;
+            width: 50px;
+            height: 36px;
+            display: none;
+        }
+        .right_click{
+            position: absolute;
+            width: 100px;
+            display: none;
+        }
+        .right_click span{
+            width: 100px;
+            display: inline-block;
+            font-size: 16px;
+            line-height: 36px;
+        }
+        .save{
+                display: block;
+                padding: 0;
+                border: 0;
+                margin-bottom: 0;
+                text-align: center;
+                cursor: pointer;
+                left: 0;
+                top: 0;
+        }
+    </style>
 
 </head>
 <body>
@@ -82,7 +151,7 @@
                 </el-table-column>
             </el-table>
             <div class='block' style='text-align:right'>
-        <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change1"></el-pagination>
+        <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change"></el-pagination>
             </div>
 
 
@@ -340,8 +409,103 @@
                 </el-form>
             </div>
         </div>
-    </el-card>
 
+        <!-- 场景编排 -->
+
+
+    </el-card>
+    <el-row class="monitor_edit">
+                <el-col :span="22">
+                    <h1 style="rgba(40, 147, 108, 0.45);line-height: 60px;text-align: center">场景编排</h1>
+                </el-col>
+                <el-col :span="2">
+                    <el-col :span="24">
+                        <button @click="monitor_edit_close" style="margin-top: 10px;background: beige;width: 100%;line-height: 50px;border: none;border-radius: 10px;">
+                            <el-col :span="24">
+                                <span class="save" >返回</span>
+                            </el-col>
+                        </button>
+                    </el-col>
+                </el-col>
+                <el-col :span="6">
+                    <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245);position: relative">
+                        <h2 class="monitor_title" style="line-height:48px;background:#283593;text-align: center;color: #ffffff">监控项</h2>
+                        <el-col :span="24">
+                                <h3 @click="monitor_type_switch(1)" class="monitor_type" >基本监控项</h3>
+                        </el-col>
+                        <div class="monitor_list">
+                            <el-col :span="12" v-for="(i,index) in base_monitor" :key="index">
+                                <div @click="add_base_monitor(i)">
+                                    <p>{{ i.monitor_name }}</p>
+                                    <i class="bk-icon icon-monitors"></i>
+                                </div>
+
+                            </el-col>
+                            <el-col :span="24">
+                                <el-pagination :page-count="base_page_count" background layout="prev, pager, next" style="float:right"
+                                       @current-change="current_change1"></el-pagination>
+                            </el-col>
+                        </div>
+                        <el-col :span="24">
+                                <h3 @click="monitor_type_switch(2)" class="monitor_type">图表监控项</h3>
+                        </el-col>
+                        <div class="monitor_list">
+                            <el-col :span="12" v-for="(i,index) in chart_monitor" :key="index">
+                                <div @click="add_chart_monitor(i)">
+                                    <p>{{ i.monitor_name }}</p>
+                                    <i class="bk-icon icon-panel-permission"></i>
+                                </div>
+                            </el-col>
+                            <el-col :span="24">
+                                <el-pagination :page-count="chart_page_count" background layout="prev, pager, next" style="float:right"
+                                   @current-change="current_change2"></el-pagination>
+                            </el-col>
+
+                        </div>
+                        <el-col :span="24">
+                                <h3 @click="monitor_type_switch(3)" class="monitor_type">作业监控项</h3>
+                        </el-col>
+                        <div class="monitor_list">
+                            <el-col :span="12" v-for="(i,index) in job_monitor" :key="index">
+                                <div @click="add_job_monitor(i)">
+                                    <p>{{ i.monitor_name }}</p>
+                                    <i class="bk-icon icon-monitors"></i>
+                                </div>
+                            </el-col>
+                            <el-col :span="24">
+                                <el-pagination :page-count="job_page_count" background layout="prev, pager, next" style="float:right"
+                                   @current-change="current_change3"></el-pagination>
+                            </el-col>
+
+                        </div>
+                        <el-col :span="24">
+                                <h3 @click="monitor_type_switch(4)" class="monitor_type">流程监控项</h3>
+                        </el-col>
+                        <div class="monitor_list">
+                            <el-col :span="12" v-for="(i,index) in flow_monitor" :key="index">
+                                <div @click="add_flow_monitor(i)">
+                                    <p>{{ i.monitor_name }}</p>
+                                    <i class="bk-icon icon-monitors"></i>
+                                </div>
+                            </el-col>
+                            <el-col :span="24">
+                                <el-pagination :page-count="flow_page_count" background layout="prev, pager, next" style="float:right"
+                                   @current-change="current_change4"></el-pagination>
+                            </el-col>
+
+                        </div>
+                        <div style="position: absolute;bottom: 0;right: 0;font-size:30px;width: 100%">
+                            <i class="el-icon-circle-plus-outline"></i>
+                            <i class="el-icon-remove-outline"></i>
+                        </div>
+                    </div>
+
+                </el-col>
+                <el-col :span="18">
+                    <div class="monitor_content" style="min-height: 600px;background: rgb(244, 244, 245)">
+                    </div>
+                </el-col>
+            </el-row>
 </div>
 <script type="text/javascript">
 //csrf验证
@@ -417,7 +581,21 @@
                 scene_endTime:[
                      {type: 'string', required: true, message: '请选择结束时间', trigger: 'change'}
                 ]
-            }
+            },
+            result_list:[],
+            base_page_count:0,
+            chart_page_count:0,
+            job_page_count:0,
+            flow_page_count:0,
+            monitor_type:0,
+            page1:1,
+            limit:4,
+            base_monitor:[],
+            chart_monitor:[],
+            job_monitor:[],
+            flow_monitor:[],
+            drigging_id:1,
+            show_num:0,
 
         },
 
@@ -432,7 +610,8 @@
                                 method: 'post',
                                 url: '${SITE_URL}monitorScene/addSence/',
                                 data: {
-                                    data: vm.scene
+                                    data: vm.scene,
+                                    monitor_data: vm.result_list
                                 }
                             }).then(function (res) {
                                 vm.isAdd = 1;
@@ -443,7 +622,8 @@
                                 method: 'post',
                                 url: '${SITE_URL}monitorScene/editSence/',
                                 data: {
-                                    data: vm.scene_edit
+                                    data: vm.scene_edit,
+                                    monitor_data: vm.result_list
                                 }
                             }).then(function (res) {
                                 vm.isAdd = 1;
@@ -456,7 +636,7 @@
                     }
                 });
             },
-            current_change1(value) {
+            current_change(value) {
                 vm.page = value;
                 vm.paging()
             },
@@ -511,8 +691,17 @@
             hide() {
                 this.isAdd = 1
                 vm.paging()
-            }, goto() {
-                window.location.href = '${SITE_URL}ming'
+            },
+            goto() {
+                $('.monitor_edit').css('display','block');
+                vm.show_num=vm.isAdd;
+                vm.isAdd=0;
+            },
+            monitor_edit_close(){
+                $('.monitor_edit').css('display','none');
+                vm.isAdd=vm.show_num;
+                vm.show_num=0;
+
             },
             a(){
                 scene_name: ''//场景名称
@@ -606,13 +795,259 @@
                 }).then(function(res) {
                        vm.pos = res.data.message
                 })
-            }
+            },
+
+            show1(){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitorScene/scene_show/',
+                    data: {
+                        limit:vm.limit,
+                        type:vm.monitor_type,
+                        page:vm.page1
+                    },
+                }).then((res)=> {
+                    if (vm.monitor_type == 0){
+                        vm.base_monitor=res.data.results.base_list;
+                        vm.chart_monitor=res.data.results.chart_list;
+                        vm.job_monitor=res.data.results.job_list;
+                        vm.flow_monitor=res.data.results.flow_list;
+                        vm.base_page_count=res.data.results.base_list[0].page_count;
+                        vm.chart_page_count=res.data.results.chart_list[0].page_count;
+                        vm.job_page_count=res.data.results.job_list[0].page_count;
+                        vm.flow_page_count=res.data.results.flow_list[0].page_count;
+                    }
+                    else if (vm.monitor_type == 1) {
+                        vm.base_monitor=res.data.results.base_list;
+                        vm.base_page_count=res.data.results.base_list[0].page_count;
+                    }
+                    else if (vm.monitor_type == 2) {
+                        vm.chart_monitor=res.data.results.chart_list;
+                        vm.chart_page_count=res.data.results.chart_list[0].page_count;
+                    }
+                    else if (vm.monitor_type == 3) {
+                        vm.job_monitor=res.data.results.job_list;
+                        vm.job_page_count=res.data.results.job_list[0].page_count;
+                    }
+                    else if (vm.monitor_type == 4) {
+                        vm.flow_monitor=res.data.results.flow_list;
+                        vm.flow_page_count=res.data.results.flow_list[0].page_count;
+                    }
+                });
+            },
+            add_base_monitor(i){
+                console.log(i);
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"basic'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>');
+                base_monitor(i.id,i.font_size,i.height,i.width);
+                vm.drigging_id++
+            },
+            add_chart_monitor(i){
+                console.log(i);
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+i.height+'px;width:'+i.width+'px\"></div><input class="score_input" type="text"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
+                chart_monitor(i.id,i.gather_params,i.height,i.width,vm.drigging_id);
+                vm.drigging_id++
+            },
+            add_job_monitor(i){
+                console.log(i);
+                var job_params={
+                    'job_id':i.id,
+                    'width' :i.width,
+                    'height':i.height,
+                    'status':i.job_status
+                }
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"job'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
+                job_monitor(job_params)
+                vm.drigging_id++
+            },
+            add_flow_monitor(i){
+                console.log(i);
+                let jion_id=[{
+                    "id":i.jion_id
+                }]
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"><div type=\"flow_monitor'+vm.drigging_id+'\"></div></div>')
+                flow_monitor(jion_id,vm.drigging_id)
+                vm.drigging_id++
+            },
+            current_change1(value) {
+                vm.page1 = value;
+                vm.monitor_type=1;
+                vm.show1();
+            },
+            current_change2(value) {
+                vm.page1 = value;
+                vm.monitor_type=2;
+                vm.show1();
+            },
+            current_change3(value) {
+                vm.page1 = value;
+                vm.monitor_type=3;
+                vm.show1();
+            },
+            current_change4(value) {
+                vm.page1 = value;
+                vm.monitor_type=4;
+                vm.show1();
+            },
+            monitor_type_switch(value){
+                vm.monitor_type = value;
+                vm.show1()
+            },
 
 
         }
     });
 
     vm.paging();
+    $('.monitor_type').click(function () {
+        $(this).parent().next('div').animate({
+           height:'toggle'
+        });
+        $(this).parent().next('div').siblings('.monitor_list').animate({
+            height:"hide"
+        });
+    });
+    document.oncontextmenu = function(){
+    　　return false;
+    };
+    $(function () {
+        $('.save').click(function () {
+            var len=$('.Drigging').length;
+            var order,item_id,x,y,score;
+            var scale=1.0,score=0.0;
+                for(var i=0;i<len;i++){
+                     order = $('.Drigging').eq(i).attr('id');
+                     item_id = $('.Drigging').eq(i).attr('name');
+                     x=$('.Drigging').eq(i).position().left;
+                     y=$('.Drigging').eq(i).position().top;
+                     var style=$('.Drigging').eq(i).attr('style');
+                    if(style.indexOf('scale')>-1){
+                        scale= parseFloat(style.split('scale')[1].substring(style.split('scale')[1].indexOf('(')+1,style.split('scale')[1].indexOf(')')));
+                    }
+                    score=$('.Drigging').eq(i).find('.score_input').val();
+                    var data = {
+                        'order':order,
+                        'item_id':item_id,
+                        'x':x,
+                        'y':y,
+                        'scale':scale,
+                        'score':score
+                    };
+                    vm.result_list.push(data);
+                    console.log(order,item_id,x,y,scale,score);
+                }
+                console.log(vm.result_list)
+        })
+    });
+    $(function () {
+    var obox=$('.monitor_content');
+    var selector = '';
+    var flag=false;
+    var x,y;
+    var offsetLeft,offsetTop;
+    var proportion=1;
+    var Multiple = 0;
+    $(document).on("mouseover", ".Drigging", function () {
+        $(this).css('cursor', 'pointer');//当鼠标移动到拖拽目标上的时候，将鼠标的样式设置为移动(move)
+    });
+    $(document).on("mousedown", ".Drigging", function (e) {
+        var e=window.event||e;
+        selector = '#' + this.id;
+        flag = true;//当鼠标在移动元素按下的时候将flag设定为true
+        x = e.clientX;//获取鼠标在当前窗口的相对偏移位置的Left值并赋值给x
+        y = e.clientY;//获取鼠在当前窗口的相对偏移位置的Top值并赋值给y
+        offsetLeft = $(selector).position().left;
+        offsetTop = $(selector).position().top;
+        $(this).css('cursor', 'pointer');
+        console.log(x,y,e.clientX,e.clientY,obox.width(),obox.height(),$(selector).width(),$(selector).height(),offsetLeft,offsetTop);
+    });
+    $(document).on("mouseup", ".Drigging", function () {
+        flag = false;//当鼠标在移动元素起来的时候将flag设定为false
+    });
+    $(document).on("mousedown", ".Drigging", function (e) {//监控项右击显示打分输入框
+        if(e.button == 2){
+            e.preventDefault();
+            var x = e.offsetX + 10;
+            var y = e.offsetY + 10;
+            $(this).find('.right_click').css({
+                left: x,
+                top: y,
+                display: 'block'
+            });
+            $(this).find('.right_click').off();
+            $(this).find('.score').on('click', function(e) {
+                e.stopPropagation();
+                $(selector+' .score_input').css('display', 'block');
+                $('.right_click').css('display', 'none');
+            })
+            $(this).find('.delete').on('click', function(e) {
+                e.stopPropagation();
+                $(this).parent().parent().remove();
+
+            })
+
+        }
+    });
+    $(document).on("blur", ".score_input", function(){//打分输入框失去焦点隐藏
+       $('.score_input').css('display','none');
+    });
+    $(document).mousemove(function (e) {
+        if (!flag)//如果flag为false则返回
+            return;//当flag为true的时候执行下面的代码
+        e.preventDefault();
+        var e=window.event||e;
+        var _x = e.clientX - x + offsetLeft+Math.abs(Multiple)*$(selector).width()*(proportion-1)/2;
+        //event.clientX得到鼠标相对于客户端正文区域的偏移
+        //然后减去offsetX即得到当前推拽元素相对于当前窗口的X值
+        //（减去鼠标刚开始拖动的时候在当前窗口的偏移X）
+        var _y = e.clientY - y + offsetTop+Math.abs(Multiple)*$(selector).height()*(proportion-1)/2;
+        //event.clientY得到鼠标相对于客户端正文区域的偏移
+        //然后减去offsetX即得到当前推拽元素相对于当前窗口的Y值
+        //（减去鼠标刚开始拖动的时候在当前窗口的偏移Y）
+        console.log(_x,_y);
+        if(_x<0){
+            _x=0+$(selector).width()*(proportion-1)/2;
+        }
+        if(_y<0){
+            _y=0+$(selector).height()*(proportion-1)/2;
+        }
+        if(_x>obox.width()-$(selector).width()){
+
+            //_x=obox.width()-$(selector).width();
+            _x=obox.width()-($(selector).width()*(proportion-1)/2+$(selector).width());
+        }
+        if(_y>obox.height()-$(selector).height()){
+            //_y=obox.height()-$(selector).height();
+            _y=obox.height()-($(selector).height()*(proportion-1)/2+$(selector).height());
+        }
+        $(selector).css("left", _x);
+        $(selector).css("top", _y);
+        $(selector).css('cursor', 'pointer');
+
+
+    });
+    $('.el-icon-circle-plus-outline').click(function () {
+        if(Multiple<2) {
+            proportion = proportion + 0.1;
+            $('.monitor_content').find('.Drigging').css('transform', 'scale(' + proportion + ')');
+            Multiple++;
+            console.log(proportion, Multiple);
+        }else {
+            return
+        }
+    });
+    $('.el-icon-remove-outline').click(function () {
+        if(Multiple>-2){
+           proportion=proportion-0.1;
+        $('.monitor_content').find('.Drigging').css('transform','scale('+proportion+')');
+        $('.monitor_content').find('canvas').css('transform','scale('+proportion+')');
+        Multiple--;
+        console.log(proportion,Multiple);
+        }else {
+            return
+        }
+
+    });
+});
 </script>
 
 <script>

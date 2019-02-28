@@ -81,7 +81,7 @@
 <div id="app" style="width: 100%;height: auto;min-height: 600px">
     <el-row>
         <el-col :span="24">
-            <h1 style="rgba(40, 147, 108, 0.45);line-height: 60px;text-align: center">场景编排<span style="background:beige;float: right">返回</span></h1>
+            <h1 style="rgba(40, 147, 108, 0.45);line-height: 60px;text-align: center">场景编排<span class="save" style="background:beige;float: right">返回</span></h1>
         </el-col>
         <el-col :span="6">
             <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245);position: relative">
@@ -229,13 +229,13 @@
             },
             add_base_monitor(i){
                 console.log(i);
-                $('.monitor_content').append('<div class=\"Drigging\" type=\"basic'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>');
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"basic'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>');
                 base_monitor(i.id,i.font_size,i.height,i.width);
                 vm.drigging_id++
             },
             add_chart_monitor(i){
                 console.log(i);
-                $('.monitor_content').append('<div class=\"Drigging\" id=\"'+vm.drigging_id+'\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+i.height+'px;width:'+i.width+'px\"></div><input class="score_input" type="text"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+i.height+'px;width:'+i.width+'px\"></div><input class="score_input" type="text"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
                 chart_monitor(i.id,i.gather_params,i.height,i.width,vm.drigging_id);
                 vm.drigging_id++
             },
@@ -247,7 +247,7 @@
                     'height':i.height,
                     'status':i.job_status
                 }
-                $('.monitor_content').append('<div class=\"Drigging\" type=\"job'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"job'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
                 job_monitor(job_params)
                 vm.drigging_id++
             },
@@ -256,7 +256,7 @@
                 let jion_id=[{
                     "id":i.jion_id
                 }]
-                $('.monitor_content').append('<div class=\"Drigging\" id=\"'+vm.drigging_id+'\"><div type=\"flow_monitor'+vm.drigging_id+'\"></div></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"><div type=\"flow_monitor'+vm.drigging_id+'\"></div></div>')
                 flow_monitor(jion_id,vm.drigging_id)
                 vm.drigging_id++
             },
@@ -299,9 +299,16 @@
     　　return false;
     };
     $(function () {
-        $('.Drigging').each(function () {
+        $('.save').click(function () {
+            $('.Drigging').each(function () {
+                var order = this.id;
+                var item_id = $(this).attr('name');
+                var x=$(this).position().left;
+                var y=$(this).position().top;
+                console.log(order,item_id,x,y);
+            });
+        })
 
-        });
     });
     $(function () {
     var obox=$('.monitor_content');
