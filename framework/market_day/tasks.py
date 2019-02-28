@@ -19,6 +19,7 @@ import market_day.celery_opt as co
 from account.models import BkUser
 from blueking.component.shortcuts import get_client_by_user
 from datetime import datetime
+from customProcess.function import clear_execute_status
 
 @task
 def crawl_task(**i):
@@ -167,6 +168,11 @@ def start_flow_task(**info):
 @task
 def count_time(**i):
     return i['x'] * i['y']
+
+@periodic_task(run_every=crontab(hour=0,minute=0))
+def clear_status_task():
+    print '开始清理状态'
+    clear_execute_status()
 
 
 
