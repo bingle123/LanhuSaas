@@ -368,7 +368,6 @@ def execute_script(client, script_content, script_params, item_id, execute_type,
         'script_content': script_content,
         'script_param': script_params,
         'account': 'root',
-        'script_type': 1,
         'ip_list': [
             {
                 'bk_cloud_id': cloud_id,
