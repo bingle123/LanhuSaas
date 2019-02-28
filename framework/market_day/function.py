@@ -1,6 +1,6 @@
 #!usr/bin/ebv python
 # -*- coding:utf-8 -*-
-from models import Holiday,HeaderData
+from models import Holiday,HeaderData,Area
 import os
 from xlrd import open_workbook
 from framework.conf import default
@@ -49,12 +49,18 @@ def delall(req,area):
     return flag
 
 
-def delone(req, date,area):
+def delone(req):
+    res=json.loads(req.body)
+    date=res['date']
+    area=res['area']
     flag = Holiday.objects.filter(Q(day=date)& Q(area=int(area))).update(flag=1)
     return flag
 
 
-def addone(req, date):
+def addone(req):
+    res = json.loads(req.body)
+    date = res['date']
+    area = res['area']
     flag = Holiday.objects.filter(Q(day=date)& Q(area=int(area))).update(flag=0)
     return flag
 
@@ -161,3 +167,26 @@ def get_header_data(request):
     headers["X-CSRFToken"] = csrftoken;
     h.header=json.dumps(headers, ensure_ascii=False)
     h.save()
+
+def add_area(req):
+    res=json.loads(req.body)
+    name=res['country']
+    timezone=res['timezone']
+    a,flag=Area.objects.get_or_create(country=name)
+    a.timezone=timezone
+    a.save()
+    return 'ok'
+
+def get_all_area(req):
+    areas=Area.objects.all()
+    area_dict=[]
+    for a in areas:
+        area_dict.append(model_to_dict(a))
+    return area_dict
+
+def del_area(name):
+    a=Area.objects.get(country=name)
+    id=a.id
+    a.delete()
+    Holiday.objects.filter(area=id).delete()
+    return 'ok'

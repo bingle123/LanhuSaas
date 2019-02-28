@@ -13,18 +13,88 @@ var vm = new Vue({
         historyChose: [],
         dateTop: '',
         loading2: true,
-        options: [{
-          value: 1,
-          area: '中国'
-        }, {
-          value: 2,
-          area: '美国'
-        }, {
-          value: 3,
-          area: '日本'
-        }],
+        areas: [],
         area:1,
-        file_url:'/market_day/get_file/1'
+        country:'',
+        file_url:'/market_day/get_file/1',
+        zones:[
+            {
+                value:'UTC+12',
+                label:'东西十二区'
+            },
+            {
+                value:'UTC+11',
+                label:'东十一区'
+            },{
+                value:'UTC+10',
+                label:'东十区'
+            },{
+                value:'UTC+9',
+                label:'东九区'
+            },{
+                value:'UTC+8',
+                label:'东八区'
+            },{
+                value:'UTC+7',
+                label:'东七区'
+            },{
+                value:'UTC+6',
+                label:'东六区'
+            },{
+                value:'UTC+5',
+                label:'东五区'
+            },{
+                value:'UTC+4',
+                label:'东四区'
+            },{
+                value:'UTC+3',
+                label:'东三区'
+            },{
+                value:'UTC+2',
+                label:'东二区'
+            },{
+                value:'UTC+1',
+                label:'东一区'
+            },{
+                value:'UTC+0',
+                label:'中时区'
+            },
+            {
+                value:'UTC-11',
+                label:'西十一区'
+            },{
+                value:'UTC-10',
+                label:'西十区'
+            },{
+                value:'UTC-9',
+                label:'西九区'
+            },{
+                value:'UTC-8',
+                label:'西八区'
+            },{
+                value:'UTC-7',
+                label:'西七区'
+            },{
+                value:'UTC-6',
+                label:'西六区'
+            },{
+                value:'UTC-5',
+                label:'西五区'
+            },{
+                value:'UTC-4',
+                label:'西四区'
+            },{
+                value:'UTC-3',
+                label:'西三区'
+            },{
+                value:'UTC-2',
+                label:'西二区'
+            },{
+                value:'UTC-1',
+                label:'西一区'
+            }
+            ],
+        zone:''
     },
     props: {
         markDate: {
@@ -76,7 +146,14 @@ var vm = new Vue({
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.post('/market_day/delone/' + item.date+'/'+vm.area).then(function (resp) {
+                    axios({
+                        method:'post',
+                        url:'/market_day/delone/',
+                        data:{
+                            'date':item.date,
+                            'timezone': vm.zone
+                        }
+                    }).then(function (resp) {
                         vm.$message({
                             type: 'success',
                             message: '删除成功!'
@@ -99,18 +176,20 @@ var vm = new Vue({
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    axios.post('/market_day/addone/' + item.date+'/'+vm.area).then(function (resp) {
+                    axios({
+                        method:'post',
+                        url:'/market_day/addone/',
+                        data:{
+                            'date':item.date,
+                            'timezone': vm.zone
+                        }
+                    }).then(function (resp) {
                         vm.$message({
                             type: 'success',
                             message: '添加成功!'
                         });
                         vm.markDate.push(item.date)
                     })
-                }).catch(() => {
-                    vm.$message({
-                        type: 'info',
-                        message: '已取消添加'
-                    });
                 })
             }
             if (item.otherMonth === 'nowMonth' && !item.dayHide) {
@@ -204,7 +283,6 @@ var vm = new Vue({
         addarrs() {
             year = new Date().getFullYear()
             var vm=this
-            console.log(vm.area)
             axios.get('/market_day/get_holiday/'+vm.area).then(function (res) {
                 for (var i = 0; i < res.data.message.length; i++) {
                     vm.markDate.push(res.data.message[i])
@@ -214,7 +292,6 @@ var vm = new Vue({
         },
         get_header_data(){
             axios.get('/market_day/get_header/').then(function (res) {
-               console.log(res)
             })
         },
         upsuccess() {
@@ -226,7 +303,7 @@ var vm = new Vue({
             vm.addarrs()
         },
         get_file_url(){
-          return vm.file_url
+          return this.file_url
         },
         err() {
             this.$message({
@@ -253,12 +330,67 @@ var vm = new Vue({
                     message: '已取消删除'
                 });
             })
+        },
+        get_all_area(){
+            axios({
+                method:'get',
+                url:'/market_day/get_all_area',
+            }).then(function (res) {
+                res=res.data.message
+                vm.areas=[]
+                for (var i=0;i<res.length;i++){
+                    var label=res[i].country+"("+res[i].timezone+")"
+                    temp={
+                        'area':label,
+                        'value':res[i].id
+                    }
+                    vm.areas.push(temp)
+                }
+            })
+        },add_area(){
+            axios({
+                method: 'post',
+                url:'/market_day/add_area',
+                data:{
+                    'country':vm.country,
+                    'timezone':vm.zone
+                }
+            }).then(function (res) {
+                vm.$message({
+                    type: 'info',
+                    message: '添加地区成功!'
+                });
+                vm.get_all_area()
+            })
+        },del_area(){
+            this.$confirm('此操作将删除该地区以及所有节假日, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                    axios({
+                    method: 'get',
+                    url:'/market_day/del_area/'+vm.country,
+                }).then(function (res) {
+                    vm.$message({
+                        type: 'info',
+                        message: '删除地区成功!'
+                    });
+                    window.location.reload()
+                })
+            }).catch(() => {
+                vm.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });
+            })
         }
     },
     mounted() {
         this.addarrs();
         this.getList(this.myDate);
         this.get_header_data()
+        this.get_all_area()
     },
     watch: {
         markDate: {

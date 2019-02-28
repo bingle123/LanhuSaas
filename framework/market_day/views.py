@@ -34,20 +34,20 @@ def delall(req,area):
     add_log(info)
     return render_json(flag)
 
-def delone(req,date,area):
+def delone(req):
     try:
-        flag=function.delone(req,date,area)
+        function.delone(req)
         info = make_log_info(u'变更为交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
                              get_active_user(req)['data']['bk_username'], '成功', '无')
     except Exception as e:
         info = make_log_info(u'变更为交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
                              get_active_user(req)['data']['bk_username'], '失败', repr(e))
     add_log(info)
-    return render_json(flag)
+    return render_json('ok')
 
-def addone(req,date,area):
+def addone(req):
     try:
-        function.addone(req,date,area)
+        function.addone(req)
         info = make_log_info(u'取消交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
                              get_active_user(req)['data']['bk_username'], '成功', '无')
     except Exception as e:
@@ -99,6 +99,18 @@ def cedemo(req):
 def get_data_header(req):
     function.get_header_data(req)
     return HttpResponse('ok')
+
+def add_area(req):
+    res=function.add_area(req)
+    return render_json(res)
+
+def get_all_area(req):
+    res=function.get_all_area(req)
+    return render_json(res)
+
+def del_area(req,name):
+    res=function.del_area(name)
+    return render_json(res)
 
 
 
