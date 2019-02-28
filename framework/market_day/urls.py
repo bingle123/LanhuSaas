@@ -12,6 +12,7 @@ urlpatterns = patterns(
     url(r'addone',views.addone),
     url(r'get_header',views.get_data_header),
     url(r'add_area',views.add_area),
+    url(r'get_all_timezone',views.get_all_timezone),
     url(r'get_all_area',views.get_all_area),
     url(r'del_area/(.+)',views.del_area)
 )

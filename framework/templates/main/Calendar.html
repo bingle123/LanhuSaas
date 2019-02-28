@@ -28,14 +28,14 @@
             </el-col>
             <el-col>
                 <el-input
-              placeholder="请输入国家"
+              placeholder="请输入地区"
               v-model="country"
               clearable>
                 </el-input>
             </el-col>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <el-col>
-                <el-select v-model="zone" placeholder="请选择国家的时区">
+                <el-select v-model="zone" filterable placeholder="请选择国家的时区">
                 <el-option
                   v-for="item in zones"
                   :key="item.value"
