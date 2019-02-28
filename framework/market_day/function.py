@@ -11,6 +11,8 @@ import celery_opt as co
 import json
 import tasks
 import json
+from datetime import datetime
+import pytz
 
 
 def get_holiday(req,area):
@@ -34,6 +36,7 @@ def get_file(req,area):
                 f.close()
             workbook = open_workbook(path)
             sheet = workbook.sheet_by_index(0)
+            delall(area)
             for i in range(1, sheet.nrows):
                 day = str(sheet.row_values(i)[0])
                 d = day[0:4] + u'/' + str(int(day[4:6])) + u'/' + str(int(day[6:8]))
@@ -44,7 +47,7 @@ def get_file(req,area):
             print '文件不匹配'
 
 
-def delall(req,area):
+def delall(area):
     flag = Holiday.objects.filter(area=int(area)).delete()
     return flag
 
@@ -190,3 +193,7 @@ def del_area(name):
     a.delete()
     Holiday.objects.filter(area=id).delete()
     return 'ok'
+
+def get_all_timezone():
+    all=pytz.common_timezones
+    return all
