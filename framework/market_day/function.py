@@ -195,3 +195,18 @@ def del_area(name):
 def get_all_timezone():
     all=pytz.common_timezones
     return all
+
+def check_jobday(id):
+    timezone=Area.objects.get(id=id).timezone
+    tz=pytz.timezone(timezone)
+    now=datetime.now(tz)
+    str_date=datetime.strftime(now,'%Y/%m/%d')
+    day=str_date[:4] + u'/' + str(int(str_date[5:7])) + u'/' + str(int(str_date[8:10]))
+    hs=Holiday.objects.filter(Q(day=day)&Q(area=id))
+    flag=0
+    for h in hs:
+        flag=h.flag
+    if flag==1:
+        return True
+    elif flag==2:
+        return False

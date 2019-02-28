@@ -286,6 +286,7 @@ var vm = new Vue({
                     message: '添加地区成功!'
                 });
                 vm.get_all_area()
+                vm.dialogVisible=false
             })
         },del_area(){
             this.$confirm('此操作将删除该地区以及所有节假日, 是否继续?', '提示', {
