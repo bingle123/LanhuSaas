@@ -117,6 +117,7 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="changePage"></el-pagination>
     </el-card>
     <!--end 卡片 列表页-->
 
@@ -274,6 +275,8 @@
                 receivers: '',
                 url_pre: '',
             },
+            page_count:100,
+            page:1,
         },
         methods: {
             changeDiaLog() {//跳转爬虫配置新增页面
@@ -282,6 +285,7 @@
                 this.loading = false;
                 this.message = '新增';
                 this.crawl_form.id = '';
+                vm.initHtml();
             },
             editCrawl(res) {//跳转爬虫配置编辑页面
                 this.changeDiaLog();
@@ -386,15 +390,21 @@
                 })
 
             },
+            changePage(value) {
+                vm.page = value;
+                vm.initHtml()
+            },
             initHtml() {
                 axios({
                     url: '${SITE_URL}system_config/get_crawls/',
-                    methods: 'post',
+                    method: 'post',
+                    data:{page:vm.page,limit:2}
                 }).then((res) => {
                     console.log(res);
                     if (res.data.code == 0) {
                         console.log(res.data.results);
                         vm.crawl_table = res.data.results;
+                        vm.page_count = res.data.results[0]['page_count']
                     } else {
                         vm.$message({
                             type: 'info',
