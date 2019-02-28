@@ -371,7 +371,7 @@
                 axios({
                     url: '${SITE_URL}system_config/get_crawl_by_name/',
                     method: 'post',
-                    data: this.crawl_search.name
+                    data: {'keyword':this.crawl_search.name,page:vm.page,limit:2}
                 }).then((res) => {
                     if (res.data.code == 0) {
                         vm.crawl_table = res.data.results;
@@ -392,7 +392,7 @@
             },
             changePage(value) {
                 vm.page = value;
-                vm.initHtml()
+                vm.get_crawl_by_name()
             },
             initHtml() {
                 axios({
