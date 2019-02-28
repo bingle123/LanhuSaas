@@ -17,7 +17,7 @@ from gatherData.function import gather_data
 
 
 def monitor_show(request):
-    monitor = Scene.objects.all ()
+    monitor = Scene.objects.all()
     res_list = []
     for i in monitor:
         dic = {
@@ -165,6 +165,9 @@ def scene_data(id):
         for i in obj:
             data_dic = model_to_dict(i)
             data_dic['scale'] = str(i.scale)
+            monitor_data = Monitor.objects.filter(id=data_dic['item_id'])
+            for i in monitor_data:
+                data_dic['monitor_type'] = i.monitor_type
             data_list.append(data_dic)
         res = tools.success_result(data_list)
     except Exception as e:
@@ -173,7 +176,7 @@ def scene_data(id):
 
 
 def pos_name(request):
-    job = JobInstance.objects.all ()
+    job = JobInstance.objects.all()
     res_list = []
     for i in job:
         dic = {
