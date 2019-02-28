@@ -81,7 +81,7 @@
 <div id="app" style="width: 100%;height: auto;min-height: 600px">
     <el-row>
         <el-col :span="24">
-            <h1 style="rgba(40, 147, 108, 0.45);line-height: 60px;text-align: center">场景编排</h1>
+            <h1 style="rgba(40, 147, 108, 0.45);line-height: 60px;text-align: center">场景编排<span style="background:beige;float: right">返回</span></h1>
         </el-col>
         <el-col :span="6">
             <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245);position: relative">
@@ -297,7 +297,12 @@
     });
     document.oncontextmenu = function(){
     　　return false;
-    }
+    };
+    $(function () {
+        $('.Drigging').each(function () {
+
+        });
+    });
     $(function () {
     var obox=$('.monitor_content');
     var selector = '';
