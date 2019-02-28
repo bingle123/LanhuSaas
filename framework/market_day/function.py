@@ -188,10 +188,8 @@ def get_all_area(req):
     return area_dict
 
 def del_area(name):
-    a=Area.objects.get(country=name)
-    id=a.id
-    a.delete()
-    Holiday.objects.filter(area=id).delete()
+    Area.objects.get(id=name).delete()
+    Holiday.objects.filter(area=name).delete()
     return 'ok'
 
 def get_all_timezone():
