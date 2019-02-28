@@ -89,11 +89,9 @@ def crawl_task(**i):
 #基本监控项和图标监控项的采集task
 @task
 def gather_data_task_one(**i):
-    print '采集开始'
-    print i['gather_rule']
+
     # 调用基本监控项和图标监控项数据采集的方法
     function.gather_data(**i)
-    return '采集成功'
 
 #作业监控项的采集task
 @task
@@ -173,6 +171,7 @@ def count_time(**i):
 def clear_status_task():
     print '开始清理状态'
     clear_execute_status()
+
 
 
 

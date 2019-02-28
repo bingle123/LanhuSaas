@@ -44,41 +44,40 @@ def monitor_show(request):
 
 
 def addSence(request):
-# try:
-    res = request.body
-    senceModel = json.loads (res)
-    senceModel2 = {
-        "scene_name": senceModel['data']['scene_name'],
-        "scene_startTime": senceModel['data']["scene_startTime"],
-        "scene_endTime": senceModel['data']["scene_endTime"],
-        "scene_creator": "admin"
-    }
-    Scene.objects.create (**senceModel2)
-    id = Scene.objects.last ()
-    senceModel3 = {
-        "scene": id,
-        "position_id": senceModel['data']["pos_name"]
-    }
-    position_scene.objects.create (**senceModel3)
-    for i in senceModel['monitor_data']:
-        print(i)
-        monitor_data = {
-            'scene_id': id.id,
-            'item_id': int(i['item_id']),
-            'x': int(i['x']),
-            'y': int(i['y']),
-            'scale': i['scale'],
-            'score': int(i['score']),
-            'order': int(i['order'])
+    try:
+        res = request.body
+        senceModel = json.loads (res)
+        senceModel2 = {
+            "scene_name": senceModel['data']['scene_name'],
+            "scene_startTime": senceModel['data']["scene_startTime"],
+            "scene_endTime": senceModel['data']["scene_endTime"],
+            "scene_creator": "admin"
         }
-    Scene_monitor.objects.create (**monitor_data)
-    # info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-    #                      get_active_user(request)['data']['bk_username'], '成功', '无')
-    # except Exception as e:
-    #     info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-    #                           get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    # add_log(info)
-
+        Scene.objects.create (**senceModel2)
+        id = Scene.objects.last ()
+        senceModel3 = {
+            "scene": id,
+            "position_id": senceModel['data']["pos_name"]
+        }
+        position_scene.objects.create (**senceModel3)
+        for i in senceModel['monitor_data']:
+            print(i)
+            monitor_data = {
+                'scene_id': id.id,
+                'item_id': int(i['item_id']),
+                'x': int(i['x']),
+                'y': int(i['y']),
+                'scale': i['scale'],
+                'score': int(i['score']),
+                'order': int(i['order'])
+            }
+            Scene_monitor.objects.create (**monitor_data)
+        info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
     return None
 
 
@@ -157,6 +156,16 @@ def editSence(request):
                                get_active_user (request)['data']['bk_username'], '失败', repr (e))
         add_log (info2)
     return None
+
+
+def scene_data(id):
+
+    obj = Scene_monitor.objects.filter(scene_id=id)
+    data_list = []
+    for i in obj:
+        data_list.append(i)
+    res = tools.success_result(data_list)
+    return res
 
 
 def pos_name(request):

@@ -682,11 +682,22 @@
                 vm.scene_edit.pos_name =  row.pos_name
                 this.isAdd = 3
                 vm.sen_position()
+                vm.monitore_edit_start(row.id)
                 setTimeout(function () {
                     vm.Time()
 
                 }, 100)
 
+            },
+            monitore_edit_start(value){
+
+                axios({
+                    method:'post',
+                    url:'${SITE_URL}monitorScene/scene_data/',
+                    data:value,
+                }).then(function (res) {
+                    console.log(res);
+                })
             },
             hide() {
                 this.isAdd = 1
@@ -916,6 +927,7 @@
             var len=$('.Drigging').length;
             var order,item_id,x,y,score;
             var scale=1.0,score=0.0;
+            vm.result_list=[];
                 for(var i=0;i<len;i++){
                      order = $('.Drigging').eq(i).attr('id');
                      item_id = $('.Drigging').eq(i).attr('name');
