@@ -25,30 +25,10 @@
                   :value="item.value">
                 </el-option>
           </el-select>
+                 <el-button type="danger" icon="el-icon-delete" @click="del_area" circle></el-button>
             </el-col>
             <el-col>
-                <el-input
-              placeholder="请输入地区"
-              v-model="country"
-              clearable>
-                </el-input>
-            </el-col>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <el-col>
-                <el-select v-model="zone" filterable placeholder="请选择国家的时区">
-                <el-option
-                  v-for="item in zones"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-          </el-select>
-            </el-col>
-            <el-col>
-                <el-button type="success" icon="el-icon-check" @click="add_area" circle></el-button>
-            </el-col>
-            <el-col>
-                <el-button type="danger" icon="el-icon-delete" @click="del_area" circle></el-button>
+                <el-button type="success" @click="dialogVisible=true" plain>添加日历地区</el-button>
             </el-col>
         </el-row>
         <div class="wh_content_all" v-loading="loading2" element-loading-text="拼命加载中"
@@ -95,7 +75,34 @@
         </div>
     </section>
     <br/>
-
+    <el-dialog
+  title="添加地区"
+  :visible.sync="dialogVisible"
+  width="40%" height="30%">
+        <el-row type="flex" jusitify="left">
+            <el-col>
+                <el-input
+              placeholder="请输入地区"
+              v-model="country"
+              clearable>
+                </el-input>
+            </el-col>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <el-col>
+                <el-select v-model="zone" filterable placeholder="请选择国家的时区">
+                <el-option
+                  v-for="item in zones"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+                </el-option>
+          </el-select>
+            </el-col>
+        </el-row>
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="add_area">添加</el-button>
+  </span>
+    </el-dialog>
 </div>
 <script src="${STATIC_URL}js/calendar.js" type="text/javascript" charset="utf-8"></script>
 </body>

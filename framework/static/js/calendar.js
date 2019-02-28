@@ -18,7 +18,8 @@ var vm = new Vue({
         country:'',
         file_url:'/market_day/get_file/1',
         zones:[],
-        zone:''
+        zone:'',
+        dialogVisible: false
     },
     props: {
         markDate: {
@@ -294,7 +295,7 @@ var vm = new Vue({
             }).then(() => {
                     axios({
                     method: 'get',
-                    url:'/market_day/del_area/'+vm.country,
+                    url:'/market_day/del_area/'+vm.area,
                 }).then(function (res) {
                     vm.$message({
                         type: 'info',
