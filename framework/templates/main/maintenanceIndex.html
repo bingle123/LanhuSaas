@@ -348,10 +348,10 @@
                         ve.selector_type = 'flow_monitor' + ve.drigging_id
                         ve.selector_canvas = 'canvas' + ve.drigging_id
                         ve.selector_template = 'template' + ve.drigging_id
-                        //$('#mychart').append("<type =\"" + ve.selector_type + "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"></div>");
-                        $('#mychart').append("<div id=\"" + ve.selector_id + "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\">" +
-                            "<div id=\"" + ve.selector_canvas+ "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"></div>" +
-                            "<div id=\"" + ve.selector_template+ "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"></div></div>");
+                        $('#mychart').append("<type =\"" + ve.selector_type + "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"></div>");
+                        //$('#mychart').append("<div id=\"" + ve.selector_id + "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\">" +
+                           // "<div id=\"" + ve.selector_canvas+ "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"></div>" +
+                           // "<div id=\"" + ve.selector_template+ "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"></div></div>");
                         flow_monitor([{"id": ve.items_data[i]['jion_id']}], ve.drigging_id)
 
                     } else {
