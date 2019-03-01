@@ -159,17 +159,19 @@ def editSence(request):
 
 
 def scene_data(id):
-    try:
-        obj = Scene_monitor.objects.filter(scene_id=id)
-        data_list = []
-        for i in obj:
-            data_dic = model_to_dict(i)
-            data_dic['scale'] = str(i.scale)
-            monitor_data = Monitor.objects.filter(id=data_dic['item_id'])
-            data_list.append(data_dic)
-        res = tools.success_result(data_list)
-    except Exception as e:
-        res = tools.error_result(e)
+# try:
+    obj = Scene_monitor.objects.filter(scene_id=id)
+    data_list = []
+    for i in obj:
+        data_dic = model_to_dict(i)
+        data_dic['scale'] = str(i.scale)
+        monitor_data = Monitor.objects.filter(id=data_dic['item_id'])
+        for i in monitor_data:
+            data_dic['monitor_type'] = i.monitor_type
+        data_list.append(data_dic)
+    res = tools.success_result(data_list)
+    # except Exception as e:
+    #     res = tools.error_result(e)
     return res
 
 
@@ -288,9 +290,22 @@ def scene_show(res):
 
 def monitor_scene_show(id):
     obj = Monitor.objects.filter(id=id)
+    data_list = []
     for i in obj:
-        print(i)
-    return None
+        x = model_to_dict(i)
+        x['edit_time'] = str(i.edit_time)
+        x['create_time'] = str(i.create_time)
+        x['start_time'] = str(i.start_time)
+        x['end_time'] = str(i.end_time)
+        if x['monitor_type'] == u'作业单元类型':
+            job_status = Job.objects.filter (job_id=i['jion_id']).last().status
+        else:
+            job_status = 0
+        x['job_status'] = job_status
+        print(x)
+        data_list.append(x)
+    res = tools.success_result(data_list)
+    return res
 
 
 
