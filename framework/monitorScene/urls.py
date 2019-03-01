@@ -24,11 +24,10 @@ urlpatterns = patterns(
     (r'^pos_name/$', 'pos_name'),
     (r'^paging/$', 'paging'),
     (r'^scene_show/$', 'scene_show'),                        #场景展示
-    (r'^add_scene/$', 'add_scene'),                         #场景保存
+    #(r'^add_scene/$', 'add_scene'),                         #场景保存
     (r'get_chart_data/(.+)$','get_chart_data'),
     (r'^getSceneByid/(.+)/$','getBySceneId'),   #根据Id获取场景详情
     (r'get_basic_data/(.+)$','get_basic_data'),
-    (r'^get_scenes/$', 'get_scenes'),
     (r'^alternate_play/$', 'alternate_play'),
     (r'^alternate_play_test/$', 'alternate_play_test'),
     (r'^scene_data/$', 'scene_data'),
