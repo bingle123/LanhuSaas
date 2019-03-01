@@ -68,6 +68,10 @@ def getBySceneId(request,id):
     return render_json(res)
 
 
-def get_scenes(request):
-    res = function.get_scenes(request)
+def alternate_play(request):
+    res = function.alternate_play(request)
+    return render_json(res)
+
+def alternate_play_test(request):
+    res = function.alternate_play_test(request)
     return render_json(res)
