@@ -4,13 +4,14 @@
 
     <meta charset="utf-8">
     <title>title</title>
+    <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
 
     <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
     <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
     <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
     <link type="text/css" href="${STATIC_URL}css/monitorScene/style.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/v-charts/lib/index.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
     <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
@@ -24,7 +25,7 @@
     <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
      <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
-    <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
+
     <style>
         .content{
             position: relative;
@@ -503,6 +504,7 @@
                 </el-col>
                 <el-col :span="18">
                     <div class="monitor_content" style="min-height: 600px;background: rgb(244, 244, 245)">
+
                     </div>
                 </el-col>
             </el-row>
@@ -598,6 +600,8 @@
             drigging_id:1,
             show_num:0,
             monitor_data:[],
+            scale:1,
+            multiple:1,
 
         },
 
@@ -632,6 +636,7 @@
                                 vm.select_table()
                             })
                         }
+                        $('.monitor_content').html('');
                     } else {
                         console.log('提交失败!!');
                         return false;
@@ -699,80 +704,96 @@
                     data:value,
                 }).then(function (res) {
                     vm.result_list_edit=res.data.results;
-                    console.log(vm.result_list_edit);
+                    vm.scale=parseFloat(res.data.results[0].scale);
+                    console.log(vm.scale)
+                    vm.multiple = Math.round((vm.scale-1)*10);
+                    console.log(vm.multiple);
                 })
             },
             hide() {
-                this.isAdd = 1
-                vm.paging()
+                this.isAdd = 1;
+                vm.paging();
+                $('.monitor_content').html('');
             },
-            goto() {
-                $('.monitor_edit').css('display','block');
-                vm.show_num=vm.isAdd;
-                vm.isAdd=0;
-                let result_list_edit=vm.result_list_edit;
-                let max=0;
-                for(var i=0;i<result_list_edit.length;i++){
-                    if(max<result_list_edit[i].order){
-                        max=result_list_edit[i].order;
-                    }
-                    if(result_list_edit[i].monitor_type=='基本单元类型'){
-                        $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"basic'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\"></div>');
-                        var monitor_data=[];
-                        axios({
-                            method:'post',
-                            url:'${SITE_URL}monitorScene/monitor_scene_show/',
-                            data:result_list_edit[i].item_id,
-                        }).then(function (res) {
-                            vm.monitor_data=res.data.results;
-                            console.log(vm.monitor_data);
-                            base_monitor(vm.monitor_data[0].item_id,vm.monitor_data[0].font_size,vm.monitor_data[0].height,vm.monitor_data[0].width,vm.monitor_data[0].contents);
-                        });
-                    }
-                    if(result_list_edit[i].monitor_type=='图表单元类型'){
-                        axios({
-                            method:'post',
-                            url:'${SITE_URL}monitorScene/monitor_scene_show/',
-                            data:result_list_edit[i].item_id,
-                        }).then(function (res) {
-                            vm.monitor_data=res.data.results[0];
-                        });
-                        $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\"><div id=\"chart'+result_list_edit[i].item_id+'\" style=\"background:beige;height:'+monitor_data.height+'px;width:'+monitor_data.width+'px\"></div><input class="score_input" type="text"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
-                        show_chart(result_list_edit[i].item_id,vm.monitor_data.gather_params,vm.monitor_data.height,vm.monitor_data.width,result_list_edit[i].order,vm.monitor_data.contents);
-                    }
-                    if(result_list_edit[i].monitor_type=='作业单元类型'){
-                        axios({
-                            method:'post',
-                            url:'${SITE_URL}monitorScene/monitor_scene_show/',
-                            data:result_list_edit[i].item_id,
-                        }).then(function (res) {
-                            vm.monitor_data=res.data.results[0];
-                        });
-                        let job_params=vm.monitor_data;
-                        $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"job'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\"></div>');
-                        job_monitor(job_params);
-                    }
-                    if(result_list_edit[i].monitor_type=='流程单元类型'){
-                        axios({
-                            method:'post',
-                            url:'${SITE_URL}monitorScene/monitor_scene_show/',
-                            data:result_list_edit[i].item_id,
-                        }).then(function (res) {
-                            vm.monitor_data=res.data.results[0];
-                        });
-                        $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"><div type=\"flow_monitor'+vm.drigging_id+'\"></div></div>');
-                        flow_monitor(result_list_edit[i].item_id,result_list_edit[i].order);
-                    }
+            async goto() {
+                if($('.monitor_content').html()==''){
+                    $('.monitor_edit').css('display','block');
+                    vm.show_num=vm.isAdd;
+                    vm.isAdd=0;
+                    let result_list_edit=vm.result_list_edit;
+                    let max=0;
+                    let index=0;
+                    for(var i=0;i<result_list_edit.length;i++){
+                        if(max<result_list_edit[i].order){
+                            max=result_list_edit[i].order;
+                        }
+                        if(result_list_edit[i].monitor_type=='基本单元类型'){
+                            let res = await axios({
+                                method:'post',
+                                url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                                data:result_list_edit[i].item_id,
+                            })
+                            vm.monitor_data = res.data.results;
+                            $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"basic'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"></div>');
+                            base_monitor(vm.monitor_data[0].id,vm.monitor_data[0].font_size,vm.monitor_data[0].height,vm.monitor_data[0].width,vm.monitor_data[0].contents);
 
+
+
+
+                        }
+                        if(result_list_edit[i].monitor_type=='图表单元类型'){
+                            let res = await axios({
+                                method:'post',
+                                url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                                data:result_list_edit[i].item_id,
+                            })
+                            vm.monitor_data = res.data.results;
+                            console.log(vm.monitor_data[0])
+                            $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px;top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"><div id=\"chart'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
+                            show_chart(vm.monitor_data[0].id, vm.monitor_data[0].gather_params, vm.monitor_data[0].height, vm.monitor_data[0].width, result_list_edit[i].order, vm.monitor_data[0].contents);
+
+                        }
+                        if(result_list_edit[i].monitor_type=='作业单元类型'){
+                            let res = await axios({
+                                method:'post',
+                                url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                                data:result_list_edit[i].item_id,
+                            });
+                            vm.monitor_data = res.data.results;
+                            console.log(result_list_edit[i],vm.monitor_data)
+                            let job_params = vm.monitor_data[0];
+                            $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"job'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"></div>');
+                            job_monitor(job_params);
+                        }
+                        if(result_list_edit[i].monitor_type=='流程单元类型'){
+                            let res = await axios({
+                                method:'post',
+                                url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                                data:result_list_edit[i].item_id,
+                            })
+                            vm.monitor_data=res.data.results;
+                            let jion_id=[{
+                                "id":vm.monitor_data[0].jion_id
+                            }];
+                            $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"><div type=\"flow_monitor'+result_list_edit[i].order+'\"></div></div>');
+                            flow_monitor(jion_id,result_list_edit[i].order);
+                        }
+
+                    }
+                    vm.drigging_id=max+1;
                 }
-                vm.drigging_id=max+1;
+                else {
+                    $('.monitor_edit').css('display','block');
+                    vm.show_num=vm.isAdd;
+                    vm.isAdd=0;
+                }
+
 
             },
             monitor_edit_close(){
                 $('.monitor_edit').css('display','none');
                 vm.isAdd=vm.show_num;
                 vm.show_num=0;
-                $('.monitor_content').html('');
             },
             a(){
                 scene_name: ''//场景名称
@@ -914,14 +935,14 @@
             },
             add_chart_monitor(i){
                 console.log(i);
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+i.height+'px;width:'+i.width+'px\"></div><input class="score_input" type="text"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+i.height+'px;width:'+i.width+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
                 show_chart(i.id,i.gather_params,i.height,i.width,vm.drigging_id,i.contents);
                 vm.drigging_id++
             },
             add_job_monitor(i){
                 console.log(i);
                 var job_params={
-                    'job_id':i.id,
+                    'id':i.id,
                     'width' :i.width,
                     'height':i.height,
                     'status':i.job_status,
@@ -1017,8 +1038,6 @@
     var flag=false;
     var x,y;
     var offsetLeft,offsetTop;
-    var proportion=1;
-    var Multiple = 0;
     $(document).on("mouseover", ".Drigging", function () {
         $(this).css('cursor', 'pointer');//当鼠标移动到拖拽目标上的时候，将鼠标的样式设置为移动(move)
     });
@@ -1031,9 +1050,8 @@
         offsetLeft = $(selector).position().left;
         offsetTop = $(selector).position().top;
         $(this).css('cursor', 'pointer');
-        console.log(x,y,e.clientX,e.clientY,obox.width(),obox.height(),$(selector).width(),$(selector).height(),offsetLeft,offsetTop);
     });
-    $(document).on("mouseup", ".Drigging", function () {
+    $(document).on("mouseup", "html", function () {
         flag = false;//当鼠标在移动元素起来的时候将flag设定为false
     });
     $(document).on("mousedown", ".Drigging", function (e) {//监控项右击显示打分输入框
@@ -1068,29 +1086,28 @@
             return;//当flag为true的时候执行下面的代码
         e.preventDefault();
         var e=window.event||e;
-        var _x = e.clientX - x + offsetLeft+Math.abs(Multiple)*$(selector).width()*(proportion-1)/2;
+        var _x = e.clientX - x + offsetLeft+Math.abs(vm.multiple)*$(selector).width()*(vm.scale-1)/2;
         //event.clientX得到鼠标相对于客户端正文区域的偏移
         //然后减去offsetX即得到当前推拽元素相对于当前窗口的X值
         //（减去鼠标刚开始拖动的时候在当前窗口的偏移X）
-        var _y = e.clientY - y + offsetTop+Math.abs(Multiple)*$(selector).height()*(proportion-1)/2;
+        var _y = e.clientY - y + offsetTop+Math.abs(vm.multiple)*$(selector).height()*(vm.scale-1)/2;
         //event.clientY得到鼠标相对于客户端正文区域的偏移
         //然后减去offsetX即得到当前推拽元素相对于当前窗口的Y值
         //（减去鼠标刚开始拖动的时候在当前窗口的偏移Y）
-        console.log(_x,_y);
         if(_x<0){
-            _x=0+$(selector).width()*(proportion-1)/2;
+            _x=0+$(selector).width()*(vm.scale-1)/2;
         }
         if(_y<0){
-            _y=0+$(selector).height()*(proportion-1)/2;
+            _y=0+$(selector).height()*(vm.scale-1)/2;
         }
         if(_x>obox.width()-$(selector).width()){
 
             //_x=obox.width()-$(selector).width();
-            _x=obox.width()-($(selector).width()*(proportion-1)/2+$(selector).width());
+            _x=obox.width()-($(selector).width()*(vm.scale-1)/2+$(selector).width());
         }
         if(_y>obox.height()-$(selector).height()){
             //_y=obox.height()-$(selector).height();
-            _y=obox.height()-($(selector).height()*(proportion-1)/2+$(selector).height());
+            _y=obox.height()-($(selector).height()*(vm.scale-1)/2+$(selector).height());
         }
         $(selector).css("left", _x);
         $(selector).css("top", _y);
@@ -1099,22 +1116,24 @@
 
     });
     $('.el-icon-circle-plus-outline').click(function () {
-        if(Multiple<2) {
-            proportion = proportion + 0.1;
-            $('.monitor_content').find('.Drigging').css('transform', 'scale(' + proportion + ')');
-            Multiple++;
-            console.log(proportion, Multiple);
+        if(vm.multiple<2) {
+            alert("+")
+            vm.scale = vm.scale + 0.1;
+            console.log(vm.scale);
+            $('.monitor_content').find('.Drigging').css('transform','scale('+vm.scale+')');
+            $('.monitor_content').find('canvas').css('transform','scale('+vm.scale+')');
+            vm.multiple++;
         }else {
             return
         }
     });
     $('.el-icon-remove-outline').click(function () {
-        if(Multiple>-2){
-           proportion=proportion-0.1;
-        $('.monitor_content').find('.Drigging').css('transform','scale('+proportion+')');
-        $('.monitor_content').find('canvas').css('transform','scale('+proportion+')');
-        Multiple--;
-        console.log(proportion,Multiple);
+        if(vm.multiple>-2){
+            alert("-")
+            vm.scale=vm.scale-0.1;
+            $('.monitor_content').find('.Drigging').css('transform','scale('+vm.scale+')');
+            $('.monitor_content').find('canvas').css('transform','scale('+vm.scale+')');
+            vm.multiple--;
         }else {
             return
         }
