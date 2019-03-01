@@ -1,0 +1,249 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>报表统计</title>
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- element UI引入样式 -->
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <!-- vue的ajax依赖-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/jrange/css/jquery.range.css" rel="stylesheet">
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+<div class="content">
+        <div class="body">
+        <el-card shadow="always">
+            <div>
+                <div id="pagetitle">
+                    报表统计查询
+                </div>
+                <hr id="hr">
+                <el-row type="flex" justify="space-between" align="center" class="row">
+                    <el-col :span="12">
+                        <el-col :span="9">
+                            <el-input v-model="search" placeholder="请输入场景名称检查日志"></el-input>
+                        </el-col>
+                        <el-col :span="3">
+                            <el-button type="primary" icon="el-icon-search" v-on:click="select_log" style="margin-left: 10px;">搜索</el-button>
+                        </el-col>
+                    </el-col>
+                </el-row>
+                <el-row type="flex" justify="space-between" align="center" class="row">
+                <el-col :span="12" style="margin-top: 5px">
+                    <el-col :span="9">
+                   <el-input v-model="keyword" placeholder="请输入关键字检查日志"></el-input>
+                    </el-col>
+                </el-col>
+                </el-row>
+                <el-col  :span="5" style="margin-top: 5px">
+                <el-select placeholder="请选择日志类型" v-model="log_type" @change="change_type">
+                    <el-option label="日志查询" value="log"></el-option>
+                    <el-option label="执行告警信息查询" value="alert"></el-option>
+                </el-select>
+                </el-col>
+                <div id="table1" style="display: block">
+                <el-table :data="Operatelog"  style="width: 150%">
+                    <el-table-column prop="id" label="id" width="100" align="center">
+                    </el-table-column>
+                    <el-table-column prop="log_type" label="操作类型" width="220" align="center">
+                    </el-table-column>
+                    <el-table-column prop="log_name" label="日志名称" width="150" align="center">
+                    </el-table-column>
+                    <el-table-column prop="user_name" label="用户名称" width="150" align="center">
+                    </el-table-column>
+                    <el-table-column prop="create_time" label="创建时间" width="200" align="center">
+                    </el-table-column>
+                    <el-table-column prop="succeed" label="是否成功" width="150" align="center">
+                    </el-table-column>
+                    <el-table-column prop="message" label="备注" width="800" align="center">
+                    </el-table-column>
+                </el-table>
+                    <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                               @current-change="current_change"></el-pagination>
+                    </div>
+                 <div id="table2" style="display:none">
+                     <el-table :data="alertRuleTableData">
+                         <el-table-column prop="id" label="序号" width="50">
+                         </el-table-column>
+                         <el-table-column prop="item_id" label="监控项ID" width="100" align="center">
+                         </el-table-column>
+                         <el-table-column prop="rule_name" label="规则名称" width="200" align="center">
+                         </el-table-column>
+                         <el-table-column prop="key_name" label="告警键值" width="200" align="center">
+                         </el-table-column>
+                         <el-table-column prop="upper_limit" label="上限值" width="100" align="center">
+                         </el-table-column>
+                         <el-table-column prop="lower_limit" label="下限值" width="100" align="center">
+                         </el-table-column>
+                         <el-table-column prop="alert_title" label="告警标题" width="200" align="center">
+                         </el-table-column>
+                         <el-table-column prop="alert_content" label="告警内容" width="200" align="center">
+                         </el-table-column>
+                         <el-table-column prop="create_time" label="创建时间" width="200" align="center">
+                         </el-table-column>
+                         <el-table-column prop="creator" label="创建人" width="100" align="center">
+                         </el-table-column>
+                         <el-table-column prop="edit_time" label="修改时间" width="200" align="center">
+                         </el-table-column>
+                         <el-table-column prop="editor" label="修改人" width="100" align="center">
+                         </el-table-column>
+
+                     </el-table>
+                     <el-pagination :page-count="alertRulesCount" background layout="prev, pager, next" style="float:right"
+                               @current-change="alertRulePageChange"></el-pagination>
+                    </div>
+
+
+            </div>
+        </el-card>
+    </div>
+
+</div>
+<script type="text/javascript">
+     axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
+let vm = new Vue({
+        el: '.content',
+        data: {
+            page_count: 100,                             //总页码数
+            alertRulesCount:1,
+            page: 1,                                   //分页页码数
+            Operatelog:[],
+            search: '',                                 //搜索框
+            log_type:'',                                //日志类型
+            alertRuleTableData:null,
+            keyword:'',                                 //关键字内容
+        },
+        methods: {
+           show() {
+               //显示
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}history_chart/show_all/',
+                    data: {
+                        page: vm.page,
+                        limit: 10
+                    },
+                }).then(function (res) {
+                    vm.Operatelog = res.data.message;
+                    vm.page_count = res.data.message[0].page_count;
+                })
+                axios({
+                        method: 'post',
+                        url: '${SITE_URL}history_chart/select_all_rules'
+                }).then((res) =>{
+                    this.alertRuleTableData = res.data.message;
+                })
+            },
+           current_change(value){
+               vm.page = value;
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}history_chart/select_log/',
+                    data: {
+                        search: this.search,
+                        page: vm.page,
+                        keyword:vm.keyword,
+
+                        limit: 10
+                    },
+                }).then((res) => {
+                    vm.Operatelog = res.data.message;
+                    vm.page_count = res.data.message[0].page_count;
+                })
+            },
+           select_log(){
+               alert(this.search.trim())
+               if(vm.log_type == 'log'){
+                   vm.page = 1                                             //查询
+                   if (this.search.trim() == '') {
+                       vm.show()
+                   }
+                   axios({
+                       method: 'post',
+                       url: '${SITE_URL}history_chart/select_log/',
+                       data: {
+                           search: this.search,
+                           page: this.page,
+                        keyword:vm.keyword,
+                           limit: 10
+                       },
+                   }).then((res) => {
+                       vm.Operatelog = res.data.message;
+                       vm.page_count = res.data.message[0].page_count;
+                   })
+               }else if(vm.log_type == 'alert'){
+                 this.alertRulePageChange(1);
+               }
+
+           },
+             alertRulePageChange: function(page){
+                var data = {
+                    search:  this.search,
+                    page: page,
+                    limit: 10
+                };
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}history_chart/select_rules_pagination',
+                    data: data
+                }).then((res) => {
+                    this.alertRuleTableData = res.data.items;
+                    alert(res.data.pages)
+                    this.alertRulesCount = res.data.pages;
+                    this.current_change = page;
+                    if(page > res.data.pages){
+                        this.current_change = res.data.pages;
+                    }
+                }).catch((res) => {
+                    var msg = '告警规则信息加载失败！';
+                    this.alertRulePopupErrorMessage(msg + res);
+                });
+            },
+            change_type(value){
+               alert(value)
+                if(value == 'log'){
+                    $('#table1').css('display','block');
+                    $('#table2').css('display','none');
+                }else if(value == 'alert'){
+                   $('#table1').css('display','none');
+                   $('#table2').css('display','block');
+                }
+            },
+            select_Keyword(){
+               if(vm.log_type == 'log'){
+                   vm.page = 1
+                   if (this.search.trim() == '') {
+                       vm.show()
+                   }
+                   axios({
+                       method: 'post',
+                       url: '${SITE_URL}history_chart/select_Keyword',
+                       data: {
+                           'search': vm.keyword,
+                           'page': this.page,
+                           'limit': 10
+                       }
+                   }).then(function (res) {
+                        vm.Operatelog = res.data.message;
+                       vm.page_count = res.data.message[0].page_count;
+                   })
+                }
+            }
+
+        }
+    });
+    vm.show();
+</script>
+</body>
+</html>

@@ -49,6 +49,8 @@ urlpatterns = patterns(
     url(r'^notification/', include('notification.urls')),
     # 操作日志记录
      url(r'^logmanagement/', include('logmanagement.urls')),
+    # 报表统计
+     url(r'^history_chart/', include('history_chart.urls')),
 )
 
 

@@ -18,6 +18,7 @@
       <sourceFolder url="file://$MODULE_DIR$/framework/blueking" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/framework/shell_app" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/framework/MarketDay" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/framework" isTestSource="false" />
     </content>
     <orderEntry type="jdk" jdkName="Python 2.7" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
