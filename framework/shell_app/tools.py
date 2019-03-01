@@ -3,10 +3,12 @@ from blueking.component.shortcuts import get_client_by_request
 import time
 import pytz
 import datetime
-from settings import WECHAT_APP_ID
-from settings import WECHAT_SECRETE
+from settings import *
 import requests
 import json
+from suds.client import Client
+from suds.transport.https import HttpAuthenticated
+
 
 def error_result(e):
     """
@@ -110,6 +112,7 @@ def wechat_access_token():
     return access_token
 
 
+# 微信公众号发送内容到指定openid用户
 def wechat_send_msg(access_token, openid, msg):
     print "OPEN_ID: %s" % openid
     body = {
@@ -119,8 +122,8 @@ def wechat_send_msg(access_token, openid, msg):
             "content": msg
         }
     }
-    unicode_str=json.dumps(body, ensure_ascii=False)
-    utf8_str=unicode_str.encode('utf-8')
+    unicode_str = json.dumps(body, ensure_ascii=False)
+    utf8_str = unicode_str.encode('utf-8')
     # print 'UNICODE: %s'% unicode_str
     # print 'UTF8: %s' % utf8_str
     response = requests.post(
@@ -136,3 +139,53 @@ def wechat_send_msg(access_token, openid, msg):
         print "WeChat Message Send Success!"
     else:
         print "WeChat Message Send Error: %s" % result['errmsg']
+
+
+# 使用登飞平台发送邮件通知
+# mail_receivers是一个list，包含多个dict，每个dict包含name和content，name是中文姓名，content是邮箱帐号
+def mail_send_msg(mail_title, mail_content, mail_receivers):
+    auth = HttpAuthenticated(username=DENGFEI_USERNAME, password=DENGFEI_PASSWORD)
+    client = Client(url=DENGFEI_WS, transport=auth)
+
+    params = dict()
+    params['type'] = 'M'
+    params['sysFlag'] = '测试系统标识'
+    params['moduleFlag'] = '测试模块标识'
+    params['formatType'] = 'T'
+    params['title'] = mail_title
+    params['content'] = mail_content
+    params['roadFlag'] = '测试消息通道标识'
+    params['sender'] = dict()
+    params['sender']['name'] = '测试姓名'
+    params['sender']['mailaddr'] = 'test@test.com'
+    params['recivers'] = mail_receivers
+
+    json_params = json.dumps(params, ensure_ascii=False)
+    json_params = json_params.encode('utf8')
+
+    response = client.service.receiveMsg(json_params)
+    # 打印接口调用返回信息
+    print response
+
+
+# 使用登飞平台发送短信通知
+# sms_receivers是一个list，包含多个dict，每个dict包含name和content，name是中文姓名，content是手机号码
+def sms_send_msg(sms_content, sms_receivers):
+    auth = HttpAuthenticated(username=DENGFEI_USERNAME, password=DENGFEI_PASSWORD)
+    client = Client(url=DENGFEI_WS, transport=auth)
+
+    params = dict()
+    params['type'] = 'S'
+    params['sysFlag'] = '测试系统标识'
+    params['moduleFlag'] = '测试模块标识'
+    params['sType'] = 'S'
+    params['content'] = sms_content
+    params['roadFlag'] = '测试消息通道标识'
+    params['recivers'] = sms_receivers
+
+    json_params = json.dumps(params, ensure_ascii=False)
+    json_params = json_params.encode('utf8')
+
+    response = client.service.receiveMsg(json_params)
+    # 打印接口调用返回信息
+    print response

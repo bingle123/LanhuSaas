@@ -213,7 +213,7 @@ def rule_check(monitor_id):
     if 0 != len(alert_infos):
         pass
         # 邮箱被封暂时不能用了 send_alert(**alert_info)
-        # wechat_alert(alert_infos)
+        # 是否使用微信告警? wechat_alert(alert_infos)
     return "ok"
 
 
@@ -232,6 +232,7 @@ def send_alert(**msg):
     TdAlertLog.objects.create(**msg)
 
 
+#发送微信告警
 def wechat_alert(msgs):
     for msg in msgs:
         alert_title = msg['alert_title']
