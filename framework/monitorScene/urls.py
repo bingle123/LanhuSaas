@@ -28,6 +28,8 @@ urlpatterns = patterns(
     (r'^getSceneByid/(.+)/$','getBySceneId'),   #根据Id获取场景详情
     (r'get_basic_data/(.+)$','get_basic_data'),
     (r'^get_scenes/$', 'get_scenes'),
+    (r'^alternate_play/$', 'alternate_play'),
+    (r'^alternate_play_test/$', 'alternate_play_test'),
     (r'^scene_data/$', 'scene_data'),
     (r'^monitor_scene_show/$', 'monitor_scene_show'),
 
