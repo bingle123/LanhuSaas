@@ -15,6 +15,7 @@ from logmanagement.function import add_log, make_log_info, get_active_user
 from db_connection.function import get_db
 from gatherData.function import gather_data
 import datetime
+from position.models import Localuser
 
 def monitor_show(request):
     monitor = Scene.objects.all()
@@ -339,8 +340,12 @@ def getBySceneId(request, id):
 
 
 def alternate_play_test(request):
-    username = json.loads (request.body)
-    res_list = get_scenes(username)
+    res = json.loads (request.body)
+    #接收参数
+    username = res['user_name']
+    start = res['start']
+    end = res['end']
+    res_list = get_scenes(username,start,end)
     return res_list
 
 def alternate_play(request):
@@ -391,7 +396,7 @@ def get_scenes(user_name,start,end):
             item_dict['create_time'] = str (item.create_time)
             item_dict['edit_time'] = str (item.edit_time)
             #判断系统时间是否在轮播时间
-            if start > str (item.start_time) and end < str (item.end_time):
+            if str (item.start_time) <= end and str (item.end_time) >=  start:
                 # 采集数据
                 info = {
                     'id': item.id,
@@ -431,3 +436,10 @@ def get_scenes(user_name,start,end):
         }
         res_list.append (data)
     return res_list
+
+def get_all_user(request):
+    res = []
+    users = Localuser.objects.all()
+    for i in users:
+        res.append(i.user_name)
+    return res
