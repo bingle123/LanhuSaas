@@ -75,5 +75,10 @@ def del_area(req,name):
     res=function.del_area(name)
     return render_json(res)
 
+def test(req):
+    #测试专用view
+    res=function.check_jobday(1)
+    return render_json(res)
+
 
 
