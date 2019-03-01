@@ -698,7 +698,7 @@
                     data:value,
                 }).then(function (res) {
                     vm.result_list_edit=res.data.results;
-
+                    console.log(vm.result_list_edit);
                 })
             },
             hide() {
@@ -715,7 +715,33 @@
                     if(max<result_list_edit[i].order){
                         max=result_list_edit[i].order;
                     }
-                    $('.monitor_content').append('123')
+                    if(result_list_edit[i].monitor_type=='基本单元类型'){
+                        $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"basic'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\"></div>');
+                        let monitor_data={};
+                        axios({
+                            method:'post',
+                            url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                            data:result_list_edit[i].item_id,
+                        }).then(function (res) {
+                            monitor_data=res.data.results;
+                            console.log(vm.result_list_edit);
+                        });
+                        base_monitor(result_list_edit[i].item_id,monitor_data.font_size,monitor_data.height,monitor_data.width,monitor_data.content);
+                    }
+                    if(result_list_edit[i].monitor_type=='图表单元类型'){
+                        let monitor_data={};
+                        axios({
+                            method:'post',
+                            url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                            data:result_list_edit[i].item_id,
+                        }).then(function (res) {
+                            monitor_data=res.data.results;
+                            console.log(vm.result_list_edit);
+                        });
+                        $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+i.height+'px;width:'+i.width+'px\"></div><input class="score_input" type="text"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
+                        base_monitor(result_list_edit[i].item_id,monitor_data.font_size,monitor_data.height,monitor_data.width,monitor_data.content);
+                    }
+
                 }
                 vm.drigging_id=max+1;
 
