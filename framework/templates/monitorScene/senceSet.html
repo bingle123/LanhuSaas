@@ -503,6 +503,7 @@
                 </el-col>
                 <el-col :span="18">
                     <div class="monitor_content" style="min-height: 600px;background: rgb(244, 244, 245)">
+
                     </div>
                 </el-col>
             </el-row>
@@ -597,6 +598,9 @@
             flow_monitor:[],
             drigging_id:1,
             show_num:0,
+            monitor_data:[],
+            scale:1,
+            multiple:1,
 
         },
 
@@ -698,24 +702,76 @@
                     data:value,
                 }).then(function (res) {
                     vm.result_list_edit=res.data.results;
-
+                    vm.scale=res.data.results[0].scale;
+                    vm.multiple = Math.round((vm.scale-1)*10);
+                    console.log(vm.multiple);
                 })
             },
             hide() {
                 this.isAdd = 1
                 vm.paging()
             },
-            goto() {
+            async goto() {
                 $('.monitor_edit').css('display','block');
                 vm.show_num=vm.isAdd;
                 vm.isAdd=0;
                 let result_list_edit=vm.result_list_edit;
                 let max=0;
+                let index=0;
                 for(var i=0;i<result_list_edit.length;i++){
                     if(max<result_list_edit[i].order){
                         max=result_list_edit[i].order;
                     }
-                    $('.monitor_content').append('123')
+                    if(result_list_edit[i].monitor_type=='基本单元类型'){
+                        let res = await axios({
+                            method:'post',
+                            url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                            data:result_list_edit[i].item_id,
+                        })
+                        vm.monitor_data = res.data.results;
+                        $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"basic'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"></div>');
+                        base_monitor(vm.monitor_data[0].id,vm.monitor_data[0].font_size,vm.monitor_data[0].height,vm.monitor_data[0].width,vm.monitor_data[0].contents);
+
+
+
+
+                    }
+                    if(result_list_edit[i].monitor_type=='图表单元类型'){
+                        let res = await axios({
+                            method:'post',
+                            url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                            data:result_list_edit[i].item_id,
+                        })
+                        vm.monitor_data = res.data.results;
+                        $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\"><div id=\"chart'+result_list_edit[i].item_id+'\" style=\"background:beige;height:'+vm.monitor_data[0].width+'px;width:'+vm.monitor_data[0].height+'px;top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+');\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
+                        show_chart(vm.monitor_data[0].id, vm.monitor_data[0].gather_params, vm.monitor_data[0].height, vm.monitor_data[0].width, result_list_edit[0].order, vm.monitor_data[0].contents);
+
+                    }
+                    if(result_list_edit[i].monitor_type=='作业单元类型'){
+                        let res = await axios({
+                            method:'post',
+                            url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                            data:result_list_edit[i].item_id,
+                        });
+                        vm.monitor_data = res.data.results;
+                        let job_params = vm.monitor_data[0];
+                        $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"job'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"></div>');
+                        job_monitor(job_params);
+                    }
+                    if(result_list_edit[i].monitor_type=='流程单元类型'){
+                        let res = await axios({
+                            method:'post',
+                            url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                            data:result_list_edit[i].item_id,
+                        })
+                        vm.monitor_data=res.data.results;
+                        let jion_id=[{
+                            "id":vm.monitor_data[0].jion_id
+                        }];
+                        $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"><div type=\"flow_monitor'+result_list_edit[i].order+'\"></div></div>');
+                        flow_monitor(jion_id,result_list_edit[i].order);
+                    }
+
                 }
                 vm.drigging_id=max+1;
 
@@ -969,8 +1025,6 @@
     var flag=false;
     var x,y;
     var offsetLeft,offsetTop;
-    var proportion=1;
-    var Multiple = 0;
     $(document).on("mouseover", ".Drigging", function () {
         $(this).css('cursor', 'pointer');//当鼠标移动到拖拽目标上的时候，将鼠标的样式设置为移动(move)
     });
@@ -983,10 +1037,10 @@
         offsetLeft = $(selector).position().left;
         offsetTop = $(selector).position().top;
         $(this).css('cursor', 'pointer');
-        console.log(x,y,e.clientX,e.clientY,obox.width(),obox.height(),$(selector).width(),$(selector).height(),offsetLeft,offsetTop);
     });
-    $(document).on("mouseup", ".Drigging", function () {
+    $(document).on("mouseup", "html", function (e) {
         flag = false;//当鼠标在移动元素起来的时候将flag设定为false
+        e.preventDefault();
     });
     $(document).on("mousedown", ".Drigging", function (e) {//监控项右击显示打分输入框
         if(e.button == 2){
@@ -1020,29 +1074,28 @@
             return;//当flag为true的时候执行下面的代码
         e.preventDefault();
         var e=window.event||e;
-        var _x = e.clientX - x + offsetLeft+Math.abs(Multiple)*$(selector).width()*(proportion-1)/2;
+        var _x = e.clientX - x + offsetLeft+Math.abs(vm.multiple)*$(selector).width()*(vm.scale-1)/2;
         //event.clientX得到鼠标相对于客户端正文区域的偏移
         //然后减去offsetX即得到当前推拽元素相对于当前窗口的X值
         //（减去鼠标刚开始拖动的时候在当前窗口的偏移X）
-        var _y = e.clientY - y + offsetTop+Math.abs(Multiple)*$(selector).height()*(proportion-1)/2;
+        var _y = e.clientY - y + offsetTop+Math.abs(vm.multiple)*$(selector).height()*(vm.scale-1)/2;
         //event.clientY得到鼠标相对于客户端正文区域的偏移
         //然后减去offsetX即得到当前推拽元素相对于当前窗口的Y值
         //（减去鼠标刚开始拖动的时候在当前窗口的偏移Y）
-        console.log(_x,_y);
         if(_x<0){
-            _x=0+$(selector).width()*(proportion-1)/2;
+            _x=0+$(selector).width()*(vm.scale-1)/2;
         }
         if(_y<0){
-            _y=0+$(selector).height()*(proportion-1)/2;
+            _y=0+$(selector).height()*(vm.scale-1)/2;
         }
         if(_x>obox.width()-$(selector).width()){
 
             //_x=obox.width()-$(selector).width();
-            _x=obox.width()-($(selector).width()*(proportion-1)/2+$(selector).width());
+            _x=obox.width()-($(selector).width()*(vm.scale-1)/2+$(selector).width());
         }
         if(_y>obox.height()-$(selector).height()){
             //_y=obox.height()-$(selector).height();
-            _y=obox.height()-($(selector).height()*(proportion-1)/2+$(selector).height());
+            _y=obox.height()-($(selector).height()*(vm.scale-1)/2+$(selector).height());
         }
         $(selector).css("left", _x);
         $(selector).css("top", _y);
@@ -1051,22 +1104,20 @@
 
     });
     $('.el-icon-circle-plus-outline').click(function () {
-        if(Multiple<2) {
-            proportion = proportion + 0.1;
-            $('.monitor_content').find('.Drigging').css('transform', 'scale(' + proportion + ')');
-            Multiple++;
-            console.log(proportion, Multiple);
+        if(vm.multiple<2) {
+            vm.scale = vm.scale + 0.1;
+            $('.monitor_content').find('.Drigging').css('transform', 'scale(' + vm.scale + ')');
+            vm.multiple++;
         }else {
             return
         }
     });
     $('.el-icon-remove-outline').click(function () {
-        if(Multiple>-2){
-           proportion=proportion-0.1;
-        $('.monitor_content').find('.Drigging').css('transform','scale('+proportion+')');
-        $('.monitor_content').find('canvas').css('transform','scale('+proportion+')');
-        Multiple--;
-        console.log(proportion,Multiple);
+        if(vm.multiple>-2){
+           vm.scale=vm.scale-0.1;
+        $('.monitor_content').find('.Drigging').css('transform','scale('+vm.scale+')');
+        $('.monitor_content').find('canvas').css('transform','scale('+vm.scale+')');
+        vm.multiple--;
         }else {
             return
         }

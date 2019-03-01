@@ -37,19 +37,19 @@
             active-text-color="#ffd04b">
         <el-form :inline="true" class="demo-form-inline" style="margin-top: 15px;">
 
-            <el-form-item label="员工名称:" size="mini">
-                <el-select v-model="value8" placeholder="请选择员工">
+            <el-form-item label="员工名称:" size="mini"  prop="users">
+                <el-select v-model="users" placeholder="请选择员工" >
                     <el-option v-for="item in options" :label="item.label" :key="item.value"
                                :value="item.value"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="起始时间:" size="mini">
-                <el-time-picker v-model="date1" placeholder="开始时间点" format="hh:mm" value-format="hh:mm">
+                <el-time-picker v-model="start" placeholder="开始时间点" format="HH:mm" value-format="HH:mm" >
                 </el-time-picker>
-                <el-time-picker v-model="date2" placeholder="结束时间点" format="hh:mm" value-format="hh:mm">
+                <el-time-picker v-model="end" placeholder="结束时间点" format="HH:mm" value-format="HH:mm" >
                 </el-time-picker>
             </el-form-item>
-            <el-button type="info" >测试</el-button>
+            <el-button type="info" v-on:click="alternate_play_test">测试</el-button>
         </el-form>
     </el-menu>
     <template>
@@ -73,42 +73,55 @@
 </div>
 
 <script>
+    axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
     let vm = new Vue({
         el: "#main",
         data: {
-            imgList: [
-                {id: 0, idView: '${STATIC_URL}img/slide1.png'},
-                {id: 1, name: '详情', idView: '${STATIC_URL}img/slide1.png'},
-                {id: 2, name: '推荐', idView: '${STATIC_URL}img/slide1.png'}
-            ],
+            imgList: [],
             imgHeight: '' + document.documentElement.clientHeight + 'px',
-            date1: '08:00',                                                                   //开始时间
-            date2: '10:00',                                                                   //结束时间
+            start: '09:00',                                                                   //开始时间
+            end: '18:00',                                                                   //结束时间
             region1: '1',                                                                 //岗位选择
-            value8: '员工1',                                                                  //员工选择
-            options: []
+            users: 'admin',                                                                  //员工选择
+            options: [],
         },
         methods: {
-            change1(value) {
-                if (value == 1) {
-                    vm.options = [
-                        {value: '1', label: '员工1'},
-                        {value: '2', label: '员工2'},
-                        {value: '3', label: '员工3'},
-                    ]
-                } else if (value == 2) {
-                    vm.options = [
-                        {value: '4', label: '员工4'},
-                        {value: '5', label: '员工5'},
-                        {value: '6', label: '员工6'},
-                    ]
-                } else if (value == 3) {
-                    vm.options = [
-                        {value: '7', label: '员工7'},
-                        {value: '8', label: '员工8'},
-                        {value: '9', label: '员工9'},
-                    ]
-                }
+            get_user(){
+                 axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitorScene/get_all_user/',
+                }).then((res)=> {
+                    let json = [];
+                    if (res.data.message.length > 0) {
+                        for (var i = 0; i < res.data.message.length; i++) {
+                            let j = {};
+                            j.value = res.data.message[i];
+                            j.label = res.data.message[i];
+                            json.push(j);
+                        };
+                        this.options = json;
+                    }
+                }).catch((res) => {
+                    console.log('获取用户错误')
+                })
+            },
+            alternate_play_test(){
+                 axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitorScene/alternate_play_test/',
+                     data :{
+                        'user_name':vm.users,
+                         'start':vm.start,
+                         'end':vm.end
+                     }
+                }).then((res)=> {
+                     vm.imgList = res.data.message;
+                 })
             }
         },
         mounted() {
@@ -138,7 +151,7 @@
         }
     });
 
-
+    vm.get_user();
 </script>
 
 

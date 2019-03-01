@@ -54,6 +54,15 @@ def scene_show(request):
     param = json.loads(request.body)
     res = function.scene_show(param)
     return render_json(res)
+
+
+def monitor_scene_show(request):
+
+    id = request.body
+    res = function.monitor_scene_show(id)
+    return render_json(res)
+
+
 def get_chart_data(req,id):
     res=function.get_chart_data(id)
     return render_json(res)
@@ -69,6 +78,14 @@ def getBySceneId(request,id):
     return render_json(res)
 
 
-def get_scenes(request):
-    res = function.get_scenes(request)
+def alternate_play(request):
+    res = function.alternate_play(request)
+    return render_json(res)
+
+def alternate_play_test(request):
+    res = function.alternate_play_test(request)
+    return render_json(res)
+
+def get_all_user(request):
+    res = function.get_all_user(request)
     return render_json(res)
