@@ -335,9 +335,11 @@
                     } else if (ve.items_data[i]['monitor_type'] == '图表单元类型') {
                         ve.drigging_id = ve.drigging_id + 1;
                         ve.show_c = 'show' + ve.drigging_id;
-                        $('#mychart').append("<div id=\"" + ve.show_c + "\"></div>");
-                        $('#mychart').append("<div id=\"" + ve.items_data[i]['id'] + "\"></div>");
-                        show_chart(ve.items_data[i]['id'], ve.items_data[i]['monitor_type'], ve.items_data[i]['height'], ve.items_data[i]['width'], ve.show_c, ve.items_data[i]['contents'])
+                        $('#mychart').append("<div id=\"" + ve.show_c + "\" style= \"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"><div></div></div>");
+
+                        show_chart(ve.items_data[i]['id'], ve.items_data[i]['gather_params'], ve.items_data[i]['height'], ve.items_data[i]['width'], ve.show_c, ve.items_data[i]['contents'])
+
+
 
                     } else if (ve.items_data[i]['monitor_type'] == '流程单元类型') {
                         //$('#mychart').append("<el-col span:12>" + "<div id=\""+ve.show_c + "\"></div>"+"</el-col>");
