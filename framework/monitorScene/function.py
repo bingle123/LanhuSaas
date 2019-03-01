@@ -368,7 +368,8 @@ def getBySceneId(request,id):
     for s in sm:
         scene_monitor = model_to_dict(s)
         itemId = scene_monitor['item_id']
-        monitor = Monitor.objects.get(id = itemId)
+        monitor = Monitor.objects.get(id =itemId)
+
         item = model_to_dict(monitor)
         item['start_time'] = str(item['start_time'])
         item['end_time'] = str(item['end_time'])
