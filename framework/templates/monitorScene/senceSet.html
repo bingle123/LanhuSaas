@@ -704,7 +704,8 @@
                     data:value,
                 }).then(function (res) {
                     vm.result_list_edit=res.data.results;
-                    vm.scale=res.data.results[0].scale;
+                    vm.scale=parseFloat(res.data.results[0].scale);
+                    console.log(vm.scale)
                     vm.multiple = Math.round((vm.scale-1)*10);
                     console.log(vm.multiple);
                 })
@@ -745,11 +746,12 @@
                                 method:'post',
                                 url:'${SITE_URL}monitorScene/monitor_scene_show/',
                                 data:result_list_edit[i].item_id,
-                            });
+                            })
                             vm.monitor_data = res.data.results;
                             console.log(vm.monitor_data[0])
                             $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px;top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"><div id=\"chart'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
                             show_chart(vm.monitor_data[0].id, vm.monitor_data[0].gather_params, vm.monitor_data[0].height, vm.monitor_data[0].width, result_list_edit[i].order, vm.monitor_data[0].contents);
+
                         }
                         if(result_list_edit[i].monitor_type=='作业单元类型'){
                             let res = await axios({
@@ -1114,8 +1116,11 @@
     });
     $('.el-icon-circle-plus-outline').click(function () {
         if(vm.multiple<2) {
+            alert("+")
             vm.scale = vm.scale + 0.1;
-            $('.monitor_content').find('.Drigging').css('transform', 'scale(' + vm.scale + ')');
+            console.log(vm.scale);
+            $('.monitor_content').find('.Drigging').css('transform','scale('+vm.scale+')');
+            $('.monitor_content').find('canvas').css('transform','scale('+vm.scale+')');
             vm.multiple++;
         }else {
             return
@@ -1123,10 +1128,11 @@
     });
     $('.el-icon-remove-outline').click(function () {
         if(vm.multiple>-2){
-           vm.scale=vm.scale-0.1;
-        $('.monitor_content').find('.Drigging').css('transform','scale('+vm.scale+')');
-        $('.monitor_content').find('canvas').css('transform','scale('+vm.scale+')');
-        vm.multiple--;
+            alert("-")
+            vm.scale=vm.scale-0.1;
+            $('.monitor_content').find('.Drigging').css('transform','scale('+vm.scale+')');
+            $('.monitor_content').find('canvas').css('transform','scale('+vm.scale+')');
+            vm.multiple--;
         }else {
             return
         }
