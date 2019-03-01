@@ -85,3 +85,7 @@ def alternate_play(request):
 def alternate_play_test(request):
     res = function.alternate_play_test(request)
     return render_json(res)
+
+def get_all_user(request):
+    res = function.get_all_user(request)
+    return render_json(res)
