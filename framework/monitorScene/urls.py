@@ -31,4 +31,7 @@ urlpatterns = patterns(
     (r'^get_scenes/$', 'get_scenes'),
     (r'^alternate_play/$', 'alternate_play'),
     (r'^alternate_play_test/$', 'alternate_play_test'),
+    (r'^scene_data/$', 'scene_data'),
+    (r'^monitor_scene_show/$', 'monitor_scene_show'),
+
 )

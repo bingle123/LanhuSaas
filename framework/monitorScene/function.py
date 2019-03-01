@@ -17,7 +17,7 @@ from gatherData.function import gather_data
 import datetime
 
 def monitor_show(request):
-    monitor = Scene.objects.all ()
+    monitor = Scene.objects.all()
     res_list = []
     for i in monitor:
         dic = {
@@ -159,17 +159,22 @@ def editSence(request):
 
 
 def scene_data(id):
-
-    obj = Scene_monitor.objects.filter(scene_id=id)
-    data_list = []
-    for i in obj:
-        data_list.append(i)
-    res = tools.success_result(data_list)
+    try:
+        obj = Scene_monitor.objects.filter(scene_id=id)
+        data_list = []
+        for i in obj:
+            data_dic = model_to_dict(i)
+            data_dic['scale'] = str(i.scale)
+            monitor_data = Monitor.objects.filter(id=data_dic['item_id'])
+            data_list.append(data_dic)
+        res = tools.success_result(data_list)
+    except Exception as e:
+        res = tools.error_result(e)
     return res
 
 
 def pos_name(request):
-    job = JobInstance.objects.all ()
+    job = JobInstance.objects.all()
     res_list = []
     for i in job:
         dic = {
@@ -213,7 +218,7 @@ def paging(request):
         res_list.append (dic)
     return res_list
 
-
+# 场景编排显示
 def scene_show(res):
     try:
         type = res['type']
@@ -279,6 +284,14 @@ def scene_show(res):
     except Exception as e:
         result = tools.error_result (e)
     return result
+
+
+def monitor_scene_show(id):
+    obj = Monitor.objects.filter(id=id)
+    for i in obj:
+        print(i)
+    return None
+
 
 
 def add_scene(res1):
