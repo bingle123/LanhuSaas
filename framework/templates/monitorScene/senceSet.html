@@ -760,6 +760,7 @@
                                 data:result_list_edit[i].item_id,
                             });
                             vm.monitor_data = res.data.results;
+                            console.log(result_list_edit[i],vm.monitor_data)
                             let job_params = vm.monitor_data[0];
                             $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"job'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"></div>');
                             job_monitor(job_params);
@@ -941,7 +942,7 @@
             add_job_monitor(i){
                 console.log(i);
                 var job_params={
-                    'job_id':i.id,
+                    'id':i.id,
                     'width' :i.width,
                     'height':i.height,
                     'status':i.job_status,

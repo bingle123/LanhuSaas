@@ -6,7 +6,7 @@ axios.interceptors.request.use((config) => {
     });
 function job_monitor(job_params){
     console.log(job_params);
-    selector_id='job'+job_params.job_id
+    selector_id='job'+job_params.id
     // var status=job_params.status
     // if(status==0){
         $('[type='+selector_id+']').html($('<div class="unexecuted" style="background: beige;color: grey;"><h1>作业未执行</h1><i class="el-icon-error" style="color: grey;font-size: 30px;margin-top: 20px;"></i></div>'))
