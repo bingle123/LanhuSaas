@@ -9,6 +9,8 @@ import MySQLdb
 from gatherData.models import *
 from position.models import Localuser
 from system_config.function import *
+from position.models import *
+from shell_app.tools import *
 
 
 # 获取所有告警规则
@@ -172,6 +174,7 @@ def rule_check(monitor_id):
             selected_rule = TbAlertRule.objects.filter(item_id=data.item_id, key_name=data.data_key).get()
             # 只处理单值情况的告警，多值情况下的采集数据忽略
             if ',' not in data.data_value:
+                # print 'UPPER_LIMIT: %s, LOWER_LIMIT: %s' % (selected_rule.upper_limit, selected_rule.lower_limit)
                 # 告警规则配置了上限值和下限值的情况
                 if selected_rule.upper_limit is not None and selected_rule.lower_limit is not None:
                     if float(data.data_value) > selected_rule.upper_limit or float(data.data_value) < selected_rule.lower_limit:
@@ -206,9 +209,11 @@ def rule_check(monitor_id):
             else:
                 print 'INFO: Multiple value, rule check skip.......'
     # 如果搜集到了告警信息，将alert_infos对象传递给celery并通知处理告警
+    # print len(alert_infos)
     if 0 != len(alert_infos):
-        #邮箱被封暂时不能用了 send_alert(**alert_info)
         pass
+        # 邮箱被封暂时不能用了 send_alert(**alert_info)
+        # 是否使用微信告警? wechat_alert(alert_infos)
     return "ok"
 
 
@@ -225,3 +230,20 @@ def send_alert(**msg):
     print receivers
     mail_send(alert_title, alert_content, receivers)
     TdAlertLog.objects.create(**msg)
+
+
+#发送微信告警
+def wechat_alert(msgs):
+    for msg in msgs:
+        alert_title = msg['alert_title']
+        alert_content = msg['alert_content']
+        staff_users_ids = msg['staff_user']
+        access_token = wechat_access_token()
+        alert_msg = alert_title + '\n' + alert_content
+        for id in staff_users_ids:
+            open_id = Localuser.objects.get(id=id).open_id
+            wechat_send_msg(access_token, open_id, alert_msg)
+        msg.update({'persons': msg.pop("staff_user")})
+        TdAlertLog.objects.create(**msg)
+
+

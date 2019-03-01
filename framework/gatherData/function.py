@@ -236,7 +236,6 @@ def gather_data(**info):
             # 将采集的数据保存到td_gather_data中
             for item in data_set:
                 TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'], data_value=item['value_str']).save()
-            return "success"
         else:
             # 采集是空结果集的情况
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='0').save()
@@ -351,6 +350,7 @@ def gather_data(**info):
     # 数据采集完毕后使用告警规则检查数据合法性
     if None != info['id']:
         rule_check(info['id'])
+
     return 'success'
 
 

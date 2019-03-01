@@ -1,6 +1,6 @@
 #!usr/bin/ebv python
 # -*- coding:utf-8 -*-
-from models import Holiday,HeaderData
+from models import Holiday,HeaderData,Area
 import os
 from xlrd import open_workbook
 from framework.conf import default
@@ -9,8 +9,8 @@ from django.forms import model_to_dict
 from django.db.models import Q
 import celery_opt as co
 import json
-import tasks
-import json
+from datetime import datetime
+import pytz
 
 
 def get_holiday(req,area):
@@ -34,6 +34,7 @@ def get_file(req,area):
                 f.close()
             workbook = open_workbook(path)
             sheet = workbook.sheet_by_index(0)
+            delall(area)
             for i in range(1, sheet.nrows):
                 day = str(sheet.row_values(i)[0])
                 d = day[0:4] + u'/' + str(int(day[4:6])) + u'/' + str(int(day[6:8]))
@@ -44,17 +45,23 @@ def get_file(req,area):
             print '文件不匹配'
 
 
-def delall(req,area):
+def delall(area):
     flag = Holiday.objects.filter(area=int(area)).delete()
     return flag
 
 
-def delone(req, date,area):
+def delone(req):
+    res=json.loads(req.body)
+    date=res['date']
+    area=res['area']
     flag = Holiday.objects.filter(Q(day=date)& Q(area=int(area))).update(flag=1)
     return flag
 
 
-def addone(req, date):
+def addone(req):
+    res = json.loads(req.body)
+    date = res['date']
+    area = res['area']
     flag = Holiday.objects.filter(Q(day=date)& Q(area=int(area))).update(flag=0)
     return flag
 
@@ -161,3 +168,43 @@ def get_header_data(request):
     headers["X-CSRFToken"] = csrftoken;
     h.header=json.dumps(headers, ensure_ascii=False)
     h.save()
+
+def add_area(req):
+    res=json.loads(req.body)
+    name=res['country']
+    timezone=res['timezone']
+    a,flag=Area.objects.get_or_create(country=name)
+    a.timezone=timezone
+    a.save()
+    return 'ok'
+
+def get_all_area(req):
+    areas=Area.objects.all()
+    area_dict=[]
+    for a in areas:
+        area_dict.append(model_to_dict(a))
+    return area_dict
+
+def del_area(name):
+    Area.objects.get(id=name).delete()
+    Holiday.objects.filter(area=name).delete()
+    return 'ok'
+
+def get_all_timezone():
+    all=pytz.common_timezones
+    return all
+
+def check_jobday(id):
+    timezone=Area.objects.get(id=id).timezone
+    tz=pytz.timezone(timezone)
+    now=datetime.now(tz)
+    str_date=datetime.strftime(now,'%Y/%m/%d')
+    day=str_date[:4] + u'/' + str(int(str_date[5:7])) + u'/' + str(int(str_date[8:10]))
+    hs=Holiday.objects.filter(Q(day=day)&Q(area=id))
+    flag=0
+    for h in hs:
+        flag=h.flag
+    if flag==1:
+        return True
+    elif flag==2:
+        return False

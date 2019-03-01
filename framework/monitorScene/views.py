@@ -37,6 +37,11 @@ def pos_name(request):
     res=function.pos_name(request)
     return  render_json(res)
 
+# 提取编排数据
+def scene_data(request):
+    id = request.body
+    res = function.scene_data(id)
+    return render_json(res)
 
 def paging(request):
     res=function.paging(request)
@@ -48,10 +53,20 @@ def scene_show(request):
 
     param = json.loads(request.body)
     res = function.scene_show(param)
-    return  render_json(res)
+    return render_json(res)
+
+
+def monitor_scene_show(request):
+
+    id = request.body
+    res = function.monitor_scene_show(id)
+    return render_json(res)
+
+
 def get_chart_data(req,id):
     res=function.get_chart_data(id)
     return render_json(res)
+
 
 def get_basic_data(req,id):
     res=function.get_basic_data(id)
@@ -96,6 +111,16 @@ def getBySceneId(request,id):
     return render_json(res)
 
 
+def alternate_play(request):
+    res = function.alternate_play(request)
+    return render_json(res)
+
+def alternate_play_test(request):
+    res = function.alternate_play_test(request)
+    return render_json(res)
+
+def get_all_user(request):
+    res = function.get_all_user(request)
 
 def get_scenes(request):
     res = function.get_scenes(request)

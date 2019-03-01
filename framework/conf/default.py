@@ -42,6 +42,21 @@ APP_TOKEN = '99d97ec5-4864-4716-a877-455a6a8cf9ef'
 # 数据采集测试用主机地址
 GATHER_DATA_HOST = '192.168.1.52'
 
+# 微信发送测试用appid
+WECHAT_APP_ID = 'wx0f4cdb94945968ef'
+
+# 微信发送测试用secrete
+WECHAT_SECRETE = '4b009bae3a96c7cae67945693749700d'
+
+# 登飞平台测试用webservice接口地址
+DENGFEI_WS = 'http://10.189.96.53:8891/dfmc/service/dfMsgReceive?wsdl'
+
+# 登飞平台测试用户名
+DENGFEI_USERNAME = 'test'
+
+# 登飞平台测试密码
+DENGFEI_PASSWORD = 'test'
+
 # 蓝鲸智云开发者中心的域名，形如：http://paas.bking.com#
 # 长沙
 BK_PAAS_HOST = 'http://paas.bk.com'
