@@ -3,7 +3,10 @@ from blueking.component.shortcuts import get_client_by_request
 import time
 import pytz
 import datetime
-
+from settings import WECHAT_APP_ID
+from settings import WECHAT_SECRETE
+import requests
+import json
 
 def error_result(e):
     """
@@ -84,3 +87,52 @@ def get_active_user(request):
     client = interface_param(request)
     res = client.bk_login.get_user({})
     return res
+
+
+# 获取微信公众号token
+def wechat_access_token():
+    """
+    获取微信全局接口的凭证(默认有效期俩个小时)
+    如果不每天请求次数过多, 通过设置缓存即可
+    """
+    result = requests.get(
+        url="https://api.weixin.qq.com/cgi-bin/token",
+        params={
+            "grant_type": "client_credential",
+            "appid": WECHAT_APP_ID,
+            "secret": WECHAT_SECRETE,
+        }
+    ).json()
+    if result.get("access_token"):
+        access_token = result.get('access_token')
+    else:
+        access_token = None
+    return access_token
+
+
+def wechat_send_msg(access_token, openid, msg):
+    print "OPEN_ID: %s" % openid
+    body = {
+        "touser": openid,
+        "msgtype": "text",
+        "text": {
+            "content": msg
+        }
+    }
+    unicode_str=json.dumps(body, ensure_ascii=False)
+    utf8_str=unicode_str.encode('utf-8')
+    # print 'UNICODE: %s'% unicode_str
+    # print 'UTF8: %s' % utf8_str
+    response = requests.post(
+        url="https://api.weixin.qq.com/cgi-bin/message/custom/send",
+        params={
+            'access_token': access_token
+        },
+        data=utf8_str
+    )
+    # 这里可根据回执code进行判定是否发送成功(也可以根据code根据错误信息)
+    result = response.json()
+    if 0 == int(result['errcode']):
+        print "WeChat Message Send Success!"
+    else:
+        print "WeChat Message Send Error: %s" % result['errmsg']

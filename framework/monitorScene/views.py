@@ -60,7 +60,7 @@ def monitor_scene_show(request):
 
     id = request.body
     res = function.monitor_scene_show(id)
-    return res
+    return render_json(res)
 
 
 def get_chart_data(req,id):
@@ -78,6 +78,10 @@ def getBySceneId(request,id):
     return render_json(res)
 
 
-def get_scenes(request):
-    res = function.get_scenes(request)
+def alternate_play(request):
+    res = function.alternate_play(request)
+    return render_json(res)
+
+def alternate_play_test(request):
+    res = function.alternate_play_test(request)
     return render_json(res)

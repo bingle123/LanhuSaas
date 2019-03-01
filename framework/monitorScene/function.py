@@ -14,7 +14,7 @@ import sys
 from logmanagement.function import add_log, make_log_info, get_active_user
 from db_connection.function import get_db
 from gatherData.function import gather_data
-
+import datetime
 
 def monitor_show(request):
     monitor = Scene.objects.all()
@@ -159,17 +159,19 @@ def editSence(request):
 
 
 def scene_data(id):
-    try:
-        obj = Scene_monitor.objects.filter(scene_id=id)
-        data_list = []
-        for i in obj:
-            data_dic = model_to_dict(i)
-            data_dic['scale'] = str(i.scale)
-            monitor_data = Monitor.objects.filter(id=data_dic['item_id'])
-            data_list.append(data_dic)
-        res = tools.success_result(data_list)
-    except Exception as e:
-        res = tools.error_result(e)
+# try:
+    obj = Scene_monitor.objects.filter(scene_id=id)
+    data_list = []
+    for i in obj:
+        data_dic = model_to_dict(i)
+        data_dic['scale'] = str(i.scale)
+        monitor_data = Monitor.objects.filter(id=data_dic['item_id'])
+        for i in monitor_data:
+            data_dic['monitor_type'] = i.monitor_type
+        data_list.append(data_dic)
+    res = tools.success_result(data_list)
+    # except Exception as e:
+    #     res = tools.error_result(e)
     return res
 
 
@@ -288,9 +290,22 @@ def scene_show(res):
 
 def monitor_scene_show(id):
     obj = Monitor.objects.filter(id=id)
+    data_list = []
     for i in obj:
-        print(i)
-    return None
+        x = model_to_dict(i)
+        x['edit_time'] = str(i.edit_time)
+        x['create_time'] = str(i.create_time)
+        x['start_time'] = str(i.start_time)
+        x['end_time'] = str(i.end_time)
+        if x['monitor_type'] == u'作业单元类型':
+            job_status = Job.objects.filter (job_id=i['jion_id']).last().status
+        else:
+            job_status = 0
+        x['job_status'] = job_status
+        print(x)
+        data_list.append(x)
+    res = tools.success_result(data_list)
+    return res
 
 
 
@@ -338,11 +353,29 @@ def getBySceneId(request, id):
     print dic_data
 
 
-def get_scenes(request):
+def alternate_play_test(request):
+    username = json.loads (request.body)
+    res_list = get_scenes(username)
+    return res_list
+
+def alternate_play(request):
+    # 获取当前用户
+    username = get_active_user(request)['data']['bk_username']
+    # 获取当前时间
+    nowtime = datetime.datetime.now().strftime('%H:%M:%S')
+    res_list = get_scenes(username,nowtime,nowtime)
+    return  res_list
+
+
+def get_scenes(user_name,start,end):
+    """
+    :param user_name: 用户名
+    :param start: 轮播开始时间
+    :param end: 轮播结束时间
+    :return: 场景的参数
+    """
     res_list = []
     scenes = []
-    # 获取当前用户
-    user_name = get_active_user (request)['data']['bk_username']
     # 获取当前用户的岗位
     pos_id = Localuser.objects.get (user_name=user_name).user_pos_id
     # 获取岗位对应的场景
@@ -364,7 +397,6 @@ def get_scenes(request):
         # 遍历场景的监控项ID
         for j in items_id:
             # 获取基本数据
-            print j
             item = Monitor.objects.get (id=j)
             # 转成字典
             item_dict = model_to_dict (item)
@@ -373,37 +405,39 @@ def get_scenes(request):
             item_dict['end_time'] = str (item.end_time)
             item_dict['create_time'] = str (item.create_time)
             item_dict['edit_time'] = str (item.edit_time)
-            # 采集数据
-            info = {
-                'id': item.id,
-                'params': item.params,
-                'gather_rule': item.gather_rule,
-                'gather_params': item.gather_params,
-            }
-            gather_data (**info)
-            gather_rule = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str (j)
-            db = get_db ()
-            cursor = db.cursor ()
-            cursor.execute (gather_rule)
-            results = cursor.fetchall ()
-            dic = {}
-            for i in results:
-                dic1 = {
-                    i[0]: i[1],
-                    'gather_status': i[2]
+            #判断系统时间是否在轮播时间
+            if start > str (item.start_time) and end < str (item.end_time):
+                # 采集数据
+                info = {
+                    'id': item.id,
+                    'params': item.params,
+                    'gather_rule': item.gather_rule,
+                    'gather_params': item.gather_params,
                 }
-                dic = dict (dic, **dic1)
-            # 拼接监控项基础数据和采集数据
-            item_dict = dict (item_dict, **dic)
-            # 按不同的监控项类型保存
-            if u'基本单元类型' == item.monitor_type:
-                base_list.append (item_dict)
-            if u'图表单元类型' == item.monitor_type:
-                chart_list.append (item_dict)
-            if u'流程单元类型' == item.monitor_type:
-                flow_list.append (item_dict)
-            if u'作业单元类型' == item.monitor_type:
-                job_list.append (item_dict)
+                gather_data (**info)
+                gather_rule = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str (j)
+                db = get_db ()
+                cursor = db.cursor ()
+                cursor.execute (gather_rule)
+                results = cursor.fetchall ()
+                dic = {}
+                for i in results:
+                    dic1 = {
+                        i[0]: i[1],
+                        'gather_status': i[2]
+                    }
+                    dic = dict (dic, **dic1)
+                # 拼接监控项基础数据和采集数据
+                item_dict = dict (item_dict, **dic)
+                # 按不同的监控项类型保存
+                if u'基本单元类型' == item.monitor_type:
+                    base_list.append (item_dict)
+                if u'图表单元类型' == item.monitor_type:
+                    chart_list.append (item_dict)
+                if u'流程单元类型' == item.monitor_type:
+                    flow_list.append (item_dict)
+                if u'作业单元类型' == item.monitor_type:
+                    job_list.append (item_dict)
         data = {
             'base_list': base_list,
             'chart_list': chart_list,
