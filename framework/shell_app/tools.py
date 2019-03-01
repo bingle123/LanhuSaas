@@ -173,7 +173,6 @@ def wechat_batch_send_msg(access_token, openids, msg):
         print "WeChat Message Send Error: %s" % result['errmsg']
 
 
-
 # 使用登飞平台发送邮件通知
 # mail_receivers是一个list，包含多个dict，每个dict包含name和content，name是中文姓名，content是邮箱帐号
 def mail_send_msg(mail_title, mail_content, mail_receivers):
