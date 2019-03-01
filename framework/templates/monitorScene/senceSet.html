@@ -1038,7 +1038,7 @@
         offsetTop = $(selector).position().top;
         $(this).css('cursor', 'pointer');
     });
-    $(document).on("mouseup", ".html", function () {
+    $(document).on("mouseup", "html", function () {
         flag = false;//当鼠标在移动元素起来的时候将flag设定为false
     });
     $(document).on("mousedown", ".Drigging", function (e) {//监控项右击显示打分输入框
