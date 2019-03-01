@@ -135,7 +135,7 @@
                 通知内容：<span>{{ customProcessNoticeContent }}</span>
             </el-card>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="customProcessSendNotification">发送通知</el-button>
+                <el-button :type="customProcessNotifyButtonType" :disabled="customProcessNotifyButtonDisabled" @click="customProcessSendNotification">{{ customProcessNotifyButtonText }}</el-button>
             </span>
         </el-dialog>
         <el-row>
@@ -216,6 +216,10 @@
             bkUsers: {},
             //步骤条默认高度
             customProcessHeight: '1000',
+            //发送通知按钮属性控制
+            customProcessNotifyButtonType: 'primary',
+            customProcessNotifyButtonText: '发送通知',
+            customProcessNotifyButtonDisabled: false,
             //执行流程按钮属性控制
             customProcessStartButtonType: 'primary',
             customProcessStartButtonText: '开始执行流程',
@@ -279,7 +283,9 @@
             },
             //发送通知
             customProcessSendNotification: function(){
-                this.customProcessSendMsgDialogVisible = false;
+                this.customProcessNotifyButtonText = '正在发送...';
+                this.customProcessNotifyButtonType = 'info';
+                this.customProcessNotifyButtonDisabled = true;
                 var url = '${SITE_URL}customProcess/send_notification';
                 var nofityData = {
                     'receivers': this.customProcessReceivers,
@@ -290,6 +296,10 @@
                     url: url,
                     data: nofityData
                 }).then((res) =>{
+                    this.customProcessSendMsgDialogVisible = false;
+                    this.customProcessNotifyButtonText = '发送通知';
+                    this.customProcessNotifyButtonType = 'primary';
+                    this.customProcessNotifyButtonDisabled = false;
                     if('ok' == res.data.message){
                         var msg = res.data.info;
                         this.customProcessPopupSuccessMessage(msg);
@@ -298,6 +308,11 @@
                         this.customProcessPopupErrorMessage(msg);
                     }
                 }).catch((res) => {
+                    this.customProcessSendMsgDialogVisible = false;
+                    this.customProcessSendMsgDialogVisible = false;
+                    this.customProcessNotifyButtonText = '发送通知';
+                    this.customProcessNotifyButtonType = 'primary';
+                    this.customProcessNotifyButtonDisabled = false;
                     var msg = '通知发送失败！' + res;
                     this.customProcessPopupErrorMessage(msg);
                 });
