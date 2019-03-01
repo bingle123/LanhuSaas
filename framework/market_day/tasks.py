@@ -20,7 +20,7 @@ from account.models import BkUser
 from blueking.component.shortcuts import get_client_by_user
 from datetime import datetime
 from customProcess.function import clear_execute_status
-from function import check_jobday
+from market_day.function import check_jobday
 
 @task
 def crawl_task(**i):

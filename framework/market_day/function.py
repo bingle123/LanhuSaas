@@ -9,8 +9,6 @@ from django.forms import model_to_dict
 from django.db.models import Q
 import celery_opt as co
 import json
-import tasks
-import json
 from datetime import datetime
 import pytz
 
