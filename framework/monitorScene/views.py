@@ -60,7 +60,7 @@ def monitor_scene_show(request):
 
     id = request.body
     res = function.monitor_scene_show(id)
-    return res
+    return render_json(res)
 
 
 def get_chart_data(req,id):
