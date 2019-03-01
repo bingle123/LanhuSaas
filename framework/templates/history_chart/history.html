@@ -41,12 +41,29 @@
                     </el-col>
                 </el-col>
                 </el-row>
+                 <el-row type="flex" justify="space-between" align="center" class="row">
+                 <el-col  :span="9" style="margin-top: 5px">
+                    <template>
+                        <div class="block">
+                            <el-date-picker
+                                    v-model="date_Choice"
+                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    type="datetimerange"
+                                    range-separator="至"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期">
+                            </el-date-picker>
+                        </div>
+                    </template>
+                </el-col>
+                 </el-row>
                 <el-col  :span="5" style="margin-top: 5px">
                 <el-select placeholder="请选择日志类型" v-model="log_type" @change="change_type">
                     <el-option label="日志查询" value="log"></el-option>
                     <el-option label="执行告警信息查询" value="alert"></el-option>
                 </el-select>
                 </el-col>
+
                 <div id="table1" style="display: block">
                 <el-table :data="Operatelog"  style="width: 150%">
                     <el-table-column prop="id" label="id" width="100" align="center">
@@ -69,29 +86,21 @@
                     </div>
                  <div id="table2" style="display:none">
                      <el-table :data="alertRuleTableData">
-                         <el-table-column prop="id" label="序号" width="50">
+                         <el-table-column prop="scene_id" label="场景ID" width="100">
                          </el-table-column>
-                         <el-table-column prop="item_id" label="监控项ID" width="100" align="center">
+                         <el-table-column prop="scene_name" label=场景名字 width="100" align="center">
                          </el-table-column>
-                         <el-table-column prop="rule_name" label="规则名称" width="200" align="center">
+                         <el-table-column prop="id" label="监控项ID" width="200" align="center">
                          </el-table-column>
-                         <el-table-column prop="key_name" label="告警键值" width="200" align="center">
-                         </el-table-column>
-                         <el-table-column prop="upper_limit" label="上限值" width="100" align="center">
-                         </el-table-column>
-                         <el-table-column prop="lower_limit" label="下限值" width="100" align="center">
+                         <el-table-column prop="monitor_name" label="监控项名字" width="200" align="center">
                          </el-table-column>
                          <el-table-column prop="alert_title" label="告警标题" width="200" align="center">
                          </el-table-column>
-                         <el-table-column prop="alert_content" label="告警内容" width="200" align="center">
+                         <el-table-column prop="alert_content" label="告警内容" width="500" align="center">
                          </el-table-column>
-                         <el-table-column prop="create_time" label="创建时间" width="200" align="center">
+                         <el-table-column prop="alert_time" label="告警时间" width="200" align="center">
                          </el-table-column>
-                         <el-table-column prop="creator" label="创建人" width="100" align="center">
-                         </el-table-column>
-                         <el-table-column prop="edit_time" label="修改时间" width="200" align="center">
-                         </el-table-column>
-                         <el-table-column prop="editor" label="修改人" width="100" align="center">
+                         <el-table-column prop="persons" label="告警人" width="200" align="center">
                          </el-table-column>
 
                      </el-table>
@@ -123,6 +132,7 @@ let vm = new Vue({
             log_type:'',                                //日志类型
             alertRuleTableData:null,
             keyword:'',                                 //关键字内容
+            date_Choice: '',                            //时间选择
         },
         methods: {
            show() {
@@ -142,7 +152,7 @@ let vm = new Vue({
                         method: 'post',
                         url: '${SITE_URL}history_chart/select_all_rules'
                 }).then((res) =>{
-                    this.alertRuleTableData = res.data.message;
+                    this.alertRuleTableData = res.data.results;
                 })
             },
            current_change(value){
@@ -154,7 +164,7 @@ let vm = new Vue({
                         search: this.search,
                         page: vm.page,
                         keyword:vm.keyword,
-
+                        date_Choice:vm.date_Choice,
                         limit: 10
                     },
                 }).then((res) => {
@@ -163,7 +173,7 @@ let vm = new Vue({
                 })
             },
            select_log(){
-               alert(this.search.trim())
+               alert(vm.date_Choice)
                if(vm.log_type == 'log'){
                    vm.page = 1                                             //查询
                    if (this.search.trim() == '') {
@@ -175,7 +185,8 @@ let vm = new Vue({
                        data: {
                            search: this.search,
                            page: this.page,
-                        keyword:vm.keyword,
+                            keyword:vm.keyword,
+                           date_Choice:vm.date_Choice,
                            limit: 10
                        },
                    }).then((res) => {
@@ -245,5 +256,7 @@ let vm = new Vue({
     });
     vm.show();
 </script>
+
+
 </body>
 </html>
