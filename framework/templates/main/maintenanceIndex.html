@@ -335,16 +335,16 @@
                     } else if (ve.items_data[i]['monitor_type'] == '图表单元类型') {
                         ve.drigging_id = ve.drigging_id + 1;
                         ve.show_c = 'show' + ve.drigging_id;
-                        $('#mychart').append("<div id=\"" + ve.show_c + "\" style= \"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"><div></div></div>");
-
+                        $('#mychart').append("<div id=\"" + ve.show_c + "\" style= \"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"><div style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' +"top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"></div></div>");
                         show_chart(ve.items_data[i]['id'], ve.items_data[i]['gather_params'], ve.items_data[i]['height'], ve.items_data[i]['width'], ve.show_c, ve.items_data[i]['contents'])
-
-
-
                     } else if (ve.items_data[i]['monitor_type'] == '流程单元类型') {
                         //$('#mychart').append("<el-col span:12>" + "<div id=\""+ve.show_c + "\"></div>"+"</el-col>");
                         ve.drigging_id = ve.drigging_id + 1;
-                        flow_monitor([{"id": ve.items_data[i]['jion_id']}], ve.drigging_id = ve.drigging_id + 1)
+                        //var selector_id = 'flow' + value2;
+                       //var selector_type = 'flow_monitor' + value2
+                        //var selector_canvas = 'canvas' + value2
+                        //var selector_template = 'template' + value2
+                        flow_monitor([{"id": ve.items_data[i]['jion_id']}], ve.drigging_id)
 
                     } else {
                         //"<div type=\"" + 'basic'+ve.items_data[i]['id'] + "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;'+"top:" + ve.items_data[i]['y'] + 'px;' + "\"></div>"
