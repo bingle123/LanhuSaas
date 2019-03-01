@@ -144,6 +144,7 @@ def editSence(request):
         add_log (info)
         Scene_monitor.objects.filter(scene_id=model['data']['id']).delete()
         for i in model['monitor_data']:
+            print(i)
             monitor_data = {
                 'scene_id': model['data']['id'],
                 'item_id': int(i['item_id']),
@@ -165,7 +166,6 @@ def editSence(request):
                 "scene_id": model['data']['id'],
                 "position_id": j.id
             }
-            print senceModel3
         position_scene.objects.filter (scene=senceModel3['scene_id']).update (**senceModel3)
         info2 = make_log_info (u'编辑场景', u'业务日志', u'position_scene', sys._getframe ().f_code.co_name,
                                get_active_user (request)['data']['bk_username'], '成功', '无')
@@ -319,10 +319,14 @@ def monitor_scene_show(id):
         x['create_time'] = str(i.create_time)
         x['start_time'] = str(i.start_time)
         x['end_time'] = str(i.end_time)
-        if x['monitor_type'] == u'作业单元类型':
-            job_status = Job.objects.filter (job_id=i['jion_id']).last().status
-        else:
-            job_status = 0
+        # if x['monitor_type'] == u'作业单元类型':
+        #     try:
+        #         job_status = Job.objects.filter (job_id=i['jion_id']).last().status
+        #     except Exception as e:
+        #         job_status = 0
+        # else:
+        job_status = 0
+        # print(job_status)
         x['job_status'] = job_status
         data_list.append(x)
     res = tools.success_result(data_list)
