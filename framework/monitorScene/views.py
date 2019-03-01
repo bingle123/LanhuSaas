@@ -96,6 +96,7 @@ def getBySceneId(request,id):
     return render_json(res)
 
 
+
 def get_scenes(request):
     res = function.get_scenes(request)
     return render_json(res)

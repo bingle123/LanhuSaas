@@ -6,8 +6,8 @@ from django.core.paginator import Paginator
 from django.forms import model_to_dict
 from models import Scene
 from models import position_scene
-from monitor.models import Scene_monitor,Monitor,Job
-from monitor import tools
+from monitor_item.models import Scene_monitor,Monitor,Job
+from monitor_item import tools
 from position.models import JobInstance
 from gatherData.models import TDGatherData
 import sys
@@ -168,11 +168,12 @@ def paging(request):
         dic = {
             'id': i.id,
             'scene_name': i.scene_name,
+            'scene_editor': i.scene_editor,
+            'scene_creator': i.scene_creator,
             'scene_startTime': str(i.scene_startTime),
             'scene_endTime': str(i.scene_endTime),
-            'scene_creator': i.scene_creator,
             'scene_creator_time': str(i.scene_creator_time),
-            'scene_editor': i.scene_editor,
+
             'scene_editor_time': str(i.scene_editor_time),
             'pos_name': '',
             'page_count': page_count,
@@ -285,14 +286,17 @@ def get_basic_data(id):
 
 
 def getBySceneId(request,id):
-    sm = Scene_monitor.objects.filter(scene_id = id)
+    sm = Scene_monitor.objects.filter(scene_id=id)
     dic_data = []
-    for s in model_to_dict(sm):
-        itemId = s['item_id']
+    for s in sm:
+        scene_monitor = model_to_dict(s)
+        itemId = scene_monitor['item_id']
         monitor = Monitor.objects.get(id = itemId)
         item = model_to_dict(monitor)
-        item['x'] = s['x']
-        item['y'] = s['y']
+        item['start_time'] = str(item['start_time'])
+        item['end_time'] = str(item['end_time'])
+        item['x'] = scene_monitor['x']
+        item['y'] = scene_monitor['y']
         dic_data.append(item)
-    print dic_data
+    return tools.success_result(dic_data)
 

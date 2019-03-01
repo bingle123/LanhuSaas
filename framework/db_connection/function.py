@@ -101,7 +101,6 @@ def saveconn_all(request):
 
 #修改
 def editconn(request):
-    print request.body
     try:
         res = json.loads(request.body)
         cilent = tools.interface_param(request)
