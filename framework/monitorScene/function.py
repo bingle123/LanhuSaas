@@ -61,7 +61,6 @@ def addSence(request):
         }
         position_scene.objects.create (**senceModel3)
         for i in senceModel['monitor_data']:
-            print(i)
             monitor_data = {
                 'scene_id': id.id,
                 'item_id': int(i['item_id']),
@@ -112,13 +111,21 @@ def select_table(request):
 def delect(request):
     try:
         Scene.objects.filter (id=request.body).delete ()
-        position_scene.objects.filter (scene=request.body).delete ()
+        Scene_monitor.objects.filter(scene_id=request.body).delete()
         info = make_log_info (u'删除场景', u'业务日志', u'position_scene', sys._getframe ().f_code.co_name,
                               get_active_user (request)['data']['bk_username'], '成功', '无')
+        add_log (info)
+        position_scene.objects.filter (scene=request.body).delete ()
+        info = make_log_info (u'删除场景编排数据', u'业务日志', u'position_scene', sys._getframe ().f_code.co_name,
+                              get_active_user (request)['data']['bk_username'], '成功', '无')
+        add_log (info)
     except Exception as e:
         info = make_log_info (u'删除场景', u'业务日志', u'position_scene', sys._getframe ().f_code.co_name,
                               get_active_user (request)['data']['bk_username'], '失败', repr (e))
-    add_log (info)
+        add_log (info)
+        info = make_log_info (u'删除场景', u'业务日志', u'position_scene', sys._getframe ().f_code.co_name,
+                              get_active_user (request)['data']['bk_username'], '失败', repr (e))
+        add_log (info)
     return ""
 
 
@@ -133,6 +140,21 @@ def editSence(request):
         }
         Scene.objects.filter (id=model['data']['id']).update (**senceModel2)
         info = make_log_info (u'编辑场景', u'业务日志', u'Scene', sys._getframe ().f_code.co_name,
+                              get_active_user (request)['data']['bk_username'], '成功', '无')
+        add_log (info)
+        Scene_monitor.objects.filter(scene_id=model['data']['id']).delete()
+        for i in model['monitor_data']:
+            monitor_data = {
+                'scene_id': model['data']['id'],
+                'item_id': int(i['item_id']),
+                'x': int(i['x']),
+                'y': int(i['y']),
+                'scale': i['scale'],
+                'score': int(i['score']),
+                'order': int(i['order'])
+            }
+            Scene_monitor.objects.create(**monitor_data)
+        info = make_log_info (u'场景编排', u'业务日志', u'Scene', sys._getframe ().f_code.co_name,
                               get_active_user (request)['data']['bk_username'], '成功', '无')
         add_log (info)
         scene = Scene.objects.get (id=model['data']['id'])
@@ -152,26 +174,26 @@ def editSence(request):
         info = make_log_info (u'编辑场景', u'业务日志', u'Scene', sys._getframe ().f_code.co_name,
                               get_active_user (request)['data']['bk_username'], '失败', repr (e))
         add_log (info)
-        info2 = make_log_info (u'编辑场景', u'业务日志', u'Monitor', sys._getframe ().f_code.co_name,
+        info2 = make_log_info (u'场景编排', u'业务日志', u'Monitor', sys._getframe ().f_code.co_name,
                                get_active_user (request)['data']['bk_username'], '失败', repr (e))
         add_log (info2)
     return None
 
 
 def scene_data(id):
-# try:
-    obj = Scene_monitor.objects.filter(scene_id=id)
-    data_list = []
-    for i in obj:
-        data_dic = model_to_dict(i)
-        data_dic['scale'] = str(i.scale)
-        monitor_data = Monitor.objects.filter(id=data_dic['item_id'])
-        for i in monitor_data:
-            data_dic['monitor_type'] = i.monitor_type
-        data_list.append(data_dic)
-    res = tools.success_result(data_list)
-    # except Exception as e:
-    #     res = tools.error_result(e)
+    try:
+        obj = Scene_monitor.objects.filter(scene_id=id)
+        data_list = []
+        for i in obj:
+            data_dic = model_to_dict(i)
+            data_dic['scale'] = str(i.scale)
+            monitor_data = Monitor.objects.filter(id=data_dic['item_id'])
+            for i in monitor_data:
+                data_dic['monitor_type'] = i.monitor_type
+            data_list.append(data_dic)
+        res = tools.success_result(data_list)
+    except Exception as e:
+        res = tools.error_result(e)
     return res
 
 
@@ -302,7 +324,6 @@ def monitor_scene_show(id):
         else:
             job_status = 0
         x['job_status'] = job_status
-        print(x)
         data_list.append(x)
     res = tools.success_result(data_list)
     return res
