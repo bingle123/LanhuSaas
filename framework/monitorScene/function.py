@@ -166,8 +166,6 @@ def scene_data(id):
             data_dic = model_to_dict(i)
             data_dic['scale'] = str(i.scale)
             monitor_data = Monitor.objects.filter(id=data_dic['item_id'])
-            for i in monitor_data:
-                data_dic['monitor_type'] = i.monitor_type
             data_list.append(data_dic)
         res = tools.success_result(data_list)
     except Exception as e:
@@ -220,7 +218,7 @@ def paging(request):
         res_list.append (dic)
     return res_list
 
-
+# 场景编排显示
 def scene_show(res):
     try:
         type = res['type']
@@ -286,6 +284,14 @@ def scene_show(res):
     except Exception as e:
         result = tools.error_result (e)
     return result
+
+
+def monitor_scene_show(id):
+    obj = Monitor.objects.filter(id=id)
+    for i in obj:
+        print(i)
+    return None
+
 
 
 def add_scene(res1):
