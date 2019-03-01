@@ -1,22 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import sys
-
-reload(sys)
-
 from models import *
 from django.forms.models import model_to_dict
 from db_connection.models import *
 from db_connection.function import *
 from django.core.paginator import *
 import MySQLdb
-import requests
 from gatherData.models import *
 from position.models import Localuser
 from system_config.function import *
 from position.models import *
-from settings import WECHAT_APP_ID
-from settings import WECHAT_SECRETE
+from shell_app.tools import *
 
 
 # 获取所有告警规则
@@ -180,7 +174,7 @@ def rule_check(monitor_id):
             selected_rule = TbAlertRule.objects.filter(item_id=data.item_id, key_name=data.data_key).get()
             # 只处理单值情况的告警，多值情况下的采集数据忽略
             if ',' not in data.data_value:
-                print 'UPPER_LIMIT: %s, LOWER_LIMIT: %s' % (selected_rule.upper_limit, selected_rule.lower_limit)
+                # print 'UPPER_LIMIT: %s, LOWER_LIMIT: %s' % (selected_rule.upper_limit, selected_rule.lower_limit)
                 # 告警规则配置了上限值和下限值的情况
                 if selected_rule.upper_limit is not None and selected_rule.lower_limit is not None:
                     if float(data.data_value) > selected_rule.upper_limit or float(data.data_value) < selected_rule.lower_limit:
@@ -217,9 +211,9 @@ def rule_check(monitor_id):
     # 如果搜集到了告警信息，将alert_infos对象传递给celery并通知处理告警
     # print len(alert_infos)
     if 0 != len(alert_infos):
-        # print alert_infos
-        #邮箱被封暂时不能用了 send_alert(**alert_info)
-        wechat_alert(alert_infos)
+        pass
+        # 邮箱被封暂时不能用了 send_alert(**alert_info)
+        # wechat_alert(alert_infos)
     return "ok"
 
 
@@ -238,64 +232,17 @@ def send_alert(**msg):
     TdAlertLog.objects.create(**msg)
 
 
-def wechat_access_token():
-    """
-    获取微信全局接口的凭证(默认有效期俩个小时)
-    如果不每天请求次数过多, 通过设置缓存即可
-    """
-    result = requests.get(
-        url="https://api.weixin.qq.com/cgi-bin/token",
-        params={
-            "grant_type": "client_credential",
-            "appid": WECHAT_APP_ID,
-            "secret": WECHAT_SECRETE,
-        }
-    ).json()
-    if result.get("access_token"):
-        access_token = result.get('access_token')
-    else:
-        access_token = None
-    return access_token
-
-
-def wechat_send_msg(access_token, openid, msg):
-    body = {
-        "touser": openid,
-        "msgtype": "text",
-        "text": {
-            "content": msg
-        }
-    }
-    unicode_str=json.dumps(body, ensure_ascii=False)
-    utf8_str=unicode_str.encode('utf-8')
-    # print 'UNICODE: %s'% unicode_str
-    # print 'UTF8: %s' % utf8_str
-    response = requests.post(
-        url="https://api.weixin.qq.com/cgi-bin/message/custom/send",
-        params={
-            'access_token': access_token
-        },
-        data=utf8_str
-    )
-    # 这里可根据回执code进行判定是否发送成功(也可以根据code根据错误信息)
-    result = response.json()
-    print result
-
-
 def wechat_alert(msgs):
     for msg in msgs:
-        print 'USER: %s' % msg['staff_user']
         alert_title = msg['alert_title']
         alert_content = msg['alert_content']
         staff_users_ids = msg['staff_user']
         access_token = wechat_access_token()
-        receivers = list()
-        for id in staff_users_ids:
-            print 'ID: %s' % id
-            open_id = Localuser.objects.get(id=id).open_id
-            receivers.append(open_id)
         alert_msg = alert_title + '\n' + alert_content
-        print "receivers: %s" % receivers
-        wechat_send_msg(access_token, receivers[0], alert_msg)
+        for id in staff_users_ids:
+            open_id = Localuser.objects.get(id=id).open_id
+            wechat_send_msg(access_token, open_id, alert_msg)
+        msg.update({'persons': msg.pop("staff_user")})
+        TdAlertLog.objects.create(**msg)
 
 
