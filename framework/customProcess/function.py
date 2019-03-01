@@ -126,7 +126,9 @@ def send_notification(notification):
                 mail_send_list = list()
             mail_send_list.append(receiver)
     if None is not sms_send_list:
-        pass
+        sms_send_msg(notification['content'], sms_send_list)
+    if None is not mail_send_list:
+        mail_send_msg(u'过程通知信息', notification['content'], mail_send_list)
     if send_flag:
         status['message'] = 'ok'
     else:
