@@ -24,7 +24,7 @@ function job_monitor(job_params){
     // }else if(status==-1){
     //     $('[type='+selector_id+']').html($('<div class="error" style="background: beige;color: red;"><h1>作业执行失败</h1><i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i></div>'))
     // }
-    $('[type='+selector_id+']').append('<input class="score_input" type="text">');
+    $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
     $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
     $('[type='+selector_id+']').css('height',job_params.height);
     $('[type='+selector_id+']').css('width',job_params.width);
@@ -271,7 +271,7 @@ function base_monitor(item_id,font_size,height,width,content) {
     // },dataType='json')
         $('[type='+selector_id+']').html("");
         $('[type='+selector_id+']').append("<div>"+content +"</div>");
-        $('[type='+selector_id+']').append('<input class="score_input" type="text">');
+        $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
         $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
         $('[type='+selector_id+']').css('height',height+'px');
         $('[type='+selector_id+']').css('width',width+'px');
@@ -321,7 +321,7 @@ function base_monitor(item_id,font_size,height,width,content) {
                 icon4.push(icon3[i][1]);
             }
             $('[type='+selector_id+']').html("")
-            $('[type='+selector_id+']').append('<input class="score_input" type="text">');
+            $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
             $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
             $('[type='+selector_id+']').append(asd);
             if(icon4 ){
@@ -371,7 +371,7 @@ function base_monitor(item_id,font_size,height,width,content) {
             icon3 = icon2[1].split("=")
             icon4 = icon3[1]
             $('[type='+selector_id+']').html("")
-            $('[type='+selector_id+']').append('<input class="score_input" type="text">');
+            $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
             $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
             for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                 if (i == flag2) {
@@ -493,7 +493,7 @@ function flow_monitor(value1,value2){
                             "                                    </div>\n" +
                             "                            </div>";
                         $('[type='+selector_type+']').html(cc);
-                        $('[type='+selector_type+']').append('<input class="score_input" type="text">');
+                        $('[type='+selector_type+']').append('<input class="score_input" type="text" value="0">');
                         $('[type='+selector_type+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
                 axios({
                     method:'post',
