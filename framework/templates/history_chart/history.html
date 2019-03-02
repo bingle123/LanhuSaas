@@ -147,16 +147,23 @@ let vm = new Vue({
                 }).then(function (res) {
                     vm.Operatelog = res.data.message;
                     vm.page_count = res.data.message[0].page_count;
+                    console.log(res.data.message[0].page_count)
                 })
                 axios({
                         method: 'post',
-                        url: '${SITE_URL}history_chart/select_all_rules'
+                        url: '${SITE_URL}history_chart/select_all_rules',
+                        data: {
+                            page: vm.page,
+                            limit: 10
+                        },
                 }).then((res) =>{
                     this.alertRuleTableData = res.data.results;
+                    vm.alertRulesCount = res.data.results[0].pages
+                    console.log(vm.page_count)
                 })
             },
            current_change(value){
-               vm.page = value;
+                    vm.page = value;
                 axios({
                     method: 'post',
                     url: '${SITE_URL}history_chart/select_log/',
@@ -171,12 +178,12 @@ let vm = new Vue({
                     vm.Operatelog = res.data.message;
                     vm.page_count = res.data.message[0].page_count;
                 })
+
             },
            select_log(){
-               alert(vm.date_Choice)
                if(vm.log_type == 'log'){
                    vm.page = 1                                             //查询
-                   if (this.search.trim() == '') {
+                   if (m.keyword == "" & vm.date_Choice == "" & this.search =="") {
                        vm.show()
                    }
                    axios({
@@ -198,28 +205,24 @@ let vm = new Vue({
                }
 
            },
-             alertRulePageChange: function(page){
-                var data = {
-                    search:  this.search,
-                    page: page,
-                    limit: 10
-                };
+            //用于告警分页方法
+             alertRulePageChange: function(value){
+                vm.page = value;
                 axios({
                     method: 'post',
                     url: '${SITE_URL}history_chart/select_rules_pagination',
-                    data: data
+                    data: {
+                        search: this.search,
+                        page: vm.page,
+                        keyword:vm.keyword,
+                        date_Choice:vm.date_Choice,
+                        limit: 10
+                    },
                 }).then((res) => {
-                    this.alertRuleTableData = res.data.items;
-                    alert(res.data.pages)
-                    this.alertRulesCount = res.data.pages;
-                    this.current_change = page;
-                    if(page > res.data.pages){
-                        this.current_change = res.data.pages;
-                    }
-                }).catch((res) => {
-                    var msg = '告警规则信息加载失败！';
-                    this.alertRulePopupErrorMessage(msg + res);
-                });
+                     this.alertRuleTableData = res.data.results;
+                    vm.alertRulesCount = res.data.results[0].pages
+                    console.log(vm.alertRulesCount)
+                })
             },
             change_type(value){
                alert(value)
