@@ -739,6 +739,8 @@
             }
         },
         watch: {
+            //监听流程节点总数，如果总数发生变化，重新获取所有节点的状态信息，由于初始默认节点数是0
+            //因此在页面加载完成节点总数会发生变化，从而在页面加载完成后自动加载所有节点的状态信息
             customProcessStepSum: function(val, oldVal) {
                 if(-1 == oldVal){
                     this.$nextTick(() => {
@@ -776,7 +778,9 @@
             }
         },
         mounted(){
+            //在页面加载完成后获取所有的流程节点
             this.customProcessSelectAllNodes();
+            //在页面加载完成后加载所有的蓝鲸用户数据，用于在填写发送通知信息时指定用户
             this.loadBkUsers();
             this.get_header_data();
         }
