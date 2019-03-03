@@ -120,7 +120,7 @@ def send_notification(notification):
     for receiver in receivers:
         # 获取当前账户名称的用户信息
         rec_info = Localuser.objects.filter(user_name=receiver).get()
-        # 当用户的通知方式为微信通知方式的情况下
+        # 当用户的通知方式为微信通知方式的情况下--由于微信端限制，非服务号无法使用群发，因此只能在遍历用户时发送，不能统一发送
         if 'wechat' == rec_info.notice_style:
             # 如果当前为第一次获取token信息
             if None is access_token:
