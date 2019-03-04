@@ -409,14 +409,14 @@
                 temp.html(customProcessExecStatus);
                 temp.removeAttr('id');
                 $('#customProcessNextButton').remove();
+                this.customProcessSendMessage(this.customProcessStep - 1);
                 //如果当前已经执行到最后一个节点
                 if(this.customProcessStep == this.customProcessStepSum){
                     this.customProcessStartButtonType = 'info';
                     this.customProcessStartButtonText = '当日流程已执行完毕';
-                    this.customProcessEnd();
+                    //this.customProcessEnd();
                     return;
                 }
-                this.customProcessSendMessage(this.customProcessStep - 1);
                 this.generateCurrentProcessInfo();
             },
             //发送短信通知
