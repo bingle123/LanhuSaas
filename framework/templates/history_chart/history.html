@@ -183,7 +183,7 @@ let vm = new Vue({
            select_log(){
                if(vm.log_type == 'log'){
                    vm.page = 1                                             //查询
-                   if (m.keyword == "" & vm.date_Choice == "" & this.search =="") {
+                   if (vm.keyword == "" & vm.date_Choice == "" & this.search =="") {
                        vm.show()
                    }
                    axios({
