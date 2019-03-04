@@ -20,6 +20,9 @@ urlpatterns = patterns(
     (r'^select_all_rules$', 'select_all_rules'),
     (r'^select_rules_pagination$', 'select_rules_pagination'),
     (r'^select_Keyword', 'select_Keyword'),
+    (r'^about_select', 'about_select'),
+    (r'^about_search', 'about_search'),
+
     (r'^select_scenes/$', 'select_scenes'),     #场景对比分析
 
 

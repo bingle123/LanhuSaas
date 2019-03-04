@@ -28,6 +28,14 @@ def select_Keyword(request):
     res = function.select_Keyword(request)
     return render_json(res)
 
+def about_select(request):
+    res = function.about_select(request)
+    return render_json(res)
+
+def about_search(request):
+    res = function.about_search(request)
+    return render_json(res)
+
 def select_scenes(request):
     res = function.select_scenes(request)
     return render_json(res)
