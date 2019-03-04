@@ -13,7 +13,7 @@
 </head>
 <body>
     <div id="customProcess">
-        <el-dialog title="定制过程通知" :visible.sync="addDialogVisible" width="80%" :close-on-click-modal="false" center>
+        <el-dialog title="定制过程通知" :visible.sync="addDialogVisible" width="80%" :close-on-click-modal="false" center @closed="customProcessListNode">
             <div v-if="customProcessTableStatus == 'list'">
                 <el-row>
                     <el-col :span="24">
@@ -533,7 +533,7 @@
                             if('ok' == res.data.message){
                                 this.customProcessPageChange(1);
                                 this.addDialogVisible = true;
-                                //this.customProcessSelectAllNodes()
+                                this.customProcessSelectAllNodes()
                             }else{
                                 var msg = '修改过程通知失败！';
                                 this.customProcessPopupErrorMessage(msg);

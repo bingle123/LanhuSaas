@@ -6,6 +6,7 @@ from django.forms.models import model_to_dict
 from shell_app.tools import *
 from django.core.paginator import *
 
+
 # 获取所有定制过程节点
 def select_all_nodes():
     node_info = TbCustProcess.objects.order_by('seq').all()
@@ -65,10 +66,10 @@ def add_node(node):
     return status_dic
 
 
-# 获取所有蓝鲸用户信息
+# 获取所有已设置通知方式的蓝鲸用户信息
 def select_all_bkusers():
     users_list = list()
-    bk_users = Localuser.objects.all()
+    bk_users = Localuser.objects.all().filter(notice_style__isnull=False)
     for bk_user in bk_users:
         user_dict = model_to_dict(bk_user)
         users_list.append(user_dict)
@@ -158,14 +159,16 @@ def send_notification(notification):
                 if None is access_token:
                     print 'Wechat access token get fail'
                     send_flag = False
-                    infos.append(u'微信接入Token获取异常!')
+                    infos.append(u'微信发送失败!Token获取异常!')
                     break
             # 根据获取的当前用户的openid和获取的token发送指定内容的推送消息给用户
+            if None is rec_info.open_id or '' == rec_info.open_id.strip():
+                infos.append(u'%s：微信发送失败!用户openid未设置' % receiver)
+                send_flag = False
+                continue
             res = wechat_send_msg(access_token, rec_info.open_id, notification['content'])
             # 函数返回为None说明发送正常，否则将返回错误信息
-            if None is res:
-                infos.append(u'%s: 微信通知发送成功!' % receiver)
-            else:
+            if None is not res:
                 infos.append(u'%s: 微信通知发送失败! %s' % (receiver, res))
                 # send_flag标志位置False告诉前端有发送失败的任务，前端将会以error框展示
                 send_flag = False
@@ -190,8 +193,9 @@ def send_notification(notification):
     # 根据当前发送状态标志位，返回前端一个相应的发送状态，用于前端判断发送是否存在问题
     if send_flag:
         status['message'] = 'ok'
+        status['info'] = u'通知发送成功!'
     else:
         status['message'] = 'error'
-    status['info'] = infos
+        status['info'] = infos
     # 返回发送的状态信息给前端
     return status
