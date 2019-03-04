@@ -195,13 +195,12 @@
                 ve.current_change(1)
             },
             current_change(value) {
-                ve.page = value;
                 axios({
                     method: 'post',
                     url: '${SITE_URL}db_connection/selecthor2/',
                     data: {
                         search: this.menusearch,
-                        page: ve.page,
+                        page: value,
                         limit: 5,
                     }
                 }).then((res) => {
@@ -235,7 +234,7 @@
 
             hide() {
                 this.isAdd = 1;
-                ve.current_change(ve.page)
+                ve.current_change(ve.currentPage)
             },
 
             rowClass({row, rowIndex}) {
@@ -276,8 +275,8 @@
                         axios.post(
                             '${SITE_URL}db_connection/addmuenus/', this.addmuenus
                         ).then(function (res) {
-                            if(ve.page < res.data.results['page_count']){
-                            ve.page = res.data.results['page_count']
+                            if(ve.currentPage < res.data.results['page_count']){
+                            ve.currentPage = res.data.results['page_count']
                             ve.hide()
                         }
                         });
@@ -313,7 +312,7 @@
 
             //删除
             delete_muenu(id, index, data) {
-                this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
+                this.$confirm('此操作将永久删除该菜单, 是否继续?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning',
