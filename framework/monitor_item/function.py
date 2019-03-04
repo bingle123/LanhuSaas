@@ -100,7 +100,7 @@ def delete_unit(request):
         unit_id = res['unit_id']
         monitor_name=res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
-        co.delete_task(monitor_name)
+        co.delete_task(unit_id)
         res1 = tools.success_result(None)
         info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
@@ -113,7 +113,7 @@ def delete_unit(request):
 
 
 def add_unit(request):
-    try:
+    # try:
         res = json.loads(request.body)
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
@@ -147,6 +147,7 @@ def add_unit(request):
         add_dic['creator'] = user['data']['bk_username']
         add_dic['editor'] = user['data']['bk_username']
         Monitor.objects.create(**add_dic)
+        add_dic['monitor_area'] = res['monitor_area']
         if res['monitor_type'] == 'fourth':
             function.add_unit_task(add_dicx=add_flow_dic)
         else:
@@ -154,16 +155,16 @@ def add_unit(request):
         result = tools.success_result(None)
         info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
-    except Exception as e:
-        info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        result = tools.error_result(e)
-    add_log(info)
-    return result
+    # except Exception as e:
+    #     info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    #     result = tools.error_result(e)
+    # add_log(info)
+        return result
 
 
 def edit_unit(request):
-    try:
+    # try:
         res = json.loads (request.body)
         id = res['unit_id']
         cilent = tools.interface_param (request)
@@ -177,7 +178,7 @@ def edit_unit(request):
         if res['monitor_type'] == 'third':
             monitor_type = '作业单元类型'
         if res['monitor_type'] == 'fourth':
-            monitor_type = '流程单元类型'
+            monitor_type = 'fourth'
             add_dic['jion_id'] = res['flow']['jion_id']
             add_dic['gather_params'] = add_dic['node_name']
             add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
@@ -192,16 +193,17 @@ def edit_unit(request):
         add_dic['monitor_type'] = monitor_type
         add_dic['editor'] = user['data']['bk_username']
         Monitor.objects.filter(id=id).update(**add_dic)
+        add_dic['monitor_area'] = res['monitor_area']
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
-    except Exception as e:
-        info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        result = tools.error_result(e)
-    add_log(info)
-    return result
+    # except Exception as e:
+    #     info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    #     result = tools.error_result(e)
+    # add_log(info)
+        return result
 
 
 def basic_test(request):
@@ -269,7 +271,7 @@ def chart_get_test(request):
     info['gather_rule']=request_body['sql']
     sql = request_body['sql']
     #调用gatherData方法
-    gather_data(info)
+    gather_data(**info)
     # sql查询列的名称
     column_name_temp = sql.split('@')
     column_name_list = []

@@ -83,6 +83,16 @@
         <div>
             <span>监控监控项名称</span>
             <el-input placeholder="请输入监控项名称" v-model="monitor_name" style="width: 30%"></el-input>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>监控项执行日历</span>
+            <el-select v-model="area" placeholder="请选择日历的地区">
+                <el-option
+                  v-for="item in areas"
+                  :key="item.value"
+                  :label="item.area"
+                  :value="item.value">
+                </el-option>
+            </el-select>
         </div>
         <div style="height: 30px"></div>
         <span>
@@ -665,6 +675,8 @@
             disabled3: false,                            //图表单元
             disabled4: false,                            //作业单元
             disabled5: false,                            //流程单元
+            areas:[],
+            area:1,
             caiji1: 'block',
             caiji2: 'none',
             monitor_name: '',                             //单元名称
@@ -896,6 +908,23 @@
             get_header_data(){
             axios.get('/market_day/get_header/').then(function (res) {
             })
+            },
+            get_all_area(){
+            axios({
+                method:'get',
+                url:'/market_day/get_all_area',
+            }).then(function (res) {
+                res=res.data.message
+                vm.areas=[]
+                for (var i=0;i<res.length;i++){
+                    var label=res[i].country+"("+res[i].timezone+")"
+                    temp={
+                        'area':label,
+                        'value':res[i].id
+                    }
+                    vm.areas.push(temp)
+                    }
+                })
             },
             sycontent(){
                 let tempcontents = vm.basic.contents
@@ -1525,6 +1554,7 @@
                             monitor_type: vm.monitor_type,
                             monitor_name: vm.monitor_name,
                             unit_id: vm.unit_id,
+                            monitor_area:vm.area
                         }
                     }).then((res) => {
                         if (res['data']['code'] == 1) {
@@ -1547,7 +1577,8 @@
                             'flow':flow,
                             data: vm.result_data,
                             monitor_type: vm.monitor_type,
-                            monitor_name: vm.monitor_name
+                            monitor_name: vm.monitor_name,
+                            monitor_area:vm.area
                         },
                     }).then((res) => {
                         if (res['data']['code'] == 1) {
@@ -2176,6 +2207,7 @@
         },
         mounted() {
             this.get_header_data()
+            this.get_all_area()
         },
     });
     vm.show();
