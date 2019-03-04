@@ -597,10 +597,10 @@
             chart_monitor:[],
             job_monitor:[],
             flow_monitor:[],
-            drigging_id:1,
+            drigging_id:1,      //画布元素id
             show_num:0,
             monitor_data:[],
-            scale:1,
+            scale:1,            //比例
             multiple:1,
 
         },
@@ -696,7 +696,7 @@
                 }, 100)
 
             },
-            monitore_edit_start(value){
+            monitore_edit_start(value){    //获取场景监控项信息
 
                 axios({
                     method:'post',
@@ -705,9 +705,7 @@
                 }).then(function (res) {
                     vm.result_list_edit=res.data.results;
                     vm.scale=parseFloat(res.data.results[0].scale);
-                    console.log(vm.scale)
                     vm.multiple = Math.round((vm.scale-1)*10);
-                    console.log(vm.multiple);
                 })
             },
             hide() {
@@ -716,7 +714,7 @@
                 $('.monitor_content').html('');
             },
             async goto() {
-                if($('.monitor_content').html()==''){
+                if($('.monitor_content').html()==''){     //场景编排内容块无元素
                     $('.monitor_edit').css('display','block');
                     vm.show_num=vm.isAdd;
                     vm.isAdd=0;
@@ -724,7 +722,7 @@
                     let max=0;
                     let index=0;
                     for(var i=0;i<result_list_edit.length;i++){
-                        if(max<result_list_edit[i].order){
+                        if(max<result_list_edit[i].order){  //场景监控项拖拽元素唯一
                             max=result_list_edit[i].order;
                         }
                         if(result_list_edit[i].monitor_type=='基本单元类型'){
@@ -748,7 +746,6 @@
                                 data:result_list_edit[i].item_id,
                             })
                             vm.monitor_data = res.data.results;
-                            console.log(vm.monitor_data[0])
                             $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px;top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"><div id=\"chart'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
                             show_chart(vm.monitor_data[0].id, vm.monitor_data[0].gather_params, vm.monitor_data[0].height, vm.monitor_data[0].width, result_list_edit[i].order, vm.monitor_data[0].contents);
 
@@ -760,7 +757,6 @@
                                 data:result_list_edit[i].item_id,
                             });
                             vm.monitor_data = res.data.results;
-                            console.log(result_list_edit[i],vm.monitor_data)
                             let job_params = vm.monitor_data[0];
                             $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"job'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"></div>');
                             job_monitor(job_params);
@@ -928,19 +924,16 @@
                 });
             },
             add_base_monitor(i){
-                console.log(i);
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"basic'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>');
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"basic'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"transform: scale('+vm.scale+')\"></div>');
                 base_monitor(i.id,i.font_size,i.height,i.width,i.contents);
                 vm.drigging_id++
             },
             add_chart_monitor(i){
-                console.log(i);
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+i.height+'px;width:'+i.width+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"transform: scale('+vm.scale+')\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+i.height+'px;width:'+i.width+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
                 show_chart(i.id,i.gather_params,i.height,i.width,vm.drigging_id,i.contents);
                 vm.drigging_id++
             },
             add_job_monitor(i){
-                console.log(i);
                 var job_params={
                     'id':i.id,
                     'width' :i.width,
@@ -948,16 +941,15 @@
                     'status':i.job_status,
                     'contents':i.contents
                 }
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"job'+i.id+'\" id=\"'+vm.drigging_id+'\"></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"job'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"transform: scale('+vm.scale+')\"></div>')
                 job_monitor(job_params)
                 vm.drigging_id++
             },
             add_flow_monitor(i){
-                console.log(i);
                 let jion_id=[{
                     "id":i.jion_id
                 }]
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\"><div type=\"flow_monitor'+vm.drigging_id+'\"></div></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"transform: scale('+vm.scale+')\"><div type=\"flow_monitor'+vm.drigging_id+'\"></div></div>')
                 flow_monitor(jion_id,vm.drigging_id)
                 vm.drigging_id++
             },
@@ -1027,9 +1019,7 @@
                         'score':score
                     };
                     vm.result_list.push(data);
-                    console.log(order,item_id,x,y,scale,score);
                 }
-                console.log(vm.result_list)
         })
     });
     $(function () {
@@ -1116,12 +1106,9 @@
 
     });
     $('.el-icon-circle-plus-outline').click(function () {
-        if(vm.multiple<2) {
-            alert("+")
+        if(vm.multiple<3) {
             vm.scale = vm.scale + 0.1;
-            console.log(vm.scale);
             $('.monitor_content').find('.Drigging').css('transform','scale('+vm.scale+')');
-            $('.monitor_content').find('canvas').css('transform','scale('+vm.scale+')');
             vm.multiple++;
         }else {
             return
@@ -1129,10 +1116,8 @@
     });
     $('.el-icon-remove-outline').click(function () {
         if(vm.multiple>-2){
-            alert("-")
             vm.scale=vm.scale-0.1;
             $('.monitor_content').find('.Drigging').css('transform','scale('+vm.scale+')');
-            $('.monitor_content').find('canvas').css('transform','scale('+vm.scale+')');
             vm.multiple--;
         }else {
             return
@@ -1147,111 +1132,7 @@
 
 
         //flow1_js_start
-        $('#flow1').dataflow({
-            el: '.tool', //流程拖动源
-            canvas: '#canvas', //画布
-            arrowWidth: 8,
-            arrowHeight: 10,
-            template: '#template',
-            id: 'ch', // 定义节点id，当页面只有一个dataflow实例是可忽略，当有多个实例时，需自定义该字段，id具有唯一性
-            onRemoveNodeAfter: function(id, line) { //删除节点回调
-                //console.log(id);
-                //console.log(line);
-            },
-            onCreateNodeAfter: function(id) { //初始化节点回调
-                //console.log(id)
-            },
-            onCreateLineAfter: function() { //创建线条后回调
-                //console.log("1111")
-            },
-            ondrawData: function() { //初始化流程后回调
-                //console.log($('.node-icon').length)
-            },
-            data: {
-                "line": [
-                    {
-                    "source": {
-                        "id": "ch1",
-                        "arrow": "Bottom"
-                    },
-                    "target": {
-                        "id": "ch3",
-                        "arrow": "Left"
-                    }
-                    },
-                    {
-                        "source": {
-                            "id": "ch2",
-                            "arrow": "Right"
-                        },
-                        "target": {
-                            "id": "ch3",
-                            "arrow": "Right"
-                        }
-                    },
-                    {
-                        "source": {
-                            "id": "ch3",
-                            "arrow": "Top"
-                        },
-                        "target": {
-                            "id": "ch2",
-                            "arrow": "Bottom"
-                        }
-                    },
-                    {
-                        "source": {
-                            "id": "ch3",
-                            "arrow": "Top"
-                        },
-                        "target": {
-                            "id": "ch2",
-                            "arrow": "Right"
-                        }
-                    },
-                    {
-                        "source": {
-                            "id": "ch3",
-                            "arrow": "Top"
-                        },
-                        "target": {
-                            "id": "ch4",
-                            "arrow": "Right"
-                        }
-                    },
-                    ],
-                "location": [
-                    {
-                        "id": "ch1",
-                        "x": 130,
-                        "y": 48,
-                        "name":"1",
-                        "type": "database"
-                    },
-                    {
-                        "id": "ch2",
-                        "x": 406,
-                        "y": 33,
-                        "name":"2",
-                        "type": "dataCog"
-                    },
-                    {
-                        "id": "ch3",
-                        "x": 406,
-                        "y": 243,
-                        "name":"3",
-                        "type": "dataCog"
-                    },
-                    {
-                        "id": "ch4",
-                        "x": 150,
-                        "y": 60,
-                        "name":"4",
-                        "type": "database"
-                    },
-                ]
-            }
-        });
+
         $('#save2').click(function() {
             // 获取全部数据
             var data= $('#flow1').data('dataflow').getAllData();
