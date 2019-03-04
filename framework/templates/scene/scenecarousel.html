@@ -79,7 +79,22 @@
             },
             scene_content_change(value){
                 let selector = '.scene_content'+value;
-                $(selector).html(selector)
+                let base_list=vm.imgList[value].content[0].base_list
+                let chart_list=vm.imgList[value].content[0].chart_list
+                let job_list=vm.imgList[value].content[0].job_list
+                let flow_list=vm.imgList[value].content[0].flow_list
+                for(let i=0;i<base_list.length;i++){
+                    $(selector).html(selector)
+                }
+                for(let i=0;i<chart_list.length;i++){
+                    $(selector).html(selector)
+                }
+                for(let i=0;i<job_list.length;i++){
+                    $(selector).html(selector)
+                }
+                for(let i=0;i<flow_list.length;i++){
+                    $(selector).html(selector)
+                }
             },
         },
         mounted() {
