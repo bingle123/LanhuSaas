@@ -84,38 +84,34 @@ def select_rules_pagination(request):
     limit = res1['limit']
     page = res1['page']
     search = res1['search'].strip()
-    print (search)
+    keyword = res1['keyword'].strip()
+    date_Choice =res1['date_Choice']
+    if(res1['date_Choice']):
+        res3 = res1['date_Choice'][0]
+        res4 = res1['date_Choice'][1]
+        print res3,res4
+    DATABASES = settings_development.DATABASES['default']
+    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
+                         db=DATABASES['NAME'], charset="utf8")
+    cursor = db.cursor()
+    sql = "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "\
+          "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "\
+          "FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id "\
+          "FROM tb_monitor_scene AS a, tl_scene_monitor AS b "\
+          "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d "\
+          "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "\
+          "WHERE e.item_id = f.item_id "
     if(search):
-        print 456
-        DATABASES = settings_development.DATABASES['default']
-        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
-        cursor = db.cursor()
-        cursor.execute(
-            "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "
-            "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "
-            "FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id "
-            "FROM tb_monitor_scene AS a, tl_scene_monitor AS b "
-            "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d "
-            "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
-            "WHERE e.item_id = f.item_id and  e.scene_name = '" + search + "'"
-                                                                           " ORDER BY e.scene_name")
-        res = cursor.fetchall()
-    else:
-        print 123
-        DATABASES = settings_development.DATABASES['default']
-        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
-        cursor = db.cursor()
-        cursor.execute(
-            "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "
-            "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "
-            "FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id "
-            "FROM tb_monitor_scene AS a, tl_scene_monitor AS b "
-            "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d "
-            "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
-            "WHERE e.item_id = f.item_id ORDER BY e.scene_name")
-        res = cursor.fetchall()
+        sql = sql+"and  e.scene_name = '" + search + "'"\
+
+    if(keyword):
+        sql=sql+"and (e.scene_id = '" + keyword + "' or e.id ='" + keyword + "' or e.monitor_name = '" + keyword + "' or f.alert_title='" + keyword + "' or f.alert_content='" + keyword + "' or f.alert_time='" + keyword + "' or f.persons='" + keyword + "') "\
+
+    if(date_Choice):
+        sql=sql+"and f.alert_time between  '" + res3 + "'  and '" + res4 + "'"
+    sql=sql+" ORDER BY e.scene_name"
+    cursor.execute(sql)
+    res = cursor.fetchall()
     p = Paginator(res, limit)
     count = p.page_range
     pages = count
