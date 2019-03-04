@@ -414,10 +414,10 @@ def get_scenes(user_name,start,end):
     pos_id = Localuser.objects.get (user_name=user_name).user_pos_id
     # 获取岗位对应的场景
     scene = position_scene.objects.filter (position_id=pos_id)
-    for z in scene:
+    for x in scene:
         scenes.append (x.scene_id)
     # 遍历scenes,获取每个场景对应的监控项
-    for i in scenes:
+    for z in scenes:
         # 初始化
         base_list = []
         chart_list = []
