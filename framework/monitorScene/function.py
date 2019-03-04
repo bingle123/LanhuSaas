@@ -471,7 +471,7 @@ def get_scenes(user_name,start,end):
                 scene_monitor_dict = {
                     'x':scene_monitor.x,
                     'y':scene_monitor.y,
-                    'scale':int(scene_monitor.scale),
+                    'scale':str(scene_monitor.scale),
                     'score':scene_monitor.score,
                     'order':scene_monitor.order,
                 }
