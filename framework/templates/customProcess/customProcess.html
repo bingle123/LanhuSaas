@@ -574,7 +574,7 @@
                     }).then((res) =>{
                         loading.close();
                         if('ok' == res.data.message){
-                            this.customProcessPageChange(1);
+                            this.customProcessPageChange(this.currentPage);
                             this.customProcessSelectAllNodes();
                             this.customProcessListNode();
                             this.$message({
