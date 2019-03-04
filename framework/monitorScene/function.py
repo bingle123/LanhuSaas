@@ -436,7 +436,7 @@ def get_scenes(user_name,start,end):
             # 遍历场景的监控项ID
             for j in items_id:
                 # 获取基本数据
-                item = Monitor.objects.get (id=j)
+                item = Monitor.objects.get(id=j)
                 # 转成字典
                 item_dict = model_to_dict (item)
                 # 把时间类型转换为String
