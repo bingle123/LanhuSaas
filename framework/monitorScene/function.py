@@ -414,7 +414,7 @@ def get_scenes(user_name,start,end):
     pos_id = Localuser.objects.get (user_name=user_name).user_pos_id
     # 获取岗位对应的场景
     scene = position_scene.objects.filter (position_id=pos_id)
-    for x in scene:
+    for z in scene:
         scenes.append (x.scene_id)
     # 遍历scenes,获取每个场景对应的监控项
     for i in scenes:
@@ -425,7 +425,7 @@ def get_scenes(user_name,start,end):
         job_list = []
         items_id = []
         # 场景对应的监控项id
-        scene_monitor = Scene_monitor.objects.filter(scene_id = i)
+        scene_monitor = Scene_monitor.objects.filter(scene_id = z)
         for k in scene_monitor:
             items_id.append(k.item_id)
         # 遍历场景的监控项ID
@@ -463,6 +463,16 @@ def get_scenes(user_name,start,end):
                     dic = dict (dic, **dic1)
                 # 拼接监控项基础数据和采集数据
                 item_dict = dict (item_dict, **dic)
+                #拼接tl_scene_monitor信息
+                scene_monitor = Scene_monitor.objects.get(scene_id=z,item_id=j)
+                scene_monitor_dict = {
+                    'x':scene_monitor.x,
+                    'y':scene_monitor.y,
+                    'scale':int(scene_monitor.scale),
+                    'score':scene_monitor.score,
+                    'order':scene_monitor.order,
+                }
+                item_dict = dict (item_dict, **scene_monitor_dict)
                 # 按不同的监控项类型保存
                 if u'基本单元类型' == item.monitor_type:
                     base_list.append (item_dict)
@@ -471,6 +481,12 @@ def get_scenes(user_name,start,end):
                 if u'流程单元类型' == item.monitor_type:
                     flow_list.append (item_dict)
                 if u'作业单元类型' == item.monitor_type:
+                    jobs = Job.objects.filter(job_id = item.jion_id)
+                    status = jobs.last().status
+                    temp_dict = {
+                        'job_status':status
+                    }
+                    item_dict = dict (item_dict, **temp_dict)
                     job_list.append (item_dict)
         data = {
             'base_list': base_list,
