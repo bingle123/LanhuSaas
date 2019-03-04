@@ -33,7 +33,7 @@ def select_nodes_pagination(node_info):
     list_set = list()
     page = node_info['page']
     limit = node_info['limit']
-    nodes_list = TbCustProcess.objects.all().order_by("seq")
+    nodes_list = TbCustProcess.objects.all()
     paginator = Paginator(nodes_list, limit)
     try:
         selected_set = paginator.page(page)
