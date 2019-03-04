@@ -4,7 +4,7 @@ from models import *
 from position.models import *
 from django.forms.models import model_to_dict
 from shell_app.tools import *
-
+from django.core.paginator import *
 
 # 获取所有定制过程节点
 def select_all_nodes():
@@ -26,14 +26,43 @@ def select_all_nodes():
     return node_list
 
 
+# 分页获取定制过程节点
+def select_nodes_pagination(node_info):
+    result_dict = dict()
+    list_set = list()
+    page = node_info['page']
+    limit = node_info['limit']
+    nodes_list = TbCustProcess.objects.all()
+    paginator = Paginator(nodes_list, limit)
+    try:
+        selected_set = paginator.page(page)
+    except PageNotAnInteger:
+        selected_set = paginator.page(1)
+    except EmptyPage:
+        selected_set = paginator.page(paginator.num_pages)
+    for selected_data in selected_set:
+        temp = model_to_dict(selected_data)
+        list_set.append(temp)
+    result_dict['items'] = list_set
+    result_dict['pages'] = paginator.num_pages
+    return result_dict
+
+
 # 添加一个定制过程节点
 def add_node(node):
+    status_dic = dict()
     TbCustProcess(**node).save()
     last_node = TbCustProcess.objects.last()
     has_record = TdCustProcessLog.objects.filter(node_id=last_node.id).count()
     if 0 == has_record:
         TdCustProcessLog(node_id=last_node.id).save()
-    return "ok"
+    items_count = TbCustProcess.objects.count()
+    pages = items_count // 5
+    if 0 != items_count % 5:
+        pages = pages + 1
+    status_dic['message'] = 'ok'
+    status_dic['total_pages'] = pages
+    return status_dic
 
 
 # 获取所有蓝鲸用户信息

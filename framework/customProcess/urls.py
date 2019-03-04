@@ -25,4 +25,5 @@ urlpatterns = patterns(
     (r'^clear_execute_status$', 'clear_execute_status'),
     (r'^select_all_bkusers$', 'select_all_bkusers'),
     (r'^send_notification$', 'send_notification'),
+    (r'^select_nodes_pagination$', 'select_nodes_pagination')
 )
