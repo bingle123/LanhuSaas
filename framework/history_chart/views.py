@@ -27,3 +27,7 @@ def select_all_rules(request):
 def select_Keyword(request):
     res = function.select_Keyword(request)
     return render_json(res)
+
+def select_scenes(request):
+    res = function.select_scenes(request)
+    return render_json(res)
