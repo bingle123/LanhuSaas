@@ -129,7 +129,6 @@ def delect(request):
         add_log (info)
     return ""
 
-
 def editSence(request):
     try:
         model = json.loads (request.body)
@@ -305,9 +304,9 @@ def scene_show(res):
             res_dic = {
                 'flow_list': flow_list,
             }
-        result = tools.success_result (res_dic)
+        result = tools.success_result(res_dic)
     except Exception as e:
-        result = tools.error_result (e)
+        result = tools.error_result(e)
     return result
 
 
@@ -366,17 +365,22 @@ def get_basic_data(id):
     return datas
 
 
-def getBySceneId(request, id):
-    sm = Scene_monitor.objects.filter (scene_id=id)
+
+def getBySceneId(request,id):
+    sm = Scene_monitor.objects.filter(scene_id=id)
     dic_data = []
-    for s in model_to_dict (sm):
-        itemId = s['item_id']
-        monitor = Monitor.objects.get (id=itemId)
-        item = model_to_dict (monitor)
-        item['x'] = s['x']
-        item['y'] = s['y']
-        dic_data.append (item)
-    print dic_data
+    for s in sm:
+        scene_monitor = model_to_dict(s)
+        itemId = scene_monitor['item_id']
+        monitor = Monitor.objects.get(id =itemId)
+
+        item = model_to_dict(monitor)
+        item['start_time'] = str(item['start_time'])
+        item['end_time'] = str(item['end_time'])
+        item['x'] = scene_monitor['x']
+        item['y'] = scene_monitor['y']
+        dic_data.append(item)
+    return tools.success_result(dic_data)
 
 
 def alternate_play_test(request):
