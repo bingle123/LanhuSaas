@@ -18,6 +18,7 @@ from celery.task import periodic_task
 import datetime
 import sys
 from logmanagement.function import add_log,make_log_info,get_active_user
+from conf import settings_development
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
@@ -101,7 +102,6 @@ def saveconn_all(request):
 
 #修改
 def editconn(request):
-    print request.body
     try:
         res = json.loads(request.body)
         cilent = tools.interface_param(request)
@@ -464,7 +464,8 @@ def savemnus(request):
 
 #获得数据库连接对象
 def get_db():
-    db = MySQLdb.connect('192.168.1.25', 'root', '12345678', 'mydjango1',charset='utf8')
+    res = settings_development.DATABASES['default']
+    db = MySQLdb.connect(res['HOST'], res['USER'], res['PASSWORD'],res['NAME'],charset='utf8')
     return db
 
 #通用数据库连接对象

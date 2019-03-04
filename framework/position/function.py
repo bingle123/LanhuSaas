@@ -226,10 +226,10 @@ def synchronize(request):
             flag1 = 0
             for j in users:
                 if i['bk_username'] == j.user_name:
-                    Localuser.objects.filter(user_name=j.user_name).update(mobile_no=i['phone'],email=i['email'],open_id=i['wx_userid'])
+                    Localuser.objects.filter(user_name=j.user_name).update(mobile_no=i['phone'],email=i['email']) #,open_id=i['wx_userid']
                     flag1=1
             if flag1 == 0:
-                Localuser.objects.create(user_name=i['bk_username'],user_pos_id=1,mobile_no=i['phone'], email=i['email'], open_id=i['wx_userid'])
+                Localuser.objects.create(user_name=i['bk_username'],user_pos_id=1,mobile_no=i['phone'], email=i['email']) #, open_id=i['wx_userid']
 
         for x in users:
             flag2 = 0

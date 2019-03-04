@@ -131,9 +131,8 @@
             get_scenes(){
                  axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/get_scenes/',
+                    url: '${SITE_URL}monitorScene/alternate_play/',
                 }).then((res)=> {
-                    console.log(res)
                      vm.imgList = res.data.message;
                 })
                  }

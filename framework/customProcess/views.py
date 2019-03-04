@@ -4,6 +4,8 @@ from common.mymako import render_json
 from common.mymako import render_mako_context
 from . import function
 import json
+import sys
+from logmanagement.function import add_log,make_log_info,get_active_user
 
 
 def show_index(request):
@@ -73,4 +75,15 @@ def truncate_node(request):
 
 def clear_execute_status(request):
     status = function.clear_execute_status()
+    return render_json(status)
+
+
+def select_all_bkusers(request):
+    bk_users = function.select_all_bkusers()
+    return render_json(bk_users)
+
+
+def send_notification(request):
+    notification = json.loads(request.body)
+    status = function.send_notification(notification)
     return render_json(status)

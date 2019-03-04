@@ -20,7 +20,7 @@ from account.models import BkUser
 from blueking.component.shortcuts import get_client_by_user
 from datetime import datetime
 from customProcess.function import clear_execute_status
-import function
+from market_day.function import check_jobday
 
 @task
 def crawl_task(**i):
@@ -92,7 +92,7 @@ def crawl_task(**i):
 def gather_data_task_one(**i):
     # 调用基本监控项和图标监控项数据采集的方法
     area_id=i['area_id']
-    if function.check_jobday(area_id):
+    if check_jobday(area_id):
         function.gather_data(**i)
     else:
         pass
@@ -102,7 +102,7 @@ def gather_data_task_one(**i):
 def gather_data_task_two(**i):
     print '采集开始'
     # 调用作业监控项数据采集的方法
-    if function.check_jobday(area_id):
+    if check_jobday(area_id):
         tools.job_interface(res=i)
     else:
         pass
@@ -119,7 +119,7 @@ def gather_data_task_thrid(**i):
 @task
 def start_flow_task(**info):
     #得到client对象，方便调用接口
-    if function.check_jobday(area_id):
+    if check_jobday(area_id):
         user_account = BkUser.objects.filter(id=1).get()
         client = get_client_by_user(user_account)
         client.set_bk_api_ver('v2')
@@ -181,7 +181,7 @@ def count_time(**i):
 @periodic_task(run_every=crontab(hour=0,minute=0))
 def clear_status_task():
     print '开始清理状态'
-    if function.check_jobday(area_id):
+    if check_jobday(area_id):
         clear_execute_status()
     else:
         pass

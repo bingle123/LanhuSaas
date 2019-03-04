@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from models import *
+from position.models import *
 from django.forms.models import model_to_dict
+from shell_app.tools import *
 
 
 def select_all_nodes():
@@ -30,6 +32,15 @@ def add_node(node):
     if 0 == has_record:
         TdCustProcessLog(node_id=last_node.id).save()
     return "ok"
+
+
+def select_all_bkusers():
+    users_list = list()
+    bk_users = Localuser.objects.all()
+    for bk_user in bk_users:
+        user_dict = model_to_dict(bk_user)
+        users_list.append(user_dict)
+    return users_list
 
 
 def update_node_status(node):
@@ -74,3 +85,53 @@ def clear_execute_status():
         status.do_person = None
         status.save()
     return "ok"
+
+
+def send_notification(notification):
+
+    send_flag = True
+
+    status = dict()
+    if -1 != notification['receivers'].find(','):
+        receivers = notification['receivers'].split(',')
+    else:
+        receivers = list()
+        receivers.append(notification['receivers'])
+    infos = list()
+    access_token = None
+    sms_send_list = None
+    mail_send_list = None
+    for receiver in receivers:
+        rec_info = Localuser.objects.filter(user_name=receiver).get()
+        if 'wechat' == rec_info.notice_style:
+            if None is access_token:
+                access_token = wechat_access_token()
+                if None is access_token:
+                    print 'Wechat access token get fail'
+                    send_flag = False
+                    infos.append(u'微信接入Token获取异常!')
+                    break
+            res = wechat_send_msg(access_token, rec_info.open_id, notification['content'])
+            if None is res:
+                infos.append(u'%s: 微信通知发送成功!' % receiver)
+            else:
+                infos.append(u'%s: 微信通知发送失败! %s' % (receiver, res))
+                send_flag = False
+        elif 'sms' == rec_info.notice_style:
+            if None is sms_send_list:
+                sms_send_list = list()
+            sms_send_list.append(receiver)
+        elif 'email' == rec_info.notice_style:
+            if None is sms_send_list:
+                mail_send_list = list()
+            mail_send_list.append(receiver)
+    if None is not sms_send_list:
+        sms_send_msg(notification['content'], sms_send_list)
+    if None is not mail_send_list:
+        mail_send_msg(u'过程通知信息', notification['content'], mail_send_list)
+    if send_flag:
+        status['message'] = 'ok'
+    else:
+        status['message'] = 'error'
+    status['info'] = infos
+    return status
