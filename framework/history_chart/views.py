@@ -17,12 +17,11 @@ def select_log(request):
     return render_json(res)
 
 def select_rules_pagination(request):
-    page_info = json.loads(request.body)
-    selected_rules = function.select_rules_pagination(page_info)
-    return render_json(selected_rules)
+    alert_rules = function.select_rules_pagination(request)
+    return render_json(alert_rules)
 
 def select_all_rules(request):
-    alert_rules = function.select_all_rules()
+    alert_rules = function.select_all_rules(request)
     return render_json(alert_rules)
 
 def select_Keyword(request):
