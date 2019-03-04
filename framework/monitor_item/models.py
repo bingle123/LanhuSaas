@@ -50,7 +50,7 @@ class Job(models.Model):
         verbose_name_plural = u'作业实列信息'
         db_table = 'td_job_instance'
 
-#status：1表示FAILED  2表示RUNNING   3表示SUSPENDED   4表示REVOKED   5表示FINISHED
+#status：0表示FAILED  1表示RUNNING   2表示SUSPENDED   3表示REVOKED   4表示FINISHED 5表示超时
 #test_flag 1表示测试  2表示非测试
 class Flow(models.Model):
     flow_id = models.PositiveIntegerField(verbose_name=u'关联ID')

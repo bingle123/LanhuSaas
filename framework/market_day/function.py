@@ -3,7 +3,7 @@
 from models import Holiday,HeaderData,Area
 import os
 from xlrd import open_workbook
-from framework.conf import default
+from conf import default
 from monitor_item.models import Monitor
 from django.forms import model_to_dict
 from django.db.models import Q
@@ -73,50 +73,61 @@ def addperdic_task():
 def add_unit_task(add_dicx):
     type=add_dicx['monitor_type']
     schename = add_dicx['monitor_name']
-    print type
+    print add_dicx
     id=Monitor.objects.filter(monitor_name=schename).last().id
     schename=str(id)
     if type=='基本单元类型':
-        starthour = str(add_dicx['start_time'])[:2]
-        endhour = str(add_dicx['end_time'])[:2]
+        starthour = str(add_dicx['start_time']).split(':')[0]
+        startmin=str(add_dicx['start_time']).split(':')[-1]
+        endtime=add_dicx['end_time']
         period = int(add_dicx['period'])
         ctime = {
-            'hour': starthour + '-' + endhour,
-            'minute': '*/1',
+            'hour': starthour,
+            'minute': startmin,
         }
         info = {
             'id': id,
             'gather_params': add_dicx['gather_params'],
             'params': add_dicx['params'],
             'gather_rule': add_dicx['gather_rule'],
-            'period':period
+            'period':period,
+            'area_id':add_dicx['monitor_area'],
+            'task_name':str(schename)+'task',
+            'endtime':endtime
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,task_args=info, desc=schename)
     elif type=='图表单元类型':
         starthour = str(add_dicx['start_time'])[:2]
+        startmin=str(add_dicx['start_time']).split(':')[-1]
         endhour = str(add_dicx['end_time'])[:2]
         period = int(add_dicx['period'])
+        endtime=add_dicx['end_time']
         ctime = {
-            'hour': starthour + '-' + endhour,
-            'minute': '*/1',
+            'hour': starthour,
+            'minute': startmin,
         }
         info = {
             'id': id,
             'gather_params': 'sql',
             'params': add_dicx['params'],
             'gather_rule': add_dicx['gather_rule'],
-            'period': period
+            'period': period,
+            'area_id': add_dicx['monitor_area'],
+            'task_name': str(schename) + 'task',
+            'endtime': endtime
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,
                                task_args=info, desc=schename)
 
     elif type=='作业单元类型':
         starthour = str(add_dicx['start_time'])[:2]
+        startmin=str(add_dicx['start_time']).split(':')[-1]
         endhour = str(add_dicx['end_time'])[:2]
+        endtime=add_dicx['end_time']
         period = int(add_dicx['period'])
         ctime = {
-            'hour': starthour + '-' + endhour,
-            'minute':'*/1',
+            'hour': starthour,
+            'minute': startmin,
         }
         info = {
             'id': id,
@@ -126,7 +137,10 @@ def add_unit_task(add_dicx):
                 'name': add_dicx['gather_rule'],
                 'id': add_dicx['jion_id']
             }],
-            'period':period
+            'period':period,
+            'area_id': add_dicx['monitor_area'],
+            'task_name': str(schename) + 'task',
+            'endtime': endtime
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_two', crontab_time=ctime,task_args=info, desc=schename)
     elif type=='fourth':
@@ -135,8 +149,9 @@ def add_unit_task(add_dicx):
         node_times=add_dicx['node_times']
         constants=add_dicx['constants']
         print node_times[-1]
-        starthour = str(node_times[-1]['starttime']).split(':')[0]
-        startmin = str(node_times[-1]['starttime']).split(':')[-1]
+        starthour = str(node_times[0]['starttime']).split(':')[0]
+        startmin = str(node_times[0]['starttime']).split(':')[-1]
+        endtime=str(node_times[-1]['endtime'])
         ctime = {
             'hour': starthour,
             'minute': startmin,
@@ -146,7 +161,10 @@ def add_unit_task(add_dicx):
             'template_id':template_list ,   #创建任务的模板id
             'node_times':node_times,
             'period':period,
-            'constants':constants
+            'constants':constants,
+            'area_id': add_dicx['monitor_area'],
+            'task_name': str(schename) + 'task',
+            'endtime': endtime
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.start_flow_task', crontab_time=ctime,task_args=info, desc=schename)
 
