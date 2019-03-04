@@ -463,6 +463,16 @@ def get_scenes(user_name,start,end):
                     dic = dict (dic, **dic1)
                 # 拼接监控项基础数据和采集数据
                 item_dict = dict (item_dict, **dic)
+                #拼接tl_scene_monitor信息
+                scene_monitor = Scene_monitor.objects.get(scene_id=i,item_id=j)
+                scene_monitor_dict = {
+                    'x':scene_monitor.x,
+                    'y':scene_monitor.y,
+                    'scale':scene_monitor.scale,
+                    'score':scene_monitor.score,
+                    'order':scene_monitor.order,
+                }
+                item_dict = dict (item_dict, **scene_monitor_dict)
                 # 按不同的监控项类型保存
                 if u'基本单元类型' == item.monitor_type:
                     base_list.append (item_dict)
@@ -471,6 +481,12 @@ def get_scenes(user_name,start,end):
                 if u'流程单元类型' == item.monitor_type:
                     flow_list.append (item_dict)
                 if u'作业单元类型' == item.monitor_type:
+                    jobs = Job.objects.filter(job_id = item.jion_id)
+                    status = jobs.last().status
+                    temp_dict = {
+                        'job_status':status
+                    }
+                    item_dict = dict (item_dict, **temp_dict)
                     job_list.append (item_dict)
         data = {
             'base_list': base_list,
