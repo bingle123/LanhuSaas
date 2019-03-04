@@ -8,6 +8,7 @@ from monitorScene.models import *
 from monitor_item import tools
 from conf import settings_development
 import MySQLdb
+import time
 def show_all(request):
     """
         显示所有操作日志
@@ -226,3 +227,96 @@ def select_log(request):
         }
         res_list.append(dic)
     return res_list
+
+def about_select(request):
+    res1 = json.loads(request.body)
+    limit = res1['limit']
+    page = res1['page']
+    sql = "select e.scene_name,e.scene_id,e.item_id,e.monitor_name,e.start_time,e.end_time,e.minture" \
+          " from(SELECT round((UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(CONCAT(DATE_FORMAT(now(),'%Y-%m-%d'),' ',d.end_time)))/60) " \
+          "as minture ,d.*,c.* FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id  " \
+          "FROM tb_monitor_scene AS a, tl_scene_monitor AS b  " \
+          "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d " \
+          "WHERE c.item_id = d.id ) e;"
+    DATABASES = settings_development.DATABASES['default']
+    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
+                         db=DATABASES['NAME'], charset="utf8")
+    cursor = db.cursor()
+    cursor.execute(sql)
+    res = cursor.fetchall()
+    p = Paginator(res, limit)
+    count = p.page_range
+    pages = count
+    res_list = []
+    current_page = p.page(page)
+    res_list = list(current_page)
+    res_list2 = []
+    for i in range(0, len(res_list)):
+        dic = {
+            'scene_name': res_list[i][0],
+            'scene_id': res_list[i][1],
+            'item_id': res_list[i][2],
+            'monitor_name': res_list[i][3],
+            'start_time': str(res_list[i][4]),
+            'end_time': str(res_list[i][5]),
+            'minture': str(res_list[i][6]),
+            'pages': len(pages)
+        }
+        res_list2.append(dic)
+    db.close()
+    res2 = tools.success_result(res_list2)
+    return res2
+
+def about_search(request):
+    res1 = json.loads(request.body)
+    print res1
+    limit = res1['limit']
+    page = res1['page']
+    search = res1['search'].strip()
+    keyword = res1['keyword'].strip()
+    res3 = ""
+    res4 = ""
+    if (res1['date_Choice']):
+        res3 = res1['date_Choice'][0]
+        res4 = res1['date_Choice'][1]
+    sql = "select e.scene_name,e.scene_id,e.item_id,e.monitor_name,e.start_time,e.end_time,e.minture" \
+          " from(SELECT round((UNIX_TIMESTAMP(now()) - UNIX_TIMESTAMP(CONCAT(DATE_FORMAT(now(),'%Y-%m-%d'),' ',d.end_time)))/60) " \
+          "as minture ,d.*,c.* FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id  " \
+          "FROM tb_monitor_scene AS a, tl_scene_monitor AS b  " \
+          "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d " \
+          "WHERE c.item_id = d.id ) e,tb_monitor_item as l "\
+           "where e.id = l.id"
+    if(search):
+        sql = sql+" and e.scene_name = '"+search+"'"
+    if(keyword):
+        sql = sql+" and (e.scene_id='"+keyword+"' or e.item_id='"+keyword+"' or e.monitor_name='"+keyword+"')"
+    if(res1['date_Choice']):
+        sql = sql+" and e.start_time between '"+res3+"' and '"+res4+"'"
+    DATABASES = settings_development.DATABASES['default']
+    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
+                         db=DATABASES['NAME'], charset="utf8")
+    cursor = db.cursor()
+    cursor.execute(sql)
+    res = cursor.fetchall()
+    p = Paginator(res, limit)
+    count = p.page_range
+    pages = count
+    res_list = []
+    current_page = p.page(page)
+    res_list = list(current_page)
+    res_list2 = []
+    for i in range(0, len(res_list)):
+        dic = {
+            'scene_name': res_list[i][0],
+            'scene_id': res_list[i][1],
+            'item_id': res_list[i][2],
+            'monitor_name': res_list[i][3],
+            'start_time': str(res_list[i][4]),
+            'end_time': str(res_list[i][5]),
+            'minture': str(res_list[i][6]),
+            'pages': len(pages)
+        }
+        res_list2.append(dic)
+    db.close()
+    res2 = tools.success_result(res_list2)
+    return res2

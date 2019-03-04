@@ -61,6 +61,7 @@
                 <el-select placeholder="请选择日志类型" v-model="log_type" @change="change_type">
                     <el-option label="日志查询" value="log"></el-option>
                     <el-option label="执行告警信息查询" value="alert"></el-option>
+                    <el-option label="场景运行即将到期查询" value="about_to_expire"></el-option>
                 </el-select>
                 </el-col>
 
@@ -107,7 +108,28 @@
                      <el-pagination :page-count="alertRulesCount" background layout="prev, pager, next" style="float:right"
                                @current-change="alertRulePageChange"></el-pagination>
                     </div>
+                    <div id="table3" style="display:none">
+                     <el-table :data="aboutTableDate">
+                         <el-table-column prop="scene_id" label="场景ID" width="100">
+                         </el-table-column>
+                         <el-table-column prop="scene_name" label=场景名字 width="200" align="center">
+                         </el-table-column>
+                         <el-table-column prop="item_id" label="监控项ID" width="100" align="center">
+                         </el-table-column>
+                         <el-table-column prop="monitor_name" label="监控项名字" width="200" align="center">
+                         </el-table-column>
+                         <el-table-column prop="start_time" label="开始时间" width="150" align="center">
+                         </el-table-column>
+                         <el-table-column prop="end_time" label="结束时间" width="150" align="center">
+                         </el-table-column>
+                         <el-table-column prop="minture" label="间距分钟" width="100" align="center">
+                         </el-table-column>
 
+
+                     </el-table>
+                     <el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next" style="float:right"
+                               @current-change="about_change"></el-pagination>
+                    </div>
 
             </div>
         </el-card>
@@ -131,6 +153,7 @@ let vm = new Vue({
             search: '',                                 //搜索框
             log_type:'',                                //日志类型
             alertRuleTableData:null,
+            aboutTableDate:null,
             keyword:'',                                 //关键字内容
             date_Choice: '',                            //时间选择
         },
@@ -161,6 +184,17 @@ let vm = new Vue({
                     vm.alertRulesCount = res.data.results[0].pages
                     console.log(vm.page_count)
                 })
+               axios({
+                   method:'post',
+                   url:'${SITE_URL}history_chart/about_select',
+                   data:{
+                        page: vm.page,
+                        limit: 10
+                   }
+               }).then(function (res) {
+                    vm.aboutTableDate = res.data.results;
+                    vm.aboutRulesCount = res.data.results[0].pages
+               })
             },
            current_change(value){
                     vm.page = value;
@@ -179,6 +213,23 @@ let vm = new Vue({
                     vm.page_count = res.data.message[0].page_count;
                 })
 
+            },
+            about_change(value){
+                vm.page = value;
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}history_chart/about_search/',
+                    data: {
+                        search: vm.search,
+                        page: vm.page,
+                        keyword:vm.keyword,
+                        date_Choice:vm.date_Choice,
+                        limit: 10
+                    },
+                }).then((res) => {
+                    vm.aboutTableDate = res.data.results;
+                    vm.aboutRulesCount = res.data.results[0].pages
+                })
             },
            select_log(){
                if(vm.log_type == 'log'){
@@ -202,6 +253,8 @@ let vm = new Vue({
                    })
                }else if(vm.log_type == 'alert'){
                  this.alertRulePageChange(1);
+               }else if(vm.log_type == 'about_to_expire'){
+                   vm.about_change(1);
                }
 
            },
@@ -228,9 +281,15 @@ let vm = new Vue({
                 if(value == 'log'){
                     $('#table1').css('display','block');
                     $('#table2').css('display','none');
+                    $('#table3').css('display','none');
                 }else if(value == 'alert'){
                    $('#table1').css('display','none');
                    $('#table2').css('display','block');
+                   $('#table3').css('display','none');
+                }else if(value == 'about_to_expire'){
+                    $('#table1').css('display','none');
+                    $('#table2').css('display','none');
+                    $('#table3').css('display','block');
                 }
             },
             select_Keyword(){
