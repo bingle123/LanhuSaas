@@ -61,10 +61,14 @@
             <!-- 选择员工信息 end -->
             <!--<span class="demonstration">Click 指示器触发</span>-->
 
-            <el-carousel trigger="click" :height="imgHeight">
+            <el-carousel trigger="click" :change="scene_change" :height="imgHeight">
                 <el-carousel-item v-for="item in imgList" :key="item.id">
                     <el-row>
-                        <el-col :span="24"><img ref="imgHeight" :src="item.idView" class="banner_img"/></el-col>
+                        <el-col :span="24">
+                            <div ref="imgHeight" :src="item.idView" class="'scene_content'+item.id">
+                            </div>
+                        </el-col>
+
                     </el-row>
                 </el-carousel-item>
             </el-carousel>
@@ -121,8 +125,15 @@
                      }
                 }).then((res)=> {
                      vm.imgList = res.data.message;
+                     console.log(vm.imgList)
                  })
-            }
+            },
+            scene_change(value1,value2){
+                vm.scene_content_change(value1);
+            },
+            scene_content_change(value){
+                console.log(value);
+            },
         },
         mounted() {
             //const that = this
