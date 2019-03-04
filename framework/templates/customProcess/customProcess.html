@@ -13,7 +13,7 @@
 </head>
 <body>
     <div id="customProcess">
-        <el-dialog title="定制过程通知" :visible.sync="addDialogVisible" width="80%" :close-on-click-modal="false" center>
+        <el-dialog title="定制过程通知" :visible.sync="addDialogVisible" width="80%" :close-on-click-modal="false" center @closed="customProcessListNode">
             <div v-if="customProcessTableStatus == 'list'">
                 <el-row>
                     <el-col :span="24">
@@ -24,7 +24,7 @@
                 <div style="text-align: right">
                     <el-button type="primary" size="medium" @click="customProcessAddNode()">新增过程节点</el-button>
                 </div>
-                <el-table :data="customProcessTableData" id="customProcessTable">
+                <el-table :data="customProcessTableListData" id="customProcessTable">
                     <el-table-column prop="node_name" label="节点名称">
                     </el-table-column>
                     <el-table-column prop="send_content" label="通知内容">
@@ -40,6 +40,9 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-row>
+                    <el-pagination :page-count="customProcessPageCount" :current-page="currentPage" background layout="prev, pager, next" style="float:right" @current-change="customProcessPageChange"></el-pagination>
+                </el-row>
                 <el-row class="customProcessFormButton">
                     <el-button type="primary" @click="addDialogVisible = false">关 闭</el-button>
                 </el-row>
@@ -201,17 +204,40 @@
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
         return config
     });
-    const receiversCheck= (rule, value, callback) => {
+    //接收人校验
+    const receiversCheck = (rule, value, callback) => {
         if(0 == vue.customProcessNode.receivers.length){
-            callback(new Error('通知接收人不能为空'));
+            callback(new Error('请输入通知接收人'));
         }else{
-            vue.customProcessNode.receivers = vue.customProcessNode.receivers.join(',');
+            return callback();
+        }
+    };
+    //节点顺序校验
+    const seqCheck = (rule, value, callback) => {
+        if(0 == vue.customProcessNode.seq.length){
+            callback(new Error('请输入节点顺序'));
+        }else if(!/^[1-9][0-9]{0,1}$/.test(vue.customProcessNode.seq)){
+            return callback(new Error('节点值在1~99之间'));
+        }else{
+            $.each(vue.customProcessTableData, function(k, v){
+                if(vue.customProcessNode.seq == v.seq){
+                    if(null == vue.customProcessNodeInitSeq){
+                        return callback(new Error('该节点顺序已被定义'));
+                    }else if(vue.customProcessNodeInitSeq != vue.customProcessNode.seq){
+                        return callback(new Error('该节点顺序已被定义'));
+                    }
+                }
+            });
             return callback();
         }
     };
     var vue = new Vue({
         el: '#customProcess',
         data: {
+            customProcessPageCount: 0,
+            currentPage: 1,
+            //用于列表显示的节点信息
+            customProcessTableListData: [],
             //蓝鲸平台用户列表信息
             bkUsers: {},
             //步骤条默认高度
@@ -244,6 +270,7 @@
                 seq: null,
                 receivers: null*/
             },
+            customProcessNodeInitSeq: null,
             customProcessTableData: [],
             //校验规则定义
             rules: {
@@ -256,16 +283,39 @@
                     { min: 1, max: 1000, message: '通知内容长度在1~1000之间', trigger: 'blur' }
                 ],
                 seq: [
-                    { required: true, message: '请输入节点顺序', trigger: 'blur' },
-                    { pattern: /^[1-9][0-9]{0,1}$/, message: '节点值在1~99之间', trigger: 'blur' }
+                    { validator: seqCheck, trigger: 'blur' }
                 ],
                 receivers: [
-                    { required: true, message: '请输入通知接收人', trigger: 'blur' },
                     { validator: receiversCheck, trigger: 'blur' }
                 ]
             }
         },
         methods:{
+            //分页显示方法
+            customProcessPageChange: function(page) {
+                const loading = this.customProcessPopupLoading();
+                var data = {
+                    page: page,
+                    limit: 5
+                };
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}customProcess/select_nodes_pagination',
+                    data: data
+                }).then((res) => {
+                    loading.close();
+                    this.customProcessTableListData = res.data.items;
+                    this.customProcessPageCount = res.data.pages;
+                    this.currentPage = page;
+                    if(page > res.data.pages){
+                        this.currentPage = res.data.pages;
+                    }
+                }).catch((res) => {
+                    loading.close();
+                    var msg = '节点信息加载失败！';
+                    this.alertRulePopupErrorMessage(msg + res);
+                });
+            },
             //Date()对象转yyyy-MM-dd HH:mm:ss函数
             formatDateTime: function (date) {
                 var y = date.getFullYear();
@@ -455,6 +505,7 @@
                 }).then((res) =>{
                     loading.close();
                     this.customProcessNode = res.data.message[0];
+                    this.customProcessNodeInitSeq = this.customProcessNode.seq;
                     //切换修改节点的时候使用逗号切割发送人信息，使select组件能识别选中默认值
                     this.customProcessNode.receivers = this.customProcessNode.receivers.split(',');
                     this.customProcessTableStatus = 'edit';
@@ -480,6 +531,7 @@
                             url: url
                         }).then((res) =>{
                             if('ok' == res.data.message){
+                                this.customProcessPageChange(1);
                                 this.addDialogVisible = true;
                                 this.customProcessSelectAllNodes()
                             }else{
@@ -499,6 +551,7 @@
                         });
                     });
                 }else{
+                    this.customProcessPageChange(1);
                     this.addDialogVisible = true;
                 }
             },
@@ -521,6 +574,7 @@
                     }).then((res) =>{
                         loading.close();
                         if('ok' == res.data.message){
+                            this.customProcessPageChange(this.currentPage);
                             this.customProcessSelectAllNodes();
                             this.customProcessListNode();
                             this.$message({
@@ -560,6 +614,12 @@
                     }else {
                         const loading = this.customProcessPopupLoading();
                         var url = '${SITE_URL}customProcess/add_node';
+                        if(1 != this.customProcessNode.receivers.length){
+                            this.customProcessNode.receivers = this.customProcessNode.receivers.join(',');
+                        }else{
+                            this.customProcessNode.receivers = this.customProcessNode.receivers[0];
+                        }
+                        this.customProcessNodeInitSeq = null;
                         axios({
                             method: 'post',
                             url: url,
@@ -568,6 +628,12 @@
                             loading.close();
                             if('ok' == res.data.message){
                                 this.customProcessSelectAllNodes();
+                                if('edit' == this.customProcessTableStatus){
+                                    this.customProcessPageChange(this.currentPage);
+                                }
+                                else if('add' == this.customProcessTableStatus){
+                                    this.customProcessPageChange(res.data.total_pages);
+                                }
                                 this.customProcessListNode();
                             }else{
                                 var msg = '请求添加/修改节点数据失败！';

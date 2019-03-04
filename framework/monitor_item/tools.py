@@ -279,6 +279,11 @@ def flow_gather_task(**info):
             status=0
         elif s=='RUNNING':
             status=1
+            for node in node_times:
+                if d['name']==node['node_name']:
+                    strnow = datetime.strftime(datetime.now(), '%H:%M')
+                    if strnow>node['endtime']:
+                        status=5
         elif s=='SUSPENDED':
             status=2
         elif s == 'REVOKED':

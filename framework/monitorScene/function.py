@@ -414,33 +414,36 @@ def get_scenes(user_name,start,end):
     pos_id = Localuser.objects.get (user_name=user_name).user_pos_id
     # 获取岗位对应的场景
     scene = position_scene.objects.filter (position_id=pos_id)
-    for z in scene:
+    for x in scene:
         scenes.append (x.scene_id)
     # 遍历scenes,获取每个场景对应的监控项
-    for i in scenes:
-        # 初始化
-        base_list = []
-        chart_list = []
-        flow_list = []
-        job_list = []
-        items_id = []
-        # 场景对应的监控项id
-        scene_monitor = Scene_monitor.objects.filter(scene_id = z)
-        for k in scene_monitor:
-            items_id.append(k.item_id)
-        # 遍历场景的监控项ID
-        for j in items_id:
-            # 获取基本数据
-            item = Monitor.objects.get (id=j)
-            # 转成字典
-            item_dict = model_to_dict (item)
-            # 把时间类型转换为String
-            item_dict['start_time'] = str (item.start_time)
-            item_dict['end_time'] = str (item.end_time)
-            item_dict['create_time'] = str (item.create_time)
-            item_dict['edit_time'] = str (item.edit_time)
-            #判断系统时间是否在轮播时间
-            if str (item.start_time) <= end and str (item.end_time) >=  start:
+    for z in scenes:
+        # 场景
+        temp_scene = Scene.objects.get(id=z)
+        # 判断系统时间是否在轮播时间
+        if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
+            # 初始化
+            base_list = []
+            chart_list = []
+            flow_list = []
+            job_list = []
+            items_id = []
+            temp_list = []
+            # 场景对应的监控项id
+            scene_monitor = Scene_monitor.objects.filter(scene_id = z)
+            for k in scene_monitor:
+                items_id.append(k.item_id)
+            # 遍历场景的监控项ID
+            for j in items_id:
+                # 获取基本数据
+                item = Monitor.objects.get(id=j)
+                # 转成字典
+                item_dict = model_to_dict (item)
+                # 把时间类型转换为String
+                item_dict['start_time'] = str (item.start_time)
+                item_dict['end_time'] = str (item.end_time)
+                item_dict['create_time'] = str (item.create_time)
+                item_dict['edit_time'] = str (item.edit_time)
                 # 采集数据
                 info = {
                     'id': item.id,
@@ -488,13 +491,18 @@ def get_scenes(user_name,start,end):
                     }
                     item_dict = dict (item_dict, **temp_dict)
                     job_list.append (item_dict)
-        data = {
-            'base_list': base_list,
-            'chart_list': chart_list,
-            'flow_list': flow_list,
-            'job_list': job_list,
-        }
-        res_list.append (data)
+            data = {
+                'base_list': base_list,
+                'chart_list': chart_list,
+                'flow_list': flow_list,
+                'job_list': job_list,
+            }
+            temp_list.append (data)
+            scene_dict = {
+                'scene_id': z,
+                'scene_content':temp_list
+            }
+            res_list.append(scene_dict)
     return res_list
 
 def get_all_user(request):

@@ -17,62 +17,70 @@ function job_monitor(job_params){
     // }else if(status==-1){
     //     $('[type='+selector_id+']').html($('<div class="error" style="background: beige;color: red;"><h1>作业执行失败</h1><i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i></div>'))
     // }
-    // }else if(status==1){
-    //     $('[type='+selector_id+']').html($('<div class="success" style="background: beige;color: green;"><h1>作业执行成功</h1><i class="el-icon-success" style="color: green;font-size: 30px;margin-top: 20px;"></i></div>'))
-    // }else if(status==2){
-    //     $('[type='+selector_id+']').html($('<div class="loading" style="background: beige;color: orange;"><h1>正在执行</h1><i class="el-icon-loading" style="color: orange;font-size: 30px;margin-top: 20px;"></i></div>'))
-    // }else if(status==-1){
-    //     $('[type='+selector_id+']').html($('<div class="error" style="background: beige;color: red;"><h1>作业执行失败</h1><i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i></div>'))
-    // }
     $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
     $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
     $('[type='+selector_id+']').css('height',job_params.height);
     $('[type='+selector_id+']').css('width',job_params.width);
     $('[type='+selector_id+']').find("*").css('font-size',job_params.font_size);
 }
-// function chart_monitor(item_id,chart_type,height,width,drigging_id){
-//     new_res=[]
-//     var barX=[]
-//     var barCount=[]
-//     var person_count=''
-//     var chartdata=[]
-//     $.get("/monitorScene/get_chart_data/"+item_id,function (res) {
-//         res=res.message
-//        for(r in res){
-//            if(isNotANumber(res[r].values[0])){
-//                new_res[1]=res[r]
-//            }else{
-//                 new_res[0]=res[r]
-//            }
-//        }
-//         barX=new_res[0].values
-//         barCount=new_res[1].values
-//         person_count=new_res[1].key
-//         for(var i=0;i<new_res[0].values.length;i++){
-//             temp={
-//                 'name':new_res[0].values[i],
-//                 'value':new_res[1].values[i]
-//             }
-//             chartdata.push(temp)
-//         }
-//         console.log(chartdata)
-//         show_chart(item_id,barX,barCount,person_count,chartdata,chart_type,height,width,drigging_id)
-//     },dataType='json')
-// }
-// function isNotANumber(inputData) {
-// 　　//isNaN(inputData)不能判断空串或一个空格
-// 　　//如果是一个空串或是一个空格，而isNaN是做为数字0进行处理的，而parseInt与parseFloat是返回一个错误消息，这个isNaN检查不严密而导致的。
-// 　　if (parseFloat(inputData).toString() == "NaN") {
-// 　　　　return false;
-// 　　} else {
-// 　　　　return true;
-// 　　}
-// }
 
-function show_chart(item_id,chart_type,height,width,drigging_id,content) {
-                var content=content;
+function job_monitor_active(job_params) {
+    selector_id='job'+job_params.id
+    var status=job_params.status
+    if(status==0){
+        $('[type='+selector_id+']').html($('<div class="unexecuted" style="background: beige;color: grey;"><h1>作业未执行</h1><i class="el-icon-error" style="color: grey;font-size: 30px;margin-top: 20px;"></i></div>'))
+    }else if(status==1){
+        $('[type='+selector_id+']').html($('<div class="success" style="background: beige;color: green;"><h1>作业执行成功</h1><i class="el-icon-success" style="color: green;font-size: 30px;margin-top: 20px;"></i></div>'))
+    }else if(status==2){
+        $('[type='+selector_id+']').html($('<div class="loading" style="background: beige;color: orange;"><h1>正在执行</h1><i class="el-icon-loading" style="color: orange;font-size: 30px;margin-top: 20px;"></i></div>'))
+    }else if(status==-1){
+        $('[type='+selector_id+']').html($('<div class="error" style="background: beige;color: red;"><h1>作业执行失败</h1><i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i></div>'))
+    }
+    $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
+    $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
+    $('[type='+selector_id+']').css('height',job_params.height);
+    $('[type='+selector_id+']').css('width',job_params.width);
+    $('[type='+selector_id+']').find("*").css('font-size',job_params.font_size);
+}
+function chart_monitor(item_id,chart_type,height,width,drigging_id){
+    new_res=[]
+    var chartdata=[]
+    $.get("/monitorScene/get_chart_data/"+item_id,function (res) {
+        res=res.message
+       for(r in res){
+           if(isNotANumber(res[r].values[0])){
+               new_res[1]=res[r]
+           }else{
+                new_res[0]=res[r]
+           }
+       }
+       person_count=new_res[0].key
+        for(var i=0;i<new_res[0].values.length;i++){
+            temp={
+                'name':new_res[0].values[i],
+                'value':new_res[1].values[i]
+            }
+            chartdata.push(temp)
+        }
+        show_chart(item_id,chartdata,person_count,chart_type,height,width,drigging_id,'')
+    },dataType='json')
+}
+function isNotANumber(inputData) {
+　　//isNaN(inputData)不能判断空串或一个空格
+　　//如果是一个空串或是一个空格，而isNaN是做为数字0进行处理的，而parseInt与parseFloat是返回一个错误消息，这个isNaN检查不严密而导致的。
+　　if (parseFloat(inputData).toString() == "NaN") {
+　　　　return false;
+　　} else {
+　　　　return true;
+　　}
+}
+
+function show_chart(item_id,chartData,person_count,chart_type,height,width,drigging_id,content) {
+    if(chartData==''){
+        chartData=[]
+    }
+    if(content!=''){
                 var obj = JSON.parse(content);
-                var chartData = [];
                 for(let i=0;i<obj.X.v.length;i++){
                     var obj_1={};
                     obj_1.name=obj.X.v[i];
@@ -80,17 +88,21 @@ function show_chart(item_id,chart_type,height,width,drigging_id,content) {
                     chartData.push(obj_1)
                 }
                 person_count=obj.Y.k
-                var barX=[];
-                        var barCount=[];
-                        for(var i=0;i<chartData.length;i++){
-                            barX.push(chartData[i].name)
-                            barCount.push(chartData[i].value)
-                        }
+    }
+    var barX=[];
+    var barCount=[];
+    for(var i=0;i<chartData.length;i++){
+        barX.push(chartData[i].name)
+        barCount.push(chartData[i].value)
+    }
         if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
                 this.myChart.dispose();
         }
+        $('#'+drigging_id).css('height',height);
+        $('#'+drigging_id).css('width',width);
         if (chart_type == "饼图") {
-            myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
+            console.log(barCount,barX,chartData)
+            myChart = echarts.init(document.getElementById(drigging_id), 'macarons');
             var legendData = [];
                     for(var i=0;i<chartData.length;i++){
                         legendData.push(chartData[i].name)
@@ -217,6 +229,50 @@ function show_chart(item_id,chart_type,height,width,drigging_id,content) {
             myChart.setOption(option);
         }
 }
+function base_monitor_active(item_id,font_size,height,width) {
+     $.get("/monitorScene/get_basic_data/"+item_id,function (res){
+        console.log(res)
+        var selector_id='basic'+item_id
+        var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
+         var content=''
+        for(key in res){
+            if(key!='DB_CONNECTION'&&key!='URL_CONNECTION'&&key!='FILE_EXIST'){
+                 content+='<div>'+key+':'+res[key]+'</div>'
+            }
+        }
+        var status=1
+        for(key in res){
+            if(key=='DB_CONNECTION'){
+                status=res[key]
+                content+='<div>'+'行情数据库连接状态:'+cricle+'</div>'
+            }else if(key=='URL_CONNECTION'){
+                    status=res[key]
+                 content+='<div>'+'行情接口状态:'+cricle+'</div>'
+            }else if(key=='FILE_EXIST'){
+                    status=res[key]
+                 content+='<div>'+'深圳行情文件状态:'+cricle+'</div>'
+            }
+        }
+        $('[type='+selector_id+']').html(content)
+        $('[type='+selector_id+']').css({
+        'text-align':'center',
+        'width': '100%',
+        'height': '40%',
+        'background-color': 'whitesmoke',
+        'position': 'relative'
+    })
+        if(status==2){
+            $("#status").css('background-color','darkgreen')
+        }else if(status==-1){
+            $("#status").css('background-color','red')
+        }else if(status==0){
+            $("#status").css('background-color','grey')
+        }
+    $('[type='+selector_id+']').find("*").css("font-size",font_size)
+    $('[type='+selector_id+']').css('height',height);
+    $('[type='+selector_id+']').css('width',width);
+    },dataType='json')
+}
 function base_monitor(item_id,font_size,height,width,content) {
     selector_id='basic'+item_id
     console.log(content)
@@ -225,51 +281,6 @@ function base_monitor(item_id,font_size,height,width,content) {
     var circle3='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
     var circle2='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:darkgreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
     var asd='<div class="display: inline-block;">'
-    // $.get("/monitorScene/get_basic_data/"+item_id,function (res){
-    //     console.log(res)
-    //     var selector_id='basic'+item_id
-    //     var cricle1='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
-    //     var cricle2='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:red;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
-    //     var cricle3='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
-    //     var cricle4='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:black;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
-    //     var content=''
-    //     for(key in res){
-    //         if(key!='DB_CONNECTION'&&key!='URL_CONNECTION'&&key!='FILE_EXIST'){
-    //              content+='<div>'+key+':'+res[key]+'</div>'
-    //         }
-    //     }
-    //     var status=1
-    //     for(key in res){
-    //         if(key=='DB_CONNECTION'){
-    //             status=res[key]
-    //             content+='<div>'+'行情数据库连接状态:'+cricle+'</div>'
-    //         }else if(key=='URL_CONNECTION'){
-    //                 status=res[key]
-    //              content+='<div>'+'行情接口状态:'+cricle+'</div>'
-    //         }else if(key=='FILE_EXIST'){
-    //                 status=res[key]
-    //              content+='<div>'+'深圳行情文件状态:'+cricle+'</div>'
-    //         }
-    //     }
-    //     $('[type='+selector_id+']').html(content)
-    //     $('[type='+selector_id+']').css({
-    //     'text-align':'center',
-    //     'width': '100%',
-    //     'height': '40%',
-    //     'background-color': 'whitesmoke',
-    //     'position': 'relative'
-    // })
-    //     if(status==2){
-    //         $("#status").css('background-color','darkgreen')
-    //     }else if(status==-1){
-    //         $("#status").css('background-color','red')
-    //     }else if(status==0){
-    //         $("#status").css('background-color','grey')
-    //     }
-    // $('[type='+selector_id+']').find("*").css("font-size",font_size)
-    // $('[type='+selector_id+']').css('height',height);
-    // $('[type='+selector_id+']').css('width',width);
-    // },dataType='json')
         $('[type='+selector_id+']').html("");
         $('[type='+selector_id+']').append("<div>"+content +"</div>");
         $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');

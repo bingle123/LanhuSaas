@@ -38,75 +38,13 @@
         <div class="block">
             <!--<span class="demonstration">Click 指示器触发</span>-->
 
-            <el-carousel trigger="click" :height="imgHeight">
-                <el-carousel-item v-for="item in imgList" :key="item.id">
+            <el-carousel trigger="click" @change="scene_change" :height="imgHeight">
+                <el-carousel-item v-for="(item,index) in imgList" :key="index">
                     <el-row>
-                        <div id="flow1" class="clearfix workflow-box" style="width: 100%">
-
-                                        <div class="workflow-canvas" style="margin-left: 0px;padding-left: 0px">
-                                            <!-- 画布模板 start -->
-                                            <div class="jtk-content">
-                                                <div class="jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan"
-                                                     id="canvas" style="height:370px;">
-                                                    <!-- 流程 -->
-                                                </div>
-                                            </div>
-                                            <!-- 画布模板 end -->
-
-                                        </div>
-
-                                        <!-- template 模板-->
-                                        <div class="jtk-delete jtk-none ">删除节点</div>
-                                        <div id="template" class="jtk-none">
-                                            <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
-                                                 data-type="start">
-                                                <div class="node-wrapper">
-                                                    <div class="node-icon-start">
-                                                        <i class="bk-icon icon-star-shape"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="jtk-window jtk-node workfolw-node database-node" id="{charts}"
-                                                 data-type="database">
-                                                <div class="node-wrapper">
-                                                    <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">一级分析</p>
-                                                    </div>
-                                                    <div class="node-icon">
-                                                        <i class="bk-icon icon-data"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="jtk-window jtk-node workfolw-node cog-node" id="{charts}"
-                                                 data-type="dataCog">
-                                                <div class="node-wrapper">
-                                                    <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">实时加载</p>
-                                                    </div>
-                                                    <div class="node-icon">
-                                                        <i class="bk-icon icon-cog"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="jtk-window jtk-node workfolw-node filter-node" id="{charts}"
-                                                 data-type="dataFilter">
-                                                <div class="node-wrapper">
-                                                    <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">离线计算</p>
-                                                    </div>
-                                                    <div class="node-icon">
-                                                        <i class="bk-icon icon-circle"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                        <el-col :span="24"><img ref="imgHeight" :src="item.idView" class="banner_img"/></el-col>
+                        <el-col :span="24">
+                            <div ref="imgHeight" :src="item.idView" id="item.id" :class="'scene_content'+index">
+                            </div>
+                        </el-col>
                     </el-row>
                 </el-carousel-item>
             </el-carousel>
@@ -135,7 +73,29 @@
                 }).then((res)=> {
                      vm.imgList = res.data.message;
                 })
-                 }
+                 },
+            scene_change(value1,value2){
+                vm.scene_content_change(value1);
+            },
+            scene_content_change(value){
+                let selector = '.scene_content'+value;
+                let base_list=vm.imgList[value].content[0].base_list
+                let chart_list=vm.imgList[value].content[0].chart_list
+                let job_list=vm.imgList[value].content[0].job_list
+                let flow_list=vm.imgList[value].content[0].flow_list
+                for(let i=0;i<base_list.length;i++){
+                    $(selector).html(selector)
+                }
+                for(let i=0;i<chart_list.length;i++){
+                    $(selector).html(selector)
+                }
+                for(let i=0;i<job_list.length;i++){
+                    $(selector).html(selector)
+                }
+                for(let i=0;i<flow_list.length;i++){
+                    $(selector).html(selector)
+                }
+            },
         },
         mounted() {
             //const that = this
@@ -166,144 +126,7 @@
     vm.get_scenes()
 
 </script>
-<script>
-    setInterval(function () {
 
-
-        //flow1_js_start
-        $('#flow1').dataflow({
-            el: '.tool', //流程拖动源
-            canvas: '#canvas', //画布
-            arrowWidth: 8,
-            arrowHeight: 10,
-            template: '#template',
-            id: 'ch', // 定义节点id，当页面只有一个dataflow实例是可忽略，当有多个实例时，需自定义该字段，id具有唯一性
-            onRemoveNodeAfter: function(id, line) { //删除节点回调
-                //console.log(id);
-                //console.log(line);
-            },
-            onCreateNodeAfter: function(id) { //初始化节点回调
-                //console.log(id)
-            },
-            onCreateLineAfter: function() { //创建线条后回调
-                //console.log("1111")
-            },
-            ondrawData: function() { //初始化流程后回调
-                //console.log($('.node-icon').length)
-            },
-            data: {
-                "line": [
-                    {
-                    "source": {
-                        "id": "ch1",
-                        "arrow": "Bottom"
-                    },
-                    "target": {
-                        "id": "ch3",
-                        "arrow": "Left"
-                    }
-                    },
-                    {
-                        "source": {
-                            "id": "ch2",
-                            "arrow": "Right"
-                        },
-                        "target": {
-                            "id": "ch3",
-                            "arrow": "Right"
-                        }
-                    },
-                    {
-                        "source": {
-                            "id": "ch3",
-                            "arrow": "Top"
-                        },
-                        "target": {
-                            "id": "ch2",
-                            "arrow": "Bottom"
-                        }
-                    },
-                    {
-                        "source": {
-                            "id": "ch3",
-                            "arrow": "Top"
-                        },
-                        "target": {
-                            "id": "ch2",
-                            "arrow": "Right"
-                        }
-                    },
-                    {
-                        "source": {
-                            "id": "ch3",
-                            "arrow": "Top"
-                        },
-                        "target": {
-                            "id": "ch4",
-                            "arrow": "Right"
-                        }
-                    },
-                    ],
-                "location": [
-                    {
-                        "id": "ch1",
-                        "x": 130,
-                        "y": 48,
-                        "name":"1",
-                        "type": "database"
-                    },
-                    {
-                        "id": "ch2",
-                        "x": 406,
-                        "y": 33,
-                        "name":"2",
-                        "type": "dataCog"
-                    },
-                    {
-                        "id": "ch3",
-                        "x": 406,
-                        "y": 243,
-                        "name":"3",
-                        "type": "dataCog"
-                    },
-                    {
-                        "id": "ch4",
-                        "x": 150,
-                        "y": 60,
-                        "name":"4",
-                        "type": "database"
-                    },
-                ]
-            }
-        });
-        $('#save2').click(function() {
-            // 获取全部数据
-            var data= $('#flow1').data('dataflow').getAllData();
-            var name = data.location[0];
-            $('#result2').val(JSON.stringify(data));
-        });
-
-        // 清空画布
-        $('#resetCanvas').click(function() {
-            $('#flow1').data('dataflow').resetCanvas();
-        });
-        //flow1_js_end
-        // $('.node-wrapper').click(function () {
-        //
-        //     $(this).find(".node-title").attr('contenteditable','plaintext-only');
-        // })
-        //节点抽屉
-        $('.tool-title').click(function () {
-            $(this).next('.tool-list').animate({
-                height:'toggle'
-            });
-            $(this).parent().siblings().children('.tool-list').animate({
-                height:"hide"
-            });
-        });
-
-    },1)
-</script>
 
 <!--暂时的css样式-->
 <style>
