@@ -444,7 +444,6 @@ def get_scenes(user_name,start,end):
                 item_dict['end_time'] = str (item.end_time)
                 item_dict['create_time'] = str (item.create_time)
                 item_dict['edit_time'] = str (item.edit_time)
-
                 # 采集数据
                 info = {
                     'id': item.id,
