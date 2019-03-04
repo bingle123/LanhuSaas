@@ -90,136 +90,28 @@ def select_rules_pagination(request):
         res3 = res1['date_Choice'][0]
         res4 = res1['date_Choice'][1]
         print res3,res4
-    if(search and keyword =="" and date_Choice == ""):
-        DATABASES = settings_development.DATABASES['default']
-        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
-        cursor = db.cursor()
-        cursor.execute(
-            "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "
-            "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "
-            "FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id "
-            "FROM tb_monitor_scene AS a, tl_scene_monitor AS b "
-            "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d "
-            "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
-            "WHERE e.item_id = f.item_id and  e.scene_name = '" + search + "'"
-            " ORDER BY e.scene_name")
-        res = cursor.fetchall()
-    elif(keyword and search=="" and date_Choice == ""):
-        DATABASES = settings_development.DATABASES['default']
-        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
-        cursor = db.cursor()
-        cursor.execute(
-            "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "
-            "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "
-            "FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id "
-            "FROM tb_monitor_scene AS a, tl_scene_monitor AS b "
-            "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d "
-            "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
-            "WHERE e.item_id = f.item_id"
-            " and (e.scene_id = '" + keyword + "' or e.id ='" + keyword + "' or e.monitor_name = '" + keyword + "' or f.alert_title='" + keyword + "' or f.alert_content='" + keyword + "' or f.alert_time='" + keyword + "' or f.persons='" + keyword + "') "
-            " ORDER BY e.scene_name")
-        res = cursor.fetchall()
-    elif(date_Choice and search == "" and keyword ==""):
-        DATABASES = settings_development.DATABASES['default']
-        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
-        cursor = db.cursor()
-        cursor.execute(
-            "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "
-            "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "
-            "FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id "
-            "FROM tb_monitor_scene AS a, tl_scene_monitor AS b "
-            "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d "
-            "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
-            "WHERE e.item_id = f.item_id"
-            " and f.alert_time between  '" + res3 + "'  and '" + res4 + "'"
-            " ORDER BY e.scene_name")
-        res = cursor.fetchall()
-    elif(search and date_Choice and keyword):
-        DATABASES = settings_development.DATABASES['default']
-        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
-        cursor = db.cursor()
-        cursor.execute(
-            "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "
-            "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "
-            "FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id "
-            "FROM tb_monitor_scene AS a, tl_scene_monitor AS b "
-            "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d "
-            "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
-            "WHERE e.item_id = f.item_id"
-            " and  e.scene_name = '" + search + "'"
-            " and (e.scene_id = '" + keyword + "' or e.id ='" + keyword + "' or e.monitor_name = '" + keyword + "' or f.alert_title='" + keyword + "' or f.alert_content='" + keyword + "' or f.alert_time='" + keyword + "' or f.persons='" + keyword + "') "
-            " and f.alert_time between  '" + res3 + "'  and '" + res4 + "'"
-             " ORDER BY e.scene_name")
-        res = cursor.fetchall()
-    elif(search and keyword and date_Choice == ""):
-        DATABASES = settings_development.DATABASES['default']
-        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
-        cursor = db.cursor()
-        cursor.execute(
-            "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "
-            "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "
-            "FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id "
-            "FROM tb_monitor_scene AS a, tl_scene_monitor AS b "
-            "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d "
-            "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
-            "WHERE e.item_id = f.item_id"
-            " and  e.scene_name = '" + search + "'"
-            " and (e.scene_id = '" + keyword + "' or e.id ='" + keyword + "' or e.monitor_name = '" + keyword + "' or f.alert_title='" + keyword + "' or f.alert_content='" + keyword + "' or f.alert_time='" + keyword + "' or f.persons='" + keyword + "') "
-            " ORDER BY e.scene_name")
-        res = cursor.fetchall()
-    elif (search and date_Choice and keyword == ""):
-        DATABASES = settings_development.DATABASES['default']
-        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
-        cursor = db.cursor()
-        cursor.execute(
-            "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "
-            "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "
-            "FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id "
-            "FROM tb_monitor_scene AS a, tl_scene_monitor AS b "
-            "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d "
-            "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
-            "WHERE e.item_id = f.item_id"
-            " and  e.scene_name = '" + search + "'"
-            " and f.alert_time between  '" + res3 + "'  and '" + res4 + "'"
-            " ORDER BY e.scene_name")
-        res = cursor.fetchall()
-    elif (date_Choice and keyword and search == ""):
-        DATABASES = settings_development.DATABASES['default']
-        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
-        cursor = db.cursor()
-        cursor.execute(
-            "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "
-            "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "
-            "FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id "
-            "FROM tb_monitor_scene AS a, tl_scene_monitor AS b "
-            "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d "
-            "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
-            "WHERE e.item_id = f.item_id"
-           " and (e.scene_id = '" + keyword + "' or e.id ='" + keyword + "' or e.monitor_name = '" + keyword + "' or f.alert_title='" + keyword + "' or f.alert_content='" + keyword + "' or f.alert_time='" + keyword + "' or f.persons='" + keyword + "') "
-            " and f.alert_time between  '" + res3 + "'  and '" + res4 + "'"
-            " ORDER BY e.scene_name")
-        res = cursor.fetchall()
-    else:
-        DATABASES = settings_development.DATABASES['default']
-        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
-        cursor = db.cursor()
-        cursor.execute(
-            "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "
-            "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "
-            "FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id "
-            "FROM tb_monitor_scene AS a, tl_scene_monitor AS b "
-            "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d "
-            "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
-            "WHERE e.item_id = f.item_id ORDER BY e.scene_name")
-        res = cursor.fetchall()
+    DATABASES = settings_development.DATABASES['default']
+    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
+                         db=DATABASES['NAME'], charset="utf8")
+    cursor = db.cursor()
+    sql = "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "\
+          "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "\
+          "FROM(SELECT DISTINCT b.scene_id, a.scene_name, b.item_id "\
+          "FROM tb_monitor_scene AS a, tl_scene_monitor AS b "\
+          "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d "\
+          "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "\
+          "WHERE e.item_id = f.item_id "
+    if(search):
+        sql = sql+"and  e.scene_name = '" + search + "'"\
+
+    if(keyword):
+        sql=sql+"and (e.scene_id = '" + keyword + "' or e.id ='" + keyword + "' or e.monitor_name = '" + keyword + "' or f.alert_title='" + keyword + "' or f.alert_content='" + keyword + "' or f.alert_time='" + keyword + "' or f.persons='" + keyword + "') "\
+
+    if(date_Choice):
+        sql=sql+"and f.alert_time between  '" + res3 + "'  and '" + res4 + "'"
+    sql=sql+" ORDER BY e.scene_name"
+    cursor.execute(sql)
+    res = cursor.fetchall()
     p = Paginator(res, limit)
     count = p.page_range
     pages = count
