@@ -183,7 +183,7 @@ let vm = new Vue({
            select_log(){
                if(vm.log_type == 'log'){
                    vm.page = 1                                             //查询
-                   if (m.keyword == "" & vm.date_Choice == "" & this.search =="") {
+                   if (vm.keyword == "" & vm.date_Choice == "" & this.search =="") {
                        vm.show()
                    }
                    axios({
@@ -225,7 +225,6 @@ let vm = new Vue({
                 })
             },
             change_type(value){
-               alert(value)
                 if(value == 'log'){
                     $('#table1').css('display','block');
                     $('#table2').css('display','none');
