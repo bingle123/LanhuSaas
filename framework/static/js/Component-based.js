@@ -228,7 +228,6 @@ function show_chart(item_id,chartData,person_count,chart_type,height,width,drigg
 }
 function base_monitor_active(item_id,font_size,height,width) {
      $.get("/monitorScene/get_basic_data/"+item_id,function (res){
-        console.log(res)
         var selector_id='basic'+item_id
         var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
          var content=''
@@ -252,11 +251,7 @@ function base_monitor_active(item_id,font_size,height,width) {
         }
         $('[type='+selector_id+']').html(content)
         $('[type='+selector_id+']').css({
-        'text-align':'center',
-        'width': '100%',
-        'height': '40%',
-        'background-color': 'whitesmoke',
-        'position': 'relative'
+        'text-align':'center'
     })
         if(status==2){
             $("#status").css('background-color','darkgreen')

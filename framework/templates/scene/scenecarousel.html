@@ -89,9 +89,7 @@
                 vm.imgList = res.data.message;
             },
             scene_change(value1, value2) {
-                if (vm.imgList.length > 1) {
                     vm.scene_content_change(value1);
-                }
             },
             scene_content_change(value) {
                 let selector = '.scene_content' + value;
@@ -158,6 +156,9 @@
         }
     });
     vm.get_scenes()
+    setInterval(function () {
+        vm.get_scenes();
+    },10000)
 
 </script>
 
