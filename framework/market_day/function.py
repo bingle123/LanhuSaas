@@ -20,7 +20,7 @@ def get_holiday(req,area):
         days.append(date['day'])
     return days
 
-
+#通过节假日文件获取节假日
 def get_file(req,area):
     if req.method == 'POST':
         try:
@@ -44,12 +44,12 @@ def get_file(req,area):
         except:
             print '文件不匹配'
 
-
+#删除所有的节假日
 def delall(area):
     flag = Holiday.objects.filter(area=int(area)).delete()
     return flag
 
-
+#删除指定的节假日
 def delone(req):
     res=json.loads(req.body)
     date=res['date']
@@ -57,7 +57,7 @@ def delone(req):
     flag = Holiday.objects.filter(Q(day=date)& Q(area=int(area))).update(flag=1)
     return flag
 
-
+#添加一个日期为节假日
 def addone(req):
     res = json.loads(req.body)
     date = res['date']

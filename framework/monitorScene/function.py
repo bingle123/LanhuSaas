@@ -15,7 +15,9 @@ from logmanagement.function import add_log, make_log_info, get_active_user
 from db_connection.function import get_db
 from gatherData.function import gather_data
 import datetime
+import pytz
 from position.models import Localuser
+from market_day.models import Area
 
 def monitor_show(request):
     monitor = Scene.objects.all()
@@ -400,7 +402,7 @@ def alternate_play(request):
     username = get_active_user(request)['data']['bk_username']
     # 获取当前时间
     nowtime = datetime.datetime.now().strftime('%H:%M:%S')
-    res_list = get_scenes(username,nowtime,nowtime)
+    res_list = get_scenes(username,'','')
     return  res_list
 
 
@@ -423,6 +425,12 @@ def get_scenes(user_name,start,end):
     for z in scenes:
         # 场景
         temp_scene = Scene.objects.get(id=z)
+        if start=='' and end=='':
+            id=temp_scene.scene_area
+            timezone = Area.objects.get(id=id).timezone
+            tz = pytz.timezone(timezone)
+            end = datetime.datetime.now(tz).strftime('%H:%M:%S')
+            start=end
         # 判断系统时间是否在轮播时间
         if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
             # 初始化
