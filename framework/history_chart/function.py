@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
+
+from gatherDataHistory.models import TDGatherHistory
 from logmanagement.models import *
 from django.core.paginator import *
 from system_config.function import *
@@ -320,3 +322,16 @@ def about_search(request):
     db.close()
     res2 = tools.success_result(res_list2)
     return res2
+
+#场景对比分析
+def select_scenes(request):
+    scenes = Scene.objects.all()
+    list_data = list()
+    dic_data = {}
+    for i in scenes:
+        dic_data = {
+            'id':model_to_dict(i)['id'],
+            'sname':model_to_dict(i)['scene_name'],
+        }
+        list_data.append(dic_data)
+    return tools.success_result(list_data)

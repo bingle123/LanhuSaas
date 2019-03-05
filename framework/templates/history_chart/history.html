@@ -67,6 +67,12 @@
                 </el-select>
                 </el-col>
 
+                <el-col :span="5" style="margin-top: 5px">
+                    <el-select placeholder="请选择场景" v-model="scenes" value-key="id">
+                        <el-option v-for="item in scenes_data" :label="item.scene_name" :key="item.id"></el-option>
+                    </el-select>
+                </el-col>
+
                 <div id="table1" style="display: block">
                 <el-table :data="Operatelog"  style="width: 150%">
                     <el-table-column prop="id" label="id" width="100" align="center">
@@ -138,6 +144,9 @@
                     <div id="scene_et" style="width: 600px;height: 400px;margin: 60px">
 
                     </div>
+                    <div>
+
+                    </div>
                 </div>
 
             </div>
@@ -165,7 +174,9 @@ let vm = new Vue({
             aboutTableDate:null,
             keyword:'',                                 //关键字内容
             date_Choice: '',                            //时间选择
-            myChart:'',
+            myChart: '',
+            scenes_data:'',
+            scenes:'',
         },
         methods: {
             show() {
@@ -300,19 +311,20 @@ let vm = new Vue({
             change_type(value){
                 if(value == 'log'){
                     $('#table1').css('display','block');
-                    $('#table2').css('display','none');
-                    $('#table3').css('display','none');
+                    $("#table3，#scene_compare,#table2").css('display','none');
                 }else if(value == 'alert'){
-                   $('#table1').css('display','none');
                    $('#table2').css('display','block');
-                   $('#table3').css('display','none');
+                   $("#table3，#scene_compare,#table1").css('display','none');
                 }else if(value == 'about_to_expire'){
-                    $('#table1').css('display','none');
-                    $('#table2').css('display','none');
+                    $("#table2,#table1,#scene_compare").css('display','none');
                     $('#table3').css('display','block');
                 }else  if(value == 'compare'){
-                    $("#table1,#table2").css('display','none');
+                    $("#table1,#table2,#table3").css('display','none');
                     $('#scene_compare').css('display','block');
+                    axios.post('${SITE_URL}history_chart/select_scenes/').then((res) => {
+                        vm.scenes_data = res.data.results
+                        console.log(vm.scenes_data)
+                    });
                     vm.draw_line();
                 }
             },
@@ -340,93 +352,94 @@ let vm = new Vue({
             },
 
 
-            draw_line(){
+            draw_line() {
                 vm.myChart = echarts.init(document.getElementById('scene_et'));
                 option = {
-                title: {
-                    text: '场景比对',
-                    left :1,
-                },
-                tooltip: {
-                    trigger: 'axis'
-                },
-                legend: {
-                    left :'25%',
-                    data:['节点数','运行成功场景单元数','运行失败数','告警数量']
-                },
-                grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
-                },
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: ['周一','周二','周三','周四','周五','周六','周日']
-                },
-                yAxis: {
-                    type: 'value',
-                    min :0,
-                    max:30,
-                },
-                series: [
-                    {
-                        name:'节点数',
-                        type:'line',
-                        data:[1, 2, 4, 5, 6,6, 7],
-                        itemStyle: {
-                        normal: {
-                       color: "#000033",
-                       lineStyle: {
-                       color: "#000033"
+                    title: {
+                        text: '场景比对',
+                        left: 1,
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        left: '25%',
+                        data: ['节点数', '运行成功场景单元数', '运行失败数', '告警数量']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                    },
+                    yAxis: {
+                        type: 'value',
+                        min: 0,
+                        max: 30,
+                    },
+                    series: [
+                        {
+                            name: '节点数',
+                            type: 'line',
+                            data: [1, 2, 4, 5, 6, 6, 7],
+                            itemStyle: {
+                                normal: {
+                                    color: "#000033",
+                                    lineStyle: {
+                                        color: "#000033"
 
-                      }
-                    }
-                 },
+                                    }
+                                }
+                            },
 
-                    },
-                    {
-                        name:'运行成功场景单元数',
-                        type:'line',
-                        data:[5, 7, 3, 3, 1, 5, 6],
-                        itemStyle: {
-                        normal: {
-                       color: "#00FF00",
-                       lineStyle: {
-                       color: "#00FF00"
-                      }
-                    }
-                 },
-                    },
-                    {
-                        name:'运行失败数',
-                        type:'line',
-                        data:[1, 30, 3, 2, 2, 1, 3],
-                        itemStyle: {
-                        normal: {
-                       color: "#FF0000",
-                       lineStyle: {
-                       color: "#FF0000"
-                      }
-                    }
-                 },
-                    },
-                    {
-                        name:'告警数量',
-                        type:'line',
-                        data:[4, 7, 13, 4, 5, 6, 6],
-                        itemStyle: {
-                        normal: {
-                       color: "#3300FF",
-                       lineStyle: {
-                       color: "#3300FF"
-                      }
-                    }
-                 },
-                    },
-                ]};
-                 vm.myChart.setOption(option);
+                        },
+                        {
+                            name: '运行成功场景单元数',
+                            type: 'line',
+                            data: [5, 7, 3, 3, 1, 5, 6],
+                            itemStyle: {
+                                normal: {
+                                    color: "#00FF00",
+                                    lineStyle: {
+                                        color: "#00FF00"
+                                    }
+                                }
+                            },
+                        },
+                        {
+                            name: '运行失败数',
+                            type: 'line',
+                            data: [1, 30, 3, 2, 2, 1, 3],
+                            itemStyle: {
+                                normal: {
+                                    color: "#FF0000",
+                                    lineStyle: {
+                                        color: "#FF0000"
+                                    }
+                                }
+                            },
+                        },
+                        {
+                            name: '告警数量',
+                            type: 'line',
+                            data: [4, 7, 13, 4, 5, 6, 6],
+                            itemStyle: {
+                                normal: {
+                                    color: "#3300FF",
+                                    lineStyle: {
+                                        color: "#3300FF"
+                                    }
+                                }
+                            },
+                        },
+                    ]
+                };
+                vm.myChart.setOption(option);
             },
         }
     });
