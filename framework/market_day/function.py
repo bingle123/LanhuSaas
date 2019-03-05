@@ -3,7 +3,7 @@
 from models import Holiday,HeaderData,Area
 import os
 from xlrd import open_workbook
-from framework.conf import default
+from conf import default
 from monitor_item.models import Monitor
 from django.forms import model_to_dict
 from django.db.models import Q
@@ -70,53 +70,65 @@ def addperdic_task():
     flag=co.create_task_interval(name='demo_per', task='market_day.tasks.count_time', task_args=[10,50], desc='demodemo',interval_time={'every':10,'period':'seconds'})
     return flag
 
+#添加一个监控项定时任务
 def add_unit_task(add_dicx):
     type=add_dicx['monitor_type']
     schename = add_dicx['monitor_name']
-    print type
+    print add_dicx
     id=Monitor.objects.filter(monitor_name=schename).last().id
     schename=str(id)
     if type=='基本单元类型':
-        starthour = str(add_dicx['start_time'])[:2]
-        endhour = str(add_dicx['end_time'])[:2]
+        starthour = str(add_dicx['start_time']).split(':')[0]
+        startmin=str(add_dicx['start_time']).split(':')[-1]
+        endtime=add_dicx['end_time']
         period = int(add_dicx['period'])
         ctime = {
-            'hour': starthour + '-' + endhour,
-            'minute': '*/1',
+            'hour': starthour,
+            'minute': startmin,
         }
         info = {
             'id': id,
             'gather_params': add_dicx['gather_params'],
             'params': add_dicx['params'],
             'gather_rule': add_dicx['gather_rule'],
-            'period':period
+            'period':period,
+            'area_id':add_dicx['monitor_area'],
+            'task_name':str(schename)+'task',
+            'endtime':endtime
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,task_args=info, desc=schename)
     elif type=='图表单元类型':
         starthour = str(add_dicx['start_time'])[:2]
+        startmin=str(add_dicx['start_time']).split(':')[-1]
         endhour = str(add_dicx['end_time'])[:2]
         period = int(add_dicx['period'])
+        endtime=add_dicx['end_time']
         ctime = {
-            'hour': starthour + '-' + endhour,
-            'minute': '*/1',
+            'hour': starthour,
+            'minute': startmin,
         }
         info = {
             'id': id,
             'gather_params': 'sql',
             'params': add_dicx['params'],
             'gather_rule': add_dicx['gather_rule'],
-            'period': period
+            'period': period,
+            'area_id': add_dicx['monitor_area'],
+            'task_name': str(schename) + 'task',
+            'endtime': endtime
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,
                                task_args=info, desc=schename)
 
     elif type=='作业单元类型':
         starthour = str(add_dicx['start_time'])[:2]
+        startmin=str(add_dicx['start_time']).split(':')[-1]
         endhour = str(add_dicx['end_time'])[:2]
+        endtime=add_dicx['end_time']
         period = int(add_dicx['period'])
         ctime = {
-            'hour': starthour + '-' + endhour,
-            'minute':'*/1',
+            'hour': starthour,
+            'minute': startmin,
         }
         info = {
             'id': id,
@@ -126,7 +138,10 @@ def add_unit_task(add_dicx):
                 'name': add_dicx['gather_rule'],
                 'id': add_dicx['jion_id']
             }],
-            'period':period
+            'period':period,
+            'area_id': add_dicx['monitor_area'],
+            'task_name': str(schename) + 'task',
+            'endtime': endtime
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_two', crontab_time=ctime,task_args=info, desc=schename)
     elif type=='fourth':
@@ -134,22 +149,27 @@ def add_unit_task(add_dicx):
         period=add_dicx['period']
         node_times=add_dicx['node_times']
         constants=add_dicx['constants']
-        print node_times[-1]
-        starthour = str(node_times[-1]['starttime']).split(':')[0]
-        startmin = str(node_times[-1]['starttime']).split(':')[-1]
+        starthour = str(node_times[0]['starttime']).split(':')[0]
+        startmin = str(node_times[0]['starttime']).split(':')[-1]
+        endtime=str(node_times[-1]['endtime'])
         ctime = {
             'hour': starthour,
             'minute': startmin,
         }
         info = {
             'id': id,
-            'template_id':template_list ,   #创建任务的模板id
+            'template_id':template_list,#创建任务的模板id
             'node_times':node_times,
             'period':period,
-            'constants':constants
+            'constants':constants,
+            'area_id': add_dicx['monitor_area'],
+            'task_name': str(schename) + 'task',
+            'endtime': endtime
         }
+        #创建一个开始流程的任务
         co.create_task_crontab(name=schename, task='market_day.tasks.start_flow_task', crontab_time=ctime,task_args=info, desc=schename)
 
+#获取蓝鲸平台的头文件，并存入数据库
 def get_header_data(request):
     h,flag=HeaderData.objects.get_or_create(id=1)
     headers = {
@@ -168,7 +188,7 @@ def get_header_data(request):
     headers["X-CSRFToken"] = csrftoken;
     h.header=json.dumps(headers, ensure_ascii=False)
     h.save()
-
+#添加一个新的日历地区
 def add_area(req):
     res=json.loads(req.body)
     name=res['country']
@@ -177,23 +197,23 @@ def add_area(req):
     a.timezone=timezone
     a.save()
     return 'ok'
-
+#获取所有的日历地区
 def get_all_area(req):
     areas=Area.objects.all()
     area_dict=[]
     for a in areas:
         area_dict.append(model_to_dict(a))
     return area_dict
-
+#删除日历的某个地区
 def del_area(name):
     Area.objects.get(id=name).delete()
     Holiday.objects.filter(area=name).delete()
     return 'ok'
-
+#获得世界上的所有时区
 def get_all_timezone():
     all=pytz.common_timezones
     return all
-
+#判断今天是不是对应地区的工作日
 def check_jobday(id):
     timezone=Area.objects.get(id=id).timezone
     tz=pytz.timezone(timezone)
@@ -208,3 +228,4 @@ def check_jobday(id):
         return True
     elif flag==2:
         return False
+#得到当前时间

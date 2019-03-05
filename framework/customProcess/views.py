@@ -87,3 +87,9 @@ def send_notification(request):
     notification = json.loads(request.body)
     status = function.send_notification(notification)
     return render_json(status)
+
+
+def select_nodes_pagination(request):
+    page_info = json.loads(request.body)
+    selected_nodes = function.select_nodes_pagination(page_info)
+    return render_json(selected_nodes)

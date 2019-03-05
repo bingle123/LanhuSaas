@@ -52,7 +52,8 @@ def addSence(request):
             "scene_name": senceModel['data']['scene_name'],
             "scene_startTime": senceModel['data']["scene_startTime"],
             "scene_endTime": senceModel['data']["scene_endTime"],
-            "scene_creator": "admin"
+            "scene_creator": "admin",
+            "scene_area":senceModel['scene_area']
         }
         Scene.objects.create (**senceModel2)
         id = Scene.objects.last ()
@@ -136,7 +137,8 @@ def editSence(request):
             "scene_name": model['data']['scene_name'],
             "scene_startTime": model['data']["scene_startTime"],
             "scene_endTime": model['data']["scene_endTime"],
-            "scene_editor": "admin"
+            "scene_editor": "admin",
+            "scene_area": model['scene_area']
         }
         Scene.objects.filter (id=model['data']['id']).update (**senceModel2)
         info = make_log_info (u'编辑场景', u'业务日志', u'Scene', sys._getframe ().f_code.co_name,
@@ -228,6 +230,7 @@ def paging(request):
             'scene_creator_time': str (i.scene_creator_time),
             'scene_editor': i.scene_editor,
             'scene_editor_time': str (i.scene_editor_time),
+            'scene_area':str(i.scene_area),
             'pos_name': '',
             'page_count': page_count,
         }
@@ -337,7 +340,7 @@ def monitor_scene_show(id):
 def add_scene(res1):
     try:
         for i in res1:
-            Scene_monitor.objects.create (**i)
+            Scene_monitor.objects.create(**i)
         res_dic = tools.success_result (None)
     except Exception as e:
         res_dic = tools.error_result (e)
@@ -347,13 +350,14 @@ def add_scene(res1):
 # 获得图标监控项的数据
 def get_chart_data(id):
     datas = []
-    data = TDGatherData.objects.filter (item_id=id)
+    data = TDGatherData.objects.filter(item_id=id)
     for d in data:
         temp = {
             'key': d.data_key,
             'values': d.data_value.split (',')
         }
-        datas.append (temp)
+        datas.append(temp)
+    print datas
     return datas
 
 
@@ -429,14 +433,17 @@ def get_scenes(user_name,start,end):
             job_list = []
             items_id = []
             temp_list = []
+            scene_monitor_id = []
             # 场景对应的监控项id
             scene_monitor = Scene_monitor.objects.filter(scene_id = z)
             for k in scene_monitor:
-                items_id.append(k.item_id)
-            # 遍历场景的监控项ID
-            for j in items_id:
+                #items_id.append(k.item_id)
+                scene_monitor_id.append(k.id)
+            # 遍历场景的场景—监控项ID
+            for j in scene_monitor_id:
+                item_id = Scene_monitor.objects.get(id=j).item_id
                 # 获取基本数据
-                item = Monitor.objects.get(id=j)
+                item = Monitor.objects.get(id=item_id)
                 # 转成字典
                 item_dict = model_to_dict (item)
                 # 把时间类型转换为String
@@ -445,33 +452,33 @@ def get_scenes(user_name,start,end):
                 item_dict['create_time'] = str (item.create_time)
                 item_dict['edit_time'] = str (item.edit_time)
                 # 采集数据
-                info = {
-                    'id': item.id,
-                    'params': item.params,
-                    'gather_rule': item.gather_rule,
-                    'gather_params': item.gather_params,
-                }
-                gather_data (**info)
-                gather_rule = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str (j)
-                db = get_db ()
-                cursor = db.cursor ()
-                cursor.execute (gather_rule)
-                results = cursor.fetchall ()
-                dic = {}
-                for i in results:
-                    dic1 = {
-                        i[0]: i[1],
-                        'gather_status': i[2]
-                    }
-                    dic = dict (dic, **dic1)
-                # 拼接监控项基础数据和采集数据
-                item_dict = dict (item_dict, **dic)
+                # info = {
+                #     'id': item.id,
+                #     'params': item.params,
+                #     'gather_rule': item.gather_rule,
+                #     'gather_params': item.gather_params,
+                # }
+                # gather_data (**info)
+                # gather_rule = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str (item_id)
+                # db = get_db ()
+                # cursor = db.cursor ()
+                # cursor.execute (gather_rule)
+                # results = cursor.fetchall ()
+                # dic = {}
+                # for i in results:
+                #     dic1 = {
+                #         i[0]: i[1],
+                #         'gather_status': i[2]
+                #     }
+                #     dic = dict (dic, **dic1)
+                # # 拼接监控项基础数据和采集数据
+                # item_dict = dict (item_dict, **dic)
                 #拼接tl_scene_monitor信息
-                scene_monitor = Scene_monitor.objects.get(scene_id=z,item_id=j)
+                scene_monitor = Scene_monitor.objects.get(id = j)
                 scene_monitor_dict = {
                     'x':scene_monitor.x,
                     'y':scene_monitor.y,
-                    'scale':int(scene_monitor.scale),
+                    'scale':str(scene_monitor.scale),
                     'score':scene_monitor.score,
                     'order':scene_monitor.order,
                 }

@@ -2,6 +2,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 ${STATIC_URL}assets/-->
     <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
     <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
@@ -25,6 +27,20 @@
     "${SITE_URL}";	        // app的url前缀,在ajax调用的时候，应该加上该前缀
     "${STATIC_URL}";       // 静态资源前缀
     **/--->
+    <link type="text/css" href="${STATIC_URL}css/monitorScene/style.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/v-charts/lib/index.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/jrange/css/jquery.range.css" rel="stylesheet">
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+    <script src="${STATIC_URL}js/jquery.range-min.js"></script>
+
+
+    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
+    <script type="text/javascript" src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
+    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
+    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
+     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
 </head>
 <body style="height: 100%">
 <div id="main">
@@ -61,14 +77,13 @@
             <!-- 选择员工信息 end -->
             <!--<span class="demonstration">Click 指示器触发</span>-->
 
-            <el-carousel trigger="click" :change="scene_change" :height="imgHeight">
-                <el-carousel-item v-for="item in imgList" :key="item.id">
+            <el-carousel trigger="click" @change="scene_change" :height="imgHeight">
+                <el-carousel-item v-for="(item,index) in imgList" :key="index">
                     <el-row>
                         <el-col :span="24">
-                            <div ref="imgHeight" :src="item.idView" class="'scene_content'+item.id">
+                            <div ref="imgHeight" :src="item.idView" :id="item.scene_id" :class="'scene_content'+index" style="position: relative;">
                             </div>
                         </el-col>
-
                     </el-row>
                 </el-carousel-item>
             </el-carousel>
@@ -129,10 +144,49 @@
                  })
             },
             scene_change(value1,value2){
-                vm.scene_content_change(value1);
+                if(vm.imgList.length>1){
+                    vm.scene_content_change(value1);
+                }
+                else {
+                    return
+                }
             },
             scene_content_change(value){
-                console.log(value);
+                let selector = '.scene_content'+value;
+                let base_list=vm.imgList[value].scene_content[0].base_list;
+                let chart_list=vm.imgList[value].scene_content[0].chart_list;
+                let job_list=vm.imgList[value].scene_content[0].job_list;
+                let flow_list=vm.imgList[value].scene_content[0].flow_list;
+                console.log(base_list,chart_list,job_list,flow_list);
+                let drigging_id=1;
+                $(selector).html('');
+                for (let i = 0; i < base_list.length; i++) {
+                    $(selector).append('<div type=\"basic' + base_list[i].id + '\" style=\"position: absolute;top:' + base_list[i].y + 'px;left:' + base_list[i].x + 'px;transform: scale(' + base_list[i].scale + ')\"></div>');
+                    base_monitor_active(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width);
+                }
+                for (let i = 0; i < chart_list.length; i++) {
+                    $(selector).append('<div id=\"' + value + '_' + chart_list[i].order + '\" style=\"position: absolute;background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px;top:' + chart_list[i].y + 'px;left:' + chart_list[i].x + 'px;transform: scale(' + chart_list[i].scale + ')\"><div id=\"chart' + value + '_' + chart_list[i].order + '\" style=\"background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
+                    show_chart_active(chart_list[i].id, chart_list[i].gather_params, chart_list[i].height, chart_list[i].width, value + '_' + chart_list[i].order);
+
+                }
+                for (let i = 0; i < job_list.length; i++) {
+                    let job_params = {
+                        'id': job_list[i].id,
+                        'width': job_list[i].width,
+                        'height': job_list[i].height,
+                        'status': job_list[i].job_status,
+                        'contents': job_list[i].contents
+                    };
+                    $(selector).append('<div type=\"job' + job_list[i].id + '\" id=\"' + value + '_' + job_list[i].order + '\" style=\"position: absolute;top:' + job_list[i].y + 'px;left:' + job_list[i].x + 'px;transform: scale(' + job_list[i].scale + ')\"></div>');
+                    job_monitor_active(job_params);
+                }
+                for (let i = 0; i < flow_list.length; i++) {
+                    let jion_id = [{
+                        "id": flow_list[i].jion_id
+                    }];
+                    $(selector).append('<div style=\"position: absolute;top:' + flow_list[i].y + 'px;left:' + flow_list[i].x + 'px;transform: scale(' + flow_list[i].scale + ')\"><div type=\"flow_monitor' + value + '_' + flow_list[i].order + '\"></div></div>');
+                    flow_monitor(jion_id, value + '_' + flow_list[i].order);
+                }
             },
         },
         mounted() {
@@ -182,6 +236,27 @@
 
     .el-carousel__item:nth-child(2n+1) {
         background-color: #d3dce6;
+    }
+    .score_input{
+            font-size: 16px;
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            top: -36px;
+            left: 0;
+            width: 50px;
+            height: 36px;
+            display: none;
+        }
+    .right_click{
+        position: absolute;
+        width: 100px;
+        display: none;
+    }
+    .right_click span{
+        width: 100px;
+        display: inline-block;
+        font-size: 16px;
+        line-height: 36px;
     }
 </style>
 </body>

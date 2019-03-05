@@ -26,6 +26,7 @@ class Monitor(models.Model):
     edit_time = models.DateTimeField(verbose_name=u'修改时间', auto_now=True)
     status = models.PositiveIntegerField(verbose_name=u'监控状态')
     contents = models.CharField(verbose_name=u'显示内容',max_length=500)
+    monitor_area=models.IntegerField(verbose_name=u'监控项日历地区')
 
     def __str__(self):
         return self.id
@@ -50,7 +51,7 @@ class Job(models.Model):
         verbose_name_plural = u'作业实列信息'
         db_table = 'td_job_instance'
 
-#status：1表示FAILED  2表示RUNNING   3表示SUSPENDED   4表示REVOKED   5表示FINISHED
+#status：0表示FAILED  1表示RUNNING   2表示SUSPENDED   3表示REVOKED   4表示FINISHED 5表示超时
 #test_flag 1表示测试  2表示非测试
 class Flow(models.Model):
     flow_id = models.PositiveIntegerField(verbose_name=u'关联ID')
