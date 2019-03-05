@@ -167,6 +167,7 @@ def add_unit(request):
 def edit_unit(request):
     # try:
         res = json.loads (request.body)
+        print res['flow']
         id = res['unit_id']
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
@@ -178,6 +179,7 @@ def edit_unit(request):
             monitor_type = '图表单元类型'
         if res['monitor_type'] == 'third':
             monitor_type = '作业单元类型'
+            add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
         if res['monitor_type'] == 'fourth':
             monitor_type = 'fourth'
             add_dic['jion_id'] = res['flow']['jion_id']

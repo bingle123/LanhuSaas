@@ -484,6 +484,7 @@
                                 url: '${SITE_URL}monitorScene/addSence/',
                                 data: {
                                     data: vm.scene,
+                                    scene_area:vm.area,
                                     monitor_data: vm.result_list
                                 }
                             }).then(function (res) {
@@ -496,6 +497,7 @@
                                 url: '${SITE_URL}monitorScene/editSence/',
                                 data: {
                                     data: vm.scene_edit,
+                                    scene_area:vm.area,
                                     monitor_data: vm.result_list
                                 }
                             }).then(function (res) {

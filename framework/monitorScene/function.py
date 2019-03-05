@@ -52,7 +52,8 @@ def addSence(request):
             "scene_name": senceModel['data']['scene_name'],
             "scene_startTime": senceModel['data']["scene_startTime"],
             "scene_endTime": senceModel['data']["scene_endTime"],
-            "scene_creator": "admin"
+            "scene_creator": "admin",
+            "scene_area":senceModel['scene_area']
         }
         Scene.objects.create (**senceModel2)
         id = Scene.objects.last ()
@@ -136,7 +137,8 @@ def editSence(request):
             "scene_name": model['data']['scene_name'],
             "scene_startTime": model['data']["scene_startTime"],
             "scene_endTime": model['data']["scene_endTime"],
-            "scene_editor": "admin"
+            "scene_editor": "admin",
+            "scene_area": model['scene_area']
         }
         Scene.objects.filter (id=model['data']['id']).update (**senceModel2)
         info = make_log_info (u'编辑场景', u'业务日志', u'Scene', sys._getframe ().f_code.co_name,
@@ -228,6 +230,7 @@ def paging(request):
             'scene_creator_time': str (i.scene_creator_time),
             'scene_editor': i.scene_editor,
             'scene_editor_time': str (i.scene_editor_time),
+            'scene_area':str(i.scene_area),
             'pos_name': '',
             'page_count': page_count,
         }
@@ -337,7 +340,7 @@ def monitor_scene_show(id):
 def add_scene(res1):
     try:
         for i in res1:
-            Scene_monitor.objects.create (**i)
+            Scene_monitor.objects.create(**i)
         res_dic = tools.success_result (None)
     except Exception as e:
         res_dic = tools.error_result (e)

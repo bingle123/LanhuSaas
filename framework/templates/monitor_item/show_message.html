@@ -1433,12 +1433,15 @@
                     vm.flow.jion_id = row.jion_id;
                     vm.flow.period = row.period;
                     vm.flow.node_name = row.gather_params;
-                    vm.flow.gather_rule = row.gather_rule;
+                    vm.flow.gather_rule = {
+                        'name':row.gather_rule,
+                        'id':row.jion_id
+                    };
                     vm.area=row.monitor_area;
                     var id1=row.jion_id
-                    var id=[{
-                        'id':id1
-                    }]
+                    var id={
+                        'template_id':id1
+                    }
                     vm.flow_change(id)
                 }
             },
@@ -1557,6 +1560,7 @@
                     vm.unit_id = -1;
                 }
                 if (vm.unit_id > 0) {
+                    console.log()
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor_item/edit/',
