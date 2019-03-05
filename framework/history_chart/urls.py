@@ -20,5 +20,6 @@ urlpatterns = patterns(
     (r'^select_all_rules$', 'select_all_rules'),
     (r'^select_rules_pagination$', 'select_rules_pagination'),
     (r'^select_Keyword', 'select_Keyword'),
+    (r'^select_scene_operation', 'select_scene_operation'),         #查询场景运行情况
 
 )

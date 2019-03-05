@@ -61,6 +61,7 @@
                 <el-select placeholder="请选择日志类型" v-model="log_type" @change="change_type">
                     <el-option label="日志查询" value="log"></el-option>
                     <el-option label="执行告警信息查询" value="alert"></el-option>
+                    <el-option label="场景运行情况统计" value="sceneOperation"></el-option>
                 </el-select>
                 </el-col>
 
@@ -107,8 +108,24 @@
                      <el-pagination :page-count="alertRulesCount" background layout="prev, pager, next" style="float:right"
                                @current-change="alertRulePageChange"></el-pagination>
                     </div>
-
-
+                <div id="table10" style="display:none">
+                     <el-table :data="sceneOperationRuleTableData" style="width: 100%;margin-top: 20px">
+                         <el-table-column prop="date" label="时间" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="scene_num" label="场景数" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="success_num" label=运行成功数 style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="success_rate" label="运行成功率" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="failed_num" label="执行失败数" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center">
+                         </el-table-column>
+                     </el-table>
+                     <el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
+                               @current-change="sceneOperationTableData"></el-pagination>
+                    </div>
             </div>
         </el-card>
     </div>
@@ -131,6 +148,7 @@ let vm = new Vue({
             search: '',                                 //搜索框
             log_type:'',                                //日志类型
             alertRuleTableData:null,
+            sceneOperationRuleTableData:null,
             keyword:'',                                 //关键字内容
             date_Choice: '',                            //时间选择
         },
@@ -160,6 +178,17 @@ let vm = new Vue({
                     this.alertRuleTableData = res.data.results;
                     vm.alertRulesCount = res.data.results[0].pages
                     console.log(vm.page_count)
+                })
+               axios({
+                        method: 'post',
+                        url: '${SITE_URL}history_chart/select_scene_operation',
+                        data: {
+                            page: vm.page,
+                            limit: 10
+                        },
+                }).then((res) =>{
+                    vm.sceneOperationRuleTableData = res.data.message
+
                 })
             },
            current_change(value){
@@ -224,13 +253,19 @@ let vm = new Vue({
                     console.log(vm.alertRulesCount)
                 })
             },
-            change_type(value){
+           change_type(value){
                 if(value == 'log'){
                     $('#table1').css('display','block');
                     $('#table2').css('display','none');
+                    $('#table10').css('display','none');
                 }else if(value == 'alert'){
                    $('#table1').css('display','none');
                    $('#table2').css('display','block');
+                   $('#table10').css('display','none');
+                }else if(value == 'sceneOperation'){
+                   $('#table1').css('display','none');
+                   $('#table2').css('display','none');
+                   $('#table10').css('display','block');
                 }
             },
             select_Keyword(){
