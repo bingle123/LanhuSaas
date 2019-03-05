@@ -26,6 +26,7 @@ class Monitor(models.Model):
     edit_time = models.DateTimeField(verbose_name=u'修改时间', auto_now=True)
     status = models.PositiveIntegerField(verbose_name=u'监控状态')
     contents = models.CharField(verbose_name=u'显示内容',max_length=500)
+    monitor_area=models.IntegerField(verbose_name=u'监控项日历地区')
 
     def __str__(self):
         return self.id

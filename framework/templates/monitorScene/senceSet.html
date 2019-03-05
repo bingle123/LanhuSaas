@@ -169,8 +169,17 @@
                     <el-form-item label="场景名称" prop="scene_name">
                        <el-input placeholder="请输入场景名称"  v-model="scene.scene_name" style="width: 30%"></el-input>
                     </el-form-item>
-
-                    <el-form-item label="轮播时间"   >
+                    <el-form-item label="轮播日历">
+                        <el-select v-model="area" placeholder="请选择日历的地区">
+                            <el-option
+                              v-for="item in areas"
+                              :key="item.value"
+                              :label="item.area"
+                              :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="轮播时间">
                         <el-col :span="5">
                             <el-form-item prop="scene_startTime">
                                 <el-time-picker v-model="scene.scene_startTime" placeholder="开始时间点" format="HH:mm"
@@ -218,6 +227,16 @@
                 <el-form ref="scene_edit" :model="scene_edit" :rules="rules" label-width="80px">
                     <el-form-item label="场景名称" prop="scene_name">
                        <el-input placeholder="请输入场景名称" v-model="scene_edit.scene_name" style="width: 30%"></el-input>
+                    </el-form-item>
+                    <el-form-item label="轮播日历">
+                        <el-select v-model="area" placeholder="请选择日历的地区">
+                            <el-option
+                              v-for="item in areas"
+                              :key="item.value"
+                              :label="item.area"
+                              :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                      <el-form-item label="轮播时间" >
                           <el-col :span="5">
@@ -375,6 +394,8 @@
             selectvalue:'',
             search:'',//搜索框的值
             isAdd: 1,
+            areas:[],
+            area:1,
             imgUrl: './static/1.png',
             chartData: {
                 columns: ['日期', '下单用户'],
@@ -488,6 +509,23 @@
                         return false;
                     }
                 });
+            },
+            get_all_area(){
+            axios({
+                method:'get',
+                url:'/market_day/get_all_area',
+            }).then(function (res) {
+                res=res.data.message
+                vm.areas=[]
+                for (var i=0;i<res.length;i++){
+                    var label=res[i].country+"("+res[i].timezone+")"
+                    temp={
+                        'area':label,
+                        'value':res[i].id
+                    }
+                    vm.areas.push(temp)
+                    }
+                })
             },
             current_change(value) {
                 vm.page = value;
@@ -827,7 +865,7 @@
 
         }
     });
-
+    vm.get_all_area()
     vm.paging();
     $('.monitor_type').click(function () {
         $(this).parent().next('div').animate({
