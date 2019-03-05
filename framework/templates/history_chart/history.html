@@ -311,15 +311,12 @@ let vm = new Vue({
             change_type(value){
                 if(value == 'log'){
                     $('#table1').css('display','block');
-                    $('#table2').css('display','none');
-                    $('#table3').css('display','none');
+                    $("#table3，#scene_compare,#table2").css('display','none');
                 }else if(value == 'alert'){
-                   $('#table1').css('display','none');
                    $('#table2').css('display','block');
-                   $('#table3').css('display','none');
+                   $("#table3，#scene_compare,#table1").css('display','none');
                 }else if(value == 'about_to_expire'){
-                    $('#table1').css('display','none');
-                    $('#table2').css('display','none');
+                    $("#table2,#table1,#scene_compare").css('display','none');
                     $('#table3').css('display','block');
                 }else  if(value == 'compare'){
                     $("#table1,#table2,#table3").css('display','none');
