@@ -87,47 +87,6 @@
                     url: '${SITE_URL}monitorScene/alternate_play/',
                 });
                 vm.imgList = res.data.message;
-                if (vm.imgList.length == 1) {
-                    let selector = '.scene_content0';
-                    let base_list = vm.imgList[0].scene_content[0].base_list;
-                    let chart_list = vm.imgList[0].scene_content[0].chart_list;
-                    let job_list = vm.imgList[0].scene_content[0].job_list;
-                    let flow_list = vm.imgList[0].scene_content[0].flow_list;
-                    console.log(base_list, chart_list, job_list, flow_list);
-                    let drigging_id = 1;
-                    $(selector).html('');
-                    for (let i = 0; i < base_list.length; i++) {
-
-                        $(selector).append('<div type=\"basic' + base_list[i].id + '\" style=\"position: absolute;top:' + base_list[i].y + 'px;left:' + base_list[i].x + 'px;transform: scale(' + base_list[i].scale + ')\"></div>');
-                        base_monitor(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width, base_list[i].contents);
-                    }
-                    for (let i = 0; i < chart_list.length; i++) {
-                        $(selector).append('<div id=\"' + value + '_' + chart_list[i].order + '\" style=\"position: absolute;background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px;top:' + chart_list[i].y + 'px;left:' + chart_list[i].x + 'px;transform: scale(' + chart_list[i].scale + ')\"><div id=\"chart' + value + '_' + chart_list[i].order + '\" style=\"background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
-                        show_chart(chart_list[i].id, chart_list[i].gather_params, chart_list[i].height, chart_list[i].width, value + '_' + chart_list[i].order, chart_list[i].contents);
-
-                    }
-                    for (let i = 0; i < job_list.length; i++) {
-                        let job_params = {
-                            'id': job_list[i].id,
-                            'width': job_list[i].width,
-                            'height': job_list[i].height,
-                            'status': job_list[i].job_status,
-                            'contents': job_list[i].contents
-                        };
-                        $(selector).append('<div type=\"job' + job_list[i].id + '\" id=\"' + value + '_' + job_list[i].order + '\" style=\"position: absolute;top:' + job_list[i].y + 'px;left:' + job_list[i].x + 'px;transform: scale(' + job_list[i].scale + ')\"></div>');
-                        job_monitor(job_params);
-                    }
-                    for (let i = 0; i < flow_list.length; i++) {
-                        let value=1;
-                        let jion_id = [{
-                            "id": flow_list[i].jion_id
-                        }];
-                        $(selector).append('<div style=\"position: absolute;top:' + flow_list[i].y + 'px;left:' + flow_list[i].x + 'px;transform: scale(' + flow_list[i].scale + ')\"><div type=\"flow_monitor' + drigging_id + '_' + flow_list[i].order + '\"></div></div>');
-                        flow_monitor(jion_id, drigging_id + '_' + flow_list[i].order);
-                        drigging_id++;
-                    }
-                }
-
             },
             scene_change(value1, value2) {
                 if (vm.imgList.length > 1) {
@@ -145,11 +104,11 @@
                 $(selector).html('');
                 for (let i = 0; i < base_list.length; i++) {
                     $(selector).append('<div type=\"basic' + base_list[i].id + '\" style=\"position: absolute;top:' + base_list[i].y + 'px;left:' + base_list[i].x + 'px;transform: scale(' + base_list[i].scale + ')\"></div>');
-                    base_monitor(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width, base_list[i].contents);
+                    base_monitor_active(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width);
                 }
                 for (let i = 0; i < chart_list.length; i++) {
                     $(selector).append('<div id=\"' + value + '_' + chart_list[i].order + '\" style=\"position: absolute;background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px;top:' + chart_list[i].y + 'px;left:' + chart_list[i].x + 'px;transform: scale(' + chart_list[i].scale + ')\"><div id=\"chart' + value + '_' + chart_list[i].order + '\" style=\"background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
-                    show_chart(chart_list[i].id, chart_list[i].gather_params, chart_list[i].height, chart_list[i].width, value + '_' + chart_list[i].order, chart_list[i].contents);
+                    show_chart_active(chart_list[i].id, chart_list[i].gather_params, chart_list[i].height, chart_list[i].width, value + '_' + chart_list[i].order);
 
                 }
                 for (let i = 0; i < job_list.length; i++) {
@@ -161,7 +120,7 @@
                         'contents': job_list[i].contents
                     };
                     $(selector).append('<div type=\"job' + job_list[i].id + '\" id=\"' + value + '_' + job_list[i].order + '\" style=\"position: absolute;top:' + job_list[i].y + 'px;left:' + job_list[i].x + 'px;transform: scale(' + job_list[i].scale + ')\"></div>');
-                    job_monitor(job_params);
+                    job_monitor_active(job_params);
                 }
                 for (let i = 0; i < flow_list.length; i++) {
                     let jion_id = [{
