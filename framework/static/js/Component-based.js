@@ -95,14 +95,11 @@ function show_chart(item_id,chartData,person_count,chart_type,height,width,drigg
         barX.push(chartData[i].name)
         barCount.push(chartData[i].value)
     }
-        if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
-                this.myChart.dispose();
-        }
         $('#'+drigging_id).css('height',height);
         $('#'+drigging_id).css('width',width);
         if (chart_type == "饼图") {
             console.log(barCount,barX,chartData)
-            myChart = echarts.init(document.getElementById(drigging_id), 'macarons');
+            myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
             var legendData = [];
                     for(var i=0;i<chartData.length;i++){
                         legendData.push(chartData[i].name)
@@ -156,7 +153,7 @@ function show_chart(item_id,chartData,person_count,chart_type,height,width,drigg
         }
 
         if (chart_type == "柱状图") {
-            var myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
+            myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
             option = {
                 tooltip: {
                     trigger: 'axis',
