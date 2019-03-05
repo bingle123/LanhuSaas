@@ -163,6 +163,7 @@ def job_monitor_task(**i):
 @task
 def gather_data_task_thrid(**i):
     endtime = i['endtime']
+    print endtime
     task_name = i['task_name']
     # 逾期删除本任务
     strnow = datetime.strftime(datetime.now(), '%H:%M')
@@ -171,6 +172,11 @@ def gather_data_task_thrid(**i):
         tools.flow_gather_task(**i)
     else:
         co.delete_task(task_name)
+
+#流程监控项的采集测试专用task
+@task
+def gather_data_task_thrid_test(**i):
+    tools.flow_gather_task(**i)
 
 @task
 def start_flow_task(**info):
@@ -184,13 +190,13 @@ def start_flow_task(**info):
         user_account = BkUser.objects.filter(id=1).get()
         client = get_client_by_user(user_account)
         client.set_bk_api_ver('v2')
-        template_id=info['template_list']['id']
+        template_id=info['template_id']
         constants_temp = info['constants']
         constants = {}
         for temp in constants_temp:
             constants[temp['key']] = temp['value']
         strnow = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
-        name=info['template_list']['name']+strnow
+        name=str(info['template_id'])+strnow
         param = {
             "bk_biz_id": "2",
             "template_id": template_id,
@@ -211,28 +217,21 @@ def start_flow_task(**info):
         #如果启动任务成功创建一个定时查看节点状态的任务
         if flag:
             node_times = info['node_times']
-            starthour = str(node_times[-1]['starttime']).split(':')[0]
-            endhour = str(node_times[0]['endtime'])[:2].split(':')[0]
             period=info['period']
             args = {
                 'item_id': info['id'],
                 'task_id': task_id,  # 启动流程的任务id
                 'node_times': node_times,
-                'period': period,
-                'task_name':info['template_list']['name'] + '_check_status_test',
+                'task_name':info['task_name'] + '_check_status_test',
                 'endtime': info['endtime']
             }
-            ctime = {
-                'hour': starthour,
-                'minute': '*/1',
+            period = {
+                'every': period,
+                'period': 'seconds'
             }
-            co.create_task_interval(name=info['template_list']['name']+'_check_status', task='market_day.tasks.gather_data_task_thrid',interval_time=period,
+            co.create_task_interval(name=info['task_name'], task='market_day.tasks.gather_data_task_thrid',interval_time=period,
                                    task_args=args, desc=name)
-            status=1
-            for time in node_times:
-                Flow_Node(flow_id=template_id, node_name=time['node_name'], start_time=time['starttime'],
-                          end_time=time['endtime']).save()
-        Flow(instance_id=task_id, status=flag, test_flag=0, flow_id=template_id).save()
+        Flow(instance_id=task_id, status=flag, test_flag=0, flow_id=info['id']).save()
     else:
         pass
 # 定时任务测试

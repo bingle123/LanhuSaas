@@ -92,6 +92,7 @@ def node_name(request):
 
 def start_flow_task(request):
     info=json.loads(request.body)
+    print info
     res = tools.start_flow_task(**info)
     return render_json(res)
 
