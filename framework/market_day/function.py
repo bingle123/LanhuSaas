@@ -228,3 +228,4 @@ def check_jobday(id):
         return True
     elif flag==2:
         return False
+#得到当前时间
