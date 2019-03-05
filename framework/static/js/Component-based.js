@@ -42,8 +42,8 @@ function job_monitor_active(job_params) {
     $('[type='+selector_id+']').css('width',job_params.width);
     $('[type='+selector_id+']').find("*").css('font-size',job_params.font_size);
 }
-function chart_monitor(item_id,chart_type,height,width,drigging_id){
-    new_res=[]
+function show_chart_active(item_id,chart_type,height,width,drigging_id){
+    var new_res=[]
     var chartdata=[]
     $.get("/monitorScene/get_chart_data/"+item_id,function (res) {
         res=res.message
