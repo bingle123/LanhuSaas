@@ -347,13 +347,14 @@ def add_scene(res1):
 # 获得图标监控项的数据
 def get_chart_data(id):
     datas = []
-    data = TDGatherData.objects.filter (item_id=id)
+    data = TDGatherData.objects.filter(item_id=id)
     for d in data:
         temp = {
             'key': d.data_key,
             'values': d.data_value.split (',')
         }
-        datas.append (temp)
+        datas.append(temp)
+    print datas
     return datas
 
 
@@ -448,27 +449,27 @@ def get_scenes(user_name,start,end):
                 item_dict['create_time'] = str (item.create_time)
                 item_dict['edit_time'] = str (item.edit_time)
                 # 采集数据
-                info = {
-                    'id': item.id,
-                    'params': item.params,
-                    'gather_rule': item.gather_rule,
-                    'gather_params': item.gather_params,
-                }
-                gather_data (**info)
-                gather_rule = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str (item_id)
-                db = get_db ()
-                cursor = db.cursor ()
-                cursor.execute (gather_rule)
-                results = cursor.fetchall ()
-                dic = {}
-                for i in results:
-                    dic1 = {
-                        i[0]: i[1],
-                        'gather_status': i[2]
-                    }
-                    dic = dict (dic, **dic1)
-                # 拼接监控项基础数据和采集数据
-                item_dict = dict (item_dict, **dic)
+                # info = {
+                #     'id': item.id,
+                #     'params': item.params,
+                #     'gather_rule': item.gather_rule,
+                #     'gather_params': item.gather_params,
+                # }
+                # gather_data (**info)
+                # gather_rule = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str (item_id)
+                # db = get_db ()
+                # cursor = db.cursor ()
+                # cursor.execute (gather_rule)
+                # results = cursor.fetchall ()
+                # dic = {}
+                # for i in results:
+                #     dic1 = {
+                #         i[0]: i[1],
+                #         'gather_status': i[2]
+                #     }
+                #     dic = dict (dic, **dic1)
+                # # 拼接监控项基础数据和采集数据
+                # item_dict = dict (item_dict, **dic)
                 #拼接tl_scene_monitor信息
                 scene_monitor = Scene_monitor.objects.get(id = j)
                 scene_monitor_dict = {
