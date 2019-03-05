@@ -343,7 +343,7 @@ def gather_data(**info):
     elif "space_interface" == gather_type:
         if info['data_key'] == 3:
             TDGatherData (item_id=info['id'], gather_time=GATHER_TIME, data_key=info['data_key'], data_value=info['data_value'],
-                          gather_error_log=info['gather_error_log'],instance_id = info['instance_id']).save()
+                          gather_error_log=None,instance_id = info['instance_id']).save()
         else:
             TDGatherData (item_id=info['id'], gather_time=GATHER_TIME, data_key=info['data_key'], data_value=info['data_value'],
                           gather_error_log=info['gather_error_log'],instance_id = info['instance_id']).save ()
