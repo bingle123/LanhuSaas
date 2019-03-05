@@ -358,18 +358,32 @@ def crawl_test(request):
     return success_result(result['results'])
 
 
-def get_scene_type(type_name):
+def get_scene_type(type_name, page, limit):
     """
     获取场景分组类别
     :param type_name:       场景类型名称
+    :param page:
+    :param limit:
     :return:
     """
+    count = SceneType.objects.all().values()
+    if limit == 0:
+        limit = len(count)
+        page_count = 1
+    else:
+        page_count = int(math.ceil(len(count) / limit) + 1)
+    start_page = int(page - 1) * int(limit)
+    if type_name != '':
+        count = SceneType.objects.filter(Q(scene_type_name__icontains=type_name))
+        page_count = int(math.ceil(len(count) / limit) + 1)
     scene_type_list = SceneType.objects.filter(Q(scene_type_name__icontains=type_name)).order_by(
-        '-update_time').values()
+        '-update_time').values()[start_page:start_page + limit]
     result_list = []
     for i in scene_type_list:
         i['create_time'] = i['create_time'].strftime("%Y-%m-%d %H:%M:%S")
         i['update_time'] = i['update_time'].strftime("%Y-%m-%d %H:%M:%S")
+        i['page_count'] = page_count
+        i['page'] = page
         result_list.append(i)
     return success_result(result_list)
 

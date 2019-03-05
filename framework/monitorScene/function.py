@@ -432,14 +432,17 @@ def get_scenes(user_name,start,end):
             job_list = []
             items_id = []
             temp_list = []
+            scene_monitor_id = []
             # 场景对应的监控项id
             scene_monitor = Scene_monitor.objects.filter(scene_id = z)
             for k in scene_monitor:
-                items_id.append(k.item_id)
-            # 遍历场景的监控项ID
-            for j in items_id:
+                #items_id.append(k.item_id)
+                scene_monitor_id.append(k.id)
+            # 遍历场景的场景—监控项ID
+            for j in scene_monitor_id:
+                item_id = Scene_monitor.objects.get(id=j).item_id
                 # 获取基本数据
-                item = Monitor.objects.get(id=j)
+                item = Monitor.objects.get(id=item_id)
                 # 转成字典
                 item_dict = model_to_dict (item)
                 # 把时间类型转换为String
@@ -455,7 +458,7 @@ def get_scenes(user_name,start,end):
                     'gather_params': item.gather_params,
                 }
                 gather_data (**info)
-                gather_rule = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str (j)
+                gather_rule = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str (item_id)
                 db = get_db ()
                 cursor = db.cursor ()
                 cursor.execute (gather_rule)
@@ -470,7 +473,7 @@ def get_scenes(user_name,start,end):
                 # 拼接监控项基础数据和采集数据
                 item_dict = dict (item_dict, **dic)
                 #拼接tl_scene_monitor信息
-                scene_monitor = Scene_monitor.objects.get(scene_id=z,item_id=j)
+                scene_monitor = Scene_monitor.objects.get(id = j)
                 scene_monitor_dict = {
                     'x':scene_monitor.x,
                     'y':scene_monitor.y,
