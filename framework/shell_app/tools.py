@@ -135,6 +135,38 @@ def wechat_send_msg(access_token, openid, msg):
     )
     # 这里可根据回执code进行判定是否发送成功(也可以根据code根据错误信息)
     result = response.json()
+    print result
+    if 0 == int(result['errcode']):
+        print "WeChat Message Send Success!"
+        return None
+    else:
+        print "WeChat Message Send Error: %s" % result['errmsg']
+        return result['errmsg']
+
+
+# 微信公众号群发功能：只有服务号可用，订阅号不可用
+def wechat_batch_send_msg(access_token, openids, msg):
+    print "OPEN_IDS: %s" % openids
+    body = {
+        "touser": openids,
+        "msgtype": "text",
+        "text": {
+            "content": msg
+        }
+    }
+    unicode_str = json.dumps(body, ensure_ascii=False)
+    utf8_str = unicode_str.encode('utf-8')
+    # print 'UNICODE: %s'% unicode_str
+    # print 'UTF8: %s' % utf8_str
+    response = requests.post(
+        url="https://api.weixin.qq.com/cgi-bin/message/mass/send",
+        params={
+            'access_token': access_token
+        },
+        data=utf8_str
+    )
+    # 这里可根据回执code进行判定是否发送成功(也可以根据code根据错误信息)
+    result = response.json()
     if 0 == int(result['errcode']):
         print "WeChat Message Send Success!"
     else:

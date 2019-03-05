@@ -8,7 +8,6 @@ from celery.task import periodic_task
 from system_config.models import SendMailLog as sml
 from djcelery import models as celery_models
 import logging
-import time
 from gatherData import function
 from monitor_item.models import Monitor
 from django.db.models import Q
@@ -21,6 +20,7 @@ from blueking.component.shortcuts import get_client_by_user
 from datetime import datetime
 from customProcess.function import clear_execute_status
 from market_day.function import check_jobday
+from monitor_item.models import *
 
 @task
 def crawl_task(**i):
@@ -90,35 +90,96 @@ def crawl_task(**i):
 #基本监控项和图标监控项的采集task
 @task
 def gather_data_task_one(**i):
-    # 调用基本监控项和图标监控项数据采集的方法
+    # 启动一个
     area_id=i['area_id']
+    period={
+        'every':i['period'],
+        'period':'seconds'
+    }
+    task_name=i['task_name']
+    info = {
+        'id': i['id'],
+        'gather_params': i['gather_params'],
+        'params': i['params'],
+        'gather_rule': i['gather_rule'],
+        'task_name': i['task_name'],
+        'endtime':i['endtime']
+    }
     if check_jobday(area_id):
-        function.gather_data(**i)
+        co.create_task_interval(name=task_name, task='market_day.tasks.basic_monitor_task',interval_time=period,
+                               task_args=info, desc=task_name)
+
     else:
         pass
+
+@task
+def basic_monitor_task(**i):
+    #调用基本监控项和图标监控项数据采集的方法
+    endtime=i['endtime']
+    task_name=i['task_name']
+    #逾期删除本任务
+    strnow=datetime.strftime(datetime.now(),'%H:%M')
+    if strnow<=endtime:
+        function.gather_data(**i)
+    else:
+        co.delete_task(task_name)
 
 #作业监控项的采集task
 @task
 def gather_data_task_two(**i):
-    print '采集开始'
-    # 调用作业监控项数据采集的方法
+    area_id = i['area_id']
+    period = {
+        'every': i['period'],
+        'period': 'seconds'
+    }
+    task_name = i['task_name']
+    info = {
+        'id': i['id'],
+        'gather_params': i['gather_params'],
+        'params': i['params'],
+        'gather_rule': i['gather_rule'],
+        'task_name': i['task_name'],
+        'endtime': i['endtime']
+    }
     if check_jobday(area_id):
-        tools.job_interface(res=i)
+        co.create_task_interval(name=task_name, task='market_day.tasks.chart_monitor_task', interval_time=period,
+                                task_args=info, desc=task_name)
     else:
         pass
+
+@task
+def job_monitor_task(**i):
+    endtime=i['endtime']
+    task_name=i['task_name']
+    #逾期删除本任务
+    strnow=datetime.strftime(datetime.now(),'%H:%M')
+    if strnow<=endtime:
+        # 调用作业采集的方法
+        tools.job_interface(i)
+    else:
+        co.delete_task(task_name)
 
 #流程监控项的采集task
 @task
 def gather_data_task_thrid(**i):
-    print '采集开始'
-    # 调用流程监控项数据采集的方法
-    if check_jobday(area_id):
+    endtime = i['endtime']
+    task_name = i['task_name']
+    # 逾期删除本任务
+    strnow = datetime.strftime(datetime.now(), '%H:%M')
+    if strnow <= endtime:
+        # 调用流程监控项数据采集的方法
         tools.flow_gather_task(**i)
     else:
-        pass
+        co.delete_task(task_name)
+
 @task
 def start_flow_task(**info):
     #得到client对象，方便调用接口
+    area_id = info['area_id']
+    period = {
+        'every': info['period'],
+        'period': 'seconds'
+    }
     if check_jobday(area_id):
         user_account = BkUser.objects.filter(id=1).get()
         client = get_client_by_user(user_account)
@@ -158,19 +219,20 @@ def start_flow_task(**info):
                 'task_id': task_id,  # 启动流程的任务id
                 'node_times': node_times,
                 'period': period,
-                'task_name':info['template_list']['name'] + '_check_status_test'
+                'task_name':info['template_list']['name'] + '_check_status_test',
+                'endtime': info['endtime']
             }
             ctime = {
-                'hour': starthour + '-' + endhour,
+                'hour': starthour,
                 'minute': '*/1',
             }
-            co.create_task_crontab(name=info['template_list']['name']+'_check_status', task='market_day.tasks.gather_data_task_thrid', crontab_time=ctime,
+            co.create_task_interval(name=info['template_list']['name']+'_check_status', task='market_day.tasks.gather_data_task_thrid',interval_time=period,
                                    task_args=args, desc=name)
             status=1
             for time in node_times:
-                Flow_Node(flow_id=item_id, node_name=time['node_name'], start_time=time['starttime'],
+                Flow_Node(flow_id=template_id, node_name=time['node_name'], start_time=time['starttime'],
                           end_time=time['endtime']).save()
-        Flow(instance_id=task_id, status=flag, test_flag=0, flow_id=item_id).save()
+        Flow(instance_id=task_id, status=flag, test_flag=0, flow_id=template_id).save()
     else:
         pass
 # 定时任务测试
@@ -181,10 +243,7 @@ def count_time(**i):
 @periodic_task(run_every=crontab(hour=0,minute=0))
 def clear_status_task():
     print '开始清理状态'
-    if check_jobday(area_id):
-        clear_execute_status()
-    else:
-        pass
+    clear_execute_status()
 
 
 

@@ -112,5 +112,4 @@ def checked_menu(request):
 # 保存勾选id
 def savemnus(request):
     res = function.savemnus(request)
-    print res
     return render_json(res)

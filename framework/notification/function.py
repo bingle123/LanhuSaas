@@ -151,7 +151,7 @@ def add_rule(rule_data):
     print rule_data
     TbAlertRule(**rule_data).save()
     items_count = TbAlertRule.objects.count()
-    pages = items_count / 5
+    pages = items_count // 5
     if 0 != items_count % 5:
         pages = pages + 1
     status_dic['message'] = 'ok'

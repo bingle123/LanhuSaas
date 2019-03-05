@@ -13,7 +13,7 @@
 </head>
 <body>
     <div id="customProcess">
-        <el-dialog title="定制过程通知" :visible.sync="addDialogVisible" width="80%" center>
+        <el-dialog title="定制过程通知" :visible.sync="addDialogVisible" width="80%" :close-on-click-modal="false" center @closed="customProcessListNode">
             <div v-if="customProcessTableStatus == 'list'">
                 <el-row>
                     <el-col :span="24">
@@ -24,7 +24,7 @@
                 <div style="text-align: right">
                     <el-button type="primary" size="medium" @click="customProcessAddNode()">新增过程节点</el-button>
                 </div>
-                <el-table :data="customProcessTableData" id="customProcessTable">
+                <el-table :data="customProcessTableListData" id="customProcessTable">
                     <el-table-column prop="node_name" label="节点名称">
                     </el-table-column>
                     <el-table-column prop="send_content" label="通知内容">
@@ -40,6 +40,9 @@
                         </template>
                     </el-table-column>
                 </el-table>
+                <el-row>
+                    <el-pagination :page-count="customProcessPageCount" :current-page="currentPage" background layout="prev, pager, next" style="float:right" @current-change="customProcessPageChange"></el-pagination>
+                </el-row>
                 <el-row class="customProcessFormButton">
                     <el-button type="primary" @click="addDialogVisible = false">关 闭</el-button>
                 </el-row>
@@ -72,7 +75,9 @@
                         </el-col>
                         <el-col :span="11" :offset="1">
                             <el-form-item label="通知接收人:" prop="receivers">
-                                <el-input v-model="customProcessNode.receivers"></el-input>
+                                <el-select v-model="customProcessNode.receivers" multiple collapse-tags filterable placeholder="请选择" style="width: 100%">
+	                                <el-option v-for="bkUser in bkUsers" :key="bkUser.id" :label="bkUser.user_name" :value="bkUser.user_name"></el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -111,7 +116,9 @@
                         </el-col>
                         <el-col :span="11" :offset="1">
                             <el-form-item label="通知接收人:" prop="receivers">
-                                <el-input v-model="customProcessNode.receivers"></el-input>
+                                <el-select v-model="customProcessNode.receivers" :value-key="customProcessNode.receivers" multiple collapse-tags filterable placeholder="请选择" style="width: 100%">
+	                                <el-option v-for="bkUser in bkUsers" :key="bkUser.id" :label="bkUser.user_name" :value="bkUser.user_name" ></el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -123,7 +130,7 @@
                 </el-form>
             </div>
         </el-dialog>
-        <el-dialog title="发送短信通知" :visible.sync="customProcessSendMsgDialogVisible" width="60%" :before-close="customProcessHandleClose" center>
+        <el-dialog title="发送通知" :visible.sync="customProcessSendMsgDialogVisible" width="60%" :before-close="customProcessHandleClose" center>
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
                     通知人：<span>{{ customProcessReceivers }}</span>
@@ -131,7 +138,7 @@
                 通知内容：<span>{{ customProcessNoticeContent }}</span>
             </el-card>
             <span slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="customProcessSendMsgDialogVisible = false">发送短信</el-button>
+                <el-button :type="customProcessNotifyButtonType" :disabled="customProcessNotifyButtonDisabled" @click="customProcessSendNotification">{{ customProcessNotifyButtonText }}</el-button>
             </span>
         </el-dialog>
         <el-row>
@@ -197,10 +204,48 @@
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
         return config
     });
+    //接收人校验
+    const receiversCheck = (rule, value, callback) => {
+        if(0 == vue.customProcessNode.receivers.length){
+            callback(new Error('请输入通知接收人'));
+        }else{
+            return callback();
+        }
+    };
+    //节点顺序校验
+    const seqCheck = (rule, value, callback) => {
+        if(0 == vue.customProcessNode.seq.length){
+            callback(new Error('请输入节点顺序'));
+        }else if(!/^[1-9][0-9]{0,1}$/.test(vue.customProcessNode.seq)){
+            return callback(new Error('节点值在1~99之间'));
+        }else{
+            $.each(vue.customProcessTableData, function(k, v){
+                if(vue.customProcessNode.seq == v.seq){
+                    if(null == vue.customProcessNodeInitSeq){
+                        return callback(new Error('该节点顺序已被定义'));
+                    }else if(vue.customProcessNodeInitSeq != vue.customProcessNode.seq){
+                        return callback(new Error('该节点顺序已被定义'));
+                    }
+                }
+            });
+            return callback();
+        }
+    };
     var vue = new Vue({
         el: '#customProcess',
         data: {
+            customProcessPageCount: 0,
+            currentPage: 1,
+            //用于列表显示的节点信息
+            customProcessTableListData: [],
+            //蓝鲸平台用户列表信息
+            bkUsers: {},
+            //步骤条默认高度
             customProcessHeight: '1000',
+            //发送通知按钮属性控制
+            customProcessNotifyButtonType: 'primary',
+            customProcessNotifyButtonText: '发送通知',
+            customProcessNotifyButtonDisabled: false,
             //执行流程按钮属性控制
             customProcessStartButtonType: 'primary',
             customProcessStartButtonText: '开始执行流程',
@@ -225,6 +270,7 @@
                 seq: null,
                 receivers: null*/
             },
+            customProcessNodeInitSeq: null,
             customProcessTableData: [],
             //校验规则定义
             rules: {
@@ -237,16 +283,39 @@
                     { min: 1, max: 1000, message: '通知内容长度在1~1000之间', trigger: 'blur' }
                 ],
                 seq: [
-                    { required: true, message: '请输入节点顺序', trigger: 'blur' },
-                    { pattern: /^[1-9][0-9]{0,1}$/, message: '节点值在1~99之间', trigger: 'blur' }
+                    { validator: seqCheck, trigger: 'blur' }
                 ],
                 receivers: [
-                    { required: true, message: '请输入通知接收人', trigger: 'blur' },
-                    { min: 1, max: 1000, message: '通知接收人长度在1~1000之间', trigger: 'blur' }
+                    { validator: receiversCheck, trigger: 'blur' }
                 ]
             }
         },
         methods:{
+            //分页显示方法
+            customProcessPageChange: function(page) {
+                const loading = this.customProcessPopupLoading();
+                var data = {
+                    page: page,
+                    limit: 5
+                };
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}customProcess/select_nodes_pagination',
+                    data: data
+                }).then((res) => {
+                    loading.close();
+                    this.customProcessTableListData = res.data.items;
+                    this.customProcessPageCount = res.data.pages;
+                    this.currentPage = page;
+                    if(page > res.data.pages){
+                        this.currentPage = res.data.pages;
+                    }
+                }).catch((res) => {
+                    loading.close();
+                    var msg = '节点信息加载失败！';
+                    this.alertRulePopupErrorMessage(msg + res);
+                });
+            },
             //Date()对象转yyyy-MM-dd HH:mm:ss函数
             formatDateTime: function (date) {
                 var y = date.getFullYear();
@@ -261,6 +330,42 @@
                 var seconds = date.getSeconds();
                 seconds = seconds < 10 ? ('0' + seconds) : seconds;
                 return y + '-' + m + '-' + d+' '+h+':'+minute+':'+seconds;
+            },
+            //发送通知
+            customProcessSendNotification: function(){
+                this.customProcessNotifyButtonText = '正在发送...';
+                this.customProcessNotifyButtonType = 'info';
+                this.customProcessNotifyButtonDisabled = true;
+                var url = '${SITE_URL}customProcess/send_notification';
+                var nofityData = {
+                    'receivers': this.customProcessReceivers,
+                    'content': this.customProcessNoticeContent
+                };
+                axios({
+                    method: 'post',
+                    url: url,
+                    data: nofityData
+                }).then((res) =>{
+                    this.customProcessSendMsgDialogVisible = false;
+                    this.customProcessNotifyButtonText = '发送通知';
+                    this.customProcessNotifyButtonType = 'primary';
+                    this.customProcessNotifyButtonDisabled = false;
+                    if('ok' == res.data.message){
+                        var msg = res.data.info;
+                        this.customProcessPopupSuccessMessage(msg);
+                    }else{
+                        var msg = '通知发送失败！' + res.data.info;
+                        this.customProcessPopupErrorMessage(msg);
+                    }
+                }).catch((res) => {
+                    this.customProcessSendMsgDialogVisible = false;
+                    this.customProcessSendMsgDialogVisible = false;
+                    this.customProcessNotifyButtonText = '发送通知';
+                    this.customProcessNotifyButtonType = 'primary';
+                    this.customProcessNotifyButtonDisabled = false;
+                    var msg = '通知发送失败！' + res;
+                    this.customProcessPopupErrorMessage(msg);
+                });
             },
             //弹出加载界面
             customProcessPopupLoading: function() {
@@ -277,6 +382,14 @@
                 this.$notify.error({
                   title: '错误',
                   message: msg
+                });
+            },
+            //弹出成功的信息
+            customProcessPopupSuccessMessage: function(msg) {
+                this.$notify({
+                  title: '成功',
+                  message: msg,
+                  type: 'success'
                 });
             },
             //生成当前执行节点的信息
@@ -346,24 +459,24 @@
                 temp.html(customProcessExecStatus);
                 temp.removeAttr('id');
                 $('#customProcessNextButton').remove();
+                this.customProcessSendMessage(this.customProcessStep - 1);
                 //如果当前已经执行到最后一个节点
                 if(this.customProcessStep == this.customProcessStepSum){
                     this.customProcessStartButtonType = 'info';
                     this.customProcessStartButtonText = '当日流程已执行完毕';
-                    this.customProcessEnd();
+                    //this.customProcessEnd();
                     return;
                 }
-                this.customProcessSendMessage(this.customProcessStep - 1);
                 this.generateCurrentProcessInfo();
             },
             //发送短信通知
-            customProcessSendMessage(nodeOrder) {
+            customProcessSendMessage: function(nodeOrder) {
                 this.customProcessReceivers = this.customProcessTableData[nodeOrder].receivers;
                 this.customProcessNoticeContent = this.customProcessTableData[nodeOrder].send_content;
                 this.customProcessSendMsgDialogVisible = true;
             },
             //短信通知关闭前的确认
-            customProcessHandleClose() {
+            customProcessHandleClose: function() {
                 this.$confirm('确定不发送短信通知吗？').then(_ => {
                     this.customProcessSendMsgDialogVisible = false;
                 }).catch(_ => {
@@ -392,6 +505,9 @@
                 }).then((res) =>{
                     loading.close();
                     this.customProcessNode = res.data.message[0];
+                    this.customProcessNodeInitSeq = this.customProcessNode.seq;
+                    //切换修改节点的时候使用逗号切割发送人信息，使select组件能识别选中默认值
+                    this.customProcessNode.receivers = this.customProcessNode.receivers.split(',');
                     this.customProcessTableStatus = 'edit';
                 }).catch((res) => {
                     loading.close();
@@ -415,6 +531,7 @@
                             url: url
                         }).then((res) =>{
                             if('ok' == res.data.message){
+                                this.customProcessPageChange(1);
                                 this.addDialogVisible = true;
                                 this.customProcessSelectAllNodes()
                             }else{
@@ -434,6 +551,7 @@
                         });
                     });
                 }else{
+                    this.customProcessPageChange(1);
                     this.addDialogVisible = true;
                 }
             },
@@ -456,6 +574,7 @@
                     }).then((res) =>{
                         loading.close();
                         if('ok' == res.data.message){
+                            this.customProcessPageChange(this.currentPage);
                             this.customProcessSelectAllNodes();
                             this.customProcessListNode();
                             this.$message({
@@ -495,6 +614,12 @@
                     }else {
                         const loading = this.customProcessPopupLoading();
                         var url = '${SITE_URL}customProcess/add_node';
+                        if(1 != this.customProcessNode.receivers.length){
+                            this.customProcessNode.receivers = this.customProcessNode.receivers.join(',');
+                        }else{
+                            this.customProcessNode.receivers = this.customProcessNode.receivers[0];
+                        }
+                        this.customProcessNodeInitSeq = null;
                         axios({
                             method: 'post',
                             url: url,
@@ -503,6 +628,12 @@
                             loading.close();
                             if('ok' == res.data.message){
                                 this.customProcessSelectAllNodes();
+                                if('edit' == this.customProcessTableStatus){
+                                    this.customProcessPageChange(this.currentPage);
+                                }
+                                else if('add' == this.customProcessTableStatus){
+                                    this.customProcessPageChange(res.data.total_pages);
+                                }
                                 this.customProcessListNode();
                             }else{
                                 var msg = '请求添加/修改节点数据失败！';
@@ -655,9 +786,27 @@
                     var msg = '节点数据信息加载错误！';
                     this.customProcessPopupErrorMessage(msg);
                 });
+            },
+            loadBkUsers: function(){
+                const loading = this.customProcessPopupLoading();
+                var url = '${SITE_URL}customProcess/select_all_bkusers';
+                axios({
+                    method: 'post',
+                    url: url
+                }).then((res) =>{
+                    this.bkUsers = res.data.message;
+                    console.log(res.data.message);
+                    loading.close();
+                }).catch((res) => {
+                    loading.close();
+                    var msg = '蓝鲸用户信息加载失败！' + res;
+                    this.customProcessPopupErrorMessage(msg);
+                });
             }
         },
         watch: {
+            //监听流程节点总数，如果总数发生变化，重新获取所有节点的状态信息，由于初始默认节点数是0
+            //因此在页面加载完成节点总数会发生变化，从而在页面加载完成后自动加载所有节点的状态信息
             customProcessStepSum: function(val, oldVal) {
                 if(-1 == oldVal){
                     this.$nextTick(() => {
@@ -695,7 +844,10 @@
             }
         },
         mounted(){
+            //在页面加载完成后获取所有的流程节点
             this.customProcessSelectAllNodes();
+            //在页面加载完成后加载所有的蓝鲸用户数据，用于在填写发送通知信息时指定用户
+            this.loadBkUsers();
             this.get_header_data();
         }
     });
