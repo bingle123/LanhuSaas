@@ -214,6 +214,8 @@ def edit_unit(request):
 
 def basic_test(request):
     info = json.loads(request.body)
+    if info['id'] == '':
+        info['id'] = 0
     result = []
     gather_data(**info)
     gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
