@@ -35,7 +35,7 @@ from django.conf.global_settings import *  # noqa
 # 在蓝鲸智云开发者中心 -> 点击应用ID -> 基本信息 中获取 APP_ID 和 APP_TOKEN 的值
 APP_ID = 'mydjango1'
 # 长沙APP_TOKEN
-APP_TOKEN = '99d97ec5-4864-4716-a877-455a6a8cf9ef'
+APP_TOKEN = 'd441289d-14f9-435f-b195-499e20920e9e'
 # 上海APP_TOKEN
 # APP_TOKEN = 'c6369717-7906-4699-ad0d-31f5798d5cef'
 
@@ -59,7 +59,7 @@ DENGFEI_PASSWORD = 'test'
 
 # 蓝鲸智云开发者中心的域名，形如：http://paas.bking.com#
 # 长沙
-BK_PAAS_HOST = 'http://paas.bk.com'
+BK_PAAS_HOST = 'http://paas.bk.com:80'
 # 上海
 # BK_PAAS_HOST = 'http://paas.blueking.com:8030'
 

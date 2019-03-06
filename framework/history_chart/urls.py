@@ -24,6 +24,8 @@ urlpatterns = patterns(
     (r'^about_search', 'about_search'),
 
     (r'^select_scenes/$', 'select_scenes'),     #场景对比分析
+    (r'^selectScenes_ById/$', 'selectScenes_ById'),  #选择场景比对
+
 
 
 )
