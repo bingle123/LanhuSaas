@@ -69,6 +69,7 @@
                         <el-option label="日志查询" value="log"></el-option>
                         <el-option label="执行告警信息查询" value="alert"></el-option>
                         <el-option label="场景运行即将到期查询" value="about_to_expire"></el-option>
+                        <el-option label="场景运行情况统计" value="sceneOperation"></el-option>
                         <el-option label="场景运行比对" value="compare"></el-option>
                     </el-select>
                 </el-col>
@@ -194,8 +195,9 @@
                          <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center">
                          </el-table-column>
                      </el-table>
-                     <el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
+                     <!--<el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
                                @current-change="sceneOperationTableData"></el-pagination>
+                          -->
                     </div>
             </div>
         </el-card>
@@ -378,36 +380,6 @@ let vm = new Vue({
             },
 
 
-            change_type(value){
-                if(value == 'log'){
-                    $('#table1').css('display','block');
-                    $('#table2').css('display','none');
-                    $('#table3').css('display','none');
-                    $('#scene_compare').css('display','none');
-                }else if(value == 'alert'){
-                   $('#table1').css('display','none');
-                   $('#table2').css('display','block');
-                   $('#table3').css('display','none');
-                    $('#scene_compare').css('display','none');
-                }else if(value == 'about_to_expire'){
-                    $('#table1').css('display','none');
-                    $('#table2').css('display','none');
-                    $('#table3').css('display','block');
-                    $('#scene_compare').css('display','none');
-                }else  if(value == 'compare'){
-                    $("#table1").css('display','none');
-                    $("#table2").css('display','none');
-                    $("#table3").css('display','none');
-                    $('#scene_compare').css('display','block');
-                    vm.draw_line();
-                   $('#table10').css('display','none');
-                }else if(value == 'sceneOperation'){
-                   $("#table1,#table2,#table3,#scene_compare").css('display','none');
-                   $('#table10').css('display','block');
-                }
-            },
-
-
             select_Keyword(){
                if(vm.log_type == 'log'){
                    vm.page = 1
@@ -566,22 +538,26 @@ let vm = new Vue({
             change_type(value) {
                 if (value == 'log') {
                     $("#table1,#hide_k").css('display', 'block');
-                    $("#table3，#scene_compare,#table2,#hide_m").css('display', 'none');
+                    $("#table3，#scene_compare,#table2,#hide_m,#table10").css('display', 'none');
                     vm.get_null();
                 } else if (value == 'alert') {
                     $("#table2,#hide_k").css('display', 'block');
-                    $("#table3，#scene_compare,#table1,#hide_m").css('display', 'none');
+                    $("#table3，#scene_compare,#table1,#hide_m,#table10").css('display', 'none');
                     vm.get_null();
                 } else if (value == 'about_to_expire') {
-                    $("#table2,#table1,#scene_compare,#hide_m").css('display', 'none');
+                    $("#table2,#table1,#scene_compare,#hide_m,#table10").css('display', 'none');
                     $("#table3,#hide_k").css('display', 'block');
                     vm.get_null();
                 } else if (value == 'compare') {
-                    $("#table1,#table2,#table3,#hide_k").css('display', 'none');
-                    $("#scene_compare,#hide_m").css('display', 'block');
+                    $("#table1,#table2,#table3,#hide_k,#table10").css('display', 'none');
+                    $("#scene_compare,#hide_k").css('display', 'block');
                     axios.post('${SITE_URL}history_chart/select_scenes/').then((res) => {
                         vm.scenes_data = res.data.results
                     });
+                }else if(value == 'sceneOperation'){
+                   $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m").css('display','none');
+                   $('#table10').css('display','block');
+                   vm.get_null();
                 }
             },
 
