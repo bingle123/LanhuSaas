@@ -18,6 +18,7 @@ import datetime
 import pytz
 from position.models import Localuser
 from market_day.models import Area
+from market_day.function import tran_time_china
 
 def monitor_show(request):
     monitor = Scene.objects.all()
@@ -50,10 +51,21 @@ def addSence(request):
     try:
         res = request.body
         senceModel = json.loads (res)
+        starttime=senceModel['data']["scene_startTime"]
+        endtime=senceModel['data']["scene_endTime"]
+        starthour = datetime.strftime(starttime, '%H')
+        startmin = datetime.strftime(starttime, '%M')
+        temp_date = datetime(2019, 1, 1, starthour, startmin, 0)
+        timezone = Area.objects.get(id=add_dicx['monitor_area']).timezone
+        starttime = tran_time_china(temp_date, timezone=timezone)
+        starttime=datetime.strftime(starttime,'%H:%M')
+        temp_date = datetime(2019, 1, 1, endtime.split(':')[0], endtime.split(':')[-1], 0)
+        endtime = tran_time_china(temp_date, timezone=timezone)
+        endtime = datetime.strftime(endtime, '%H:%M')
         senceModel2 = {
             "scene_name": senceModel['data']['scene_name'],
-            "scene_startTime": senceModel['data']["scene_startTime"],
-            "scene_endTime": senceModel['data']["scene_endTime"],
+            "scene_startTime":starttime ,
+            "scene_endTime": endtime,
             "scene_creator": "admin",
             "scene_area":senceModel['scene_area']
         }
@@ -135,10 +147,21 @@ def delect(request):
 def editSence(request):
     try:
         model = json.loads (request.body)
+        starttime = model['data']["scene_startTime"]
+        endtime = model['data']["scene_endTime"]
+        starthour = datetime.strftime(starttime, '%H')
+        startmin = datetime.strftime(starttime, '%M')
+        temp_date = datetime(2019, 2, 1, starthour, startmin, 0)
+        timezone = Area.objects.get(id=add_dicx['monitor_area']).timezone
+        starthour,startmin = tran_time_china(temp_date, timezone=timezone)
+        starttime = starthour+":"+startmin
+        temp_date = datetime(2019, 2, 1, endtime.split(':')[0], endtime.split(':')[-1], 0)
+        endhour,endmin = tran_time_china(temp_date, timezone=timezone)
+        endtime = end+":"+endmin
         senceModel2 = {
             "scene_name": model['data']['scene_name'],
-            "scene_startTime": model['data']["scene_startTime"],
-            "scene_endTime": model['data']["scene_endTime"],
+            "scene_startTime": starttime,
+            "scene_endTime": endtime,
             "scene_editor": "admin",
             "scene_area": model['scene_area']
         }
