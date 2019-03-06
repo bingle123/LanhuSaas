@@ -410,6 +410,7 @@ def select_scene_operation(request):
                             flag = 0
                             break
                 if u'图表单元类型' == item.monitor_type:
+                    print item.id
                     temp = TDGatherData.objects.get(item_id=item.id, data_key='DB_CONNECTION')
                     if temp.gather_time.strftime("%Y-%m-%d") == i:
                         if temp.data_value != 1:
@@ -426,6 +427,7 @@ def select_scene_operation(request):
         success_num = scene_num - failed_num
         #成功率
         success_rate = success_num/scene_num
+        success_rate = str(success_rate*100)+'%'
         #获取告警数目
         alert = TdAlertLog.objects.filter(Q(alert_time = i))
         alert_num = len(alert)

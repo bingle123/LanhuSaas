@@ -343,7 +343,6 @@ let vm = new Vue({
                 if(value == 'log'){
                     $('#table1').css('display','block');
                     $("#table3，#scene_compare,#table2").css('display','none');
-                    $('#table2').css('display','none');
                     $('#table10').css('display','none');
                 }else if(value == 'alert'){
                    $('#table2').css('display','block');
@@ -361,8 +360,7 @@ let vm = new Vue({
                     vm.draw_line();
                    $('#table10').css('display','none');
                 }else if(value == 'sceneOperation'){
-                   $('#table1').css('display','none');
-                   $('#table2').css('display','none');
+                   $("#table1,#table2,#table3").css('display','none');
                    $('#table10').css('display','block');
                 }
             },
