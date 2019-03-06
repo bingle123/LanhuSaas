@@ -59,7 +59,7 @@ DENGFEI_PASSWORD = 'test'
 
 # 蓝鲸智云开发者中心的域名，形如：http://paas.bking.com#
 # 长沙
-BK_PAAS_HOST = 'http://paas.bk.com'
+BK_PAAS_HOST = 'http://paas.bk.com:80'
 # 上海
 # BK_PAAS_HOST = 'http://paas.blueking.com:8030'
 
