@@ -451,7 +451,7 @@ def selectScenes_ById(request):
     # }
 
 
-def select_scene_operation(request):
+def select_scene_operation():
     #初始化
     res_list = []
     date_info = []
@@ -559,6 +559,7 @@ def select_scene_operation(request):
             'failed_num':failed_num,
             'alert_num':alert_num
         }
+        #非交易日剔除
         if flag2:
             res_list.append(dict)
     return  res_list
@@ -576,3 +577,22 @@ def check_jobday(id,time):
         return True
     elif flag==2:
         return False
+
+#运行情况分页
+def operation_page(request):
+    res = json.loads(request.body)
+    res_list = []
+    limit = res['limit']
+    page = res['page']
+    scene_operation = select_scene_operation()
+    p = Paginator(scene_operation, limit)
+    count = p.page_range
+    pages = count[-1]
+    current_page = p.page(page)
+    for x in current_page.object_list:
+        temp_dict = {
+            'page_count': pages
+        }
+        x = dict(x, **temp_dict)
+        res_list.append(x)
+    return res_list
