@@ -590,6 +590,7 @@
                     data:value,
                 }).then(function (res) {
                     vm.result_list_edit=res.data.results;
+                    vm.result_list=vm.result_list_edit;
                     vm.scale=parseFloat(res.data.results[0].scale);
                     vm.multiple = Math.round((vm.scale-1)*10);
                 })
