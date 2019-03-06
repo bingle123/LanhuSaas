@@ -20,7 +20,7 @@ def get_holiday(req,area):
         days.append(date['day'])
     return days
 
-
+#通过节假日文件获取节假日
 def get_file(req,area):
     if req.method == 'POST':
         try:
@@ -44,12 +44,12 @@ def get_file(req,area):
         except:
             print '文件不匹配'
 
-
+#删除所有的节假日
 def delall(area):
     flag = Holiday.objects.filter(area=int(area)).delete()
     return flag
 
-
+#删除指定的节假日
 def delone(req):
     res=json.loads(req.body)
     date=res['date']
@@ -57,7 +57,7 @@ def delone(req):
     flag = Holiday.objects.filter(Q(day=date)& Q(area=int(area))).update(flag=1)
     return flag
 
-
+#添加一个日期为节假日
 def addone(req):
     res = json.loads(req.body)
     date = res['date']
@@ -65,7 +65,7 @@ def addone(req):
     flag = Holiday.objects.filter(Q(day=date)& Q(area=int(area))).update(flag=0)
     return flag
 
-
+#定时任务demo
 def addperdic_task():
     flag=co.create_task_interval(name='demo_per', task='market_day.tasks.count_time', task_args=[10,50], desc='demodemo',interval_time={'every':10,'period':'seconds'})
     return flag
@@ -74,13 +74,21 @@ def addperdic_task():
 def add_unit_task(add_dicx):
     type=add_dicx['monitor_type']
     schename = add_dicx['monitor_name']
-    print add_dicx
     id=Monitor.objects.filter(monitor_name=schename).last().id
     schename=str(id)
+    starthour = str(add_dicx['start_time']).split(':')[0]
+    startmin = str(add_dicx['start_time']).split(':')[-1]
+    endtime = add_dicx['end_time']
+    #创建一个特定时区的时间的实例
+    temp_date=datetime(2019,1,1,starthour,startmin,0)
+    timezone = Area.objects.get(id=add_dicx['monitor_area']).timezone
+    starttime=tran_time_china(temp_date,timezone=timezone)
+    starthour=datetime.strftime(starttime,'%H')
+    startmin=datetime.strftime(starttime,'%M')
+    temp_date=datetime(2019,1,1,endtime.split(':')[0],endtime.split(':')[0],0)
+    endtime=tran_time_china(temp_date,timezone=timezone)
+    endtime=datetime.strftime(endtime,'%H:%M')
     if type=='基本单元类型':
-        starthour = str(add_dicx['start_time']).split(':')[0]
-        startmin=str(add_dicx['start_time']).split(':')[-1]
-        endtime=add_dicx['end_time']
         period = int(add_dicx['period'])
         ctime = {
             'hour': starthour,
@@ -98,11 +106,8 @@ def add_unit_task(add_dicx):
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,task_args=info, desc=schename)
     elif type=='图表单元类型':
-        starthour = str(add_dicx['start_time'])[:2]
-        startmin=str(add_dicx['start_time']).split(':')[-1]
         endhour = str(add_dicx['end_time'])[:2]
         period = int(add_dicx['period'])
-        endtime=add_dicx['end_time']
         ctime = {
             'hour': starthour,
             'minute': startmin,
@@ -121,10 +126,6 @@ def add_unit_task(add_dicx):
                                task_args=info, desc=schename)
 
     elif type=='作业单元类型':
-        starthour = str(add_dicx['start_time'])[:2]
-        startmin=str(add_dicx['start_time']).split(':')[-1]
-        endhour = str(add_dicx['end_time'])[:2]
-        endtime=add_dicx['end_time']
         period = int(add_dicx['period'])
         ctime = {
             'hour': starthour,
@@ -149,9 +150,6 @@ def add_unit_task(add_dicx):
         period=add_dicx['period']
         node_times=add_dicx['node_times']
         constants=add_dicx['constants']
-        starthour = str(node_times[0]['starttime']).split(':')[0]
-        startmin = str(node_times[0]['starttime']).split(':')[-1]
-        endtime=str(node_times[-1]['endtime'])
         ctime = {
             'hour': starthour,
             'minute': startmin,
@@ -188,6 +186,7 @@ def get_header_data(request):
     headers["X-CSRFToken"] = csrftoken;
     h.header=json.dumps(headers, ensure_ascii=False)
     h.save()
+
 #添加一个新的日历地区
 def add_area(req):
     res=json.loads(req.body)
@@ -197,6 +196,7 @@ def add_area(req):
     a.timezone=timezone
     a.save()
     return 'ok'
+
 #获取所有的日历地区
 def get_all_area(req):
     areas=Area.objects.all()
@@ -204,15 +204,18 @@ def get_all_area(req):
     for a in areas:
         area_dict.append(model_to_dict(a))
     return area_dict
+
 #删除日历的某个地区
 def del_area(name):
     Area.objects.get(id=name).delete()
     Holiday.objects.filter(area=name).delete()
     return 'ok'
+
 #获得世界上的所有时区
 def get_all_timezone():
     all=pytz.common_timezones
     return all
+
 #判断今天是不是对应地区的工作日
 def check_jobday(id):
     timezone=Area.objects.get(id=id).timezone
@@ -228,4 +231,11 @@ def check_jobday(id):
         return True
     elif flag==2:
         return False
-#得到当前时间
+#将不同时区的时间转为中国时间
+def tran_time_china(tempdate,timezone):
+    tz = pytz.timezone(timezone)
+    central = pytz.timezone(tz)
+    local_us = central.localize(temp_date)
+    # 使用astimezone得出时间
+    time = local_us.astimezone(pytz.timezone('Asia/Shanghai'))
+    return time
