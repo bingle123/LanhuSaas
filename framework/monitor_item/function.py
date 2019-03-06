@@ -437,3 +437,18 @@ def node_state(request):
         }
         data1.append(dic)
     return data1
+
+def node_state_by_item_id(request):
+    res = json.loads(request.body)
+    item_id= res['item_id']
+    print item_id
+    data = TDGatherData.objects.filter(item_id=item_id)
+    data1=[]
+    for i in data:
+        dic={
+
+            'data_key':i.data_key,
+            'data_value':i.data_value
+        }
+        data1.append(dic)
+    return data1
