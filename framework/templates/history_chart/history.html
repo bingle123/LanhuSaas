@@ -20,7 +20,7 @@
 <div class="content">
         <div class="body">
         <el-card shadow="always">
-            <div>
+             <div>
                 <div id="pagetitle">
                     报表统计查询
                 </div>
@@ -302,16 +302,21 @@ let vm = new Vue({
                     $('#table1').css('display','block');
                     $('#table2').css('display','none');
                     $('#table3').css('display','none');
+                    $('#scene_compare').css('display','none');
                 }else if(value == 'alert'){
                    $('#table1').css('display','none');
                    $('#table2').css('display','block');
                    $('#table3').css('display','none');
+                    $('#scene_compare').css('display','none');
                 }else if(value == 'about_to_expire'){
                     $('#table1').css('display','none');
                     $('#table2').css('display','none');
                     $('#table3').css('display','block');
+                    $('#scene_compare').css('display','none');
                 }else  if(value == 'compare'){
-                    $("#table1,#table2").css('display','none');
+                    $("#table1").css('display','none');
+                    $("#table2").css('display','none');
+                    $("#table3").css('display','none');
                     $('#scene_compare').css('display','block');
                     vm.draw_line();
                 }

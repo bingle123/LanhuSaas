@@ -1412,6 +1412,7 @@
                     vm.disabled4 = true;
                     vm.disabled5 = false;
                     vm.monitor_type = 'fourth';
+                    console.log(row)
                     vm.flow.font_size = row.font_size;
                     vm.flow.height = row.height;
                     vm.flow.width = row.width;
@@ -1422,11 +1423,14 @@
                     vm.flow.jion_id = row.jion_id;
                     vm.flow.period = row.period;
                     vm.flow.node_name = row.gather_params;
-                    vm.flow.gather_rule = row.gather_rule;
+                    vm.flow.gather_rule = {
+                        'name':row.gather_rule,
+                        'id': row.jion_id
+                    };
                     var id1=row.jion_id
-                    var id={
-                        'template_id':id1
-                    }
+                    var id=[{
+                        'id':id1
+                    }]
                     vm.flow_change(id)
                 }
             },
@@ -1533,6 +1537,7 @@
                     flow.node_times = node_times;
                     flow.monitor_name = vm.monitor_name;
                     flow.monitor_type = vm.monitor_type;
+                    console.log(vm.flow.gather_rule)
                     flow.jion_id = vm.flow.gather_rule[0].id;
                     flow.font_size = vm.flow.font_size;
                     flow.height = vm.flow.height;

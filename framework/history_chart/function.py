@@ -54,6 +54,7 @@ def select_all_rules(request):
                    "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
                    "WHERE e.item_id = f.item_id ORDER BY e.scene_name")
     res = cursor.fetchall()
+    print res
     p = Paginator(res, limit)
     count = p.page_range
     pages = count
