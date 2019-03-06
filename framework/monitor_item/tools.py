@@ -347,4 +347,17 @@ def start_flow_task(**info):
         status=1
     Flow(instance_id=task_id, status=flag, test_flag=1, flow_id=item_id).save()
     return task_id
+#让流程继续执行
+def resume_flow(item_id):
+    user_account = BkUser.objects.filter(id=1).get()
+    client = get_client_by_user(user_account)
+    client.set_bk_api_ver('v2')
+    task_id=Flow.objects.get(flow_id=item_id).instance_id
+    params={
+        'bk_biz_id':2,
+        'task_id':task_id,
+        'action':'resume'
+    }
+    res=client.sops.operate_task(params)
+    return res['result']
 
