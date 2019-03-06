@@ -708,6 +708,7 @@
                 contents: '',                          //显示内容
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
+                monitor_area:''                             //日历地区
             },
             rules1: {
                 font_size: [
@@ -740,7 +741,8 @@
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
                 gather_params: '',                   //节点
-                params: '',                          //监控参数
+                params: '',                         //监控参数
+                monitor_area:''                             //日历地区
             },
             rules2: {
                 font_size: [
@@ -776,6 +778,7 @@
                 gather_rule: '',                     //NODE_KEY
                 gather_params: '',                   //作业模板
                 params: '',                         //执行服务器
+                monitor_area:''                             //日历地区
             },
             rules3: {
                 font_size: [
@@ -811,7 +814,8 @@
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
                 gather_params: '',                   //流程模板
-                node_name:''
+                node_name:'',
+                monitor_area:''                             //日历地区
             },
             rules4: {
                 font_size: [
@@ -844,6 +848,7 @@
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
                 gather_params: 'sql',                   //采集参数
+                monitor_area:''                             //日历地区
             },
             chart1: {                                //图表单元
                 monitor_name: '',                    //单元名称
@@ -859,6 +864,7 @@
                 gather_rule: '',                     //采集规则
                 gather_params: '',                   //节点
                 params: '',                          //监控参数
+                monitor_area:''                             //日历地区
             },
             job1: {                                   //作业单元
                 monitor_name: '',                    //单元名称
@@ -874,6 +880,7 @@
                 gather_rule: '',                     //NODE_KEY
                 gather_params: '',                   //作业模板
                 params: '',                         //执行服务器
+                monitor_area:''                             //日历地区
             },
             flow7: {                                //流程单元
                 monitor_name: '',                    //单元名称
@@ -889,6 +896,7 @@
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
                 gather_params: '',                   //流程模板
+                monitor_area:''                             //日历地区
             },
             myChart: null,
             chart_content:'',
@@ -1301,6 +1309,7 @@
                     vm.basic.gather_rule = row.gather_rule;
                     vm.basic.contents = row.contents;
                     vm.basic.status = row.status;
+                    vm.area=row.monitor_area;
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface =3;
                         axios({
@@ -1376,6 +1385,7 @@
                     vm.chart.end_time = row.end_time;
                     vm.chart.gather_rule = row.gather_rule;
                     vm.chart.status = row.status;
+                    vm.area=row.monitor_area;
                     axios({
                             method: 'post',
                             url: '${SITE_URL}db_connection/get_conname/',
@@ -1405,6 +1415,7 @@
                     vm.job.gather_params = row.gather_params;
                     vm.job.params = row.params;
                     vm.job.status = row.status;
+                    vm.area=row.monitor_area;
                 }
                 if (row.monitor_type == '流程单元类型') {
                     vm.disabled2 = true;
@@ -1425,8 +1436,9 @@
                     vm.flow.node_name = row.gather_params;
                     vm.flow.gather_rule = {
                         'name':row.gather_rule,
-                        'id': row.jion_id
+                        'id':row.jion_id
                     };
+                    vm.area=row.monitor_area;
                     var id1=row.jion_id
                     var id=[{
                         'id':id1
@@ -1550,6 +1562,7 @@
                     vm.unit_id = -1;
                 }
                 if (vm.unit_id > 0) {
+                    console.log()
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor_item/edit/',

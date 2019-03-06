@@ -210,6 +210,8 @@ def edit_unit(request):
 
 def basic_test(request):
     info = json.loads(request.body)
+    if info['id'] == '':
+        info['id'] = 0
     result = []
     gather_data(**info)
     gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
@@ -236,7 +238,7 @@ def job_test(request):
     result = tools.job_interface(res)
     return result
 
-
+#改变监控项的启用状态
 def change_unit_status(req):
     try:
         res=json.loads(req.body)
