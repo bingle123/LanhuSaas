@@ -14,7 +14,7 @@ import sys
 from logmanagement.function import add_log, make_log_info, get_active_user
 from db_connection.function import get_db
 from gatherData.function import gather_data
-import datetime
+from datetime import datetime
 import pytz
 from position.models import Localuser
 from market_day.models import Area
@@ -48,20 +48,18 @@ def monitor_show(request):
 
 
 def addSence(request):
-    try:
+    # try:
         res = request.body
         senceModel = json.loads (res)
         starttime=senceModel['data']["scene_startTime"]
         endtime=senceModel['data']["scene_endTime"]
-        starthour = datetime.strftime(starttime, '%H')
-        startmin = datetime.strftime(starttime, '%M')
-        temp_date = datetime(2019, 1, 1, starthour, startmin, 0)
-        timezone = Area.objects.get(id=add_dicx['monitor_area']).timezone
-        starttime = tran_time_china(temp_date, timezone=timezone)
-        starttime=datetime.strftime(starttime,'%H:%M')
-        temp_date = datetime(2019, 1, 1, endtime.split(':')[0], endtime.split(':')[-1], 0)
-        endtime = tran_time_china(temp_date, timezone=timezone)
-        endtime = datetime.strftime(endtime, '%H:%M')
+        temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
+        timezone = Area.objects.get(id=senceModel['scene_area']).timezone
+        starthour,startmin = tran_time_china(temp_date, timezone=timezone)
+        starttime=starthour+":"+startmin
+        temp_date = datetime(2019, 1, 1, int(endtime.split(':')[0]), int(endtime.split(':')[-1]), 0)
+        endhour,endmin = tran_time_china(temp_date, timezone=timezone)
+        endtime = endhour+":"+endmin
         senceModel2 = {
             "scene_name": senceModel['data']['scene_name'],
             "scene_startTime":starttime ,
@@ -89,11 +87,11 @@ def addSence(request):
             Scene_monitor.objects.create (**monitor_data)
         info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
-    except Exception as e:
-        info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    add_log(info)
-    return None
+    # except Exception as e:
+    #     info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+    #                           get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    # add_log(info)
+        return None
 
 
 def select_table(request):
@@ -149,15 +147,13 @@ def editSence(request):
         model = json.loads (request.body)
         starttime = model['data']["scene_startTime"]
         endtime = model['data']["scene_endTime"]
-        starthour = datetime.strftime(starttime, '%H')
-        startmin = datetime.strftime(starttime, '%M')
-        temp_date = datetime(2019, 2, 1, starthour, startmin, 0)
-        timezone = Area.objects.get(id=add_dicx['monitor_area']).timezone
-        starthour,startmin = tran_time_china(temp_date, timezone=timezone)
-        starttime = starthour+":"+startmin
-        temp_date = datetime(2019, 2, 1, endtime.split(':')[0], endtime.split(':')[-1], 0)
-        endhour,endmin = tran_time_china(temp_date, timezone=timezone)
-        endtime = end+":"+endmin
+        temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
+        timezone = Area.objects.get(id=model['scene_area']).timezone
+        starthour, startmin = tran_time_china(temp_date, timezone=timezone)
+        starttime = starthour + ":" + startmin
+        temp_date = datetime(2019, 1, 1, int(endtime.split(':')[0]), int(endtime.split(':')[-1]), 0)
+        endhour, endmin = tran_time_china(temp_date, timezone=timezone)
+        endtime = endhour + ":" + endmin
         senceModel2 = {
             "scene_name": model['data']['scene_name'],
             "scene_startTime": starttime,
@@ -425,7 +421,7 @@ def alternate_play(request):
     # 获取当前用户
     username = get_active_user(request)['data']['bk_username']
     # 获取当前时间
-    nowtime = datetime.datetime.now().strftime('%H:%M:%S')
+    # nowtime = datetime.datetime.now().strftime('%H:%M:%S')
     res_list = get_scenes(username,'','')
     return  res_list
 
@@ -453,7 +449,7 @@ def get_scenes(user_name,start,end):
             id=temp_scene.scene_area
             timezone = Area.objects.get(id=id).timezone
             tz = pytz.timezone(timezone)
-            end = datetime.datetime.now(tz).strftime('%H:%M:%S')
+            end = datetime.now(tz).strftime('%H:%M:%S')
             start=end
         # 判断系统时间是否在轮播时间
         if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:

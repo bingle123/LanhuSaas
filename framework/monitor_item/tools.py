@@ -352,7 +352,7 @@ def resume_flow(item_id):
     user_account = BkUser.objects.filter(id=1).get()
     client = get_client_by_user(user_account)
     client.set_bk_api_ver('v2')
-    task_id=Flow.objects.get(flow_id=item_id).instance_id
+    task_id=Flow.objects.filter(flow_id=item_id).last().instance_id
     params={
         'bk_biz_id':2,
         'task_id':task_id,
