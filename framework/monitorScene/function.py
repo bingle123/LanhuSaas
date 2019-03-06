@@ -354,12 +354,12 @@ def get_chart_data(id):
     datas = []
     data = TDGatherData.objects.filter(item_id=id)
     for d in data:
-        temp = {
-            'key': d.data_key,
-            'values': d.data_value.split (',')
-        }
-        datas.append(temp)
-    print datas
+        if d.data_key!='DB_CONNECTION':
+            temp = {
+                'key': d.data_key,
+                'values': d.data_value.split (',')
+            }
+            datas.append(temp)
     return datas
 
 
