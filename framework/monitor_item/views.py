@@ -105,3 +105,7 @@ def resume_flow(req):
     item_id=req['item_id']
     rt=tools.resume_flow(item_id=item_id)
     return render_json(rt)
+
+def node_state_by_item_id(request):
+    res = function.node_state_by_item_id(request)
+    return render_json(res)
