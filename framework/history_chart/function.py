@@ -363,11 +363,7 @@ def select_scene_operation(request):
         scenes_list = Scene.objects.filter(Q(scene_creator_time__lt=i))
         scenes_list2 = Scene.objects.filter(Q(scene_creator_time__icontains=i))
         scenes_list=scenes_list|scenes_list2
-        print '日期：'
-        print i
-        print '场景：'
         for j in scenes_list:
-            print j.id
             scenes.append(j.id)
             flag = 1
             #获取场景所对应的所有监控项id
