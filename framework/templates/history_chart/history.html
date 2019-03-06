@@ -195,8 +195,8 @@
                          <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center">
                          </el-table-column>
                      </el-table>
-                     <el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
-                               @current-change="sceneOperationTableData"></el-pagination>
+                     <el-pagination :page-count="sceneOperationCount" background layout="prev, pager, next" style="float:right"
+                               @current-change="sceneOperationpage"></el-pagination>
 
                     </div>
             </div>
@@ -216,6 +216,7 @@ let vm = new Vue({
         data: {
             page_count: 100,                             //总页码数
             alertRulesCount:1,
+            sceneOperationCount:1,
             page: 1,                                   //分页页码数
             Operatelog:[],
             search: '',                                 //搜索框
@@ -514,27 +515,21 @@ let vm = new Vue({
                 vm.scene_time = '';
             },
 
-            //用于告警分页方法
-            alertRulePageChange: function (value) {
+            //运行情况分页
+            sceneOperationpage: function (value) {
                 vm.page = value;
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}history_chart/select_rules_pagination',
+                    url: '${SITE_URL}history_chart/select_scene_operation',
                     data: {
-                        search: this.search,
                         page: vm.page,
-                        keyword: vm.keyword,
-                        date_Choice: vm.date_Choice,
                         limit: 10
                     },
                 }).then((res) => {
-                    this.alertRuleTableData = res.data.results;
-                    vm.alertRulesCount = res.data.results[0].pages
-                    console.log(vm.alertRulesCount)
+                    this.sceneOperationRuleTableData = res.data.message;
+                    vm.sceneOperationCount = res.data.message[0].pages;
                 })
             },
-
-
             change_type(value) {
                 if (value == 'log') {
                     $("#table1,#hide_k").css('display', 'block');
