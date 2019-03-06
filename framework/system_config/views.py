@@ -146,13 +146,16 @@ def get_scene_type(request):
     :param request:
     :return:
     """
-    if request.body is None or request.body == '':
-        res = function.get_scene_type('')
+    request_body = json.loads(request.body)
+    page = request_body['page']
+    limit = request_body['limit']
+    if request_body['query_name'] is None or request_body['query_name'] == '':
+        res = function.get_scene_type('', page, limit)
         return render_json(res)
     else:
         query_name = json.loads(request.body)['query_name']
         print query_name
-        res = function.get_scene_type(query_name)
+        res = function.get_scene_type(query_name, page, limit)
         return render_json(res)
 
 

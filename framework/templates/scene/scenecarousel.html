@@ -86,88 +86,63 @@
                     method: 'post',
                     url: '${SITE_URL}monitorScene/alternate_play/',
                 });
-                vm.imgList = res.data.message;
-                if (vm.imgList.length == 1) {
-                    let selector = '.scene_content0';
-                    let base_list = vm.imgList[0].scene_content[0].base_list;
-                    let chart_list = vm.imgList[0].scene_content[0].chart_list;
-                    let job_list = vm.imgList[0].scene_content[0].job_list;
-                    let flow_list = vm.imgList[0].scene_content[0].flow_list;
-                    console.log(base_list, chart_list, job_list, flow_list);
-                    let drigging_id = 1;
-                    $(selector).html('');
-                    for (let i = 0; i < base_list.length; i++) {
-
-                        $(selector).append('<div type=\"basic' + base_list[i].id + '\" style=\"position: absolute;top:' + base_list[i].y + 'px;left:' + base_list[i].x + 'px;transform: scale(' + base_list[i].scale + ')\"></div>');
-                        base_monitor(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width, base_list[i].contents);
-                    }
-                    for (let i = 0; i < chart_list.length; i++) {
-                        $(selector).append('<div id=\"' + value + '_' + chart_list[i].order + '\" style=\"position: absolute;background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px;top:' + chart_list[i].y + 'px;left:' + chart_list[i].x + 'px;transform: scale(' + chart_list[i].scale + ')\"><div id=\"chart' + value + '_' + chart_list[i].order + '\" style=\"background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
-                        show_chart(chart_list[i].id, chart_list[i].gather_params, chart_list[i].height, chart_list[i].width, value + '_' + chart_list[i].order, chart_list[i].contents);
-
-                    }
-                    for (let i = 0; i < job_list.length; i++) {
-                        let job_params = {
-                            'id': job_list[i].id,
-                            'width': job_list[i].width,
-                            'height': job_list[i].height,
-                            'status': job_list[i].job_status,
-                            'contents': job_list[i].contents
-                        };
-                        $(selector).append('<div type=\"job' + job_list[i].id + '\" id=\"' + value + '_' + job_list[i].order + '\" style=\"position: absolute;top:' + job_list[i].y + 'px;left:' + job_list[i].x + 'px;transform: scale(' + job_list[i].scale + ')\"></div>');
-                        job_monitor(job_params);
-                    }
-                    for (let i = 0; i < flow_list.length; i++) {
-                        let value=1;
-                        let jion_id = [{
-                            "id": flow_list[i].jion_id
-                        }];
-                        $(selector).append('<div style=\"position: absolute;top:' + flow_list[i].y + 'px;left:' + flow_list[i].x + 'px;transform: scale(' + flow_list[i].scale + ')\"><div type=\"flow_monitor' + drigging_id + '_' + flow_list[i].order + '\"></div></div>');
-                        flow_monitor(jion_id, drigging_id + '_' + flow_list[i].order);
-                        drigging_id++;
-                    }
-                }
-
+                vm.imgList = res.data.message;   //获取场景
             },
+            //轮播切换时触发，多个场景时才会切换时触发，单个场景只执行一次
             scene_change(value1, value2) {
-                if (vm.imgList.length > 1) {
+                if (vm.imgList.length==1){    //只有一个场景
+                    vm.scene_content_change(0);
+                    setInterval(function () {
+                        vm.scene_content_change(0);   //十秒钟更新一次dom
+                    },10000)
+                }
+                if (vm.imgList.length>1) {  //多于一个场景
                     vm.scene_content_change(value1);
                 }
+
             },
+            //更新dom
             scene_content_change(value) {
                 let selector = '.scene_content' + value;
-                let base_list = vm.imgList[value].scene_content[0].base_list;
-                let chart_list = vm.imgList[value].scene_content[0].chart_list;
-                let job_list = vm.imgList[value].scene_content[0].job_list;
-                let flow_list = vm.imgList[value].scene_content[0].flow_list;
-                console.log(base_list, chart_list, job_list, flow_list);
-                let drigging_id = 1;
-                $(selector).html('');
+                let base_list = vm.imgList[value].scene_content[0].base_list;  //获取当前场景的基本监控项数据
+                let chart_list = vm.imgList[value].scene_content[0].chart_list;  //获取当前场景的图标监控项数据
+                let job_list = vm.imgList[value].scene_content[0].job_list;  //获取当前场景的作业监控项数据
+                let flow_list = vm.imgList[value].scene_content[0].flow_list;  //获取当前场景的流程监控项数据
+                $(selector).html('');    //初始化场景
                 for (let i = 0; i < base_list.length; i++) {
+                    //添加一个div容器，形如<div type="basic1"></div>
                     $(selector).append('<div type=\"basic' + base_list[i].id + '\" style=\"position: absolute;top:' + base_list[i].y + 'px;left:' + base_list[i].x + 'px;transform: scale(' + base_list[i].scale + ')\"></div>');
-                    base_monitor(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width, base_list[i].contents);
+                    //调用基本监控项的渲染方法,第一个参数对应容器div的type
+                    base_monitor_active(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width);
                 }
                 for (let i = 0; i < chart_list.length; i++) {
+                    //添加一个div容器,形如<div id="1_1"><div id="chart1_1"></div></div>
                     $(selector).append('<div id=\"' + value + '_' + chart_list[i].order + '\" style=\"position: absolute;background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px;top:' + chart_list[i].y + 'px;left:' + chart_list[i].x + 'px;transform: scale(' + chart_list[i].scale + ')\"><div id=\"chart' + value + '_' + chart_list[i].order + '\" style=\"background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
-                    show_chart(chart_list[i].id, chart_list[i].gather_params, chart_list[i].height, chart_list[i].width, value + '_' + chart_list[i].order, chart_list[i].contents);
+                    //调用图标监控项的渲染方法，最后一个参数对应容器外层div的id
+                    show_chart_active(chart_list[i].id, chart_list[i].gather_params, chart_list[i].height, chart_list[i].width, value + '_' + chart_list[i].order);
 
                 }
                 for (let i = 0; i < job_list.length; i++) {
                     let job_params = {
-                        'id': job_list[i].id,
+                        'id': job_list[i].id,     //监控项id
                         'width': job_list[i].width,
                         'height': job_list[i].height,
-                        'status': job_list[i].job_status,
-                        'contents': job_list[i].contents
+                        'status': job_list[i].job_status,   //采集测试的作业状态
+                        'contents': job_list[i].contents    //监控项的显示内容参数
                     };
+                    //添加一个div容器,形如<div id="job1"></div></div>
                     $(selector).append('<div type=\"job' + job_list[i].id + '\" id=\"' + value + '_' + job_list[i].order + '\" style=\"position: absolute;top:' + job_list[i].y + 'px;left:' + job_list[i].x + 'px;transform: scale(' + job_list[i].scale + ')\"></div>');
-                    job_monitor(job_params);
+                    //调用作业监控项的渲染方法，参数的第一条值对应容器外层div的id
+                    job_monitor_active(job_params);
                 }
                 for (let i = 0; i < flow_list.length; i++) {
+
                     let jion_id = [{
                         "id": flow_list[i].jion_id
                     }];
+                    //添加一个div容器,形如<div><div id="flow1_1"></div></div>
                     $(selector).append('<div style=\"position: absolute;top:' + flow_list[i].y + 'px;left:' + flow_list[i].x + 'px;transform: scale(' + flow_list[i].scale + ')\"><div type=\"flow_monitor' + value + '_' + flow_list[i].order + '\"></div></div>');
+                    //调用流程监控项的渲染方法，第一条参数必须为[{}]格式，用来调v3接口，第二条参数对应容器内部div的id
                     flow_monitor(jion_id, value + '_' + flow_list[i].order);
                 }
             },
@@ -199,6 +174,9 @@
         }
     });
     vm.get_scenes()
+    setInterval(function () {
+        vm.get_scenes();
+    },10000)
 
 </script>
 
@@ -220,7 +198,6 @@
     .el-carousel__item:nth-child(2n+1) {
         background-color: #d3dce6;
     }
-
     .score_input {
         font-size: 16px;
         position: absolute;
@@ -231,7 +208,6 @@
         height: 36px;
         display: none;
     }
-
     .right_click {
         position: absolute;
         width: 100px;

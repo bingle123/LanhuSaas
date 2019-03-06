@@ -135,6 +135,7 @@ def add_unit(request):
             add_dic.pop('node_name')
             add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
             add_dic['params']=res['flow']['constants']
+            add_flow_dic['monitor_area']=res['data']['monitor_area']
             start_list = []
             for i in res['flow']['node_times']:
                 start_list.append(i['endtime'])
@@ -146,8 +147,8 @@ def add_unit(request):
         add_dic['monitor_type'] = monitor_type
         add_dic['creator'] = user['data']['bk_username']
         add_dic['editor'] = user['data']['bk_username']
-        Monitor.objects.create(**add_dic)
         add_dic['monitor_area'] = res['monitor_area']
+        Monitor.objects.create(**add_dic)
         if res['monitor_type'] == 'fourth':
             function.add_unit_task(add_dicx=add_flow_dic)
         else:
@@ -166,6 +167,7 @@ def add_unit(request):
 def edit_unit(request):
     # try:
         res = json.loads (request.body)
+        print res['flow']
         id = res['unit_id']
         cilent = tools.interface_param (request)
         user = cilent.bk_login.get_user({})
@@ -177,11 +179,14 @@ def edit_unit(request):
             monitor_type = '图表单元类型'
         if res['monitor_type'] == 'third':
             monitor_type = '作业单元类型'
+            add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
         if res['monitor_type'] == 'fourth':
             monitor_type = 'fourth'
             add_dic['jion_id'] = res['flow']['jion_id']
             add_dic['gather_params'] = add_dic['node_name']
             add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+            node_times=res['flow']['node_times']
+            constants=res['flow']['constants']
             add_dic.pop('node_name')
             start_list = []
             for i in res['flow']['node_times']:
@@ -192,8 +197,11 @@ def edit_unit(request):
         add_dic['monitor_name'] = res['monitor_name']
         add_dic['monitor_type'] = monitor_type
         add_dic['editor'] = user['data']['bk_username']
-        Monitor.objects.filter(id=id).update(**add_dic)
         add_dic['monitor_area'] = res['monitor_area']
+        Monitor.objects.filter(id=id).update(**add_dic)
+        if res['monitor_type'] == 'fourth':
+            add_dic['node_times']=node_times
+            add_dic['constants']=constants
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
@@ -208,6 +216,8 @@ def edit_unit(request):
 
 def basic_test(request):
     info = json.loads(request.body)
+    if info['id'] == '':
+        info['id'] = 0
     result = []
     gather_data(**info)
     gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
@@ -234,7 +244,7 @@ def job_test(request):
     result = tools.job_interface(res)
     return result
 
-
+#改变监控项的启用状态
 def change_unit_status(req):
     try:
         res=json.loads(req.body)
@@ -333,21 +343,6 @@ def get_desc(request, id):
     req.raise_for_status()
     return json.loads(req.text)
 
-def get_flow_desc(request):
-    headers = {
-        'Content-Type': 'application/json;charset=utf-8',
-        'Cookie': 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
-        'Host': 'paas.bk.com',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3679.0 Safari/537.36',
-        'X-CSRFToken': 'FI1fszvZzgIsYYX8n6aPMduEeAL7qTV3',
-        'X-Requested-With': 'XMLHttpRequest'
-    }
-    csrftoken = request.COOKIES["csrftoken"];
-    Cookie = "keyA=1";
-    for key in request.COOKIES:
-        Cookie = "%s;%s=%s" % (Cookie, key, request.COOKIES[key]);
-    headers['Cookie'] = Cookie;
-    headers['X-CSRFToken'] = csrftoken;
 def flow_change(request):
 
     cilent = tools.interface_param (request)

@@ -209,7 +209,7 @@ def job_interface(res):
     except Exception as e:
         res1 = error_result(e)
     return res1
-
+#流程的数据采集方法，采集测试和celery调度公用的方法
 def flow_gather_task(**info):
     task_id = info['task_id']
     item_id = info['item_id']
@@ -293,7 +293,7 @@ def flow_gather_task(**info):
         mo.TDGatherData.objects.create(item_id=item_id, instance_id=task_id, data_key=d['name'], data_value=status,gather_error_log=msg)
     if item_id != 0:
         rule_check(item_id)
-
+#流程采集测试开始流程的方法
 def start_flow_task(**info):
     # 得到client对象，方便调用接口
     user_account = BkUser.objects.filter(id=1).get()
@@ -329,7 +329,7 @@ def start_flow_task(**info):
         starthour = str(node_times[-1]['starttime']).split(':')[0]
         endhour = str(node_times[0]['endtime'])[:2].split(':')[0]
         period = info['period']
-        item_id=0
+        item_id=1000000
         args = {
             'item_id': item_id,
             'task_id': task_id,  # 启动流程的任务id
@@ -342,11 +342,22 @@ def start_flow_task(**info):
             'period': 'seconds'
         }
         co.create_task_interval(name=info['template_list']['name'] + '_check_status_test',
-                               task='market_day.tasks.gather_data_task_thrid', interval_time=ctime,
+                               task='market_day.tasks.gather_data_task_thrid_test', interval_time=ctime,
                                task_args=args, desc=name)
         status=1
-        for time in node_times:
-            Flow_Node(flow_id=item_id,node_name=time['node_name'],start_time=time['starttime'], end_time=time['endtime']).save()
-    Flow(instance_id=task_id, status=flag, test_flag=1, flow_id=template_id).save()
+    Flow(instance_id=task_id, status=flag, test_flag=1, flow_id=item_id).save()
     return task_id
+#让流程继续执行
+def resume_flow(item_id):
+    user_account = BkUser.objects.filter(id=1).get()
+    client = get_client_by_user(user_account)
+    client.set_bk_api_ver('v2')
+    task_id=Flow.objects.get(flow_id=item_id).instance_id
+    params={
+        'bk_biz_id':2,
+        'task_id':task_id,
+        'action':'resume'
+    }
+    res=client.sops.operate_task(params)
+    return res['result']
 

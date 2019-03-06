@@ -18,7 +18,7 @@
 </head>
 <body>
 <div class="content">
-    <div class="body">
+        <div class="body">
         <el-card shadow="always">
             <div>
                 <div id="pagetitle">
@@ -175,54 +175,51 @@
                     <div id="scene_et" style="width: 600px;height: 400px;margin: 60px">
                     </div>
                     <div>
-                        <!-- <el-table :data="scenes_tab">
-                          <el-table-column prop="scene_id" label="比对日期" width="100">
-                          </el-table-column>
-                          <el-table-column prop="scene_startTime" label=运行开始时间 width="100" align="center">
-                          </el-table-column>
-                          <el-table-column prop="scene_endTime" label="运行结束时间" width="100" align="center">
-                          </el-table-column>
-                          <el-table-column prop="itemNums" label="节点数" width="100" align="center">
-                          </el-table-column>
-                          <el-table-column prop="count_time" label="总耗时" width="100" align="center">
-                          </el-table-column>
-                          <el-table-column prop="success_items" label="运行成功单元" width="100" align="center">
-                          </el-table-column>
-                          <el-table-column prop="success_percent" label="运行成功率" width="100" align="center">
-                          </el-table-column>
-                          <el-table-column prop="failed_percent" label="运行失败率" width="100" align="center">
-                          </el-table-column>
-                          <el-table-column prop="alertNums" label="告警数量" width="100" align="center">
-                          </el-table-column>
-                      </el-table>
-                      <el-pagination :page-count="sCount" background layout="prev, pager, next" style="float:right"
-                                @current-change="Schange"></el-pagination>
-                     </div>-->
+
                     </div>
                 </div>
 
+                <div id="table10" style="display:none">
+                     <el-table :data="sceneOperationRuleTableData" style="width: 100%;margin-top: 20px">
+                         <el-table-column prop="date" label="时间" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="scene_num" label="场景数" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="success_num" label=运行成功数 style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="success_rate" label="运行成功率" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="failed_num" label="执行失败数" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center">
+                         </el-table-column>
+                     </el-table>
+                     <el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
+                               @current-change="sceneOperationTableData"></el-pagination>
+                    </div>
             </div>
         </el-card>
     </div>
 
 </div>
 <script type="text/javascript">
-    axios.interceptors.request.use((config) => {
+     axios.interceptors.request.use((config) => {
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
         let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
         return config
     });
-    let vm = new Vue({
+let vm = new Vue({
         el: '.content',
         data: {
             page_count: 100,                             //总页码数
-            alertRulesCount: 1,
+            alertRulesCount:1,
             page: 1,                                   //分页页码数
-            Operatelog: [],
+            Operatelog:[],
             search: '',                                 //搜索框
             log_type: '',                                //日志类型
             alertRuleTableData: null,
+            sceneOperationRuleTableData:null,
             aboutTableDate: null,
             keyword: '',                                 //关键字内容
             date_Choice: '',                            //时间选择
@@ -237,7 +234,7 @@
         },
         methods: {
             show() {
-                //显示
+               //显示
                 axios({
                     method: 'post',
                     url: '${SITE_URL}history_chart/show_all/',
@@ -261,29 +258,40 @@
                     vm.alertRulesCount = res.data.results[0].pages
                     console.log(vm.page_count)
                 })
-                axios({
-                    method: 'post',
-                    url: '${SITE_URL}history_chart/about_select',
-                    data: {
+               axios({
+                        method: 'post',
+                        url: '${SITE_URL}history_chart/select_scene_operation',
+                        data: {
+                            page: vm.page,
+                            limit: 10
+                        },
+                }).then((res) =>{
+                    vm.sceneOperationRuleTableData = res.data.message
+
+                })
+               axios({
+                   method:'post',
+                   url:'${SITE_URL}history_chart/about_select',
+                   data:{
                         page: vm.page,
                         limit: 10
-                    }
-                }).then(function (res) {
+                   }
+               }).then(function (res) {
                     vm.aboutTableDate = res.data.results;
                     vm.aboutRulesCount = res.data.results[0].pages
-                })
+               })
             },
 
-            current_change(value) {
-                vm.page = value;
+            current_change(value){
+               vm.page = value;
                 axios({
                     method: 'post',
                     url: '${SITE_URL}history_chart/select_log/',
                     data: {
                         search: this.search,
                         page: vm.page,
-                        keyword: vm.keyword,
-                        date_Choice: vm.date_Choice,
+                        keyword:vm.keyword,
+                        date_Choice:vm.date_Choice,
                         limit: 10
                     },
                 }).then((res) => {
@@ -292,7 +300,7 @@
                 })
 
             },
-            about_change(value) {
+            about_change(value){
                 vm.page = value;
                 axios({
                     method: 'post',
@@ -300,8 +308,8 @@
                     data: {
                         search: vm.search,
                         page: vm.page,
-                        keyword: vm.keyword,
-                        date_Choice: vm.date_Choice,
+                        keyword:vm.keyword,
+                        date_Choice:vm.date_Choice,
                         limit: 10
                     },
                 }).then((res) => {
@@ -310,34 +318,34 @@
                 })
             },
 
-            select_log() {
-                if (vm.log_type == 'log') {
-                    vm.page = 1                                             //查询
-                    if (vm.keyword == "" & vm.date_Choice == "" & this.search == "") {
-                        vm.show()
-                    }
-                    axios({
-                        method: 'post',
-                        url: '${SITE_URL}history_chart/select_log/',
-                        data: {
-                            search: this.search,
-                            page: this.page,
-                            keyword: vm.keyword,
-                            date_Choice: vm.date_Choice,
-                            limit: 10
-                        },
-                    }).then((res) => {
-                        vm.Operatelog = res.data.message;
-                        vm.page_count = res.data.message[0].page_count;
-                    })
-                } else if (vm.log_type == 'alert') {
-                    this.alertRulePageChange(1);
-                } else if (vm.log_type == 'about_to_expire') {
-                    vm.about_change(1);
-                }
+            select_log(){
+               if(vm.log_type == 'log'){
+                   vm.page = 1                                             //查询
+                   if (vm.keyword == "" & vm.date_Choice == "" & this.search =="") {
+                       vm.show()
+                   }
+                   axios({
+                       method: 'post',
+                       url: '${SITE_URL}history_chart/select_log/',
+                       data: {
+                           search: this.search,
+                           page: this.page,
+                            keyword:vm.keyword,
+                           date_Choice:vm.date_Choice,
+                           limit: 10
+                       },
+                   }).then((res) => {
+                       vm.Operatelog = res.data.message;
+                       vm.page_count = res.data.message[0].page_count;
+                   })
+               }else if(vm.log_type == 'alert'){
+                 this.alertRulePageChange(1);
+               }else if(vm.log_type == 'about_to_expire'){
+                   vm.about_change(1);
+               }
 
 
-            },
+           },
 
             //选择场景
             chose_scenes(value) {
@@ -533,6 +541,7 @@
     vm.show();
 
 </script>
+
 
 
 </body>

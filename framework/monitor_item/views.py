@@ -92,9 +92,16 @@ def node_name(request):
 
 def start_flow_task(request):
     info=json.loads(request.body)
+    print info
     res = tools.start_flow_task(**info)
     return render_json(res)
 
 def node_state(request):
     res = function.node_state(request)
     return render_json(res)
+
+def resume_flow(req):
+    res=json.loads(req.body)
+    item_id=req['item_id']
+    rt=tools.resume_flow(item_id=item_id)
+    return render_json(rt)

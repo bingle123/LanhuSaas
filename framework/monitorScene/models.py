@@ -15,6 +15,7 @@ class Scene(models.Model):
     scene_creator_time = models.DateTimeField(verbose_name=u'创建时间',auto_now_add=True)
     scene_editor = models.CharField(verbose_name=u'编辑人', max_length=50)
     scene_editor_time = models.DateTimeField(verbose_name=u'编辑时间', auto_now=True)
+    scene_area=models.IntegerField(verbose_name=u'场景日历地区')
 
     def __str__(self):
         return self.id
