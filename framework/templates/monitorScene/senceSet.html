@@ -169,20 +169,29 @@
                     <el-form-item label="场景名称" prop="scene_name">
                        <el-input placeholder="请输入场景名称"  v-model="scene.scene_name" style="width: 30%"></el-input>
                     </el-form-item>
-
-                    <el-form-item label="轮播时间"   >
+                    <el-form-item label="轮播日历">
+                        <el-select v-model="area" placeholder="请选择日历的地区">
+                            <el-option
+                              v-for="item in areas"
+                              :key="item.value"
+                              :label="item.area"
+                              :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="轮播时间">
                         <el-col :span="5">
                             <el-form-item prop="scene_startTime">
-                                <el-time-picker v-model="scene.scene_startTime" placeholder="开始时间点" format="hh:mm"
-                                                value-format="hh:mm">
+                                <el-time-picker v-model="scene.scene_startTime" placeholder="开始时间点" format="HH:mm"
+                                                value-format="HH:mm">
                                 </el-time-picker>
                             </el-form-item>
                         </el-col>
                         <el-col class="line" :span="1">—</el-col>
                         <el-col :span="11">
                             <el-form-item prop="scene_endTime">
-                                <el-time-picker v-model="scene.scene_endTime"  placeholder="结束时间点" format="hh:mm"
-                                                value-format="hh:mm">
+                                <el-time-picker v-model="scene.scene_endTime"  placeholder="结束时间点" format="HH:mm"
+                                                value-format="HH:mm">
                                 </el-time-picker>
                             </el-form-item>
                         </el-col>
@@ -194,83 +203,6 @@
                     </el-form-item>
                     <el-form-item label="预览区">
                         <el-button type="info" @click="goto">场景编排</el-button>
-                    </el-form-item>
-                    <el-form-item>
-                            <el-row type="flex" justify="space-around">
-                                <el-col :span="9">
-                                    <div class="grid-content bg-purple-light">
-                                        <ve-histogram :data="chartData"></ve-histogram>
-                                    </div>
-                                </el-col>
-                                <el-col :span="9" style="width: 80%">
-                                    <div id="flow1" class="clearfix workflow-box" style="width: 100%">
-
-                                        <div class="workflow-canvas" style="margin-left: 0px;padding-left: 0px">
-                                            <!-- 画布模板 start -->
-                                            <div class="jtk-content">
-                                                <div class="jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan"
-                                                     id="canvas" style="height:370px;">
-                                                    <!-- 流程 -->
-                                                </div>
-                                            </div>
-                                            <!-- 画布模板 end -->
-
-                                        </div>
-
-                                        <!-- template 模板-->
-                                        <div class="jtk-delete jtk-none ">删除节点</div>
-                                        <div id="template" class="jtk-none">
-                                            <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
-                                                 data-type="start">
-                                                <div class="node-wrapper">
-                                                    <div class="node-icon-start">
-                                                        <i class="bk-icon icon-star-shape"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="jtk-window jtk-node workfolw-node database-node" id="{charts}"
-                                                 data-type="database">
-                                                <div class="node-wrapper">
-                                                    <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">一级分析</p>
-                                                    </div>
-                                                    <div class="node-icon">
-                                                        <i class="bk-icon icon-data"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="jtk-window jtk-node workfolw-node cog-node" id="{charts}"
-                                                 data-type="dataCog">
-                                                <div class="node-wrapper">
-                                                    <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">实时加载</p>
-                                                    </div>
-                                                    <div class="node-icon">
-                                                        <i class="bk-icon icon-cog"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="jtk-window jtk-node workfolw-node filter-node" id="{charts}"
-                                                 data-type="dataFilter">
-                                                <div class="node-wrapper">
-                                                    <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">离线计算</p>
-                                                    </div>
-                                                    <div class="node-icon">
-                                                        <i class="bk-icon icon-circle"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </divcard>
                     </el-form-item>
                     <el-row type="flex" class="row-bg" justify="center">
                         <el-col :span="2">
@@ -296,19 +228,29 @@
                     <el-form-item label="场景名称" prop="scene_name">
                        <el-input placeholder="请输入场景名称" v-model="scene_edit.scene_name" style="width: 30%"></el-input>
                     </el-form-item>
+                    <el-form-item label="轮播日历">
+                        <el-select v-model="area" placeholder="请选择日历的地区">
+                            <el-option
+                              v-for="item in areas"
+                              :key="item.value"
+                              :label="item.area"
+                              :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                      <el-form-item label="轮播时间" >
                           <el-col :span="5">
                             <el-form-item prop="scene_startTime">
-                                <el-time-picker v-model="scene_edit.scene_startTime" placeholder="开始时间点" format="hh:mm"
-                                                value-format="hh:mm">
+                                <el-time-picker v-model="scene_edit.scene_startTime" placeholder="开始时间点" format="HH:mm"
+                                                value-format="HH:mm">
                                 </el-time-picker>
                             </el-form-item>
                         </el-col>
                         <el-col class="line" :span="1">—</el-col>
                         <el-col :span="11">
                             <el-form-item prop="scene_endTime">
-                                <el-time-picker v-model="scene_edit.scene_endTime"  placeholder="结束时间点" format="hh:mm"
-                                                value-format="hh:mm">
+                                <el-time-picker v-model="scene_edit.scene_endTime"  placeholder="结束时间点" format="HH:mm"
+                                                value-format="HH:mm">
                                 </el-time-picker>
                             </el-form-item>
                         </el-col>
@@ -321,83 +263,6 @@
                     </el-form-item>
                     <el-form-item label="预览区">
                         <el-button type="info" @click="goto">场景编排</el-button>
-                    </el-form-item>
-                    <el-form-item>
-                            <el-row type="flex" justify="space-around">
-                                <el-col :span="9">
-                                    <div class="grid-content bg-purple-light">
-                                        <ve-histogram :data="chartData"></ve-histogram>
-                                    </div>
-                                </el-col>
-                                <el-col :span="9"  style="width: 80%">
-                                  <div id="flow1" class="clearfix workflow-box" style="width: 100%">
-
-                                        <div class="workflow-canvas" style="margin-left: 0px;padding-left: 0px">
-                                            <!-- 画布模板 start -->
-                                            <div class="jtk-content">
-                                                <div class="jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan"
-                                                     id="canvas" style="height:370px;">
-                                                    <!-- 流程 -->
-                                                </div>
-                                            </div>
-                                            <!-- 画布模板 end -->
-
-                                        </div>
-
-                                        <!-- template 模板-->
-                                        <div class="jtk-delete jtk-none ">删除节点</div>
-                                        <div id="template" class="jtk-none">
-                                            <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
-                                                 data-type="start">
-                                                <div class="node-wrapper">
-                                                    <div class="node-icon-start">
-                                                        <i class="bk-icon icon-star-shape"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="jtk-window jtk-node workfolw-node database-node" id="{charts}"
-                                                 data-type="database">
-                                                <div class="node-wrapper">
-                                                    <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">一级分析</p>
-                                                    </div>
-                                                    <div class="node-icon">
-                                                        <i class="bk-icon icon-data"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="jtk-window jtk-node workfolw-node cog-node" id="{charts}"
-                                                 data-type="dataCog">
-                                                <div class="node-wrapper">
-                                                    <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">实时加载</p>
-                                                    </div>
-                                                    <div class="node-icon">
-                                                        <i class="bk-icon icon-cog"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="jtk-window jtk-node workfolw-node filter-node" id="{charts}"
-                                                 data-type="dataFilter">
-                                                <div class="node-wrapper">
-                                                    <div class="node-content">
-                                                        <input type="text" class="node-title" value="">
-                                                        <p data="数据源" class="node-desc">离线计算</p>
-                                                    </div>
-                                                    <div class="node-icon">
-                                                        <i class="bk-icon icon-circle"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </divcard>
                     </el-form-item>
                     <el-row type="flex" class="row-bg" justify="center">
                         <el-col :span="2">
@@ -529,6 +394,8 @@
             selectvalue:'',
             search:'',//搜索框的值
             isAdd: 1,
+            areas:[],
+            area:1,
             imgUrl: './static/1.png',
             chartData: {
                 columns: ['日期', '下单用户'],
@@ -617,6 +484,7 @@
                                 url: '${SITE_URL}monitorScene/addSence/',
                                 data: {
                                     data: vm.scene,
+                                    scene_area:vm.area,
                                     monitor_data: vm.result_list
                                 }
                             }).then(function (res) {
@@ -629,6 +497,7 @@
                                 url: '${SITE_URL}monitorScene/editSence/',
                                 data: {
                                     data: vm.scene_edit,
+                                    scene_area:vm.area,
                                     monitor_data: vm.result_list
                                 }
                             }).then(function (res) {
@@ -642,6 +511,23 @@
                         return false;
                     }
                 });
+            },
+            get_all_area(){
+            axios({
+                method:'get',
+                url:'/market_day/get_all_area',
+            }).then(function (res) {
+                res=res.data.message
+                vm.areas=[]
+                for (var i=0;i<res.length;i++){
+                    var label=res[i].country+"("+res[i].timezone+")"
+                    temp={
+                        'area':label,
+                        'value':res[i].id
+                    }
+                    vm.areas.push(temp)
+                    }
+                })
             },
             current_change(value) {
                 vm.page = value;
@@ -704,6 +590,7 @@
                     data:value,
                 }).then(function (res) {
                     vm.result_list_edit=res.data.results;
+                    vm.result_list=vm.result_list_edit;
                     vm.scale=parseFloat(res.data.results[0].scale);
                     vm.multiple = Math.round((vm.scale-1)*10);
                 })
@@ -747,7 +634,7 @@
                             })
                             vm.monitor_data = res.data.results;
                             $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px;top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"><div id=\"chart'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
-                            show_chart(vm.monitor_data[0].id, vm.monitor_data[0].gather_params, vm.monitor_data[0].height, vm.monitor_data[0].width, result_list_edit[i].order, vm.monitor_data[0].contents);
+                            show_chart(vm.monitor_data[0].id,"","", vm.monitor_data[0].gather_params, vm.monitor_data[0].height, vm.monitor_data[0].width, result_list_edit[i].order, vm.monitor_data[0].contents);
 
                         }
                         if(result_list_edit[i].monitor_type=='作业单元类型'){
@@ -930,8 +817,8 @@
             },
             add_chart_monitor(i){
                 $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"transform: scale('+vm.scale+')\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+i.height+'px;width:'+i.width+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
-                show_chart(i.id,i.gather_params,i.height,i.width,vm.drigging_id,i.contents);
-                vm.drigging_id++
+                show_chart(i.id,"","",i.gather_params,i.height,i.width,vm.drigging_id,i.contents);
+                vm.drigging_id++;
             },
             add_job_monitor(i){
                 var job_params={
@@ -943,7 +830,7 @@
                 }
                 $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"job'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"transform: scale('+vm.scale+')\"></div>')
                 job_monitor(job_params)
-                vm.drigging_id++
+                vm.drigging_id++;
             },
             add_flow_monitor(i){
                 let jion_id=[{
@@ -951,7 +838,7 @@
                 }]
                 $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"transform: scale('+vm.scale+')\"><div type=\"flow_monitor'+vm.drigging_id+'\"></div></div>')
                 flow_monitor(jion_id,vm.drigging_id)
-                vm.drigging_id++
+                vm.drigging_id++;
             },
             current_change1(value) {
                 vm.page1 = value;
@@ -981,7 +868,7 @@
 
         }
     });
-
+    vm.get_all_area()
     vm.paging();
     $('.monitor_type').click(function () {
         $(this).parent().next('div').animate({
