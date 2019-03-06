@@ -39,3 +39,7 @@ def about_search(request):
 def select_scenes(request):
     res = function.select_scenes(request)
     return render_json(res)
+
+def select_scene_operation(request):
+    res = function.select_scene_operation(request)
+    return render_json(res)
