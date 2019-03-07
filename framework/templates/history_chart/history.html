@@ -20,7 +20,7 @@
 <div class="content">
         <div class="body">
         <el-card shadow="always">
-             <div>
+            <div>
                 <div id="pagetitle">
                     报表统计查询
                 </div>
@@ -69,37 +69,36 @@
                         <el-option label="日志查询" value="log"></el-option>
                         <el-option label="执行告警信息查询" value="alert"></el-option>
                         <el-option label="场景运行即将到期查询" value="about_to_expire"></el-option>
-                        <el-option label="场景运行情况统计" value="sceneOperation"></el-option>
                         <el-option label="场景运行比对" value="compare"></el-option>
                     </el-select>
                 </el-col>
 
                 <div id="hide_m" style="display:none">
                     <el-row type="flex">
-                    <el-col :span="3" style="margin-top: 5px">
-                        <el-select placeholder="请选择场景" v-model="Cscene" value-key="id" @change="chose_scenes">
-                            <el-option v-for="item in scenes_data" :label="item.sname" :key="item.id"
-                                       :value="item"></el-option>
-                        </el-select>
-                    </el-col>
-                    <el-col :span="3" style="margin-top: 5px">
-                        <el-date-picker
-                                v-model="scene_time"
-                                value-format="yyyy-MM-dd HH:mm:ss"
-                                type="datetimerange"
-                                @change="sceneTChang"
-                                range-separator="至"
-                                start-placeholder="开始日期"
-                                end-placeholder="结束日期">
-                        </el-date-picker>
-                    </el-col>
+                        <el-col :span="3" style="margin-top: 5px">
+                            <el-select placeholder="请选择场景" v-model="Cscene" value-key="id" @change="chose_scenes">
+                                <el-option v-for="item in scenes_data" :label="item.sname" :key="item.id"
+                                           :value="item"></el-option>
+                            </el-select>
+                        </el-col>
+                        <el-col :span="3" style="margin-top: 5px">
+                            <el-date-picker
+                                    v-model="scene_time"
+                                    value-format="yyyy-MM-dd HH:mm:ss"
+                                    type="datetimerange"
+                                    @change="sceneTChang"
+                                    range-separator="至"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期">
+                            </el-date-picker>
+                        </el-col>
                     </el-row>
                     <el-row>
-                            <el-col :span="5" style="margin-top: 5px">
-                               <el-button type="primary" @click="drawging_">
-                                    <span>画图</span>
-                               </el-button>
-                            </el-col>
+                        <el-col :span="5" style="margin-top: 5px">
+                            <el-button type="primary" @click="drawging_">
+                                <span>画图</span>
+                            </el-button>
+                        </el-col>
                     </el-row>
                 </div>
 
@@ -234,6 +233,7 @@ let vm = new Vue({
             Cscene: '',
             Cscene_id:'',
             scene_time: '',
+            qnmb: [],
         },
         methods: {
             show() {
@@ -403,46 +403,58 @@ let vm = new Vue({
             },
 
             //初始化图
-            draw_line(){
+            draw_line(value) {
+                console.log(value)
+                console.log(typeof value)
+                let list_x = [];
+                let list_s = [];
+                let list_f = [];
+                let list_all = [];
+                for (var i=0;i<value.length - 1;i++) {
+                    list_x = value[i]['timedata']
+                    list_s = value[i]['success_items'];
+                    list_f = value[i]['failed_items'];
+                    list_all = value[i]['itemNums'];
+                }
                 vm.myChart = echarts.init(document.getElementById('scene_et'));
                 option = {
-                title: {
-                    text: '场景比对',
-                    left :1,
-                },
-                tooltip: {
-                    trigger: 'axis'
-                },
-                legend: {
-                    left :'25%',
-                    data:['节点数','运行成功场景单元数','运行失败数','告警数量']
-                },
-                grid: {
-                    left: '3%',
-                    right: '4%',
-                    bottom: '3%',
-                    containLabel: true
-                },
-                xAxis: {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: ['周一','周二','周三','周四','周五','周六','周日']
-                },
-                yAxis: {
-                    type: 'value',
-                    min :0,
-                    max:30,
-                },
-                series: [
-                    {
-                        name:'节点数',
-                        type:'line',
-                        data:[1, 2, 4, 5, 6,6, 7],
-                        itemStyle: {
-                        normal: {
-                       color: "#000033",
-                       lineStyle: {
-                       color: "#000033"
+                    title: {
+                        text: '场景比对',
+                        left: 1,
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        left: '25%',
+                        data: ['节点数', '运行成功场景单元数', '运行失败数']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: list_x
+                    },
+                    yAxis: {
+                        type: 'value',
+                        min: 0,
+                        max: 30,
+                    },
+                    series: [
+                        {
+                            name: '节点数',
+                            type: 'line',
+                            data: list_all,
+                            itemStyle: {
+                                normal: {
+                                    color: "#000033",
+                                    lineStyle: {
+                                        color: "#000033"
 
                                     }
                                 }
@@ -452,7 +464,7 @@ let vm = new Vue({
                         {
                             name: '运行成功场景单元数',
                             type: 'line',
-                            data: [5, 7, 3, 3, 1, 5, 6],
+                            data: list_s,
                             itemStyle: {
                                 normal: {
                                     color: "#00FF00",
@@ -465,7 +477,7 @@ let vm = new Vue({
                         {
                             name: '运行失败数',
                             type: 'line',
-                            data: [1, 30, 3, 2, 2, 1, 3],
+                            data: list_f,
                             itemStyle: {
                                 normal: {
                                     color: "#FF0000",
@@ -493,21 +505,26 @@ let vm = new Vue({
                 vm.myChart.setOption(option);
             },
             //画图
-            drawging_(){
-                if(vm.Cscene==''){
+            drawging_() {
+                if (vm.Cscene == '') {
                     alert('请选择场景');
-                }else if(vm.scene_time ==''){
+                } else if (vm.scene_time == '') {
                     alert('请选择日期');
-                }else {
+                } else {
                     axios({
-                    method:'post',
-                    url:'${SITE_URL}history_chart/selectScenes_ById/',
-                    data:{
-                        id:vm.Cscene_id,
-                        dataTime:vm.scene_time,
-                    },
-                });
-                }},
+                        method: 'post',
+                        url: '${SITE_URL}history_chart/selectScenes_ById/',
+                        data: {
+                            id: vm.Cscene_id,
+                            dataTime: vm.scene_time,
+                        },
+                    }).then((res) => {
+                        vm.qnmb = res.data.results;
+                        vm.draw_line(vm.qnmb);
+                    })
+
+                }
+            },
             //清空下拉框
             get_null() {
                 vm.scenes_data = '';
@@ -530,6 +547,8 @@ let vm = new Vue({
                     vm.sceneOperationCount = res.data.message[0].pages;
                 })
             },
+
+
             change_type(value) {
                 if (value == 'log') {
                     $("#table1,#hide_k").css('display', 'block');
