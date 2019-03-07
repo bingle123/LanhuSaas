@@ -212,8 +212,6 @@
                                 data_key=res.data.message[j].data_value
                                 if(data_key == '1'||data_key=='4'){
                                     $('p:contains('+res.data.message[j].data_key+')').parent().siblings('.node-icon').css('background','#67c23a');
-                                    $('p:contains('+res.data.message[j].data_key+')').parent().siblings('.node-icon').children().css('position','relative')
-                                    $('p:contains('+res.data.message[j].data_key+')').parents().siblings('.node-icon').children().html('<div class=\"keepOn\"><p>是否继续</p><span class="keepOn_yes">是</span><span class="keepOn_no">否</span></div>')
                                 }else if(data_key == '0' || data_key == '3'){
                                     $('p:contains('+res.data.message[j].data_key+')').parent().siblings('.node-icon').css('background','#f56c6c')
                                 }else if (data_key == '2') {
@@ -298,6 +296,24 @@
         display: inline-block;
         font-size: 16px;
         line-height: 36px;
+    }
+    .keepOn{
+        position: absolute;
+        top: 32px;
+        right: 0;
+        width: 115px;
+        height: 60px;
+    }
+    .keepOn p{
+        margin-top: 5px;
+        line-height: 20px;
+        color: black;
+    }
+    .keepOn span{
+        width: 20%;
+        margin: 0 20px;
+        color: black;
+        background: #00baff;
     }
 </style>
 </body>
