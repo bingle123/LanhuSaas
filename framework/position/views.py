@@ -55,3 +55,8 @@ def get_tree(request):
 def synchronize(request):
     r = function.synchronize(request)
     return render_json(r)
+
+def get_active_user(req):
+    res=function.get_active_user(request=req)
+    bk_username=res['data']['bk_username']
+    return render_json(bk_username)

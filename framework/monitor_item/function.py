@@ -18,6 +18,7 @@ from gatherData.models import TDGatherData
 import sys
 from logmanagement.function import add_log,make_log_info,get_active_user
 import datetime
+from market_day.models import HeaderData as hd
 
 
 def unit_show(request):
@@ -317,21 +318,8 @@ def chart_get_test(request):
     }
 
 def get_desc(request, id):
-    print id
-    headers = {
-        'Content-Type': 'application/json;charset=utf-8',
-        'Cookie': 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
-        'Host': 'paas.bk.com',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3679.0 Safari/537.36',
-        'X-CSRFToken': 'FI1fszvZzgIsYYX8n6aPMduEeAL7qTV3',
-        'X-Requested-With': 'XMLHttpRequest'
-    }
-    csrftoken = request.COOKIES["csrftoken"];
-    Cookie="keyA=1";
-    for key in request.COOKIES:
-        Cookie = "%s;%s=%s"%(Cookie,key,request.COOKIES[key]);
-    headers['Cookie'] = Cookie;
-    headers['X-CSRFToken'] = csrftoken;
+    mess = hd.objects.get(id=1).header
+    headers = json.loads(mess.decode('utf-8').replace("'", "\""))
     a_url="http://paas.bk.com/o/bk_sops/api/v3/template/{}/".format(id[0]['id']);
     req=requests.get(url=a_url,headers=headers)
     req.encoding=req.apparent_encoding
