@@ -124,12 +124,9 @@
         </el-card>
 
     </div>
-    <div style="display: none">
-        <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
+    <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
     <el-tree class="filter-tree" :data="data3" :props="defaultProps" default-expand-all show-checkbox
              :filter-node-method="filterNode" ref="tree2"></el-tree>
-    </div>
-
 </div>
 <script type="text/javascript">
     axios.interceptors.request.use((config) => {
