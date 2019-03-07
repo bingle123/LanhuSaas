@@ -965,11 +965,11 @@
         var e=window.event||e;
         var _x = e.clientX - x + offsetLeft+Math.abs(vm.multiple)*$(selector).width()*(vm.scale-1)/2;
         //event.clientX得到鼠标相对于客户端正文区域的偏移
-        //然后减去offsetX即得到当前推拽元素相对于当前窗口的X值
+        //然后减去offsetLeft即得到当前推拽元素相对于当前窗口的X值
         //（减去鼠标刚开始拖动的时候在当前窗口的偏移X）
         var _y = e.clientY - y + offsetTop+Math.abs(vm.multiple)*$(selector).height()*(vm.scale-1)/2;
         //event.clientY得到鼠标相对于客户端正文区域的偏移
-        //然后减去offsetX即得到当前推拽元素相对于当前窗口的Y值
+        //然后减去offsetTop即得到当前推拽元素相对于当前窗口的Y值
         //（减去鼠标刚开始拖动的时候在当前窗口的偏移Y）
         if(_x<0){
             _x=0+$(selector).width()*(vm.scale-1)/2;
