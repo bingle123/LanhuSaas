@@ -48,7 +48,7 @@ def monitor_show(request):
 
 
 def addSence(request):
-    # try:
+    try:
         res = request.body
         senceModel = json.loads (res)
         starttime=senceModel['data']["scene_startTime"]
@@ -87,11 +87,11 @@ def addSence(request):
             Scene_monitor.objects.create (**monitor_data)
         info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
-    # except Exception as e:
-    #     info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-    #                           get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    # add_log(info)
-        return None
+    except Exception as e:
+        info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
+    return None
 
 
 def select_table(request):
@@ -447,6 +447,7 @@ def get_scenes(user_name,start,end):
     for z in scenes:
         # 场景
         temp_scene = Scene.objects.get(id=z)
+        flag=True
         if start=='' and end=='':
             id=temp_scene.scene_area
             timezone = Area.objects.get(id=id).timezone

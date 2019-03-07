@@ -23,5 +23,6 @@ urlpatterns = patterns(
     (r'^add_person/$', 'add_person'),                               #增加员工
     (r'^edit_job/$', 'edit_job'),                                   #编辑
     (r'^get_user/$', 'filter_user'),                                #调接口查询所有用户,并筛选
-    (r'^synchronize/$', 'synchronize'),                                #调接口查询所有用户,并筛选
+    (r'^synchronize/$', 'synchronize'),                               #调接口查询所有用户,并筛选
+    (r'get_active_user','get_active_user'),                             #获取当前登陆用户的蓝鲸名
 )
