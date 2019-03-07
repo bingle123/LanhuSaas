@@ -18,6 +18,7 @@ import time
 from datetime import datetime,date,timedelta
 from gatherData.models import TDGatherData
 from gatherDataHistory.models import TDGatherHistory
+from market_day.models import Holiday
 
 def show_all(request):
     """
@@ -364,7 +365,6 @@ def Caltime(date1,date2):
 def selectScenes_ById(request):
     res = json.loads(request.body)
     scene = Scene.objects.get(id = res['id'])
-
     #根据id查监控项个数
     sm = Scene_monitor.objects.filter(scene_id=res['id'])
     item_len = sm.__len__()
@@ -456,6 +456,21 @@ def selectScenes_ById(request):
 
 
 
+
+
+    # dic_data = {
+    #     'compare_date':'',
+    #     'scene_startTime': model_to_dict(scene)['scene_startTime'],
+    #     'scene_endTime': model_to_dict(scene)['scene_endTime'],
+    #     'itemNums':itemNums,
+    #     'count_time':'',
+    #     'success_items':'',
+    #     'success_percent':'',
+    #     'failed_percent':'',
+    #     'alertNums':'',
+    # }
+
+
 def select_scene_operation(request):
     #初始化
     res_list = []
@@ -481,10 +496,16 @@ def select_scene_operation(request):
         for j in scenes_list:
             scenes.append(j.id)
             flag = 1
+            flag2 = 0
+            #判断是否为交易日
+            scene_area_id = j.scene_area
+            if check_jobday(scene_area_id,i):
+                flag2 = 1
             #获取场景所对应的所有监控项id
             items = Scene_monitor.objects.filter(scene_id=j.id)
             #判断每个监控项的运行结果是成功还是失败
             for k in items:
+                print k.item_id
                 item = Monitor.objects.get(id = k.item_id)
                 if u'基本单元类型' == item.monitor_type:
                     if 'sql' == item.gather_params:
@@ -558,5 +579,40 @@ def select_scene_operation(request):
             'failed_num':failed_num,
             'alert_num':alert_num
         }
-        res_list.append(dict)
+        #非交易日剔除
+        if flag2:
+            res_list.append(dict)
     return  res_list
+
+#判断是否为交易日
+def check_jobday(id,time):
+    time=datetime(time.year,time.month,time.day)
+    str_date=datetime.strftime(time,'%Y/%m/%d')
+    day=str_date[:4] + u'/' + str(int(str_date[5:7])) + u'/' + str(int(str_date[8:10]))
+    hs=Holiday.objects.filter(Q(day=day)&Q(area=id))
+    flag=0
+    for h in hs:
+        flag=h.flag
+    if flag==1:
+        return True
+    elif flag==2:
+        return False
+
+#运行情况分页
+def operation_page(request):
+    res = json.loads(request.body)
+    res_list = []
+    limit = res['limit']
+    page = res['page']
+    scene_operation = select_scene_operation()
+    p = Paginator(scene_operation, limit)
+    count = p.page_range
+    pages = count[-1]
+    current_page = p.page(page)
+    for x in current_page.object_list:
+        temp_dict = {
+            'page_count': pages
+        }
+        x = dict(x, **temp_dict)
+        res_list.append(x)
+    return res_list

@@ -2,6 +2,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
     <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 ${STATIC_URL}assets/-->
@@ -34,7 +36,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
     <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
     <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/jrange/css/jquery.range.css" rel="stylesheet">
-    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
     <script src="${STATIC_URL}js/jquery.range-min.js"></script>
 
 
@@ -43,7 +44,6 @@
             src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
     <link rel="stylesheet"
           href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css"/>
-    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
 </head>
 <body>
@@ -58,6 +58,7 @@
                         <el-col :span="24">
                             <div ref="imgHeight" :src="item.idView" :id="item.scene_id" :class="'scene_content'+index"
                                  style="position: relative;">
+
                             </div>
                         </el-col>
                     </el-row>
@@ -141,9 +142,38 @@
                         "id": flow_list[i].jion_id
                     }];
                     //添加一个div容器,形如<div><div id="flow1_1"></div></div>
-                    $(selector).append('<div style=\"position: absolute;top:' + flow_list[i].y + 'px;left:' + flow_list[i].x + 'px;transform: scale(' + flow_list[i].scale + ')\"><div type=\"flow_monitor' + value + '_' + flow_list[i].order + '\"></div></div>');
+                    $(selector).append('<div class=\"flow_monitor\" type=\"'+flow_list[i].id+'\" style=\"position: absolute;top:' + flow_list[i].y + 'px;left:' + flow_list[i].x + 'px;transform: scale(' + flow_list[i].scale + ')\"><div type=\"flow_monitor' + value + '_' + flow_list[i].order + '\"></div></div>');
                     //调用流程监控项的渲染方法，第一条参数必须为[{}]格式，用来调v3接口，第二条参数对应容器内部div的id
                     flow_monitor(jion_id, value + '_' + flow_list[i].order);
+                    setTimeout(function () {
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}monitor_item/node_state_by_item_id/',
+                        data: {
+                            'item_id': flow_list[i].id
+                        }
+                    }).then(function (res) {
+
+                            var len =res.data.message.length
+                            for(var j=0;j<=len-1;j++){
+                                data_key=res.data.message[j].data_value
+                                if(data_key == '1'||data_key=='4'){
+                                    $('p:contains('+res.data.message[j].data_key+')').parent().siblings('.node-icon').css('background','#67c23a');
+                                    $('p:contains('+res.data.message[j].data_key+')').parent().siblings('.node-icon').children().css('position','relative')
+                                    $('p:contains('+res.data.message[j].data_key+')').parents().siblings('.node-icon').children().html('<div class=\"keepOn\"><p>是否继续</p><span class="keepOn_yes">是</span><span class="keepOn_no">否</span></div>')
+                                }else if(data_key == '0' || data_key == '3'){
+                                    $('p:contains('+res.data.message[j].data_key+')').parent().siblings('.node-icon').css('background','#f56c6c')
+                                }else if (data_key == '2') {
+                                    $('p:contains('+res.data.message[j].data_key+')').parent().siblings('.node-icon').css('background','#f56c6c')
+                                    $('p:contains('+res.data.message[j].data_key+')').parent().siblings('.node-icon').children().css('position','relative')
+                                    $('p:contains('+res.data.message[j].data_key+')').parents().siblings('.node-icon').children().html('<div class=\"keepOn\"><p>是否继续</p><span class="keepOn_yes">是</span><span class="keepOn_no">否</span></div>')
+                                }
+                            }
+                        })
+                    },1000)
+
+
+
                 }
             },
         },
@@ -177,7 +207,27 @@
     setInterval(function () {
         vm.get_scenes();
     },10000)
+    $(function () {
+        $(document).on("click", ".keepOn_yes", function (e) {
+            e.preventDefault();
+            $(this).parent().hide();
+        });
+        $(document).on("click", ".keepOn_no", function (e) {
+            e.preventDefault();
+            var id=$(this).parents('.flow_monitor').attr('type');
+            axios({
+                method: 'post',
+                        url: '${SITE_URL}monitor_item/resume_flow/',
+                        data: {
+                            'item_id': id
+                        }
+            }).then(function (res) {
+                console.log(res);
+            });
+            $(this).parent().hide();
+        });
 
+    })
 </script>
 
 
@@ -219,6 +269,24 @@
         display: inline-block;
         font-size: 16px;
         line-height: 36px;
+    }
+    .keepOn{
+        position: absolute;
+        top: 32px;
+        right: 0;
+        width: 115px;
+        height: 60px;
+    }
+    .keepOn p{
+        margin-top: 5px;
+        line-height: 20px;
+        color: black;
+    }
+    .keepOn span{
+        width: 20%;
+        margin: 0 20px;
+        color: black;
+        background: #00baff;
     }
 </style>
 </body>
