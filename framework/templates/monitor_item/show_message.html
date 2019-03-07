@@ -226,7 +226,7 @@
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item prop="height">
-                                            <el-input type="number" v-model.number="numberValidateForm.age"
+                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="chart.height"
                                                       placeholder="请输入高度" @change="echart_height"></el-input>
                                         </el-form-item>
@@ -234,7 +234,7 @@
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item prop="width">
-                                              <el-input type="number" v-model.number="numberValidateForm.age"
+                                              <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="chart.width"
                                                         placeholder="请输入宽度" @change="echart_width"></el-input>
                                         </el-form-item>
@@ -279,7 +279,7 @@
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="采集周期" prop="period">
-                                            <el-input type="number" v-model.number="numberValidateForm.age"
+                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="chart.period" style="width: 96%"
                                                       placeholder="请输入采集周期(秒)"></el-input>
                                 </el-form-item>
