@@ -472,8 +472,8 @@ def selectScenes_ById(request):
     #     'alertNums':'',
     # }
 
-
-def select_scene_operation(request):
+#场景运行情况
+def select_scene_operation():
     #初始化
     res_list = []
     date_info = []
@@ -617,6 +617,29 @@ def operation_page(request):
         }
         x = dict(x, **temp_dict)
         res_list.append(x)
+    return res_list
+
+#周运行情况
+def get_week(request):
+    scene_operation = select_scene_operation()
+    res = json.loads(request.body)
+    #初始化
+    days = []
+    res_list = []
+    #获取一周的第一天
+    res['date'] = str(res['date'])[:10]
+    temp = datetime.strptime(res['date'], "%Y-%m-%d")
+    date = datetime.date(temp)
+    days.append(date)
+    #加6天
+    oneday = timedelta(days=1)
+    for i in range(6):
+        date += oneday
+        days.append(date)
+    for j in days:
+        for k in scene_operation:
+            if str(j) == k['date']:
+                res_list.append(k)
     return res_list
 
 
