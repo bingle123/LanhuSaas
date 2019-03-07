@@ -440,7 +440,6 @@ def selectScenes_ById(request):
             return tools.success_result(Alldays)
         #有效天大于3天小于7天，取所有天数
         elif listCount_date >= 3 and listCount_date <=7:
-            print  getPant_list(scene_list, d_data, all_itemid, item_len)
             return getPant_list(scene_list, d_data, all_itemid, item_len)
         #有效期大于7天，取前7天，splen为取数组中的前7天个数
         else:
@@ -631,5 +630,190 @@ def get_week(request):
 def monthly_select(request):
     res = select_scene_operation()
     total = 0
+    Success_num=0
+    failure_num = 0
+    dic_list=[]
     for i in res:
-        total += i['scene_num']
+        if(str(i['date'])[5:7] == '01'):
+            total += i['scene_num']
+            Success_num += i['success_num']
+            failure_num +=i['failed_num']
+        elif(str(i['date'])[5:7] == '02'):
+            total += i['scene_num']
+            Success_num += i['success_num']
+            failure_num += i['failed_num']
+        elif (str(i['date'])[5:7] == '03'):
+            total += i['scene_num']
+            Success_num += i['success_num']
+            failure_num += i['failed_num']
+        elif (str(i['date'])[5:7] == '04'):
+            total += i['scene_num']
+            Success_num += i['success_num']
+            failure_num += i['failed_num']
+        elif (str(i['date'])[5:7] == '05'):
+            total += i['scene_num']
+            Success_num += i['success_num']
+            failure_num += i['failed_num']
+        elif (str(i['date'])[5:7] == '06'):
+            total += i['scene_num']
+            Success_num += i['success_num']
+            failure_num += i['failed_num']
+        elif (str(i['date'])[5:7] == '07'):
+            total += i['scene_num']
+            Success_num += i['success_num']
+            failure_num += i['failed_num']
+        elif (str(i['date'])[5:7] == '08'):
+            total += i['scene_num']
+            Success_num += i['success_num']
+            failure_num += i['failed_num']
+        elif (str(i['date'])[5:7] == '09'):
+            total += i['scene_num']
+            Success_num += i['success_num']
+            failure_num += i['failed_num']
+        elif (str(i['date'])[5:7] == '10'):
+            total += i['scene_num']
+            Success_num += i['success_num']
+            failure_num += i['failed_num']
+        elif (str(i['date'])[5:7] == '11'):
+            total += i['scene_num']
+            Success_num += i['success_num']
+            failure_num += i['failed_num']
+        elif (str(i['date'])[5:7] == '12'):
+            total += i['scene_num']
+            Success_num += i['success_num']
+            failure_num += i['failed_num']
+    if(str(i['date'])[:7] == '2019-01'):
+        success_rate = round(Success_num / total, 4)
+        success_rate = str(success_rate * 100) + '%'
+        dic={
+            'total':total,
+            'Success_num':Success_num,
+            'failure_num':failure_num,
+            'success_rate':success_rate,
+            'date':'2019-01'
+        }
+        dic_list.append(dic)
+    elif(str(i['date'][:7]) == '2019-02'):
+        success_rate = round(Success_num / total, 4)
+        success_rate = str(success_rate * 100) + '%'
+        dic = {
+            'total':total,
+            'Success_num':Success_num,
+            'failure_num':failure_num,
+            'success_rate':success_rate,
+            'date': '2019-02'
+        }
+        dic_list.append(dic)
+    elif(str(i['date'][:7]) == '2019-03'):
+        success_rate = round(Success_num / total, 4)
+        success_rate = str(success_rate * 100) + '%'
+        dic = {
+            'total':total,
+            'Success_num':Success_num,
+            'failure_num':failure_num,
+            'success_rate':success_rate,
+            'date': '2019-03'
+        }
+        dic_list.append(dic)
+    elif(str(i['date'][:7]) == '2019-04'):
+        success_rate = round(Success_num / total, 4)
+        success_rate = str(success_rate * 100) + '%'
+        dic = {
+            'total':total,
+            'Success_num':Success_num,
+            'failure_num':failure_num,
+            'success_rate':success_rate,
+            'date': '2019-04'
+        }
+        dic_list.append(dic)
+    elif(str(i['date'][:7]) == '2019-05'):
+        success_rate = round(Success_num / total, 4)
+        success_rate = str(success_rate * 100) + '%'
+        dic = {
+            'total':total,
+            'Success_num':Success_num,
+            'failure_num':failure_num,
+            'success_rate':success_rate,
+            'date': '2019-05'
+        }
+        dic_list.append(dic)
+    elif(str(i['date'][:7]) == '2019-06'):
+        success_rate = round(Success_num / total, 4)
+        success_rate = str(success_rate * 100) + '%'
+        dic = {
+            'total':total,
+            'Success_num':Success_num,
+            'failure_num':failure_num,
+            'success_rate':success_rate,
+            'date': '2019-06'
+        }
+        dic_list.append(dic)
+    elif(str(i['date'][:7]) == '2019-07'):
+        success_rate = round(Success_num / total, 4)
+        success_rate = str(success_rate * 100) + '%'
+        dic = {
+            'total':total,
+            'Success_num':Success_num,
+            'failure_num':failure_num,
+            'success_rate':success_rate,
+            'date': '2019-07'
+        }
+        dic_list.append(dic)
+    elif(str(i['date'][:7]) == '2019-08'):
+        success_rate = round(Success_num / total, 4)
+        success_rate = str(success_rate * 100) + '%'
+        dic = {
+            'total':total,
+            'Success_num':Success_num,
+            'failure_num':failure_num,
+            'success_rate':success_rate,
+            'date': '2019-08'
+        }
+        dic_list.append(dic)
+    elif(str(i['date'][:7]) == '2019-09'):
+        success_rate = round(Success_num / total, 4)
+        success_rate = str(success_rate * 100) + '%'
+        dic = {
+            'total':total,
+            'Success_num':Success_num,
+            'failure_num':failure_num,
+            'success_rate':success_rate,
+            'date': '2019-09'
+        }
+        dic_list.append(dic)
+    elif(str(i['date'][:7]) == '2019-10'):
+        success_rate = round(Success_num / total, 4)
+        success_rate = str(success_rate * 100) + '%'
+        dic = {
+            'total':total,
+            'Success_num':Success_num,
+            'failure_num':failure_num,
+            'success_rate':success_rate,
+            'date': '2019-10'
+        }
+        dic_list.append(dic)
+    elif(str(i['date'][:7]) == '2019-11'):
+        success_rate = round(Success_num / total, 4)
+        success_rate = str(success_rate * 100) + '%'
+        dic = {
+            'total':total,
+            'Success_num':Success_num,
+            'failure_num':failure_num,
+            'success_rate':success_rate,
+            'date': '2019-11'
+        }
+        dic_list.append(dic)
+    elif(str(i['date'][:7]) == '2019-12'):
+        success_rate = round(Success_num / total, 4)
+        success_rate = str(success_rate * 100) + '%'
+        dic = {
+            'total':total,
+            'Success_num':Success_num,
+            'failure_num':failure_num,
+            'success_rate':success_rate,
+            'date': '2019-12'
+        }
+
+        dic_list.append(dic)
+    print total
+    return dic_list
