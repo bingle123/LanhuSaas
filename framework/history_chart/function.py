@@ -4,7 +4,7 @@ from __future__ import division
 from gatherDataHistory.models import TDGatherHistory
 from logmanagement.models import *
 from django.core.paginator import *
-
+from db_connection.function import get_db
 from monitor_item.models import Scene_monitor, Monitor
 from system_config.function import *
 from notification.models import *
@@ -492,22 +492,24 @@ def select_scene_operation():
         #初始化
         failed_num = 0
         scenes = []
-        scenes_list = Scene.objects.filter(Q(scene_creator_time__lt=i))
-        scenes_list2 = Scene.objects.filter(Q(scene_creator_time__icontains=i))
-        scenes_list=scenes_list|scenes_list2
+        temp = str(i)+' 23:59:59'
+        sql = "SELECT * from tb_monitor_scene where scene_creator_time < '" + temp + "'"
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(sql)
+        scenes_list = cursor.fetchall()
         for j in scenes_list:
-            scenes.append(j.id)
+            scenes.append(j[0])
             flag = 1
             flag2 = 0
             #判断是否为交易日
-            scene_area_id = j.scene_area
+            scene_area_id = j[8]
             if check_jobday(scene_area_id,i):
                 flag2 = 1
             #获取场景所对应的所有监控项id
-            items = Scene_monitor.objects.filter(scene_id=j.id)
+            items = Scene_monitor.objects.filter(scene_id=j[0])
             #判断每个监控项的运行结果是成功还是失败
             for k in items:
-                print k.item_id
                 item = Monitor.objects.get(id = k.item_id)
                 if u'基本单元类型' == item.monitor_type:
                     if 'sql' == item.gather_params:
@@ -571,8 +573,13 @@ def select_scene_operation():
         success_rate = round(success_num/scene_num,4)
         success_rate = str(success_rate*100)+'%'
         #获取告警数目
-        alert = TdAlertLog.objects.filter(Q(alert_time__icontains= i))
-        alert_num = len(alert)
+        temp2 = str(i) + '%'
+        sql2 = "SELECT count(*) from td_alert_log WHERE alert_time like " + "'"+ temp2 + "'"
+        cursor = db.cursor()
+        cursor.execute(sql2)
+        alert_num = cursor.fetchall()[0][0]
+        #alert = TdAlertLog.objects.filter(Q(alert_time__icontains= i))
+        #alert_num = len(alert)
         dict = {
             'date':str(i),
             'scene_num':scene_num,
