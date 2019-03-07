@@ -468,6 +468,7 @@ def select_scene_operation():
     for i in date_info:
         #初始化
         failed_num = 0
+        scene_num = 0
         scenes = []
         temp = str(i)+' 23:59:59'
         sql = "SELECT * from tb_monitor_scene where scene_creator_time < '" + temp + "'"
@@ -478,77 +479,76 @@ def select_scene_operation():
         for j in scenes_list:
             scenes.append(j[0])
             flag = 1
-            flag2 = 0
-            #判断是否为交易日
+            #判断是否为本场景是否在交易日
             scene_area_id = j[8]
             if check_jobday(scene_area_id,i):
-                flag2 = 1
-            #获取场景所对应的所有监控项id
-            items = Scene_monitor.objects.filter(scene_id=j[0])
-            #判断每个监控项的运行结果是成功还是失败
-            for k in items:
-                item = Monitor.objects.get(id = k.item_id)
-                if u'基本单元类型' == item.monitor_type:
-                    if 'sql' == item.gather_params:
-                        temp = TDGatherData.objects.get(item_id=item.id,data_key='DB_CONNECTION')
+                #获取场景所对应的所有监控项id
+                items = Scene_monitor.objects.filter(scene_id=j[0])
+                #判断每个监控项的运行结果是成功还是失败
+                for k in items:
+                    item = Monitor.objects.get(id = k.item_id)
+                    if u'基本单元类型' == item.monitor_type:
+                        if 'sql' == item.gather_params:
+                            temp = TDGatherData.objects.get(item_id=item.id,data_key='DB_CONNECTION')
+                            if temp.gather_time.strftime("%Y-%m-%d") == i:
+                                if temp.gather_error_log:
+                                    flag = 0
+                            else:
+                                temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='DB_CONNECTION').last()
+                                if temp.gather_error_log:
+                                    flag = 0
+                        if 'file' == item.gather_params:
+                            temp = TDGatherData.objects.get(item_id=item.id,data_key='FILE_EXIST')
+                            if temp.gather_time.strftime("%Y-%m-%d") == i:
+                                if temp.gather_error_log:
+                                    flag = 0
+                            else:
+                                temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='FILE_EXIST').last()
+                                if temp.gather_error_log:
+                                    flag = 0
+                        if 'interface' == item.gather_params:
+                            temp = TDGatherData.objects.get(item_id=item.id,data_key='URL_CONNECTION')
+                            if temp.gather_time.strftime("%Y-%m-%d") == i:
+                                if temp.gather_error_log:
+                                    flag = 0
+                            else:
+                                temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='URL_CONNECTION').last()
+                                if temp.gather_error_log:
+                                    flag = 0
+                    if u'作业单元类型' == item.monitor_type:
+                        temp = TDGatherData.objects.get(item_id=item.id)
                         if temp.gather_time.strftime("%Y-%m-%d") == i:
                             if temp.gather_error_log:
                                 flag = 0
                         else:
-                            temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='DB_CONNECTION').last()
+                            temp = TDGatherHistory.objects.filter(item_id=item.id).last()
                             if temp.gather_error_log:
                                 flag = 0
-                    if 'file' == item.gather_params:
-                        temp = TDGatherData.objects.get(item_id=item.id,data_key='FILE_EXIST')
+                    if u'流程单元类型' == item.monitor_type:
+                        temp = TDGatherHistory.objects.filter(item_id=item.id)
+                        for l in temp:
+                            if l.gather_error_log:
+                                flag = 0
+                                break
+                    if u'图表单元类型' == item.monitor_type:
+                        temp = TDGatherData.objects.get(item_id=item.id, data_key='DB_CONNECTION')
                         if temp.gather_time.strftime("%Y-%m-%d") == i:
                             if temp.gather_error_log:
                                 flag = 0
                         else:
-                            temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='FILE_EXIST').last()
+                            temp = TDGatherHistory.objects.filter(item_id=item.id, data_key='DB_CONNECTION').last()
                             if temp.gather_error_log:
                                 flag = 0
-                    if 'interface' == item.gather_params:
-                        temp = TDGatherData.objects.get(item_id=item.id,data_key='URL_CONNECTION')
-                        if temp.gather_time.strftime("%Y-%m-%d") == i:
-                            if temp.gather_error_log:
-                                flag = 0
-                        else:
-                            temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='URL_CONNECTION').last()
-                            if temp.gather_error_log:
-                                flag = 0
-                if u'作业单元类型' == item.monitor_type:
-                    temp = TDGatherData.objects.get(item_id=item.id)
-                    if temp.gather_time.strftime("%Y-%m-%d") == i:
-                        if temp.gather_error_log:
-                            flag = 0
-                    else:
-                        temp = TDGatherHistory.objects.filter(item_id=item.id).last()
-                        if temp.gather_error_log:
-                            flag = 0
-                if u'流程单元类型' == item.monitor_type:
-                    temp = TDGatherHistory.objects.filter(item_id=item.id)
-                    for l in temp:
-                        if l.gather_error_log:
-                            flag = 0
-                            break
-                if u'图表单元类型' == item.monitor_type:
-                    temp = TDGatherData.objects.get(item_id=item.id, data_key='DB_CONNECTION')
-                    if temp.gather_time.strftime("%Y-%m-%d") == i:
-                        if temp.gather_error_log:
-                            flag = 0
-                    else:
-                        temp = TDGatherHistory.objects.filter(item_id=item.id, data_key='DB_CONNECTION').last()
-                        if temp.gather_error_log:
-                            flag = 0
-            if flag == 0:
-                failed_num += 1
-        #场景总数
-        scene_num = len(scenes)
+                if flag == 0:
+                    failed_num += 1
+                #场景总数
+                scene_num += 1
         #成功数
         success_num = scene_num - failed_num
         #成功率
-        success_rate = round(success_num/scene_num,4)
-        success_rate = str(success_rate*100)+'%'
+        if scene_num != 0:
+            success_rate = round(success_num/scene_num,4)
+            success_rate = str(success_rate*100)+'%'
         #获取告警数目
         temp2 = str(i) + '%'
         sql2 = "SELECT count(*) from td_alert_log WHERE alert_time like " + "'"+ temp2 + "'"
@@ -566,7 +566,7 @@ def select_scene_operation():
             'alert_num':alert_num
         }
         #非交易日剔除
-        if flag2:
+        if scene_num != 0:
             res_list.append(dict)
     return  res_list
 
