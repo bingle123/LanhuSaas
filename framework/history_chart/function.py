@@ -280,7 +280,6 @@ def about_select(request):
 
 def about_search(request):
     res1 = json.loads(request.body)
-    print res1
     limit = res1['limit']
     page = res1['page']
     search = res1['search'].strip()
@@ -332,7 +331,7 @@ def about_search(request):
     res2 = tools.success_result(res_list2)
     return res2
 
-#场景对比分析
+#别动
 def select_scenes(request):
     scenes = Scene.objects.all()
     list_data = list()
@@ -345,7 +344,7 @@ def select_scenes(request):
         list_data.append(dic_data)
     return tools.success_result(list_data)
 
-# 封装方法
+#封装方法，别动
 def getPant_list(scene_list,d_data,all_itemid,item_len):
     last_list = []
     AllList = []
@@ -429,14 +428,10 @@ def selectScenes_ById(request):
                     pass
     #得到的
     scene_list_len = scene_list.__len__()
-
     #查到的总天数
     listCount_date = scene_list_len/item_len
-
     #时间间隔数
-    Alldays = (datetime.strptime(e_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(b_time, "%Y-%m-%d %H:%M:%S")).days
-    print Alldays
-
+    Alldays = (datetime.strptime(e_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(b_time, "%Y-%m-%d %H:%M:%S")).days\
     #间隔天数小于3不查，大于3但是查到的有效天数小于3也不要
     if Alldays < 3:
         return tools.success_result(Alldays)
@@ -445,6 +440,7 @@ def selectScenes_ById(request):
             return tools.success_result(Alldays)
         #有效天大于3天小于7天，取所有天数
         elif listCount_date >= 3 and listCount_date <=7:
+            print  getPant_list(scene_list, d_data, all_itemid, item_len)
             return getPant_list(scene_list, d_data, all_itemid, item_len)
         #有效期大于7天，取前7天，splen为取数组中的前7天个数
         else:
@@ -637,5 +633,3 @@ def monthly_select(request):
     total = 0
     for i in res:
         total += i['scene_num']
-    print total
-    print res
