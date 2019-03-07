@@ -18,7 +18,7 @@ from datetime import datetime
 import pytz
 from position.models import Localuser
 from market_day.models import Area
-from market_day.function import tran_time_china,tran_china_time_other
+from market_day.function import tran_time_china,tran_china_time_other,check_jobday
 
 def monitor_show(request):
     monitor = Scene.objects.all()
@@ -48,13 +48,13 @@ def monitor_show(request):
 
 
 def addSence(request):
-    # try:
+    try:
         res = request.body
         senceModel = json.loads (res)
         starttime=senceModel['data']["scene_startTime"]
         endtime=senceModel['data']["scene_endTime"]
         temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
-        timezone = Area.objects.get(id=senceModel['data']['scene_area']).timezone
+        timezone = Area.objects.get(id=senceModel['data']['area']).timezone
         starthour,startmin = tran_time_china(temp_date, timezone=timezone)
         starttime=starthour+":"+startmin
         temp_date = datetime(2019, 1, 1, int(endtime.split(':')[0]), int(endtime.split(':')[-1]), 0)
@@ -65,7 +65,7 @@ def addSence(request):
             "scene_startTime":starttime ,
             "scene_endTime": endtime,
             "scene_creator": "admin",
-            "scene_area":senceModel['data']['scene_area']
+            "scene_area":senceModel['data']['area']
         }
         Scene.objects.create (**senceModel2)
         id = Scene.objects.last ()
@@ -87,11 +87,11 @@ def addSence(request):
             Scene_monitor.objects.create (**monitor_data)
         info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
-    # except Exception as e:
-    #     info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-    #                           get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    # add_log(info)
-        return None
+    except Exception as e:
+        info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    add_log(info)
+    return None
 
 
 def select_table(request):
@@ -148,7 +148,7 @@ def editSence(request):
         starttime = model['data']["scene_startTime"]
         endtime = model['data']["scene_endTime"]
         temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
-        timezone = Area.objects.get(id=model['data']['scene_area']).timezone
+        timezone = Area.objects.get(id=model['data']['area']).timezone
         starthour, startmin = tran_time_china(temp_date, timezone=timezone)
         starttime = starthour + ":" + startmin
         temp_date = datetime(2019, 1, 1, int(endtime.split(':')[0]), int(endtime.split(':')[-1]), 0)
@@ -159,7 +159,7 @@ def editSence(request):
             "scene_startTime": starttime,
             "scene_endTime": endtime,
             "scene_editor": "admin",
-            "scene_area": model['data']['scene_area']
+            "scene_area": model['data']['area']
         }
         Scene.objects.filter (id=model['data']['id']).update (**senceModel2)
         info = make_log_info (u'编辑场景', u'业务日志', u'Scene', sys._getframe ().f_code.co_name,
@@ -447,14 +447,16 @@ def get_scenes(user_name,start,end):
     for z in scenes:
         # 场景
         temp_scene = Scene.objects.get(id=z)
+        flag=True
         if start=='' and end=='':
             id=temp_scene.scene_area
             timezone = Area.objects.get(id=id).timezone
             tz = pytz.timezone(timezone)
             end = datetime.now(tz).strftime('%H:%M:%S')
             start=end
+            flag=check_jobday(id)
         # 判断系统时间是否在轮播时间
-        if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
+        if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start and flag:
             # 初始化
             base_list = []
             chart_list = []

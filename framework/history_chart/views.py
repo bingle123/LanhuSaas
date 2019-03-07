@@ -42,8 +42,18 @@ def select_scenes(request):
 
 def selectScenes_ById(request):
     res = function.selectScenes_ById(request)
+    print res
     return render_json(res)
 
 def select_scene_operation(request):
     res = function.operation_page(request)
+    return render_json(res)
+
+def monthly_select(request):
+    res = function.monthly_select(request)
+    return render_json(res)
+
+
+def get_week(request):
+    res = function.get_week(request)
     return render_json(res)

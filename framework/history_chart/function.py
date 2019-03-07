@@ -4,7 +4,7 @@ from __future__ import division
 from gatherDataHistory.models import TDGatherHistory
 from logmanagement.models import *
 from django.core.paginator import *
-
+from db_connection.function import get_db
 from monitor_item.models import Scene_monitor, Monitor
 from system_config.function import *
 from notification.models import *
@@ -65,7 +65,6 @@ def select_all_rules(request):
                    "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
                    "WHERE e.item_id = f.item_id ORDER BY e.scene_name")
     res = cursor.fetchall()
-    print res
     p = Paginator(res, limit)
     count = p.page_range
     pages = count
@@ -346,36 +345,57 @@ def select_scenes(request):
         list_data.append(dic_data)
     return tools.success_result(list_data)
 
+# 封装方法
+def getPant_list(scene_list,d_data,all_itemid,item_len):
+    last_list = []
+    AllList = []
+    new_AllList = []
+    for s in scene_list:
+        AllList.append(str(s[0]).split(' ')[0])
+    for All in AllList:
+        if All not in new_AllList:
+            new_AllList.append(All)
+    for l in new_AllList:
+        success_items = 0
+        failed_items = 0
+        alertNums = 0
+        for x in d_data:
+            if str(x).split(' ')[0] == l:
+                failed_items += 1
+        success_items = item_len - failed_items
 
-#计算天数
-def Caltime(date1,date2):
-
-    #%Y-%m-%d为日期格式，其中的-可以用其他代替或者不写，但是要统一，同理后面的时分秒也一样；可以只计算日期，不计算时间。
-    date1=time.strptime(date1,"%Y-%m-%d %H:%M:%S")
-    date2=time.strptime(date2,"%Y-%m-%d %H:%M:%S")
-    # date1=time.strptime(date1,"%Y-%m-%d")
-    # date2=time.strptime(date2,"%Y-%m-%d")
-    #根据上面需要计算日期还是日期时间，来确定需要几个数组段。下标0表示年，小标1表示月，依次类推...
-    date1=datetime.datetime(date1[0],date1[1],date1[2],date1[3],date1[4],date1[5])
-    date2=datetime.datetime(date2[0],date2[1],date2[2],date2[3],date2[4],date2[5])
-    # date1=datetime.datetime(date1[0],date1[1],date1[2])
-    # date2=datetime.datetime(date2[0],date2[1],date2[2])
-    #返回两个变量相差的值，就是相差天数
-    return date2-date1
-
+        for i in all_itemid:
+            alog = TdAlertLog.objects.filter(item_id=i)
+            for al in alog:
+                alertlog = model_to_dict(al)
+                alertlog['alert_time'] = al.alert_time
+                if str(alertlog['alert_time']).split(' ')[0] ==l:
+                    alertNums +=1
+        persent = (success_items/item_len) *100
+        dic_data = {
+            'timedata':l,
+            'success_items':success_items,
+            'failed_items':failed_items,
+            'itemNums':item_len,
+            'alertNums':alertNums,
+            'succeess_persent':persent,
+        }
+        last_list.append(dic_data)
+    return tools.success_result(last_list)
+#场景对比分析
 def selectScenes_ById(request):
     res = json.loads(request.body)
     scene = Scene.objects.get(id = res['id'])
     #根据id查监控项个数
     sm = Scene_monitor.objects.filter(scene_id=res['id'])
     item_len = sm.__len__()
+    #获取开始结束时间
     b_time = res['dataTime'][0]
     e_time = res['dataTime'][1]
-    itemNums = 0
-    success_items = 0
-    failed_items = 0
 
+    #根据开始结束时间查询单个场景下所有监控项每一天最后一个采集到的数据
     all_itemid = []
+    #所有监控项
     str1 = ""
     for i in sm:
         all_itemid.append(model_to_dict(i)['item_id'])
@@ -384,7 +404,6 @@ def selectScenes_ById(request):
             str1 = str(index)+","
         else:
             str1 += str(index)
-
     sql = "SELECT * from (select max(a.gather_time) AS mtime,a.item_id FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx,tt.gather_time,tt.gather_error_log,tt.item_id	FROM td_gather_history tt WHERE	item_id IN ("+str1+")) AS t WHERE   gather_time BETWEEN '"+b_time+"'  AND '"+e_time+"' ORDER BY item_id,gather_time) a	group by a.item_id,a.xx)  as m ORDER BY m.mtime"
 
     DATABASES = settings_development.DATABASES['default']
@@ -395,7 +414,19 @@ def selectScenes_ById(request):
     res1 = cursor.fetchall()
     scene_list = []
     scene_list = list(res1)
-
+    d_data = []
+    h1_new = None
+    for i in scene_list:
+        h = TDGatherHistory.objects.filter(item_id=i[1])
+        for th in h:
+            h1 = model_to_dict(th)
+            h1['gather_time'] = th.gather_time
+            if h1['gather_time'] == i[0]:
+                h1_new = h1
+                if (h1_new['gather_error_log'] != '') and (h1_new['gather_error_log'] != None):
+                    d_data.append(i[0])
+                else:
+                    pass
     #得到的
     scene_list_len = scene_list.__len__()
 
@@ -404,53 +435,26 @@ def selectScenes_ById(request):
 
     #时间间隔数
     Alldays = (datetime.strptime(e_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(b_time, "%Y-%m-%d %H:%M:%S")).days
+    print Alldays
 
-
+    #间隔天数小于3不查，大于3但是查到的有效天数小于3也不要
     if Alldays < 3:
-        return tools.error_result(Alldays)
-    elif Alldays >=3 and Alldays<=7:
-        if listCount_date < 3:
-            return tools.error_result(Alldays)
-        else:
-            print 1
+        return tools.success_result(Alldays)
     else:
         if listCount_date < 3:
-            return tools.error_result(Alldays)
+            return tools.success_result(Alldays)
+        #有效天大于3天小于7天，取所有天数
         elif listCount_date >= 3 and listCount_date <=7:
-            # print scene_list
-            alllist = []
-            for s in scene_list:
-                dic_data={
-                    'timedate':str(s[0]),
-                    'id':all_itemid
-                }
-                alllist.append(dic_data)
-            print alllist
+            return getPant_list(scene_list, d_data, all_itemid, item_len)
+        #有效期大于7天，取前7天，splen为取数组中的前7天个数
         else:
             splen = item_len*7
-            print scene_list[:splen]
+            scene_list = scene_list[:splen]
+            return getPant_list(scene_list,d_data,all_itemid,item_len)
 
 
 
-
-
-
-
-
-
-    # dic_data = {
-    #     'compare_date':'',
-    #     'scene_startTime': model_to_dict(scene)['scene_startTime'],
-    #     'scene_endTime': model_to_dict(scene)['scene_endTime'],
-    #     'itemNums':itemNums,
-    #     'count_time':'',
-    #     'success_items':'',
-    #     'success_percent':'',
-    #     'failed_percent':'',
-    #     'alertNums':'',
-    # }
-
-
+#场景运行情况
 def select_scene_operation():
     #初始化
     res_list = []
@@ -470,22 +474,24 @@ def select_scene_operation():
         #初始化
         failed_num = 0
         scenes = []
-        scenes_list = Scene.objects.filter(Q(scene_creator_time__lt=i))
-        scenes_list2 = Scene.objects.filter(Q(scene_creator_time__icontains=i))
-        scenes_list=scenes_list|scenes_list2
+        temp = str(i)+' 23:59:59'
+        sql = "SELECT * from tb_monitor_scene where scene_creator_time < '" + temp + "'"
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(sql)
+        scenes_list = cursor.fetchall()
         for j in scenes_list:
-            scenes.append(j.id)
+            scenes.append(j[0])
             flag = 1
             flag2 = 0
             #判断是否为交易日
-            scene_area_id = j.scene_area
+            scene_area_id = j[8]
             if check_jobday(scene_area_id,i):
                 flag2 = 1
             #获取场景所对应的所有监控项id
-            items = Scene_monitor.objects.filter(scene_id=j.id)
+            items = Scene_monitor.objects.filter(scene_id=j[0])
             #判断每个监控项的运行结果是成功还是失败
             for k in items:
-                print k.item_id
                 item = Monitor.objects.get(id = k.item_id)
                 if u'基本单元类型' == item.monitor_type:
                     if 'sql' == item.gather_params:
@@ -549,8 +555,13 @@ def select_scene_operation():
         success_rate = round(success_num/scene_num,4)
         success_rate = str(success_rate*100)+'%'
         #获取告警数目
-        alert = TdAlertLog.objects.filter(Q(alert_time__icontains= i))
-        alert_num = len(alert)
+        temp2 = str(i) + '%'
+        sql2 = "SELECT count(*) from td_alert_log WHERE alert_time like " + "'"+ temp2 + "'"
+        cursor = db.cursor()
+        cursor.execute(sql2)
+        alert_num = cursor.fetchall()[0][0]
+        #alert = TdAlertLog.objects.filter(Q(alert_time__icontains= i))
+        #alert_num = len(alert)
         dict = {
             'date':str(i),
             'scene_num':scene_num,
@@ -596,3 +607,35 @@ def operation_page(request):
         x = dict(x, **temp_dict)
         res_list.append(x)
     return res_list
+
+#周运行情况
+def get_week(request):
+    scene_operation = select_scene_operation()
+    res = json.loads(request.body)
+    #初始化
+    days = []
+    res_list = []
+    #获取一周的第一天
+    res['date'] = str(res['date'])[:10]
+    temp = datetime.strptime(res['date'], "%Y-%m-%d")
+    date = datetime.date(temp)
+    days.append(date)
+    #加6天
+    oneday = timedelta(days=1)
+    for i in range(6):
+        date += oneday
+        days.append(date)
+    for j in days:
+        for k in scene_operation:
+            if str(j) == k['date']:
+                res_list.append(k)
+    return res_list
+
+
+def monthly_select(request):
+    res = select_scene_operation()
+    total = 0
+    for i in res:
+        total += i['scene_num']
+    print total
+    print res
