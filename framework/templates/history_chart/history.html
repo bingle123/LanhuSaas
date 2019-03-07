@@ -202,6 +202,21 @@
                 </div>
 
                 <div id="table10" style="display:none">
+                        <div class="container">
+                            <el-col :span="5" style="margin-top: 5px">
+                                <div class="block">
+                                    <span class="demonstration">选择周</span>
+                                    <el-date-picker
+                                      v-model="weeks"
+                                      type="week"
+                                      format="yyyy 第 WW 周"
+                                      placeholder="选择周">
+                                    </el-date-picker>
+                                </div>
+                            </el-col>
+                            <el-col :span="3" style="margin-top: 5px">
+                                <el-button icon="el-icon-search" circle  v-on:click="get_week"></el-button>
+                            </el-col>
                      <el-table :data="sceneOperationRuleTableData" style="width: 100%;margin-top: 20px">
                          <el-table-column prop="date" label="时间" style="width: 15%" align="center">
                          </el-table-column>
@@ -219,6 +234,30 @@
                      <el-pagination :page-count="sceneOperationCount" background layout="prev, pager, next" style="float:right"
                                @current-change="sceneOperationpage"></el-pagination>
                 </div>
+
+                     <!--<el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
+                               @current-change="sceneOperationTableData"></el-pagination>
+                          -->
+                    </div>
+                 <div id="table4" style="display:none">
+                     <el-table :data="monthly_operationTableData" style="width: 100%;margin-top: 20px">
+                         <el-table-column prop="date" label="统计日期" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="scene_num" label="场景数" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="success_num" label=运行成功数 style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="success_rate" label="运行成功率" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="failed_num" label="执行失败数" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center">
+                         </el-table-column>
+                     </el-table>
+                     <el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
+                                   style="float:right"
+                                   @current-change=""></el-pagination>
+                    </div>
             </div>
         </el-card>
     </div>
@@ -257,6 +296,9 @@ let vm = new Vue({
             qnmb: [],
             dayData:[],
             dayDataCount:1,
+            monthly_operation_statistics:'',
+            monthly_operationTableData:'',
+            weeks:'',                                    //运行情况周数查询
         },
         methods: {
             show() {
@@ -306,6 +348,18 @@ let vm = new Vue({
                     vm.aboutTableDate = res.data.results;
                     vm.aboutRulesCount = res.data.results[0].pages
                })
+                 axios({
+                   method:'post',
+                   url:'${SITE_URL}history_chart/monthly_select',
+                   data:{
+                        page: vm.page,
+                        limit: 10
+                   }
+               }).then(function (res) {
+                    vm.monthly_operationTableData = res.data.results;
+                    vm.aboutRulesCount = res.data.results[0].pages
+               })
+
             },
 
             current_change(value){
@@ -373,6 +427,16 @@ let vm = new Vue({
 
            },
 
+            //选择场景
+            chose_scenes(value) {
+                vm.Cscene = value.sname;
+                vm.Cscene_id = value.id;
+            },
+            //选择日期
+            sceneTChang(value){
+                vm.scene_time = value;
+            },
+
             //用于告警分页方法
              alertRulePageChange: function(value){
                 vm.page = value;
@@ -392,6 +456,7 @@ let vm = new Vue({
                     console.log(vm.alertRulesCount)
                 })
             },
+
 
             select_Keyword(){
                if(vm.log_type == 'log'){
@@ -414,36 +479,20 @@ let vm = new Vue({
                 }
             },
 
-
-            //先选场景
-            chose_scenes(value) {
-                vm.Cscene = value.sname;
-                vm.Cscene_id = value.id;
-            },
-            //再选日期
-            sceneTChang(value){
-                vm.scene_time = value;
-            },
-            //翻页方法
-            dayDataCount(){
-
-            },
-            //再初始化图
+            //初始化图
             draw_line(value) {
+                console.log(value)
+                console.log(typeof value)
                 let list_x = [];
                 let list_s = [];
                 let list_f = [];
                 let list_all = [];
-                let list_alert = [];
-                console.log(value);
-                for (var i=0;i<value.length;i++) {
-                    this.$set(list_x,i,value[i]['timedata']);
-                    this.$set(list_s,i,value[i]['success_items']);
-                    this.$set(list_f,i,value[i]['failed_items']);
-                    this.$set(list_all,i,value[i]['itemNums']);
-                    this.$set(list_alert,i,value[i]['alertNums']);
+                for (var i=0;i<value.length - 1;i++) {
+                    list_x = value[i]['timedata']
+                    list_s = value[i]['success_items'];
+                    list_f = value[i]['failed_items'];
+                    list_all = value[i]['itemNums'];
                 }
-                console.log(list_x,list_s,list_f,list_all,list_alert);
                 vm.myChart = echarts.init(document.getElementById('scene_et'));
                 option = {
                     title: {
@@ -455,7 +504,7 @@ let vm = new Vue({
                     },
                     legend: {
                         left: '25%',
-                        data: ['节点数', '运行成功场景单元数', '运行失败数','告警数']
+                        data: ['节点数', '运行成功场景单元数', '运行失败数']
                     },
                     grid: {
                         left: '3%',
@@ -471,6 +520,7 @@ let vm = new Vue({
                     yAxis: {
                         type: 'value',
                         min: 0,
+                        max: 30,
                     },
                     series: [
                         {
@@ -515,9 +565,9 @@ let vm = new Vue({
                             },
                         },
                         {
-                            name: '告警数',
+                            name: '告警数量',
                             type: 'line',
-                            data: list_alert,
+                            data: [4, 7, 13, 4, 5, 6, 6],
                             itemStyle: {
                                 normal: {
                                     color: "#3300FF",
@@ -531,7 +581,7 @@ let vm = new Vue({
                 };
                 vm.myChart.setOption(option);
             },
-            //最后画图，出表
+            //画图
             drawging_() {
                 if (vm.Cscene == '') {
                     alert('请选择场景');
@@ -561,6 +611,7 @@ let vm = new Vue({
                             $('#get_days,#scene_et').css('display','block');
                             }
                     })
+
                 }
             },
             //清空下拉框
@@ -586,31 +637,53 @@ let vm = new Vue({
                     vm.sceneOperationCount = res.data.message[0].pages;
                 })
             },
+            //用于告警分页方法
+            alertRulePageChange: function (value) {
+                vm.page = value;
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}history_chart/select_rules_pagination',
+                    data: {
+                        search: this.search,
+                        page: vm.page,
+                        keyword: vm.keyword,
+                        date_Choice: vm.date_Choice,
+                        limit: 10
+                    },
+                }).then((res) => {
+                    this.alertRuleTableData = res.data.results;
+                    vm.alertRulesCount = res.data.results[0].pages
+                    console.log(vm.alertRulesCount)
+                })
+            },
 
 
             change_type(value) {
                 if (value == 'log') {
                     $("#table1,#hide_k").css('display', 'block');
-                    $("#table3，#scene_compare,#table2,#hide_m,#table10").css('display', 'none');
+                    $("#table3，#scene_compare,#table2,#hide_m,#table10,#table4").css('display', 'none');
                     vm.get_null();
                 } else if (value == 'alert') {
                     $("#table2,#hide_k").css('display', 'block');
-                    $("#table3，#scene_compare,#table1,#hide_m,#table10").css('display', 'none');
+                    $("#table3，#scene_compare,#table1,#hide_m,#table10,#table4").css('display', 'none');
                     vm.get_null();
                 } else if (value == 'about_to_expire') {
-                    $("#table2,#table1,#scene_compare,#hide_m,#table10").css('display', 'none');
+                    $("#table2,#table1,#scene_compare,#hide_m,#table10,#table4").css('display', 'none');
                     $("#table3,#hide_k").css('display', 'block');
                     vm.get_null();
                 } else if (value == 'compare') {
-                    $("#table1,#table2,#table3,#hide_k,#table10,#scene_et,#get_days").css('display', 'none');
+                    $("#table1,#table2,#table3,#hide_k,#table10,#scene_et,#get_days,#table4").css('display', 'none');
                     $("#scene_compare,#hide_m").css('display', 'block');
                     axios.post('${SITE_URL}history_chart/select_scenes/').then((res) => {
                         vm.scenes_data = res.data.results
                     });
                 }else if(value == 'sceneOperation'){
-                   $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m").css('display','none');
+                   $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table4").css('display','none');
                    $('#table10').css('display','block');
                    vm.get_null();
+                }else if(value == 'monthly_operation_statistics'){
+                    $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table10").css('display','none');
+                   $('#table4').css('display','block');
                 }
             },
 
@@ -633,6 +706,25 @@ let vm = new Vue({
                         vm.Operatelog = res.data.message;
                         vm.page_count = res.data.message[0].page_count;
                     })
+                }
+            },
+
+            get_week(){
+                if (vm.weeks){
+                    let date = vm.weeks
+                    axios({
+                            method: 'post',
+                            url: '${SITE_URL}history_chart/get_week/',
+                            data: {
+                                date:date,
+                                page: vm.page,
+                                limit: 10
+                            },
+                    }).then((res) =>{
+                        vm.sceneOperationRuleTableData = res.data.message
+                    })
+                }else {
+                    vm.show()
                 }
             },
 

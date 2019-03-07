@@ -11,6 +11,7 @@ import celery_opt as co
 import json
 from datetime import datetime
 import pytz
+from shell_app.function import get_user
 
 
 def get_holiday(req,area):
@@ -167,6 +168,7 @@ def add_unit_task(add_dicx):
 
 #获取蓝鲸平台的头文件，并存入数据库
 def get_header_data(request):
+    role_id=get_user(request)['data']['role_id']
     h,flag=HeaderData.objects.get_or_create(id=1)
     headers = {
         "Content-Type": 'application/json;charset=utf-8',
@@ -182,8 +184,9 @@ def get_header_data(request):
         Cookie = "%s;%s=%s" % (Cookie, key, request.COOKIES[key]);
     headers["Cookie"] = Cookie;
     headers["X-CSRFToken"] = csrftoken;
-    h.header=json.dumps(headers, ensure_ascii=False)
-    h.save()
+    if role_id==1:
+        h.header=json.dumps(headers, ensure_ascii=False)
+        h.save()
 
 #添加一个新的日历地区
 def add_area(req):
