@@ -345,7 +345,43 @@ def select_scenes(request):
         list_data.append(dic_data)
     return tools.success_result(list_data)
 
+# 封装方法
+def getPant_list(scene_list,d_data,all_itemid,item_len):
+    last_list = []
+    AllList = []
+    new_AllList = []
+    for s in scene_list:
+        AllList.append(str(s[0]).split(' ')[0])
+    for All in AllList:
+        if All not in new_AllList:
+            new_AllList.append(All)
+    for l in new_AllList:
+        success_items = 0
+        failed_items = 0
+        alertNums = 0
+        for x in d_data:
+            if str(x).split(' ')[0] == l:
+                failed_items += 1
+        success_items = item_len - failed_items
 
+        for i in all_itemid:
+            alog = TdAlertLog.objects.filter(item_id=i)
+            for al in alog:
+                alertlog = model_to_dict(al)
+                alertlog['alert_time'] = al.alert_time
+                if str(alertlog['alert_time']).split(' ')[0] ==l:
+                    alertNums +=1
+        persent = (success_items/item_len) *100
+        dic_data = {
+            'timedata':l,
+            'success_items':success_items,
+            'failed_items':failed_items,
+            'itemNums':item_len,
+            'alertNums':alertNums,
+            'succeess_persent':persent,
+        }
+        last_list.append(dic_data)
+    return tools.success_result(last_list)
 #场景对比分析
 def selectScenes_ById(request):
     res = json.loads(request.body)
@@ -409,48 +445,12 @@ def selectScenes_ById(request):
             return tools.success_result(Alldays)
         #有效天大于3天小于7天，取所有天数
         elif listCount_date >= 3 and listCount_date <=7:
-            last_list = []
-            AllList = []
-            new_AllList = []
-            for s in scene_list:
-                AllList.append(str(s[0]).split(' ')[0])
-            for All in AllList:
-                if All not in new_AllList:
-                    new_AllList.append(All)
-            print new_AllList
-            for l in new_AllList:
-                success_items = 0
-                failed_items = 0
-                alertNums = 0
-                for x in d_data:
-                    if str(x).split(' ')[0] == l:
-                        failed_items += 1
-                success_items = sm.__len__() - failed_items
-
-                for i in all_itemid:
-                    alog = TdAlertLog.objects.filter(item_id=i)
-                    for al in alog:
-                        alertlog = model_to_dict(al)
-                        alertlog['alert_time'] = al.alert_time
-                        if str(alertlog['alert_time']).split(' ')[0] ==l:
-                            alertNums +=1
-                persent = (success_items/item_len) *100
-                dic_data = {
-                    'timedata':l,
-                    'success_items':success_items,
-                    'failed_items':failed_items,
-                    'itemNums':item_len,
-                    'alertNums':alertNums,
-                    'succeess_persent':persent,
-                }
-                last_list.append(dic_data)
-            return tools.success_result(last_list)
+            return getPant_list(scene_list, d_data, all_itemid, item_len)
         #有效期大于7天，取前7天，splen为取数组中的前7天个数
         else:
             splen = item_len*7
             scene_list = scene_list[:splen]
-
-
+            return getPant_list(scene_list,d_data,all_itemid,item_len)
 
 
 
