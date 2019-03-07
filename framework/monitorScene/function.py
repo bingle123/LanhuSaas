@@ -447,6 +447,7 @@ def get_scenes(user_name,start,end):
     for z in scenes:
         # 场景
         temp_scene = Scene.objects.get(id=z)
+        flag=True
         if start=='' and end=='':
             id=temp_scene.scene_area
             timezone = Area.objects.get(id=id).timezone
