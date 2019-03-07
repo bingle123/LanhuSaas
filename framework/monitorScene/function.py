@@ -18,7 +18,7 @@ from datetime import datetime
 import pytz
 from position.models import Localuser
 from market_day.models import Area
-from market_day.function import tran_time_china,tran_china_time_other
+from market_day.function import tran_time_china,tran_china_time_other,check_jobday
 
 def monitor_show(request):
     monitor = Scene.objects.all()
@@ -453,8 +453,9 @@ def get_scenes(user_name,start,end):
             tz = pytz.timezone(timezone)
             end = datetime.now(tz).strftime('%H:%M:%S')
             start=end
+            flag=check_jobday(id)
         # 判断系统时间是否在轮播时间
-        if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
+        if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start and flag:
             # 初始化
             base_list = []
             chart_list = []
