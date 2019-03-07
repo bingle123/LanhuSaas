@@ -54,7 +54,7 @@ def addSence(request):
         starttime=senceModel['data']["scene_startTime"]
         endtime=senceModel['data']["scene_endTime"]
         temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
-        timezone = Area.objects.get(id=senceModel['data']['scene_area']).timezone
+        timezone = Area.objects.get(id=senceModel['data']['area']).timezone
         starthour,startmin = tran_time_china(temp_date, timezone=timezone)
         starttime=starthour+":"+startmin
         temp_date = datetime(2019, 1, 1, int(endtime.split(':')[0]), int(endtime.split(':')[-1]), 0)
@@ -65,7 +65,7 @@ def addSence(request):
             "scene_startTime":starttime ,
             "scene_endTime": endtime,
             "scene_creator": "admin",
-            "scene_area":senceModel['data']['scene_area']
+            "scene_area":senceModel['data']['area']
         }
         Scene.objects.create (**senceModel2)
         id = Scene.objects.last ()
@@ -148,7 +148,7 @@ def editSence(request):
         starttime = model['data']["scene_startTime"]
         endtime = model['data']["scene_endTime"]
         temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
-        timezone = Area.objects.get(id=model['data']['scene_area']).timezone
+        timezone = Area.objects.get(id=model['data']['area']).timezone
         starthour, startmin = tran_time_china(temp_date, timezone=timezone)
         starttime = starthour + ":" + startmin
         temp_date = datetime(2019, 1, 1, int(endtime.split(':')[0]), int(endtime.split(':')[-1]), 0)
@@ -159,7 +159,7 @@ def editSence(request):
             "scene_startTime": starttime,
             "scene_endTime": endtime,
             "scene_editor": "admin",
-            "scene_area": model['data']['scene_area']
+            "scene_area": model['data']['area']
         }
         Scene.objects.filter (id=model['data']['id']).update (**senceModel2)
         info = make_log_info (u'编辑场景', u'业务日志', u'Scene', sys._getframe ().f_code.co_name,
