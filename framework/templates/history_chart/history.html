@@ -673,9 +673,7 @@ let vm = new Vue({
             },
 
             get_week(){
-                if (vm.weeks == ''){
-                    vm.show()
-                }else {
+                if (vm.weeks){
                     let date = vm.weeks
                     axios({
                             method: 'post',
@@ -688,6 +686,8 @@ let vm = new Vue({
                     }).then((res) =>{
                         vm.sceneOperationRuleTableData = res.data.message
                     })
+                }else {
+                    vm.show()
                 }
             },
 
