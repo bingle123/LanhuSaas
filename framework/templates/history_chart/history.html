@@ -69,7 +69,9 @@
                         <el-option label="日志查询" value="log"></el-option>
                         <el-option label="执行告警信息查询" value="alert"></el-option>
                         <el-option label="场景运行即将到期查询" value="about_to_expire"></el-option>
+                        <el-option label="场景运行情况统计" value="sceneOperation"></el-option>
                         <el-option label="场景运行比对" value="compare"></el-option>
+                        <el-option label="场景月运行情况统计分析" value="monthly_operation_statistics"></el-option>
                     </el-select>
                 </el-col>
 
@@ -197,6 +199,28 @@
                      <el-pagination :page-count="sceneOperationCount" background layout="prev, pager, next" style="float:right"
                                @current-change="sceneOperationpage"></el-pagination>
 
+                     <!--<el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
+                               @current-change="sceneOperationTableData"></el-pagination>
+                          -->
+                    </div>
+                 <div id="table4" style="display:none">
+                     <el-table :data="monthly_operationTableData" style="width: 100%;margin-top: 20px">
+                         <el-table-column prop="date" label="统计日期" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="scene_num" label="场景数" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="success_num" label=运行成功数 style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="success_rate" label="运行成功率" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="failed_num" label="执行失败数" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center">
+                         </el-table-column>
+                     </el-table>
+                     <el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
+                                   style="float:right"
+                                   @current-change=""></el-pagination>
                     </div>
             </div>
         </el-card>
@@ -234,6 +258,8 @@ let vm = new Vue({
             Cscene_id:'',
             scene_time: '',
             qnmb: [],
+            monthly_operation_statistics:'',
+            monthly_operationTableData:'',
         },
         methods: {
             show() {
@@ -283,6 +309,18 @@ let vm = new Vue({
                     vm.aboutTableDate = res.data.results;
                     vm.aboutRulesCount = res.data.results[0].pages
                })
+                 axios({
+                   method:'post',
+                   url:'${SITE_URL}history_chart/monthly_select',
+                   data:{
+                        page: vm.page,
+                        limit: 10
+                   }
+               }).then(function (res) {
+                    vm.monthly_operationTableData = res.data.results;
+                    vm.aboutRulesCount = res.data.results[0].pages
+               })
+
             },
 
             current_change(value){
@@ -531,7 +569,6 @@ let vm = new Vue({
                 vm.Cscene = '';
                 vm.scene_time = '';
             },
-
             //运行情况分页
             sceneOperationpage: function (value) {
                 vm.page = value;
@@ -547,31 +584,53 @@ let vm = new Vue({
                     vm.sceneOperationCount = res.data.message[0].pages;
                 })
             },
+            //用于告警分页方法
+            alertRulePageChange: function (value) {
+                vm.page = value;
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}history_chart/select_rules_pagination',
+                    data: {
+                        search: this.search,
+                        page: vm.page,
+                        keyword: vm.keyword,
+                        date_Choice: vm.date_Choice,
+                        limit: 10
+                    },
+                }).then((res) => {
+                    this.alertRuleTableData = res.data.results;
+                    vm.alertRulesCount = res.data.results[0].pages
+                    console.log(vm.alertRulesCount)
+                })
+            },
 
 
             change_type(value) {
                 if (value == 'log') {
                     $("#table1,#hide_k").css('display', 'block');
-                    $("#table3，#scene_compare,#table2,#hide_m,#table10").css('display', 'none');
+                    $("#table3，#scene_compare,#table2,#hide_m,#table10,#table4").css('display', 'none');
                     vm.get_null();
                 } else if (value == 'alert') {
                     $("#table2,#hide_k").css('display', 'block');
-                    $("#table3，#scene_compare,#table1,#hide_m,#table10").css('display', 'none');
+                    $("#table3，#scene_compare,#table1,#hide_m,#table10,#table4").css('display', 'none');
                     vm.get_null();
                 } else if (value == 'about_to_expire') {
-                    $("#table2,#table1,#scene_compare,#hide_m,#table10").css('display', 'none');
+                    $("#table2,#table1,#scene_compare,#hide_m,#table10,#table4").css('display', 'none');
                     $("#table3,#hide_k").css('display', 'block');
                     vm.get_null();
                 } else if (value == 'compare') {
-                    $("#table1,#table2,#table3,#hide_k,#table10").css('display', 'none');
+                    $("#table1,#table2,#table3,#hide_k,#table10,#table4").css('display', 'none');
                     $("#scene_compare,#hide_k").css('display', 'block');
                     axios.post('${SITE_URL}history_chart/select_scenes/').then((res) => {
                         vm.scenes_data = res.data.results
                     });
                 }else if(value == 'sceneOperation'){
-                   $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m").css('display','none');
+                   $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table4").css('display','none');
                    $('#table10').css('display','block');
                    vm.get_null();
+                }else if(value == 'monthly_operation_statistics'){
+                    $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table10").css('display','none');
+                   $('#table4').css('display','block');
                 }
             },
 

@@ -370,7 +370,9 @@ def selectScenes_ById(request):
     item_len = sm.__len__()
     b_time = res['dataTime'][0]
     e_time = res['dataTime'][1]
-
+    itemNums = 0
+    success_items = 0
+    failed_items = 0
 
     all_itemid = []
     str1 = ""
@@ -616,3 +618,12 @@ def operation_page(request):
         x = dict(x, **temp_dict)
         res_list.append(x)
     return res_list
+
+
+def monthly_select(request):
+    res = select_scene_operation()
+    total = 0
+    for i in res:
+        total += i['scene_num']
+    print total
+    print res
