@@ -21,6 +21,7 @@ urlpatterns = patterns(
     (r'^select_rules_pagination$', 'select_rules_pagination'),
     (r'^select_Keyword', 'select_Keyword'),
     (r'^select_scene_operation', 'select_scene_operation'),         #查询场景运行情况
+    (r'^get_week', 'get_week'),                                     #场景周运行情况
     (r'^about_select', 'about_select'),
     (r'^about_search', 'about_search'),
 

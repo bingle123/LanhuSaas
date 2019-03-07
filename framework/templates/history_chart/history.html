@@ -181,6 +181,21 @@
                 </div>
 
                 <div id="table10" style="display:none">
+                        <div class="container">
+                            <el-col :span="5" style="margin-top: 5px">
+                                <div class="block">
+                                    <span class="demonstration">选择周</span>
+                                    <el-date-picker
+                                      v-model="weeks"
+                                      type="week"
+                                      format="yyyy 第 WW 周"
+                                      placeholder="选择周">
+                                    </el-date-picker>
+                                </div>
+                            </el-col>
+                            <el-col :span="3" style="margin-top: 5px">
+                                <el-button icon="el-icon-search" circle  v-on:click="get_week"></el-button>
+                            </el-col>
                      <el-table :data="sceneOperationRuleTableData" style="width: 100%;margin-top: 20px">
                          <el-table-column prop="date" label="时间" style="width: 15%" align="center">
                          </el-table-column>
@@ -234,6 +249,7 @@ let vm = new Vue({
             Cscene: '',
             Cscene_id:'',
             scene_time: '',
+            weeks:'',                                    //运行情况周数查询
         },
         methods: {
             show() {
@@ -574,6 +590,25 @@ let vm = new Vue({
                     }).then(function (res) {
                         vm.Operatelog = res.data.message;
                         vm.page_count = res.data.message[0].page_count;
+                    })
+                }
+            },
+
+            get_week(){
+                if (vm.weeks == ''){
+                    vm.show()
+                }else {
+                    let date = vm.weeks
+                    axios({
+                            method: 'post',
+                            url: '${SITE_URL}history_chart/get_week/',
+                            data: {
+                                date:date,
+                                page: vm.page,
+                                limit: 10
+                            },
+                    }).then((res) =>{
+                        vm.sceneOperationRuleTableData = res.data.message
                     })
                 }
             },
