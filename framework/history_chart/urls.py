@@ -24,6 +24,7 @@ urlpatterns = patterns(
     (r'^get_week', 'get_week'),                                     #场景周运行情况
     (r'^about_select', 'about_select'),
     (r'^about_search', 'about_search'),
+    (r'^monthly_select', 'monthly_select'),
 
     (r'^select_scenes/$', 'select_scenes'),     #场景对比分析
     (r'^selectScenes_ById/$', 'selectScenes_ById'),  #选择场景比对

@@ -204,15 +204,11 @@
         }
     });
     vm.get_scenes()
-    setInterval(function () {
+    var interval = setInterval(function () {
         vm.get_scenes();
     },10000)
     $(function () {
         $(document).on("click", ".keepOn_yes", function (e) {
-            e.preventDefault();
-            $(this).parent().hide();
-        });
-        $(document).on("click", ".keepOn_no", function (e) {
             e.preventDefault();
             var id=$(this).parents('.flow_monitor').attr('type');
             axios({
@@ -224,6 +220,10 @@
             }).then(function (res) {
                 console.log(res);
             });
+            $(this).parent().hide();
+        });
+        $(document).on("click", ".keepOn_no", function (e) {
+            e.preventDefault();
             $(this).parent().hide();
         });
 
