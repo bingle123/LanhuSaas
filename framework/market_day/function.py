@@ -236,3 +236,16 @@ def tran_time_china(tempdate,timezone):
     # 使用astimezone得出时间
     time = local_us.astimezone(pytz.timezone(timezone))
     return str(time.hour),str(time.minute)
+
+#将中国时间转为不同的时区
+def tran_china_time_other(time,timezone):
+    print timezone
+    hour=time.hour
+    min=time.minute
+    tempdate=datetime(2019,1,2,int(hour),int(min),0)
+    timezone=Area.objects.get(id=timezone).timezone
+    central = pytz.timezone(timezone)
+    local_us = central.localize(tempdate)
+    # 使用astimezone得出时间
+    time = local_us.astimezone(pytz.timezone('Asia/Shanghai'))
+    return str(time.hour)+":"+str(time.minute)
