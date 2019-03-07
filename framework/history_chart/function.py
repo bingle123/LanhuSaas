@@ -576,3 +576,11 @@ def check_jobday(id,time):
         return True
     elif flag==2:
         return False
+
+def monthly_select(request):
+    res = select_scene_operation()
+    total = 0
+    for i in res:
+        total += i['scene_num']
+    print total
+    print res
