@@ -70,6 +70,7 @@
                         <el-option label="执行告警信息查询" value="alert"></el-option>
                         <el-option label="场景运行即将到期查询" value="about_to_expire"></el-option>
                         <el-option label="场景运行比对" value="compare"></el-option>
+                        <el-option label="场景月运行情况统计分析" value="monthly_operation_statistics"></el-option>
                     </el-select>
                 </el-col>
 
@@ -243,15 +244,15 @@
                      <el-table :data="monthly_operationTableData" style="width: 100%;margin-top: 20px">
                          <el-table-column prop="date" label="统计日期" style="width: 15%" align="center">
                          </el-table-column>
-                         <el-table-column prop="scene_num" label="场景数" style="width: 15%" align="center">
+                         <el-table-column prop="total" label="场景数" style="width: 15%" align="center">
                          </el-table-column>
-                         <el-table-column prop="success_num" label=运行成功数 style="width: 15%" align="center">
+                         <el-table-column prop="Success_num" label=运行成功数 style="width: 15%" align="center">
                          </el-table-column>
                          <el-table-column prop="success_rate" label="运行成功率" style="width: 15%" align="center">
                          </el-table-column>
-                         <el-table-column prop="failed_num" label="执行失败数" style="width: 15%" align="center">
+                         <el-table-column prop="failure_num" label="执行失败数" style="width: 15%" align="center">
                          </el-table-column>
-                         <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center">
+                         <el-table-column prop="failure_num" label="告警数量" style="width: 15%" align="center">
                          </el-table-column>
                      </el-table>
                      <el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
@@ -356,7 +357,7 @@ let vm = new Vue({
                         limit: 10
                    }
                }).then(function (res) {
-                    vm.monthly_operationTableData = res.data.results;
+                    vm.monthly_operationTableData = res.data.message;
                     vm.aboutRulesCount = res.data.results[0].pages
                })
 
