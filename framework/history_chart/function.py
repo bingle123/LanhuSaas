@@ -18,7 +18,7 @@ import time
 from datetime import datetime,date,timedelta
 from gatherData.models import TDGatherData
 from gatherDataHistory.models import TDGatherHistory
-from market_day.models import Area
+from market_day.models import Holiday
 
 def show_all(request):
     """
@@ -65,7 +65,6 @@ def select_all_rules(request):
                    "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
                    "WHERE e.item_id = f.item_id ORDER BY e.scene_name")
     res = cursor.fetchall()
-    print res
     p = Paginator(res, limit)
     count = p.page_range
     pages = count
@@ -371,9 +370,7 @@ def selectScenes_ById(request):
     item_len = sm.__len__()
     b_time = res['dataTime'][0]
     e_time = res['dataTime'][1]
-    itemNums = 0
-    success_items = 0
-    failed_items = 0
+
 
     all_itemid = []
     str1 = ""
@@ -384,6 +381,8 @@ def selectScenes_ById(request):
             str1 = str(index)+","
         else:
             str1 += str(index)
+    itemNums = all_itemid.__len__()
+
 
     sql = "SELECT * from (select max(a.gather_time) AS mtime,a.item_id FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx,tt.gather_time,tt.gather_error_log,tt.item_id	FROM td_gather_history tt WHERE	item_id IN ("+str1+")) AS t WHERE   gather_time BETWEEN '"+b_time+"'  AND '"+e_time+"' ORDER BY item_id,gather_time) a	group by a.item_id,a.xx)  as m ORDER BY m.mtime"
 
@@ -395,7 +394,14 @@ def selectScenes_ById(request):
     res1 = cursor.fetchall()
     scene_list = []
     scene_list = list(res1)
-
+    d_data = []
+    for i in scene_list:
+        h = TDGatherHistory.objects.get(gather_time=i[0],item_id=i[1])
+        if model_to_dict(h)['gather_error_log'] != '' and  model_to_dict(h)['gather_error_log'] != None:
+            d_data.append(i[0])
+        else:
+            pass
+    print d_data
     #得到的
     scene_list_len = scene_list.__len__()
 
@@ -412,20 +418,34 @@ def selectScenes_ById(request):
         if listCount_date < 3:
             return tools.error_result(Alldays)
         else:
-            print 1
+            print 'qnmlgb'
     else:
         if listCount_date < 3:
             return tools.error_result(Alldays)
         elif listCount_date >= 3 and listCount_date <=7:
-            # print scene_list
-            alllist = []
+            print 'laileladi'
+            last_list = []
+            AllList = []
             for s in scene_list:
-                dic_data={
-                    'timedate':str(s[0]),
-                    'id':all_itemid
+                AllList.append(str(s[0]).split(' ')[0])
+            AllList = list(set(AllList))
+            for l in AllList:
+                success_items = 0
+                failed_items = 0
+                itemNums = 0
+                for x in d_data:
+                    if str(x).split(' ')[0] == l:
+                        failed_items += 1
+                success_items = all_itemid.__len__() - failed_items
+                itemNums = all_itemid.__len__()
+                dic_data = {
+                    'timedata':l,
+                    'success_items':success_items,
+                    'failed_items':failed_items,
+                    'itemNums':itemNums,
                 }
-                alllist.append(dic_data)
-            print alllist
+                last_list.append(dic_data)
+            return tools.success_result(last_list)
         else:
             splen = item_len*7
             print scene_list[:splen]
@@ -476,14 +496,16 @@ def select_scene_operation(request):
         for j in scenes_list:
             scenes.append(j.id)
             flag = 1
+            flag2 = 0
             #判断是否为交易日
             scene_area_id = j.scene_area
-            # if check_jobday(scene_area_id, i):
-            #     pass
+            if check_jobday(scene_area_id,i):
+                flag2 = 1
             #获取场景所对应的所有监控项id
             items = Scene_monitor.objects.filter(scene_id=j.id)
             #判断每个监控项的运行结果是成功还是失败
             for k in items:
+                print k.item_id
                 item = Monitor.objects.get(id = k.item_id)
                 if u'基本单元类型' == item.monitor_type:
                     if 'sql' == item.gather_params:
@@ -557,13 +579,14 @@ def select_scene_operation(request):
             'failed_num':failed_num,
             'alert_num':alert_num
         }
-        res_list.append(dict)
+        #非交易日剔除
+        if flag2:
+            res_list.append(dict)
     return  res_list
 
-#判断是否为工作日
+#判断是否为交易日
 def check_jobday(id,time):
-    timezone=Area.objects.get(id=id).timezone
-    tz=pytz.timezone(timezone)
+    time=datetime(time.year,time.month,time.day)
     str_date=datetime.strftime(time,'%Y/%m/%d')
     day=str_date[:4] + u'/' + str(int(str_date[5:7])) + u'/' + str(int(str_date[8:10]))
     hs=Holiday.objects.filter(Q(day=day)&Q(area=id))
@@ -574,3 +597,22 @@ def check_jobday(id,time):
         return True
     elif flag==2:
         return False
+
+#运行情况分页
+def operation_page(request):
+    res = json.loads(request.body)
+    res_list = []
+    limit = res['limit']
+    page = res['page']
+    scene_operation = select_scene_operation()
+    p = Paginator(scene_operation, limit)
+    count = p.page_range
+    pages = count[-1]
+    current_page = p.page(page)
+    for x in current_page.object_list:
+        temp_dict = {
+            'page_count': pages
+        }
+        x = dict(x, **temp_dict)
+        res_list.append(x)
+    return res_list

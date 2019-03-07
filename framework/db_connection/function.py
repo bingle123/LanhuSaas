@@ -317,7 +317,7 @@ def selecthor2(request):
 #获取角色对应的菜单名和Url
 def get_user_muenu(request):
     cilent = tools.interface_param(request)
-    # requestuser = cilent.bk_login.get_user({})
+    # user = cilent.bk_login.get_user({})
     # bk_roleid = user['data']['bk_role']
     role_muenus = rm.objects.filter(roleid=1)
     temp_list = []
