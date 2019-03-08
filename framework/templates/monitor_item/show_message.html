@@ -33,6 +33,11 @@
         .el-table--border th {
             padding: 5px
         }
+        .newline{
+            word-wrap: break-word;
+            word-break: break-all;
+            overflow: hidden;
+        }
         .circle1{display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
         .circle2{display: inline-block;margin-left:5px;width:16px;height:16px;background-color:darkgreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
         .circle3{display: inline-block;margin-left:5px;width:16px;height:16px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
@@ -198,7 +203,7 @@
                             </div>
                             <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke; position: relative" id="text1">
                                 <!--<div id = "text2" style="position:absolute;left:230px;top:150px;"> -->
-                                <div id="text2" style="margin:auto;position:absolute;left:25%;top:50%;margin-left: -50px;margin-top:-50px;">
+                                <div id="text2" style="margin:auto;position:absolute;left:25%;top:25%;margin-left: -50px;margin-top:-50px;">
                                 </div>
                             </div>
                             <div style="padding: 0px 20%">
@@ -937,7 +942,7 @@
             sycontent(){
                 let tempcontents = vm.basic.contents
                 $("#text2").html("")
-                $("#text2").append("<div>"+tempcontents+"</div>")
+                $("#text2").append("<div class=\"newline\">"+tempcontents+"</div>")
                 if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
                     var temp1 = tempcontents.split("#");
                     var temp2=[];
@@ -1073,7 +1078,7 @@
                 }).then(function (res) {
                     let tempcontents2 = vm.basic.contents
                     $("#text2").html("")
-                    $("#text2").append("<div>"+tempcontents2+"</div>")
+                    $("#text2").append("<div class=\"newline\">"+tempcontents2+"</div>")
                     if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
                         var temp1 = tempcontents2.split("#");
                         var temp2=[];
@@ -2101,13 +2106,6 @@
                             {
                                 name: vm.person_count,
                                 type: 'bar',
-                                stack: 'data',
-                                data: barCount
-                            },
-                            {
-                                name: vm.person_count,
-                                type: 'bar',
-                                stack: 'data',
                                 data: barCount
                             },
                         ]

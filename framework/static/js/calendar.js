@@ -76,7 +76,7 @@ var vm = new Vue({
                         url:'/market_day/delone/',
                         data:{
                             'date':item.date,
-                            'timezone': vm.zone
+                            'area': vm.area
                         }
                     }).then(function (resp) {
                         vm.$message({
@@ -106,7 +106,7 @@ var vm = new Vue({
                         url:'/market_day/addone/',
                         data:{
                             'date':item.date,
-                            'timezone': vm.zone
+                            'area': vm.area
                         }
                     }).then(function (resp) {
                         vm.$message({
