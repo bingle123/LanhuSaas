@@ -49,7 +49,7 @@ def select_job(request):
     res = json.loads(request.body)
     limit = res['limit']
     page = res['page']
-    search = res['search']
+    search = res['search'].strip()
     res1 = search
     res_list = []
     tmp = JobInstance.objects.filter(id__gt=1)
