@@ -47,6 +47,7 @@ function show_chart_active(item_id,chart_type,height,width,drigging_id){
     var chartdata=[]
     $.get("/monitorScene/get_chart_data/"+item_id,function (res) {
         res=res.message
+        console.log(res)
        for(r in res){
            if(isNotANumber(res[r].values[0])){
                new_res[1]=res[r]
@@ -99,7 +100,7 @@ function show_chart(item_id,chartData,person_count,chart_type,height,width,drigg
         $('#'+drigging_id).css('width',width);
         if (chart_type == "饼图") {
             console.log(barCount,barX,chartData)
-            myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
+            myChart = echarts.init(document.getElementById(drigging_id), 'macarons');
             var legendData = [];
                     for(var i=0;i<chartData.length;i++){
                         legendData.push(chartData[i].name)
@@ -226,14 +227,29 @@ function show_chart(item_id,chartData,person_count,chart_type,height,width,drigg
             myChart.setOption(option);
         }
 }
-function base_monitor_active(item_id,font_size,height,width) {
+function base_monitor_active(item_id,font_size,height,width,content) {
+        var contents=content.split('#')
+        var count=(contents.length-1)/2
+        var con=[]
+        for(var i=0;i<count;i++){
+            var temp={
+                'key':contents[(i*2)],
+                'value':contents[(i*2+1)].split("=")[0]
+            }
+            con.push(temp)
+        }
+        console.log(con)
      $.get("/monitorScene/get_basic_data/"+item_id,function (res){
         var selector_id='basic'+item_id
         var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
          var content=''
         for(key in res){
             if(key!='DB_CONNECTION'&&key!='URL_CONNECTION'&&key!='FILE_EXIST'){
-                 content+='<div>'+key+':'+res[key]+'</div>'
+                for(var i=0;i<con.length;i++){
+                    if(con[i].value==key){
+                         content+='<div>'+con[i].key+':'+res[key]+'</div>'
+                    }
+                }
             }
         }
         var status=1
@@ -381,19 +397,19 @@ function base_monitor(item_id,font_size,height,width,content) {
                 if (i == flag2) {
                     $('[type='+selector_id+']').append(asd);
                     if (icon4 == 1) {
-                        $('[type='+selector_id+']').append(icon1[0])
+                        $('[type='+selector_id+']').append("<div style='display: inline-block'>"+icon1[0]+"</div>")
                         $('[type='+selector_id+']').append(circle1);
                     }
                     if (icon4 == 2) {
-                        $('[type='+selector_id+']').append(icon1[0])
+                        $('[type='+selector_id+']').append("<div style='display: inline-block'>"+icon1[0]+"</div>")
                         $('[type='+selector_id+']').append(circle2);
                     }
                     if (icon4 == 0) {
-                        $('[type='+selector_id+']').append(icon1[0])
+                        $('[type='+selector_id+']').append("<div style='display: inline-block'>"+icon1[0]+"</div>")
                         $('[type='+selector_id+']').append(circle4);
                     }
                     if (icon4 == -1 || icon4 == -2) {
-                        $('[type='+selector_id+']').append(icon1[0])
+                        $('[type='+selector_id+']').append("<div style='display: inline-block'>"+icon1[0]+"</div>")
                         $('[type='+selector_id+']').append(circle3);
                     }
                 } else {
@@ -521,7 +537,6 @@ function flow_monitor(value1,value2){
                         }
                         //显示流程单元中的预览图
                         $('#'+selector_id).dataflow({
-
                             el: '.tool', //流程拖动源
                             canvas: '#'+selector_canvas, //画布
                             arrowWidth: 8,

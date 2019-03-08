@@ -170,7 +170,7 @@
                        <el-input placeholder="请输入场景名称"  v-model="scene.scene_name" style="width: 30%"></el-input>
                     </el-form-item>
                     <el-form-item label="轮播日历">
-                        <el-select v-model="area" placeholder="请选择日历的地区">
+                        <el-select v-model="scene.area" placeholder="请选择日历的地区">
                             <el-option
                               v-for="item in areas"
                               :key="item.value"
@@ -196,7 +196,7 @@
                             </el-form-item>
                         </el-col>
                      </el-form-item>
-                    <el-form-item label="场景适用岗位" prop="pos_name">
+                    <el-form-item label="适用岗位" prop="pos_name">
                         <el-select  placeholder="请选择" v-model="scene.pos_name" >
                             <el-option v-for="item in pos" :label="item.pos_name" :value="item.id"></el-option>
                         </el-select>
@@ -229,7 +229,7 @@
                        <el-input placeholder="请输入场景名称" v-model="scene_edit.scene_name" style="width: 30%"></el-input>
                     </el-form-item>
                     <el-form-item label="轮播日历">
-                        <el-select v-model="area" placeholder="请选择日历的地区">
+                        <el-select v-model="scene_edit.area" placeholder="请选择日历的地区">
                             <el-option
                               v-for="item in areas"
                               :key="item.value"
@@ -256,7 +256,7 @@
                         </el-col>
                      </el-form-item>
                      </el-form-item>
-                    <el-form-item label="场景适用岗位"  prop="pos_name">
+                    <el-form-item label="适用岗位"  prop="pos_name">
                         <el-select  placeholder="请选择" v-model="scene_edit.pos_name" >
                             <el-option v-for="item in pos" :label="item.pos_name" :value="item.pos_name"></el-option>
                         </el-select>
@@ -293,7 +293,7 @@
                         </button>
                     </el-col>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="5">
                     <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245);position: relative">
                         <h2 class="monitor_title" style="line-height:48px;background:#283593;text-align: center;color: #ffffff">监控项</h2>
                         <el-col :span="24">
@@ -367,7 +367,7 @@
                     </div>
 
                 </el-col>
-                <el-col :span="18">
+                <el-col :span="19">
                     <div class="monitor_content" style="min-height: 600px;background: rgb(244, 244, 245)">
 
                     </div>
@@ -395,7 +395,6 @@
             search:'',//搜索框的值
             isAdd: 1,
             areas:[],
-            area:1,
             imgUrl: './static/1.png',
             chartData: {
                 columns: ['日期', '下单用户'],
@@ -422,12 +421,14 @@
                 scene_startTime:'',
                 pos_name:'',
                 scene_endTime:'',
+                area:1,
             },
             scene1: {                            //场景管理
                 scene_name: '', //场景名称
                 scene_startTime:'',
                 pos_name:'',
                 scene_endTime:'',
+                area:1,
             },
             scene_edit:{                       //编辑页面中的
                 id:'',
@@ -435,6 +436,7 @@
                 pos_name:'',//岗位
                  scene_startTime:'',
                 scene_endTime:'',
+                area:1,
             },
 
             rules: {
@@ -484,7 +486,6 @@
                                 url: '${SITE_URL}monitorScene/addSence/',
                                 data: {
                                     data: vm.scene,
-                                    scene_area:vm.area,
                                     monitor_data: vm.result_list
                                 }
                             }).then(function (res) {
@@ -497,7 +498,6 @@
                                 url: '${SITE_URL}monitorScene/editSence/',
                                 data: {
                                     data: vm.scene_edit,
-                                    scene_area:vm.area,
                                     monitor_data: vm.result_list
                                 }
                             }).then(function (res) {
@@ -573,6 +573,7 @@
                 vm.scene_edit.scene_startTime = row.scene_startTime
                 vm.scene_edit.scene_endTime = row.scene_endTime
                 vm.scene_edit.pos_name =  row.pos_name
+                vm.scene_edit.area=row.scene_area
                 this.isAdd = 3
                 vm.sen_position()
                 vm.monitore_edit_start(row.id)
@@ -965,11 +966,11 @@
         var e=window.event||e;
         var _x = e.clientX - x + offsetLeft+Math.abs(vm.multiple)*$(selector).width()*(vm.scale-1)/2;
         //event.clientX得到鼠标相对于客户端正文区域的偏移
-        //然后减去offsetX即得到当前推拽元素相对于当前窗口的X值
+        //然后减去offsetLeft即得到当前推拽元素相对于当前窗口的X值
         //（减去鼠标刚开始拖动的时候在当前窗口的偏移X）
         var _y = e.clientY - y + offsetTop+Math.abs(vm.multiple)*$(selector).height()*(vm.scale-1)/2;
         //event.clientY得到鼠标相对于客户端正文区域的偏移
-        //然后减去offsetX即得到当前推拽元素相对于当前窗口的Y值
+        //然后减去offsetTop即得到当前推拽元素相对于当前窗口的Y值
         //（减去鼠标刚开始拖动的时候在当前窗口的偏移Y）
         if(_x<0){
             _x=0+$(selector).width()*(vm.scale-1)/2;

@@ -18,15 +18,20 @@ from gatherData.models import TDGatherData
 import sys
 from logmanagement.function import add_log,make_log_info,get_active_user
 import datetime
+from market_day.models import HeaderData as hd
 
 
 def unit_show(request):
     try:
         res = json.loads(request.body)
+        #  个数
         limit = res['limit']
+        #  当前页面号
         page = res['page']
         unit = Monitor.objects.all()
+        # 进入分页函数进行分页，返回总页数和当前页数据
         page_data, base_page_count = tools.page_paging(unit,limit,page)
+        #  把返回的数据对象转为list
         res_list= tools.obt_dic(page_data,base_page_count)
         param = {
             'bk_username': 'admin',
@@ -35,8 +40,11 @@ def unit_show(request):
         param1 = {
             "bk_biz_id": 2,
         }
+        #  用user v2的方式调用接口
         client = tools.user_interface_param()
+        #  调用获取作业详情接口
         res = client.job.get_job_list(param)
+        #  调用获取标准运维模板详情接口
         res1 = client.sops.get_template_list(param1)
         if res.get('result'):
             job_list = res.get('data')
@@ -50,6 +58,7 @@ def unit_show(request):
             logger.error (u"请求流程模板失败：%s" % res.get ('message'))
         job = []
         flow = []
+        #  获取模板名称和ID
         for i in flow_list:
             dic2 = {
                 'flow_name': i['name'],
@@ -97,6 +106,7 @@ def select_unit(request):
 def delete_unit(request):
     try:
         res = json.loads(request.body)
+        #  根据前台传的来的id进行删除
         unit_id = res['unit_id']
         monitor_name=res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
@@ -113,104 +123,100 @@ def delete_unit(request):
 
 
 def add_unit(request):
-    # try:
-        res = json.loads(request.body)
-        cilent = tools.interface_param (request)
-        user = cilent.bk_login.get_user({})
-        add_dic = res['data']
-        add_flow_dic = res['flow']
-        monitor_type = res['monitor_type']
-        if res['monitor_type'] == 'first':
-            monitor_type = '基本单元类型'
-        if res['monitor_type'] == 'second':
-            monitor_type = '图表单元类型'
-        if res['monitor_type'] == 'third':
-            monitor_type = '作业单元类型'
-            add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
-            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
-        if res['monitor_type'] == 'fourth':
-            monitor_type = '流程单元类型'
-            add_dic['jion_id'] = res['flow']['jion_id']
-            add_dic['gather_params'] = add_dic['node_name']
-            add_dic.pop('node_name')
-            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
-            add_dic['params']=res['flow']['constants']
-            add_flow_dic['monitor_area']=res['data']['monitor_area']
-            start_list = []
-            for i in res['flow']['node_times']:
-                start_list.append(i['endtime'])
-                start_list.append(i['starttime'])
-            add_dic['start_time']=min(start_list)
-            add_dic['end_time'] =max(start_list)
-        add_dic['monitor_name'] = res['monitor_name']
-        add_dic['status'] = 0
-        add_dic['monitor_type'] = monitor_type
-        add_dic['creator'] = user['data']['bk_username']
-        add_dic['editor'] = user['data']['bk_username']
-        add_dic['monitor_area'] = res['monitor_area']
-        Monitor.objects.create(**add_dic)
-        if res['monitor_type'] == 'fourth':
-            function.add_unit_task(add_dicx=add_flow_dic)
-        else:
-            function.add_unit_task(add_dicx=add_dic)
-        result = tools.success_result(None)
-        info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
-    # except Exception as e:
-    #     info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    #     result = tools.error_result(e)
-    # add_log(info)
+        try:
+            res = json.loads(request.body)
+            cilent = tools.user_interface_param()
+            user = cilent.bk_login.get_user({})
+            add_dic = res['data']
+            add_flow_dic = res['flow']
+            monitor_type = res['monitor_type']
+            #  根据前台来的单元类型进行分类
+            if res['monitor_type'] == 'first':
+                monitor_type = '基本单元类型'
+            if res['monitor_type'] == 'second':
+                monitor_type = '图表单元类型'
+            if res['monitor_type'] == 'third':
+                monitor_type = '作业单元类型'
+                #  作业监控项的把作业id和name分别存放
+                add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
+                add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+            if res['monitor_type'] == 'fourth':
+                monitor_type = '流程单元类型'
+                add_dic['jion_id'] = res['flow']['jion_id']
+                add_dic['gather_params'] = add_dic['node_name']
+                add_dic.pop('node_name')
+                add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+                add_dic['params']=res['flow']['constants']
+                start_list = []
+                for i in res['flow']['node_times']:
+                    start_list.append(i['endtime'])
+                    start_list.append(i['starttime'])
+                add_dic['start_time']=min(start_list)
+                add_dic['end_time'] =max(start_list)
+            add_dic['monitor_name'] = res['monitor_name']
+            # 新增一条数据时 开关状态默认为0 关闭
+            add_dic['status'] = 0
+            add_dic['monitor_type'] = monitor_type
+            add_dic['creator'] = user['data']['bk_username']
+            add_dic['editor'] = user['data']['bk_username']
+            Monitor.objects.create(**add_dic)
+            add_dic['monitor_area'] = res['monitor_area']
+            if res['monitor_type'] == 'fourth':
+                function.add_unit_task(add_dicx=add_flow_dic)
+            else:
+                function.add_unit_task(add_dicx=add_dic)
+            result = tools.success_result(None)
+            info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                                 get_active_user(request)['data']['bk_username'], '成功', '无')
+        except Exception as e:
+            info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                                 get_active_user(request)['data']['bk_username'], '失败', repr(e))
+            result = tools.error_result(e)
+        add_log(info)
         return result
 
 
 def edit_unit(request):
-    # try:
-        res = json.loads (request.body)
-        print res['flow']
-        id = res['unit_id']
-        cilent = tools.interface_param (request)
-        user = cilent.bk_login.get_user({})
-        monitor_type = res['monitor_type']
-        add_dic = res['data']
-        if res['monitor_type'] == 'first':
-            monitor_type = '基本单元类型'
-        if res['monitor_type'] == 'second':
-            monitor_type = '图表单元类型'
-        if res['monitor_type'] == 'third':
-            monitor_type = '作业单元类型'
-            add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
-        if res['monitor_type'] == 'fourth':
-            monitor_type = 'fourth'
-            add_dic['jion_id'] = res['flow']['jion_id']
-            add_dic['gather_params'] = add_dic['node_name']
-            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
-            node_times=res['flow']['node_times']
-            constants=res['flow']['constants']
-            add_dic.pop('node_name')
-            start_list = []
-            for i in res['flow']['node_times']:
-                start_list.append(i['endtime'])
-                start_list.append(i['starttime'])
-            add_dic['start_time']=min(start_list)
-            add_dic['end_time'] =max(start_list)
-        add_dic['monitor_name'] = res['monitor_name']
-        add_dic['monitor_type'] = monitor_type
-        add_dic['editor'] = user['data']['bk_username']
-        add_dic['monitor_area'] = res['monitor_area']
-        Monitor.objects.filter(id=id).update(**add_dic)
-        if res['monitor_type'] == 'fourth':
-            add_dic['node_times']=node_times
-            add_dic['constants']=constants
-        function.add_unit_task(add_dicx=add_dic)
-        result = tools.success_result(None)
-        info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
-    # except Exception as e:
-    #     info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    #     result = tools.error_result(e)
-    # add_log(info)
+        try:
+            res = json.loads (request.body)
+            id = res['unit_id']
+            cilent = tools.user_interface_param()
+            user = cilent.bk_login.get_user({})
+            monitor_type = res['monitor_type']
+            # 把前台来的监控项数据一次性转为字典
+            add_dic = res['data']
+            if res['monitor_type'] == 'first':
+                monitor_type = '基本单元类型'
+            if res['monitor_type'] == 'second':
+                monitor_type = '图表单元类型'
+            if res['monitor_type'] == 'third':
+                monitor_type = '作业单元类型'
+            if res['monitor_type'] == 'fourth':
+                monitor_type = 'fourth'
+                add_dic['jion_id'] = res['flow']['jion_id']
+                add_dic['gather_params'] = add_dic['node_name']
+                add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+                add_dic.pop('node_name')
+                start_list = []
+                for i in res['flow']['node_times']:
+                    start_list.append(i['endtime'])
+                    start_list.append(i['starttime'])
+                add_dic['start_time']=min(start_list)
+                add_dic['end_time'] =max(start_list)
+            add_dic['monitor_name'] = res['monitor_name']
+            add_dic['monitor_type'] = monitor_type
+            add_dic['editor'] = user['data']['bk_username']
+            Monitor.objects.filter(id=id).update(**add_dic)
+            add_dic['monitor_area'] = res['monitor_area']
+            function.add_unit_task(add_dicx=add_dic)
+            result = tools.success_result(None)
+            info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                                 get_active_user(request)['data']['bk_username'], '成功', '无')
+        except Exception as e:
+            info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                                 get_active_user(request)['data']['bk_username'], '失败', repr(e))
+            result = tools.error_result(e)
+        add_log(info)
         return result
 
 
@@ -240,6 +246,7 @@ def basic_test(request):
 def job_test(request):
 
     res = json.loads(request.body)
+    # 采集测试id为0 用于与队列调度区分
     res['id'] = 0
     result = tools.job_interface(res)
     return result
@@ -323,6 +330,15 @@ def chart_get_test(request):
     }
 
 def get_desc(request, id):
+    mess = hd.objects.get(id=1).header
+    headers = json.loads(mess.decode('utf-8').replace("'", "\""))
+    a_url="http://paas.bk.com/o/bk_sops/api/v3/template/{}/".format(id[0]['id']);
+    req=requests.get(url=a_url,headers=headers)
+    req.encoding=req.apparent_encoding
+    req.raise_for_status()
+    return json.loads(req.text)
+
+def get_flow_desc(request):
     headers = {
         'Content-Type': 'application/json;charset=utf-8',
         'Cookie': 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
@@ -332,17 +348,11 @@ def get_desc(request, id):
         'X-Requested-With': 'XMLHttpRequest'
     }
     csrftoken = request.COOKIES["csrftoken"];
-    Cookie="keyA=1";
+    Cookie = "keyA=1";
     for key in request.COOKIES:
-        Cookie = "%s;%s=%s"%(Cookie,key,request.COOKIES[key]);
+        Cookie = "%s;%s=%s" % (Cookie, key, request.COOKIES[key]);
     headers['Cookie'] = Cookie;
     headers['X-CSRFToken'] = csrftoken;
-    a_url="http://paas.bk.com/o/bk_sops/api/v3/template/{}/".format(id[0]['id']);
-    req=requests.get(url=a_url,headers=headers)
-    req.encoding=req.apparent_encoding
-    req.raise_for_status()
-    return json.loads(req.text)
-
 def flow_change(request):
 
     cilent = tools.interface_param (request)
@@ -428,6 +438,21 @@ def node_state(request):
     item_id= res['item_id']['message']
     print item_id
     data = TDGatherData.objects.filter(instance_id=item_id)
+    data1=[]
+    for i in data:
+        dic={
+
+            'data_key':i.data_key,
+            'data_value':i.data_value
+        }
+        data1.append(dic)
+    return data1
+
+def node_state_by_item_id(request):
+    res = json.loads(request.body)
+    item_id= res['item_id']
+    print item_id
+    data = TDGatherData.objects.filter(item_id=item_id)
     data1=[]
     for i in data:
         dic={

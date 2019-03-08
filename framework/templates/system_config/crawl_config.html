@@ -45,6 +45,9 @@
                         <el-form-item label="爬虫名称：">
                             <el-input v-model="crawl_search.name" placeholder="请输入爬虫名称"></el-input>
                         </el-form-item>
+                        <el-form-item label="爬虫网址：">
+                            <el-input v-model="crawl_search.url" placeholder="请输入爬虫名称"></el-input>
+                        </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="get_crawl_by_name">查询</el-button>
                         </el-form-item>
@@ -259,7 +262,8 @@
                 }
             ],
             crawl_search: {
-                name: ''
+                name: '',
+                url:'',
             },
             crawl_form: {
                 id: '',
@@ -277,6 +281,7 @@
             },
             page_count:100,
             page:1,
+            limit:2,
         },
         methods: {
             changeDiaLog() {//跳转爬虫配置新增页面
@@ -306,6 +311,7 @@
                     }
                 }
             },
+            //新增爬虫配置
             addCrawl() {
                 axios({
                     url: '${SITE_URL}system_config/manage_crawl/',
@@ -330,6 +336,7 @@
                     console.log(res)
                 })
             },
+            //删除爬虫配置
             deleteCrawl(id) {
                 this.$confirm('此操作将永久删除该文爬虫配置, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -367,14 +374,20 @@
                     });
                 });
             },
+            //根据爬虫名称和网站获取爬虫配置
             get_crawl_by_name() {
                 axios({
                     url: '${SITE_URL}system_config/get_crawl_by_name/',
                     method: 'post',
-                    data: {'keyword':this.crawl_search.name,page:vm.page,limit:2}
+                    data: {'keyword':this.crawl_search.name,'crawl_url':this.crawl_search.url,page:vm.page,limit:vm.limit}
                 }).then((res) => {
                     if (res.data.code == 0) {
                         vm.crawl_table = res.data.results;
+                        if (res.data.results.length != 0){
+                            vm.page_count = res.data.results[0]['page_count']
+                        }else {
+                            vm.page_count = 1;
+                        }
                     } else {
                         vm.$message({
                             type: 'info',

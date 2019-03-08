@@ -11,6 +11,7 @@ import celery_opt as co
 import json
 from datetime import datetime
 import pytz
+from shell_app.function import get_user
 
 
 def get_holiday(req,area):
@@ -62,8 +63,10 @@ def addone(req):
     res = json.loads(req.body)
     date = res['date']
     area = res['area']
-    flag = Holiday.objects.filter(Q(day=date)& Q(area=int(area))).update(flag=0)
-    return flag
+    day=Holiday.objects.get(Q(day=date)&Q(area=int(area)))
+    day.flag=0
+    day.save()
+    return 'ok'
 
 #定时任务demo
 def addperdic_task():
@@ -80,14 +83,12 @@ def add_unit_task(add_dicx):
     startmin = str(add_dicx['start_time']).split(':')[-1]
     endtime = add_dicx['end_time']
     #创建一个特定时区的时间的实例
-    temp_date=datetime(2019,1,1,starthour,startmin,0)
+    temp_date=datetime(2019,2,12,int(starthour),int(startmin),0)
     timezone = Area.objects.get(id=add_dicx['monitor_area']).timezone
-    starttime=tran_time_china(temp_date,timezone=timezone)
-    starthour=datetime.strftime(starttime,'%H')
-    startmin=datetime.strftime(starttime,'%M')
-    temp_date=datetime(2019,1,1,endtime.split(':')[0],endtime.split(':')[0],0)
-    endtime=tran_time_china(temp_date,timezone=timezone)
-    endtime=datetime.strftime(endtime,'%H:%M')
+    starthour,startmin=tran_time_china(temp_date,timezone=timezone)
+    temp_date=datetime(2019,2,12,int(endtime.split(':')[0]),int(endtime.split(':')[-1]),0)
+    endhour,endmin=tran_time_china(temp_date,timezone=timezone)
+    endtime=endhour+":"+endmin
     if type=='基本单元类型':
         period = int(add_dicx['period'])
         ctime = {
@@ -169,6 +170,7 @@ def add_unit_task(add_dicx):
 
 #获取蓝鲸平台的头文件，并存入数据库
 def get_header_data(request):
+    role_id=get_user(request)['data']['bk_role']
     h,flag=HeaderData.objects.get_or_create(id=1)
     headers = {
         "Content-Type": 'application/json;charset=utf-8',
@@ -184,8 +186,9 @@ def get_header_data(request):
         Cookie = "%s;%s=%s" % (Cookie, key, request.COOKIES[key]);
     headers["Cookie"] = Cookie;
     headers["X-CSRFToken"] = csrftoken;
-    h.header=json.dumps(headers, ensure_ascii=False)
-    h.save()
+    if role_id==1:
+        h.header=json.dumps(headers, ensure_ascii=False)
+        h.save()
 
 #添加一个新的日历地区
 def add_area(req):
@@ -229,13 +232,24 @@ def check_jobday(id):
         flag=h.flag
     if flag==1:
         return True
-    elif flag==2:
+    else:
         return False
 #将不同时区的时间转为中国时间
 def tran_time_china(tempdate,timezone):
-    tz = pytz.timezone(timezone)
-    central = pytz.timezone(tz)
-    local_us = central.localize(temp_date)
+    central = pytz.timezone('Asia/Shanghai')
+    local_us = central.localize(tempdate)
+    # 使用astimezone得出时间
+    time = local_us.astimezone(pytz.timezone(timezone))
+    return str(time.hour),str(time.minute)
+
+#将中国时间转为不同的时区
+def tran_china_time_other(time,timezone):
+    hour=time.hour
+    min=time.minute
+    tempdate=datetime(2019,1,2,int(hour),int(min),0)
+    timezone=Area.objects.get(id=timezone).timezone
+    central = pytz.timezone(timezone)
+    local_us = central.localize(tempdate)
     # 使用astimezone得出时间
     time = local_us.astimezone(pytz.timezone('Asia/Shanghai'))
-    return time
+    return str(time.hour)+":"+str(time.minute)

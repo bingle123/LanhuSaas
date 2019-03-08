@@ -256,7 +256,7 @@ def flow_gather_task(**info):
     task_name=info['task_name']
     gather_data_migrate(item_id=item_id)
     if state == 'FAILED':
-        if item_id==0:
+        if item_id==1000000:
             co.delete_task(task_name)
         for d in data:
             if d['status'] == u'FAILED':
@@ -267,11 +267,11 @@ def flow_gather_task(**info):
         msg = u'该任务被暂停'
     elif state == 'REVOKED':
         msg = u'该任务已被终止'
-        if item_id==0:
+        if item_id==1000000:
             co.delete_task(task_name)
     elif state == 'FINISHED':
         msg = u'该任务成功执行'
-        if item_id==0:
+        if item_id==1000000:
             co.delete_task(task_name)
     for d in data:
         s=d['status']
@@ -347,4 +347,17 @@ def start_flow_task(**info):
         status=1
     Flow(instance_id=task_id, status=flag, test_flag=1, flow_id=item_id).save()
     return task_id
+#让流程继续执行
+def resume_flow(item_id):
+    user_account = BkUser.objects.filter(id=1).get()
+    client = get_client_by_user(user_account)
+    client.set_bk_api_ver('v2')
+    task_id=Flow.objects.filter(flow_id=item_id).last().instance_id
+    params={
+        'bk_biz_id':2,
+        'task_id':task_id,
+        'action':'resume'
+    }
+    res=client.sops.operate_task(params)
+    return res['result']
 
