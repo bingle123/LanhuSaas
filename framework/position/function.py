@@ -29,10 +29,16 @@ def show(request):
         for y in users:
             if x.id == y.user_pos.id:
                 tmp.append(y.user_name + ' ')
+        x.create_time = str(x.create_time)
+        x.edit_time = str(x.edit_time)
         dic = {
             'id': x.id,
             'user_name': tmp,
             'pos_name': x.pos_name,
+            'create_time':x.create_time,
+            'creator':x.creator,
+            'edit_time':x.edit_time,
+            'editor':x.editor,
             'page_count': pages
         }
         res_list.append(dic)
@@ -43,11 +49,18 @@ def select_job(request):
     res = json.loads(request.body)
     limit = res['limit']
     page = res['page']
-    search = res['search']
+    search = res['search'].strip()
     res1 = search
     res_list = []
     tmp = JobInstance.objects.filter(id__gt=1)
+    #按岗位查询
     job = tmp.filter(Q(pos_name__contains=res1))
+    #按人名查询
+    users = Localuser.objects.filter(Q(user_name__contains=res1))
+    for i in users:
+        user_pos = i.user_pos_id
+        temp = JobInstance.objects.filter(id=user_pos)
+        job = job | temp
     users = Localuser.objects.all()
     p = Paginator(job, limit)
     count = p.page_range

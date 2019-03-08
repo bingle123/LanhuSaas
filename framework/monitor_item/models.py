@@ -9,7 +9,7 @@ class Monitor(models.Model):
     单元信息表
     """
     monitor_name = models.CharField(verbose_name=u'监控项名称', max_length=50)
-    monitor_type = models.CharField(verbose_name=u'监控项类型',max_length=10)
+    monitor_type = models.CharField(verbose_name=u'监控项类型', max_length=10)
     jion_id = models.PositiveIntegerField(verbose_name=u'关联ID')
     gather_rule = models.CharField(verbose_name=u'采集规则', max_length=500)
     gather_params = models.CharField(verbose_name=u'采集参数', max_length=500)
@@ -25,12 +25,11 @@ class Monitor(models.Model):
     editor = models.CharField(verbose_name=u'编辑人', max_length=10)
     edit_time = models.DateTimeField(verbose_name=u'修改时间', auto_now=True)
     status = models.PositiveIntegerField(verbose_name=u'监控状态')
-    contents = models.CharField(verbose_name=u'显示内容',max_length=500)
-    monitor_area=models.IntegerField(verbose_name=u'监控项日历地区')
+    contents = models.CharField(verbose_name=u'显示内容', max_length=500)
+    monitor_area = models.IntegerField(verbose_name=u'监控项日历地区')
 
     def __str__(self):
         return self.id
-
 
     class Meta:
         verbose_name = u'监控项信息表'
@@ -43,7 +42,7 @@ class Job(models.Model):
     instance_id = models.PositiveIntegerField(verbose_name=u'作业实列ID')
     status = models.IntegerField(verbose_name=u'作业状态')
     test_flag = models.PositiveIntegerField(verbose_name=u'测试标识')
-    start_time = models.TimeField(verbose_name=u'开始时间',auto_now_add=True)
+    start_time = models.TimeField(verbose_name=u'开始时间', auto_now_add=True)
     job_log = models.CharField(verbose_name=u'作业日志', max_length=5000)
 
     class Meta:
@@ -51,14 +50,15 @@ class Job(models.Model):
         verbose_name_plural = u'作业实列信息'
         db_table = 'td_job_instance'
 
-#status：0表示FAILED  1表示RUNNING   2表示SUSPEN DED   3表示REVOKED   4表示FINISHED 5表示超时
-#test_flag 1表示测试  2表示非测试
+
+# status：0表示FAILED  1表示RUNNING   2表示SUSPEN DED   3表示REVOKED   4表示FINISHED 5表示超时
+# test_flag 1表示测试  2表示非测试
 class Flow(models.Model):
     flow_id = models.PositiveIntegerField(verbose_name=u'关联ID')
     instance_id = models.PositiveIntegerField(verbose_name=u'流程实列ID')
     status = models.PositiveIntegerField(verbose_name=u'节点状态')
     test_flag = models.PositiveIntegerField(verbose_name=u'测试标识')
-    start_time = models.TimeField(verbose_name=u'开始时间',auto_now_add=True)
+    start_time = models.TimeField(verbose_name=u'开始时间', auto_now_add=True)
 
     class Meta:
         verbose_name = u'流程实列表'
@@ -68,9 +68,9 @@ class Flow(models.Model):
 
 class Flow_Node(models.Model):
     flow_id = models.PositiveIntegerField(verbose_name=u'流程ID')
-    node_name = models.CharField(verbose_name=u'节点名称',max_length=50)
-    start_time = models.CharField(verbose_name=u'开始时间',max_length=50)
-    end_time = models.CharField(verbose_name=u'结束时间',max_length=50)
+    node_name = models.CharField(verbose_name=u'节点名称', max_length=50)
+    start_time = models.CharField(verbose_name=u'开始时间', max_length=50)
+    end_time = models.CharField(verbose_name=u'结束时间', max_length=50)
 
     class Meta:
         verbose_name = u'流程节点表'
@@ -80,13 +80,12 @@ class Flow_Node(models.Model):
 
 class Scene_monitor(models.Model):
     scene_id = models.PositiveIntegerField(verbose_name=u'场景ID')
-    item_id = models.PositiveIntegerField (verbose_name=u'监控项ID')
+    item_id = models.PositiveIntegerField(verbose_name=u'监控项ID')
     x = models.PositiveIntegerField(verbose_name=u'x坐标')
-    y= models.PositiveIntegerField(verbose_name=u'y坐标')
+    y = models.PositiveIntegerField(verbose_name=u'y坐标')
     scale = models.DecimalField(verbose_name=u'比例', max_digits=4, decimal_places=2)
     score = models.PositiveIntegerField(verbose_name=u'打分')
     order = models.PositiveIntegerField(verbose_name=u'排序')
-
 
     class Meta:
         verbose_name = u'场景监控项'
@@ -97,9 +96,8 @@ class Scene_monitor(models.Model):
 class Scene_node(models.Model):
     pos_id = models.PositiveIntegerField(verbose_name=u'场景ID')
     item_id = models.PositiveIntegerField(verbose_name=u'监控项ID')
-    node_id = models.PositiveIntegerField (verbose_name=u'节点ID')
-    score = models.PositiveIntegerField (verbose_name=u'打分')
-
+    node_id = models.PositiveIntegerField(verbose_name=u'节点ID')
+    score = models.PositiveIntegerField(verbose_name=u'打分')
 
     class Meta:
         verbose_name = u'节点打分表'
