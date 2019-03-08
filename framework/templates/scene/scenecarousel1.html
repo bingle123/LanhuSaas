@@ -129,8 +129,8 @@
                     console.log('获取用户错误')
                 })
             },
-            alternate_play_test(){
-                 axios({
+             async alternate_play_test(){
+                  var res= await axios({
                     method: 'post',
                     url: '${SITE_URL}monitorScene/alternate_play_test/',
                      data :{
@@ -138,18 +138,16 @@
                          'start':vm.start,
                          'end':vm.end
                      }
-                }).then((res)=> {
-                     vm.imgList = res.data.message;
-                     if (vm.imgList.length==1){    //只有一个场景
-                        vm.scene_content_change(0);
-                        setInterval(function () {
-                            vm.scene_content_change(0);   //十秒钟更新一次dom
-                        },10000)
-                     }
-                 })
+                  });
+                 vm.imgList = res.data.message;
             },
             scene_change(value1, value2) {
-
+                if (vm.imgList.length==1){    //只有一个场景
+                    vm.scene_content_change(0);
+                    setInterval(function () {
+                        vm.scene_content_change(0);   //十秒钟更新一次dom
+                    },10000)
+                }
                 if (vm.imgList.length>1) {  //多于一个场景
                     vm.scene_content_change(value1);
                 }
@@ -167,7 +165,7 @@
                     //添加一个div容器，形如<div type="basic1"></div>
                     $(selector).append('<div type=\"basic' + base_list[i].id + '\" style=\"position: absolute;top:' + base_list[i].y + 'px;left:' + base_list[i].x + 'px;transform: scale(' + base_list[i].scale + ')\"></div>');
                     //调用基本监控项的渲染方法,第一个参数对应容器div的type
-                    base_monitor_active(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width);
+                    base_monitor_active(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width,base_list[i].contents);
                 }
                 for (let i = 0; i < chart_list.length; i++) {
                     //添加一个div容器,形如<div id="1_1"><div id="chart1_1"></div></div>
@@ -257,6 +255,9 @@
 
     vm.get_pos();
     vm.alternate_play_test();
+    var interval = setInterval(function () {
+        vm.alternate_play_test();
+    },10000);
     $(function () {
         $(document).on("click", ".keepOn_yes", function (e) {
             e.preventDefault();

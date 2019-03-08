@@ -51,6 +51,8 @@ urlpatterns = patterns(
      url(r'^logmanagement/', include('logmanagement.urls')),
     # 报表统计
      url(r'^history_chart/', include('history_chart.urls')),
+    # 自定义查询
+    url(r'^customQuery/', include('customQuery.urls')),
 )
 
 
