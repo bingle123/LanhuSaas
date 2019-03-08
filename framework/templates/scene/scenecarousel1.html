@@ -53,8 +53,8 @@
             active-text-color="#ffd04b">
         <el-form :inline="true" class="demo-form-inline" style="margin: 50px 20px;">
 
-            <el-form-item label="员工名称:" size="mini"  prop="users">
-                <el-select v-model="position" placeholder="请选择员工" >
+            <el-form-item label="岗位名称:" size="mini"  prop="users">
+                <el-select v-model="position" placeholder="请选择岗位" >
                     <el-option v-for="item in options" :label="item.label" :key="item.value"
                                :value="item.value"></el-option>
                 </el-select>
@@ -106,7 +106,7 @@
             start: '09:00',                                                                   //开始时间
             end: '18:00',                                                                   //结束时间
             region1: '1',                                                                 //岗位选择
-            position: '无岗位人员',                                                                  //岗位
+            position: '1',                                                                  //岗位
             options: [],
         },
         methods: {
@@ -256,7 +256,7 @@
     });
 
     vm.get_pos();
-    vm.alternate_play_test()
+    vm.alternate_play_test();
     $(function () {
         $(document).on("click", ".keepOn_yes", function (e) {
             e.preventDefault();
