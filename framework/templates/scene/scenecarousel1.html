@@ -54,7 +54,7 @@
         <el-form :inline="true" class="demo-form-inline" style="margin-top: 15px;">
 
             <el-form-item label="员工名称:" size="mini"  prop="users">
-                <el-select v-model="users" placeholder="请选择员工" >
+                <el-select v-model="position" placeholder="请选择员工" >
                     <el-option v-for="item in options" :label="item.label" :key="item.value"
                                :value="item.value"></el-option>
                 </el-select>
@@ -106,21 +106,21 @@
             start: '09:00',                                                                   //开始时间
             end: '18:00',                                                                   //结束时间
             region1: '1',                                                                 //岗位选择
-            users: 'admin',                                                                  //员工选择
+            position: '无岗位人员',                                                                  //岗位
             options: [],
         },
         methods: {
-            get_user(){
+            get_pos(){
                  axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/get_all_user/',
+                    url: '${SITE_URL}monitorScene/get_all_pos/',
                 }).then((res)=> {
                     let json = [];
                     if (res.data.message.length > 0) {
                         for (var i = 0; i < res.data.message.length; i++) {
                             let j = {};
-                            j.value = res.data.message[i];
-                            j.label = res.data.message[i];
+                            j.value = res.data.message[i].id;
+                            j.label = res.data.message[i].pos_name;
                             json.push(j);
                         };
                         this.options = json;
@@ -134,7 +134,7 @@
                     method: 'post',
                     url: '${SITE_URL}monitorScene/alternate_play_test/',
                      data :{
-                        'user_name':vm.users,
+                        'pos_id':vm.position,
                          'start':vm.start,
                          'end':vm.end
                      }
@@ -255,7 +255,7 @@
         }
     });
 
-    vm.get_user();
+    vm.get_pos();
 </script>
 
 
