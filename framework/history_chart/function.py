@@ -461,7 +461,7 @@ def selectScenes_ById(request):
             return getPant_list(scene_list, d_data, all_itemid, item_len)
         #有效期大于7天，取前7天，splen为取数组中的前7天个数
         else:
-            splen = item_len*7
+            splen = item_len*7-1
             scene_list = scene_list[:splen]
             return getPant_list(scene_list,d_data,all_itemid,item_len)
 
