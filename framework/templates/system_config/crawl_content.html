@@ -2,9 +2,146 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>爬虫内容查看</title>
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- vue的ajax依赖-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <!-- element UI引入样式 -->
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script src='${STATIC_URL}js/jquery.min.js'></script>
+    <script src='${STATIC_URL}js/jquery-ui.js'></script>
+    <!--jQuery库使用时请使用标准jQuery语法-->
+    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
+    <!--页面初始化css(Tencent)-->
+    <link href="${STATIC_URL}css/init.css" rel="stylesheet">
 </head>
 <body>
+<div id="main">
+    <!--start 面包屑-->
+    <el-breadcrumb separator-class="el-icon-arrow-right" separator="/" style="padding: 20px;">
+        <el-breadcrumb-item><a href="/">系统配置</a></el-breadcrumb-item>
+        <el-breadcrumb-item>爬虫内容查看</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!--end 面包屑-->
 
+    <!--start 卡片 列表页-->
+    <el-card class="box-card" style="margin: 20px;" style="height: 100%">
+        <div slot="header" class="clearfix">
+            <div class="grid-content bg-purple"><h2>爬虫内容查看</h2></div>
+            <br>
+            <el-row :gutter="20">
+                <el-col :span="20">
+                    <el-form :inline="true" class="demo-form-inline">
+                        <el-form-item label="爬虫内容标题名称：">
+                            <el-input placeholder="请输入标题名称" v-model="title_content"></el-input>
+                        </el-form-item>
+                        <el-form-item label="爬虫名称：">
+                            <el-input placeholder="请输入爬虫名称" v-model="crawl_name"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="query">查询</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-col>
+            </el-row>
+        </div>
+        <template>
+            <el-table
+                    :data="tableData"
+                    stripe
+                    style="width: 100%">
+                <el-table-column
+                        prop="crawl_name"
+                        label="爬虫名称"
+                        width="200">
+                </el-table-column>
+                <el-table-column label="爬虫内容查看" width="600">
+                    <template slot-scope="scope">
+                        <el-button size="mini" type="text"
+                                   v-on:click="open_url(scope.row.url_content)">{{ scope.row.title_content }}</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="url_content"
+                        label="地址"
+                        width="400">
+                </el-table-column>
+                <el-table-column
+                        prop="time_content"
+                        label="时间"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="save_time"
+                        label="保存时间"
+                        width="180">
+                </el-table-column>
+            </el-table>
+            <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                           @current-change="changePage"></el-pagination>
+        </template>
+
+    </el-card>
+    <!--end 卡片 列表页-->
+</div>
+
+<script>
+    //csrf验证
+    axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
+    let vm = new Vue({
+        el: '#main',
+        data: {
+            title_content: '',
+            crawl_name: '',
+            page: 1,
+            page_count: 1,
+            limit: 2,
+            tableData: [],
+        },
+        methods: {
+            query() {
+                axios({
+                    url: '${SITE_URL}system_config/get_crawl_content/',
+                    method: 'post',
+                    data: {title_content: vm.title_content, crawl_name: vm.crawl_name, page: vm.page, limit: vm.limit}
+                }).then((res) => {
+                    console.log(res);
+                    if (res.code != 0) {
+                        if (res.data.results.length == 0) {
+                            vm.$message.info('没有数据')
+                        } else {
+                            vm.tableData = res.data.results;
+                            vm.page_count = res.data.results[0]['page_count']
+                        }
+                    } else {
+                        vm.$message.error('获取失败')
+                    }
+                }).catch((res) => {
+                    console.log(res);
+                    vm.$message.error('获取失败' + res)
+                })
+            },
+            changePage(value) {
+                vm.page = value;
+                vm.query();
+            },
+            open_url(value) {
+                window.location.href = value
+            }
+
+        }
+
+    });
+    vm.query();
+</script>
 </body>
 </html>

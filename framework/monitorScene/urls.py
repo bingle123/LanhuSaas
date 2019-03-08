@@ -11,10 +11,9 @@ See the License for the specific language governing permissions and limitations 
 
 from django.conf.urls import patterns
 
-
 urlpatterns = patterns(
     'monitorScene.views',
-    (r'^$', 'index'),# 首页--服务器选择页面
+    (r'^$', 'index'),  # 首页--服务器选择页面
     (r'demo', 'demo'),
     (r'^monitor_show/$', 'monitor_show'),
     (r'^addSence/$', 'addSence'),
@@ -23,10 +22,10 @@ urlpatterns = patterns(
     (r'^editSence/$', 'editSence'),
     (r'^pos_name/$', 'pos_name'),
     (r'^paging/$', 'paging'),
-    (r'^scene_show/$', 'scene_show'),                        #场景展示
-    (r'get_chart_data/(.+)$','get_chart_data'),
-    (r'^getSceneByid/(.+)/$','getBySceneId'),   #根据Id获取场景详情
-    (r'get_basic_data/(.+)$','get_basic_data'),
+    (r'^scene_show/$', 'scene_show'),  # 场景展示
+    (r'get_chart_data/(.+)$', 'get_chart_data'),
+    (r'^getSceneByid/(.+)/$', 'getBySceneId'),  # 根据Id获取场景详情
+    (r'get_basic_data/(.+)$', 'get_basic_data'),
     (r'^alternate_play/$', 'alternate_play'),
     (r'^alternate_play_test/$', 'alternate_play_test'),
     (r'^scene_data/$', 'scene_data'),
