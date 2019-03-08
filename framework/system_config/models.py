@@ -13,7 +13,7 @@ class CrawlerConfig(models.Model):
     crawl_no_keyword = models.CharField(verbose_name=u'非关键字', max_length=64)            # 可设置多个，用逗号隔开
     period = models.CharField(verbose_name=u'爬虫周期', max_length=64)
     url_pre = models.CharField(verbose_name=u'静态资源前缀', max_length=64)
-    total_xpath = models.CharField(verbose_name=u'总Xpath', max_length=64)
+    total_xpath = models.CharField(verbose_name=u'总Xpath', max_length=255)
     title_xpath = models.CharField(verbose_name=u'标题Xpath', max_length=64)
     time_xpath = models.CharField(verbose_name=u'时间Xpath', max_length=64)
     url_xpath = models.CharField(verbose_name=u'URLXpath', max_length=64)
