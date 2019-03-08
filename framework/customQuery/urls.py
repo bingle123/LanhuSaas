@@ -21,4 +21,5 @@ urlpatterns = patterns(
     (r'^add_query$', 'add_query'),
     (r'^load_all_tables_name$', 'load_all_tables_name'),
     (r'^load_all_fields_name$', 'load_all_fields_name'),
+    (r'sql_test','sql_test'),
 )
