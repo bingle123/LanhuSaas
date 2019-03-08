@@ -196,7 +196,7 @@
                             </el-form-item>
                         </el-col>
                      </el-form-item>
-                    <el-form-item label="场景适用岗位" prop="pos_name">
+                    <el-form-item label="适用岗位" prop="pos_name">
                         <el-select  placeholder="请选择" v-model="scene.pos_name" >
                             <el-option v-for="item in pos" :label="item.pos_name" :value="item.id"></el-option>
                         </el-select>
@@ -256,7 +256,7 @@
                         </el-col>
                      </el-form-item>
                      </el-form-item>
-                    <el-form-item label="场景适用岗位"  prop="pos_name">
+                    <el-form-item label="适用岗位"  prop="pos_name">
                         <el-select  placeholder="请选择" v-model="scene_edit.pos_name" >
                             <el-option v-for="item in pos" :label="item.pos_name" :value="item.pos_name"></el-option>
                         </el-select>
@@ -293,7 +293,7 @@
                         </button>
                     </el-col>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="5">
                     <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245);position: relative">
                         <h2 class="monitor_title" style="line-height:48px;background:#283593;text-align: center;color: #ffffff">监控项</h2>
                         <el-col :span="24">
@@ -367,7 +367,7 @@
                     </div>
 
                 </el-col>
-                <el-col :span="18">
+                <el-col :span="19">
                     <div class="monitor_content" style="min-height: 600px;background: rgb(244, 244, 245)">
 
                     </div>
