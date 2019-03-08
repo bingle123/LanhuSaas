@@ -53,7 +53,6 @@ def delall(area):
 #删除指定的节假日
 def delone(req):
     res=json.loads(req.body)
-    print res
     date=res['date']
     area=res['area']
     flag = Holiday.objects.filter(Q(day=date)& Q(area=int(area))).update(flag=1)
@@ -245,7 +244,6 @@ def tran_time_china(tempdate,timezone):
 
 #将中国时间转为不同的时区
 def tran_china_time_other(time,timezone):
-    print timezone
     hour=time.hour
     min=time.minute
     tempdate=datetime(2019,1,2,int(hour),int(min),0)
