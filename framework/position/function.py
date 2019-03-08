@@ -16,6 +16,7 @@ def show(request):
     res = json.loads(request.body)
     limit = res['limit']
     page = res['page']
+    #查出id大于等于1的岗位（岗位id=1是无岗位人员）
     job = JobInstance.objects.filter(id__gt=1)
     users = Localuser.objects.all()
     p = Paginator(job, limit)
@@ -46,7 +47,7 @@ def select_job(request):
     res1 = search
     res_list = []
     tmp = JobInstance.objects.filter(id__gt=1)
-    job = tmp.filter(Q(pos_name__contains=res1) | Q(creator__icontains=res1))
+    job = tmp.filter(Q(pos_name__contains=res1))
     users = Localuser.objects.all()
     p = Paginator(job, limit)
     count = p.page_range
@@ -96,6 +97,7 @@ def add_job(request):
 
 
 def add_person(request):
+    #外键关联，user_pos不能为空，把岗位id=1 的设为无岗位人员
     try:
         res = json.loads(request.body)
         id = res['id']
@@ -122,7 +124,9 @@ def edit_job(request):
         res = json.loads(request.body)
         id = res['id']
         posname = res['pos_name']
+        #获取系统使劲按
         nowTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        #获取当前用户
         tmp = get_active_user(request)
         nowPerson = tmp['data']['bk_username']
         r1 = JobInstance.objects.filter(id=id).update(pos_name=posname,edit_time=nowTime,editor=nowPerson)
@@ -172,8 +176,10 @@ def filter_user(request):
     :param request:
     :return:
     """
+    #蓝鲸所有用户
     filter_list = get_user(request)
     temp = dict_get(filter_list['data'], u'bk_username', None)
+    #找出所有无岗位的人员（岗位id=1）
     users = Localuser.objects.all()
     tmp = []
     for j in users:
@@ -222,6 +228,7 @@ def synchronize(request):
         res = get_user(request)
         reslist = res['data']
         users = Localuser.objects.all()
+        #判断本地用户与蓝鲸用户，以蓝鲸的为准，多了删除，少了增加，变了更新
         for i in reslist:
             flag1 = 0
             for j in users:
