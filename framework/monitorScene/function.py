@@ -441,6 +441,9 @@ def get_scenes(user_name,start,end):
     pos_id = Localuser.objects.get (user_name=user_name).user_pos_id
     # 获取岗位对应的场景
     scene = position_scene.objects.filter (position_id=pos_id)
+    ff=False
+    if start == '' and end == '':
+        ff=True
     for x in scene:
         scenes.append (x.scene_id)
     # 遍历scenes,获取每个场景对应的监控项
@@ -448,7 +451,7 @@ def get_scenes(user_name,start,end):
         # 场景
         temp_scene = Scene.objects.get(id=z)
         flag=True
-        if start=='' and end=='':
+        if ff:
             id=temp_scene.scene_area
             timezone = Area.objects.get(id=id).timezone
             tz = pytz.timezone(timezone)
@@ -456,7 +459,7 @@ def get_scenes(user_name,start,end):
             start=end
             flag=check_jobday(id)
         # 判断系统时间是否在轮播时间
-        if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start and flag:
+        if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start and flag==True:
             # 初始化
             base_list = []
             chart_list = []
