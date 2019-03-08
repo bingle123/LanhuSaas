@@ -349,6 +349,7 @@ def getPant_list(scene_list,d_data,all_itemid,item_len):
     last_list = []
     AllList = []
     new_AllList = []
+
     for s in scene_list:
         AllList.append(str(s[0]).split(' ')[0])
     for All in AllList:
@@ -358,18 +359,29 @@ def getPant_list(scene_list,d_data,all_itemid,item_len):
         success_items = 0
         failed_items = 0
         alertNums = 0
+
         for x in d_data:
             if str(x).split(' ')[0] == l:
                 failed_items += 1
         success_items = item_len - failed_items
-
+        be_list = []
         for i in all_itemid:
-            alog = TdAlertLog.objects.filter(item_id=i)
-            for al in alog:
-                alertlog = model_to_dict(al)
-                alertlog['alert_time'] = al.alert_time
-                if str(alertlog['alert_time']).split(' ')[0] ==l:
-                    alertNums +=1
+            ts = TDGatherHistory.objects.filter(item_id=i)
+            for t in ts:
+                tds = model_to_dict(t)
+                tds['gather_time'] = t.gather_time
+                if str(tds['gather_time']).split(' ')[0] == l:
+                    be_list.append(tds['gather_time'])
+        mx = max(be_list)
+        mi = min(be_list)
+        time_consum = mx - mi
+        time_consum = str(time_consum)
+        alog = TdAlertLog.objects.filter(item_id=i)
+        for al in alog:
+            alertlog = model_to_dict(al)
+            alertlog['alert_time'] = al.alert_time
+            if str(alertlog['alert_time']).split(' ')[0] ==l:
+                alertNums +=1
         persent = (success_items/item_len) *100
         dic_data = {
             'timedata':l,
@@ -378,6 +390,7 @@ def getPant_list(scene_list,d_data,all_itemid,item_len):
             'itemNums':item_len,
             'alertNums':alertNums,
             'succeess_persent':persent,
+            'time_consum':time_consum,
         }
         last_list.append(dic_data)
     return tools.success_result(last_list)
@@ -385,7 +398,7 @@ def getPant_list(scene_list,d_data,all_itemid,item_len):
 def selectScenes_ById(request):
     res = json.loads(request.body)
     scene = Scene.objects.get(id = res['id'])
-    #根据id查监控项个数
+    #根据场景id查监控项个数
     sm = Scene_monitor.objects.filter(scene_id=res['id'])
     item_len = sm.__len__()
     #获取开始结束时间
@@ -403,6 +416,7 @@ def selectScenes_ById(request):
             str1 = str(index)+","
         else:
             str1 += str(index)
+
     sql = "SELECT * from (select max(a.gather_time) AS mtime,a.item_id FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx,tt.gather_time,tt.gather_error_log,tt.item_id	FROM td_gather_history tt WHERE	item_id IN ("+str1+")) AS t WHERE   gather_time BETWEEN '"+b_time+"'  AND '"+e_time+"' ORDER BY item_id,gather_time) a	group by a.item_id,a.xx)  as m ORDER BY m.mtime"
 
     DATABASES = settings_development.DATABASES['default']
@@ -431,7 +445,7 @@ def selectScenes_ById(request):
     #查到的总天数
     listCount_date = scene_list_len/item_len
     #时间间隔数
-    Alldays = (datetime.strptime(e_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(b_time, "%Y-%m-%d %H:%M:%S")).days\
+    Alldays = (datetime.strptime(e_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(b_time, "%Y-%m-%d %H:%M:%S")).days
     #间隔天数小于3不查，大于3但是查到的有效天数小于3也不要
     if Alldays < 3:
         return tools.success_result(Alldays)
@@ -815,5 +829,4 @@ def monthly_select(request):
         }
 
         dic_list.append(dic)
-    print total
     return dic_list

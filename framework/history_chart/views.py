@@ -42,7 +42,6 @@ def select_scenes(request):
 
 def selectScenes_ById(request):
     res = function.selectScenes_ById(request)
-    print res
     return render_json(res)
 
 def select_scene_operation(request):
