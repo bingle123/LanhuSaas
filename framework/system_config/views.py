@@ -6,7 +6,7 @@ import json
 import crawl_template
 import function
 import sys
-from logmanagement.function import add_log,make_log_info,get_active_user
+from logmanagement.function import add_log, make_log_info, get_active_user
 
 
 # Create your views here.
@@ -26,6 +26,15 @@ def scene_type_html(request):
     :return:
     """
     return render_mako_context(request, './system_config/scene_type.html')
+
+
+def crawl_content_html(request):
+    """
+    爬虫内容
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './system_config/crawl_content.html')
 
 
 def manage_crawl(request):
@@ -215,9 +224,19 @@ def delete_scene_by_uuid(request):
         uuid = request_body['uuid']
         res = function.delete_scene_by_uuid(uuid)
         info = make_log_info(u'删除场景分组', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
-                         get_active_user(request)['data']['bk_username'], '成功', '无')
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
         info = make_log_info(u'删除场景分组', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
     add_log(info)
+    return render_json(res)
+
+
+def get_crawl_content(request):
+    request_body = json.loads(request.body)
+    title_content = request_body['title_content']
+    crawl_name = request_body['crawl_name']
+    page = request_body['page']
+    limit = request_body['limit']
+    res = function.get_crawl_content(title_content, crawl_name, page, limit)
     return render_json(res)

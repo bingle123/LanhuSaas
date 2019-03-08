@@ -96,7 +96,7 @@ def get_crawls_config(request):
     page = request_body['page']
     limit = request_body['limit']
     count = CrawlerConfig.objects.all()
-    page_count = int(math.ceil(len(count) / limit))
+    page_count = int(math.ceil(len(count) / limit) + 1)
     start_page = (page - 1) * limit
     try:
         res = CrawlerConfig.objects.all().order_by('-update_time').values()[start_page:start_page + limit]
@@ -123,12 +123,17 @@ def get_crawl_by_name(request):
     page = request_body['page']
     limit = request_body['limit']
     keyword = request_body['keyword']
-    count = CrawlerConfig.objects.filter(Q(crawl_name__contains=keyword))
-    page_count = int(math.ceil(len(count) / limit))
+    url = request_body['crawl_url']
+    count = CrawlerConfig.objects.filter(Q(crawl_name__contains=keyword) & Q(crawl_url__contains=url))
+    print len(count)
+    if len(count) < limit:
+        page_count = len(count)
+    else:
+        page_count = int(math.ceil(len(count) / limit) + 1)
     start_page = (page - 1) * limit
     try:
-
-        res = CrawlerConfig.objects.filter(Q(crawl_name__contains=keyword)).order_by('-update_time').values()[
+        res = CrawlerConfig.objects.filter(Q(crawl_name__contains=keyword) & Q(crawl_url__contains=url)).order_by(
+            '-update_time').values()[
               start_page:start_page + limit]
         result_list = []
         for i in res:
@@ -397,7 +402,7 @@ def delete_scene_by_uuid(scene_type_id):
     try:
         with transaction.atomic():
             SceneType.objects.filter(scene_type_id=scene_type_id).delete()
-            return success_result('删除成功')
+            return success_result(u'删除成功')
     except Exception as e:
         return error_result(e)
 
@@ -447,3 +452,43 @@ def add_scene_type(create_user, scene_type_name):
             return error_result(e)
     else:
         return error_result(u'场景类型已经存在')
+
+
+def get_crawl_content(title_name, crawl_name, page, limit):
+    """
+    获取爬虫内容
+    :param title_name:                      搜索名称
+    :param crawl_name:                      爬虫名称
+    :param page:                            页码数
+    :param limit:                           页面容量
+    :return:
+    """
+    crawl_config = CrawlerConfig.objects.filter(Q(crawl_name__icontains=crawl_name)).values()
+    crawl_id_list = []
+    print len(crawl_config)
+    for i in crawl_config:
+        crawl_id_list.append(i['id'])
+    print crawl_id_list
+    count = CrawlContent.objects.filter(Q(title_content__icontains=title_name) & Q(crawl_id__in=crawl_id_list)).values()
+    print len(count)
+    result_list = []
+    if len(count) == 0:
+        return success_result([])
+    elif len(count) < limit:
+        page_count = 1
+        limit = len(count)
+    else:
+        page_count = int(math.ceil(len(count) / limit))
+    start_page = int(page - 1) * int(limit)
+    config_object = count[start_page:start_page + limit]
+    for i in config_object:
+        i['save_time'] = i['save_time'].strftime("%Y-%m-%d %H:%M:%S")
+        i['page_count'] = page_count
+        i['page'] = page
+        i['crawl_name'] = model_to_dict(CrawlerConfig.objects.get(id=1))['crawl_name']
+        result_list.append(i)
+    return success_result(result_list)
+
+
+
+
