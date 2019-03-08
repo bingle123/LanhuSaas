@@ -72,14 +72,12 @@
                         <div style="float: right">
                             <span style="color: #555759; etter-spacing: 0.23px;">当前用户：</span>
                             <span style="color: #555759; etter-spacing: 0.23px;">{{ user.name }}</span>
-                            <el-dropdown :hide-on-click="false">
+                            <el-dropdown :hide-on-click="false"  @command="logout">
                                 <span class="el-dropdown-link">
                                   帮助中心<i class="el-icon-caret-bottom el-icon--right"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item>黄金糕</el-dropdown-item>
-                                    <el-dropdown-item>狮子头</el-dropdown-item>
-                                    <el-dropdown-item>螺蛳粉</el-dropdown-item>
+                                    <el-dropdown-item command="a">注销</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </div>
@@ -131,7 +129,7 @@
                 name: "蓝鲸",
             },
             user: {             //用户数据
-                name: "admin",
+                name: "",
             },
 
             clickhtml:'index',
@@ -155,6 +153,9 @@
             handleClose(key, keyPath) { //手风琴关闭
                 console.log(key, keyPath);
             },
+            logout(){
+                window.location.href='http://paas.bk.com/login/?c_url=http%3A//dev.paas.bk.com%3A8000/&app_id=mydjango1'
+            },
             changeCollapse() {          //更改伸缩状态
                 let res = this.isCollapse;
                 if (res) {
@@ -165,6 +166,12 @@
                     this.display2.display = 'inline-block';
                 }
                 this.isCollapse = res ? false : true;
+            },
+            get_user_name(){
+                axios.get('${SITE_URL}position/get_active_user').then((res)=>{
+                    console.log(res)
+                    vm.user.name=res.data.message
+                });
             },
             testClick(res) {            //更新iframe显示页面
                 vm.clickhtml = res
@@ -181,6 +188,7 @@
         }
     });
     vm.get_Muenu();
+    vm.get_user_name()
 </script>
 </body>
 </html>

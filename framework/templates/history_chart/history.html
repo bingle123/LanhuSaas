@@ -25,7 +25,7 @@
                     报表统计查询
                 </div>
                 <hr id="hr">
-                <div id="hide_k">
+                <div id="hide_k" style="display:block">
                     <el-row type="flex" justify="space-between" align="center" class="row">
                         <el-col :span="12">
                             <el-col :span="9">
@@ -70,17 +70,22 @@
                         <el-option label="执行告警信息查询" value="alert"></el-option>
                         <el-option label="场景运行即将到期查询" value="about_to_expire"></el-option>
                         <el-option label="场景运行比对" value="compare"></el-option>
+                        <el-option label="场景运行情况统计" value="sceneOperation"></el-option>
+                        <el-option label="场景月运行情况统计分析" value="monthly_operation_statistics"></el-option>
                     </el-select>
                 </el-col>
 
                 <div id="hide_m" style="display:none">
                     <el-row type="flex">
+                        <el-col :span="2"><a>场景：</a></el-col>
                         <el-col :span="3" style="margin-top: 5px">
+
                             <el-select placeholder="请选择场景" v-model="Cscene" value-key="id" @change="chose_scenes">
                                 <el-option v-for="item in scenes_data" :label="item.sname" :key="item.id"
                                            :value="item"></el-option>
                             </el-select>
                         </el-col>
+                        <el-col :span="2"><span>日期:</span></el-col>
                         <el-col :span="3" style="margin-top: 5px">
                             <el-date-picker
                                     v-model="scene_time"
@@ -172,14 +177,54 @@
                 </div>
 
                 <div id="scene_compare" style="display:none">
+                    <!--画图开始-->
                     <div id="scene_et" style="width: 600px;height: 400px;margin: 60px">
                     </div>
-                    <div>
-
+                    <!--画图结束勿动-->
+                    <!--场景比对table-->
+                    <div id="get_days" style="display: none">
+                     <el-table :data="dayData" style="width: 100%;margin-top: 20px">
+                         <el-table-column prop="timedata" label="比对时间" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="itemNums" label="场景数" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="begin_time" label="开始时间" style="width: 15%" show-overflow-tooltip="true">
+                         </el-table-column>
+                         <el-table-column prop="end_time" label="结束时间" style="width: 15%" show-overflow-tooltip="true">
+                         </el-table-column>
+                         <el-table-column prop="time_consum" label="总耗时" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="success_items" label=运行成功数 style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="failed_items" label="执行失败数" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="succeess_persent" label="成功率" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="alertNums" label="告警数量" style="width: 15%" align="center">
+                         </el-table-column>
+                     </el-table>
+                    <!-- <el-pagination :page-count="dayDataCount" background layout="prev, pager, next" style="float:right"
+                               @current-change="dayDatapage"></el-pagination>-->
                     </div>
+                    <!--场景比对结束-->
                 </div>
 
                 <div id="table10" style="display:none">
+                        <div class="container">
+                            <el-col :span="5" style="margin-top: 5px">
+                                <div class="block">
+                                    <span class="demonstration">选择周</span>
+                                    <el-date-picker
+                                      v-model="weeks"
+                                      type="week"
+                                      format="yyyy 第 WW 周"
+                                      placeholder="选择周">
+                                    </el-date-picker>
+                                </div>
+                            </el-col>
+                            <el-col :span="3" style="margin-top: 5px">
+                                <el-button icon="el-icon-search" circle  v-on:click="get_week"></el-button>
+                            </el-col>
                      <el-table :data="sceneOperationRuleTableData" style="width: 100%;margin-top: 20px">
                          <el-table-column prop="date" label="时间" style="width: 15%" align="center">
                          </el-table-column>
@@ -196,7 +241,30 @@
                      </el-table>
                      <el-pagination :page-count="sceneOperationCount" background layout="prev, pager, next" style="float:right"
                                @current-change="sceneOperationpage"></el-pagination>
+                </div>
 
+                     <!--<el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
+                               @current-change="sceneOperationTableData"></el-pagination>
+                          -->
+                    </div>
+                 <div id="table4" style="display:none">
+                     <el-table :data="monthly_operationTableData" style="width: 100%;margin-top: 20px">
+                         <el-table-column prop="date" label="统计日期" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="total" label="场景数" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="Success_num" label=运行成功数 style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="success_rate" label="运行成功率" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="failure_num" label="执行失败数" style="width: 15%" align="center">
+                         </el-table-column>
+                         <el-table-column prop="failure_num" label="告警数量" style="width: 15%" align="center">
+                         </el-table-column>
+                     </el-table>
+                     <el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
+                                   style="float:right"
+                                   @current-change=""></el-pagination>
                     </div>
             </div>
         </el-card>
@@ -227,13 +295,21 @@ let vm = new Vue({
             date_Choice: '',                            //时间选择
             //以下是场景勿动
             scenes_tab: '',
-            sCount: 1,
+
             myChart: '',
             scenes_data: '',
             Cscene: '',
             Cscene_id:'',
             scene_time: '',
             qnmb: [],
+            dayData:[],
+            dayDataCount:1,
+
+
+            sCount: 1,
+            monthly_operation_statistics:'',
+            monthly_operationTableData:'',
+            weeks:'',                                    //运行情况周数查询
         },
         methods: {
             show() {
@@ -283,6 +359,18 @@ let vm = new Vue({
                     vm.aboutTableDate = res.data.results;
                     vm.aboutRulesCount = res.data.results[0].pages
                })
+                 axios({
+                   method:'post',
+                   url:'${SITE_URL}history_chart/monthly_select',
+                   data:{
+                        page: vm.page,
+                        limit: 10
+                   }
+               }).then(function (res) {
+                    vm.monthly_operationTableData = res.data.message;
+                    vm.aboutRulesCount = res.data.results[0].pages
+               })
+
             },
 
             current_change(value){
@@ -323,7 +411,7 @@ let vm = new Vue({
 
             select_log(){
                if(vm.log_type == 'log'){
-                   vm.page = 1                                             //查询
+                   vm.page = 1
                    if (vm.keyword == "" & vm.date_Choice == "" & this.search =="") {
                        vm.show()
                    }
@@ -350,16 +438,6 @@ let vm = new Vue({
 
            },
 
-            //选择场景
-            chose_scenes(value) {
-                vm.Cscene = value.sname;
-                vm.Cscene_id = value.id;
-            },
-            //选择日期
-            sceneTChang(value){
-                vm.scene_time = value;
-            },
-
             //用于告警分页方法
              alertRulePageChange: function(value){
                 vm.page = value;
@@ -379,7 +457,6 @@ let vm = new Vue({
                     console.log(vm.alertRulesCount)
                 })
             },
-
 
             select_Keyword(){
                if(vm.log_type == 'log'){
@@ -402,20 +479,118 @@ let vm = new Vue({
                 }
             },
 
-            //初始化图
+            //运行情况分页
+            sceneOperationpage: function (value) {
+                vm.page = value;
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}history_chart/select_scene_operation',
+                    data: {
+                        page: vm.page,
+                        limit: 10
+                    },
+                }).then((res) => {
+                    this.sceneOperationRuleTableData = res.data.message;
+                    vm.sceneOperationCount = res.data.message[0].pages;
+                })
+            },
+            //用于告警分页方法
+            alertRulePageChange: function (value) {
+                vm.page = value;
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}history_chart/select_rules_pagination',
+                    data: {
+                        search: this.search,
+                        page: vm.page,
+                        keyword: vm.keyword,
+                        date_Choice: vm.date_Choice,
+                        limit: 10
+                    },
+                }).then((res) => {
+                    this.alertRuleTableData = res.data.results;
+                    vm.alertRulesCount = res.data.results[0].pages
+                    console.log(vm.alertRulesCount)
+                })
+            },
+
+            change_type(value) {
+                if (value == 'log') {
+                    $("#table1,#hide_k").css('display', 'block');
+                    $("#table3，#scene_compare,#table2,#hide_m,#table10,#table4").css('display', 'none');
+                    vm.get_null();
+                } else if (value == 'alert') {
+                    $("#table2,#hide_k").css('display', 'block');
+                    $("#table3，#scene_compare,#table1,#hide_m,#table10,#table4").css('display', 'none');
+                    vm.get_null();
+                } else if (value == 'about_to_expire') {
+                    $("#table2,#table1,#scene_compare,#hide_m,#table10,#table4").css('display', 'none');
+                    $("#table3,#hide_k").css('display', 'block');
+                    vm.get_null();
+                } else if (value == 'compare') {
+                    $("#table1,#table2,#table3,#hide_k,#table10,#scene_et,#get_days,#table4").css('display', 'none');
+                    $("#scene_compare,#hide_m").css('display', 'block');
+                    axios.post('${SITE_URL}history_chart/select_scenes/').then((res) => {
+                        vm.scenes_data = res.data.results
+                    });
+                }else if(value == 'sceneOperation'){
+                   $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table4").css('display','none');
+                   $('#table10').css('display','block');
+                   vm.get_null();
+                }else if(value == 'monthly_operation_statistics'){
+                    $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table10").css('display','none');
+                   $('#table4').css('display','block');
+                }
+            },
+
+            get_week(){
+                if (vm.weeks){
+                    let date = vm.weeks
+                    axios({
+                            method: 'post',
+                            url: '${SITE_URL}history_chart/get_week/',
+                            data: {
+                                date:date,
+                                page: vm.page,
+                                limit: 10
+                            },
+                    }).then((res) =>{
+                        vm.sceneOperationRuleTableData = res.data.message
+                    })
+                }else {
+                    vm.show()
+                }
+            },
+
+
+            //先选场景
+            chose_scenes(value) {
+                vm.Cscene = value.sname;
+                vm.Cscene_id = value.id;
+            },
+            //再选日期
+            sceneTChang(value){
+                vm.scene_time = value;
+            },
+            //翻页方法
+            dayDataCount(){
+
+            },
+            //再初始化图
             draw_line(value) {
-                console.log(value)
-                console.log(typeof value)
                 let list_x = [];
                 let list_s = [];
                 let list_f = [];
                 let list_all = [];
-                for (var i=0;i<value.length - 1;i++) {
-                    list_x = value[i]['timedata']
-                    list_s = value[i]['success_items'];
-                    list_f = value[i]['failed_items'];
-                    list_all = value[i]['itemNums'];
+                let list_alert = [];
+                for (var i = 0; i < value.length; i++) {
+                    this.$set(list_x,i,value[i]['timedata']);
+                    this.$set(list_s,i,value[i]['success_items']);
+                    this.$set(list_f,i, value[i]['failed_items']);
+                    this.$set(list_all,i,value[i]['itemNums']);
+                    this.$set(list_alert,i,value[i]['alertNums']);
                 }
+
                 vm.myChart = echarts.init(document.getElementById('scene_et'));
                 option = {
                     title: {
@@ -427,7 +602,7 @@ let vm = new Vue({
                     },
                     legend: {
                         left: '25%',
-                        data: ['节点数', '运行成功场景单元数', '运行失败数']
+                        data: ['节点数', '运行成功场景单元数', '运行失败数', '告警数']
                     },
                     grid: {
                         left: '3%',
@@ -443,7 +618,6 @@ let vm = new Vue({
                     yAxis: {
                         type: 'value',
                         min: 0,
-                        max: 30,
                     },
                     series: [
                         {
@@ -488,9 +662,9 @@ let vm = new Vue({
                             },
                         },
                         {
-                            name: '告警数量',
+                            name: '告警数',
                             type: 'line',
-                            data: [4, 7, 13, 4, 5, 6, 6],
+                            data: list_alert,
                             itemStyle: {
                                 normal: {
                                     color: "#3300FF",
@@ -504,7 +678,7 @@ let vm = new Vue({
                 };
                 vm.myChart.setOption(option);
             },
-            //画图
+            //最后画图，出表
             drawging_() {
                 if (vm.Cscene == '') {
                     alert('请选择场景');
@@ -521,8 +695,21 @@ let vm = new Vue({
                     }).then((res) => {
                         vm.qnmb = res.data.results;
                         vm.draw_line(vm.qnmb);
+                        console.log()
+                        if(typeof res.data.results == 'number'){
+                            console.log(res.data.results)
+                            if(res.data.results < 3){
+                                alert('日期间隔需要大于3天');
+                            }else{
+                                alert('此期间不足3条数据');
+                            }
+                        }else{
+                            vm.qnmb = res.data.results;
+                            vm.dayData = res.data.results;
+                            vm.draw_line(vm.qnmb);
+                            $('#get_days,#scene_et').css('display','block');
+                            }
                     })
-
                 }
             },
             //清空下拉框
@@ -531,74 +718,6 @@ let vm = new Vue({
                 vm.Cscene = '';
                 vm.scene_time = '';
             },
-
-            //运行情况分页
-            sceneOperationpage: function (value) {
-                vm.page = value;
-                axios({
-                    method: 'post',
-                    url: '${SITE_URL}history_chart/select_scene_operation',
-                    data: {
-                        page: vm.page,
-                        limit: 10
-                    },
-                }).then((res) => {
-                    this.sceneOperationRuleTableData = res.data.message;
-                    vm.sceneOperationCount = res.data.message[0].pages;
-                })
-            },
-
-
-            change_type(value) {
-                if (value == 'log') {
-                    $("#table1,#hide_k").css('display', 'block');
-                    $("#table3，#scene_compare,#table2,#hide_m,#table10").css('display', 'none');
-                    vm.get_null();
-                } else if (value == 'alert') {
-                    $("#table2,#hide_k").css('display', 'block');
-                    $("#table3，#scene_compare,#table1,#hide_m,#table10").css('display', 'none');
-                    vm.get_null();
-                } else if (value == 'about_to_expire') {
-                    $("#table2,#table1,#scene_compare,#hide_m,#table10").css('display', 'none');
-                    $("#table3,#hide_k").css('display', 'block');
-                    vm.get_null();
-                } else if (value == 'compare') {
-                    $("#table1,#table2,#table3,#hide_k,#table10").css('display', 'none');
-                    $("#scene_compare,#hide_k").css('display', 'block');
-                    axios.post('${SITE_URL}history_chart/select_scenes/').then((res) => {
-                        vm.scenes_data = res.data.results
-                    });
-                }else if(value == 'sceneOperation'){
-                   $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m").css('display','none');
-                   $('#table10').css('display','block');
-                   vm.get_null();
-                }
-            },
-
-
-            select_Keyword() {
-                if (vm.log_type == 'log') {
-                    vm.page = 1
-                    if (this.search.trim() == '') {
-                        vm.show()
-                    }
-                    axios({
-                        method: 'post',
-                        url: '${SITE_URL}history_chart/select_Keyword',
-                        data: {
-                            'search': vm.keyword,
-                            'page': this.page,
-                            'limit': 10
-                        }
-                    }).then(function (res) {
-                        vm.Operatelog = res.data.message;
-                        vm.page_count = res.data.message[0].page_count;
-                    })
-                }
-            },
-
-
-
         }
     });
     vm.show();

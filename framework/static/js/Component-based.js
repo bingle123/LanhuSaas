@@ -381,19 +381,19 @@ function base_monitor(item_id,font_size,height,width,content) {
                 if (i == flag2) {
                     $('[type='+selector_id+']').append(asd);
                     if (icon4 == 1) {
-                        $('[type='+selector_id+']').append(icon1[0])
+                        $('[type='+selector_id+']').append("<div style='display: inline-block'>"+icon1[0]+"</div>")
                         $('[type='+selector_id+']').append(circle1);
                     }
                     if (icon4 == 2) {
-                        $('[type='+selector_id+']').append(icon1[0])
+                        $('[type='+selector_id+']').append("<div style='display: inline-block'>"+icon1[0]+"</div>")
                         $('[type='+selector_id+']').append(circle2);
                     }
                     if (icon4 == 0) {
-                        $('[type='+selector_id+']').append(icon1[0])
+                        $('[type='+selector_id+']').append("<div style='display: inline-block'>"+icon1[0]+"</div>")
                         $('[type='+selector_id+']').append(circle4);
                     }
                     if (icon4 == -1 || icon4 == -2) {
-                        $('[type='+selector_id+']').append(icon1[0])
+                        $('[type='+selector_id+']').append("<div style='display: inline-block'>"+icon1[0]+"</div>")
                         $('[type='+selector_id+']').append(circle3);
                     }
                 } else {

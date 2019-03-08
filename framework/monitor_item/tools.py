@@ -256,7 +256,7 @@ def flow_gather_task(**info):
     task_name=info['task_name']
     gather_data_migrate(item_id=item_id)
     if state == 'FAILED':
-        if item_id==0:
+        if item_id==1000000:
             co.delete_task(task_name)
         for d in data:
             if d['status'] == u'FAILED':
@@ -267,11 +267,11 @@ def flow_gather_task(**info):
         msg = u'该任务被暂停'
     elif state == 'REVOKED':
         msg = u'该任务已被终止'
-        if item_id==0:
+        if item_id==1000000:
             co.delete_task(task_name)
     elif state == 'FINISHED':
         msg = u'该任务成功执行'
-        if item_id==0:
+        if item_id==1000000:
             co.delete_task(task_name)
     for d in data:
         s=d['status']

@@ -18,15 +18,20 @@ from gatherData.models import TDGatherData
 import sys
 from logmanagement.function import add_log,make_log_info,get_active_user
 import datetime
+from market_day.models import HeaderData as hd
 
 
 def unit_show(request):
     try:
         res = json.loads(request.body)
+        #  个数
         limit = res['limit']
+        #  当前页面号
         page = res['page']
         unit = Monitor.objects.all()
+        # 进入分页函数进行分页，返回总页数和当前页数据
         page_data, base_page_count = tools.page_paging(unit,limit,page)
+        #  把返回的数据对象转为list
         res_list= tools.obt_dic(page_data,base_page_count)
         param = {
             'bk_username': 'admin',
@@ -35,8 +40,11 @@ def unit_show(request):
         param1 = {
             "bk_biz_id": 2,
         }
+        #  用user v2的方式调用接口
         client = tools.user_interface_param()
+        #  调用获取作业详情接口
         res = client.job.get_job_list(param)
+        #  调用获取标准运维模板详情接口
         res1 = client.sops.get_template_list(param1)
         if res.get('result'):
             job_list = res.get('data')
@@ -50,6 +58,7 @@ def unit_show(request):
             logger.error (u"请求流程模板失败：%s" % res.get ('message'))
         job = []
         flow = []
+        #  获取模板名称和ID
         for i in flow_list:
             dic2 = {
                 'flow_name': i['name'],
@@ -97,6 +106,7 @@ def select_unit(request):
 def delete_unit(request):
     try:
         res = json.loads(request.body)
+        #  根据前台传的来的id进行删除
         unit_id = res['unit_id']
         monitor_name=res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
@@ -115,18 +125,19 @@ def delete_unit(request):
 def add_unit(request):
         try:
             res = json.loads(request.body)
-            print res
-            cilent = tools.interface_param (request)
+            cilent = tools.user_interface_param()
             user = cilent.bk_login.get_user({})
             add_dic = res['data']
             add_flow_dic = res['flow']
             monitor_type = res['monitor_type']
+            #  根据前台来的单元类型进行分类
             if res['monitor_type'] == 'first':
                 monitor_type = '基本单元类型'
             if res['monitor_type'] == 'second':
                 monitor_type = '图表单元类型'
             if res['monitor_type'] == 'third':
                 monitor_type = '作业单元类型'
+                #  作业监控项的把作业id和name分别存放
                 add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
                 add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
             if res['monitor_type'] == 'fourth':
@@ -143,6 +154,7 @@ def add_unit(request):
                 add_dic['start_time']=min(start_list)
                 add_dic['end_time'] =max(start_list)
             add_dic['monitor_name'] = res['monitor_name']
+            # 新增一条数据时 开关状态默认为0 关闭
             add_dic['status'] = 0
             add_dic['monitor_type'] = monitor_type
             add_dic['creator'] = user['data']['bk_username']
@@ -168,9 +180,10 @@ def edit_unit(request):
         try:
             res = json.loads (request.body)
             id = res['unit_id']
-            cilent = tools.interface_param (request)
+            cilent = tools.user_interface_param()
             user = cilent.bk_login.get_user({})
             monitor_type = res['monitor_type']
+            # 把前台来的监控项数据一次性转为字典
             add_dic = res['data']
             if res['monitor_type'] == 'first':
                 monitor_type = '基本单元类型'
@@ -180,7 +193,6 @@ def edit_unit(request):
                 monitor_type = '作业单元类型'
             if res['monitor_type'] == 'fourth':
                 monitor_type = 'fourth'
-                print res['flow']
                 add_dic['jion_id'] = res['flow']['jion_id']
                 add_dic['gather_params'] = add_dic['node_name']
                 add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
@@ -234,6 +246,7 @@ def basic_test(request):
 def job_test(request):
 
     res = json.loads(request.body)
+    # 采集测试id为0 用于与队列调度区分
     res['id'] = 0
     result = tools.job_interface(res)
     return result
@@ -317,21 +330,8 @@ def chart_get_test(request):
     }
 
 def get_desc(request, id):
-    print id
-    headers = {
-        'Content-Type': 'application/json;charset=utf-8',
-        'Cookie': 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
-        'Host': 'paas.bk.com',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3679.0 Safari/537.36',
-        'X-CSRFToken': 'FI1fszvZzgIsYYX8n6aPMduEeAL7qTV3',
-        'X-Requested-With': 'XMLHttpRequest'
-    }
-    csrftoken = request.COOKIES["csrftoken"];
-    Cookie="keyA=1";
-    for key in request.COOKIES:
-        Cookie = "%s;%s=%s"%(Cookie,key,request.COOKIES[key]);
-    headers['Cookie'] = Cookie;
-    headers['X-CSRFToken'] = csrftoken;
+    mess = hd.objects.get(id=1).header
+    headers = json.loads(mess.decode('utf-8').replace("'", "\""))
     a_url="http://paas.bk.com/o/bk_sops/api/v3/template/{}/".format(id[0]['id']);
     req=requests.get(url=a_url,headers=headers)
     req.encoding=req.apparent_encoding
