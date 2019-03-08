@@ -188,9 +188,9 @@
                          </el-table-column>
                          <el-table-column prop="itemNums" label="场景数" style="width: 15%" align="center">
                          </el-table-column>
-                         <el-table-column prop="begin_time" label="开始时间" style="width: 15%" show-overflow-tooltip="true">
+                         <el-table-column prop="begin_time" label="开始时间" style="width: 15%" show-overflow-tooltip>
                          </el-table-column>
-                         <el-table-column prop="end_time" label="结束时间" style="width: 15%" show-overflow-tooltip="true">
+                         <el-table-column prop="end_time" label="结束时间" style="width: 15%" show-overflow-tooltip>
                          </el-table-column>
                          <el-table-column prop="time_consum" label="总耗时" style="width: 15%" align="center">
                          </el-table-column>
@@ -613,7 +613,7 @@ let vm = new Vue({
                     xAxis: {
                         type: 'category',
                         boundaryGap: false,
-                        data: list_x
+                        data:list_x,
                     },
                     yAxis: {
                         type: 'value',
@@ -693,23 +693,26 @@ let vm = new Vue({
                             dataTime: vm.scene_time,
                         },
                     }).then((res) => {
-                        vm.qnmb = res.data.results;
-                        vm.draw_line(vm.qnmb);
-                        console.log()
-                        if(typeof res.data.results == 'number'){
-                            console.log(res.data.results)
-                            if(res.data.results < 3){
-                                alert('日期间隔需要大于3天');
-                            }else{
-                                alert('此期间不足3条数据');
-                            }
-                        }else{
+                        if(res.data.code == 1){
+                            alert('此场景没有监控项')
+                            $('#get_days,#scene_et').css('display','none');
+                        }else {
                             vm.qnmb = res.data.results;
-                            vm.dayData = res.data.results;
-                            vm.draw_line(vm.qnmb);
-                            $('#get_days,#scene_et').css('display','block');
-                            }
-                    })
+                            if(typeof res.data.results == 'number'){
+                                if(res.data.results < 3){
+                                    alert('日期间隔需要大于3天');
+                                    $('#get_days,#scene_et').css('display','none');
+                                }else{
+                                    alert('此期间不足3条数据');
+                                    $('#get_days,#scene_et').css('display','none');
+                                }
+                            }else{
+                                vm.qnmb = res.data.results;
+                                vm.dayData = res.data.results;
+                                vm.draw_line(vm.qnmb);
+                                $('#get_days,#scene_et').css('display','block');
+                                }
+                            }});
                 }
             },
             //清空下拉框
