@@ -401,34 +401,36 @@ def getPant_list(scene_list,d_data,all_itemid,item_len):
 #场景对比分析
 def selectScenes_ById(request):
     res = json.loads(request.body)
-    scene = Scene.objects.get(id = res['id'])
+
     #根据场景id查监控项个数
     sm = Scene_monitor.objects.filter(scene_id=res['id'])
     item_len = sm.__len__()
-    #获取开始结束时间
+    # 获取开始结束时间
     b_time = res['dataTime'][0]
     e_time = res['dataTime'][1]
 
-    #根据开始结束时间查询单个场景下所有监控项每一天最后一个采集到的数据
+    # 根据开始结束时间查询单个场景下所有监控项每一天最后一个采集到的数据
     all_itemid = []
-    #所有监控项
+    # 所有监控项
     str1 = ""
     for i in sm:
         all_itemid.append(model_to_dict(i)['item_id'])
-    for i,index in enumerate(all_itemid):
-        if (i+1) < all_itemid.__len__():
-            str1 = str(index)+","
+    for i, index in enumerate(all_itemid):
+        if (i + 1) < all_itemid.__len__():
+            str1 = str(index) + ","
         else:
             str1 += str(index)
+    try:
+        sql = "SELECT * from (select max(a.gather_time) AS mtime,a.item_id FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx,tt.gather_time,tt.gather_error_log,tt.item_id	FROM td_gather_history tt WHERE	item_id IN (" + str1 + ")) AS t WHERE   gather_time BETWEEN '" + b_time + "'  AND '" + e_time + "' ORDER BY item_id,gather_time) a	group by a.item_id,a.xx)  as m ORDER BY m.mtime"
 
-    sql = "SELECT * from (select max(a.gather_time) AS mtime,a.item_id FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx,tt.gather_time,tt.gather_error_log,tt.item_id	FROM td_gather_history tt WHERE	item_id IN ("+str1+")) AS t WHERE   gather_time BETWEEN '"+b_time+"'  AND '"+e_time+"' ORDER BY item_id,gather_time) a	group by a.item_id,a.xx)  as m ORDER BY m.mtime"
-
-    DATABASES = settings_development.DATABASES['default']
-    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                         db=DATABASES['NAME'], charset="utf8")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    res1 = cursor.fetchall()
+        DATABASES = settings_development.DATABASES['default']
+        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
+                             db=DATABASES['NAME'], charset="utf8")
+        cursor = db.cursor()
+        cursor.execute(sql)
+        res1 = cursor.fetchall()
+    except Exception as e:
+        return tools.error_result(e)
     scene_list = []
     scene_list = list(res1)
     d_data = []
@@ -444,26 +446,28 @@ def selectScenes_ById(request):
                     d_data.append(i[0])
                 else:
                     pass
-    #得到的
+    # 得到的
     scene_list_len = scene_list.__len__()
-    #查到的总天数
-    listCount_date = scene_list_len/item_len
-    #时间间隔数
+    # 查到的总天数
+    listCount_date = scene_list_len / item_len
+    # 时间间隔数
     Alldays = (datetime.strptime(e_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(b_time, "%Y-%m-%d %H:%M:%S")).days
-    #间隔天数小于3不查，大于3但是查到的有效天数小于3也不要
+    # 间隔天数小于3不查，大于3但是查到的有效天数小于3也不要
     if Alldays < 3:
         return tools.success_result(Alldays)
     else:
         if listCount_date < 3:
             return tools.success_result(Alldays)
-        #有效天大于3天小于7天，取所有天数
-        elif listCount_date >= 3 and listCount_date <=7:
+        # 有效天大于3天小于7天，取所有天数
+        elif listCount_date >= 3 and listCount_date <= 7:
             return getPant_list(scene_list, d_data, all_itemid, item_len)
-        #有效期大于7天，取前7天，splen为取数组中的前7天个数
+        # 有效期大于7天，取前7天，splen为取数组中的前7天个数
         else:
-            splen = item_len*7-1
+            splen = item_len * 7 - 1
             scene_list = scene_list[:splen]
-            return getPant_list(scene_list,d_data,all_itemid,item_len)
+            return getPant_list(scene_list, d_data, all_itemid, item_len)
+
+
 
 
 
@@ -626,6 +630,7 @@ def get_week(request):
     scene_operation = select_scene_operation()
     res = json.loads(request.body)
     #初始化
+
     days = []
     res_list = []
     #获取一周的第一天
