@@ -383,8 +383,12 @@ def getPant_list(scene_list,d_data,all_itemid,item_len):
             if str(alertlog['alert_time']).split(' ')[0] ==l:
                 alertNums +=1
         persent = (success_items/item_len) *100
+        mx = str(mx)
+        mi = str(mi)
         dic_data = {
             'timedata':l,
+            'begin_time':mi,
+            'end_time':mx,
             'success_items':success_items,
             'failed_items':failed_items,
             'itemNums':item_len,
