@@ -29,10 +29,16 @@ def show(request):
         for y in users:
             if x.id == y.user_pos.id:
                 tmp.append(y.user_name + ' ')
+        x.create_time = str(x.create_time)
+        x.edit_time = str(x.edit_time)
         dic = {
             'id': x.id,
             'user_name': tmp,
             'pos_name': x.pos_name,
+            'create_time':x.create_time,
+            'creator':x.creator,
+            'edit_time':x.edit_time,
+            'editor':x.editor,
             'page_count': pages
         }
         res_list.append(dic)
