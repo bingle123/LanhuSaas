@@ -53,7 +53,14 @@ def select_job(request):
     res1 = search
     res_list = []
     tmp = JobInstance.objects.filter(id__gt=1)
+    #按岗位查询
     job = tmp.filter(Q(pos_name__contains=res1))
+    #按人名查询
+    users = Localuser.objects.filter(Q(user_name__contains=res1))
+    for i in users:
+        user_pos = i.user_pos_id
+        temp = JobInstance.objects.filter(id=user_pos)
+        job = job | temp
     users = Localuser.objects.all()
     p = Paginator(job, limit)
     count = p.page_range
