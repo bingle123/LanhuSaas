@@ -229,28 +229,7 @@ console.log('init');
                     return false
                 };
 
-                $(settings.canvas).on('mousedown', '.jtk-window', function(e) {
-                    e = e || event;
-                    var id = $(this).attr('id');
-                    // 右键
-                    if (e.which == 3 && settings.isEdit) {
-                        e.stopPropagation();
-                        var x = e.pageX + 10;
-                        var y = e.pageY + 10;
-                        $('.jtk-delete').css({
-                            left: x,
-                            top: y,
-                            display: 'block'
-                        });
-                        $('.jtk-delete').off();
-                        $('.jtk-delete').on('click', function(e) {
-                            e.stopPropagation();
-                            _deleteData(id, settings.onRemoveNodeAfter);
-                            $('.jtk-delete').css('display', 'none');
-                        })
-                    };
 
-                });
                 $('body').click(function(e) { //隐藏右键弹窗事件
                     $('.jtk-delete').css('display', 'none');
                 });
@@ -319,16 +298,7 @@ console.log('init');
                     })
 
                     // 所有div流程都可拖动
-                    if (settings.isEdit) {
-                        // 点击连线
-                        instance.bind("dblclick", function(conn, originalEvent) {
-                            instance.detach(conn); //删除连线
-                        });
-                        instance.draggable(jsPlumb.getSelector(settings.canvas + ' ' + '.jtk-window'), {
-                            grid: [20, 20]
-                        });
-                    };
-                    settings.ondrawData();
+
                 });
             };
 
