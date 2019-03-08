@@ -21,93 +21,78 @@
 
 
     <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
-    <script type="text/javascript"
-            src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
-    <link rel="stylesheet"
-          href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css"/>
+    <script type="text/javascript" src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
+    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
-    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
 
     <style>
-        .content {
+        .content{
             position: relative;
         }
-
-        .monitor_edit {
+        .monitor_edit{
             display: none;
             position: absolute;
             top: 65px;
-            left: 0;
+            left:0;
             width: 100%;
         }
-
         .Drigging {
-            position: absolute;
+            position:absolute;
         }
-
-        .monitor_type {
+        .monitor_type{
             line-height: 48px;
             background: #28359324;
             text-align: center;
         }
-
-        .monitor_list {
+        .monitor_list{
             display: none;
         }
-
-        .monitor_list div {
+        .monitor_list div{
             text-align: center;
         }
-
-        .monitor_content {
-            position: relative;
+        .monitor_content{
+            position:relative;
         }
-
-        .el-row {
+        .el-row{
             border: 1px solid #ffffff;
         }
-
-        .el-col {
+        .el-col{
             border: 1px solid #ffffff;
         }
-
-        p, i {
+        p,i{
             text-align: center;
         }
-
-        .score_input {
+        .score_input{
             font-size: 16px;
             position: absolute;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.1);
             top: -36px;
             left: 0;
             width: 50px;
             height: 36px;
             display: none;
         }
-
-        .right_click {
+        .right_click{
             position: absolute;
             width: 100px;
             display: none;
         }
-
-        .right_click span {
+        .right_click span{
             width: 100px;
             display: inline-block;
             font-size: 16px;
             line-height: 36px;
         }
-
-        .save {
-            display: block;
-            padding: 0;
-            border: 0;
-            margin-bottom: 0;
-            text-align: center;
-            cursor: pointer;
-            left: 0;
-            top: 0;
+        .save{
+                display: block;
+                padding: 0;
+                border: 0;
+                margin-bottom: 0;
+                text-align: center;
+                cursor: pointer;
+                left: 0;
+                top: 0;
         }
     </style>
 
@@ -119,56 +104,55 @@
         <el-breadcrumb-item>首页</el-breadcrumb-item>
         <el-breadcrumb-item>场景管理</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-card class='card' shadow='always' style="margin-top: 10px">
+    <el-card class='card' shadow='always'style="margin-top: 10px" >
         <div v-if="isAdd == 1">
             <div id='pagetitle' style="margin-bottom: 10px">
                 场景管理
             </div>
             <hr id='hr'>
-            <el-row type='flex' justify='space-between' align='center' class='row' style="margin-top: 10px">
+            <el-row type='flex' justify='space-between' align='center' class='row'  style="margin-top: 10px">
                 <el-col :span="12">
-                    <el-col :span="9">
-                        <el-input v-model="search" placeholder="请输入内容"></el-input>
+                        <el-col :span="9">
+                            <el-input v-model="search" placeholder="请输入内容"></el-input>
+                        </el-col>
+                        <el-col :span="3">
+                            <el-button type="primary" icon="el-icon-search" v-on:click="select_table">搜索</el-button>
+                        </el-col>
                     </el-col>
-                    <el-col :span="3">
-                        <el-button type="primary" icon="el-icon-search" v-on:click="select_table">搜索</el-button>
-                    </el-col>
-                </el-col>
                 <el-col :span='3'>
-                    <el-button type='primary' @click='show'>新增场景</el-button>
+                    <el-button type='primary'  @click='show'>新增场景</el-button>
                 </el-col>
             </el-row>
             <el-table :data='tableData' :header-cell-style='rowclass' style="width: 100%;margin-top: 10px">
 
                 <el-table-column type="index" label='序号' width='80'>
                 </el-table-column>
-                <el-table-column prop='id' v-if="false" label='id' width='80'>
+                <el-table-column prop='id'  v-if="false" label='id' width='80'>
                 </el-table-column>
-                <el-table-column prop='scene_name' label='场景名称' style="width: 30%;" sortable>
+                <el-table-column prop='scene_name' label='场景名称'  style="width: 30%;" sortable>
                 </el-table-column>
-                <el-table-column prop='scene_creator' label='创建人' style="width: 30%;" sortable>
+                <el-table-column prop='scene_creator' label='创建人'  style="width: 30%;" sortable>
                 </el-table-column>
-                <el-table-column prop='scene_creator_time' label='创建时间' style="width: 30%;" sortable>
+                <el-table-column prop='scene_creator_time' label='创建时间'  style="width: 30%;" sortable>
                 </el-table-column>
-                <el-table-column prop='pos_name' label='岗位' style="width: 30%;" sortable>
+                <el-table-column prop='pos_name' label='岗位'  style="width: 30%;" sortable>
                 </el-table-column>
-                <el-table-column prop='scene_startTime' label='开始时间' v-if="false" style="width: 30%;" sortable>
+                <el-table-column prop='scene_startTime' label='开始时间'  v-if="false"  style="width: 30%;" sortable>
                 </el-table-column>
-                <el-table-column prop='scene_endTime' label='结束时间' v-if="false" style="width: 30%;" sortable>
+                <el-table-column prop='scene_endTime' label='结束时间'  v-if="false"  style="width: 30%;" sortable>
                 </el-table-column>
 
                 <el-table-column prop='operation' label='操作' style="width: 30%;">
                     <template slot-scope="scope">
-                        <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
-                        <el-button size="mini" type="text" v-on:click="edit(scope.row)">编辑</el-button>
-                        <el-button size="mini" type="text" v-on:click="delect(scope.row)">删除</el-button>
-                        </el-tooltip>
-                    </template>
+                    <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
+                    <el-button size="mini" type="text" v-on:click="edit(scope.row)">编辑</el-button>
+                    <el-button size="mini" type="text" v-on:click="delect(scope.row)">删除</el-button>
+                    </el-tooltip>
+                </template>
                 </el-table-column>
             </el-table>
             <div class='block' style='text-align:right'>
-                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
-                               @current-change="current_change"></el-pagination>
+        <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change"></el-pagination>
             </div>
 
 
@@ -183,15 +167,15 @@
             <div style="margin-top: 20px">
                 <el-form ref="scene" :model="scene" :rules="rules" label-width="80px">
                     <el-form-item label="场景名称" prop="scene_name">
-                        <el-input placeholder="请输入场景名称" v-model="scene.scene_name" style="width: 30%"></el-input>
+                       <el-input placeholder="请输入场景名称"  v-model="scene.scene_name" style="width: 30%"></el-input>
                     </el-form-item>
                     <el-form-item label="轮播日历">
                         <el-select v-model="scene.area" placeholder="请选择日历的地区">
                             <el-option
-                                    v-for="item in areas"
-                                    :key="item.value"
-                                    :label="item.area"
-                                    :value="item.value">
+                              v-for="item in areas"
+                              :key="item.value"
+                              :label="item.area"
+                              :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -206,14 +190,14 @@
                         <el-col class="line" :span="1">—</el-col>
                         <el-col :span="11">
                             <el-form-item prop="scene_endTime">
-                                <el-time-picker v-model="scene.scene_endTime" placeholder="结束时间点" format="HH:mm"
+                                <el-time-picker v-model="scene.scene_endTime"  placeholder="结束时间点" format="HH:mm"
                                                 value-format="HH:mm">
                                 </el-time-picker>
                             </el-form-item>
                         </el-col>
-                    </el-form-item>
-                    <el-form-item label="场景适用岗位" prop="pos_name">
-                        <el-select placeholder="请选择" v-model="scene.pos_name">
+                     </el-form-item>
+                    <el-form-item label="适用岗位" prop="pos_name">
+                        <el-select  placeholder="请选择" v-model="scene.pos_name" >
                             <el-option v-for="item in pos" :label="item.pos_name" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
@@ -222,7 +206,7 @@
                     </el-form-item>
                     <el-row type="flex" class="row-bg" justify="center">
                         <el-col :span="2">
-                            <el-button type="primary" v-on:click="submitForm('scene')" id="button">保存</el-button>
+                            <el-button type="primary"  v-on:click="submitForm('scene')" id="button">保存</el-button>
                         </el-col>
                         <el-col :span="2">
                             <el-button @click="hide" id="button">取消</el-button>
@@ -242,20 +226,20 @@
             <div style="margin-top: 20px">
                 <el-form ref="scene_edit" :model="scene_edit" :rules="rules" label-width="80px">
                     <el-form-item label="场景名称" prop="scene_name">
-                        <el-input placeholder="请输入场景名称" v-model="scene_edit.scene_name" style="width: 30%"></el-input>
+                       <el-input placeholder="请输入场景名称" v-model="scene_edit.scene_name" style="width: 30%"></el-input>
                     </el-form-item>
                     <el-form-item label="轮播日历">
                         <el-select v-model="scene_edit.area" placeholder="请选择日历的地区">
                             <el-option
-                                    v-for="item in areas"
-                                    :key="item.value"
-                                    :label="item.area"
-                                    :value="item.value">
+                              v-for="item in areas"
+                              :key="item.value"
+                              :label="item.area"
+                              :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="轮播时间">
-                        <el-col :span="5">
+                     <el-form-item label="轮播时间" >
+                          <el-col :span="5">
                             <el-form-item prop="scene_startTime">
                                 <el-time-picker v-model="scene_edit.scene_startTime" placeholder="开始时间点" format="HH:mm"
                                                 value-format="HH:mm">
@@ -265,15 +249,15 @@
                         <el-col class="line" :span="1">—</el-col>
                         <el-col :span="11">
                             <el-form-item prop="scene_endTime">
-                                <el-time-picker v-model="scene_edit.scene_endTime" placeholder="结束时间点" format="HH:mm"
+                                <el-time-picker v-model="scene_edit.scene_endTime"  placeholder="结束时间点" format="HH:mm"
                                                 value-format="HH:mm">
                                 </el-time-picker>
                             </el-form-item>
                         </el-col>
-                    </el-form-item>
-                    </el-form-item>
-                    <el-form-item label="场景适用岗位" prop="pos_name">
-                        <el-select placeholder="请选择" v-model="scene_edit.pos_name">
+                     </el-form-item>
+                     </el-form-item>
+                    <el-form-item label="适用岗位"  prop="pos_name">
+                        <el-select  placeholder="请选择" v-model="scene_edit.pos_name" >
                             <el-option v-for="item in pos" :label="item.pos_name" :value="item.pos_name"></el-option>
                         </el-select>
                     </el-form-item>
@@ -297,125 +281,120 @@
 
     </el-card>
     <el-row class="monitor_edit">
-        <el-col :span="22">
-            <h1 style="rgba(40, 147, 108, 0.45);line-height: 60px;text-align: center">场景编排</h1>
-        </el-col>
-        <el-col :span="2">
-            <el-col :span="24">
-                <button @click="monitor_edit_close"
-                        style="margin-top: 10px;background: beige;width: 100%;line-height: 50px;border: none;border-radius: 10px;">
-                    <el-col :span="24">
-                        <span class="save">保存</span>
-                    </el-col>
-                </button>
-            </el-col>
-        </el-col>
-        <el-col :span="6">
-            <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245);position: relative">
-                <h2 class="monitor_title" style="line-height:48px;background:#283593;text-align: center;color: #ffffff">
-                    监控项</h2>
-                <el-col :span="24">
-                    <h3 @click="monitor_type_switch(1)" class="monitor_type">基本监控项</h3>
+                <el-col :span="22">
+                    <h1 style="rgba(40, 147, 108, 0.45);line-height: 60px;text-align: center">场景编排</h1>
                 </el-col>
-                <div class="monitor_list">
-                    <el-col :span="12" v-for="(i,index) in base_monitor" :key="index">
-                        <div @click="add_base_monitor(i)">
-                            <p>{{ i.monitor_name }}</p>
-                            <i class="bk-icon icon-monitors"></i>
-                        </div>
-                    </el-col>
+                <el-col :span="2">
                     <el-col :span="24">
-                        <el-pagination :page-count="base_page_count" background layout="prev, pager, next"
-                                       style="float:right"
+                        <button @click="monitor_edit_close" style="margin-top: 10px;background: beige;width: 100%;line-height: 50px;border: none;border-radius: 10px;">
+                            <el-col :span="24">
+                                <span class="save" >保存</span>
+                            </el-col>
+                        </button>
+                    </el-col>
+                </el-col>
+                <el-col :span="5">
+                    <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245);position: relative">
+                        <h2 class="monitor_title" style="line-height:48px;background:#283593;text-align: center;color: #ffffff">监控项</h2>
+                        <el-col :span="24">
+                                <h3 @click="monitor_type_switch(1)" class="monitor_type" >基本监控项</h3>
+                        </el-col>
+                        <div class="monitor_list">
+                            <el-col :span="12" v-for="(i,index) in base_monitor" :key="index">
+                                <div @click="add_base_monitor(i)">
+                                    <p>{{ i.monitor_name }}</p>
+                                    <i class="bk-icon icon-monitors"></i>
+                                </div>
+
+                            </el-col>
+                            <el-col :span="24">
+                                <el-pagination :page-count="base_page_count" background layout="prev, pager, next" style="float:right"
                                        @current-change="current_change1"></el-pagination>
-                    </el-col>
-                </div>
-                <el-col :span="24">
-                    <h3 @click="monitor_type_switch(2)" class="monitor_type">图表监控项</h3>
-                </el-col>
-                <div class="monitor_list">
-                    <el-col :span="12" v-for="(i,index) in chart_monitor" :key="index">
-                        <div @click="add_chart_monitor(i)">
-                            <p>{{ i.monitor_name }}</p>
-                            <i class="bk-icon icon-panel-permission"></i>
+                            </el-col>
                         </div>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-pagination :page-count="chart_page_count" background layout="prev, pager, next"
-                                       style="float:right"
-                                       @current-change="current_change2"></el-pagination>
-                    </el-col>
+                        <el-col :span="24">
+                                <h3 @click="monitor_type_switch(2)" class="monitor_type">图表监控项</h3>
+                        </el-col>
+                        <div class="monitor_list">
+                            <el-col :span="12" v-for="(i,index) in chart_monitor" :key="index">
+                                <div @click="add_chart_monitor(i)">
+                                    <p>{{ i.monitor_name }}</p>
+                                    <i class="bk-icon icon-panel-permission"></i>
+                                </div>
+                            </el-col>
+                            <el-col :span="24">
+                                <el-pagination :page-count="chart_page_count" background layout="prev, pager, next" style="float:right"
+                                   @current-change="current_change2"></el-pagination>
+                            </el-col>
 
-                </div>
-                <el-col :span="24">
-                    <h3 @click="monitor_type_switch(3)" class="monitor_type">作业监控项</h3>
-                </el-col>
-                <div class="monitor_list">
-                    <el-col :span="12" v-for="(i,index) in job_monitor" :key="index">
-                        <div @click="add_job_monitor(i)">
-                            <p>{{ i.monitor_name }}</p>
-                            <i class="bk-icon icon-monitors"></i>
                         </div>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-pagination :page-count="job_page_count" background layout="prev, pager, next"
-                                       style="float:right"
-                                       @current-change="current_change3"></el-pagination>
-                    </el-col>
+                        <el-col :span="24">
+                                <h3 @click="monitor_type_switch(3)" class="monitor_type">作业监控项</h3>
+                        </el-col>
+                        <div class="monitor_list">
+                            <el-col :span="12" v-for="(i,index) in job_monitor" :key="index">
+                                <div @click="add_job_monitor(i)">
+                                    <p>{{ i.monitor_name }}</p>
+                                    <i class="bk-icon icon-monitors"></i>
+                                </div>
+                            </el-col>
+                            <el-col :span="24">
+                                <el-pagination :page-count="job_page_count" background layout="prev, pager, next" style="float:right"
+                                   @current-change="current_change3"></el-pagination>
+                            </el-col>
 
-                </div>
-                <el-col :span="24">
-                    <h3 @click="monitor_type_switch(4)" class="monitor_type">流程监控项</h3>
-                </el-col>
-                <div class="monitor_list">
-                    <el-col :span="12" v-for="(i,index) in flow_monitor" :key="index">
-                        <div @click="add_flow_monitor(i)">
-                            <p>{{ i.monitor_name }}</p>
-                            <i class="bk-icon icon-monitors"></i>
                         </div>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-pagination :page-count="flow_page_count" background layout="prev, pager, next"
-                                       style="float:right"
-                                       @current-change="current_change4"></el-pagination>
-                    </el-col>
+                        <el-col :span="24">
+                                <h3 @click="monitor_type_switch(4)" class="monitor_type">流程监控项</h3>
+                        </el-col>
+                        <div class="monitor_list">
+                            <el-col :span="12" v-for="(i,index) in flow_monitor" :key="index">
+                                <div @click="add_flow_monitor(i)">
+                                    <p>{{ i.monitor_name }}</p>
+                                    <i class="bk-icon icon-monitors"></i>
+                                </div>
+                            </el-col>
+                            <el-col :span="24">
+                                <el-pagination :page-count="flow_page_count" background layout="prev, pager, next" style="float:right"
+                                   @current-change="current_change4"></el-pagination>
+                            </el-col>
 
-                </div>
-                <div style="position: absolute;bottom: 0;right: 0;font-size:30px;width: 100%">
-                    <i class="el-icon-circle-plus-outline"></i>
-                    <i class="el-icon-remove-outline"></i>
-                </div>
-            </div>
+                        </div>
+                        <div style="position: absolute;bottom: 0;right: 0;font-size:30px;width: 100%">
+                            <i class="el-icon-circle-plus-outline"></i>
+                            <i class="el-icon-remove-outline"></i>
+                        </div>
+                    </div>
 
-        </el-col>
-        <el-col :span="18">
-            <div class="monitor_content" style="min-height: 600px;background: rgb(244, 244, 245)">
+                </el-col>
+                <el-col :span="19">
+                    <div class="monitor_content" style="min-height: 600px;background: rgb(244, 244, 245)">
 
-            </div>
-        </el-col>
-    </el-row>
+                    </div>
+                </el-col>
+            </el-row>
 </div>
 <script type="text/javascript">
-    //csrf验证
+//csrf验证
     axios.interceptors.request.use((config) => {
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
         let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
         return config
     });
-    var vm = new Vue({
+    var vm=new Vue({
         el: '.content',
 
         data: {
-            page_count: 100,//分页总页数
-            page: 1,                                   //分页页码数
+            page_count:100,//分页总页数
+            page:1,                                   //分页页码数
             start_time: '8:00',
             end_time: '16:00',
             falg: false,
-            selectvalue: '',
-            search: '',//搜索框的值
+            selectvalue:'',
+            search:'',//搜索框的值
             isAdd: 1,
-            areas: [],
+            areas:[],
             imgUrl: './static/1.png',
             chartData: {
                 columns: ['日期', '下单用户'],
@@ -435,63 +414,63 @@
             currentPage3: 5,
             currentPage4: 4,
             tableData: [],
-            pos: [],//岗位
+            pos:[],//岗位
 
             scene: {                            //场景管理
                 scene_name: '', //场景名称
-                scene_startTime: '',
-                pos_name: '',
-                scene_endTime: '',
-                area: 1,
+                scene_startTime:'',
+                pos_name:'',
+                scene_endTime:'',
+                area:1,
             },
             scene1: {                            //场景管理
                 scene_name: '', //场景名称
-                scene_startTime: '',
-                pos_name: '',
-                scene_endTime: '',
-                area: 1,
+                scene_startTime:'',
+                pos_name:'',
+                scene_endTime:'',
+                area:1,
             },
-            scene_edit: {                       //编辑页面中的
-                id: '',
+            scene_edit:{                       //编辑页面中的
+                id:'',
                 scene_name: '', //场景名称
-                pos_name: '',//岗位
-                scene_startTime: '',
-                scene_endTime: '',
-                area: 1,
+                pos_name:'',//岗位
+                 scene_startTime:'',
+                scene_endTime:'',
+                area:1,
             },
 
             rules: {
                 scene_name: [
                     {required: true, message: '请输入场景名称', trigger: 'blur'}
                 ],
-                pos_name: [
+                pos_name:[
                     {required: true, message: '请选择岗位', trigger: 'change'}
                 ],
-                scene_startTime: [
+                scene_startTime:[
                     {type: 'string', required: true, message: '请选择开始时间', trigger: 'change'}
                 ],
-                scene_endTime: [
-                    {type: 'string', required: true, message: '请选择结束时间', trigger: 'change'}
+                scene_endTime:[
+                     {type: 'string', required: true, message: '请选择结束时间', trigger: 'change'}
                 ]
             },
-            result_list: [],
-            result_list_edit: [],
-            base_page_count: 0,
-            chart_page_count: 0,
-            job_page_count: 0,
-            flow_page_count: 0,
-            monitor_type: 0,
-            page1: 1,
-            limit: 4,
-            base_monitor: [],
-            chart_monitor: [],
-            job_monitor: [],
-            flow_monitor: [],
-            drigging_id: 1,      //画布元素id
-            show_num: 0,
-            monitor_data: [],
-            scale: 1,            //比例
-            multiple: 1,
+            result_list:[],
+            result_list_edit:[],
+            base_page_count:0,
+            chart_page_count:0,
+            job_page_count:0,
+            flow_page_count:0,
+            monitor_type:0,
+            page1:1,
+            limit:4,
+            base_monitor:[],
+            chart_monitor:[],
+            job_monitor:[],
+            flow_monitor:[],
+            drigging_id:1,      //画布元素id
+            show_num:0,
+            monitor_data:[],
+            scale:1,            //比例
+            multiple:1,
 
         },
 
@@ -533,20 +512,20 @@
                     }
                 });
             },
-            get_all_area() {
-                axios({
-                    method: 'get',
-                    url: '/market_day/get_all_area',
-                }).then(function (res) {
-                    res = res.data.message
-                    vm.areas = []
-                    for (var i = 0; i < res.length; i++) {
-                        var label = res[i].country + "(" + res[i].timezone + ")"
-                        temp = {
-                            'area': label,
-                            'value': res[i].id
-                        }
-                        vm.areas.push(temp)
+            get_all_area(){
+            axios({
+                method:'get',
+                url:'/market_day/get_all_area',
+            }).then(function (res) {
+                res=res.data.message
+                vm.areas=[]
+                for (var i=0;i<res.length;i++){
+                    var label=res[i].country+"("+res[i].timezone+")"
+                    temp={
+                        'area':label,
+                        'value':res[i].id
+                    }
+                    vm.areas.push(temp)
                     }
                 })
             },
@@ -554,15 +533,15 @@
                 vm.page = value;
                 vm.paging()
             },
-            paging() {
-                axios({
+            paging(){
+               axios({
                     method: 'post',
                     url: '${SITE_URL}monitorScene/paging/',
-                    data: {
-                        page: vm.page,
-                        limit: 10
+                    data:{
+                        page:vm.page,
+                        limit:10
                     },
-                }).then(function (res) {
+                }).then(function(res) {
                     vm.tableData = res.data.message;
                     vm.page_count = res.data.message[0].page_count;
                 })
@@ -583,18 +562,18 @@
                 vm.sen_position()
                 vm.scene = vm.scene1
                 setTimeout(function () {
-                    vm.Time()
+                     vm.Time()
 
 
-                }, 100)
+                },100)
             },
-            edit(row) {
+            edit(row){
                 vm.scene_edit.id = row.id
                 vm.scene_edit.scene_name = row.scene_name
                 vm.scene_edit.scene_startTime = row.scene_startTime
                 vm.scene_edit.scene_endTime = row.scene_endTime
-                vm.scene_edit.pos_name = row.pos_name
-                vm.scene_edit.area = row.scene_area
+                vm.scene_edit.pos_name =  row.pos_name
+                vm.scene_edit.area=row.scene_area
                 this.isAdd = 3
                 vm.sen_position()
                 vm.monitore_edit_start(row.id)
@@ -604,17 +583,17 @@
                 }, 100)
 
             },
-            monitore_edit_start(value) {    //获取场景监控项信息
+            monitore_edit_start(value){    //获取场景监控项信息
 
                 axios({
-                    method: 'post',
-                    url: '${SITE_URL}monitorScene/scene_data/',
-                    data: value,
+                    method:'post',
+                    url:'${SITE_URL}monitorScene/scene_data/',
+                    data:value,
                 }).then(function (res) {
-                    vm.result_list_edit = res.data.results;
-                    vm.result_list = vm.result_list_edit;
-                    vm.scale = parseFloat(res.data.results[0].scale);
-                    vm.multiple = Math.round((vm.scale - 1) * 10);
+                    vm.result_list_edit=res.data.results;
+                    vm.result_list=vm.result_list_edit;
+                    vm.scale=parseFloat(res.data.results[0].scale);
+                    vm.multiple = Math.round((vm.scale-1)*10);
                 })
             },
             hide() {
@@ -623,91 +602,94 @@
                 $('.monitor_content').html('');
             },
             async goto() {
-                if ($('.monitor_content').html() == '') {     //场景编排内容块无元素
-                    $('.monitor_edit').css('display', 'block');
-                    vm.show_num = vm.isAdd;
-                    vm.isAdd = 0;
-                    let result_list_edit = vm.result_list_edit;
-                    let max = 0;
-                    let index = 0;
-                    for (var i = 0; i < result_list_edit.length; i++) {
-                        if (max < result_list_edit[i].order) {  //场景监控项拖拽元素唯一
-                            max = result_list_edit[i].order;
+                if($('.monitor_content').html()==''){     //场景编排内容块无元素
+                    $('.monitor_edit').css('display','block');
+                    vm.show_num=vm.isAdd;
+                    vm.isAdd=0;
+                    let result_list_edit=vm.result_list_edit;
+                    let max=0;
+                    let index=0;
+                    for(var i=0;i<result_list_edit.length;i++){
+                        if(max<result_list_edit[i].order){  //场景监控项拖拽元素唯一
+                            max=result_list_edit[i].order;
                         }
-                        if (result_list_edit[i].monitor_type == '基本单元类型') {
+                        if(result_list_edit[i].monitor_type=='基本单元类型'){
                             let res = await axios({
-                                method: 'post',
-                                url: '${SITE_URL}monitorScene/monitor_scene_show/',
-                                data: result_list_edit[i].item_id,
+                                method:'post',
+                                url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                                data:result_list_edit[i].item_id,
                             })
                             vm.monitor_data = res.data.results;
-                            $('.monitor_content').append('<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" type=\"basic' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"></div>');
-                            base_monitor(vm.monitor_data[0].id, vm.monitor_data[0].font_size, vm.monitor_data[0].height, vm.monitor_data[0].width, vm.monitor_data[0].contents);
+                            $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"basic'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"></div>');
+                            base_monitor(vm.monitor_data[0].id,vm.monitor_data[0].font_size,vm.monitor_data[0].height,vm.monitor_data[0].width,vm.monitor_data[0].contents);
+
+
 
 
                         }
-                        if (result_list_edit[i].monitor_type == '图表单元类型') {
+                        if(result_list_edit[i].monitor_type=='图表单元类型'){
                             let res = await axios({
-                                method: 'post',
-                                url: '${SITE_URL}monitorScene/monitor_scene_show/',
-                                data: result_list_edit[i].item_id,
+                                method:'post',
+                                url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                                data:result_list_edit[i].item_id,
                             })
                             vm.monitor_data = res.data.results;
-                            $('.monitor_content').append('<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"background:beige;height:' + vm.monitor_data[0].height + 'px;width:' + vm.monitor_data[0].width + 'px;top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"><div id=\"chart' + result_list_edit[i].order + '\" style=\"background:beige;height:' + vm.monitor_data[0].height + 'px;width:' + vm.monitor_data[0].width + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
-                            show_chart(vm.monitor_data[0].id, "", "", vm.monitor_data[0].gather_params, vm.monitor_data[0].height, vm.monitor_data[0].width, result_list_edit[i].order, vm.monitor_data[0].contents);
+                            $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px;top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"><div id=\"chart'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
+                            show_chart(vm.monitor_data[0].id,"","", vm.monitor_data[0].gather_params, vm.monitor_data[0].height, vm.monitor_data[0].width, result_list_edit[i].order, vm.monitor_data[0].contents);
 
                         }
-                        if (result_list_edit[i].monitor_type == '作业单元类型') {
+                        if(result_list_edit[i].monitor_type=='作业单元类型'){
                             let res = await axios({
-                                method: 'post',
-                                url: '${SITE_URL}monitorScene/monitor_scene_show/',
-                                data: result_list_edit[i].item_id,
+                                method:'post',
+                                url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                                data:result_list_edit[i].item_id,
                             });
                             vm.monitor_data = res.data.results;
                             let job_params = vm.monitor_data[0];
-                            $('.monitor_content').append('<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" type=\"job' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"></div>');
+                            $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"job'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"></div>');
                             job_monitor(job_params);
                         }
-                        if (result_list_edit[i].monitor_type == '流程单元类型') {
+                        if(result_list_edit[i].monitor_type=='流程单元类型'){
                             let res = await axios({
-                                method: 'post',
-                                url: '${SITE_URL}monitorScene/monitor_scene_show/',
-                                data: result_list_edit[i].item_id,
+                                method:'post',
+                                url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                                data:result_list_edit[i].item_id,
                             })
-                            vm.monitor_data = res.data.results;
-                            let jion_id = [{
-                                "id": vm.monitor_data[0].jion_id
+                            vm.monitor_data=res.data.results;
+                            let jion_id=[{
+                                "id":vm.monitor_data[0].jion_id
                             }];
-                            $('.monitor_content').append('<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"><div type=\"flow_monitor' + result_list_edit[i].order + '\"></div></div>');
-                            flow_monitor(jion_id, result_list_edit[i].order);
+                            $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"><div type=\"flow_monitor'+result_list_edit[i].order+'\"></div></div>');
+                            flow_monitor(jion_id,result_list_edit[i].order);
                         }
 
                     }
-                    vm.drigging_id = max + 1;
-                } else {
-                    $('.monitor_edit').css('display', 'block');
-                    vm.show_num = vm.isAdd;
-                    vm.isAdd = 0;
+                    vm.drigging_id=max+1;
+                }
+                else {
+                    $('.monitor_edit').css('display','block');
+                    vm.show_num=vm.isAdd;
+                    vm.isAdd=0;
                 }
 
 
             },
-            monitor_edit_close() {
-                $('.monitor_edit').css('display', 'none');
-                vm.isAdd = vm.show_num;
-                vm.show_num = 0;
+            monitor_edit_close(){
+                $('.monitor_edit').css('display','none');
+                vm.isAdd=vm.show_num;
+                vm.show_num=0;
             },
-            a() {
+            a(){
                 scene_name: ''//场景名称
                 scene_startTime:''
                 pos_name:''
                 scene_endTime:''
             },
 
-            select_table() {
-                if (vm.search == "") {
+            select_table(){
+                if(vm.search == ""){
                     vm.paging()
-                } else {
+                }else {
                     vm.scene.scene_endTime = $(".back-bar").children().eq(2).html()
                     vm.scene.scene_startTime = $(".back-bar").children().eq(4).html()
                     axios({
@@ -720,56 +702,56 @@
                 }
 
             },
-            delect(row) {
+            delect(row){
                 this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true,
-                }).then(() => {
-                    this.$message({
-                            type: 'success',
-                            message: '删除成功!',
-                        },
-                        axios({
-                            method: 'post',
-                            url: '${SITE_URL}monitorScene/delect/',
-                            data: row.id
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true,
+            }).then(() => {
+                this.$message({
+                        type: 'success',
+                        message: '删除成功!',
+                    },
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}monitorScene/delect/',
+                        data:  row.id
 
-                        }).then((res) => {
-                            vm.paging();
-                        }),);
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
+                    }).then((res) => {
+                        vm.paging();
+                    }),);
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
                 });
+            });
             },
 
-            Time() {
+            Time(){
 
                 setInterval(function () {
 
                     $(".back-bar").children().eq(1).mouseup(function () {
-                        var low = -$(".back-bar").children().eq(2).html()
-                        a = (Math.floor(low / 60) + 12) + ":" + ((1200 + low) % 60);
-                        setTimeout(function () {
+                           var low=-$(".back-bar").children().eq(2).html()
+                           a=(Math.floor(low/60)+12)+":"+((1200+low)%60);
+                          setTimeout(function () {
                             $(".back-bar").children().eq(2).html(a)
-                            $(".back-bar").children().eq(2).show()
-                        }, 100)
+                             $(".back-bar").children().eq(2).show()
+                         },100)
                     })
                     $(".back-bar").children().eq(3).mouseup(function () {
-                        var high = $(".back-bar").children().eq(4).html()
-                        b = (Math.floor(high / 60) + 12) + ":" + ((1200 + high) % 60);
-                        setTimeout(function () {
+                          var high=$(".back-bar").children().eq(4).html()
+                            b=(Math.floor(high/60)+12)+":"+((1200+high)%60);
+                         setTimeout(function () {
                             $(".back-bar").children().eq(4).html(b)
-                            $(".back-bar").children().eq(4).show()
-                        }, 100)
+                             $(".back-bar").children().eq(4).show()
+                         },100)
                     })
-                }, 500)
+                },500)
 
-                $('.slider-input').jRange({
+             $('.slider-input').jRange({
                     from: -1440,
                     to: 1440,
                     step: 1,
@@ -782,100 +764,104 @@
 
 
             },
-            sen_position() {
+            sen_position(){
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitorScene/pos_name/',
-                }).then(function (res) {
-                    vm.pos = res.data.message
+                }).then(function(res) {
+                       vm.pos = res.data.message
                 })
             },
 
-            show1() {
+            show1(){
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitorScene/scene_show/',
                     data: {
-                        limit: vm.limit,
-                        type: vm.monitor_type,
-                        page: vm.page1
+                        limit:vm.limit,
+                        type:vm.monitor_type,
+                        page:vm.page1
                     },
-                }).then((res) => {
-                    if (vm.monitor_type == 0) {
-                        vm.base_monitor = res.data.results.base_list;
-                        vm.chart_monitor = res.data.results.chart_list;
-                        vm.job_monitor = res.data.results.job_list;
-                        vm.flow_monitor = res.data.results.flow_list;
-                        vm.base_page_count = res.data.results.base_list[0].page_count;
-                        vm.chart_page_count = res.data.results.chart_list[0].page_count;
-                        vm.job_page_count = res.data.results.job_list[0].page_count;
-                        vm.flow_page_count = res.data.results.flow_list[0].page_count;
-                    } else if (vm.monitor_type == 1) {
-                        vm.base_monitor = res.data.results.base_list;
-                        vm.base_page_count = res.data.results.base_list[0].page_count;
-                    } else if (vm.monitor_type == 2) {
-                        vm.chart_monitor = res.data.results.chart_list;
-                        vm.chart_page_count = res.data.results.chart_list[0].page_count;
-                    } else if (vm.monitor_type == 3) {
-                        vm.job_monitor = res.data.results.job_list;
-                        vm.job_page_count = res.data.results.job_list[0].page_count;
-                    } else if (vm.monitor_type == 4) {
-                        vm.flow_monitor = res.data.results.flow_list;
-                        vm.flow_page_count = res.data.results.flow_list[0].page_count;
+                }).then((res)=> {
+                    if (vm.monitor_type == 0){
+                        vm.base_monitor=res.data.results.base_list;
+                        vm.chart_monitor=res.data.results.chart_list;
+                        vm.job_monitor=res.data.results.job_list;
+                        vm.flow_monitor=res.data.results.flow_list;
+                        vm.base_page_count=res.data.results.base_list[0].page_count;
+                        vm.chart_page_count=res.data.results.chart_list[0].page_count;
+                        vm.job_page_count=res.data.results.job_list[0].page_count;
+                        vm.flow_page_count=res.data.results.flow_list[0].page_count;
+                    }
+                    else if (vm.monitor_type == 1) {
+                        vm.base_monitor=res.data.results.base_list;
+                        vm.base_page_count=res.data.results.base_list[0].page_count;
+                    }
+                    else if (vm.monitor_type == 2) {
+                        vm.chart_monitor=res.data.results.chart_list;
+                        vm.chart_page_count=res.data.results.chart_list[0].page_count;
+                    }
+                    else if (vm.monitor_type == 3) {
+                        vm.job_monitor=res.data.results.job_list;
+                        vm.job_page_count=res.data.results.job_list[0].page_count;
+                    }
+                    else if (vm.monitor_type == 4) {
+                        vm.flow_monitor=res.data.results.flow_list;
+                        vm.flow_page_count=res.data.results.flow_list[0].page_count;
                     }
                 });
             },
-            add_base_monitor(i) {
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" type=\"basic' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"transform: scale(' + vm.scale + ')\"></div>');
-                base_monitor(i.id, i.font_size, i.height, i.width, i.contents);
+            add_base_monitor(i){
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"basic'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"transform: scale('+vm.scale+')\"></div>');
+                base_monitor(i.id,i.font_size,i.height,i.width,i.contents);
                 vm.drigging_id++
             },
-            add_chart_monitor(i) {
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"transform: scale(' + vm.scale + ')\"><div id=\"chart' + i.id + '\" style=\"background:beige;height:' + i.height + 'px;width:' + i.width + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
-                show_chart(i.id, "", "", i.gather_params, i.height, i.width, vm.drigging_id, i.contents);
+            add_chart_monitor(i){
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"transform: scale('+vm.scale+')\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+i.height+'px;width:'+i.width+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
+                show_chart(i.id,"","",i.gather_params,i.height,i.width,vm.drigging_id,i.contents);
                 vm.drigging_id++;
             },
-            add_job_monitor(i) {
-                var job_params = {
-                    'id': i.id,
-                    'width': i.width,
-                    'height': i.height,
-                    'status': i.job_status,
-                    'contents': i.contents
+            add_job_monitor(i){
+                var job_params={
+                    'id':i.id,
+                    'width' :i.width,
+                    'height':i.height,
+                    'status':i.job_status,
+                    'contents':i.contents
                 }
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" type=\"job' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"transform: scale(' + vm.scale + ')\"></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"job'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"transform: scale('+vm.scale+')\"></div>')
                 job_monitor(job_params)
                 vm.drigging_id++;
             },
-            add_flow_monitor(i) {
-                let jion_id = [{
-                    "id": i.jion_id
+            add_flow_monitor(i){
+                let jion_id=[{
+                    "id":i.jion_id
                 }]
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"transform: scale(' + vm.scale + ')\"><div type=\"flow_monitor' + vm.drigging_id + '\"></div></div>')
-                flow_monitor(jion_id, vm.drigging_id)
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"transform: scale('+vm.scale+')\"><div type=\"flow_monitor'+vm.drigging_id+'\"></div></div>')
+                flow_monitor(jion_id,vm.drigging_id)
                 vm.drigging_id++;
             },
             current_change1(value) {
                 vm.page1 = value;
-                vm.monitor_type = 1;
+                vm.monitor_type=1;
                 vm.show1();
             },
             current_change2(value) {
                 vm.page1 = value;
-                vm.monitor_type = 2;
+                vm.monitor_type=2;
                 vm.show1();
             },
             current_change3(value) {
                 vm.page1 = value;
-                vm.monitor_type = 3;
+                vm.monitor_type=3;
                 vm.show1();
             },
             current_change4(value) {
                 vm.page1 = value;
-                vm.monitor_type = 4;
+                vm.monitor_type=4;
                 vm.show1();
             },
-            monitor_type_switch(value) {
+            monitor_type_switch(value){
                 vm.monitor_type = value;
                 vm.show1()
             },
@@ -887,146 +873,146 @@
     vm.paging();
     $('.monitor_type').click(function () {
         $(this).parent().next('div').animate({
-            height: 'toggle'
+           height:'toggle'
         });
         $(this).parent().next('div').siblings('.monitor_list').animate({
-            height: "hide"
+            height:"hide"
         });
     });
-    document.oncontextmenu = function () {
-        return false;
+    document.oncontextmenu = function(){
+    　　return false;
     };
     $(function () {
         $('.save').click(function () {
-            var len = $('.Drigging').length;
-            var order, item_id, x, y, score;
-            var scale = 1.0, score = 0.0;
-            vm.result_list = [];
-            for (var i = 0; i < len; i++) {
-                order = $('.Drigging').eq(i).attr('id');
-                item_id = $('.Drigging').eq(i).attr('name');
-                x = $('.Drigging').eq(i).position().left;
-                y = $('.Drigging').eq(i).position().top;
-                var style = $('.Drigging').eq(i).attr('style');
-                if (style.indexOf('scale') > -1) {
-                    scale = parseFloat(style.split('scale')[1].substring(style.split('scale')[1].indexOf('(') + 1, style.split('scale')[1].indexOf(')')));
+            var len=$('.Drigging').length;
+            var order,item_id,x,y,score;
+            var scale=1.0,score=0.0;
+            vm.result_list=[];
+                for(var i=0;i<len;i++){
+                     order = $('.Drigging').eq(i).attr('id');
+                     item_id = $('.Drigging').eq(i).attr('name');
+                     x=$('.Drigging').eq(i).position().left;
+                     y=$('.Drigging').eq(i).position().top;
+                     var style=$('.Drigging').eq(i).attr('style');
+                    if(style.indexOf('scale')>-1){
+                        scale= parseFloat(style.split('scale')[1].substring(style.split('scale')[1].indexOf('(')+1,style.split('scale')[1].indexOf(')')));
+                    }
+                    score=$('.Drigging').eq(i).find('.score_input').val();
+                    var data = {
+                        'order':order,
+                        'item_id':item_id,
+                        'x':x,
+                        'y':y,
+                        'scale':scale,
+                        'score':score
+                    };
+                    vm.result_list.push(data);
                 }
-                score = $('.Drigging').eq(i).find('.score_input').val();
-                var data = {
-                    'order': order,
-                    'item_id': item_id,
-                    'x': x,
-                    'y': y,
-                    'scale': scale,
-                    'score': score
-                };
-                vm.result_list.push(data);
-            }
         })
     });
     $(function () {
-        var obox = $('.monitor_content');
-        var selector = '';
-        var flag = false;
-        var x, y;
-        var offsetLeft, offsetTop;
-        $(document).on("mouseover", ".Drigging", function () {
-            $(this).css('cursor', 'pointer');//当鼠标移动到拖拽目标上的时候，将鼠标的样式设置为移动(move)
-        });
-        $(document).on("mousedown", ".Drigging", function (e) {
-            var e = window.event || e;
-            selector = '#' + this.id;
-            flag = true;//当鼠标在移动元素按下的时候将flag设定为true
-            x = e.clientX;//获取鼠标在当前窗口的相对偏移位置的Left值并赋值给x
-            y = e.clientY;//获取鼠在当前窗口的相对偏移位置的Top值并赋值给y
-            offsetLeft = $(selector).position().left;
-            offsetTop = $(selector).position().top;
-            $(this).css('cursor', 'pointer');
-        });
-        $(document).on("mouseup", "html", function () {
-            flag = false;//当鼠标在移动元素起来的时候将flag设定为false
-        });
-        $(document).on("mousedown", ".Drigging", function (e) {//监控项右击显示打分输入框
-            if (e.button == 2) {
-                e.preventDefault();
-                var x = e.offsetX + 10;
-                var y = e.offsetY + 10;
-                $(this).find('.right_click').css({
-                    left: x,
-                    top: y,
-                    display: 'block'
-                });
-                $(this).find('.right_click').off();
-                $(this).find('.score').on('click', function (e) {
-                    e.stopPropagation();
-                    $(selector + ' .score_input').css('display', 'block');
-                    $('.right_click').css('display', 'none');
-                })
-                $(this).find('.delete').on('click', function (e) {
-                    e.stopPropagation();
-                    $(this).parent().parent().remove();
-
-                })
-
-            }
-        });
-        $(document).on("blur", ".score_input", function () {//打分输入框失去焦点隐藏
-            $('.score_input').css('display', 'none');
-        });
-        $(document).mousemove(function (e) {
-            if (!flag)//如果flag为false则返回
-                return;//当flag为true的时候执行下面的代码
-            e.preventDefault();
-            var e = window.event || e;
-            var _x = e.clientX - x + offsetLeft + Math.abs(vm.multiple) * $(selector).width() * (vm.scale - 1) / 2;
-            //event.clientX得到鼠标相对于客户端正文区域的偏移
-            //然后减去offsetLeft即得到当前推拽元素相对于当前窗口的X值
-            //（减去鼠标刚开始拖动的时候在当前窗口的偏移X）
-            var _y = e.clientY - y + offsetTop + Math.abs(vm.multiple) * $(selector).height() * (vm.scale - 1) / 2;
-            //event.clientY得到鼠标相对于客户端正文区域的偏移
-            //然后减去offsetTop即得到当前推拽元素相对于当前窗口的Y值
-            //（减去鼠标刚开始拖动的时候在当前窗口的偏移Y）
-            if (_x < 0) {
-                _x = 0 + $(selector).width() * (vm.scale - 1) / 2;
-            }
-            if (_y < 0) {
-                _y = 0 + $(selector).height() * (vm.scale - 1) / 2;
-            }
-            if (_x > obox.width() - $(selector).width()) {
-
-                //_x=obox.width()-$(selector).width();
-                _x = obox.width() - ($(selector).width() * (vm.scale - 1) / 2 + $(selector).width());
-            }
-            if (_y > obox.height() - $(selector).height()) {
-                //_y=obox.height()-$(selector).height();
-                _y = obox.height() - ($(selector).height() * (vm.scale - 1) / 2 + $(selector).height());
-            }
-            $(selector).css("left", _x);
-            $(selector).css("top", _y);
-            $(selector).css('cursor', 'pointer');
-
-
-        });
-        $('.el-icon-circle-plus-outline').click(function () {
-            if (vm.multiple < 3) {
-                vm.scale = vm.scale + 0.1;
-                $('.monitor_content').find('.Drigging').css('transform', 'scale(' + vm.scale + ')');
-                vm.multiple++;
-            } else {
-                return
-            }
-        });
-        $('.el-icon-remove-outline').click(function () {
-            if (vm.multiple > -2) {
-                vm.scale = vm.scale - 0.1;
-                $('.monitor_content').find('.Drigging').css('transform', 'scale(' + vm.scale + ')');
-                vm.multiple--;
-            } else {
-                return
-            }
-
-        });
+    var obox=$('.monitor_content');
+    var selector = '';
+    var flag=false;
+    var x,y;
+    var offsetLeft,offsetTop;
+    $(document).on("mouseover", ".Drigging", function () {
+        $(this).css('cursor', 'pointer');//当鼠标移动到拖拽目标上的时候，将鼠标的样式设置为移动(move)
     });
+    $(document).on("mousedown", ".Drigging", function (e) {
+        var e=window.event||e;
+        selector = '#' + this.id;
+        flag = true;//当鼠标在移动元素按下的时候将flag设定为true
+        x = e.clientX;//获取鼠标在当前窗口的相对偏移位置的Left值并赋值给x
+        y = e.clientY;//获取鼠在当前窗口的相对偏移位置的Top值并赋值给y
+        offsetLeft = $(selector).position().left;
+        offsetTop = $(selector).position().top;
+        $(this).css('cursor', 'pointer');
+    });
+    $(document).on("mouseup", "html", function () {
+        flag = false;//当鼠标在移动元素起来的时候将flag设定为false
+    });
+    $(document).on("mousedown", ".Drigging", function (e) {//监控项右击显示打分输入框
+        if(e.button == 2){
+            e.preventDefault();
+            var x = e.offsetX + 10;
+            var y = e.offsetY + 10;
+            $(this).find('.right_click').css({
+                left: x,
+                top: y,
+                display: 'block'
+            });
+            $(this).find('.right_click').off();
+            $(this).find('.score').on('click', function(e) {
+                e.stopPropagation();
+                $(selector+' .score_input').css('display', 'block');
+                $('.right_click').css('display', 'none');
+            })
+            $(this).find('.delete').on('click', function(e) {
+                e.stopPropagation();
+                $(this).parent().parent().remove();
+
+            })
+
+        }
+    });
+    $(document).on("blur", ".score_input", function(){//打分输入框失去焦点隐藏
+       $('.score_input').css('display','none');
+    });
+    $(document).mousemove(function (e) {
+        if (!flag)//如果flag为false则返回
+            return;//当flag为true的时候执行下面的代码
+        e.preventDefault();
+        var e=window.event||e;
+        var _x = e.clientX - x + offsetLeft+Math.abs(vm.multiple)*$(selector).width()*(vm.scale-1)/2;
+        //event.clientX得到鼠标相对于客户端正文区域的偏移
+        //然后减去offsetLeft即得到当前推拽元素相对于当前窗口的X值
+        //（减去鼠标刚开始拖动的时候在当前窗口的偏移X）
+        var _y = e.clientY - y + offsetTop+Math.abs(vm.multiple)*$(selector).height()*(vm.scale-1)/2;
+        //event.clientY得到鼠标相对于客户端正文区域的偏移
+        //然后减去offsetTop即得到当前推拽元素相对于当前窗口的Y值
+        //（减去鼠标刚开始拖动的时候在当前窗口的偏移Y）
+        if(_x<0){
+            _x=0+$(selector).width()*(vm.scale-1)/2;
+        }
+        if(_y<0){
+            _y=0+$(selector).height()*(vm.scale-1)/2;
+        }
+        if(_x>obox.width()-$(selector).width()){
+
+            //_x=obox.width()-$(selector).width();
+            _x=obox.width()-($(selector).width()*(vm.scale-1)/2+$(selector).width());
+        }
+        if(_y>obox.height()-$(selector).height()){
+            //_y=obox.height()-$(selector).height();
+            _y=obox.height()-($(selector).height()*(vm.scale-1)/2+$(selector).height());
+        }
+        $(selector).css("left", _x);
+        $(selector).css("top", _y);
+        $(selector).css('cursor', 'pointer');
+
+
+    });
+    $('.el-icon-circle-plus-outline').click(function () {
+        if(vm.multiple<3) {
+            vm.scale = vm.scale + 0.1;
+            $('.monitor_content').find('.Drigging').css('transform','scale('+vm.scale+')');
+            vm.multiple++;
+        }else {
+            return
+        }
+    });
+    $('.el-icon-remove-outline').click(function () {
+        if(vm.multiple>-2){
+            vm.scale=vm.scale-0.1;
+            $('.monitor_content').find('.Drigging').css('transform','scale('+vm.scale+')');
+            vm.multiple--;
+        }else {
+            return
+        }
+
+    });
+});
 </script>
 
 <script>
@@ -1035,15 +1021,15 @@
 
         //flow1_js_start
 
-        $('#save2').click(function () {
+        $('#save2').click(function() {
             // 获取全部数据
-            var data = $('#flow1').data('dataflow').getAllData();
+            var data= $('#flow1').data('dataflow').getAllData();
             var name = data.location[0];
             $('#result2').val(JSON.stringify(data));
         });
 
         // 清空画布
-        $('#resetCanvas').click(function () {
+        $('#resetCanvas').click(function() {
             $('#flow1').data('dataflow').resetCanvas();
         });
         //flow1_js_end
@@ -1054,14 +1040,14 @@
         //节点抽屉
         $('.tool-title').click(function () {
             $(this).next('.tool-list').animate({
-                height: 'toggle'
+                height:'toggle'
             });
             $(this).parent().siblings().children('.tool-list').animate({
-                height: "hide"
+                height:"hide"
             });
         });
 
-    }, 1)
+    },1)
 </script>
 </body>
 </html>

@@ -30,6 +30,6 @@ urlpatterns = patterns(
     (r'^alternate_play_test/$', 'alternate_play_test'),
     (r'^scene_data/$', 'scene_data'),
     (r'^monitor_scene_show/$', 'monitor_scene_show'),
-    (r'^get_all_user/$', 'get_all_user'),
+    (r'^get_all_pos/$', 'get_all_pos'),
 
 )
