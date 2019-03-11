@@ -3,7 +3,7 @@ from __future__ import division
 import json
 import math
 import sys
-from models import JobInstance, Localuser
+from models import pos_info, Localuser
 from django.forms.models import model_to_dict
 from shell_app import tools
 from django.db.models import Q
@@ -11,134 +11,162 @@ from django.core.paginator import Paginator
 from logmanagement.function import add_log,make_log_info,get_active_user
 import datetime
 
+#获取无岗位在岗位表的id
+def get_noposition_id():
+    noposition_id = pos_info.objects.get(pos_name=u'无岗位人员').id
+    return noposition_id
 
+#显示岗位--人员信息
 def show(request):
     res = json.loads(request.body)
+    #每页行数
     limit = res['limit']
+    #页数
     page = res['page']
+    # 获取无岗位id
+    noposition_id = get_noposition_id()
     #查出id大于等于1的岗位（岗位id=1是无岗位人员）
-    job = JobInstance.objects.filter(id__gt=1)
-    users = Localuser.objects.all()
-    p = Paginator(job, limit)
+    position_list = pos_info.objects.filter(~Q(id=noposition_id))
+    user_list = Localuser.objects.all()
+    #分页
+    p = Paginator(position_list, limit)
     count = p.page_range
     pages = count[-1]
     res_list = []
     current_page = p.page(page)
-    for x in current_page.object_list:
-        tmp = []
-        for y in users:
-            if x.id == y.user_pos.id:
-                tmp.append(y.user_name + ' ')
-        x.create_time = str(x.create_time)
-        x.edit_time = str(x.edit_time)
+    for pos in current_page.object_list:
+        users = []
+        for user in user_list:
+            #岗位对应的人员名
+            if pos.id == user.user_pos.id:
+                users.append(user.user_name + ' ')
+        pos.create_time = str(pos.create_time)
+        pos.edit_time = str(pos.edit_time)
         dic = {
-            'id': x.id,
-            'user_name': tmp,
-            'pos_name': x.pos_name,
-            'create_time':x.create_time,
-            'creator':x.creator,
-            'edit_time':x.edit_time,
-            'editor':x.editor,
+            'id': pos.id,
+            'user_name': users,
+            'pos_name': pos.pos_name,
+            'create_time':pos.create_time,
+            'creator':pos.creator,
+            'edit_time':pos.edit_time,
+            'editor':pos.editor,
             'page_count': pages
         }
         res_list.append(dic)
     return res_list
 
-
-def select_job(request):
+#查询岗位
+def select_pos(request):
+    #接受前台数据
     res = json.loads(request.body)
     limit = res['limit']
     page = res['page']
     search = res['search'].strip()
     res1 = search
     res_list = []
-    tmp = JobInstance.objects.filter(id__gt=1)
+    #获取无岗位id
+    noposition_id = get_noposition_id()
+    #获取
+    position_list = pos_info.objects.filter(~Q(id=noposition_id))
     #按岗位查询
-    job = tmp.filter(Q(pos_name__contains=res1))
+    positions = position_list.filter(Q(pos_name__contains=res1))
     #按人名查询
     users = Localuser.objects.filter(Q(user_name__contains=res1))
+    #查询结果整合
     for i in users:
         user_pos = i.user_pos_id
-        temp = JobInstance.objects.filter(id=user_pos)
-        job = job | temp
-    users = Localuser.objects.all()
-    p = Paginator(job, limit)
+        position = pos_info.objects.filter(id=user_pos)
+        positions = positions | position
+    user_list = Localuser.objects.all()
+    #分页
+    p = Paginator(positions, limit)
     count = p.page_range
     pages = count[-1]
     current_page = p.page(page)
-    for x in current_page.object_list:
-        tmp = []
-        for y in users:
-            if x.id == y.user_pos.id:
-                tmp.append(y.user_name + ' ')
-        x.create_time = str(x.create_time)
-        x.edit_time = str(x.edit_time)
+    #根据岗位id匹配用户表的user_pos_id整合返回
+    for pos in current_page.object_list:
+        usernames = []
+        for user in user_list:
+            #匹配
+            #
+            if pos.id == user.user_pos.id:
+                usernames.append(user.user_name + ' ')
+        pos.create_time = str(pos.create_time)
+        pos.edit_time = str(pos.edit_time)
         dic = {
-            'id': x.id,
-            'user_name': tmp,
-            'pos_name': x.pos_name,
-            'create_time':x.create_time,
-            'creator':x.creator,
-            'edit_time':x.edit_time,
-            'editor':x.editor,
+            'id': pos.id,
+            'user_name': usernames,
+            'pos_name': pos.pos_name,
+            'create_time':pos.create_time,
+            'creator':pos.creator,
+            'edit_time':pos.edit_time,
+            'editor':pos.editor,
             'page_count': pages
         }
         res_list.append(dic)
     return res_list
 
-
-def delete_job(request):
+#删除岗位
+def delete_pos(request):
     try:
         res = json.loads(request.body)
         id = res['id']
-        res1 = JobInstance.objects.get(id=id).delete()
-        info = make_log_info(u'删除岗位', u'业务日志', u'JobInstance', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '成功', '无')
+        res1 = pos_info.objects.get(id=id).delete()
+        info = make_log_info(u'删除岗位', u'业务日志', u'pos_info', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
         res1 = tools.error_result(e)
-        info = make_log_info(u'删除岗位', u'业务日志', u'JobInstance', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        info = make_log_info(u'删除岗位', u'业务日志', u'pos_info', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '失败', repr(e))
     add_log(info)
     return res1
 
-
-def add_job(request):
+#增加岗位
+def add_pos(request):
     try:
         res = json.loads(request.body)
-        tmp = get_active_user(request)
-        nowPerson = tmp['data']['bk_username']
+        #获取当前用户
+        nowPerson = get_active_user(request)['data']['bk_username']
         res['creator'] = nowPerson
-        re = JobInstance.objects.create(**res)
-        info = make_log_info(u'增加岗位', u'业务日志', u'JobInstance',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功','无')
+        re = pos_info.objects.create(**res)
+        info = make_log_info(u'增加岗位', u'业务日志', u'pos_info',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功','无')
     except Exception, e:
         re = tools.error_result(e)
-        info = make_log_info(u'增加岗位', u'业务日志', u'JobInstance',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '失败',repr(e))
+        info = make_log_info(u'增加岗位', u'业务日志', u'pos_info',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '失败',repr(e))
     add_log(info)
     return re
 
-
+#添加岗位人员
 def add_person(request):
     #外键关联，user_pos不能为空，把岗位id=1 的设为无岗位人员
     try:
         res = json.loads(request.body)
         id = res['id']
-        res2 = dict_get(res['data2'], u'pinyin', None)
-        res3 = res['value2']
-        tmp = res2
-        for i in res3:
-            Localuser.objects.filter(user_name=i).update(user_pos=id)
-            for j in res2:
-                if i == j:
-                    tmp.remove(i)
-        for k in tmp:
-            Localuser.objects.filter(user_name=k).update(user_pos='1')
-        info = make_log_info(u'岗位人员增加或移除', u'业务日志', u'JobInstance', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功', '无')
+        #穿梭框左边的值
+        person_no_positions = dict_get(res['data2'], u'pinyin', None)
+        #穿梭框右边的值
+        person_positions = res['value2']
+        # 获取无岗位id
+        noposition_id = get_noposition_id()
+        #一个用来循环，一个用来存数据
+        person_no_positions2 = person_no_positions
+        #增加岗位人员
+        for pos_username in person_positions:
+            Localuser.objects.filter(user_name=pos_username).update(user_pos=id)
+            #把已经赋予岗位的人员从左边移出
+            for no_pos_username in person_no_positions:
+                if pos_username == no_pos_username:
+                    person_no_positions2.remove(pos_username)
+        #移出岗位人员
+        for no_pos_username2 in person_no_positions2:
+            Localuser.objects.filter(user_name=no_pos_username2).update(user_pos=noposition_id)
+        info = make_log_info(u'岗位人员增加或移除', u'业务日志', u'pos_info', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功', '无')
     except Exception, e:
-        res2 = tools.error_result(e)
-        info = make_log_info(u'岗位人员增加或移除', u'业务日志', u'JobInstance', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败', repr(e))
+        res = tools.error_result(e)
+        info = make_log_info(u'岗位人员增加或移除', u'业务日志', u'pos_info', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败', repr(e))
     add_log(info)
-    return res2
+    return res
 
-
-def edit_job(request):
+#编辑岗位
+def edit_pos(request):
     try:
         res = json.loads(request.body)
         id = res['id']
@@ -146,13 +174,12 @@ def edit_job(request):
         #获取系统使劲按
         nowTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         #获取当前用户
-        tmp = get_active_user(request)
-        nowPerson = tmp['data']['bk_username']
-        r1 = JobInstance.objects.filter(id=id).update(pos_name=posname,edit_time=nowTime,editor=nowPerson)
-        info = make_log_info(u'编辑岗位', u'业务日志', u'JobInstance',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功', '无')
+        nowPerson = get_active_user(request)['data']['bk_username']
+        r1 = pos_info.objects.filter(id=id).update(pos_name=posname,edit_time=nowTime,editor=nowPerson)
+        info = make_log_info(u'编辑岗位', u'业务日志', u'pos_info',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功', '无')
     except Exception, e:
         r1 = tools.error_result(e)
-        info = make_log_info(u'编辑岗位', u'业务日志', u'JobInstance', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败', repr(e))
+        info = make_log_info(u'编辑岗位', u'业务日志', u'pos_info', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败', repr(e))
     add_log(info)
     return r1
 
@@ -173,7 +200,7 @@ def dict_get(list, objkey, default):
     else:
         return default
 
-
+#获取蓝鲸平台所有用户
 def get_user(request):
     """
     获取所有用户
@@ -197,23 +224,24 @@ def filter_user(request):
     """
     #蓝鲸所有用户
     filter_list = get_user(request)
-    temp = dict_get(filter_list['data'], u'bk_username', None)
-    #找出所有无岗位的人员（岗位id=1）
+    all_user_names = dict_get(filter_list['data'], u'bk_username', None)
+    #找出所有无岗位的人员
     users = Localuser.objects.all()
-    tmp = []
-    for j in users:
-        for i in range(len(temp)):
-            if temp[i] == j.user_name:
-                if j.user_pos_id == 1:
-                    tmp.append(temp[i])
-    return tmp
+    users_no_position = []
+    # 获取无岗位id
+    noposition_id = get_noposition_id()
+    for user in users:
+        for i in range(len(all_user_names)):
+            if all_user_names[i] == user.user_name and user.user_pos_id == noposition_id:
+                users_no_position.append(all_user_names[i])
+    return users_no_position
 
 
 def get_tree(request):
-    job = JobInstance.objects.all()
+    pos = pos_info.objects.all()
     users = Localuser.objects.all()
     res_list = []
-    for x in job:
+    for x in pos:
         tmp = []
         for y in users:
             if x.id == y.user_pos_id:

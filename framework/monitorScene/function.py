@@ -8,7 +8,7 @@ from models import Scene
 from models import position_scene
 from monitor_item.models import Scene_monitor, Monitor, Job,Scene_monitor
 from monitor_item import tools
-from position.models import JobInstance, Localuser
+from position.models import pos_info, Localuser
 from gatherData.models import TDGatherData
 import sys
 from logmanagement.function import add_log, make_log_info, get_active_user
@@ -37,7 +37,7 @@ def monitor_show(request):
         }
         position = position_scene.objects.filter (scene=i.id)
         for c in position:
-            job = JobInstance.objects.filter (id=c.position_id)
+            job = pos_info.objects.filter (id=c.position_id)
             for j in job:
                 jobs = {
                     "pos_name": j.pos_name
@@ -111,7 +111,7 @@ def select_table(request):
         }
         position = position_scene.objects.filter (scene=i.id)
         for c in position:
-            job = JobInstance.objects.filter (id=c.position_id)
+            job = pos_info.objects.filter (id=c.position_id)
             for j in job:
                 jobs = {
                     "pos_name": j.pos_name
@@ -183,7 +183,7 @@ def editSence(request):
         add_log (info)
         scene = Scene.objects.get (id=model['data']['id'])
         scene.save ()
-        job = JobInstance.objects.filter (pos_name=model['data']["pos_name"])
+        job = pos_info.objects.filter (pos_name=model['data']["pos_name"])
         for j in job:
             senceModel3 = {
                 "scene_id": model['data']['id'],
@@ -221,7 +221,7 @@ def scene_data(id):
 
 
 def pos_name(request):
-    job = JobInstance.objects.all()
+    job = pos_info.objects.all()
     res_list = []
     for i in job:
         dic = {
@@ -259,7 +259,7 @@ def paging(request):
         }
         position = position_scene.objects.filter (scene=i.id)
         for c in position:
-            job = JobInstance.objects.filter (id=c.position_id)
+            job = pos_info.objects.filter (id=c.position_id)
             for j in job:
                 jobs = {
                     "pos_name": j.pos_name
@@ -549,7 +549,7 @@ def get_scenes(pos_id,start,end):
 
 def get_all_pos(request):
     res = []
-    positions = JobInstance.objects.all()
+    positions = pos_info.objects.all()
     for i in positions:
         dict = {
             'id':i.id,
