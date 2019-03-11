@@ -989,37 +989,6 @@
         $(selector).css("left", _x);
         $(selector).css("top", _y);
         $(selector).css('cursor', 'pointer');
-        var t=$(selector).position().top;
-        var r=$(selector).position().left+$(selector).width();
-        var b=$(selector).position().top+$(selector).height();
-        var l=$(selector).position().left;
-        //console.log(t,r,b,l)
-        for(var i=0;i<$(selector).siblings().length;i++){
-            var t1=$(selector).siblings().eq(i).position().top;
-            var r1=$(selector).siblings().eq(i).position().left+$(selector).siblings().eq(i).width();
-            var b1=$(selector).siblings().eq(i).position().top+$(selector).siblings().eq(i).height();
-            var l1=$(selector).siblings().eq(i).position().left;
-            //console.log(t1,r1,b1,l1)
-            if(Math.abs(t-b1)<10){
-                    $(selector).css("top", b1+($(selector).height()+$(selector).siblings().eq(i).height())*(vm.scale-1)/2);
-
-            }
-            if(Math.abs(l-r1)<10){
-
-                    $(selector).css("left", r1+($(selector).width()+$(selector).siblings().eq(i).width())*(vm.scale-1)/2);
-
-            }
-            if(Math.abs(b-t1)<10){
-
-                    $(selector).css("top", t1-$(selector).height()-($(selector).height()+$(selector).siblings().eq(i).height())*(vm.scale-1)/2);
-
-            }
-            if(Math.abs(r-l1)<10){
-
-                    $(selector).css("left", l1-$(selector).width()-($(selector).width()+$(selector).siblings().eq(i).width())*(vm.scale-1)/2 );
-
-            }
-        }
 
 
     });
