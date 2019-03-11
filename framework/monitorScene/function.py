@@ -20,8 +20,9 @@ from position.models import Localuser
 from market_day.models import Area
 from market_day.function import tran_time_china,tran_china_time_other,check_jobday
 
+#渲染整个页面的数据
 def monitor_show(request):
-    monitor = Scene.objects.all()
+    monitor = Scene.objects.all()       #搜索
     res_list = []
     for i in monitor:
         dic = {
