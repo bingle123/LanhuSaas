@@ -201,7 +201,7 @@ def job_interface(res):
             } ,
             'instance_id': job_list['job_instance_id']     #实列id
         }
-        gather_data (info)
+        gather_data (**info)
         if res['id']==0:
             Job(instance_id=job_instance_id,status=status,test_flag=0,job_log=info['gather_error_log'],job_id=bk_job_id).save()
         else:
