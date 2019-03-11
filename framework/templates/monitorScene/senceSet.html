@@ -123,9 +123,7 @@
             </el-row>
             <el-table :data='tableData' :header-cell-style='rowclass' style="width: 100%;margin-top: 10px">
 
-                <el-table-column type="index" label='序号' width='80'>
-                </el-table-column>
-                <el-table-column prop='id'  v-if="false" label='id' width='80'>
+                <el-table-column prop='id'  label='id' width='80'>
                 </el-table-column>
                 <el-table-column prop='scene_name' label='场景名称'  style="width: 30%;" sortable>
                 </el-table-column>
@@ -468,7 +466,7 @@
             show_num:0,
             monitor_data:[],
             scale:1,            //比例
-            multiple:1,
+            multiple:0,
 
         },
 
@@ -912,7 +910,7 @@
     var obox=$('.monitor_content');
     var selector = '';
     var flag=false;
-    var x,y;
+    var x,y,w,h;
     var offsetLeft,offsetTop;
     $(document).on("mouseover", ".Drigging", function () {
         $(this).css('cursor', 'pointer');//当鼠标移动到拖拽目标上的时候，将鼠标的样式设置为移动(move)
@@ -925,6 +923,8 @@
         y = e.clientY;//获取鼠在当前窗口的相对偏移位置的Top值并赋值给y
         offsetLeft = $(selector).position().left;
         offsetTop = $(selector).position().top;
+        w=$(selector).width();
+        h=$(selector).height();
         $(this).css({"cursor":"pointer","z-index":"500"});
         $(this).siblings().css({"z-index":"0"});
     });
@@ -962,29 +962,29 @@
         if (!flag)//如果flag为false则返回
             return;//当flag为true的时候执行下面的代码
         e.preventDefault();
-        var e=window.event||e;
-        var _x = e.clientX - x + offsetLeft+Math.abs(vm.multiple)*$(selector).width()*(vm.scale-1)/2;
+        var e = window.event || e;
+        var _x = e.clientX - x + offsetLeft + ($(selector).width()/vm.scale) * (vm.scale - 1) / 2;
         //event.clientX得到鼠标相对于客户端正文区域的偏移
-        //然后减去offsetLeft即得到当前推拽元素相对于当前窗口的X值
+        //然后减去offsetX即得到当前推拽元素相对于当前窗口的X值
         //（减去鼠标刚开始拖动的时候在当前窗口的偏移X）
-        var _y = e.clientY - y + offsetTop+Math.abs(vm.multiple)*$(selector).height()*(vm.scale-1)/2;
+        var _y = e.clientY - y + offsetTop + ($(selector).height()/vm.scale) * (vm.scale - 1) / 2;
         //event.clientY得到鼠标相对于客户端正文区域的偏移
-        //然后减去offsetTop即得到当前推拽元素相对于当前窗口的Y值
+        //然后减去offsetX即得到当前推拽元素相对于当前窗口的Y值
         //（减去鼠标刚开始拖动的时候在当前窗口的偏移Y）
-        if(_x<0){
-            _x=0+$(selector).width()*(vm.scale-1)/2;
+        if (_x < 0) {
+            _x = 0 + ($(selector).width()/vm.scale) * (vm.scale - 1) / 2;
         }
-        if(_y<0){
-            _y=0+$(selector).height()*(vm.scale-1)/2;
+        if (_y < 0) {
+            _y = 0 + ($(selector).height()/vm.scale) * (vm.scale - 1) / 2;
         }
-        if(_x>obox.width()-$(selector).width()){
+        if (_x > obox.width() - $(selector).width()) {
 
             //_x=obox.width()-$(selector).width();
-            _x=obox.width()-($(selector).width()*(vm.scale-1)/2+$(selector).width());
+            _x = obox.width() - (($(selector).width()/vm.scale) * (vm.scale - 1) / 2 + ($(selector).width()/vm.scale));
         }
-        if(_y>obox.height()-$(selector).height()){
+        if (_y > obox.height() - $(selector).height()) {
             //_y=obox.height()-$(selector).height();
-            _y=obox.height()-($(selector).height()*(vm.scale-1)/2+$(selector).height());
+            _y = obox.height() - (($(selector).height()/vm.scale) * (vm.scale - 1) / 2 + ($(selector).height()/vm.scale));
         }
         $(selector).css("left", _x);
         $(selector).css("top", _y);
@@ -993,38 +993,36 @@
         var r=$(selector).position().left+$(selector).width();
         var b=$(selector).position().top+$(selector).height();
         var l=$(selector).position().left;
-        //console.log(t,r,b,l)
+        console.log(t,r,b,l)
         for(var i=0;i<$(selector).siblings().length;i++){
             var t1=$(selector).siblings().eq(i).position().top;
             var r1=$(selector).siblings().eq(i).position().left+$(selector).siblings().eq(i).width();
             var b1=$(selector).siblings().eq(i).position().top+$(selector).siblings().eq(i).height();
             var l1=$(selector).siblings().eq(i).position().left;
-            //console.log(t1,r1,b1,l1)
+            console.log(t1,r1,b1,l1)
             if(Math.abs(t-b1)<10){
-                    $(selector).css("top", b1+($(selector).height()+$(selector).siblings().eq(i).height())*(vm.scale-1)/2);
+                    $(selector).css("top", b1+($(selector).height()/vm.scale)*(vm.scale-1)/2);
 
             }
             if(Math.abs(l-r1)<10){
 
-                    $(selector).css("left", r1+($(selector).width()+$(selector).siblings().eq(i).width())*(vm.scale-1)/2);
+                    $(selector).css("left", r1+($(selector).width()/vm.scale)*(vm.scale-1)/2);
 
             }
             if(Math.abs(b-t1)<10){
 
-                    $(selector).css("top", t1-$(selector).height()-($(selector).height()+$(selector).siblings().eq(i).height())*(vm.scale-1)/2);
+                    $(selector).css("top", t1-$(selector).height()/vm.scale-($(selector).height()/vm.scale)*(vm.scale-1)/2);
 
             }
             if(Math.abs(r-l1)<10){
 
-                    $(selector).css("left", l1-$(selector).width()-($(selector).width()+$(selector).siblings().eq(i).width())*(vm.scale-1)/2 );
+                    $(selector).css("left", l1-$(selector).width()/vm.scale-($(selector).width()/vm.scale)*(vm.scale-1)/2 );
 
             }
         }
-
-
     });
     $('.el-icon-circle-plus-outline').click(function () {
-        if(vm.multiple<3) {
+        if(vm.multiple<2) {
             vm.scale = vm.scale + 0.1;
             $('.monitor_content').find('.Drigging').css('transform','scale('+vm.scale+')');
             vm.multiple++;
