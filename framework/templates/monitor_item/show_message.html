@@ -476,7 +476,7 @@
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item prop="height">
-                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.height" placeholder="请输入高度" @change="flow_height"></el-input>
+                                            <el-input disabled="disabled"  type="number" min="0" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.height" placeholder="请输入高度" @change="flow_height"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
@@ -484,7 +484,7 @@
                                         <el-form-item prop="width">
                                               <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="flow.width" placeholder="请输入宽度"
-                                                        @change="flow_width"></el-input>
+                                                        @change="flow_width" disabled="disabled" ></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
@@ -1085,6 +1085,7 @@
                         var temp2=[];
                         var temp3=[];
                         var temp4=[];
+
                         for(var i=1;i<temp1.length;i=i+2){
                             temp2.push(temp1[i]);
                         }
@@ -2172,6 +2173,7 @@
                 vm.echart_width();
             },
             chart_get_test(){
+                console.log(vm.chart.params)
                 axios({
                     url:'${SITE_URL}monitor_item/chart_get_test/',
                     method:'post',

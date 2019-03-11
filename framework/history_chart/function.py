@@ -49,11 +49,12 @@ def show_all(request):
         res_list.append(dic)
     return  res_list
 
-
+#搜索分页的首页table
 def select_all_rules(request):
     res1 = json.loads(request.body)
     limit = res1['limit']
     page = res1['page']
+    #数据库的连接配置
     DATABASES = settings_development.DATABASES['default']
     db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'], db=DATABASES['NAME'],charset="utf8")
     cursor = db.cursor()
@@ -65,6 +66,7 @@ def select_all_rules(request):
                    "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "
                    "WHERE e.item_id = f.item_id ORDER BY e.scene_name")
     res = cursor.fetchall()
+    #对sql语句的返回结果进行分页
     p = Paginator(res, limit)
     count = p.page_range
     pages = count
@@ -114,14 +116,15 @@ def select_rules_pagination(request):
           "WHERE c.item_id = d.id ) AS e, td_alert_log AS f "\
           "WHERE e.item_id = f.item_id "
     if(search):
-        sql = sql+"and  e.scene_name = '" + search + "'"\
+        sql = sql+"and  e.scene_name LIKE '%" + search + "%'"\
 
     if(keyword):
-        sql=sql+"and (e.scene_id = '" + keyword + "' or e.id ='" + keyword + "' or e.monitor_name = '" + keyword + "' or f.alert_title='" + keyword + "' or f.alert_content='" + keyword + "' or f.alert_time='" + keyword + "' or f.persons='" + keyword + "') "\
+        sql=sql+"and (e.scene_id LIKE '%" + keyword + "%' or e.id LIKE '%" + keyword + "%' or e.monitor_name LIKE '%" + keyword + "%' or f.alert_title LIKE '%" + keyword + "%' or f.alert_content LIKE '%" + keyword + "%' or  f.persons LIKE '%" + keyword + "%') "\
 
     if(date_Choice):
         sql=sql+"and f.alert_time between  '" + res3 + "'  and '" + res4 + "'"
     sql=sql+" ORDER BY e.scene_name"
+    print sql
     cursor.execute(sql)
     res = cursor.fetchall()
     p = Paginator(res, limit)
@@ -178,21 +181,24 @@ def select_rules_pagination(request):
 #         res_list.append(dic)
 #     return res_list
 
+#日志的搜索方法
 def select_log(request):
     res = json.loads(request.body)
     limit = res['limit']
     page = res['page']
-    search = res['search'].strip()
-    res1 = search
-    res2 = res['keyword']
-    res3 = ""
-    res4 = ""
+    search = res['search'].strip()          #场景名
+    res1 = search                           #场景名
+    res2 = res['keyword']                   #关键字
+    res3 = ""                               #开始时间
+    res4 = ""                               #结束时间
     print res['date_Choice']
     if(res['date_Choice']):
         res3 = res['date_Choice'][0]
         res4 = res['date_Choice'][1]
     res_list = []
-    tmp = Operatelog.objects.all()
+    tmp = Operatelog.objects.all()          #查询所有的表信息
+
+    #if组合判断查询的数据
     if(res1 != ""and res2 == "" and res3 == "" and res4 == ""):
         print 123
         log = tmp.filter(Q(log_type__icontains=res1))
@@ -205,20 +211,22 @@ def select_log(request):
         log = tmp.filter(Q(create_time__range=(res3,res4)))
     elif(res1 != "" and res2 != "" and res3 == "" and res4 ==""):
         print 456
-        log = tmp.filter(Q(log_type__icontains=res1) and Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-            class_name__icontains=res2) | Q(method__icontains=res2))
+        log = tmp.filter(Q(log_type__icontains=res1) & (Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
+            class_name__icontains=res2) | Q(method__icontains=res2)))
     elif (res1 != "" and res2 != ""and res3!="" and res4!=""):
         print 567
-        log = tmp.filter(Q(log_type__icontains=res1) and Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-            class_name__icontains=res2) | Q(method__icontains=res2)and Q(create_time__range=(res3,res4)))
+        log = tmp.filter((Q(log_type__icontains=res1)) & (Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
+            class_name__icontains=res2) | Q(method__icontains=res2))& (Q(create_time__range=(res3,res4))))
     elif(res3!="" and res4!="" and res1!="" and res2 == ""):
         print 111
-        log = tmp.filter(Q(log_type__icontains=res1)and Q(create_time__range=(res3, res4)))
+        log = tmp.filter(Q(log_type__icontains=res1) & Q(create_time__range=(res3, res4)))
     elif(res3!="" and res4!="" and res2!="" and res1 == ""):
-        log = tmp.filter(Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-        class_name__icontains=res2) | Q(method__icontains=res2)and Q(create_time__range=(res3, res4)))
+        log = tmp.filter((Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
+        class_name__icontains=res2) | Q(method__icontains=res2))& Q(create_time__range=(res3, res4)))
     elif(res1 == ""and res2 == "" and res3 == "" and res4 == ""):
         log = Operatelog.objects.all()
+
+    #分页
     p = Paginator(log, limit)
     count = p.page_range
     pages = count[-1]
@@ -238,7 +246,7 @@ def select_log(request):
         }
         res_list.append(dic)
     return res_list
-
+#即将到期table查询
 def about_select(request):
     res1 = json.loads(request.body)
     limit = res1['limit']
@@ -278,14 +286,15 @@ def about_select(request):
     res2 = tools.success_result(res_list2)
     return res2
 
+#即将到期的table条件查询
 def about_search(request):
     res1 = json.loads(request.body)
     limit = res1['limit']
     page = res1['page']
-    search = res1['search'].strip()
-    keyword = res1['keyword'].strip()
-    res3 = ""
-    res4 = ""
+    search = res1['search'].strip()     #场景名称搜索
+    keyword = res1['keyword'].strip()      #关键字搜索
+    res3 = ""                               #按时间搜索的开始时间
+    res4 = ""                               #按时间搜索的结束时间
     if (res1['date_Choice']):
         res3 = res1['date_Choice'][0]
         res4 = res1['date_Choice'][1]
@@ -296,10 +305,11 @@ def about_search(request):
           "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d " \
           "WHERE c.item_id = d.id ) e,tb_monitor_item as l "\
            "where e.id = l.id"
+    #用if组合来筛选掉不符合条件的数据
     if(search):
-        sql = sql+" and e.scene_name = '"+search+"'"
+        sql = sql+" and e.scene_name LIKE '%"+search+"%'"
     if(keyword):
-        sql = sql+" and (e.scene_id='"+keyword+"' or e.item_id='"+keyword+"' or e.monitor_name='"+keyword+"')"
+        sql = sql+" and (e.scene_id LIKE '%"+keyword+"%' or e.item_id LIKE '%"+keyword+"%' or e.monitor_name LIKE '%"+keyword+"%')"
     if(res1['date_Choice']):
         sql = sql+" and e.start_time between '"+res3+"' and '"+res4+"'"
     DATABASES = settings_development.DATABASES['default']
@@ -307,6 +317,7 @@ def about_search(request):
                          db=DATABASES['NAME'], charset="utf8")
     cursor = db.cursor()
     cursor.execute(sql)
+    #执行sql并分页
     res = cursor.fetchall()
     p = Paginator(res, limit)
     count = p.page_range
@@ -345,26 +356,36 @@ def select_scenes(request):
     return tools.success_result(list_data)
 
 #封装方法，别动
-def getPant_list(scene_list,d_data,all_itemid,item_len):
+def getPant_list(scene_list,d_data,all_itemid,count):
     last_list = []
     AllList = []
     new_AllList = []
 
+
     for s in scene_list:
         AllList.append(str(s[0]).split(' ')[0])
+    print AllList
     for All in AllList:
         if All not in new_AllList:
             new_AllList.append(All)
+    #循环去重之后的日期,
+    print new_AllList
     for l in new_AllList:
         success_items = 0
         failed_items = 0
         alertNums = 0
-
+        itemNums = 0
         for x in d_data:
             if str(x).split(' ')[0] == l:
                 failed_items += 1
-        success_items = item_len - failed_items
+
+        for y in AllList:
+            if l == y:
+                itemNums = itemNums +1
+        print itemNums,failed_items
+        success_items = itemNums - failed_items
         be_list = []
+        #取得当日一个场景下的时间最小值和最大值
         for i in all_itemid:
             ts = TDGatherHistory.objects.filter(item_id=i)
             for t in ts:
@@ -377,12 +398,13 @@ def getPant_list(scene_list,d_data,all_itemid,item_len):
         time_consum = mx - mi
         time_consum = str(time_consum)
         alog = TdAlertLog.objects.filter(item_id=i)
+        #告警数
         for al in alog:
             alertlog = model_to_dict(al)
             alertlog['alert_time'] = al.alert_time
             if str(alertlog['alert_time']).split(' ')[0] ==l:
                 alertNums +=1
-        persent = (success_items/item_len) *100
+        persent = (success_items/itemNums) *100
         mx = str(mx)
         mi = str(mi)
         dic_data = {
@@ -391,17 +413,23 @@ def getPant_list(scene_list,d_data,all_itemid,item_len):
             'end_time':mx,
             'success_items':success_items,
             'failed_items':failed_items,
-            'itemNums':item_len,
+            'itemNums':itemNums,
             'alertNums':alertNums,
             'succeess_persent':persent,
             'time_consum':time_consum,
         }
         last_list.append(dic_data)
-    return tools.success_result(last_list)
+    if count > 7:
+        last_list = last_list[0:7]
+        return tools.success_result(last_list)
+    else:
+        return tools.success_result(last_list)
+
 #场景对比分析
 def selectScenes_ById(request):
     res = json.loads(request.body)
-
+    m = Scene.objects.get(id=res['id'])
+    rid = model_to_dict(m)['scene_area']
     #根据场景id查监控项个数
     sm = Scene_monitor.objects.filter(scene_id=res['id'])
     item_len = sm.__len__()
@@ -411,7 +439,7 @@ def selectScenes_ById(request):
 
     # 根据开始结束时间查询单个场景下所有监控项每一天最后一个采集到的数据
     all_itemid = []
-    # 所有监控项
+    # 所有监控项,字符串拼接
     str1 = ""
     for i in sm:
         all_itemid.append(model_to_dict(i)['item_id'])
@@ -421,8 +449,12 @@ def selectScenes_ById(request):
         else:
             str1 += str(index)
     try:
-        sql = "SELECT * from (select max(a.gather_time) AS mtime,a.item_id FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx,tt.gather_time,tt.gather_error_log,tt.item_id	FROM td_gather_history tt WHERE	item_id IN (" + str1 + ")) AS t WHERE   gather_time BETWEEN '" + b_time + "'  AND '" + e_time + "' ORDER BY item_id,gather_time) a	group by a.item_id,a.xx)  as m ORDER BY m.mtime"
-
+        sql = "SELECT * from (select max(a.gather_time) AS mtime,a.item_id " \
+              "FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx," \
+              "tt.gather_time,tt.gather_error_log,tt.item_id	" \
+              "FROM td_gather_history tt WHERE	item_id IN (" + str1 + ")) AS t WHERE   " \
+            "gather_time BETWEEN '" + b_time + "'  AND '" + e_time + "' ORDER BY item_id,gather_time) a	group by " \
+            "a.item_id,a.xx)  as m ORDER BY m.mtime"
         DATABASES = settings_development.DATABASES['default']
         db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
                              db=DATABASES['NAME'], charset="utf8")
@@ -431,7 +463,6 @@ def selectScenes_ById(request):
         res1 = cursor.fetchall()
     except Exception as e:
         return tools.error_result(e)
-    scene_list = []
     scene_list = list(res1)
     d_data = []
     h1_new = None
@@ -446,26 +477,35 @@ def selectScenes_ById(request):
                     d_data.append(i[0])
                 else:
                     pass
-    # 得到的
-    scene_list_len = scene_list.__len__()
+
     # 查到的总天数
-    listCount_date = scene_list_len / item_len
+    try:
+        sql1 = "select count(*) from (select DISTINCT DATE_FORMAT(tb.mtime,'%y-%m-%d') gather_time from (SELECT * from (select max(a.gather_time) AS mtime,a.item_id FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx,tt.gather_time,tt.gather_error_log,tt.item_id	FROM td_gather_history tt WHERE	item_id IN (" + str1 + ")) AS t WHERE   gather_time BETWEEN '" + b_time + "'  AND '" + e_time + "' ORDER BY item_id,gather_time) a	group by a.item_id,a.xx)  as m ORDER BY m.mtime)as tb)as tf"
+        DATABASES = settings_development.DATABASES['default']
+        db1 = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
+                             db=DATABASES['NAME'], charset="utf8")
+        cursor1 = db1.cursor()
+        cursor1.execute(sql1)
+        count = cursor1.fetchone()
+    except Exception as e:
+        return tools.error_result(e)
+    count = count[0]
     # 时间间隔数
     Alldays = (datetime.strptime(e_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(b_time, "%Y-%m-%d %H:%M:%S")).days
     # 间隔天数小于3不查，大于3但是查到的有效天数小于3也不要
     if Alldays < 3:
         return tools.success_result(Alldays)
     else:
-        if listCount_date < 3:
+        if count < 3:
             return tools.success_result(Alldays)
         # 有效天大于3天小于7天，取所有天数
-        elif listCount_date >= 3 and listCount_date <= 7:
-            return getPant_list(scene_list, d_data, all_itemid, item_len)
+        elif count >= 3 and count <= 7:
+            return getPant_list(scene_list, d_data, all_itemid, count)
         # 有效期大于7天，取前7天，splen为取数组中的前7天个数
         else:
             splen = item_len * 7 - 1
             scene_list = scene_list[:splen]
-            return getPant_list(scene_list, d_data, all_itemid, item_len)
+            return getPant_list(scene_list, d_data, all_itemid, count)
 
 
 

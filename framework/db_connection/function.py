@@ -76,6 +76,7 @@ def saveconn_all(request):
         res = json.loads(request.body)
         cilent = tools.interface_param(request)
         user = cilent.bk_login.get_user({})
+        #获取用户名
         res['createname'] = user['data']['bk_username']
         res['editname'] = user['data']['bk_username']
 
@@ -398,7 +399,7 @@ def delete_muenu(request,id):
         res3 = tools.error_result(e)
         return tools.error_result(res3)
 
-
+#获取角色下面菜单
 def get_roleAmuenus(request):
     roles = Role.objects.all()
     menus = Muenu.objects.all()

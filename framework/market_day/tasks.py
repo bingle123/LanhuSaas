@@ -137,12 +137,12 @@ def gather_data_task_two(**i):
         'id': i['id'],
         'gather_params': i['gather_params'],
         'params': i['params'],
-        'gather_rule': i['gather_rule'],
+        'gather_rule': i['job_id'],
         'task_name': i['task_name'],
         'endtime': i['endtime']
     }
     if check_jobday(area_id):
-        co.create_task_interval(name=task_name, task='market_day.tasks.chart_monitor_task', interval_time=period,
+        co.create_task_interval(name=task_name, task='market_day.tasks.job_monitor_task', interval_time=period,
                                 task_args=info, desc=task_name)
     else:
         pass
@@ -163,7 +163,6 @@ def job_monitor_task(**i):
 @task
 def gather_data_task_thrid(**i):
     endtime = i['endtime']
-    print endtime
     task_name = i['task_name']
     # 逾期删除本任务
     strnow = datetime.strftime(datetime.now(), '%H:%M')
