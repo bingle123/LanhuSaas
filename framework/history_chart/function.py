@@ -349,6 +349,7 @@ def getPant_list(scene_list,d_data,all_itemid,item_len):
     last_list = []
     AllList = []
     new_AllList = []
+
     for s in scene_list:
         AllList.append(str(s[0]).split(' ')[0])
     for All in AllList:
@@ -358,59 +359,78 @@ def getPant_list(scene_list,d_data,all_itemid,item_len):
         success_items = 0
         failed_items = 0
         alertNums = 0
+
         for x in d_data:
             if str(x).split(' ')[0] == l:
                 failed_items += 1
         success_items = item_len - failed_items
-
+        be_list = []
         for i in all_itemid:
-            alog = TdAlertLog.objects.filter(item_id=i)
-            for al in alog:
-                alertlog = model_to_dict(al)
-                alertlog['alert_time'] = al.alert_time
-                if str(alertlog['alert_time']).split(' ')[0] ==l:
-                    alertNums +=1
+            ts = TDGatherHistory.objects.filter(item_id=i)
+            for t in ts:
+                tds = model_to_dict(t)
+                tds['gather_time'] = t.gather_time
+                if str(tds['gather_time']).split(' ')[0] == l:
+                    be_list.append(tds['gather_time'])
+        mx = max(be_list)
+        mi = min(be_list)
+        time_consum = mx - mi
+        time_consum = str(time_consum)
+        alog = TdAlertLog.objects.filter(item_id=i)
+        for al in alog:
+            alertlog = model_to_dict(al)
+            alertlog['alert_time'] = al.alert_time
+            if str(alertlog['alert_time']).split(' ')[0] ==l:
+                alertNums +=1
         persent = (success_items/item_len) *100
+        mx = str(mx)
+        mi = str(mi)
         dic_data = {
             'timedata':l,
+            'begin_time':mi,
+            'end_time':mx,
             'success_items':success_items,
             'failed_items':failed_items,
             'itemNums':item_len,
             'alertNums':alertNums,
             'succeess_persent':persent,
+            'time_consum':time_consum,
         }
         last_list.append(dic_data)
     return tools.success_result(last_list)
 #场景对比分析
 def selectScenes_ById(request):
     res = json.loads(request.body)
-    scene = Scene.objects.get(id = res['id'])
-    #根据id查监控项个数
+
+    #根据场景id查监控项个数
     sm = Scene_monitor.objects.filter(scene_id=res['id'])
     item_len = sm.__len__()
-    #获取开始结束时间
+    # 获取开始结束时间
     b_time = res['dataTime'][0]
     e_time = res['dataTime'][1]
 
-    #根据开始结束时间查询单个场景下所有监控项每一天最后一个采集到的数据
+    # 根据开始结束时间查询单个场景下所有监控项每一天最后一个采集到的数据
     all_itemid = []
-    #所有监控项
+    # 所有监控项
     str1 = ""
     for i in sm:
         all_itemid.append(model_to_dict(i)['item_id'])
-    for i,index in enumerate(all_itemid):
-        if (i+1) < all_itemid.__len__():
-            str1 = str(index)+","
+    for i, index in enumerate(all_itemid):
+        if (i + 1) < all_itemid.__len__():
+            str1 = str(index) + ","
         else:
             str1 += str(index)
-    sql = "SELECT * from (select max(a.gather_time) AS mtime,a.item_id FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx,tt.gather_time,tt.gather_error_log,tt.item_id	FROM td_gather_history tt WHERE	item_id IN ("+str1+")) AS t WHERE   gather_time BETWEEN '"+b_time+"'  AND '"+e_time+"' ORDER BY item_id,gather_time) a	group by a.item_id,a.xx)  as m ORDER BY m.mtime"
+    try:
+        sql = "SELECT * from (select max(a.gather_time) AS mtime,a.item_id FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx,tt.gather_time,tt.gather_error_log,tt.item_id	FROM td_gather_history tt WHERE	item_id IN (" + str1 + ")) AS t WHERE   gather_time BETWEEN '" + b_time + "'  AND '" + e_time + "' ORDER BY item_id,gather_time) a	group by a.item_id,a.xx)  as m ORDER BY m.mtime"
 
-    DATABASES = settings_development.DATABASES['default']
-    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                         db=DATABASES['NAME'], charset="utf8")
-    cursor = db.cursor()
-    cursor.execute(sql)
-    res1 = cursor.fetchall()
+        DATABASES = settings_development.DATABASES['default']
+        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
+                             db=DATABASES['NAME'], charset="utf8")
+        cursor = db.cursor()
+        cursor.execute(sql)
+        res1 = cursor.fetchall()
+    except Exception as e:
+        return tools.error_result(e)
     scene_list = []
     scene_list = list(res1)
     d_data = []
@@ -426,26 +446,28 @@ def selectScenes_ById(request):
                     d_data.append(i[0])
                 else:
                     pass
-    #得到的
+    # 得到的
     scene_list_len = scene_list.__len__()
-    #查到的总天数
-    listCount_date = scene_list_len/item_len
-    #时间间隔数
-    Alldays = (datetime.strptime(e_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(b_time, "%Y-%m-%d %H:%M:%S")).days\
-    #间隔天数小于3不查，大于3但是查到的有效天数小于3也不要
+    # 查到的总天数
+    listCount_date = scene_list_len / item_len
+    # 时间间隔数
+    Alldays = (datetime.strptime(e_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(b_time, "%Y-%m-%d %H:%M:%S")).days
+    # 间隔天数小于3不查，大于3但是查到的有效天数小于3也不要
     if Alldays < 3:
         return tools.success_result(Alldays)
     else:
         if listCount_date < 3:
             return tools.success_result(Alldays)
-        #有效天大于3天小于7天，取所有天数
-        elif listCount_date >= 3 and listCount_date <=7:
+        # 有效天大于3天小于7天，取所有天数
+        elif listCount_date >= 3 and listCount_date <= 7:
             return getPant_list(scene_list, d_data, all_itemid, item_len)
-        #有效期大于7天，取前7天，splen为取数组中的前7天个数
+        # 有效期大于7天，取前7天，splen为取数组中的前7天个数
         else:
-            splen = item_len*7
+            splen = item_len * 7 - 1
             scene_list = scene_list[:splen]
-            return getPant_list(scene_list,d_data,all_itemid,item_len)
+            return getPant_list(scene_list, d_data, all_itemid, item_len)
+
+
 
 
 
@@ -468,6 +490,7 @@ def select_scene_operation():
     for i in date_info:
         #初始化
         failed_num = 0
+        scene_num = 0
         scenes = []
         temp = str(i)+' 23:59:59'
         sql = "SELECT * from tb_monitor_scene where scene_creator_time < '" + temp + "'"
@@ -478,77 +501,76 @@ def select_scene_operation():
         for j in scenes_list:
             scenes.append(j[0])
             flag = 1
-            flag2 = 0
-            #判断是否为交易日
+            #判断是否为本场景是否在交易日
             scene_area_id = j[8]
             if check_jobday(scene_area_id,i):
-                flag2 = 1
-            #获取场景所对应的所有监控项id
-            items = Scene_monitor.objects.filter(scene_id=j[0])
-            #判断每个监控项的运行结果是成功还是失败
-            for k in items:
-                item = Monitor.objects.get(id = k.item_id)
-                if u'基本单元类型' == item.monitor_type:
-                    if 'sql' == item.gather_params:
-                        temp = TDGatherData.objects.get(item_id=item.id,data_key='DB_CONNECTION')
+                #获取场景所对应的所有监控项id
+                items = Scene_monitor.objects.filter(scene_id=j[0])
+                #判断每个监控项的运行结果是成功还是失败
+                for k in items:
+                    item = Monitor.objects.get(id = k.item_id)
+                    if u'基本单元类型' == item.monitor_type:
+                        if 'sql' == item.gather_params:
+                            temp = TDGatherData.objects.get(item_id=item.id,data_key='DB_CONNECTION')
+                            if temp.gather_time.strftime("%Y-%m-%d") == i:
+                                if temp.gather_error_log:
+                                    flag = 0
+                            else:
+                                temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='DB_CONNECTION').last()
+                                if temp.gather_error_log:
+                                    flag = 0
+                        if 'file' == item.gather_params:
+                            temp = TDGatherData.objects.get(item_id=item.id,data_key='FILE_EXIST')
+                            if temp.gather_time.strftime("%Y-%m-%d") == i:
+                                if temp.gather_error_log:
+                                    flag = 0
+                            else:
+                                temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='FILE_EXIST').last()
+                                if temp.gather_error_log:
+                                    flag = 0
+                        if 'interface' == item.gather_params:
+                            temp = TDGatherData.objects.get(item_id=item.id,data_key='URL_CONNECTION')
+                            if temp.gather_time.strftime("%Y-%m-%d") == i:
+                                if temp.gather_error_log:
+                                    flag = 0
+                            else:
+                                temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='URL_CONNECTION').last()
+                                if temp.gather_error_log:
+                                    flag = 0
+                    if u'作业单元类型' == item.monitor_type:
+                        temp = TDGatherData.objects.get(item_id=item.id)
                         if temp.gather_time.strftime("%Y-%m-%d") == i:
                             if temp.gather_error_log:
                                 flag = 0
                         else:
-                            temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='DB_CONNECTION').last()
+                            temp = TDGatherHistory.objects.filter(item_id=item.id).last()
                             if temp.gather_error_log:
                                 flag = 0
-                    if 'file' == item.gather_params:
-                        temp = TDGatherData.objects.get(item_id=item.id,data_key='FILE_EXIST')
+                    if u'流程单元类型' == item.monitor_type:
+                        temp = TDGatherHistory.objects.filter(item_id=item.id)
+                        for l in temp:
+                            if l.gather_error_log:
+                                flag = 0
+                                break
+                    if u'图表单元类型' == item.monitor_type:
+                        temp = TDGatherData.objects.get(item_id=item.id, data_key='DB_CONNECTION')
                         if temp.gather_time.strftime("%Y-%m-%d") == i:
                             if temp.gather_error_log:
                                 flag = 0
                         else:
-                            temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='FILE_EXIST').last()
+                            temp = TDGatherHistory.objects.filter(item_id=item.id, data_key='DB_CONNECTION').last()
                             if temp.gather_error_log:
                                 flag = 0
-                    if 'interface' == item.gather_params:
-                        temp = TDGatherData.objects.get(item_id=item.id,data_key='URL_CONNECTION')
-                        if temp.gather_time.strftime("%Y-%m-%d") == i:
-                            if temp.gather_error_log:
-                                flag = 0
-                        else:
-                            temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='URL_CONNECTION').last()
-                            if temp.gather_error_log:
-                                flag = 0
-                if u'作业单元类型' == item.monitor_type:
-                    temp = TDGatherData.objects.get(item_id=item.id)
-                    if temp.gather_time.strftime("%Y-%m-%d") == i:
-                        if temp.gather_error_log:
-                            flag = 0
-                    else:
-                        temp = TDGatherHistory.objects.filter(item_id=item.id).last()
-                        if temp.gather_error_log:
-                            flag = 0
-                if u'流程单元类型' == item.monitor_type:
-                    temp = TDGatherHistory.objects.filter(item_id=item.id)
-                    for l in temp:
-                        if l.gather_error_log:
-                            flag = 0
-                            break
-                if u'图表单元类型' == item.monitor_type:
-                    temp = TDGatherData.objects.get(item_id=item.id, data_key='DB_CONNECTION')
-                    if temp.gather_time.strftime("%Y-%m-%d") == i:
-                        if temp.gather_error_log:
-                            flag = 0
-                    else:
-                        temp = TDGatherHistory.objects.filter(item_id=item.id, data_key='DB_CONNECTION').last()
-                        if temp.gather_error_log:
-                            flag = 0
-            if flag == 0:
-                failed_num += 1
-        #场景总数
-        scene_num = len(scenes)
+                if flag == 0:
+                    failed_num += 1
+                #场景总数
+                scene_num += 1
         #成功数
         success_num = scene_num - failed_num
         #成功率
-        success_rate = round(success_num/scene_num,4)
-        success_rate = str(success_rate*100)+'%'
+        if scene_num != 0:
+            success_rate = round(success_num/scene_num,4)
+            success_rate = str(success_rate*100)+'%'
         #获取告警数目
         temp2 = str(i) + '%'
         sql2 = "SELECT count(*) from td_alert_log WHERE alert_time like " + "'"+ temp2 + "'"
@@ -566,7 +588,7 @@ def select_scene_operation():
             'alert_num':alert_num
         }
         #非交易日剔除
-        if flag2:
+        if scene_num != 0:
             res_list.append(dict)
     return  res_list
 
@@ -608,6 +630,7 @@ def get_week(request):
     scene_operation = select_scene_operation()
     res = json.loads(request.body)
     #初始化
+
     days = []
     res_list = []
     #获取一周的第一天
@@ -815,5 +838,4 @@ def monthly_select(request):
         }
 
         dic_list.append(dic)
-    print total
     return dic_list

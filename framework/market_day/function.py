@@ -63,8 +63,10 @@ def addone(req):
     res = json.loads(req.body)
     date = res['date']
     area = res['area']
-    flag = Holiday.objects.filter(Q(day=date)& Q(area=int(area))).update(flag=0)
-    return flag
+    day=Holiday.objects.get(Q(day=date)&Q(area=int(area)))
+    day.flag=0
+    day.save()
+    return 'ok'
 
 #定时任务demo
 def addperdic_task():
@@ -168,7 +170,7 @@ def add_unit_task(add_dicx):
 
 #获取蓝鲸平台的头文件，并存入数据库
 def get_header_data(request):
-    role_id=get_user(request)['data']['role_id']
+    role_id=get_user(request)['data']['bk_role']
     h,flag=HeaderData.objects.get_or_create(id=1)
     headers = {
         "Content-Type": 'application/json;charset=utf-8',
@@ -230,7 +232,7 @@ def check_jobday(id):
         flag=h.flag
     if flag==1:
         return True
-    elif flag==2:
+    else:
         return False
 #将不同时区的时间转为中国时间
 def tran_time_china(tempdate,timezone):
@@ -242,7 +244,6 @@ def tran_time_china(tempdate,timezone):
 
 #将中国时间转为不同的时区
 def tran_china_time_other(time,timezone):
-    print timezone
     hour=time.hour
     min=time.minute
     tempdate=datetime(2019,1,2,int(hour),int(min),0)

@@ -7,12 +7,16 @@ import datetime
 import json
 from shell_app import tools
 
+
 def add_log(info):
     res = info
-    r1 = Operatelog.objects.create(log_type=res['log_type'],log_name=res['log_name'],class_name=res['class_name'],method=res['method'],user_name=res['user_name'],succeed=res['succeed'],message=res['message'])
+    r1 = Operatelog.objects.create(log_type=res['log_type'], log_name=res['log_name'], class_name=res['class_name'],
+                                   method=res['method'], user_name=res['user_name'], succeed=res['succeed'],
+                                   message=res['message'])
     return r1
 
-def make_log_info(log_type,log_name,class_name,method,user_name,succeed,message):
+
+def make_log_info(log_type, log_name, class_name, method, user_name, succeed, message):
     """
     :param log_type: 操作类型
     :param log_name:日志名称
@@ -24,15 +28,16 @@ def make_log_info(log_type,log_name,class_name,method,user_name,succeed,message)
     :return:
     """
     info = {
-        'log_type':log_type,
+        'log_type': log_type,
         'log_name': log_name,
         'class_name': class_name,
-        'method':method,
-        'user_name':user_name,
-        'succeed':succeed,
-        'message':message
+        'method': method,
+        'user_name': user_name,
+        'succeed': succeed,
+        'message': message
     }
     return info
+
 
 def get_active_user(request):
     """
@@ -43,6 +48,7 @@ def get_active_user(request):
     client = tools.interface_param(request)
     res = client.bk_login.get_user({})
     return res
+
 
 def show_all(request):
     """
@@ -71,7 +77,8 @@ def show_all(request):
             'page_count': pages
         }
         res_list.append(dic)
-    return  res_list
+    return res_list
+
 
 def select_log(request):
     res = json.loads(request.body)
@@ -81,7 +88,8 @@ def select_log(request):
     res1 = search
     res_list = []
     tmp = Operatelog.objects.all()
-    log = tmp.filter(Q(log_type__icontains=res1) | Q(log_name__icontains=res1)| Q(user_name__icontains=res1)| Q(class_name__icontains=res1)| Q(method__icontains=res1))
+    log = tmp.filter(Q(log_type__icontains=res1) | Q(log_name__icontains=res1) | Q(user_name__icontains=res1) | Q(
+        class_name__icontains=res1) | Q(method__icontains=res1))
     p = Paginator(log, limit)
     count = p.page_range
     pages = count[-1]

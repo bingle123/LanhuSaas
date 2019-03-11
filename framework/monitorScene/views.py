@@ -119,8 +119,8 @@ def alternate_play_test(request):
     res = function.alternate_play_test(request)
     return render_json(res)
 
-def get_all_user(request):
-    res = function.get_all_user(request)
+def get_all_pos(request):
+    res = function.get_all_pos(request)
     return render_json(res)
 
 def get_scenes(request):

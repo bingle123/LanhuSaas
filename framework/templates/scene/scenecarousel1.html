@@ -51,10 +51,10 @@
             background-color="#fafafa"
             text-color="#fff"
             active-text-color="#ffd04b">
-        <el-form :inline="true" class="demo-form-inline" style="margin-top: 15px;">
+        <el-form :inline="true" class="demo-form-inline" style="margin: 50px 20px;">
 
-            <el-form-item label="员工名称:" size="mini"  prop="users">
-                <el-select v-model="users" placeholder="请选择员工" >
+            <el-form-item label="岗位名称:" size="mini"  prop="users">
+                <el-select v-model="position" placeholder="请选择岗位" >
                     <el-option v-for="item in options" :label="item.label" :key="item.value"
                                :value="item.value"></el-option>
                 </el-select>
@@ -106,21 +106,21 @@
             start: '09:00',                                                                   //开始时间
             end: '18:00',                                                                   //结束时间
             region1: '1',                                                                 //岗位选择
-            users: 'admin',                                                                  //员工选择
+            position: '1',                                                                  //岗位
             options: [],
         },
         methods: {
-            get_user(){
+            get_pos(){
                  axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/get_all_user/',
+                    url: '${SITE_URL}monitorScene/get_all_pos/',
                 }).then((res)=> {
                     let json = [];
                     if (res.data.message.length > 0) {
                         for (var i = 0; i < res.data.message.length; i++) {
                             let j = {};
-                            j.value = res.data.message[i];
-                            j.label = res.data.message[i];
+                            j.value = res.data.message[i].id;
+                            j.label = res.data.message[i].pos_name;
                             json.push(j);
                         };
                         this.options = json;
@@ -129,27 +129,25 @@
                     console.log('获取用户错误')
                 })
             },
-            alternate_play_test(){
-                 axios({
+             async alternate_play_test(){
+                  var res= await axios({
                     method: 'post',
                     url: '${SITE_URL}monitorScene/alternate_play_test/',
                      data :{
-                        'user_name':vm.users,
+                        'pos_id':vm.position,
                          'start':vm.start,
                          'end':vm.end
                      }
-                }).then((res)=> {
-                     vm.imgList = res.data.message;
-                     if (vm.imgList.length==1){    //只有一个场景
-                        vm.scene_content_change(0);
-                        setInterval(function () {
-                            vm.scene_content_change(0);   //十秒钟更新一次dom
-                        },10000)
-                     }
-                 })
+                  });
+                 vm.imgList = res.data.message;
             },
             scene_change(value1, value2) {
-
+                if (vm.imgList.length==1){    //只有一个场景
+                    vm.scene_content_change(0);
+                    setInterval(function () {
+                        vm.scene_content_change(0);   //十秒钟更新一次dom
+                    },10000)
+                }
                 if (vm.imgList.length>1) {  //多于一个场景
                     vm.scene_content_change(value1);
                 }
@@ -167,7 +165,7 @@
                     //添加一个div容器，形如<div type="basic1"></div>
                     $(selector).append('<div type=\"basic' + base_list[i].id + '\" style=\"position: absolute;top:' + base_list[i].y + 'px;left:' + base_list[i].x + 'px;transform: scale(' + base_list[i].scale + ')\"></div>');
                     //调用基本监控项的渲染方法,第一个参数对应容器div的type
-                    base_monitor_active(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width);
+                    base_monitor_active(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width,base_list[i].contents);
                 }
                 for (let i = 0; i < chart_list.length; i++) {
                     //添加一个div容器,形如<div id="1_1"><div id="chart1_1"></div></div>
@@ -255,7 +253,43 @@
         }
     });
 
-    vm.get_user();
+    vm.get_pos();
+    vm.alternate_play_test();
+    var interval = setInterval(function () {
+        vm.alternate_play_test();
+    },10000);
+    $(function () {
+        $(document).on("click", ".keepOn_yes", function (e) {
+            e.preventDefault();
+            var id=$(this).parents('.flow_monitor').attr('type');
+            axios({
+                method: 'post',
+                        url: '${SITE_URL}monitor_item/resume_flow/',
+                        data: {
+                            'item_id': id
+                        }
+            }).then(function (res) {
+                console.log(res);
+            });
+            $(this).parent().hide();
+        });
+        $(document).on("click", ".keepOn_no", function (e) {
+            e.preventDefault();
+            $(this).parent().hide();
+        });
+        $(document).on("click", ".block", function (e) {
+            var elem = document.body;
+            if (elem.webkitRequestFullScreen) {
+                elem.webkitRequestFullScreen();
+            } else if (elem.mozRequestFullScreen) {
+                elem.mozRequestFullScreen();
+            } else if (elem.requestFullScreen) {
+                elem.requestFullscreen();
+            } else {
+                notice.notice_show("浏览器不支持全屏API或已被禁用", null, null, null, true, true);
+            }
+        });
+    });
 </script>
 
 
