@@ -1084,6 +1084,7 @@
                         var temp2=[];
                         var temp3=[];
                         var temp4=[];
+
                         for(var i=1;i<temp1.length;i=i+2){
                             temp2.push(temp1[i]);
                         }
@@ -2171,6 +2172,7 @@
                 vm.echart_width();
             },
             chart_get_test(){
+                console.log(vm.chart.params)
                 axios({
                     url:'${SITE_URL}monitor_item/chart_get_test/',
                     method:'post',
