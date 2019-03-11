@@ -45,3 +45,8 @@ def load_all_fields_name(request):
     tb = json.loads(request.body)
     status = function.load_all_fields_name(tb)
     return render_json(status)
+
+def sql_test(req):
+    sql=json.loads(req.body)
+    res=function.sql_test(sql)
+    return render_json(res)

@@ -114,3 +114,23 @@ def load_all_fields_name(tb):
     status['message'] = 'ok'
     status['fields'] = fields
     return status
+
+#根据sqltest查询出结果集
+def sql_test(res):
+    conn = getAny_db(res['conn_id'])
+    sql=res['sql']
+    cursor = conn.cursor()  # 获取游标
+    cursor.execute(sql)
+    infos=cursor.fetchall()
+    datas=[]
+    col=cursor.description
+    names=[]
+    for c in col:
+        names.append(c[0])
+    for info in infos:
+        data={}
+        for i in range(len(names)):
+            data[names[i]]=info[i]
+        datas.append(data)
+    return datas
+

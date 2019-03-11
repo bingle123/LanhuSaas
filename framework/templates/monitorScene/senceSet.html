@@ -16,10 +16,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
     <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
     <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/jrange/css/jquery.range.css" rel="stylesheet">
-    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
     <script src="${STATIC_URL}js/jquery.range-min.js"></script>
-
-
+    <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
     <script type="text/javascript" src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
     <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
@@ -927,7 +925,8 @@
         y = e.clientY;//获取鼠在当前窗口的相对偏移位置的Top值并赋值给y
         offsetLeft = $(selector).position().left;
         offsetTop = $(selector).position().top;
-        $(this).css('cursor', 'pointer');
+        $(this).css({"cursor":"pointer","z-index":"500"});
+        $(this).siblings().css({"z-index":"0"});
     });
     $(document).on("mouseup", "html", function () {
         flag = false;//当鼠标在移动元素起来的时候将flag设定为false
@@ -990,6 +989,37 @@
         $(selector).css("left", _x);
         $(selector).css("top", _y);
         $(selector).css('cursor', 'pointer');
+        var t=$(selector).position().top;
+        var r=$(selector).position().left+$(selector).width();
+        var b=$(selector).position().top+$(selector).height();
+        var l=$(selector).position().left;
+        //console.log(t,r,b,l)
+        for(var i=0;i<$(selector).siblings().length;i++){
+            var t1=$(selector).siblings().eq(i).position().top;
+            var r1=$(selector).siblings().eq(i).position().left+$(selector).siblings().eq(i).width();
+            var b1=$(selector).siblings().eq(i).position().top+$(selector).siblings().eq(i).height();
+            var l1=$(selector).siblings().eq(i).position().left;
+            //console.log(t1,r1,b1,l1)
+            if(Math.abs(t-b1)<10){
+                    $(selector).css("top", b1+($(selector).height()+$(selector).siblings().eq(i).height())*(vm.scale-1)/2);
+
+            }
+            if(Math.abs(l-r1)<10){
+
+                    $(selector).css("left", r1+($(selector).width()+$(selector).siblings().eq(i).width())*(vm.scale-1)/2);
+
+            }
+            if(Math.abs(b-t1)<10){
+
+                    $(selector).css("top", t1-$(selector).height()-($(selector).height()+$(selector).siblings().eq(i).height())*(vm.scale-1)/2);
+
+            }
+            if(Math.abs(r-l1)<10){
+
+                    $(selector).css("left", l1-$(selector).width()-($(selector).width()+$(selector).siblings().eq(i).width())*(vm.scale-1)/2 );
+
+            }
+        }
 
 
     });
