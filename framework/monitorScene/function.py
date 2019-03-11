@@ -442,6 +442,7 @@ def get_scenes(pos_id,start,end):
     scenes = []
     # 获取岗位对应的场景
     scene = position_scene.objects.filter (position_id=pos_id)
+    #判断是否为轮播测试；false就是测试
     ff=False
     if start == '' and end == '':
         ff=True
@@ -451,6 +452,7 @@ def get_scenes(pos_id,start,end):
     for z in scenes:
         # 场景
         temp_scene = Scene.objects.get(id=z)
+        #
         flag=True
         if ff:
             id=temp_scene.scene_area

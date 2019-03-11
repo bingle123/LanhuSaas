@@ -219,14 +219,16 @@ def edit_unit(request):
         add_log(info)
         return result
 
-
+#基本监控项采集测试
 def basic_test(request):
     info = json.loads(request.body)
+    #新增时测试
     if info['id'] == '':
         info['id'] = 0
     result = []
     gather_data(**info)
     gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
+    #获得数据库对象
     db = get_db()
     cursor = db.cursor()
     cursor.execute(gather_rule2)
