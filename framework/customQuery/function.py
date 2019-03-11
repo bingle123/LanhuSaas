@@ -8,7 +8,6 @@ from django.core.paginator import *
 import MySQLdb
 from system_config.function import *
 from customQuery.models import *
-import pandas as pd
 
 
 # 分页获取自定义查询
