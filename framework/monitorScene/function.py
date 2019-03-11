@@ -397,6 +397,7 @@ def get_basic_data(id):
 def getBySceneId(request,id):
     sm = Scene_monitor.objects.filter(scene_id=id)
     dic_data = []
+    print id
     for s in sm:
         scene_monitor = model_to_dict(s)
         itemId = scene_monitor['item_id']
