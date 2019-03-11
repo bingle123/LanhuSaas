@@ -475,7 +475,7 @@
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item prop="height">
-                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.height" placeholder="请输入高度" @change="flow_height"></el-input>
+                                            <el-input disabled="disabled"  type="number" min="0" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.height" placeholder="请输入高度" @change="flow_height"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
@@ -483,7 +483,7 @@
                                         <el-form-item prop="width">
                                               <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="flow.width" placeholder="请输入宽度"
-                                                        @change="flow_width"></el-input>
+                                                        @change="flow_width" disabled="disabled" ></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
