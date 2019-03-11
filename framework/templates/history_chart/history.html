@@ -303,7 +303,6 @@ let vm = new Vue({
             scene_time: '',
             qnmb: [],
             dayData:[],
-            dayDataCount:1,
 
 
             sCount: 1,
@@ -572,10 +571,6 @@ let vm = new Vue({
             sceneTChang(value){
                 vm.scene_time = value;
             },
-            //翻页方法
-            dayDataCount(){
-
-            },
             //再初始化图
             draw_line(value) {
                 let list_x = [];
@@ -695,16 +690,16 @@ let vm = new Vue({
                     }).then((res) => {
                         if(res.data.code == 1){
                             alert('此场景没有监控项')
-                            $('#get_days,#scene_et').css('display','none');
+                            //$('#get_days,#scene_et').css('display','none');
                         }else {
                             vm.qnmb = res.data.results;
                             if(typeof res.data.results == 'number'){
                                 if(res.data.results < 3){
                                     alert('日期间隔需要大于3天');
-                                    $('#get_days,#scene_et').css('display','none');
+                                    //$('#get_days,#scene_et').css('display','none');
                                 }else{
                                     alert('此期间不足3条数据');
-                                    $('#get_days,#scene_et').css('display','none');
+                                   // $('#get_days,#scene_et').css('display','none');
                                 }
                             }else{
                                 vm.qnmb = res.data.results;
