@@ -100,7 +100,7 @@ function show_chart(item_id,chartData,person_count,chart_type,height,width,drigg
         $('#'+drigging_id).css('width',width);
         if (chart_type == "饼图") {
             console.log(barCount,barX,chartData)
-            myChart = echarts.init(document.getElementById(drigging_id), 'macarons');
+            myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
             var legendData = [];
                     for(var i=0;i<chartData.length;i++){
                         legendData.push(chartData[i].name)

@@ -84,6 +84,7 @@ def select_log(request):
     res = json.loads(request.body)
     limit = res['limit']
     page = res['page']
+    #获取搜索框内容
     search = res['search'].strip()
     res1 = search
     res_list = []

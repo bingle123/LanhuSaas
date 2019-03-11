@@ -38,10 +38,10 @@
             word-break: break-all;
             overflow: hidden;
         }
-        .circle1{display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
-        .circle2{display: inline-block;margin-left:5px;width:16px;height:16px;background-color:darkgreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
-        .circle3{display: inline-block;margin-left:5px;width:16px;height:16px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
-        .circle4{display: inline-block;margin-left:5px;width:16px;height:16px;background-color:red;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
+        .circle1{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
+        .circle2{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:darkgreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
+        .circle3{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
+        .circle4{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:red;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
         .asd{display: inline-block;}
     </style>
 </head>
@@ -201,9 +201,9 @@
                             <div style="padding: 0px 45% 0px 45%">
                                 <h2>预览</h2>
                             </div>
-                            <div style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke; position: relative" id="text1">
+                            <div style="text-align:center;width: 100%;min-height:40%;height: auto;background-color: whitesmoke; position: relative" id="text1">
                                 <!--<div id = "text2" style="position:absolute;left:230px;top:150px;"> -->
-                                <div id="text2" style="margin:auto;position:absolute;left:25%;top:25%;margin-left: -50px;margin-top:-50px;">
+                                <div id="text2" style="margin:auto;">
                                 </div>
                             </div>
                             <div style="padding: 0px 20%">
@@ -475,7 +475,7 @@
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item prop="height">
-                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.height" placeholder="请输入高度" @change="flow_height"></el-input>
+                                            <el-input disabled="disabled"  type="number" min="0" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.height" placeholder="请输入高度" @change="flow_height"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
@@ -483,7 +483,7 @@
                                         <el-form-item prop="width">
                                               <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="flow.width" placeholder="请输入宽度"
-                                                        @change="flow_width"></el-input>
+                                                        @change="flow_width" disabled="disabled" ></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
@@ -910,7 +910,7 @@
         },
         methods: {
             basic_size(){
-              $("#text2").find("*").css("font-size",this.basic.font_size)
+                $("#text2").find("*").css("font-size",this.basic.font_size)
             },
             basic_height(){
                 $('#text2').css('height',this.basic.height)
@@ -942,7 +942,7 @@
             sycontent(){
                 let tempcontents = vm.basic.contents
                 $("#text2").html("")
-                $("#text2").append("<div class=\"newline\">"+tempcontents+"</div>")
+                $("#text2").append("<div class=\"newline\" style=\"font-size:"+ vm.basic.font_size+"px;\">"+tempcontents+"</div>")
                 if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
                     var temp1 = tempcontents.split("#");
                     var temp2=[];
@@ -964,10 +964,10 @@
                     $("#text2").html("")
                      for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                          if(j<temp4.length){
-                             $("#text2").append("<div>" + temp1[i] + temp4[j]+ "</div>");
+                             $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size +"px;\">" + temp1[i] + temp4[j]+ "</div>");
                          }
                          else{
-                              $("#text2").append("<div>" + temp1[i]+ "</div>");
+                              $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i]+ "</div>");
                          }
                      }
                   }
@@ -1039,7 +1039,7 @@
                     for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
 
                         if (i == flag2) {
-                            $("#text2").append("<div class=\"asd\">" + icon1[0] + "</div>");
+                            $("#text2").append("<div class=\"asd\" style=\"font-size:"+vm.basic.font_size +"px;\">" + icon1[0] + "</div>");
                             if (icon4 == 1) {
                                 $("#text2").append("<div class=\"circle1\"></div>");
                             }
@@ -1053,7 +1053,7 @@
                                 $("#text2").append("<div class=\"circle3\"></div>");
                             }
                         } else {
-                            $("#text2").append("<div>" + temp1[i] + temp4[j] + "</div>");
+                            $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size +"px;\">" + temp1[i] + temp4[j] + "</div>");
                         }
                     }
                 }
@@ -1078,7 +1078,7 @@
                 }).then(function (res) {
                     let tempcontents2 = vm.basic.contents
                     $("#text2").html("")
-                    $("#text2").append("<div class=\"newline\">"+tempcontents2+"</div>")
+                    $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size +"px;\">"+tempcontents2+"</div>")
                     if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
                         var temp1 = tempcontents2.split("#");
                         var temp2=[];
@@ -1096,10 +1096,10 @@
                         $("#text2").html("")
                          for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                              if(j<temp4.length){
-                                 $("#text2").append("<div>" + temp1[i] + res.data.message[0][temp4[j]]+ "</div>");
+                                 $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size +"px;\">" + temp1[i] + res.data.message[0][temp4[j]]+ "</div>");
                              }
                              else{
-                                  $("#text2").append("<div>" + temp1[i]+ "</div>");
+                                  $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size +"px;\">" + temp1[i]+ "</div>");
                              }
                          }
                       }
@@ -1118,7 +1118,7 @@
                               icon4=res.data.message[0]['FILE_EXIST'];
                         }
                         $("#text2").html("")
-                        $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
+                        $("#text2").append("<div class = \"asd\" style=\"font-size:"+ vm.basic.font_size +"px;\">"+icon1[0]+"</div>");
                         if (icon4 == 1) {
                              $("#text2").append("<div class=\"circle1\"></div>");
                          }
@@ -1173,7 +1173,7 @@
                         $("#text2").html("")
                         for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                             if (i == flag2) {
-                                $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
+                                $("#text2").append("<div class = \"asd\" style=\"font-size:"+ vm.basic.font_size +"px;\">"+icon1[0]+"</div>");
                                 if (icon4 == 1) {
                                      $("#text2").append("<div class=\"circle1\"></div>");
                                  }
@@ -1187,7 +1187,7 @@
                                      $("#text2").append("<div class=\"circle4\"></div>");
                                  }
                             } else {
-                                $("#text2").append("<div>" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size +"px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
                             }
                         }
                      }

@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 -->
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- element UI引入样式 -->
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <!--axios.min.js--vue.js的ajax支持-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/echarts/echarts.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/echarts/macarons.js"></script>
+    <link rel="stylesheet" href="${STATIC_URL}css/alertRuleManage/alertRuleManage.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
+    <style type="text/css">
+        .thRow th {
+            padding: 0;
+        }
+
+        .dialog_height {
+            height: 50%;
+            overflow:scroll;
+        }
+    </style>
+</head>
+
+<body>
+<div id="customQueryManage">
+    <el-row>
+        <el-col :span="24">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item>首页</el-breadcrumb-item>
+                <el-breadcrumb-item>自定义查询</el-breadcrumb-item>
+            </el-breadcrumb>
+        </el-col>
+    </el-row>
+    <el-card>
+        <!--表单展示-->
+        <div v-if="customQueryTableStatus == 'list'">
+            <el-row>
+                <el-col :span="24">
+                    <div style="font-weight: bold">自定义查询列表</div>
+                    <hr>
+                </el-col>
+            </el-row>
+            <el-row type="flex" justify="space-between" align="center" class="row">
+                <el-col :span="12">
+                    <el-col :span="9">
+                        <el-input v-model="queryNameSearch" size="medium" placeholder="请输入查询名称"></el-input>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-button type="primary" size="medium" icon="el-icon-search" v-on:click="customQuerySearch">
+                            搜索
+                        </el-button>
+                    </el-col>
+                </el-col>
+                <el-col :span='12' style="text-align: right">
+                    <el-button type='primary' size="medium" @click='customQueryAdd'>新增自定义查询</el-button>
+                </el-col>
+            </el-row>
+            <el-table :data="customQueryTableData">
+                <el-table-column prop="id" label="序号" width="100">
+                </el-table-column>
+                <el-table-column prop="query_name" label="查询名称" width="200" align="center">
+                </el-table-column>
+                <el-table-column prop="show_type" label="显示类型" width="200" align="center">
+                </el-table-column>
+                <el-table-column prop="query_sql" label="查询SQL" width="600" align="center">
+                </el-table-column>
+                <el-table-column prop="operation" label="操作" width="300" align="center">
+                    <template slot-scope="scope">
+                        <el-button type="text" size="small" @click="customQueryEdit(scope.row.id)">编辑</el-button>
+                        <el-button type="text" size="small" @click="customQueryDelete(scope.row.id)">删除</el-button>
+                        <el-button type="text" size="small" @click="customQueryShow(scope.row)">展示</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-pagination :page-count="queryCount" :current-page="currentPage" background layout="prev, pager, next"
+                           style="float:right" @current-change="customQueryPageChange"></el-pagination>
+        </div>
+        <!--数据添加/修改-->
+        <div v-if="customQueryTableStatus == 'add' || customQueryTableStatus == 'edit'">
+            <el-row>
+                <el-col :span="24">
+                    <div style="font-weight: bold">自定义查询添加</div>
+                    <hr>
+                </el-col>
+            </el-row>
+            <el-form :model="customQueryData" ref="customQueryData" label-position="right"
+                     label-width="100px">
+                <el-row>
+                    <el-col :span="30" :offset="1">
+                        <el-form-item label="查询名称:" prop="query_name">
+                            <el-input v-model="customQueryData.query_name"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="30" :offset="1">
+                        <el-form-item label="数据库连接:">
+                            <el-select v-model="customQueryData.conn_id" filterable placeholder="请选择"
+                                       style="width: 100%">
+                                <el-option v-for="db in customQueryDatabase" :label="db.label"
+                                           :value="db.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="11" :offset="1">
+                        <el-form-item label="展示方式:" prop="show_type">
+                            <el-select v-model="customQueryData.show_type" collapse-tags filterable placeholder="请选择"
+                                       style="width: 100%">
+                                <el-option v-for="type in customQueryShowType" :key="type" :label="type"
+                                           :value="type"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="23" :offset="1">
+                        <el-form-item label="查询SQL:" prop="query_sql">
+                            <el-input type="textarea" :rows="5" v-model="customQueryData.query_sql"
+                                      @change="add_flag=false"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row class="alertRuleFormButton">
+                    <el-button @click="customQueryList()">取 消</el-button>
+                    <el-button type="success" @click="sql_test('')">验证SQL</el-button>
+                    <el-button type="primary" @click="customQuerySave('customQueryData')">添加 / 修改</el-button>
+                </el-row>
+                <el-dialog
+                        title="查询展示"
+                        :visible.sync="dialogVisible1"
+                        width="80%" custom-class="dialog_height">
+                    <div id="show1">
+                        <el-table
+                                :data="tableData"
+                                style="width: 100%">
+                            <el-table-column
+                                    :prop="field"
+                                    :label=field
+                                    width="TableLength" v-for="field in fileds">
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <el-button @click="dialogVisible1 = false">返回</el-button>
+                </el-dialog>
+                <el-dialog
+                        title="查询展示"
+                        :visible.sync="dialogVisible2"
+                        width="80%" height="80%" @opened="show_chart">
+                    <div id="show2" style="width: 500px;height: 500px">
+
+                    </div>
+                    <el-button @click="dialogVisible2 = false">返回</el-button>
+                </el-dialog>
+            </el-form>
+        </div>
+    </el-card>
+    <el-dialog
+            title="查询展示"
+            :visible.sync="dialogVisible3"
+            width="80%" custom-class="dialog_height">
+        <div id="show1">
+            <el-table
+                    :data="tableData"
+                    style="width: 100%">
+                <el-table-column
+                        :prop="field"
+                        :label=field
+                        width="TableLength" v-for="field in fileds">
+                </el-table-column>
+            </el-table>
+        </div>
+        <el-button @click="dialogVisible3 = false">返回</el-button>
+    </el-dialog>
+    <el-dialog
+            title="查询展示"
+            :visible.sync="dialogVisible4"
+            width="80%" height="80%" @opened="show_chart">
+        <div id="show2" style="width: 500px;height: 500px">
+
+        </div>
+        <el-button @click="dialogVisible4 = false">返回</el-button>
+    </el-dialog>
+</div>
+
+<script type="text/javascript">
+    //csrf验证
+    axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
+    var vue = new Vue({
+            el: '#customQueryManage',
+            data: {
+                dialogVisible1: false,
+                dialogVisible2: false,
+                dialogVisible3: false,
+                dialogVisible4: false,
+                customQueryDatabase: [],
+                tableData: [],
+                //灵活得到结果集的列名
+                fileds: [],
+                //echart对象
+                myChart: '',
+                //得到列长，美化展示
+                TableLength: 0,
+                //echart数据
+                chartData: [],
+                person_count: '',
+                //如果更新了sql语句没有检查，不允许保存
+                add_flag: true,
+                customQueryShowType: [
+                    '列表',
+                    '折线图',
+                    '柱状图',
+                    '饼图',
+                ],
+                currentPage: 1,
+                //当前自定义查询列表状态：list列表,edit修改,add添加
+                customQueryTableStatus: 'list',
+                //当前自定义查询Table所使用的数据集
+                customQueryTableData: null,
+                //当前正在添加或修改的自定义查询的保存对象
+                customQueryData: {},
+                //自定义查询的名称搜索
+                queryNameSearch: '',
+                //当前有多少页
+                queryCount: 0,
+            },
+            methods: {
+                //sql测试
+                sql_test() {
+                    var data = {
+                        'conn_id': this.customQueryData.conn_id,
+                        'sql': this.customQueryData.query_sql
+                    };
+                    axios({
+                        url: '${SITE_URL}customQuery/sql_test',
+                        method: 'post',
+                        data: data
+                    }).then((res) => {
+                        console.log(res)
+                        if (res.data.result == 'error') {
+                            this.$message.warning("您输入SQL语句有误!请检查")
+                        } else {
+                            res = res.data.data
+                            vue.add_flag = true
+                            vue.fileds = []
+                            for (key in res[0]) {
+                                vue.fileds.push(key)
+                            }
+                            vue.TableLength = 1200 / vue.fileds.length
+                            if (vue.customQueryData.show_type == '列表') {
+                                vue.dialogVisible1 = true
+                                vue.tableData = res
+                            } else {
+                                if (vue.fileds.length > 2) {
+                                    this.$message.warning("目前图表功能只支持二维，请修改SQL语句！")
+                                } else {
+                                    vue.chartData = []
+                                    var name = ""
+                                    var value = ""
+                                    vue.dialogVisible2 = true
+                                    for (var i = 0; i < res.length; i++) {
+                                        for (var j = 0; j < vue.fileds.length; j++) {
+                                            if (this.isNotANumber(res[i][vue.fileds[j]])) {
+                                                value = vue.fileds[j]
+                                            } else {
+                                                name = vue.fileds[j]
+                                            }
+                                        }
+                                        vue.person_count = name
+                                        temp = {
+                                            'name': res[i][name],
+                                            'value': res[i][value]
+                                        }
+                                        vue.chartData.push(temp)
+                                    }
+                                }
+                            }
+                        }
+                    });
+                },
+                //定制查询的展示function
+                customQueryShow(row) {
+                    var data = {
+                        'conn_id': row.conn_id,
+                        'sql': row.query_sql
+                    };
+                    axios({
+                        url: '${SITE_URL}customQuery/sql_test',
+                        method: 'post',
+                        data: data
+                    }).then((res) => {
+                        if (res.data.result == 'error') {
+                            this.$message.warning("您输入SQL语句有误!请检查")
+                        } else {
+                            res = res.data.data
+                            vue.add_flag = true
+                            vue.fileds = []
+                            for (key in res[0]) {
+                                vue.fileds.push(key)
+                            }
+                            vue.TableLength = 1200 / vue.fileds.length
+                            if (row.show_type == '列表') {
+                                vue.dialogVisible3 = true
+                                vue.tableData = res
+                            } else {
+                                vue.customQueryData.show_type=row.show_type
+                                if (vue.fileds.length > 2) {
+                                    this.$message.warning("目前图表功能只支持二维，请修改SQL语句！")
+                                } else {
+                                    vue.chartData = []
+                                    var name = ""
+                                    var value = ""
+                                    vue.dialogVisible4 = true
+                                    for (var i = 0; i < res.length; i++) {
+                                        for (var j = 0; j < vue.fileds.length; j++) {
+                                            if (this.isNotANumber(res[i][vue.fileds[j]])) {
+                                                value = vue.fileds[j]
+                                            } else {
+                                                name = vue.fileds[j]
+                                            }
+                                        }
+                                        vue.person_count = name
+                                        temp = {
+                                            'name': res[i][name],
+                                            'value': res[i][value]
+                                        }
+                                        vue.chartData.push(temp)
+                                    }
+                                }
+                            }
+                        }
+                    });
+                },
+                isNotANumber(inputData) {
+                    //isNaN(inputData)不能判断空串或一个空格
+                    //如果是一个空串或是一个空格，而isNaN是做为数字0进行处理的，而parseInt与parseFloat是返回一个错误消息，这个isNaN检查不严密而导致的。
+                    if (parseFloat(inputData).toString() == "NaN") {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+                ,
+                get_db_connections() {
+                    axios({
+                        url: '${SITE_URL}db_connection/get_all_db_connection/',
+                        method: 'post',
+                    }).then((res) => {
+                        let json = [];
+
+                        if (res.data.results.length > 0) {
+                            for (let i = 0; i < res.data.results.length; i++) {
+                                let j = {};
+                                j.value = res.data.results[i].id;
+                                j.label = res.data.results[i].connname;
+                                json.push(j);
+                            }
+                            this.customQueryDatabase = json;
+                            console.log(this.customQueryDatabase);
+                        }
+
+                    }).catch((res) => {
+                        console.log('获取数据库连接错误')
+                    })
+                }
+                ,
+                //弹出错误信息
+                customQueryPopupErrorMessage: function (msg) {
+                    this.$notify.error({
+                        title: '错误',
+                        message: msg
+                    });
+                }
+                ,
+                //显示加载中..
+                customQueryPopupLoading: function () {
+                    //返回加载标记，供外部关闭
+                    return this.$loading({
+                        lock: true,
+                        text: '正在拼命加载中...',
+                        spinner: 'el-icon-loading',
+                        background: 'rgba(0, 0, 0, 0.7)'
+                    });
+                }
+                ,
+                //自定义查询搜索方法
+                customQuerySearch: function () {
+                    this.customQueryPageChange(1);
+                }
+                ,
+                //自定义查询添加页面
+                customQueryAdd: function () {
+                    this.customQueryTableStatus = 'add';
+                }
+                ,
+                //自定义查询数据分页获取
+                customQueryPageChange: function (page) {
+                    const loading = this.customQueryPopupLoading();
+                    var data = {
+                        search: this.queryNameSearch,
+                        page: page,
+                        limit: 5
+                    };
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}customQuery/select_queries_pagination',
+                        data: data
+                    }).then((res) => {
+                        loading.close();
+                        this.customQueryTableData = res.data.items;
+                        this.queryCount = res.data.pages;
+                        this.currentPage = page;
+                        if (page > res.data.pages) {
+                            this.currentPage = res.data.pages;
+                        }
+                    }).catch((res) => {
+                        loading.close();
+                        var msg = '自定义查询信息加载失败！';
+                        this.customQueryPopupErrorMessage(msg + res);
+                    });
+                }
+                ,
+                //自定义查询编辑
+                customQueryEdit: function (id) {
+                    const loading = this.customQueryPopupLoading();
+                    var url = '${SITE_URL}customQuery/select_query';
+                    var editData = {};
+                    editData.id = id;
+                    axios({
+                        method: 'post',
+                        url: url,
+                        data: editData,
+                    }).then((res) => {
+                        loading.close();
+                        this.customQueryData = res.data;
+                        this.customQueryTableStatus = 'edit';
+                    }).catch((res) => {
+                        loading.close();
+                        var msg = '获取自定义查询数据失败！' + res;
+                        this.customQueryPopupErrorMessage(msg);
+                    });
+                }
+                ,
+                //自定义查询删除
+                customQueryDelete: function (id) {
+                    const loading = this.customQueryPopupLoading();
+                    this.$confirm('确认删除自定义查询信息吗?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true
+                    }).then(() => {
+                        var url = '${SITE_URL}customQuery/del_query';
+                        var delData = {};
+                        delData.id = id;
+                        axios({
+                            method: 'post',
+                            url: url,
+                            data: delData,
+                        }).then((res) => {
+                            loading.close();
+                            if ('ok' == res.data.message) {
+                                this.customQueryPageChange(this.currentPage);
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除自定义查询成功!'
+                                });
+                            } else {
+                                var msg = '请求删除自定义查询失败！';
+                                this.customQueryPopupErrorMessage(msg + res.data.message);
+                            }
+                        }).catch((res) => {
+                            loading.close();
+                            var msg = '请求删除自定义查询失败！';
+                            this.customQueryPopupErrorMessage(msg + res);
+                        });
+                    }).catch(() => {
+                        loading.close();
+                        this.$message({
+                            type: 'info',
+                            message: '取消自定义查询删除'
+                        });
+                    });
+                }
+                ,
+                //保存自定义查询
+                customQuerySave: function (formName) {
+                    if (!vue.add_flag) {
+                        this.$message({
+                            type: 'warning',
+                            message: '请先验证sql再保存!'
+                        });
+                    } else {
+                        const loading = this.customQueryPopupLoading();
+                        var url = '${SITE_URL}customQuery/add_query';
+                        axios({
+                            method: 'post',
+                            url: url,
+                            data: this.customQueryData,
+                        }).then((res) => {
+                            loading.close();
+                            if ('ok' == res.data.message) {
+                                if (this.customQueryTableStatus == 'edit') {
+                                    this.customQueryPageChange(this.currentPage);
+                                } else if (this.customQueryTableStatus == 'add') {
+                                    this.customQueryPageChange(res.data.total_pages);
+                                }
+                                this.customQueryList();
+                            } else {
+                                var msg = '请求添加/修改自定义查询失败！';
+                                this.customQueryPopupErrorMessage(msg + res);
+                            }
+                        }).catch((res) => {
+                            loading.close();
+                            var msg = '请求添加/修改自定义查询失败！';
+                            this.customQueryPopupErrorMessage(msg + res);
+                        });
+                    }
+                }
+                ,
+                //显示自定义查询清单
+                customQueryList: function () {
+                    this.customQueryData = {};
+                    this.customQueryTableStatus = 'list';
+                }
+                ,
+                //Data对象根据表达式转字符串
+                dataToString: function (fmt, date) {
+                    var o = {
+                        "M+": date.getMonth() + 1,                 //月份
+                        "d+": date.getDate(),                    //日
+                        "h+": date.getHours(),                   //小时
+                        "m+": date.getMinutes(),                 //分
+                        "s+": date.getSeconds(),                 //秒
+                        "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+                        "S": date.getMilliseconds()             //毫秒
+                    };
+                    if (/(y+)/.test(fmt))
+                        fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+                    for (var k in o)
+                        if (new RegExp("(" + k + ")").test(fmt))
+                            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                    return fmt;
+                }
+                ,
+                show_chart() {
+                    var chartData = vue.chartData
+                    var person_count = vue.person_count
+                    var chart_type = vue.customQueryData.show_type
+                    if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
+                        this.myChart.dispose();
+                    }
+                    if (chart_type == "饼图") {
+                        this.myChart = echarts.init(document.getElementById('show2'), 'macarons');
+                        var legendData = [];
+                        for (var i = 0; i < chartData.length; i++) {
+                            legendData.push(chartData[i].name)
+                        }
+                        console.log(legendData)
+                        option = {
+                            tooltip: {
+                                trigger: 'item',
+                                formatter: "{a} <br/>{b} : {c} ({d}%)"
+                            },
+                            legend: {
+                                type: 'scroll',
+                                orient: 'vertical',
+                                right: 10,
+                                bottom: 50,
+                                data: legendData
+                            },
+                            series: [
+                                {
+                                    name: person_count,
+                                    type: 'pie',
+                                    radius: '50%',
+                                    center: ['50%', '30%'],
+                                    data: chartData,
+                                    itemStyle: {
+                                        emphasis: {
+                                            shadowBlur: 10,
+                                            shadowOffsetX: 0,
+                                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                        }
+                                    },
+                                    avoidLabelOverlap: false,
+                                    label: {
+                                        normal: {
+                                            show: true,
+                                            position: 'inside',
+                                            formatter: '{c}'
+                                        }
+                                    },
+                                    labelLine: {
+                                        normal: {
+                                            show: false
+                                        },
+                                        emphasis: {
+                                            show: true
+                                        }
+                                    }
+                                }
+                            ]
+                        };
+                        this.myChart.setOption(option);
+                    }
+
+                    if (chart_type == "柱状图") {
+                        myChart = echarts.init(document.getElementById('show2'), 'macarons');
+                        let barX = [];
+                        let barCount = [];
+                        for (var i = 0; i < chartData.length; i++) {
+                            this.$set(barX, i, chartData[i].name);
+                            this.$set(barCount, i, chartData[i].value);
+                        }
+                        option = {
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                                }
+                            },
+                            barWidth: 15,
+                            legend: {
+                                data: ['已执行'],
+                                bottom: 10,
+                                right: 30
+                            },
+                            grid: {
+                                left: '3%',
+                                right: '4%',
+                                top: 10,
+                                containLabel: true
+                            },
+                            xAxis: {
+                                type: 'category',
+                                data: barX
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            series: [
+                                {
+                                    name: person_count,
+                                    type: 'bar',
+                                    stack: 'data',
+                                    data: barCount
+                                },
+                            ]
+                        };
+                        myChart.setOption(option);
+                    }
+                    if (chart_type == "折线图") {
+                        myChart = echarts.init(document.getElementById('show2'), 'macarons');
+                        let lineX = [];
+                        let lineCount = [];
+                        for (var i = 0; i < chartData.length; i++) {
+                            this.$set(lineX, i, chartData[i].name);
+                            this.$set(lineCount, i, chartData[i].value);
+                        }
+                        option = {
+                            tooltip: {
+                                trigger: 'axis'
+                            },
+                            legend: {
+                                data: [person_count]
+                            },
+                            calculable: true,
+                            xAxis: [
+                                {
+                                    type: 'category',
+                                    boundaryGap: false,
+                                    data: lineX
+                                }
+                            ],
+                            yAxis: [
+                                {
+                                    type: 'value'
+                                }
+                            ],
+                            series: [
+                                {
+                                    name: person_count,
+                                    type: 'line',
+                                    smooth: true,
+                                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
+                                    data: lineCount,
+                                },
+                            ]
+                        };
+                        myChart.setOption(option);
+                    }
+                }
+                ,
+                isNotANumber(inputData) {
+                    //isNaN(inputData)不能判断空串或一个空格
+                    //如果是一个空串或是一个空格，而isNaN是做为数字0进行处理的，而parseInt与parseFloat是返回一个错误消息，这个isNaN检查不严密而导致的。
+                    if (parseFloat(inputData).toString() == "NaN") {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            },
+            mounted() {
+                //this.loadAlertRuleInfo();
+                this.get_db_connections();
+                this.customQueryPageChange(1);
+            }
+        })
+    ;
+</script>
+
+</body>
+</html>
