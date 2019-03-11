@@ -242,6 +242,10 @@
                           -->
                     </div>
                  <div id="table4" style="display:none">
+                     <div id="scene_et_table4" style="width: 600px;height: 400px;margin: 60px">
+                     </div>
+                     <div id="get_days" style="display: none">
+                     </div>
                      <el-table :data="monthly_operationTableData" style="width: 100%;margin-top: 20px">
                          <el-table-column prop="date" label="统计日期" style="width: 15%" align="center">
                          </el-table-column>
@@ -283,7 +287,7 @@ let vm = new Vue({
             search: '',                                 //搜索框
             log_type: '',                                //日志类型
             alertRuleTableData: null,
-            sceneOperationRuleTableData:null,
+            sceneOperationRuleTableData:[],
             aboutTableDate: null,
             keyword: '',                                 //关键字内容
             date_Choice: '',                            //时间选择
@@ -318,52 +322,7 @@ let vm = new Vue({
                 }).then(function (res) {
                     vm.Operatelog = res.data.message;
                     vm.page_count = res.data.message[0].page_count;
-                })
-                axios({
-                    method: 'post',
-                    url: '${SITE_URL}history_chart/select_all_rules',
-                    data: {
-                        page: vm.page,
-                        limit: 10
-                    },
-                }).then((res) => {
-                    this.alertRuleTableData = res.data.results;
-                    vm.alertRulesCount = res.data.results[0].pages
-                    console.log(vm.page_count)
-                })
-               axios({
-                        method: 'post',
-                        url: '${SITE_URL}history_chart/select_scene_operation',
-                        data: {
-                            page: vm.page,
-                            limit: 10
-                        },
-                }).then((res) =>{
-                    vm.sceneOperationRuleTableData = res.data.message
-
-                })
-               axios({
-                   method:'post',
-                   url:'${SITE_URL}history_chart/about_select',
-                   data:{
-                        page: vm.page,
-                        limit: 10
-                   }
-               }).then(function (res) {
-                    vm.aboutTableDate = res.data.results;
-                    vm.aboutRulesCount = res.data.results[0].pages
-               })
-                 axios({
-                   method:'post',
-                   url:'${SITE_URL}history_chart/monthly_select',
-                   data:{
-                        page: vm.page,
-                        limit: 10
-                   }
-               }).then(function (res) {
-                    vm.monthly_operationTableData = res.data.message;
-                    vm.aboutRulesCount = res.data.results[0].pages
-               })
+                });
 
             },
 
@@ -488,52 +447,87 @@ let vm = new Vue({
                     vm.sceneOperationCount = res.data.message[0].pages;
                 })
             },
-            //用于告警分页方法
-            alertRulePageChange: function (value) {
-                vm.page = value;
-                axios({
-                    method: 'post',
-                    url: '${SITE_URL}history_chart/select_rules_pagination',
-                    data: {
-                        search: this.search,
-                        page: vm.page,
-                        keyword: vm.keyword,
-                        date_Choice: vm.date_Choice,
-                        limit: 10
-                    },
-                }).then((res) => {
-                    this.alertRuleTableData = res.data.results;
-                    vm.alertRulesCount = res.data.results[0].pages
-                    console.log(vm.alertRulesCount)
-                })
-            },
+
 
             change_type(value) {
                 if (value == 'log') {
                     $("#table1,#hide_k").css('display', 'block');
                     $("#table3，#scene_compare,#table2,#hide_m,#table10,#table4").css('display', 'none');
                     vm.get_null();
-                } else if (value == 'alert') {
+                }
+                if (value == 'alert') {
+                     axios({
+                    method: 'post',
+                    url: '${SITE_URL}history_chart/select_all_rules',
+                    data: {
+                        page: vm.page,
+                        limit: 10
+                    },
+                }).then((res) => {
+                    this.alertRuleTableData = res.data.results;
+                    vm.alertRulesCount = res.data.results[0].pages
+                    console.log(vm.page_count)
+                })
                     $("#table2,#hide_k").css('display', 'block');
                     $("#table3，#scene_compare,#table1,#hide_m,#table10,#table4").css('display', 'none');
                     vm.get_null();
-                } else if (value == 'about_to_expire') {
+                }
+                if (value == 'about_to_expire') {
+                     axios({
+                   method:'post',
+                   url:'${SITE_URL}history_chart/about_select',
+                   data:{
+                        page: vm.page,
+                        limit: 10
+                   }
+               }).then(function (res) {
+                    vm.aboutTableDate = res.data.results;
+                    vm.aboutRulesCount = res.data.results[0].pages
+               });
                     $("#table2,#table1,#scene_compare,#hide_m,#table10,#table4").css('display', 'none');
                     $("#table3,#hide_k").css('display', 'block');
                     vm.get_null();
-                } else if (value == 'compare') {
-                    $("#table1,#table2,#table3,#hide_k,#table10,#scene_et,#get_days,#table4").css('display', 'none');
+                }
+                if (value == 'compare') {
+                    $("#table1,#table2,#table3,#hide_k,#table10,#scene_et,#scene_et_table4,#get_days,#table4").css('display', 'none');
                     $("#scene_compare,#hide_m").css('display', 'block');
                     axios.post('${SITE_URL}history_chart/select_scenes/').then((res) => {
                         vm.scenes_data = res.data.results
                     });
-                }else if(value == 'sceneOperation'){
+                }
+                if(value == 'sceneOperation'){
+                     axios({
+                        method: 'post',
+                        url: '${SITE_URL}history_chart/select_scene_operation',
+                        data: {
+                            page: vm.page,
+                            limit: 10
+                        },
+                }).then((res) =>{
+                   console.log(res)
+                    vm.sceneOperationRuleTableData = res.data.message
+
+                });
                    $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table4").css('display','none');
                    $('#table10').css('display','block');
                    vm.get_null();
-                }else if(value == 'monthly_operation_statistics'){
-                    $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table10").css('display','none');
+                }
+                if(value == 'monthly_operation_statistics'){
+                    axios({
+                   method:'post',
+                   url:'${SITE_URL}history_chart/monthly_select',
+                   data:{
+                        page: vm.page,
+                        limit: 10
+                   }
+               }).then(function (res) {
+                    vm.monthly_operationTableData = res.data.message;
+                $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table10").css('display','none');
                    $('#table4').css('display','block');
+                    vm.nmsl(vm.monthly_operationTableData)
+               });
+
+
                 }
             },
 
@@ -584,7 +578,9 @@ let vm = new Vue({
                     this.$set(list_all,i,value[i]['itemNums']);
                     this.$set(list_alert,i,value[i]['alertNums']);
                 }
-
+                if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
+                    this.myChart.dispose();
+                }
                 vm.myChart = echarts.init(document.getElementById('scene_et'));
                 option = {
                     title: {
@@ -667,6 +663,85 @@ let vm = new Vue({
                                     }
                                 }
                             },
+                        },
+                    ]
+                };
+                vm.myChart.setOption(option);
+            },
+            nmsl(value) {
+                if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
+                    this.myChart.dispose();
+                }
+                let list_x = [];
+                let list_s = [];
+                let list_f = [];
+                let list_all = [];
+                let date = [];
+                for (var i = 0; i < value.length; i++) {
+                    this.$set(list_all,i,value[i]['total']);
+                    this.$set(list_s,i,value[i]['Success_num']);
+                    this.$set(list_f,i, value[i]['failure_num']);
+                    this.$set(list_x,i,value[i]['success_rate']);
+                    this.$set(date,i,value[i]['date']);
+                }
+                console.log(list_all,list_s,list_f,list_x,)
+
+                vm.myChart = echarts.init(document.getElementById('scene_et_table4'));
+                option = {
+                    title: {
+                        text: '场景比对',
+                        left: 1,
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                            }
+
+                    },
+                    legend: {
+                        left: '25%',
+                        data: ['节点数','运行成功场景单元数','运行失败数','告警数']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: date
+                    },
+                    yAxis: {
+                        type: 'value',
+                        min: 0,
+                    },
+                    series: [
+                        {
+                            name: '节点数',
+                            type: 'bar',
+                            data: list_all,
+                            stack:'data',
+                        },
+                        {
+                            name: '运行成功场景单元数',
+                            type: 'bar',
+                            data: list_s,
+                            stack:'data',
+                        },
+                        {
+                            name: '运行失败数',
+                            type: 'bar',
+                            data: list_f,
+                            stack:'data',
+                        },
+                        {
+                            name: '告警数',
+                            type: 'bar',
+                            data: list_f,
+                            stack:'data',
                         },
                     ]
                 };
