@@ -124,12 +124,13 @@ def delete_unit(request):
 
 
 def add_unit(request):
-    try:
+    # try:
         res = json.loads(request.body)
         cilent = tools.user_interface_param()
         # 获取登录用户信息
         user = cilent.bk_login.get_user({})
         add_dic = res['data']
+        print add_dic
         add_flow_dic = res['flow']
         monitor_type = res['monitor_type']
         #  根据前台来的单元类型进行分类
@@ -149,20 +150,24 @@ def add_unit(request):
             add_dic.pop('node_name')
             add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
             add_dic['params'] = res['flow']['constants']
+            add_flow_dic['monitor_area']=res['monitor_area']
             start_list = []
             for i in res['flow']['node_times']:
                 start_list.append(i['endtime'])
                 start_list.append(i['starttime'])
             add_dic['start_time'] = min(start_list)
             add_dic['end_time'] = max(start_list)
+            add_flow_dic['start_time']=add_dic['start_time']
+            add_flow_dic['end_time'] =add_dic['end_time']
+            print add_flow_dic
         add_dic['monitor_name'] = res['monitor_name']
         # 新增一条数据时 开关状态默认为0 关闭
         add_dic['status'] = 0
         add_dic['monitor_type'] = monitor_type
         add_dic['creator'] = user['data']['bk_username']
         add_dic['editor'] = user['data']['bk_username']
-        Monitor.objects.create(**add_dic)
         add_dic['monitor_area'] = res['monitor_area']
+        Monitor.objects.create(**add_dic)
         if res['monitor_type'] == 'fourth':
             function.add_unit_task(add_dicx=add_flow_dic)
         else:
@@ -170,12 +175,12 @@ def add_unit(request):
         result = tools.success_result(None)
         info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
-    except Exception as e:
-        info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        result = tools.error_result(e)
-    add_log(info)
-    return result
+    # except Exception as e:
+    #     info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    #     result = tools.error_result(e)
+    # add_log(info)
+        return result
 
 
 def edit_unit(request):
