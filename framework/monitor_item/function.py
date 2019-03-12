@@ -3,6 +3,7 @@ from __future__ import division
 from django.db.models import Q
 from common.log import logger
 import json
+import fuzzywuzzy
 import requests
 from models import Monitor,Job
 from monitorScene.models import Scene
@@ -23,69 +24,69 @@ from market_day.models import HeaderData as hd
 
 # 显示函数
 def unit_show(request):
-    try:
-        res = json.loads(request.body)
-        #  个数
-        limit = res['limit']
-        #  当前页面号
-        page = res['page']
-        unit = Monitor.objects.all()
-        # 进入分页函数进行分页，返回总页数和当前页数据
-        page_data, base_page_count = tools.page_paging(unit, limit, page)
-        #  把返回的数据对象转为list
-        rest_list = tools.obt_dic(page_data, base_page_count)
-        param = {
-            'bk_username': 'admin',
-            "bk_biz_id": 2,
+# try:
+    res = json.loads(request.body)
+    #  个数
+    limit = res['limit']
+    #  当前页面号
+    page = res['page']
+    unit = Monitor.objects.all()
+    # 进入分页函数进行分页，返回总页数和当前页数据
+    page_data, base_page_count = tools.page_paging(unit, limit, page)
+    #  把返回的数据对象转为list
+    res_list = tools.obt_dic(page_data, base_page_count)
+    param = {
+        'bk_username': 'admin',
+        "bk_biz_id": 2,
+    }
+    param1 = {
+        "bk_biz_id": 2,
+    }
+    #  用user v2的方式调用接口
+    client = tools.user_interface_param()
+    #  调用获取作业详情接口
+    res = client.job.get_job_list(param)
+    #  调用获取标准运维模板详情接口
+    res1 = client.sops.get_template_list(param1)
+    if res.get('result'):
+        job_list = res.get('data')
+    else:
+        job_list = []
+        logger.error(u"请求作业模板失败：%s" % res.get('message'))
+    if res1.get('result'):
+        flow_list = res1.get('data')
+    else:
+        flow_list = []
+        logger.error(u"请求流程模板失败：%s" % res.get('message'))
+    job = []
+    flow = []
+    #  获取模板名称和ID
+    for flow_data in flow_list:
+        dic2 = {
+            'flow_name': flow_data['name'],
+            'id': [{
+                'name': flow_data['name'],
+                'id': flow_data['id']
+            }]
         }
-        param1 = {
-            "bk_biz_id": 2,
-        }
-        #  用user v2的方式调用接口
-        client = tools.user_interface_param()
-        #  调用获取作业详情接口
-        res = client.job.get_job_list(param)
-        #  调用获取标准运维模板详情接口
-        res1 = client.sops.get_template_list(param1)
-        if res.get('result'):
-            job_list = res.get('data')
-        else:
-            job_list = []
-            logger.error(u"请求作业模板失败：%s" % res.get('message'))
-        if res1.get('result'):
-            flow_list = res1.get('data')
-        else:
-            flow_list = []
-            logger.error(u"请求流程模板失败：%s" % res.get('message'))
-        job = []
-        flow = []
-        #  获取模板名称和ID
-        for flow_data in flow_list:
-            dic2 = {
-                'flow_name': flow_data['name'],
-                'id': [{
-                    'name': flow_data['name'],
-                    'id': flow_data['id']
-                }]
-            }
-            flow.append(dic2)
-        for job_data in job_list:
-            dic1 = {
+        flow.append(dic2)
+    for job_data in job_list:
+        dic1 = {
+            'name': job_data['name'],
+            'id': [{
                 'name': job_data['name'],
-                'id': [{
-                    'name': job_data['name'],
-                    'id': job_data['bk_job_id']
-                }]
-            }
-            job.append(dic1)
-        res_dic = {
-            'res_list': res_list,
-            'job': job,
-            'flow': flow,
+                'id': job_data['bk_job_id']
+            }]
         }
-        result = tools.success_result(res_dic)
-    except Exception as e:
-        result = tools.error_result(e)
+        job.append(dic1)
+    res_dic = {
+        'res_list': res_list,
+        'job': job,
+        'flow': flow,
+    }
+    result = tools.success_result(res_dic)
+    # except Exception as e:
+    #     result = tools.error_result(e)
     return result
 
 
@@ -93,13 +94,11 @@ def unit_show(request):
 def select_unit(request):
     try:
         res = json.loads(request.body)
-        res_list = []
         res1 = res['data']
         limit = res['limit']
         page = res['page']
         # 模糊查询
-        unit = Monitor.objects.filter(
-            Q(monitor_type__icontains=res1) | Q(monitor_name__icontains=res1) | Q(editor__icontains=res1))
+        unit = Monitor.objects.filter(Q(monitor_name__icontains=res1) | Q(editor__icontains=res1))
         page_data, base_page_count = tools.page_paging(unit, limit, page)
         res_list = tools.obt_dic(page_data, base_page_count)
         return res_list
