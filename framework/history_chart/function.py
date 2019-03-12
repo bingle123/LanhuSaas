@@ -604,9 +604,11 @@ def select_scene_operation():
     # 获取告警数目
     date = str(yesterday) + '%'
     sql = "SELECT count(*) from td_alert_log WHERE alert_time like " + "'" + date + "'"
-    cursor = get_db().cursor()
+    db = get_db()
+    cursor = db.cursor()
     cursor.execute(sql)
     alert_num = cursor.fetchall()[0][0]
+    db.close()
     dict = {
         'date': str(yesterday),
         'scene_num': scene_num,
