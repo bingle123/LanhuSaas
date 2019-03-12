@@ -54,7 +54,7 @@ urlpatterns = patterns(
     # 自定义查询
     url(r'^customQuery/', include('customQuery.urls')),
     #首页
-    url(r'^home_page/', include('home_page.urls')),
+    # url(r'^home_page/', include('home_page.urls')),
 
 )
 

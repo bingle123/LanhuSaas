@@ -74,6 +74,14 @@ def obt_dic(page_data,page_count):
     """
     obj_list = []
     for i in page_data:
+        if i.monitor_type == 1:
+            i.monitor_type = u'基本监控项'
+        elif i.monitor_type == 2:
+            i.monitor_type = u'图表监控项'
+        elif i.monitor_type == 3:
+            i.monitor_type = u'作业监控项'
+        elif i.monitor_type == 4:
+            i.monitor_type = u'流程监控项'
         obj_dic = model_to_dict(i)
         obj_dic['page_count'] = page_count
         obj_dic['edit_time'] = str(i.edit_time)
@@ -81,15 +89,9 @@ def obt_dic(page_data,page_count):
         obj_dic['start_time'] = str(i.start_time)
         obj_dic['end_time'] = str(i.end_time)
         obj_dic['status'] = str(i.status)
-        if obt_dic['monitor_type'] ==1:
-            obt_dic['monitor_type'] = '基本监控项'
-        elif obt_dic['monitor_type'] ==2:
-            obt_dic['monitor_type'] = '图表监控项'
-        elif obt_dic['monitor_type'] == 3:
-            obt_dic['monitor_type'] = '作业监控项'
-        elif obt_dic['monitor_type'] == 4:
-            obt_dic['monitor_type'] = '流程监控项'
-        obj_list.append (obj_dic)
+
+
+        obj_list.append(obj_dic)
     return obj_list
 
 
@@ -370,16 +372,20 @@ def start_flow_task(**info):
     Flow(instance_id=task_id, status=flag, test_flag=1, flow_id=item_id).save()
     return task_id
 #让流程继续执行，调用v2接口
-def resume_flow(item_id):
-    user_account = BkUser.objects.filter(id=1).get()
-    client = get_client_by_user(user_account)
-    client.set_bk_api_ver('v2')
+def resume_flow(item_id,name):
     task_id=Flow.objects.filter(flow_id=item_id).last().instance_id
-    params={
-        'bk_biz_id':2,
-        'task_id':task_id,
-        'action':'resume'
-    }
-    res=client.sops.operate_task(params)
+    mess = hd.objects.get(id=1).header
+    headers = json.loads(mess.decode('utf-8').replace("'", "\""))
+    a_url = "http://paas.bk.com/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
+    req = requests.get(url=a_url, headers=headers)
+    req.encoding = req.apparent_encoding
+    req.raise_for_status()
+    res = json.loads(req.text)
+    res1 = json.loads(res['pipeline_tree'])
+    activities = res1['activities']
+    node_id=''
+    for key in activities:
+        if name==activities[key]['name']:
+            node_id = str(activities[key]['id'])
     return res['result']
 
