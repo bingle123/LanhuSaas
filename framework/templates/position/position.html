@@ -60,7 +60,7 @@
             </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
-            <el-button @click=" edit_job('form2')" type="primary">保存</el-button>
+            <el-button @click=" edit_pos('form2')" type="primary">保存</el-button>
             <el-button @click="dialogFormVisible2 = false">取消</el-button>
         </span>
 
@@ -73,7 +73,7 @@
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="add_job('form')" type="primary">保存</el-button>
+            <el-button @click="add_pos('form')" type="primary">保存</el-button>
             <el-button @click="dialogFormVisible3 = false">取消</el-button>
         </div>
     </el-dialog>
@@ -97,7 +97,7 @@
                             <el-input v-model="search" placeholder="请输入内容"></el-input>
                         </el-col>
                         <el-col :span="3">
-                            <el-button type="primary" icon="el-icon-search" v-on:click="select_job">搜索</el-button>
+                            <el-button type="primary" icon="el-icon-search" v-on:click="select_pos">搜索</el-button>
                         </el-col>
                     </el-col>
                     <el-col :span="3">
@@ -119,7 +119,7 @@
                     </el-table-column>
                     <el-table-column prop="operation" label="操作" style="width: 10%">
                         <template slot-scope="scope">
-                            <el-button type="text" @click="show_job(scope.row)" size="small">加人</el-button>
+                            <el-button type="text" @click="show_pos(scope.row)" size="small">加人</el-button>
                             <el-button type="text" @click="edit_jobname(scope.row)" size="small">编辑</el-button>
                             <el-button type="text" @click="deletePosition(scope.row.id)" size="small">删除</el-button>
                         </template>
@@ -221,7 +221,7 @@
                 vm.page = value;
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}position/select_job/',
+                    url: '${SITE_URL}position/select_pos/',
                     data: {
                         search: this.search,
                         page: vm.page,
@@ -287,14 +287,14 @@
                     });
                 });
             },
-            select_job() {
+            select_pos() {
                 vm.page = 1                                             //查询岗位
                 if (this.search.trim() == '') {
                     vm.show()
                 }
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}position/select_job/',
+                    url: '${SITE_URL}position/select_pos/',
                     data: {
                         search: this.search,
                         page: this.page,
@@ -305,35 +305,35 @@
                     vm.page_count = res.data.message[0].page_count;
                 })
             },
-            add_job(formName) {                                              //增加岗位
+            add_pos(formName) {                                              //增加岗位
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
                         return false;
                     } else {
                         axios({
                             method: 'post',
-                            url: '${SITE_URL}position/add_job/',
+                            url: '${SITE_URL}position/add_pos/',
                             data: this.form,
                         }).then((res) => {
                             vm.dialogFormVisible3 = false;
-                            window.location.href = "${SITE_URL}position/jobM"
+                            window.location.href = "${SITE_URL}position/position"
                         })
                     }
                 });
             },
-            edit_jobname(row) {                                     //显示弹框，传值到edit_job
+            edit_posname(row) {                                     //显示弹框，传值到edit_pos
                 vm.dialogFormVisible2 = true
                 vm.tempid = row.id;
                 vm.form2.tempjobname = row.pos_name;
             },
-            edit_job(formName) {                                            //修改岗位名
+            edit_pos(formName) {                                            //修改岗位名
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
                         return false;
                     } else {
                         axios({
                             method: "post",
-                            url: '${SITE_URL}position/edit_job/',
+                            url: '${SITE_URL}position/edit_pos/',
                             data: {
                                 id: this.tempid,
                                 pos_name: this.form2.tempjobname,
@@ -341,13 +341,13 @@
                         }).then((res) => {
                             vm.dialogFormVisible2 = false
                             if (res.data.message != null) {
-                                window.location.href = "${SITE_URL}position/jobM"
+                                window.location.href = "${SITE_URL}position/position"
                             }
                         })
                     }
                 });
             },
-            show_job(row) {                                      //显示弹框和穿梭框，传值到add_person
+            show_pos(row) {                                      //显示弹框和穿梭框，传值到add_person
                 vm.dialogFormVisible = true;
                 vm.jobname = row.pos_name;
                 vm.id = row.id;
@@ -380,7 +380,7 @@
                     },
                 }).then((res) => {
                     vm.dialogFormVisible = false
-                    window.location.href = "${SITE_URL}position/jobM"
+                    window.location.href = "${SITE_URL}position/position"
                 })
             },
             select_all_user() {                                                      //调接口查询所有用户

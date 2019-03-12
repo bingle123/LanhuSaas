@@ -270,7 +270,8 @@
                                     vue.dialogVisible2 = true
                                     for (var i = 0; i < res.length; i++) {
                                         for (var j = 0; j < vue.fileds.length; j++) {
-                                            if (this.isNotANumber(res[i][vue.fileds[j]])) {
+                                            console.log(parseFloat(res[i][vue.fileds[j]]))
+                                            if (!(parseFloat(res[i][vue.fileds[j]]).toString() == "NaN")&&res[i][vue.fileds[j]]<10000000){
                                                 value = vue.fileds[j]
                                             } else {
                                                 name = vue.fileds[j]
@@ -323,7 +324,7 @@
                                     vue.dialogVisible4 = true
                                     for (var i = 0; i < res.length; i++) {
                                         for (var j = 0; j < vue.fileds.length; j++) {
-                                            if (this.isNotANumber(res[i][vue.fileds[j]])) {
+                                            if (!(parseFloat(res[i][vue.fileds[j]]).toString() == "NaN")&&res[i][vue.fileds[j]]<10000000) {
                                                 value = vue.fileds[j]
                                             } else {
                                                 name = vue.fileds[j]
@@ -342,6 +343,7 @@
                     });
                 },
                 isNotANumber(inputData) {
+                    console.log(inputData)
                     //isNaN(inputData)不能判断空串或一个空格
                     //如果是一个空串或是一个空格，而isNaN是做为数字0进行处理的，而parseInt与parseFloat是返回一个错误消息，这个isNaN检查不严密而导致的。
                     if (parseFloat(inputData).toString() == "NaN") {

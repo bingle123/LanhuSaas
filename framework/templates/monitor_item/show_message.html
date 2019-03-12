@@ -38,6 +38,7 @@
             word-break: break-all;
             overflow: hidden;
         }
+
         .circle1{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
         .circle2{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:darkgreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
         .circle3{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
@@ -116,7 +117,7 @@
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item prop="height">
-                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                            <el-input type="number" min="0"  v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="basic.height"
                                                       placeholder="请输入高度" @change="basic_height"></el-input>
                                         </el-form-item>
@@ -124,7 +125,7 @@
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item prop="width">
-                                              <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                              <el-input class="max" type="number" min="0" max="600" v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="basic.width"
                                                         placeholder="请输入宽度" @change="basic_width"></el-input>
                                         </el-form-item>
