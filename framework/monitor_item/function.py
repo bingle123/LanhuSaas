@@ -4,7 +4,7 @@ from django.db.models import Q
 from common.log import logger
 import json
 import requests
-from models import Monitor
+from models import Monitor,Job
 from monitorScene.models import Scene
 from db_connection.models import Conn
 from monitor_item import tools
@@ -127,6 +127,7 @@ def add_unit(request):
     try:
         res = json.loads(request.body)
         cilent = tools.user_interface_param()
+        # 获取登录用户信息
         user = cilent.bk_login.get_user({})
         add_dic = res['data']
         add_flow_dic = res['flow']
@@ -192,9 +193,12 @@ def edit_unit(request):
             monitor_type = '图表单元类型'
         if res['monitor_type'] == 'third':
             monitor_type = '作业单元类型'
+            # id和name要拆分
             add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
+            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
         if res['monitor_type'] == 'fourth':
             monitor_type = '流程单元类型'
+            # 前台来的id和name要拆分
             add_dic['jion_id'] = res['flow']['jion_id']
             add_dic['gather_params'] = add_dic['node_name']
             add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
@@ -209,6 +213,7 @@ def edit_unit(request):
             add_dic['end_time'] = max(start_list)
         add_dic['monitor_name'] = res['monitor_name']
         add_dic['monitor_type'] = monitor_type
+        # 当前用户为编辑人
         add_dic['editor'] = user['data']['bk_username']
         add_dic['monitor_area'] = res['monitor_area']
         Monitor.objects.filter(id=id).update(**add_dic)
@@ -223,8 +228,8 @@ def edit_unit(request):
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
         result = tools.error_result(e)
-        add_log(info)
-        return result
+    add_log(info)
+    return result
 
 
 # 基本监控项采集测试

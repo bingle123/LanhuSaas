@@ -238,21 +238,21 @@ def filter_user(request):
 
 
 def get_tree(request):
-    pos = pos_info.objects.all()
+    positions = pos_info.objects.all()
     users = user_info.objects.all()
     res_list = []
-    for x in pos:
-        tmp = []
-        for y in users:
-            if x.id == y.user_pos_id:
+    for pos in positions:
+        children = []
+        for user in users:
+            if pos.id == user.user_pos_id:
                 dic1 = {
-                    'label' : y.user_name
+                    'label' : user.user_name
                 }
-                tmp.append(dic1)
+                children.append(dic1)
         dic = {
-            'id': x.id,
-            'children': tmp,
-            'label': x.pos_name,
+            'id': pos.id,
+            'children': children,
+            'label': pos.pos_name,
         }
         res_list.append(dic)
     return res_list
@@ -267,31 +267,33 @@ def get_active_user(request):
     res = client.bk_login.get_user({})
     return res
 
+#用户同步
 def synchronize(request):
-    """
-        用户同步
-        """
     try:
         res = get_user(request)
         reslist = res['data']
+        # 获取无岗位id
+        noposition_id = get_noposition_id()
+        #所有用户
         users = user_info.objects.all()
         #判断本地用户与蓝鲸用户，以蓝鲸的为准，多了删除，少了增加，变了更新
-        for i in reslist:
+        #先蓝鲸用户匹配本地用户
+        for data in reslist:
             flag1 = 0
-            for j in users:
-                if i['bk_username'] == j.user_name:
-                    user_info.objects.filter(user_name=j.user_name).update(mobile_no=i['phone'],email=i['email']) #,open_id=i['wx_userid']
+            for user in users:
+                if data['bk_username'] == user.user_name:
+                    user_info.objects.filter(user_name=user.user_name).update(mobile_no=data['phone'],email=data['email']) #,open_id=i['wx_userid']
                     flag1=1
             if flag1 == 0:
-                user_info.objects.create(user_name=i['bk_username'],user_pos_id=1,mobile_no=i['phone'], email=i['email']) #, open_id=i['wx_userid']
-
-        for x in users:
+                user_info.objects.create(user_name=data['bk_username'],user_pos_id=noposition_id,mobile_no=data['phone'], email=data['email']) #, open_id=i['wx_userid']
+        #后本地用户匹配蓝鲸用户
+        for user in users:
             flag2 = 0
-            for y in reslist:
-                if x.user_name == y['bk_username']:
+            for data in reslist:
+                if user.user_name == data['bk_username']:
                     flag2 = 1
             if flag2 == 0:
-                user_info.objects.filter(user_name=x.user_name).delete()
+                user_info.objects.filter(user_name=data.user_name).delete()
         info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'user_info',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception, e:
         r1 = tools.error_result(e)
