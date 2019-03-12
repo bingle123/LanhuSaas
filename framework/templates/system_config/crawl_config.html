@@ -120,7 +120,8 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="changePage"></el-pagination>
+        <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                       @current-change="changePage"></el-pagination>
     </el-card>
     <!--end 卡片 列表页-->
 
@@ -198,18 +199,21 @@
                 </el-col>
                 <el-col :span="12">
                     <div class="grid-content bg-purple">
-                        <el-form-item label="接收人：">
-                            <el-input v-model="crawl_form.receivers"></el-input>
-                        </el-form-item>
-                    </div>
-                </el-col>
-                <el-col :span="12">
-                    <div class="grid-content bg-purple">
                         <el-form-item label="静态资源前缀：">
                             <el-input v-model="crawl_form.url_pre"></el-input>
                         </el-form-item>
                     </div>
                 </el-col>
+                <el-col :span="24">
+                    <div class="grid-content bg-purple">
+                        <el-form-item label="接收人：">
+                            <el-button @click="dialogVisible = true" type="primary">选择人员</el-button>
+                            <el-input v-model="crawl_form.receivers" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
+                        </el-form-item>
+
+                    </div>
+                </el-col>
+
                 <el-col :span="12">
                     <div class="grid-content bg-purple">
                         <el-form-item>
@@ -224,6 +228,19 @@
         </el-form>
     </el-card>
     <!--end 卡片 新增爬虫配置页-->
+    <el-dialog
+            title="请选择人员"
+            :visible.sync="dialogVisible"
+            width="30%"
+            :before-close="handleClose" >
+        <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
+        <el-tree class="filter-tree" :data="user_list" :props="defaultProps"  show-checkbox
+                 :filter-node-method="filterNode" ref="tree2" :default-checked-keys="checked_list" @check="checked"></el-tree>
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="select_people">确 定</el-button>
+        </span>
+    </el-dialog>
+
 </div>
 
 
@@ -263,7 +280,7 @@
             ],
             crawl_search: {
                 name: '',
-                url:'',
+                url: '',
             },
             crawl_form: {
                 id: '',
@@ -279,9 +296,18 @@
                 receivers: '',
                 url_pre: '',
             },
-            page_count:100,
-            page:1,
-            limit:2,
+            page_count: 100,
+            page: 1,
+            limit: 2,
+            user_list: [],
+            filterText: '',
+            defaultProps: {
+                children: 'children',
+                label: 'label'
+            },
+            dialogVisible: false,
+            users: [],
+            checked_list:[],
         },
         methods: {
             changeDiaLog() {//跳转爬虫配置新增页面
@@ -308,6 +334,7 @@
                         this.crawl_form.url_xpath = this.crawl_table[i].url_xpath;
                         this.crawl_form.title_xpath = this.crawl_table[i].title_xpath;
                         this.crawl_form.total_xpath = this.crawl_table[i].total_xpath;
+                        this.crawl_form.receivers = this.crawl_table[i].receivers;
                     }
                 }
             },
@@ -379,13 +406,18 @@
                 axios({
                     url: '${SITE_URL}system_config/get_crawl_by_name/',
                     method: 'post',
-                    data: {'keyword':this.crawl_search.name,'crawl_url':this.crawl_search.url,page:vm.page,limit:vm.limit}
+                    data: {
+                        'keyword': this.crawl_search.name,
+                        'crawl_url': this.crawl_search.url,
+                        page: vm.page,
+                        limit: vm.limit
+                    }
                 }).then((res) => {
                     if (res.data.code == 0) {
                         vm.crawl_table = res.data.results;
-                        if (res.data.results.length != 0){
+                        if (res.data.results.length != 0) {
                             vm.page_count = res.data.results[0]['page_count']
-                        }else {
+                        } else {
                             vm.page_count = 1;
                         }
                     } else {
@@ -403,15 +435,17 @@
                 })
 
             },
+            //翻页
             changePage(value) {
                 vm.page = value;
                 vm.get_crawl_by_name()
             },
+            //页面初始化
             initHtml() {
                 axios({
                     url: '${SITE_URL}system_config/get_crawls/',
                     method: 'post',
-                    data:{page:vm.page,limit:2}
+                    data: {page: vm.page, limit: 2}
                 }).then((res) => {
                     console.log(res);
                     if (res.data.code == 0) {
@@ -430,7 +464,9 @@
                         message: '查询错误'
                     })
                 })
-            }, testCrawl() {
+            },
+            //爬虫测试
+            testCrawl() {
                 //elementUI loading动画
                 const loading = this.$loading({
                     lock: true,
@@ -444,7 +480,7 @@
                     data: this.crawl_form,
                 }).then((res) => {
                     if (res.data.code == 0) {
-                        let info = ''
+                        let info = '';
                         for (let i = 0; i < res.data.results.length; i++) {
                             let title = res.data.results[i].title;
                             let time = res.data.results[i].time;
@@ -474,12 +510,65 @@
                         type: 'info',
                         message: '爬虫异常' + res,
                     });
-                    loading.close();
+                    console.error(res)
                 })
+            },
+
+            handleDialogClose() {
+                vm.ref()
+            },
+            //获取人员树结构
+            get_tree() {
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}position/get_tree/',
+                }).then(function (res) {
+                    vm.user_list = res.data.message;
+                })
+            },
+            filterMethod(query, item) {
+                return item.pinyin.indexOf(query) > -1;
+            },
+            filterNode(value, data) {
+                if (!value) return true;
+                return data.label.indexOf(value) !== -1;
+            },
+            //关闭窗口
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {
+                    });
+            },
+            //获取选中节点
+            checked(e, dataCk) {
+                this.checkedKeys = dataCk.checkedNodes;
+                vm.getchekedKeys = this.checkedKeys;
+            },
+            //确认人员选择
+            select_people() {
+                vm.dialogVisible = false;
+                vm.getchekedKeys = vm.checkedKeys;
+                console.log(vm.getchekedKeys);
+                let receve_user_list = '';
+                for (let i = 0; i < vm.getchekedKeys.length; i++){
+                    if(vm.getchekedKeys[i]["id"] == undefined ){
+                        receve_user_list += vm.getchekedKeys[i].label+ "@";
+                    }
+                }
+                vm.crawl_form.receivers = receve_user_list;
+            },
+        },
+        watch: {
+            filterText(val) {
+                this.$refs.tree2.filter(val);
             }
-        }
+        },
     });
     vm.initHtml();
+    vm.get_tree();
 </script>
 </body>
 </html>

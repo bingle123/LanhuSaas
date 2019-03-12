@@ -30,6 +30,7 @@ urlpatterns = patterns(
     (r'^edit_scene_type_by_uuid/$', 'edit_scene_type_by_uuid'),                         # 修改场景类型
     (r'^delete_scene_by_uuid/$', 'delete_scene_by_uuid'),                                     # 删除场景类型
     (r'^get_crawl_content/$', 'get_crawl_content'),                                     # 删除场景类型
+    (r'^start_crawl_test/$', 'start_crawl_test'),                                     # 删除场景类型
     (r'^json_test', 'json_test'),   # 测试专用
 
 )
