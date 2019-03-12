@@ -3,7 +3,6 @@ from __future__ import division
 from django.db.models import Q
 from common.log import logger
 import json
-import fuzzywuzzy
 import requests
 from models import Monitor,Job
 from monitorScene.models import Scene
