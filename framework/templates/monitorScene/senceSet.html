@@ -37,6 +37,8 @@
         }
         .Drigging {
             position:absolute;
+            border: 1px solid black;
+            border-radius: 5px;
         }
         .monitor_type{
             line-height: 48px;
@@ -451,24 +453,24 @@
                      {type: 'string', required: true, message: '请选择结束时间', trigger: 'change'}
                 ]
             },
-            result_list:[],
-            result_list_edit:[],
-            base_page_count:0,
-            chart_page_count:0,
-            job_page_count:0,
-            flow_page_count:0,
-            monitor_type:0,
-            page1:1,
-            limit:4,
-            base_monitor:[],
-            chart_monitor:[],
-            job_monitor:[],
-            flow_monitor:[],
-            drigging_id:1,      //画布元素id
-            show_num:0,
-            monitor_data:[],
+            result_list:[],                 //保存场景与其对应监控项信息
+            result_list_edit:[],            //获取场景及其监控项信息
+            base_page_count:0,              //初始化总页数
+            chart_page_count:0,              //初始化总页数
+            job_page_count:0,              //初始化总页数
+            flow_page_count:0,              //初始化总页数
+            monitor_type:0,              //判断是那种监控项
+            page1:1,              //初始化默认页码
+            limit:4,              //限制每页显示条数
+            base_monitor:[],              //基本监控项的信息列表
+            chart_monitor:[],              //图表监控项的信息列表
+            job_monitor:[],              //作业监控项的信息列表
+            flow_monitor:[],              //流程监控项的信息列表
+            drigging_id:1,      //画布拖动元素id
+            show_num:0,         //关闭场景编辑页面时返回上一步
+            monitor_data:[],        //接受监控项的具体数据
             scale:1,            //比例
-            multiple:0,
+            multiple:0,         //限制比例的参数
 
         },
 
@@ -620,10 +622,6 @@
                             vm.monitor_data = res.data.results;
                             $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"basic'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"></div>');
                             base_monitor(vm.monitor_data[0].id,vm.monitor_data[0].font_size,vm.monitor_data[0].height,vm.monitor_data[0].width,vm.monitor_data[0].contents);
-
-
-
-
                         }
                         if(result_list_edit[i].monitor_type=='图表单元类型'){
                             let res = await axios({
@@ -632,9 +630,8 @@
                                 data:result_list_edit[i].item_id,
                             })
                             vm.monitor_data = res.data.results;
-                            $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px;top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"><div id=\"chart'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
+                            $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px;top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"><div id=\"chart'+result_list_edit[i].order+'\" style=\"background:beige;height:'+(vm.monitor_data[0].height-2)+'px;width:'+(vm.monitor_data[0].width-2)+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
                             show_chart(vm.monitor_data[0].id,"","", vm.monitor_data[0].gather_params, vm.monitor_data[0].height, vm.monitor_data[0].width, result_list_edit[i].order, vm.monitor_data[0].contents);
-
                         }
                         if(result_list_edit[i].monitor_type=='作业单元类型'){
                             let res = await axios({
@@ -660,7 +657,6 @@
                             $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"><div type=\"flow_monitor'+result_list_edit[i].order+'\"></div></div>');
                             flow_monitor(jion_id,result_list_edit[i].order);
                         }
-
                     }
                     vm.drigging_id=max+1;
                 }
@@ -815,7 +811,7 @@
                 vm.drigging_id++
             },
             add_chart_monitor(i){
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"transform: scale('+vm.scale+')\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+i.height+'px;width:'+i.width+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"height:'+i.height+'px;width:'+i.width+'pxtransform: scale('+vm.scale+')\"><div id=\"chart'+i.id+'\" style=\"background:beige;height:'+(i.height-2)+'px;width:'+(i.width-2)+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>')
                 show_chart(i.id,"","",i.gather_params,i.height,i.width,vm.drigging_id,i.contents);
                 vm.drigging_id++;
             },
@@ -912,7 +908,7 @@
     var obox=$('.monitor_content');
     var selector = '';
     var flag=false;
-    var x,y,w,h;
+    var x,y;
     var offsetLeft,offsetTop;
     $(document).on("mouseover", ".Drigging", function () {
         $(this).css('cursor', 'pointer');//当鼠标移动到拖拽目标上的时候，将鼠标的样式设置为移动(move)
