@@ -523,11 +523,11 @@ def select_scene_operation():
     #获取所有场景
     scenes = Scene.objects.all()
     #剔除非交易日
-    # for scene in scenes:
-    #     if check_jobday(scene.scene_area,yesterday):
-    #         scenes2.append(scene)
-    #遍历所有场景
     for scene in scenes:
+        if check_jobday(scene.scene_area,yesterday):
+            scenes2.append(scene)
+    #遍历所有场景
+    for scene in scenes2:
         scene_monitors = Scene_monitor.objects.filter(scene_id=scene.id)
         #遍历所有监控项
         for scene_monitor in scene_monitors:
