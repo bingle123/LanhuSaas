@@ -171,7 +171,7 @@ def edit_pos(request):
         res = json.loads(request.body)
         id = res['id']
         posname = res['pos_name']
-        #获取系统使劲按
+        #获取系统时间
         nowTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         #获取当前用户
         nowPerson = get_active_user(request)['data']['bk_username']
@@ -277,7 +277,7 @@ def synchronize(request):
         #所有用户
         users = user_info.objects.all()
         #判断本地用户与蓝鲸用户，以蓝鲸的为准，多了删除，少了增加，变了更新
-        #先蓝鲸用户匹配本地用户
+        #先蓝鲸用户匹配本地用户,少了增加，变了更新
         for data in reslist:
             flag1 = 0
             for user in users:
@@ -286,7 +286,7 @@ def synchronize(request):
                     flag1=1
             if flag1 == 0:
                 user_info.objects.create(user_name=data['bk_username'],user_pos_id=noposition_id,mobile_no=data['phone'], email=data['email']) #, open_id=i['wx_userid']
-        #后本地用户匹配蓝鲸用户
+        #后本地用户匹配蓝鲸用户,多了删除
         for user in users:
             flag2 = 0
             for data in reslist:

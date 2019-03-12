@@ -16,7 +16,7 @@ def create_task_crontab(name, task, task_args, crontab_time, desc):
         'month_of_year': 9  # 月份
         'day_of_month': 5   # 日期
         'hour': 01         # 小时
-        'minute':05  # 分钟
+        'minute':05         # 分钟
     }
     :param desc: 定时任务描述
     :return: True or False

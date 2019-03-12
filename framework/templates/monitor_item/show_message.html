@@ -705,7 +705,7 @@
             param2: '',
             zuoye: 'none',
             liucheng: 'none',
-            result_data: {},                           //传递新增数据
+            result_data: {},                            //传递新增数据
             monitor_type: 'first',                     //单元类型
             basic: {                                   //基本单元
                 monitor_name: '',                      //单元名称
@@ -722,7 +722,7 @@
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
                 monitor_area:''                             //日历地区
-            },
+            },             //基本单元
             rules1: {
                 font_size: [
                     {required: true, message: '请选择字号', trigger: 'change'}
@@ -740,7 +740,7 @@
                     {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
                 ],
 
-            },
+            },                              //校验规则
             chart: {                                //图表单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
@@ -756,7 +756,7 @@
                 gather_params: '',                   //节点
                 params: '',                         //监控参数
                 monitor_area:''                             //日历地区
-            },
+            },             //图表单元
             rules2: {
                 font_size: [
                     {required: true, message: '请选择字号', trigger: 'change'}
@@ -776,7 +776,7 @@
                 period: [
                     {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
                 ],
-            },
+            },                              //校验规则
             job: {                                   //作业单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
@@ -792,7 +792,7 @@
                 gather_params: '',                   //作业模板
                 params: '',                         //执行服务器
                 monitor_area:''                             //日历地区
-            },
+            },                //作业单元
             rules3: {
                 font_size: [
                     {required: true, message: '请选择字号', trigger: 'change'}
@@ -812,8 +812,8 @@
                 period: [
                     {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
                 ],
-            },
-            flow: {                                //流程单元
+            },                              //校验规则
+            flow: {                                     //流程单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
                 font_size: '20',                       //字号
@@ -829,7 +829,7 @@
                 gather_params: '',                   //流程模板
                 node_name:'',
                 monitor_area:''                             //日历地区
-            },
+            },              //流程单元
             rules4: {
                 font_size: [
                     {required: true, message: '请选择字号', trigger: 'change'}
@@ -846,7 +846,7 @@
                 period: [
                     {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
                 ]
-            },
+            },                              //校验规则
             basic1: {                                //基本单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
@@ -1202,11 +1202,12 @@
                      }
                 })
             },
+            // 保存
             pefFrom() {
-                var basic = $('#pane-first').attr('style')
-                var chart = $('#pane-second').attr('style')
-                var job = $('#pane-third').attr('style')
-                var flow = $('#pane-fourth').attr('style')
+                var basic = $('#pane-first').attr('style');
+                var chart = $('#pane-second').attr('style');
+                var job = $('#pane-third').attr('style');
+                var flow = $('#pane-fourth').attr('style');
                 if (basic == undefined || basic == "") {
                     vm.submitForm('basic')
                 } else if (chart == undefined || chart == "") {
@@ -1308,7 +1309,7 @@
                 vm.disabled5 = true;
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
-                if (row.monitor_type == '基本单元类型') {
+                if (row.monitor_type == '基本监控项') {
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
                     vm.basic.height = row.height;
@@ -1381,7 +1382,7 @@
                         vm.basic_test()
                     }
                 }
-                if (row.monitor_type == '图表单元类型') {
+                if (row.monitor_type == '图表监控项') {
                     vm.disabled2 = true;
                     vm.disabled3 = false;
                     vm.disabled4 = true;
@@ -1412,7 +1413,7 @@
                             alert('拉取数据库失败！')
                         });
                 }
-                if (row.monitor_type == '作业单元类型') {
+                if (row.monitor_type == '作业监控项') {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = false;
@@ -1434,7 +1435,7 @@
                     vm.job.status = row.status;
                     vm.area=row.monitor_area;
                 }
-                if (row.monitor_type == '流程单元类型') {
+                if (row.monitor_type == '流程监控项') {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = true;
@@ -1579,7 +1580,6 @@
                     vm.unit_id = -1;
                 }
                 if (vm.unit_id > 0) {
-                    console.log()
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor_item/edit/',
@@ -1619,12 +1619,14 @@
                         if (res['data']['code'] == 1) {
                         alert("保存失败!");
                         vm.centerDialogVisible = true;
-                    }
-                        else alert(vm.message);
-                        vm.centerDialogVisible = false;
+                        }
+                        else {
+                            alert(vm.message);
+                            vm.centerDialogVisible = false;
+                        }
                         vm.show()
                     }).catch((error) => {
-                        alert(vm.message)
+                        alert('保存出错!')
                     });
                 }
                 else {

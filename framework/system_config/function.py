@@ -9,6 +9,7 @@ from django.db.models import Q
 import json
 import datetime
 from crawl_template import crawl_temp
+from crawl_template import crawl_temp_second
 from django.db import transaction
 from django.core.mail import send_mail
 from django.conf import settings
@@ -41,7 +42,7 @@ def crawl_manage(request):
     url_pre = request_body['url_pre']
     active_user_dict = get_active_user(request)
     # 接收人为字符串，以@隔开
-    receivers = 'zork'
+    receivers = request_body['receivers']
     # 新增
     if crawl_id == '':
         create_user = active_user_dict['data']['bk_username']
@@ -113,6 +114,25 @@ def get_crawls_config(request):
         return error_result('获取爬虫配置信息失败' + e)
 
 
+def get_crawls_all(request):
+    """
+
+    :param request:
+    :return:
+    """
+    try:
+        res = CrawlerConfig.objects.all().order_by('-update_time').values()
+        result_list = []
+        for i in res:
+            i['create_time'] = i['create_time'].strftime("%Y-%m-%d %H:%M:%S")
+            i['update_time'] = i['update_time'].strftime("%Y-%m-%d %H:%M:%S")
+            result_list.append(i)
+        print result_list.__len__()
+        return success_result(result_list)
+    except Exception as e:
+        return error_result('获取爬虫配置信息失败' + e)
+
+
 def get_crawl_by_name(request):
     """
     根据crawl的名字查询信息
@@ -174,7 +194,7 @@ def start_crawl(request):
     :param request:
     :return:
     """
-    res = get_crawls_config(request)['results']
+    res = get_crawls_all(request)['results']
     result_all = []
     result_error = []
     for i in res:
@@ -357,7 +377,7 @@ def crawl_test(request):
     title_xpath = request_body['title_xpath']
     time_xpath = request_body['time_xpath']
     url_xpath = request_body['url_xpath']
-    result = crawl_temp(url=crawl_url, total_xpath=total_xpath, time_xpath=time_xpath, url_xpath=url_xpath,
+    result = crawl_temp_second(url=crawl_url, total_xpath=total_xpath, time_xpath=time_xpath, url_xpath=url_xpath,
                         title_xpath=title_xpath)
     print result
     return success_result(result['results'])
