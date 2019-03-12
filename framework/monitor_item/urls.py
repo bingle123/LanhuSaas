@@ -21,7 +21,6 @@ urlpatterns = patterns(
     (r'^edit/$', 'edit_unit'),
     (r'^delete/$', 'delete_unit'),
     (r'^add/$', 'add_unit'),
-    (r'^123/$', 'index1'),
     (r'^basic_test/$', 'basic_test'),
     (r'^job_test/$', 'job_test'),
     (r'^chart_get_test/$', 'chart_get_test'),

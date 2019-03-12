@@ -21,6 +21,7 @@ import datetime
 from market_day.models import HeaderData as hd
 
 
+# 显示函数
 def unit_show(request):
     try:
         res = json.loads(request.body)
@@ -32,7 +33,7 @@ def unit_show(request):
         # 进入分页函数进行分页，返回总页数和当前页数据
         page_data, base_page_count = tools.page_paging(unit, limit, page)
         #  把返回的数据对象转为list
-        res_list = tools.obt_dic(page_data, base_page_count)
+        rest_list = tools.obt_dic(page_data, base_page_count)
         param = {
             'bk_username': 'admin',
             "bk_biz_id": 2,
@@ -59,21 +60,21 @@ def unit_show(request):
         job = []
         flow = []
         #  获取模板名称和ID
-        for i in flow_list:
+        for flow_data in flow_list:
             dic2 = {
-                'flow_name': i['name'],
+                'flow_name': flow_data['name'],
                 'id': [{
-                    'name': i['name'],
-                    'id': i['id']
+                    'name': flow_data['name'],
+                    'id': flow_data['id']
                 }]
             }
             flow.append(dic2)
-        for i in job_list:
+        for job_data in job_list:
             dic1 = {
-                'name': i['name'],
+                'name': job_data['name'],
                 'id': [{
-                    'name': i['name'],
-                    'id': i['bk_job_id']
+                    'name': job_data['name'],
+                    'id': job_data['bk_job_id']
                 }]
             }
             job.append(dic1)
@@ -88,6 +89,7 @@ def unit_show(request):
     return result
 
 
+# 查询函数
 def select_unit(request):
     try:
         res = json.loads(request.body)
@@ -95,6 +97,7 @@ def select_unit(request):
         res1 = res['data']
         limit = res['limit']
         page = res['page']
+        # 模糊查询
         unit = Monitor.objects.filter(
             Q(monitor_type__icontains=res1) | Q(monitor_name__icontains=res1) | Q(editor__icontains=res1))
         page_data, base_page_count = tools.page_paging(unit, limit, page)
@@ -104,6 +107,7 @@ def select_unit(request):
         return None
 
 
+# 删除函数
 def delete_unit(request):
     try:
         res = json.loads(request.body)
@@ -123,6 +127,7 @@ def delete_unit(request):
     return res1
 
 
+# 添加函数
 def add_unit(request):
     try:
         res = json.loads(request.body)
@@ -134,7 +139,7 @@ def add_unit(request):
         monitor_type = res['monitor_type']
         #  根据前台来的单元类型进行分类
         if res['monitor_type'] == 'first':
-            monitor_type = '基本单元类型'
+            monitor_type = '基本监控项'
         if res['monitor_type'] == 'second':
             monitor_type = '图表单元类型'
         if res['monitor_type'] == 'third':
@@ -178,6 +183,7 @@ def add_unit(request):
     return result
 
 
+# 编辑函数
 def edit_unit(request):
     try:
         res = json.loads(request.body)
@@ -188,16 +194,16 @@ def edit_unit(request):
         # 把前台来的监控项数据一次性转为字典
         add_dic = res['data']
         if res['monitor_type'] == 'first':
-            monitor_type = '基本单元类型'
+            monitor_type = '1'
         if res['monitor_type'] == 'second':
-            monitor_type = '图表单元类型'
+            monitor_type = '2'
         if res['monitor_type'] == 'third':
-            monitor_type = '作业单元类型'
+            monitor_type = '3'
             # id和name要拆分
             add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
             add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
         if res['monitor_type'] == 'fourth':
-            monitor_type = '流程单元类型'
+            monitor_type = '4'
             # 前台来的id和name要拆分
             add_dic['jion_id'] = res['flow']['jion_id']
             add_dic['gather_params'] = add_dic['node_name']
@@ -206,9 +212,9 @@ def edit_unit(request):
             constants = res['flow']['constants']
             add_dic.pop('node_name')
             start_list = []
-            for i in res['flow']['node_times']:
-                start_list.append(i['endtime'])
-                start_list.append(i['starttime'])
+            for data in res['flow']['node_times']:
+                start_list.append(data['endtime'])
+                start_list.append(data['starttime'])
             add_dic['start_time'] = min(start_list)
             add_dic['end_time'] = max(start_list)
         add_dic['monitor_name'] = res['monitor_name']
@@ -258,6 +264,7 @@ def basic_test(request):
     return result
 
 
+# 作业采集测试
 def job_test(request):
     res = json.loads(request.body)
     # 采集测试id为0 用于与队列调度区分

@@ -90,7 +90,7 @@ def add_unit_task(add_dicx):
     temp_date=datetime(2019,2,12,int(endtime.split(':')[0]),int(endtime.split(':')[1]),0)
     endhour,endmin=tran_time_china(temp_date,timezone=timezone)
     endtime=endhour+":"+endmin
-    if type=='基本单元类型':
+    if type=='1':
         period = int(add_dicx['period'])
         ctime = {
             'hour': starthour,
@@ -107,7 +107,7 @@ def add_unit_task(add_dicx):
             'endtime':endtime
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,task_args=info, desc=schename)
-    elif type=='图表单元类型':
+    elif type=='2':
         endhour = str(add_dicx['end_time'])[:2]
         period = int(add_dicx['period'])
         ctime = {
@@ -127,7 +127,7 @@ def add_unit_task(add_dicx):
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,
                                task_args=info, desc=schename)
 
-    elif type=='作业单元类型':
+    elif type=='3':
         period = int(add_dicx['period'])
         ctime = {
             'hour': starthour,
@@ -147,7 +147,7 @@ def add_unit_task(add_dicx):
             'endtime': endtime
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_two', crontab_time=ctime,task_args=info, desc=schename)
-    elif type=='流程单元类型':
+    elif type=='4':
         template_list=add_dicx['jion_id']
         period=add_dicx['period']
         node_times=add_dicx['node_times']

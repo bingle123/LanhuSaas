@@ -549,7 +549,7 @@ def select_scene_operation():
                 #判断每个监控项的运行结果是成功还是失败
                 for k in items:
                     item = Monitor.objects.get(id = k.item_id)
-                    if u'基本单元类型' == item.monitor_type:
+                    if 1 == item.monitor_type:
                         if 'sql' == item.gather_params:
                             temp = TDGatherData.objects.get(item_id=item.id,data_key='DB_CONNECTION')
                             if temp.gather_time.strftime("%Y-%m-%d") == i:
@@ -577,7 +577,7 @@ def select_scene_operation():
                                 temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='URL_CONNECTION').last()
                                 if temp.gather_error_log:
                                     flag = 0
-                    if u'作业单元类型' == item.monitor_type:
+                    if 3 == item.monitor_type:
                         temp = TDGatherData.objects.get(item_id=item.id)
                         if temp.gather_time.strftime("%Y-%m-%d") == i:
                             if temp.gather_error_log:
@@ -586,13 +586,13 @@ def select_scene_operation():
                             temp = TDGatherHistory.objects.filter(item_id=item.id).last()
                             if temp.gather_error_log:
                                 flag = 0
-                    if u'流程单元类型' == item.monitor_type:
+                    if 4 == item.monitor_type:
                         temp = TDGatherHistory.objects.filter(item_id=item.id)
                         for l in temp:
                             if l.gather_error_log:
                                 flag = 0
                                 break
-                    if u'图表单元类型' == item.monitor_type:
+                    if 2 == item.monitor_type:
                         temp = TDGatherData.objects.get(item_id=item.id, data_key='DB_CONNECTION')
                         if temp.gather_time.strftime("%Y-%m-%d") == i:
                             if temp.gather_error_log:
