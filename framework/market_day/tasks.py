@@ -87,7 +87,7 @@ def crawl_task(**i):
             logging.error(u'消息日志保存成功')
     return 'success'
 
-#基本监控项和图标监控项的采集task
+#基本监控项和图标监控项的采集开始task
 @task
 def gather_data_task_one(**i):
     # 启动一个
@@ -111,7 +111,7 @@ def gather_data_task_one(**i):
 
     else:
         pass
-
+#基本监控项的采集任务
 @task
 def basic_monitor_task(**i):
     #调用基本监控项和图标监控项数据采集的方法
@@ -124,7 +124,7 @@ def basic_monitor_task(**i):
     else:
         co.delete_task(task_name)
 
-#作业监控项的采集task
+#作业监控项的采集开始任务
 @task
 def gather_data_task_two(**i):
     area_id = i['area_id']
@@ -146,7 +146,7 @@ def gather_data_task_two(**i):
                                 task_args=info, desc=task_name)
     else:
         pass
-
+#作业监控项的采集任务
 @task
 def job_monitor_task(**i):
     endtime=i['endtime']
@@ -176,7 +176,7 @@ def gather_data_task_thrid(**i):
 @task
 def gather_data_task_thrid_test(**i):
     tools.flow_gather_task(**i)
-
+#流程监控项的采集开始任务
 @task
 def start_flow_task(**info):
     #得到client对象，方便调用接口
@@ -237,10 +237,9 @@ def start_flow_task(**info):
 @task
 def count_time(**i):
     return i['x'] * i['y']
-
+#定时清理定制流程状态任务
 @periodic_task(run_every=crontab(hour=0,minute=0))
 def clear_status_task():
-    print '开始清理状态'
     clear_execute_status()
 
 
