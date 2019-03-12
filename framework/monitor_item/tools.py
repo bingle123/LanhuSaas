@@ -372,16 +372,20 @@ def start_flow_task(**info):
     Flow(instance_id=task_id, status=flag, test_flag=1, flow_id=item_id).save()
     return task_id
 #让流程继续执行，调用v2接口
-def resume_flow(item_id):
-    user_account = BkUser.objects.filter(id=1).get()
-    client = get_client_by_user(user_account)
-    client.set_bk_api_ver('v2')
+def resume_flow(item_id,name):
     task_id=Flow.objects.filter(flow_id=item_id).last().instance_id
-    params={
-        'bk_biz_id':2,
-        'task_id':task_id,
-        'action':'resume'
-    }
-    res=client.sops.operate_task(params)
+    mess = hd.objects.get(id=1).header
+    headers = json.loads(mess.decode('utf-8').replace("'", "\""))
+    a_url = "http://paas.bk.com/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
+    req = requests.get(url=a_url, headers=headers)
+    req.encoding = req.apparent_encoding
+    req.raise_for_status()
+    res = json.loads(req.text)
+    res1 = json.loads(res['pipeline_tree'])
+    activities = res1['activities']
+    node_id=''
+    for key in activities:
+        if name==activities[key]['name']:
+            node_id = str(activities[key]['id'])
     return res['result']
 
