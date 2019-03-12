@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     'gatherDataHistory',
     'notification',
     'logmanagement',
+    'history_chart'
 )
 
 # ==============================================================================
