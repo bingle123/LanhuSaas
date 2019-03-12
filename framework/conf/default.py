@@ -36,8 +36,6 @@ from django.conf.global_settings import *  # noqa
 APP_ID = 'mydjango1'
 # 长沙APP_TOKEN
 APP_TOKEN = 'd441289d-14f9-435f-b195-499e20920e9e'
-# 上海APP_TOKEN
-# APP_TOKEN = 'c6369717-7906-4699-ad0d-31f5798d5cef'
 
 # 数据采集测试用主机地址
 GATHER_DATA_HOST = '192.168.1.52'
@@ -60,8 +58,7 @@ DENGFEI_PASSWORD = 'test'
 # 蓝鲸智云开发者中心的域名，形如：http://paas.bking.com#
 # 长沙
 BK_PAAS_HOST = 'http://paas.bk.com:80'
-# 上海
-#BK_PAAS_HOST = 'http://paas.blueking.com:8030'
+
 
 # 请求官方 API 默认版本号，可选值为："v2" 或 ""；其中，"v2"表示规范化API，""表示未规范化API
 DEFAULT_BK_API_VER = 'v2'

@@ -275,13 +275,13 @@ def scene_show(res):
         limit = res['limit']
         page = res['page']
         if type == 0:
-            base_unit = Monitor.objects.filter (monitor_type='基本单元类型')
+            base_unit = Monitor.objects.filter (monitor_type='1')
             base_page_data, base_page_count = tools.page_paging (base_unit, limit, page)
-            chart_unit = Monitor.objects.filter (monitor_type='图表单元类型')
+            chart_unit = Monitor.objects.filter (monitor_type='2')
             chart_page_data, chart_page_count = tools.page_paging (chart_unit, limit, page)
-            job_unit = Monitor.objects.filter (monitor_type='作业单元类型')
+            job_unit = Monitor.objects.filter (monitor_type='3')
             job_page_data, job_page_count = tools.page_paging (job_unit, limit, page)
-            flow_unit = Monitor.objects.filter (monitor_type='流程单元类型')
+            flow_unit = Monitor.objects.filter (monitor_type='4')
             flow_page_data, flow_page_count = tools.page_paging (flow_unit, limit, page)
             base_list = tools.obt_dic (base_page_data, base_page_count)
             chart_list = tools.obt_dic (chart_page_data, chart_page_count)
@@ -294,21 +294,21 @@ def scene_show(res):
                 'flow_list': flow_list,
             }
         elif type == 1:
-            base_unit = Monitor.objects.filter (monitor_type='基本单元类型')
+            base_unit = Monitor.objects.filter (monitor_type='1')
             base_page_data, base_page_count = tools.page_paging (base_unit, limit, page)
             base_list = tools.obt_dic (base_page_data, base_page_count)
             res_dic = {
                 'base_list': base_list,
             }
         elif type == 2:
-            chart_unit = Monitor.objects.filter (monitor_type='图表单元类型')
+            chart_unit = Monitor.objects.filter (monitor_type='2')
             chart_page_data, chart_page_count = tools.page_paging (chart_unit, limit, page)
             chart_list = tools.obt_dic (chart_page_data, chart_page_count)
             res_dic = {
                 'chart_list': chart_list,
             }
         elif type == 3:
-            job_unit = Monitor.objects.filter (monitor_type='作业单元类型')
+            job_unit = Monitor.objects.filter (monitor_type='3')
             job_page_data, job_page_count = tools.page_paging (job_unit, limit, page)
             job_list = tools.obt_dic (job_page_data, job_page_count)
             job_status_list = []
@@ -324,7 +324,7 @@ def scene_show(res):
                 'job_list': job_list,
             }
         elif type == 4:
-            flow_unit = Monitor.objects.filter (monitor_type='流程单元类型')
+            flow_unit = Monitor.objects.filter (monitor_type='4')
             flow_page_data, flow_page_count = tools.page_paging (flow_unit, limit, page)
             flow_list = tools.obt_dic (flow_page_data, flow_page_count)
             res_dic = {
@@ -520,13 +520,13 @@ def get_scenes(pos_id,start,end):
                 }
                 item_dict = dict (item_dict, **scene_monitor_dict)
                 # 按不同的监控项类型保存
-                if u'基本单元类型' == item.monitor_type:
+                if 1 == item.monitor_type:
                     base_list.append (item_dict)
-                if u'图表单元类型' == item.monitor_type:
+                if 2 == item.monitor_type:
                     chart_list.append (item_dict)
-                if u'流程单元类型' == item.monitor_type:
+                if 3 == item.monitor_type:
                     flow_list.append (item_dict)
-                if u'作业单元类型' == item.monitor_type:
+                if 4 == item.monitor_type:
                     jobs = Job.objects.filter(job_id = item.jion_id)
                     status = jobs.last().status
                     temp_dict = {

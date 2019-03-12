@@ -81,6 +81,14 @@ def obt_dic(page_data,page_count):
         obj_dic['start_time'] = str(i.start_time)
         obj_dic['end_time'] = str(i.end_time)
         obj_dic['status'] = str(i.status)
+        if obt_dic['monitor_type'] ==1:
+            obt_dic['monitor_type'] = '基本监控项'
+        elif obt_dic['monitor_type'] ==2:
+            obt_dic['monitor_type'] = '图表监控项'
+        elif obt_dic['monitor_type'] == 3:
+            obt_dic['monitor_type'] = '作业监控项'
+        elif obt_dic['monitor_type'] == 4:
+            obt_dic['monitor_type'] = '流程监控项'
         obj_list.append (obj_dic)
     return obj_list
 
@@ -102,12 +110,14 @@ def user_interface_param():
     :param :
     :return:
     """
-    user_account = BkUser.objects.filter (id=1).get ()
+
+    user_account = BkUser.objects.filter(id=1).get ()
     client = get_client_by_user (user_account)
     client.set_bk_api_ver ('v2')                                    # 以v2版本调用接口
     return client
 
 
+# 采集测试
 def job_interface(res):
     try:
         params = res['params']  # ip
