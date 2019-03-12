@@ -270,13 +270,10 @@
                                     vue.dialogVisible2 = true
                                     for (var i = 0; i < res.length; i++) {
                                         for (var j = 0; j < vue.fileds.length; j++) {
-                                            console.log(parseFloat(res[i][vue.fileds[j]]))
                                             if (!(parseFloat(res[i][vue.fileds[j]]).toString() == "NaN")&&res[i][vue.fileds[j]]<10000000){
                                                 value = vue.fileds[j]
-                                                console.log(value)
                                             } else {
                                                 name = vue.fileds[j]
-                                                console.log(1)
                                             }
                                         }
                                         vue.person_count = name
@@ -326,7 +323,7 @@
                                     vue.dialogVisible4 = true
                                     for (var i = 0; i < res.length; i++) {
                                         for (var j = 0; j < vue.fileds.length; j++) {
-                                            if (this.isNotANumber(res[i][vue.fileds[j]])) {
+                                            if (!(parseFloat(res[i][vue.fileds[j]]).toString() == "NaN")&&res[i][vue.fileds[j]]<10000000) {
                                                 value = vue.fileds[j]
                                             } else {
                                                 name = vue.fileds[j]

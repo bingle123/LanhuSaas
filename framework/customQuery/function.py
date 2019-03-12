@@ -53,6 +53,7 @@ def select_query(query_data):
 # 添加 / 修改自定义查询
 def add_query(query_data):
     status_dic = dict()
+    print query_data
     TbCustQuery(**query_data).save()
     items_count = TbCustQuery.objects.count()
     pages = items_count // 5

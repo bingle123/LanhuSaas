@@ -111,21 +111,23 @@ def user_interface_param():
 def job_interface(res):
     try:
         params = res['params']  # ip
-        gather_params = res['gather_params']
+        gather_params = res['gather_params'] # 脚本参数
         bk_job_id = res['job_id'][0]['id']
-        script_param = base64.b64encode (gather_params)
+        script_param = base64.b64encode(gather_params)
         # 根据id为1的用户获取客户端操作快速执行脚本
         client = user_interface_param()
         select_job_params = {
             'bk_biz_id': 2,
             'bk_job_id': bk_job_id,
         }
+        # 查询作业模板详情接口
         select_job = client.job.get_job_detail (select_job_params)
         if select_job.get ('result'):
             select_job_list = select_job.get ('data')
         else:
             select_job_list = []
             logger.error (u"请求作业模板失败：%s" % select_job.get ('message'))
+        # 获取作业步骤ID
         step_id = select_job_list['steps'][0]['step_id']
         cloud_params = {
             'bk_biz_id': 2,
@@ -146,6 +148,7 @@ def job_interface(res):
                     ]
                 }]
         }
+        # 根据条件查询主机接口
         cloud_select = client.cc.search_host (cloud_params)
         if cloud_select.get ('result'):
             cloud_id = cloud_select['data']['info'][0]['host']['bk_cloud_id'][0]['id']
@@ -164,6 +167,7 @@ def job_interface(res):
                 }, ]
             }, ],
         }
+        # 启动作业接口
         job = client.job.execute_job(job_params)
         if job.get ('result'):
             job_list = job.get ('data')
@@ -176,11 +180,14 @@ def job_interface(res):
             "bk_biz_id": "2",
             "job_instance_id": job_instance_id
         }
+        # 根据实列ID查询日志接口
         log = client.job.get_job_instance_log(log_params)
         while 'True' != str (log['data'][0]['is_finished']):
             time.sleep(3)
             log = client.job.get_job_instance_log(log_params)
+        # 获取作业执行日志
         json_data = log['data'][0]['step_results'][0]['ip_logs'][0]['log_content']
+        # 状态为3则执行成功其余情况全部为失败
         if log['data'][0]['status'] ==3:
             status=1
         else:
@@ -223,6 +230,7 @@ def flow_gather_task(**info):
         'bk_biz_id':'2',
         'task_id':task_id
     }
+    #先从v2中取出id和状态
     res_temp=client.sops.get_task_status(param)
     ids=res_temp['data']['children']
     v2_data=[]
@@ -236,6 +244,7 @@ def flow_gather_task(**info):
     req = requests.get(url=a_url, headers=headers)
     req.encoding = req.apparent_encoding
     req.raise_for_status()
+    #再从v3中取出节点对应的名字和id
     res=json.loads(req.text)
     res1 = json.loads(res['pipeline_tree'])
     activities = res1['activities']
@@ -246,6 +255,7 @@ def flow_gather_task(**info):
         activities1['name'] = activities[key]['name']
         req_data.append(activities1)
     data=[]
+    #最后根据v2，v3的结果中的id匹配得到最后的名字对应状态结果集
     for req in req_data:
         for v2 in v2_data:
             if req['id']==v2['id']:
@@ -256,6 +266,7 @@ def flow_gather_task(**info):
     task_name=info['task_name']
     gather_data_migrate(item_id=item_id)
     if state == 'FAILED':
+        #判断是否是采集测试，采集测试给定的测试id为100000
         if item_id==1000000:
             co.delete_task(task_name)
         for d in data:
@@ -279,6 +290,7 @@ def flow_gather_task(**info):
             status=0
         elif s=='RUNNING':
             status=1
+            #节点只有是运行状态下，才有可能超时，判断节点是否超时,状态5代表超时
             for node in node_times:
                 if d['name']==node['node_name']:
                     strnow = datetime.strftime(datetime.now(), '%H:%M')
@@ -347,7 +359,7 @@ def start_flow_task(**info):
         status=1
     Flow(instance_id=task_id, status=flag, test_flag=1, flow_id=item_id).save()
     return task_id
-#让流程继续执行
+#让流程继续执行，调用v2接口
 def resume_flow(item_id):
     user_account = BkUser.objects.filter(id=1).get()
     client = get_client_by_user(user_account)
