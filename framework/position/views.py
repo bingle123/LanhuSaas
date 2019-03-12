@@ -9,7 +9,7 @@ from common.mymako import render_json, render_mako_context
 # Create your views here.
 
 def index(request):
-    return render_mako_context(request, './jobManagement/jobM.html')
+    return render_mako_context(request, './position/position.html')
 
 
 def show(request):
@@ -17,18 +17,18 @@ def show(request):
     return render_json(res)
 
 
-def select_job(request):
-    res = function.select_job(request)
+def select_pos(request):
+    res = function.select_pos(request)
     return render_json(res)
 
 
-def delete_job(request):
-    res = function.delete_job(request)
+def delete_pos(request):
+    res = function.delete_pos(request)
     return render_json(res)
 
 
-def add_job(request):
-    function.add_job(request)
+def add_pos(request):
+    function.add_pos(request)
     return render_json(0)
 
 
@@ -37,8 +37,8 @@ def add_person(request):
     return render_json(0)
 
 
-def edit_job(request):
-    r = function.edit_job(request)
+def edit_pos(request):
+    r = function.edit_pos(request)
     return render_json(r)
 
 

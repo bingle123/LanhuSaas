@@ -7,7 +7,7 @@ from db_connection.function import *
 from django.core.paginator import *
 import MySQLdb
 from gatherData.models import *
-from position.models import Localuser
+from position.models import user_info
 from system_config.function import *
 from position.models import *
 from shell_app.tools import *
@@ -225,7 +225,7 @@ def send_alert(**msg):
     print msg
     receivers=[]
     for id in staff_users_ids:
-        eml=Localuser.objects.get(id=id).email
+        eml=user_info.objects.get(id=id).email
         receivers.append(eml)
     print receivers
     mail_send(alert_title, alert_content, receivers)
@@ -241,7 +241,7 @@ def wechat_alert(msgs):
         access_token = wechat_access_token()
         alert_msg = alert_title + '\n' + alert_content
         for id in staff_users_ids:
-            open_id = Localuser.objects.get(id=id).open_id
+            open_id = user_info.objects.get(id=id).open_id
             wechat_send_msg(access_token, open_id, alert_msg)
         msg.update({'persons': msg.pop("staff_user")})
         TdAlertLog.objects.create(**msg)
