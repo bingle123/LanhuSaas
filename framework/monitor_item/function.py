@@ -366,12 +366,12 @@ def flow_change(request):
     location = res1['location']
     for l in location:
         if l['id']==start_event['id']:
-            start_event['x'] = l['x']*0.5
+            start_event['x'] = l['x']
             start_event['y'] = l['y']
     end_event = res1['end_event']   #结束节点信息
     for l in location:
         if l['id']==end_event['id']:
-            end_event['x'] = l['x']*0.5
+            end_event['x'] = l['x']
             end_event['y'] = l['y']
 
     activities2.append(start_event)
@@ -384,7 +384,7 @@ def flow_change(request):
         activities1['name'] = activities[key]['name']
         for l in location:
             if l['id']==activities1['id']:
-                activities1['x'] = l['x']*0.5
+                activities1['x'] = l['x']
                 activities1['y'] = l['y']
                 activities2.append(activities1)
     flows1=[]
