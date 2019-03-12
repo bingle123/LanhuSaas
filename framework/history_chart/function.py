@@ -205,24 +205,24 @@ def select_log(request):
     elif(res2 != "" and res1 == "" and res3 == "" and res4 == ""):
         print 234
         log = tmp.filter(Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-        class_name__icontains=res2) | Q(method__icontains=res2))
+        class_name__icontains=res2) | Q(method__icontains=res2) |Q(succeed__icontains=res2))
     elif(res3 != ""and res1 == "" and res2 == ""):
         print 345
         log = tmp.filter(Q(create_time__range=(res3,res4)))
     elif(res1 != "" and res2 != "" and res3 == "" and res4 ==""):
         print 456
         log = tmp.filter(Q(log_type__icontains=res1) & (Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-            class_name__icontains=res2) | Q(method__icontains=res2)))
+            class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2)))
     elif (res1 != "" and res2 != ""and res3!="" and res4!=""):
         print 567
         log = tmp.filter((Q(log_type__icontains=res1)) & (Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-            class_name__icontains=res2) | Q(method__icontains=res2))& (Q(create_time__range=(res3,res4))))
+            class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2))& (Q(create_time__range=(res3,res4))))
     elif(res3!="" and res4!="" and res1!="" and res2 == ""):
         print 111
         log = tmp.filter(Q(log_type__icontains=res1) & Q(create_time__range=(res3, res4)))
     elif(res3!="" and res4!="" and res2!="" and res1 == ""):
         log = tmp.filter((Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-        class_name__icontains=res2) | Q(method__icontains=res2))& Q(create_time__range=(res3, res4)))
+        class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2))& Q(create_time__range=(res3, res4)))
     elif(res1 == ""and res2 == "" and res3 == "" and res4 == ""):
         log = Operatelog.objects.all()
 
