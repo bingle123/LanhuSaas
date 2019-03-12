@@ -79,14 +79,15 @@ def add_unit_task(add_dicx):
     schename = add_dicx['monitor_name']
     id=Monitor.objects.filter(monitor_name=schename).last().id
     schename=str(id)
+    print add_dicx['start_time']
     starthour = str(add_dicx['start_time']).split(':')[0]
-    startmin = str(add_dicx['start_time']).split(':')[-1]
+    startmin = str(add_dicx['start_time']).split(':')[1]
     endtime = add_dicx['end_time']
     #创建一个特定时区的时间的实例
     temp_date=datetime(2019,2,12,int(starthour),int(startmin),0)
     timezone = Area.objects.get(id=add_dicx['monitor_area']).timezone
     starthour,startmin=tran_time_china(temp_date,timezone=timezone)
-    temp_date=datetime(2019,2,12,int(endtime.split(':')[0]),int(endtime.split(':')[-1]),0)
+    temp_date=datetime(2019,2,12,int(endtime.split(':')[0]),int(endtime.split(':')[1]),0)
     endhour,endmin=tran_time_china(temp_date,timezone=timezone)
     endtime=endhour+":"+endmin
     if type=='基本单元类型':
@@ -146,7 +147,7 @@ def add_unit_task(add_dicx):
             'endtime': endtime
         }
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_two', crontab_time=ctime,task_args=info, desc=schename)
-    elif type=='fourth':
+    elif type=='流程单元类型':
         template_list=add_dicx['jion_id']
         period=add_dicx['period']
         node_times=add_dicx['node_times']

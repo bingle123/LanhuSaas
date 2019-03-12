@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('job_id', models.PositiveIntegerField(verbose_name='\u5173\u8054ID')),
                 ('instance_id', models.PositiveIntegerField(verbose_name='\u4f5c\u4e1a\u5b9e\u5217ID')),
-                ('status', models.PositiveIntegerField(verbose_name='\u4f5c\u4e1a\u72b6\u6001')),
+                ('status', models.IntegerField(verbose_name='\u4f5c\u4e1a\u72b6\u6001')),
                 ('test_flag', models.PositiveIntegerField(verbose_name='\u6d4b\u8bd5\u6807\u8bc6')),
                 ('start_time', models.TimeField(auto_now_add=True, verbose_name='\u5f00\u59cb\u65f6\u95f4')),
                 ('job_log', models.CharField(max_length=5000, verbose_name='\u4f5c\u4e1a\u65e5\u5fd7')),
@@ -62,7 +62,7 @@ class Migration(migrations.Migration):
             name='Monitor',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('monitor_name', models.CharField(unique=True, max_length=50, verbose_name='\u76d1\u63a7\u9879\u540d\u79f0')),
+                ('monitor_name', models.CharField(max_length=50, verbose_name='\u76d1\u63a7\u9879\u540d\u79f0')),
                 ('monitor_type', models.CharField(max_length=10, verbose_name='\u76d1\u63a7\u9879\u7c7b\u578b')),
                 ('jion_id', models.PositiveIntegerField(verbose_name='\u5173\u8054ID')),
                 ('gather_rule', models.CharField(max_length=500, verbose_name='\u91c7\u96c6\u89c4\u5219')),
@@ -80,6 +80,7 @@ class Migration(migrations.Migration):
                 ('edit_time', models.DateTimeField(auto_now=True, verbose_name='\u4fee\u6539\u65f6\u95f4')),
                 ('status', models.PositiveIntegerField(verbose_name='\u76d1\u63a7\u72b6\u6001')),
                 ('contents', models.CharField(max_length=500, verbose_name='\u663e\u793a\u5185\u5bb9')),
+                ('monitor_area', models.IntegerField(verbose_name='\u76d1\u63a7\u9879\u65e5\u5386\u5730\u533a')),
             ],
             options={
                 'db_table': 'tb_monitor_item',
@@ -88,14 +89,14 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='scene_monitor',
+            name='Scene_monitor',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('scene_id', models.PositiveIntegerField(verbose_name='\u573a\u666fID')),
                 ('item_id', models.PositiveIntegerField(verbose_name='\u76d1\u63a7\u9879ID')),
                 ('x', models.PositiveIntegerField(verbose_name='x\u5750\u6807')),
                 ('y', models.PositiveIntegerField(verbose_name='y\u5750\u6807')),
-                ('scale', models.PositiveIntegerField(verbose_name='\u6bd4\u4f8b')),
+                ('scale', models.DecimalField(verbose_name='\u6bd4\u4f8b', max_digits=4, decimal_places=2)),
                 ('score', models.PositiveIntegerField(verbose_name='\u6253\u5206')),
                 ('order', models.PositiveIntegerField(verbose_name='\u6392\u5e8f')),
             ],
@@ -106,7 +107,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='scene_node',
+            name='Scene_node',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('pos_id', models.PositiveIntegerField(verbose_name='\u573a\u666fID')),

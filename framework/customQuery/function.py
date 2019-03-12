@@ -8,6 +8,7 @@ from django.core.paginator import *
 import MySQLdb
 from system_config.function import *
 from customQuery.models import *
+from datetime import datetime,timedelta
 
 
 # 分页获取自定义查询
@@ -63,74 +64,38 @@ def add_query(query_data):
     print 'PAGES: %s' % pages
     return status_dic
 
-
-# 根据数据库ID获取当前数据库中的所有表信息
-def load_all_tables_name(db):
-    status = dict()
-    conn_info = Conn.objects.filter(id=db['conn_id']).get()
-    db_name = conn_info.databasename
-    if 'MySQL' == conn_info.type:
-        query_sql = 'select table_name from information_schema.tables where table_schema="%s"' % db_name
-    elif 'Oracle' == conn_info.type:
-        query_sql = 'select table_name from user_tables'
-    elif 'SQL Server' == conn_info.type:
-        query_sql = 'select name as table_name from sysobjects where xtype="U"'
-    else:
-        raise RuntimeError(u'不支持的数据库类型')
-    conn = getAny_db(db['conn_id'])
-    cursor = conn.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute(query_sql)
-    res = cursor.fetchall()
-    status['message'] = 'ok'
-    status['names'] = res
-    return status
-
-
-# 根据表名查询当前表所有字段信息
-def load_all_fields_name(tb):
-    status = dict()
-    fields = list()
-    if -1 == tb['tables_name'].find(','):
-        table_names = list()
-        table_names.append(tb['tables_name'])
-    else:
-        table_names = tb['tables_name'].split(',')
-    conn_info = Conn.objects.filter(id=tb['conn_id']).get()
-    conn = getAny_db(tb['conn_id'])
-    cursor = conn.cursor(MySQLdb.cursors.DictCursor)
-    db_name = conn_info.databasename
-    for table_name in table_names:
-        if 'MySQL' == conn_info.type:
-            query_sql = 'select column_name from information_schema.COLUMNS where table_name = "%s" and table_schema="%s"' % (table_name, db_name)
-        elif 'Oracle' == conn_info.type:
-            query_sql = 'select column_name from user_tab_columns where table_name=upper("%s")' % table_name
-        elif 'SQL Server' == conn_info.type:
-            query_sql = 'select syscolumns.name as column_name from syscolumns where id=object_id("%s")' % table_name
-        else:
-            raise RuntimeError(u'不支持的数据库类型')
-        cursor.execute(query_sql)
-        res = cursor.fetchall()
-        fields.extend(res)
-    status['message'] = 'ok'
-    status['fields'] = fields
-    return status
-
 #根据sqltest查询出结果集
 def sql_test(res):
-    conn = getAny_db(res['conn_id'])
-    sql=res['sql']
-    cursor = conn.cursor()  # 获取游标
-    cursor.execute(sql)
-    infos=cursor.fetchall()
-    datas=[]
-    col=cursor.description
-    names=[]
-    for c in col:
-        names.append(c[0])
-    for info in infos:
-        data={}
-        for i in range(len(names)):
-            data[names[i]]=info[i]
-        datas.append(data)
-    return datas
+    try:
+        conn = getAny_db(res['conn_id'])
+        sql=res['sql']
+        cursor = conn.cursor()  # 获取游标
+        cursor.execute(sql)
+        infos=cursor.fetchall()
+        datas=[]
+        col=cursor.description
+        names=[]
+        #得到结果集的列名
+        for c in col:
+            names.append(c[0])
+        #根据列名生成对应列名的数据，排除datetime中的两种类型，避免转json出错
+        for info in infos:
+            data={}
+            for i in range(len(names)):
+                if type(info[i])==timedelta:
+                    data[names[i]] =str(info[i])
+                elif type(info[i])==datetime:
+                    data[names[i]] = datetime.strftime(info[i],"%Y-%m-%d %H:%M:%S")
+                else:
+                    data[names[i]]=info[i]
+            datas.append(data)
+        res={
+            'data':datas,
+            'result':'success'
+        }
+    except Exception as e:
+        res={
+            'result':'error'
+        }
+    return res
 

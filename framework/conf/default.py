@@ -61,7 +61,7 @@ DENGFEI_PASSWORD = 'test'
 # 长沙
 BK_PAAS_HOST = 'http://paas.bk.com:80'
 # 上海
-# BK_PAAS_HOST = 'http://paas.blueking.com:8030'
+#BK_PAAS_HOST = 'http://paas.blueking.com:8030'
 
 # 请求官方 API 默认版本号，可选值为："v2" 或 ""；其中，"v2"表示规范化API，""表示未规范化API
 DEFAULT_BK_API_VER = 'v2'
@@ -161,7 +161,6 @@ INSTALLED_APPS = (
     'gatherDataHistory',
     'notification',
     'logmanagement',
-    'customQuery',
 )
 
 # ==============================================================================

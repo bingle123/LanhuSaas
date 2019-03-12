@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
             name='Scene',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('scene_id', models.IntegerField(verbose_name='\u573a\u666fID')),
+                ('scene_id', models.CharField(max_length=64, verbose_name='\u573a\u666fID')),
                 ('scene_name', models.CharField(max_length=64, verbose_name='\u573a\u666f\u540d\u79f0')),
                 ('scene_example', models.CharField(max_length=64, verbose_name='\u573a\u666f\u5b9e\u4f8b')),
                 ('scene_start_time', models.TimeField(auto_now=True)),
