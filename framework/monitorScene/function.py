@@ -8,7 +8,7 @@ from models import Scene
 from models import position_scene
 from monitor_item.models import Scene_monitor, Monitor, Job,Scene_monitor
 from monitor_item import tools
-from position.models import pos_info, Localuser
+from position.models import pos_info, user_info
 from gatherData.models import TDGatherData
 import sys
 from logmanagement.function import add_log, make_log_info, get_active_user
@@ -16,7 +16,6 @@ from db_connection.function import get_db
 from gatherData.function import gather_data
 from datetime import datetime
 import pytz
-from position.models import Localuser
 from market_day.models import Area
 from market_day.function import tran_time_china,tran_china_time_other,check_jobday
 
@@ -425,7 +424,7 @@ def alternate_play(request):
     # 获取当前用户
     username = get_active_user(request)['data']['bk_username']
     # 获取当前用户的岗位id
-    pos_id = Localuser.objects.get(user_name=username).user_pos_id
+    pos_id = user_info.objects.get(user_name=username).user_pos_id
     # 获取当前时间
     # nowtime = datetime.datetime.now().strftime('%H:%M:%S')
     res_list = get_scenes(pos_id,'','')
