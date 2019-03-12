@@ -1,6 +1,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
     <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 -->
     <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
     <!-- element UI引入样式 -->
@@ -44,6 +45,27 @@
         .circle3{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
         .circle4{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:red;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
         .asd{display: inline-block;}
+        .score_input{
+            font-size: 16px;
+            position: absolute;
+            background: rgba(255,255,255,0.1);
+            top: -36px;
+            left: 0;
+            width: 50px;
+            height: 36px;
+            display: none;
+        }
+        .right_click{
+            position: absolute;
+            width: 100px;
+            display: none;
+        }
+        .right_click span{
+            width: 100px;
+            display: inline-block;
+            font-size: 16px;
+            line-height: 36px;
+        }
     </style>
 </head>
 <body>
@@ -333,7 +355,7 @@
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item prop="height">
-                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                            <el-input type="number" min="120" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="job.height"
                                                       placeholder="请输入高度" @change="change_job_height"></el-input>
                                         </el-form-item>
@@ -341,7 +363,7 @@
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item prop="width">
-                                              <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                              <el-input type="number" min="200" v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="job.width"
                                                         placeholder="请输入宽度" @change="change_job_width"></el-input>
                                         </el-form-item>
@@ -392,23 +414,8 @@
                             </div>
                             <div style="text-align:center;width: 100%;min-height:40%;height: auto;background-color: whitesmoke;">
                                 <div style="height: 60px"></div>
-                                <div id="job_text" style="max-width: 100%; background: beige;margin: auto;padding-top: 20px;">
-                                    <div class="unexecuted" style="color: grey;display: block">
-                                        <h1>作业未执行</h1>
-                                        <i class="el-icon-error" style="color: grey;font-size: 30px;margin-top: 20px;"></i>
-                                    </div>
-                                    <div class="error" style="color: red;display: none">
-                                        <h1>作业执行失败</h1>
-                                        <i class="el-icon-error" style="color: red;font-size: 30px;margin-top: 20px;"></i>
-                                    </div>
-                                    <div class="success" style="color: green;display: none">
-                                        <h1>作业执行成功</h1>
-                                        <i class="el-icon-success" style="color: green;font-size: 30px;margin-top: 20px;"></i>
-                                    </div>
-                                    <div class="loading" style="color: orange;display: none">
-                                        <h1>正在执行</h1>
-                                        <i class="el-icon-loading" style="color: orange;font-size: 30px;margin-top: 20px;"></i>
-                                    </div>
+                                <div id="job_text" style="max-width: 100%;margin: auto;padding-top: 20px;">
+
                                 </div>
 
                             </div>
@@ -774,8 +781,8 @@
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
                 font_size: '20',                       //字号
-                height: '20',                          //高度
-                width: '0',                            //宽度
+                height: '120',                          //高度
+                width: '200',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
                 period: '10',                          //采集周期
@@ -1414,6 +1421,9 @@
                     vm.job.font_size = row.font_size;
                     vm.job.height = row.height;
                     vm.job.width = row.width;
+                    vm.change_job_fontSize();
+                    vm.change_job_height();
+                    vm.change_job_width();
                     vm.job.start_time = row.start_time;
                     vm.job.end_time = row.end_time;
                     vm.job.period = row.period;
@@ -1755,7 +1765,7 @@
             Rendering_start_time(){
                 $('p:contains('+vm.flow.node_name+')').parent().find('.start_time').text(vm.activities_node_time.start_time)
             },
-             Rendering_end_time(){
+            Rendering_end_time(){
                 $('p:contains('+vm.flow.node_name+')').parent().find('.end_time').text(vm.activities_node_time.end_time)
             },
             canvas_new() {
@@ -1896,38 +1906,18 @@
             },
             change_job_contents(){       //作业单元显示内容
                 let contents=vm.job.contents;
-                let str = contents.split('@')[1].split('=')[1];
-                switch (str) {
-                    case '0':
-                        $('.unexecuted').css('display','block');
-                        $('.success').css('display','none');
-                        $('.error').css('display','none');
-                        $('.loading').css('display','none');
-                        break;
-                    case '1':
-                        $('.unexecuted').css('display','none');
-                        $('.success').css('display','block');
-                        $('.error').css('display','none');
-                        $('.loading').css('display','none');
-                        break;
-                    case '2':
-                        $('.unexecuted').css('display','none');
-                        $('.success').css('display','none');
-                        $('.error').css('display','none');
-                        $('.loading').css('display','block');
-                        break;
-                    case '-1':
-                        $('.unexecuted').css('display','none');
-                        $('.success').css('display','none');
-                        $('.error').css('display','block');
-                        $('.loading').css('display','none');
-                        break;
-                    default:
-                        $('.unexecuted').css('display','block');
-                        $('.success').css('display','none');
-                        $('.error').css('display','none');
-                        $('.loading').css('display','none');
-                }
+                let job_status = contents.split('@')[1].split('=')[1];
+                let item_id='item_id'
+                var job_params={
+                    'id':item_id,
+                    'width' :vm.job.width,
+                    'height':vm.job.height,
+                    'status':job_status,
+                };
+                $('#job_text').html('');
+                $('#job_text').append('<div type=\"job'+item_id+'\"></div>');
+                job_monitor_active(job_params);
+
             },
             job_test() {
                 vm.disabled1 = true;
