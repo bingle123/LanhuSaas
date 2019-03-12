@@ -5,12 +5,10 @@ from gatherDataHistory.models import TDGatherHistory
 from logmanagement.models import *
 from django.core.paginator import *
 from db_connection.function import get_db
-from monitor_item.models import Scene_monitor, Monitor
 from system_config.function import *
 from notification.models import *
 from monitorScene.models import *
 from monitor_item import tools
-from monitor_item import models
 from monitor_item.models import Scene_monitor,Monitor,Job
 from conf import settings_development
 import MySQLdb
@@ -19,6 +17,7 @@ from datetime import datetime,date,timedelta
 from gatherData.models import TDGatherData
 from gatherDataHistory.models import TDGatherHistory
 from market_day.models import Holiday
+from models import operation_report
 
 def show_all(request):
     """
@@ -292,7 +291,8 @@ def about_search(request):
     limit = res1['limit']
     page = res1['page']
     search = res1['search'].strip()     #场景名称搜索
-    keyword = res1['keyword'].strip()      #关键字搜索
+    keyword = res1['keyword']      #关键字搜索
+    print res1['date_Choice']
     res3 = ""                               #按时间搜索的开始时间
     res4 = ""                               #按时间搜索的结束时间
     if (res1['date_Choice']):
@@ -317,6 +317,7 @@ def about_search(request):
                          db=DATABASES['NAME'], charset="utf8")
     cursor = db.cursor()
     cursor.execute(sql)
+    print sql
     #执行sql并分页
     res = cursor.fetchall()
     p = Paginator(res, limit)
@@ -501,126 +502,136 @@ def selectScenes_ById(request):
 
 
 
-#场景运行情况
+#统计一天的场景运行情况
 def select_scene_operation():
-    #初始化
-    res_list = []
-    date_info = []
+    # 初始化
+    scenes2 = []
     failed_num = 0
-    #获取第一个场景创建的日期
-    strat_time = Scene.objects.all().first().scene_creator_time
-    strat_time = strat_time.strftime("%Y-%m-%d")
-    now = datetime.now().date()
-    oneday = timedelta(days=1)
-    yester_day = now
-    while strat_time <= str(yester_day):
-        date_info.append(yester_day)
-        yester_day -= oneday
-    #获取对应日期的所有场景
-    for i in date_info:
-        #初始化
-        failed_num = 0
-        scene_num = 0
-        scenes = []
-        temp = str(i)+' 23:59:59'
-        sql = "SELECT * from tb_monitor_scene where scene_creator_time < '" + temp + "'"
-        db = get_db()
-        cursor = db.cursor()
-        cursor.execute(sql)
-        scenes_list = cursor.fetchall()
-        for j in scenes_list:
-            scenes.append(j[0])
+    scene_num = 0
+    #获取时间
+    yesterday = datetime.now().date() - timedelta(days=1)
+    #获取所有场景
+    scenes = Scene.objects.all()
+    #剔除非交易日
+    for scene in scenes:
+        if check_jobday(scene.scene_area,yesterday):
+            scenes2.append(scene)
+    #遍历所有场景
+    for scene in scenes2:
+        scene_monitors = Scene_monitor.objects.filter(scene_id=scene.id)
+        #遍历所有监控项
+        for scene_monitor in scene_monitors:
+            #执行成功的状态信息，1为成功，0为失败
             flag = 1
-            #判断是否为本场景是否在交易日
-            scene_area_id = j[8]
-            if check_jobday(scene_area_id,i):
-                #获取场景所对应的所有监控项id
-                items = Scene_monitor.objects.filter(scene_id=j[0])
-                #判断每个监控项的运行结果是成功还是失败
-                for k in items:
-                    item = Monitor.objects.get(id = k.item_id)
-                    if u'基本单元类型' == item.monitor_type:
-                        if 'sql' == item.gather_params:
-                            temp = TDGatherData.objects.get(item_id=item.id,data_key='DB_CONNECTION')
-                            if temp.gather_time.strftime("%Y-%m-%d") == i:
-                                if temp.gather_error_log:
-                                    flag = 0
-                            else:
-                                temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='DB_CONNECTION').last()
-                                if temp.gather_error_log:
-                                    flag = 0
-                        if 'file' == item.gather_params:
-                            temp = TDGatherData.objects.get(item_id=item.id,data_key='FILE_EXIST')
-                            if temp.gather_time.strftime("%Y-%m-%d") == i:
-                                if temp.gather_error_log:
-                                    flag = 0
-                            else:
-                                temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='FILE_EXIST').last()
-                                if temp.gather_error_log:
-                                    flag = 0
-                        if 'interface' == item.gather_params:
-                            temp = TDGatherData.objects.get(item_id=item.id,data_key='URL_CONNECTION')
-                            if temp.gather_time.strftime("%Y-%m-%d") == i:
-                                if temp.gather_error_log:
-                                    flag = 0
-                            else:
-                                temp = TDGatherHistory.objects.filter(item_id=item.id,data_key='URL_CONNECTION').last()
-                                if temp.gather_error_log:
-                                    flag = 0
-                    if u'作业单元类型' == item.monitor_type:
-                        temp = TDGatherData.objects.get(item_id=item.id)
-                        if temp.gather_time.strftime("%Y-%m-%d") == i:
-                            if temp.gather_error_log:
-                                flag = 0
-                        else:
-                            temp = TDGatherHistory.objects.filter(item_id=item.id).last()
-                            if temp.gather_error_log:
-                                flag = 0
-                    if u'流程单元类型' == item.monitor_type:
-                        temp = TDGatherHistory.objects.filter(item_id=item.id)
-                        for l in temp:
-                            if l.gather_error_log:
-                                flag = 0
-                                break
-                    if u'图表单元类型' == item.monitor_type:
-                        temp = TDGatherData.objects.get(item_id=item.id, data_key='DB_CONNECTION')
-                        if temp.gather_time.strftime("%Y-%m-%d") == i:
-                            if temp.gather_error_log:
-                                flag = 0
-                        else:
-                            temp = TDGatherHistory.objects.filter(item_id=item.id, data_key='DB_CONNECTION').last()
-                            if temp.gather_error_log:
-                                flag = 0
-                if flag == 0:
-                    failed_num += 1
-                #场景总数
-                scene_num += 1
-        #成功数
-        success_num = scene_num - failed_num
-        #成功率
-        if scene_num != 0:
-            success_rate = round(success_num/scene_num,4)
-            success_rate = str(success_rate*100)+'%'
-        #获取告警数目
-        temp2 = str(i) + '%'
-        sql2 = "SELECT count(*) from td_alert_log WHERE alert_time like " + "'"+ temp2 + "'"
-        cursor = db.cursor()
-        cursor.execute(sql2)
-        alert_num = cursor.fetchall()[0][0]
-        #alert = TdAlertLog.objects.filter(Q(alert_time__icontains= i))
-        #alert_num = len(alert)
+            #根据监控项id，找到监控项
+            item = Monitor.objects.get(id=scene_monitor.item_id)
+            #判断是否成功
+            if u'基本单元类型' == item.monitor_type:
+                if 'sql' == item.gather_params:
+                    temp = TDGatherData.objects.get(item_id=scene_monitor.item_id, data_key='DB_CONNECTION')
+                    if temp.gather_time.strftime("%Y-%m-%d") == yesterday:
+                        if temp.gather_error_log:
+                            flag = 0
+                    else:
+                        temp = TDGatherHistory.objects.filter(item_id=scene_monitor.item_id, data_key='DB_CONNECTION').last()
+                        if temp.gather_error_log:
+                            flag = 0
+                if 'file' == item.gather_params:
+                    temp = TDGatherData.objects.get(item_id=scene_monitor.item_id, data_key='FILE_EXIST')
+                    if temp.gather_time.strftime("%Y-%m-%d") == yesterday:
+                        if temp.gather_error_log:
+                            flag = 0
+                    else:
+                        temp = TDGatherHistory.objects.filter(item_id=scene_monitor.item_id, data_key='FILE_EXIST').last()
+                        if temp.gather_error_log:
+                            flag = 0
+                if 'interface' == item.gather_params:
+                    temp = TDGatherData.objects.get(item_id=scene_monitor.item_id, data_key='URL_CONNECTION')
+                    if temp.gather_time.strftime("%Y-%m-%d") == yesterday:
+                        if temp.gather_error_log:
+                            flag = 0
+                    else:
+                        temp = TDGatherHistory.objects.filter(item_id=scene_monitor.item_id, data_key='URL_CONNECTION').last()
+                        if temp.gather_error_log:
+                            flag = 0
+            if u'作业单元类型' == item.monitor_type:
+                temp = TDGatherData.objects.get(item_id=scene_monitor.item_id)
+                if temp.gather_time.strftime("%Y-%m-%d") == yesterday:
+                    if temp.gather_error_log:
+                        flag = 0
+                else:
+                    temp = TDGatherHistory.objects.filter(item_id=scene_monitor.item_id).last()
+                    if temp.gather_error_log:
+                        flag = 0
+            if u'流程单元类型' == item.monitor_type:
+                temp = TDGatherHistory.objects.filter(item_id=scene_monitor.item_id)
+                for l in temp:
+                    if l.gather_error_log:
+                        flag = 0
+                        break
+            if u'图表单元类型' == item.monitor_type:
+                temp = TDGatherData.objects.get(item_id=scene_monitor.item_id, data_key='DB_CONNECTION')
+                if temp.gather_time.strftime("%Y-%m-%d") == yesterday:
+                    if temp.gather_error_log:
+                        flag = 0
+                else:
+                    temp = TDGatherHistory.objects.filter(item_id=scene_monitor.item_id, data_key='DB_CONNECTION').last()
+                    if temp.gather_error_log:
+                        flag = 0
+        #失败数
+        if flag == 0:
+            failed_num += 1
+        # 场景总数
+        scene_num += 1
+    # 成功数
+    success_num = scene_num - failed_num
+    # 成功率
+    if scene_num != 0:
+        success_rate = round(success_num / scene_num, 4)
+        success_rate = str(success_rate * 100) + '%'
+    else:
+        success_rate = 0
+    # 获取告警数目
+    date = str(yesterday) + '%'
+    sql = "SELECT count(*) from td_alert_log WHERE alert_time like " + "'" + date + "'"
+    cursor = get_db().cursor()
+    cursor.execute(sql)
+    alert_num = cursor.fetchall()[0][0]
+    dict = {
+        'date': str(yesterday),
+        'scene_num': scene_num,
+        'success_num': success_num,
+        'success_rate': success_rate,
+        'failed_num': failed_num,
+        'alert_num': alert_num
+    }
+    re = operation_report.objects.create(**dict)
+    return  re
+
+#显示运行情况
+def show_operation_report(request):
+    res = json.loads(request.body)
+    res_list = []
+    limit = res['limit']
+    page = res['page']
+    operation_reports = operation_report.objects.all()
+    p = Paginator(operation_reports, limit)
+    count = p.page_range
+    pages = count[-1]
+    current_page = p.page(page)
+    for rep in current_page.object_list:
         dict = {
-            'date':str(i),
-            'scene_num':scene_num,
-            'success_num':success_num,
-            'success_rate':success_rate,
-            'failed_num':failed_num,
-            'alert_num':alert_num
+            'date': rep.date,
+            'scene_num': rep.scene_num,
+            'success_num': rep.success_num,
+            'success_rate': rep.success_rate,
+            'failed_num': rep.failed_num,
+            'alert_num': rep.alert_num,
+            'page_count': pages
         }
-        #非交易日剔除
-        if scene_num != 0:
-            res_list.append(dict)
-    return  res_list
+        res_list.append(dict)
+    return res_list
+
 
 #判断是否为交易日
 def check_jobday(id,time):
@@ -636,236 +647,224 @@ def check_jobday(id,time):
     elif flag==2:
         return False
 
-#运行情况分页
-def operation_page(request):
-    res = json.loads(request.body)
-    res_list = []
-    limit = res['limit']
-    page = res['page']
-    scene_operation = select_scene_operation()
-    p = Paginator(scene_operation, limit)
-    count = p.page_range
-    pages = count[-1]
-    current_page = p.page(page)
-    for x in current_page.object_list:
-        temp_dict = {
-            'page_count': pages
-        }
-        x = dict(x, **temp_dict)
-        res_list.append(x)
-    return res_list
 
 #周运行情况
 def get_week(request):
-    scene_operation = select_scene_operation()
     res = json.loads(request.body)
     #初始化
-
-    days = []
     res_list = []
     #获取一周的第一天
     res['date'] = str(res['date'])[:10]
     temp = datetime.strptime(res['date'], "%Y-%m-%d")
-    date = datetime.date(temp)
-    days.append(date)
+    date1 = datetime.date(temp)
     #加6天
-    oneday = timedelta(days=1)
-    for i in range(6):
-        date += oneday
-        days.append(date)
-    for j in days:
-        for k in scene_operation:
-            if str(j) == k['date']:
-                res_list.append(k)
+    sixday = timedelta(days=6)
+    date2 = date1 + sixday
+    #获取date到date2之间的数据
+    sql = "SELECT * FROM td_operation_report WHERE date between '" + str(date1) + "' and '" + str(date2) +"'"
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(sql)
+    operation_reports = cursor.fetchall()
+    for rep in operation_reports:
+        dict = {
+            'date': rep[1],
+            'scene_num': rep[2],
+            'success_num': rep[3],
+            'success_rate': rep[4],
+            'failed_num': rep[5],
+            'alert_num': rep[6],
+        }
+        res_list.append(dict)
     return res_list
 
 
-def monthly_select(request):
-    res = select_scene_operation()
-    total = 0
-    Success_num=0
-    failure_num = 0
-    dic_list=[]
-    for i in res:
-        if(str(i['date'])[5:7] == '01'):
-            total += i['scene_num']
-            Success_num += i['success_num']
-            failure_num +=i['failed_num']
-        elif(str(i['date'])[5:7] == '02'):
-            total += i['scene_num']
-            Success_num += i['success_num']
-            failure_num += i['failed_num']
-        elif (str(i['date'])[5:7] == '03'):
-            total += i['scene_num']
-            Success_num += i['success_num']
-            failure_num += i['failed_num']
-        elif (str(i['date'])[5:7] == '04'):
-            total += i['scene_num']
-            Success_num += i['success_num']
-            failure_num += i['failed_num']
-        elif (str(i['date'])[5:7] == '05'):
-            total += i['scene_num']
-            Success_num += i['success_num']
-            failure_num += i['failed_num']
-        elif (str(i['date'])[5:7] == '06'):
-            total += i['scene_num']
-            Success_num += i['success_num']
-            failure_num += i['failed_num']
-        elif (str(i['date'])[5:7] == '07'):
-            total += i['scene_num']
-            Success_num += i['success_num']
-            failure_num += i['failed_num']
-        elif (str(i['date'])[5:7] == '08'):
-            total += i['scene_num']
-            Success_num += i['success_num']
-            failure_num += i['failed_num']
-        elif (str(i['date'])[5:7] == '09'):
-            total += i['scene_num']
-            Success_num += i['success_num']
-            failure_num += i['failed_num']
-        elif (str(i['date'])[5:7] == '10'):
-            total += i['scene_num']
-            Success_num += i['success_num']
-            failure_num += i['failed_num']
-        elif (str(i['date'])[5:7] == '11'):
-            total += i['scene_num']
-            Success_num += i['success_num']
-            failure_num += i['failed_num']
-        elif (str(i['date'])[5:7] == '12'):
-            total += i['scene_num']
-            Success_num += i['success_num']
-            failure_num += i['failed_num']
-    if(str(i['date'])[:7] == '2019-01'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic={
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'date':'2019-01'
-        }
-        dic_list.append(dic)
-    elif(str(i['date'][:7]) == '2019-02'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'date': '2019-02'
-        }
-        dic_list.append(dic)
-    elif(str(i['date'][:7]) == '2019-03'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'date': '2019-03'
-        }
-        dic_list.append(dic)
-    elif(str(i['date'][:7]) == '2019-04'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'date': '2019-04'
-        }
-        dic_list.append(dic)
-    elif(str(i['date'][:7]) == '2019-05'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'date': '2019-05'
-        }
-        dic_list.append(dic)
-    elif(str(i['date'][:7]) == '2019-06'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'date': '2019-06'
-        }
-        dic_list.append(dic)
-    elif(str(i['date'][:7]) == '2019-07'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'date': '2019-07'
-        }
-        dic_list.append(dic)
-    elif(str(i['date'][:7]) == '2019-08'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'date': '2019-08'
-        }
-        dic_list.append(dic)
-    elif(str(i['date'][:7]) == '2019-09'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'date': '2019-09'
-        }
-        dic_list.append(dic)
-    elif(str(i['date'][:7]) == '2019-10'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'date': '2019-10'
-        }
-        dic_list.append(dic)
-    elif(str(i['date'][:7]) == '2019-11'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'date': '2019-11'
-        }
-        dic_list.append(dic)
-    elif(str(i['date'][:7]) == '2019-12'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'date': '2019-12'
-        }
-
-        dic_list.append(dic)
-    return dic_list
+# def monthly_select(request):
+#     res = select_scene_operation()
+#     total = 0
+#     Success_num=0
+#     failure_num = 0
+#     dic_list=[]
+#     for i in res:
+#         if(str(i['date'])[5:7] == '01'):
+#             total += i['scene_num']
+#             Success_num += i['success_num']
+#             failure_num +=i['failed_num']
+#         elif(str(i['date'])[5:7] == '02'):
+#             total += i['scene_num']
+#             Success_num += i['success_num']
+#             failure_num += i['failed_num']
+#         elif (str(i['date'])[5:7] == '03'):
+#             total += i['scene_num']
+#             Success_num += i['success_num']
+#             failure_num += i['failed_num']
+#         elif (str(i['date'])[5:7] == '04'):
+#             total += i['scene_num']
+#             Success_num += i['success_num']
+#             failure_num += i['failed_num']
+#         elif (str(i['date'])[5:7] == '05'):
+#             total += i['scene_num']
+#             Success_num += i['success_num']
+#             failure_num += i['failed_num']
+#         elif (str(i['date'])[5:7] == '06'):
+#             total += i['scene_num']
+#             Success_num += i['success_num']
+#             failure_num += i['failed_num']
+#         elif (str(i['date'])[5:7] == '07'):
+#             total += i['scene_num']
+#             Success_num += i['success_num']
+#             failure_num += i['failed_num']
+#         elif (str(i['date'])[5:7] == '08'):
+#             total += i['scene_num']
+#             Success_num += i['success_num']
+#             failure_num += i['failed_num']
+#         elif (str(i['date'])[5:7] == '09'):
+#             total += i['scene_num']
+#             Success_num += i['success_num']
+#             failure_num += i['failed_num']
+#         elif (str(i['date'])[5:7] == '10'):
+#             total += i['scene_num']
+#             Success_num += i['success_num']
+#             failure_num += i['failed_num']
+#         elif (str(i['date'])[5:7] == '11'):
+#             total += i['scene_num']
+#             Success_num += i['success_num']
+#             failure_num += i['failed_num']
+#         elif (str(i['date'])[5:7] == '12'):
+#             total += i['scene_num']
+#             Success_num += i['success_num']
+#             failure_num += i['failed_num']
+#     if(str(i['date'])[:7] == '2019-01'):
+#         success_rate = round(Success_num / total, 4)
+#         success_rate = str(success_rate * 100) + '%'
+#         dic={
+#             'total':total,
+#             'Success_num':Success_num,
+#             'failure_num':failure_num,
+#             'success_rate':success_rate,
+#             'date':'2019-01'
+#         }
+#         dic_list.append(dic)
+#     elif(str(i['date'][:7]) == '2019-02'):
+#         success_rate = round(Success_num / total, 4)
+#         success_rate = str(success_rate * 100) + '%'
+#         dic = {
+#             'total':total,
+#             'Success_num':Success_num,
+#             'failure_num':failure_num,
+#             'success_rate':success_rate,
+#             'date': '2019-02'
+#         }
+#         dic_list.append(dic)
+#     elif(str(i['date'][:7]) == '2019-03'):
+#         success_rate = round(Success_num / total, 4)
+#         success_rate = str(success_rate * 100) + '%'
+#         dic = {
+#             'total':total,
+#             'Success_num':Success_num,
+#             'failure_num':failure_num,
+#             'success_rate':success_rate,
+#             'date': '2019-03'
+#         }
+#         dic_list.append(dic)
+#     elif(str(i['date'][:7]) == '2019-04'):
+#         success_rate = round(Success_num / total, 4)
+#         success_rate = str(success_rate * 100) + '%'
+#         dic = {
+#             'total':total,
+#             'Success_num':Success_num,
+#             'failure_num':failure_num,
+#             'success_rate':success_rate,
+#             'date': '2019-04'
+#         }
+#         dic_list.append(dic)
+#     elif(str(i['date'][:7]) == '2019-05'):
+#         success_rate = round(Success_num / total, 4)
+#         success_rate = str(success_rate * 100) + '%'
+#         dic = {
+#             'total':total,
+#             'Success_num':Success_num,
+#             'failure_num':failure_num,
+#             'success_rate':success_rate,
+#             'date': '2019-05'
+#         }
+#         dic_list.append(dic)
+#     elif(str(i['date'][:7]) == '2019-06'):
+#         success_rate = round(Success_num / total, 4)
+#         success_rate = str(success_rate * 100) + '%'
+#         dic = {
+#             'total':total,
+#             'Success_num':Success_num,
+#             'failure_num':failure_num,
+#             'success_rate':success_rate,
+#             'date': '2019-06'
+#         }
+#         dic_list.append(dic)
+#     elif(str(i['date'][:7]) == '2019-07'):
+#         success_rate = round(Success_num / total, 4)
+#         success_rate = str(success_rate * 100) + '%'
+#         dic = {
+#             'total':total,
+#             'Success_num':Success_num,
+#             'failure_num':failure_num,
+#             'success_rate':success_rate,
+#             'date': '2019-07'
+#         }
+#         dic_list.append(dic)
+#     elif(str(i['date'][:7]) == '2019-08'):
+#         success_rate = round(Success_num / total, 4)
+#         success_rate = str(success_rate * 100) + '%'
+#         dic = {
+#             'total':total,
+#             'Success_num':Success_num,
+#             'failure_num':failure_num,
+#             'success_rate':success_rate,
+#             'date': '2019-08'
+#         }
+#         dic_list.append(dic)
+#     elif(str(i['date'][:7]) == '2019-09'):
+#         success_rate = round(Success_num / total, 4)
+#         success_rate = str(success_rate * 100) + '%'
+#         dic = {
+#             'total':total,
+#             'Success_num':Success_num,
+#             'failure_num':failure_num,
+#             'success_rate':success_rate,
+#             'date': '2019-09'
+#         }
+#         dic_list.append(dic)
+#     elif(str(i['date'][:7]) == '2019-10'):
+#         success_rate = round(Success_num / total, 4)
+#         success_rate = str(success_rate * 100) + '%'
+#         dic = {
+#             'total':total,
+#             'Success_num':Success_num,
+#             'failure_num':failure_num,
+#             'success_rate':success_rate,
+#             'date': '2019-10'
+#         }
+#         dic_list.append(dic)
+#     elif(str(i['date'][:7]) == '2019-11'):
+#         success_rate = round(Success_num / total, 4)
+#         success_rate = str(success_rate * 100) + '%'
+#         dic = {
+#             'total':total,
+#             'Success_num':Success_num,
+#             'failure_num':failure_num,
+#             'success_rate':success_rate,
+#             'date': '2019-11'
+#         }
+#         dic_list.append(dic)
+#     elif(str(i['date'][:7]) == '2019-12'):
+#         success_rate = round(Success_num / total, 4)
+#         success_rate = str(success_rate * 100) + '%'
+#         dic = {
+#             'total':total,
+#             'Success_num':Success_num,
+#             'failure_num':failure_num,
+#             'success_rate':success_rate,
+#             'date': '2019-12'
+#         }
+#
+#         dic_list.append(dic)
+#     return dic_list
