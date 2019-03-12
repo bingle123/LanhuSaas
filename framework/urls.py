@@ -53,6 +53,9 @@ urlpatterns = patterns(
      url(r'^history_chart/', include('history_chart.urls')),
     # 自定义查询
     url(r'^customQuery/', include('customQuery.urls')),
+    #首页
+    url(r'^home_page/', include('home_page.urls')),
+
 )
 
 
