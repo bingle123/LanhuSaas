@@ -38,7 +38,7 @@ function job_monitor_active(job_params) {
     }
     $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
     $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
-    $('[type='+selector_id+']').css('height',job_params.height);
+    $('[type='+selector_id+']').css('height',job_params.height+50+'px');
     $('[type='+selector_id+']').css('width',job_params.width);
     $('[type='+selector_id+']').find("*").css('font-size',job_params.font_size);
 }
