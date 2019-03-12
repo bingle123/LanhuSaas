@@ -364,12 +364,10 @@ def getPant_list(scene_list,d_data,all_itemid,count):
 
     for s in scene_list:
         AllList.append(str(s[0]).split(' ')[0])
-    print AllList
     for All in AllList:
         if All not in new_AllList:
             new_AllList.append(All)
     #循环去重之后的日期,
-    print new_AllList
     for l in new_AllList:
         success_items = 0
         failed_items = 0
@@ -382,7 +380,6 @@ def getPant_list(scene_list,d_data,all_itemid,count):
         for y in AllList:
             if l == y:
                 itemNums = itemNums +1
-        print itemNums,failed_items
         success_items = itemNums - failed_items
         be_list = []
         #取得当日一个场景下的时间最小值和最大值
@@ -419,11 +416,7 @@ def getPant_list(scene_list,d_data,all_itemid,count):
             'time_consum':time_consum,
         }
         last_list.append(dic_data)
-    if count > 7:
-        last_list = last_list[0:7]
-        return tools.success_result(last_list)
-    else:
-        return tools.success_result(last_list)
+    return tools.success_result(last_list)
 
 #场景对比分析
 def selectScenes_ById(request):
@@ -436,7 +429,9 @@ def selectScenes_ById(request):
     # 获取开始结束时间
     b_time = res['dataTime'][0]
     e_time = res['dataTime'][1]
-
+    Alldays = (datetime.strptime(e_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(b_time, "%Y-%m-%d %H:%M:%S")).days
+    if Alldays > 15:
+        return tools.success_result(Alldays)
     # 根据开始结束时间查询单个场景下所有监控项每一天最后一个采集到的数据
     all_itemid = []
     # 所有监控项,字符串拼接
@@ -491,7 +486,7 @@ def selectScenes_ById(request):
         return tools.error_result(e)
     count = count[0]
     # 时间间隔数
-    Alldays = (datetime.strptime(e_time, "%Y-%m-%d %H:%M:%S") - datetime.strptime(b_time, "%Y-%m-%d %H:%M:%S")).days
+
     # 间隔天数小于3不查，大于3但是查到的有效天数小于3也不要
     if Alldays < 3:
         return tools.success_result(Alldays)
@@ -499,12 +494,7 @@ def selectScenes_ById(request):
         if count < 3:
             return tools.success_result(Alldays)
         # 有效天大于3天小于7天，取所有天数
-        elif count >= 3 and count <= 7:
-            return getPant_list(scene_list, d_data, all_itemid, count)
-        # 有效期大于7天，取前7天，splen为取数组中的前7天个数
         else:
-            splen = item_len * 7 - 1
-            scene_list = scene_list[:splen]
             return getPant_list(scene_list, d_data, all_itemid, count)
 
 
