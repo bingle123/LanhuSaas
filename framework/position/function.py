@@ -3,7 +3,7 @@ from __future__ import division
 import json
 import math
 import sys
-from models import pos_info, Localuser
+from models import pos_info, user_info
 from django.forms.models import model_to_dict
 from shell_app import tools
 from django.db.models import Q
@@ -27,7 +27,7 @@ def show(request):
     noposition_id = get_noposition_id()
     #查出id大于等于1的岗位（岗位id=1是无岗位人员）
     position_list = pos_info.objects.filter(~Q(id=noposition_id))
-    user_list = Localuser.objects.all()
+    user_list = user_info.objects.all()
     #分页
     p = Paginator(position_list, limit)
     count = p.page_range
@@ -71,13 +71,13 @@ def select_pos(request):
     #按岗位查询
     positions = position_list.filter(Q(pos_name__contains=res1))
     #按人名查询
-    users = Localuser.objects.filter(Q(user_name__contains=res1))
+    users = user_info.objects.filter(Q(user_name__contains=res1))
     #查询结果整合
     for i in users:
         user_pos = i.user_pos_id
         position = pos_info.objects.filter(id=user_pos)
         positions = positions | position
-    user_list = Localuser.objects.all()
+    user_list = user_info.objects.all()
     #分页
     p = Paginator(positions, limit)
     count = p.page_range
@@ -150,14 +150,14 @@ def add_person(request):
         person_no_positions2 = person_no_positions
         #增加岗位人员
         for pos_username in person_positions:
-            Localuser.objects.filter(user_name=pos_username).update(user_pos=id)
+            user_info.objects.filter(user_name=pos_username).update(user_pos=id)
             #把已经赋予岗位的人员从左边移出
             for no_pos_username in person_no_positions:
                 if pos_username == no_pos_username:
                     person_no_positions2.remove(pos_username)
         #移出岗位人员
         for no_pos_username2 in person_no_positions2:
-            Localuser.objects.filter(user_name=no_pos_username2).update(user_pos=noposition_id)
+            user_info.objects.filter(user_name=no_pos_username2).update(user_pos=noposition_id)
         info = make_log_info(u'岗位人员增加或移除', u'业务日志', u'pos_info', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功', '无')
     except Exception, e:
         res = tools.error_result(e)
@@ -226,7 +226,7 @@ def filter_user(request):
     filter_list = get_user(request)
     all_user_names = dict_get(filter_list['data'], u'bk_username', None)
     #找出所有无岗位的人员
-    users = Localuser.objects.all()
+    users = user_info.objects.all()
     users_no_position = []
     # 获取无岗位id
     noposition_id = get_noposition_id()
@@ -239,7 +239,7 @@ def filter_user(request):
 
 def get_tree(request):
     pos = pos_info.objects.all()
-    users = Localuser.objects.all()
+    users = user_info.objects.all()
     res_list = []
     for x in pos:
         tmp = []
@@ -274,16 +274,16 @@ def synchronize(request):
     try:
         res = get_user(request)
         reslist = res['data']
-        users = Localuser.objects.all()
+        users = user_info.objects.all()
         #判断本地用户与蓝鲸用户，以蓝鲸的为准，多了删除，少了增加，变了更新
         for i in reslist:
             flag1 = 0
             for j in users:
                 if i['bk_username'] == j.user_name:
-                    Localuser.objects.filter(user_name=j.user_name).update(mobile_no=i['phone'],email=i['email']) #,open_id=i['wx_userid']
+                    user_info.objects.filter(user_name=j.user_name).update(mobile_no=i['phone'],email=i['email']) #,open_id=i['wx_userid']
                     flag1=1
             if flag1 == 0:
-                Localuser.objects.create(user_name=i['bk_username'],user_pos_id=1,mobile_no=i['phone'], email=i['email']) #, open_id=i['wx_userid']
+                user_info.objects.create(user_name=i['bk_username'],user_pos_id=1,mobile_no=i['phone'], email=i['email']) #, open_id=i['wx_userid']
 
         for x in users:
             flag2 = 0
@@ -291,10 +291,10 @@ def synchronize(request):
                 if x.user_name == y['bk_username']:
                     flag2 = 1
             if flag2 == 0:
-                Localuser.objects.filter(user_name=x.user_name).delete()
-        info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'Localuser',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '成功', '无')
+                user_info.objects.filter(user_name=x.user_name).delete()
+        info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'user_info',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception, e:
         r1 = tools.error_result(e)
-        info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'Localuser',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败', repr(e))
+        info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'user_info',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败', repr(e))
     add_log(info)
     return  0
