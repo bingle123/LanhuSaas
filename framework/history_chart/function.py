@@ -291,7 +291,8 @@ def about_search(request):
     limit = res1['limit']
     page = res1['page']
     search = res1['search'].strip()     #场景名称搜索
-    keyword = res1['keyword'].strip()      #关键字搜索
+    keyword = res1['keyword']      #关键字搜索
+    print res1['date_Choice']
     res3 = ""                               #按时间搜索的开始时间
     res4 = ""                               #按时间搜索的结束时间
     if (res1['date_Choice']):
@@ -316,6 +317,7 @@ def about_search(request):
                          db=DATABASES['NAME'], charset="utf8")
     cursor = db.cursor()
     cursor.execute(sql)
+    print sql
     #执行sql并分页
     res = cursor.fetchall()
     p = Paginator(res, limit)

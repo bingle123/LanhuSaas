@@ -31,34 +31,18 @@
         list-style: none;
     }
 
-    .Drigging {
-        position: absolute;
-    }
-
-    .monitor_type {
-        line-height: 48px;
-        background: #28359324;
-        text-align: center;
-    }
-
-    .monitor_list {
-        display: none;
-    }
-
-    .monitor_list div {
-        text-align: center;
-    }
-
-    .monitor_content {
-        position: relative;
-    }
-
     .el-row {
-        border: 1px solid #ffffff;
+        border: none;
+    }
+    .row_margin{
+        margin-bottom: 20px
+    }
+    .row_shadow{
+        box-shadow: 1px 1px 5px rgba(102,102,102,0.3);
     }
 
     .el-col {
-        border: 1px solid #ffffff;
+        border: none;
     }
 
     p, i {
@@ -88,198 +72,186 @@
         font-size: 16px;
         line-height: 36px;
     }
+    .title{
+        background: rgb(255,255,255);
+        line-height: 72px
+    }
 </style>
 
-<body>
+<body style="background: rgb(246,246,246)">
 <div id="maintenanceIndex">
 
 
-    <div v-if="isfram == 1">
+
+        <!--首页-->
         <el-row>
             <el-col :span="24">
-                <div id="maintenanceTitle">
-                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold">维护人员首页</span>
+                <div id="maintenanceTitle" style="background: rgb(246,246,246)">
+                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;">首页</span>
+                </div>
+            </el-col>
+        </el-row>
+        <!--系统状态-->
+        <el-row class="row_margin row_shadow">
+            <el-col :span="24">
+                <div id="system_state" class="title">
+                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;margin-left: 10px">系统状态</span>
+                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;float: right;margin-right: 10px">交易日：2019年03月15日 23:45</span>
+                </div>
+            </el-col>
+        </el-row>
+        <!--健康度-->
+        <el-row :gutter="30" class="row_margin">
+            <el-col :span="6">
+                <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
+                    <p>健康度</p>
+                </div>
+            </el-col>
+            <el-col :span="6">
+                <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
+                    <p>场景状态</p>
+                </div>
+            </el-col>
+            <el-col :span="6">
+                <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
+                    <p>告警数</p>
+                </div>
+            </el-col>
+            <el-col :span="6">
+                <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
+                    <p>自定义添加</p>
+                    <i></i>
+                </div>
+            </el-col>
+        </el-row>
+        <!--各系统运行情况展示-->
+        <el-row class="row_shadow">
+            <el-col :span="24">
+                <div id="system_run_show" class="title" style="margin-bottom: 5px">
+                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;margin-left: 10px">各系统运行情况展示</span>
+                </div>
+            </el-col>
+        </el-row>
+        <!--情况展示-->
+        <el-row :gutter="10" style="margin: 0 0 20px 0;background: rgb(255,255,255);">
+            <el-col :span="3" style="margin: 20px auto">
+                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
+            </el-col>
+            <el-col :span="3" style="margin: 20px auto">
+                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
+            </el-col>
+            <el-col :span="3" style="margin: 20px auto">
+                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
+            </el-col>
+            <el-col :span="3" style="margin: 20px auto">
+                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
+            </el-col>
+            <el-col :span="3" style="margin: 20px auto">
+                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
+            </el-col>
+            <el-col :span="3" style="margin: 20px auto">
+                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
+            </el-col>
+            <el-col :span="3" style="margin: 20px auto">
+                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
+            </el-col>
+            <el-col :span="3" style="margin: 20px auto">
+                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
+            </el-col>
+            <el-col :span="3" style="margin: 20px auto">
+                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
+            </el-col>
+            <el-col :span="3" style="margin: 20px auto">
+                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
+            </el-col>
+        </el-row>
+        <!--告警-->
+        <el-row class="row_margin row_shadow" style="margin-bottom: 10px;background: rgb(255,255,255);">
+            <el-col :span="24">
+                <div id="system_state" class="title">
+                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;margin-left: 10px">告警</span>
+                    <span style="font-size: 30px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;float: right;margin-right: 20px"><i class="el-icon-arrow-up"></i></span>
+                </div>
+            </el-col>
+            <el-col :span="22" :offset="1">
+                <el-table :data="scene_table_data" style="width: 100%;margin-bottom: 50px;">
+                  <el-table-column prop="scene_id" label="场景id" width="100"></el-table-column>
+                  <el-table-column prop="scene_name" label="场景名称" width="150"></el-table-column>
+                  <el-table-column prop="scene_node" label="节点" width="150"></el-table-column>
+                  <el-table-column prop="start_time" label="开始时间" width="450"></el-table-column>
+                  <el-table-column prop="end_time" label="截至时间" width="450"></el-table-column>
+                  <el-table-column prop="scene_status" label="状态" width="150"></el-table-column>
+                </el-table>
+            </el-col>
+        </el-row>
+        <!--场景-->
+        <el-row class="row_shadow" style="margin-bottom: 10px;">
+            <el-col :span="24" style="border: none">
+                <div id="system_run_show" style="background: rgb(255,255,255);line-height: 72px;">
+                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;margin-left: 10px">场景</span>
+                </div>
+            </el-col>
+        </el-row>
+        <!--场景内容-->
+        <el-row class="row_shadow" style="margin-bottom: 10px;background: rgb(255,255,255);">
+            <el-col :span="24"class="title" style="border-bottom: 2px solid #f6f6f6">
+                <el-col :span="7" :offset="1" style="border: none;">
+                    <label for="" style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;">场景时间段：</label>
+                    <el-select v-model="value" placeholder="请选择">
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="7" :offset="1" style="border: none;">
+                    <label for="" style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;">状态：</label>
+                    <el-select v-model="value" placeholder="请选择">
+                        <el-option
+                          v-for="item in options"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="8" style="border: none;">
+                    <el-button type="primary" style="float:right;margin:20px 20px 0 0;font-size: 18px;font-family: PingFangSC-Regular;color: rgb(255, 255, 255);;font-weight: bold;">已完成场景</el-button>
+                </el-col>
+            </el-col>
+            <el-col :span="22" :offset="1">
+                <el-table :data="scene_table_data" style="width: 100%;margin-bottom: 50px;">
+                  <el-table-column prop="scene_id" label="场景id" width="100"></el-table-column>
+                  <el-table-column prop="scene_name" label="场景名称" width="150"></el-table-column>
+                  <el-table-column prop="scene_node" label="节点" width="150"></el-table-column>
+                  <el-table-column prop="start_time" label="开始时间" width="450"></el-table-column>
+                  <el-table-column prop="end_time" label="截至时间" width="450"></el-table-column>
+                  <el-table-column prop="scene_status" label="状态" width="150"></el-table-column>
+                </el-table>
+            </el-col>
+        </el-row>
+        <!--自定义报表-->
+        <el-row class="row_margin row_shadow">
+            <el-col :span="24">
+                <div id="system_state" class="title">
+                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;margin-left: 10px">自定义报表</span>
+                    <span style="font-size: 30px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;float: right;margin-right: 20px"><i class="el-icon-arrow-up"></i></span>
+                </div>
+            </el-col>
+        </el-row>
+        <!--自定义添加-->
+        <el-row class="row_margin row_shadow">
+            <el-col :span="24">
+                <div id="system_state" class="title">
+                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;margin-left: 10px">自定义添加</span>
+                    <span style="font-size: 30px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;float: right;margin-right: 20px"><i class="el-icon-circle-plus-outline"></i></span>
                 </div>
             </el-col>
         </el-row>
 
-        <el-row>
-            <el-col :span="6">
-                <el-card shadow="always" class="box-card">
-                    <div slot="header" class="clearfix">
-                        <span class="maintenanceHeader">执行情况统计</span>
-                    </div>
-                    <div id="maintenancePie"></div>
-                </el-card>
-            </el-col>
-            <el-col :span="17" :offset="1">
-                <el-card shadow="always" class="box-card">
-                    <div slot="header" class="clearfix">
-                        <span class="maintenanceHeader">场景执行情况总览</span>
-                    </div>
-                    <el-row>
-                        <div id="maintenanceBar"></div>
-                    </el-row>
-                    <el-row>
-                        <el-table :data='maintenanceTableData' id="maintenanceTable">
-                            <el-table-column prop="sum" label="场景总数"></el-table-column>
-                            <el-table-column prop="done" label="已完成"></el-table-column>
-                            <el-table-column prop="doneRate" label="完成率"></el-table-column>
-                            <el-table-column prop="error" label="执行出错"></el-table-column>
-                            <el-table-column prop="errorRate" label="出错率"></el-table-column>
-                            <el-table-column prop="doing" label="正执行"></el-table-column>
-                            <el-table-column prop="unexec" label="待执行"></el-table-column>
-                        </el-table>
-                    </el-row>
-                </el-card>
-            </el-col>
-        </el-row>
-        <el-row id="maintenanceStepBarRow">
-            <el-col :span="13">
-                <el-card shadow="always" class="box-card">
-                    <div slot="header" class="clearfix">
-                        <span class="maintenanceHeader">正在执行场景统计</span>
-                    </div>
-                    <el-row>
-                        <el-col :span="20">
-                            <div class="maintenanceStepBarDiv">
-                                <el-steps class="maintenanceStepBar" space=100% :active="1"
-                                          finish-status="success"
-                                          process-status="finish">
-                                    <el-step title="节点1"></el-step>
-                                    <el-step title="节点2"></el-step>
-                                    <el-step title="节点3"></el-step>
-                                    <el-step title="节点4"></el-step>
-                                    <el-step title="节点5"></el-step>
-                                    <el-step title="节点6"></el-step>
-                                </el-steps>
-                            </div>
-                            <el-button type="primary" @click="scene">点击事件</el-button>
-                        </el-col>
-                        <el-col :span="4">
-                            <div class="maintenancePointDiv">
-                                <span class="maintenancePoint">90</span>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="20">
-                            <div class="maintenanceStepBarDiv">
-                                <el-steps class="maintenanceStepBar" space=100% :active="1"
-                                          finish-status="success"
-                                          process-status="finish">
-                                    <el-step title="节点1"></el-step>
-                                    <el-step title="节点2"></el-step>
-                                    <el-step title="节点3"></el-step>
-                                    <el-step title="节点4"></el-step>
-                                    <el-step title="节点5"></el-step>
-                                    <el-step title="节点6"></el-step>
-                                </el-steps>
-                            </div>
-                        </el-col>
-                        <el-col :span="4">
-                            <div class="maintenancePointDiv">
-                                <span class="maintenancePoint">90</span>
-                            </div>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="20">
-                            <div class="maintenanceStepBarDiv">
-                                <el-steps class="maintenanceStepBar" space=100% :active="1"
-                                          finish-status="success"
-                                          process-status="finish">
-                                    <el-step title="节点1"></el-step>
-                                    <el-step title="节点2"></el-step>
-                                    <el-step title="节点3"></el-step>
-                                    <el-step title="节点4"></el-step>
-                                    <el-step title="节点5"></el-step>
-                                    <el-step title="节点6"></el-step>
-                                </el-steps>
-                            </div>
-                        </el-col>
-                        <el-col :span="4">
-                            <div class="maintenancePointDiv">
-                                <span class="maintenancePoint">90</span>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-card>
-            </el-col>
-            <el-col :span="10" :offset="1">
-                <el-row>
-                    <el-col :span="24">
-                        <el-card shadow="always" class="box-card">
-                            <div slot="header" class="clearfix">
-                                <span class="maintenanceHeader">已执行场景展示</span>
-                                <span class="maintenanceHeaderDesc">(以当前时间向前推3小时已执行场景情况列表包含执行状态)</span>
-                            </div>
-                            <el-row>
-                                <el-col :span="24">
-                                    <div class="maintenanceVerticalDoneDiv">
-                                        <el-steps class="maintenanceVertical" direction="vertical" :active="1"
-                                                  finish-status="success" process-status="finish">
-                                            <el-step class="maintenanceVerticalDone"
-                                                     title="2019-01-16 06:00:00"></el-step>
-                                            <el-step class="maintenanceVerticalDone"
-                                                     title="2019-01-16 07:00:00"></el-step>
-                                            <el-step class="maintenanceVerticalDone"
-                                                     title="2019-01-16 08:00:00"></el-step>
-                                            <el-step class="maintenanceVerticalDone"
-                                                     title="2019-01-16 09:00:00"></el-step>
-                                        </el-steps>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-card>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="24" id="maintenanceVerticalBarRow">
-                        <el-card shadow="always" class="box-card">
-                            <div slot="header" class="clearfix">
-                                <span class="maintenanceHeader">待执行场景展示</span>
-                                <span class="maintenanceHeaderDesc">(以当前时间向后推3小时待执行场景列表展示)</span>
-                            </div>
-                            <el-row>
-                                <el-col :span="24">
-                                    <div class="maintenanceVerticalUnexecDiv">
-                                        <el-steps class="maintenanceVertical" direction="vertical" :active="1"
-                                                  finish-status="success" process-status="finish">
-                                            <el-step class="maintenanceVerticalUnexec"
-                                                     title="2019-01-16 10:00:00"></el-step>
-                                            <el-step class="maintenanceVerticalUnexec"
-                                                     title="2019-01-16 11:00:00"></el-step>
-                                            <el-step class="maintenanceVerticalUnexec"
-                                                     title="2019-01-16 12:00:00"></el-step>
-                                            <el-step class="maintenanceVerticalUnexec"
-                                                     title="2019-01-16 13:00:00"></el-step>
-                                        </el-steps>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-card>
-                    </el-col>
-                </el-row>
-            </el-col>
-        </el-row>
-    </div>
 
-    <div v-else-if="isfram == 2">
-        <div id='pagetitle' style="margin-bottom: 10px">
-            场景详情
-        </div>
-        <hr id="hr">
-        <div>
-            <div style="margin-top: 20px;width: 900px;height: 900px;position: relative;" id="mychart">
-
-
-            </div>
-            <div>
-                <el-button @click="hiden">取消</el-button>
-            </div>
-        </div>
-    </div>
 
 
 </div>
@@ -313,6 +285,46 @@
             selector_type:'',
             selector_canvas:'',
             selector_template:'',
+            options: [{
+              value: '选项1',
+              label: '黄金糕'
+            }, {
+              value: '选项2',
+              label: '双皮奶'
+            }, {
+              value: '选项3',
+              label: '蚵仔煎'
+            }, {
+              value: '选项4',
+              label: '龙须面'
+            }, {
+              value: '选项5',
+              label: '北京烤鸭'
+            }],
+            value: '',
+            scene_table_data: [{
+                scene_id:1,
+                scene_name: '王小虎',
+                scene_node: '1',
+                start_time: '2016-05-02',
+                end_time: '2016-05-02',
+                scene_status:'正在执行'
+              },{
+                id:1,
+                scene_name: '王小虎',
+                scene_node: '1',
+                start_time: '2016-05-02',
+                end_time: '2016-05-02',
+                scene_status:'正在执行'
+              },{
+                id:1,
+                scene_name: '王小虎',
+                scene_node: '1',
+                start_time: '2016-05-02',
+                end_time: '2016-05-02',
+                scene_status:'正在执行'
+              },
+              ],
         },
         methods: {
             hiden() {

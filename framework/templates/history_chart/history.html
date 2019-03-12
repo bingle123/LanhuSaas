@@ -48,7 +48,7 @@
                     <el-row type="flex" justify="space-between" align="center" class="row">
                         <el-col :span="9" style="margin-top: 5px">
                             <template>
-                                <div class="block">
+                                <div class="block" id="block" >
                                     <el-date-picker
                                             v-model="date_Choice"
                                             value-format="yyyy-MM-dd HH:mm:ss"
@@ -62,8 +62,23 @@
                         </el-col>
                     </el-row>
                 </div>
-
-
+                <div id="date_selection" style="display:none">
+                    <el-row>
+                        <el-col :span="12" style="margin-top: 5px">
+                            <el-row type="flex">
+                                <el-time-picker
+                                        is-range
+                                        v-model="date_selection"
+                                            value-format="HH:mm:ss"
+                                        range-separator="至"
+                                        start-placeholder="开始时间"
+                                        end-placeholder="结束时间"
+                                        placeholder="选择时间范围">
+                                </el-time-picker>
+                            </el-row>
+                        </el-col>
+                    </el-row>
+                </div>
                 <el-col :span="5" style="margin-top: 5px">
                     <el-select placeholder="请选择日志类型" v-model="log_type" @change="change_type">
                         <el-option label="日志查询" value="log"></el-option>
@@ -97,7 +112,9 @@
                                     end-placeholder="结束日期">
                             </el-date-picker>
                         </el-col>
+
                     </el-row>
+
                     <el-row>
                         <el-col :span="5" style="margin-top: 5px">
                             <el-button type="primary" @click="drawging_">
@@ -297,6 +314,7 @@ let vm = new Vue({
             aboutTableDate: null,
             keyword: '',                                 //关键字内容
             date_Choice: '',                            //时间选择
+            date_selection: '',                            //时间选择
             //以下是场景勿动
             scenes_tab: '',
 
@@ -358,7 +376,7 @@ let vm = new Vue({
                         search: vm.search,
                         page: vm.page,
                         keyword:vm.keyword,
-                        date_Choice:vm.date_Choice,
+                        date_Choice:vm.date_selection,
                         limit: 10
                     },
                 }).then((res) => {
@@ -456,8 +474,8 @@ let vm = new Vue({
 
             change_type(value) {
                 if (value == 'log') {
-                    $("#table1,#hide_k").css('display', 'block');
-                    $("#table3,#scene_compare,#table2,#hide_m,#table10,#table4").css('display', 'none');
+                    $("#table1,#hide_k,#block").css('display', 'block');
+                    $("#table3,#scene_compare,#table2,#hide_m,#table10,#table4,#date_selection").css('display', 'none');
                     vm.get_null();
                 }
                 if (value == 'alert') {
@@ -473,8 +491,8 @@ let vm = new Vue({
                     vm.alertRulesCount = res.data.results[0].pages
                     console.log(vm.page_count)
                 })
-                    $("#table2,#hide_k").css('display', 'block');
-                    $("#table3,#scene_compare,#table1,#hide_m,#table10,#table4").css('display', 'none');
+                    $("#table2,#hide_k,#block").css('display', 'block');
+                    $("#table3,#scene_compare,#table1,#hide_m,#table10,#table4,#date_selection").css('display', 'none');
                     vm.get_null();
                 }
                 if (value == 'about_to_expire') {
@@ -489,12 +507,12 @@ let vm = new Vue({
                     vm.aboutTableDate = res.data.results;
                     vm.aboutRulesCount = res.data.results[0].pages
                });
-                    $("#table2,#table1,#scene_compare,#hide_m,#table10,#table4").css('display', 'none');
-                    $("#table3,#hide_k").css('display', 'block');
+                    $("#table2,#table1,#scene_compare,#hide_m,#table10,#table4,#block").css('display', 'none');
+                    $("#table3,#hide_k,#date_selection").css('display', 'block');
                     vm.get_null();
                 }
                 if (value == 'compare') {
-                    $("#table1,#table2,#table3,#hide_k,#table10,#scene_et,#scene_et_table4,#get_days,#table4").css('display', 'none');
+                    $("#table1,#table2,#table3,#hide_k,#table10,#scene_et,#scene_et_table4,#get_days,#table4,#date_selection").css('display', 'none');
                     $("#scene_compare,#hide_m").css('display', 'block');
                     axios.post('${SITE_URL}history_chart/select_scenes/').then((res) => {
                         vm.scenes_data = res.data.results
@@ -513,7 +531,7 @@ let vm = new Vue({
                     vm.sceneOperationRuleTableData = res.data.message
 
                 });
-                   $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table4").css('display','none');
+                   $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table4,#date_selection").css('display','none');
                    $('#table10').css('display','block');
                    vm.get_null();
                 }
@@ -527,7 +545,7 @@ let vm = new Vue({
                    }
                }).then(function (res) {
                     vm.monthly_operationTableData = res.data.message;
-                $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table10").css('display','none');
+                $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table10,#date_selection").css('display','none');
                    $('#table4').css('display','block');
                     vm.nmsl(vm.monthly_operationTableData)
                });
