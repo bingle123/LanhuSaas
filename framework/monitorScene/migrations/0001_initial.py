@@ -11,6 +11,14 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='Createtmp',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('name', models.CharField(max_length=255, verbose_name='\u540d\u79f0')),
+                ('tmpdate', models.TextField(max_length=10000, verbose_name='\u6570\u636e')),
+            ],
+        ),
+        migrations.CreateModel(
             name='position_scene',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
@@ -33,6 +41,7 @@ class Migration(migrations.Migration):
                 ('scene_creator_time', models.DateTimeField(auto_now_add=True, verbose_name='\u521b\u5efa\u65f6\u95f4')),
                 ('scene_editor', models.CharField(max_length=50, verbose_name='\u7f16\u8f91\u4eba')),
                 ('scene_editor_time', models.DateTimeField(auto_now=True, verbose_name='\u7f16\u8f91\u65f6\u95f4')),
+                ('scene_area', models.IntegerField(verbose_name='\u573a\u666f\u65e5\u5386\u5730\u533a')),
             ],
             options={
                 'db_table': 'tb_monitor_scene',

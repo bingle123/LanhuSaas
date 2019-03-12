@@ -31,7 +31,7 @@ def position(request):
     :param request:
     :return:
     """
-    return render_mako_context(request, './position/jobM.html')
+    return render_mako_context(request, './position/position.html')
 
 
 def index(request):

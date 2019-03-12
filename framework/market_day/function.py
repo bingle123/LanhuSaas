@@ -80,17 +80,18 @@ def add_unit_task(add_dicx):
     id=Monitor.objects.filter(monitor_name=schename).last().id
     schename=str(id)
     starthour = str(add_dicx['start_time']).split(':')[0]
-    startmin = str(add_dicx['start_time']).split(':')[-1]
+    startmin = str(add_dicx['start_time']).split(':')[1]
     endtime = add_dicx['end_time']
     #创建一个特定时区的时间的实例
     temp_date=datetime(2019,2,12,int(starthour),int(startmin),0)
     timezone = Area.objects.get(id=add_dicx['monitor_area']).timezone
+    #将开始时间转化为对应时区的时间
     starthour,startmin=tran_time_china(temp_date,timezone=timezone)
-    temp_date=datetime(2019,2,12,int(endtime.split(':')[0]),int(endtime.split(':')[-1]),0)
+    temp_date=datetime(2019,2,12,int(endtime.split(':')[0]),int(endtime.split(':')[1]),0)
     endhour,endmin=tran_time_china(temp_date,timezone=timezone)
     endtime=endhour+":"+endmin
+    period = int(add_dicx['period'])
     if type=='基本单元类型':
-        period = int(add_dicx['period'])
         ctime = {
             'hour': starthour,
             'minute': startmin,
@@ -105,10 +106,9 @@ def add_unit_task(add_dicx):
             'task_name':str(schename)+'task',
             'endtime':endtime
         }
+        #创建一个基本监控项采集的开始任务
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,task_args=info, desc=schename)
     elif type=='图表单元类型':
-        endhour = str(add_dicx['end_time'])[:2]
-        period = int(add_dicx['period'])
         ctime = {
             'hour': starthour,
             'minute': startmin,
@@ -123,11 +123,11 @@ def add_unit_task(add_dicx):
             'task_name': str(schename) + 'task',
             'endtime': endtime
         }
+        #创建一个图标采集开始任务
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,
                                task_args=info, desc=schename)
 
     elif type=='作业单元类型':
-        period = int(add_dicx['period'])
         ctime = {
             'hour': starthour,
             'minute': startmin,
@@ -145,10 +145,10 @@ def add_unit_task(add_dicx):
             'task_name': str(schename) + 'task',
             'endtime': endtime
         }
+        #创建一个作业采集的开始任务
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_two', crontab_time=ctime,task_args=info, desc=schename)
-    elif type=='fourth':
+    elif type=='流程单元类型':
         template_list=add_dicx['jion_id']
-        period=add_dicx['period']
         node_times=add_dicx['node_times']
         constants=add_dicx['constants']
         ctime = {
@@ -186,6 +186,7 @@ def get_header_data(request):
         Cookie = "%s;%s=%s" % (Cookie, key, request.COOKIES[key]);
     headers["Cookie"] = Cookie;
     headers["X-CSRFToken"] = csrftoken;
+    #如果当前用户不是管理员无法访问v3接口不保存header信息
     if role_id==1:
         h.header=json.dumps(headers, ensure_ascii=False)
         h.save()
