@@ -31,7 +31,7 @@
     ul {
         list-style: none;
     }
-
+    div{border-radius: 5px;}
     .el-row {
         border: none;
     }
@@ -106,10 +106,23 @@
         line-height:55px;
         width: 100%;
         height: 55px;
+        border-radius: 5px;
     }
     .error{background:red}
     .success{background:#409EFF}
     .progress{background:orange}
+    .red_class{
+        color:red
+    }
+    .blue_class{
+        color:blue
+    }
+    .orange_class{
+        color:orange;
+    }
+    .grey_class{
+        color: #B0B8C2;
+    }
 </style>
 
 <body style="background: rgb(246,246,246)">
@@ -190,13 +203,16 @@
                             <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">告警</span>
                         </template>
                         <el-col :span="22" :offset="1">
-                            <el-table :data="scene_table_data" style="width: 100%;margin-bottom: 50px;">
-                                <el-table-column prop="scene_id" label="场景id" width="100"></el-table-column>
-                                <el-table-column prop="scene_name" label="场景名称" width="150"></el-table-column>
-                                <el-table-column prop="scene_node" label="节点" width="150"></el-table-column>
-                                <el-table-column prop="start_time" label="开始时间" width="450"></el-table-column>
-                                <el-table-column prop="end_time" label="截至时间" width="450"></el-table-column>
-                                <el-table-column prop="scene_status" label="状态" width="150"></el-table-column>
+                            <el-table :data="alarm_table_data" style="width: 100%;margin-bottom: 50px;">
+                                <el-table-column prop="alarm_contents" label="警告内容" width="350"></el-table-column>
+                                <el-table-column prop="alarm_time" label="时间" width="350"></el-table-column>
+                                <el-table-column prop="alarm_level" label="级别" width="350">
+                                    <template scope="scope">
+                                        <span :class="{red_class: (scope.row.alarm_level === '危险')}">{{ scope.row.alarm_level }}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="alarm_status" label="状态" width="350"></el-table-column>
+
                             </el-table>
                         </el-col>
 
@@ -248,7 +264,11 @@
                   <el-table-column prop="scene_node" label="节点" width="150"></el-table-column>
                   <el-table-column prop="start_time" label="开始时间" width="450"></el-table-column>
                   <el-table-column prop="end_time" label="截至时间" width="450"></el-table-column>
-                  <el-table-column prop="scene_status" label="状态" width="150"></el-table-column>
+                  <el-table-column prop="scene_status" label="状态" width="150">
+                      <template scope="scope">
+                          <span :class="{red_class: scope.row.scene_status === '异常', orange_class: (scope.row.scene_status === '提醒'),grey_class: (scope.row.scene_status === '未执行')}">{{ scope.row.scene_status }}</span>
+                      </template>
+                  </el-table-column>
                 </el-table>
             </el-col>
         </el-row>
@@ -344,21 +364,29 @@
                 scene_node: '1',
                 start_time: '2016-05-02',
                 end_time: '2016-05-02',
-                scene_status:'正在执行'
+                scene_status:'异常'
               },{
-                id:1,
+                scene_id:1,
+                scene_name: '王小虎',
+                scene_node: '1',
+                start_time: '2016-05-02',
+                end_time: '2016-05-02',
+                scene_status:'提醒'
+              },{
+                scene_id:1,
                 scene_name: '王小虎',
                 scene_node: '1',
                 start_time: '2016-05-02',
                 end_time: '2016-05-02',
                 scene_status:'正在执行'
-              },{
-                id:1,
+              },
+                {
+                scene_id:1,
                 scene_name: '王小虎',
                 scene_node: '1',
                 start_time: '2016-05-02',
                 end_time: '2016-05-02',
-                scene_status:'正在执行'
+                scene_status:'未执行'
               },
               ],
             myChart:'',
@@ -402,6 +430,27 @@
                 },
 
             ],
+            alarm_table_data:[
+                {
+                    alarm_contents:'计算数据导入',
+                    alarm_time:'2019-02-27 14:33:50',
+                    alarm_level:'危险',
+                    alarm_status:'告警'
+                },
+                {
+                    alarm_contents:'新意接口导出',
+                    alarm_time:'2019-02-28 14:33:50',
+                    alarm_level:'危险',
+                    alarm_status:'告警'
+                },
+                {
+                    alarm_contents:'结算数据处理',
+                    alarm_time:'2019-02-26 14:33:50',
+                    alarm_level:'一般',
+                    alarm_status:'告警'
+                },
+
+            ]
 
         },
         methods: {
@@ -459,10 +508,22 @@
                     ]
                 };
                 this.myChart.setOption(option);
-            }
+            },
+            get_date(){
+                axios.post('${SITE_URL}home_page/get_time/').then((res)=>{
+                    ve.now_date_time = res.data.time_date
+                    ve.now_date_name = res.data.today_name
+                })
+            },
+            timer(){
+                return setTimeout(()=>{
+                    ve.get_date()
+                },1000)
+            },
         }
     });
     ve.show_chart1();
+    ve.timer();
 </script>
 
 </html>
