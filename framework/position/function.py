@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
 import json
-import math
 import sys
 from models import pos_info, user_info
-from django.forms.models import model_to_dict
 from shell_app import tools
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -257,15 +255,6 @@ def get_tree(request):
         res_list.append(dic)
     return res_list
 
-def get_active_user(request):
-    """
-    通过蓝鲸获取当前用户
-    :param request:
-    :return:            dict
-    """
-    client = tools.interface_param(request)
-    res = client.bk_login.get_user({})
-    return res
 
 #用户同步
 def synchronize(request):
