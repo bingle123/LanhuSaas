@@ -448,9 +448,7 @@ def selectScenes_ById(request):
               "FROM td_gather_history tt WHERE	item_id IN (" + str1 + ")) AS t WHERE  "\
             "gather_time BETWEEN '" + b_time + "'  AND '" + e_time + "' ORDER BY item_id,gather_time) a	group by "\
             "a.item_id,a.xx)  as m ORDER BY m.mtime"
-        DATABASES = settings_development.DATABASES['default']
-        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
+        db = get_db()
         cursor = db.cursor()
         cursor.execute(sql)
         res1 = cursor.fetchall()
@@ -475,9 +473,7 @@ def selectScenes_ById(request):
     # 查到的总天数
     try:
         sql1 = "select count(*) from (select DISTINCT DATE_FORMAT(tb.mtime,'%y-%m-%d') gather_time from (SELECT * from (select max(a.gather_time) AS mtime,a.item_id FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx,tt.gather_time,tt.gather_error_log,tt.item_id	FROM td_gather_history tt WHERE	item_id IN (" + str1 + ")) AS t WHERE   gather_time BETWEEN '" + b_time + "'  AND '" + e_time + "' ORDER BY item_id,gather_time) a	group by a.item_id,a.xx)  as m ORDER BY m.mtime)as tb)as tf"
-        DATABASES = settings_development.DATABASES['default']
-        db1 = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
+        db1 = get_db()
         cursor1 = db1.cursor()
         cursor1.execute(sql1)
         count = cursor1.fetchone()
