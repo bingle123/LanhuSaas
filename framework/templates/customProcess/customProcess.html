@@ -214,7 +214,7 @@
     };
     //节点顺序校验
     const seqCheck = (rule, value, callback) => {
-        if(0 == vue.customProcessNode.seq.length){
+        if(null == vue.customProcessNode.seq || 0 == vue.customProcessNode.seq.length){
             callback(new Error('请输入节点顺序'));
         }else if(!/^[1-9][0-9]{0,1}$/.test(vue.customProcessNode.seq)){
             return callback(new Error('节点值在1~99之间'));
@@ -234,6 +234,7 @@
     var vue = new Vue({
         el: '#customProcess',
         data: {
+            currentUser: null,
             customProcessPageCount: 0,
             currentPage: 1,
             //用于列表显示的节点信息
@@ -291,6 +292,18 @@
             }
         },
         methods:{
+            //获取当前用户名
+            customProcessCurrUser: function(){
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}position/get_active_user',
+                }).then((res) => {
+                    this.currentUser=res.data.message
+                }).catch((res) => {
+                    var msg = '当前用户信息获取失败！';
+                    this.alertRulePopupErrorMessage(msg + res);
+                });
+            },
             //分页显示方法
             customProcessPageChange: function(page) {
                 const loading = this.customProcessPopupLoading();
@@ -399,7 +412,7 @@
                 var url = '${SITE_URL}customProcess/update_node_status';
                 var execTime = this.formatDateTime(new Date());
                 //此处执行人固定，实际使用时应该从接口取用户名称
-                var execPerson = 'lhAdmin';
+                var execPerson = this.currentUser;
                 var statusData = {};
                 statusData.node_id = this.customProcessTableData[this.customProcessStep].id;
                 statusData.is_done = 'c';
@@ -848,6 +861,8 @@
             this.customProcessSelectAllNodes();
             //在页面加载完成后加载所有的蓝鲸用户数据，用于在填写发送通知信息时指定用户
             this.loadBkUsers();
+            //获取当前用户信息
+            this.customProcessCurrUser();
             this.get_header_data();
         }
     });

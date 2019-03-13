@@ -90,6 +90,8 @@ def select_all_bkusers():
     users_list = list()
     bk_users = user_info.objects.all().filter(notice_style__isnull=False)
     for bk_user in bk_users:
+        if bk_user.notice_style not in ('wechat','sms','email'):
+            continue
         user_dict = model_to_dict(bk_user)
         users_list.append(user_dict)
     return users_list
