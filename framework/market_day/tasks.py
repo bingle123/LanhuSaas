@@ -8,7 +8,7 @@ from celery.task import periodic_task
 from system_config.models import SendMailLog as sml
 from djcelery import models as celery_models
 import logging
-from gatherData import function
+from gather_data import function
 from monitor_item.models import Monitor
 from django.db.models import Q
 from django.forms import model_to_dict
@@ -18,7 +18,7 @@ import market_day.celery_opt as co
 from account.models import BkUser
 from blueking.component.shortcuts import get_client_by_user
 from datetime import datetime
-from customProcess.function import clear_execute_status
+from custom_process.function import clear_execute_status
 from market_day.function import check_jobday
 from monitor_item.models import *
 from history_chart.function import select_scene_operation

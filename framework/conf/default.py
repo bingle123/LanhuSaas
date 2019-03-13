@@ -157,12 +157,11 @@ INSTALLED_APPS = (
     'position',
     'market_day',
     'db_connection',
-    'customProcess',
-    'gatherData',
-    'gatherDataHistory',
+    'custom_process',
+    'gather_data',
+    'gather_data_history',
     'notification',
     'logmanagement',
-    'home_page',
 )
 
 # ==============================================================================

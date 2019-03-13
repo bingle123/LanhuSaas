@@ -11,8 +11,8 @@ import urllib
 import urllib2
 import os
 import settings
-from gatherData.models import *
-from gatherDataHistory.models import *
+from gather_data.models import *
+from gather_data_history.models import *
 from notification.function import *
 from account.models import *
 from blueking.component.shortcuts import *
