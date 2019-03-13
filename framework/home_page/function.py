@@ -93,11 +93,10 @@ def scenes_alert(request):
                 will_scene = will_scene+1
             else:
                 danger_scene = danger_scene +1
-            all_avg = all_avg + all_score
+        all_avg = all_avg + all_score
 
     #所有场景下得监控项得到的权值分总和/场景数 = 权值平均分 就是从健康度
         last_score = all_avg / ps.__len__()
-
         alert_log = TdAlertLog.objects.filter(item_id=model_to_dict(x)['item_id'])
         for y in alert_log:
             alertd = model_to_dict(y)
@@ -106,14 +105,14 @@ def scenes_alert(request):
                 alert_count = alert_count + 1
                 alertd['alert_time'] = str(alertd['alert_time'])
                 alert_data.append(alertd)
-        dic_data= {
-            'alert_count':alert_count, #告警数
-            'alert_data':alert_data,    #告警table数据
-            'last_score':last_score,    #健康度
-            'safe_scene':safe_scene,
-            'will_scene':will_scene,
-            'danger_scene':danger_scene,
-        }
+    dic_data= {
+        'alert_count':alert_count, #告警数
+        'alert_data':alert_data,    #告警table数据
+        'last_score':last_score,    #健康度
+        'safe_scene':safe_scene,
+        'will_scene':will_scene,
+        'danger_scene':danger_scene,
+    }
     return dic_data
 
 
