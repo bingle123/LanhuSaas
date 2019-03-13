@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from monitorScene.models import Scene
+from monitor_scene.models import Scene
 
 
 class Monitor(models.Model):
