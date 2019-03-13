@@ -18,10 +18,12 @@ from celery.task import periodic_task
 import datetime
 import sys
 from logmanagement.function import add_log,make_log_info,get_active_user
-from conf import settings_development
+from conf import settings_development, default, settings_production, settings_testing
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
+APP_ID = default.APP_ID
+APP_TOKEN = default.APP_TOKEN
 #加密
 def encryption_str(str):
     password = str.encode(encoding='utf-8')
@@ -198,10 +200,10 @@ def get_all_db_connection(request):
     :return:
     """
     try:
-        res = Conn.objects.all()
+        conn = Conn.objects.all()
         result = []
-        for i in res:
-            obj = model_to_dict(i)
+        for con in conn:
+            obj = model_to_dict(con)
             result.append(obj)
         return tools.success_result(result)
     except Exception as e:
@@ -212,18 +214,18 @@ def get_jobInstance(request):
     monitor = Monitor.objects.filter(status=0, monitor_type=3)
     jion_list = []
     dic = []
-    for x in monitor:
-        jobId = model_to_dict(x)['jion_id']
+    for moni in monitor:
+        jobId = model_to_dict(moni)['jion_id']
         jion_list.append(jobId)
-    for i in jion_list:
+    for jion in jion_list:
         try:
-            job_ins = Job.objects.filter(job_id=i)
+            job_ins = Job.objects.filter(job_id=jion)
             for y in job_ins:
                 cilent = tools.interface_param(request)
                 id = y.instance_id
                 instance_status = cilent.job.get_job_instance_status({
-                    "bk_app_code": "mydjango1",
-                    "bk_app_secret": "99d97ec5-4864-4716-a877-455a6a8cf9ef",
+                    "bk_app_code": APP_ID,
+                    "bk_app_secret": APP_TOKEN,
                     "bk_biz_id": 2,
                     "job_instance_id": id,
                 })
@@ -253,14 +255,14 @@ def get_flowStatus(request):
 
                 cilent = tools.interface_param(request)
                 res = cilent.sops.get_task_status({
-                    "bk_app_code": "mydjango1",
-                    "bk_app_secret": "99d97ec5-4864-4716-a877-455a6a8cf9ef",
+                    "bk_app_code": APP_ID,
+                    "bk_app_secret": APP_TOKEN,
                     "bk_biz_id": "2",
                     "task_id": y,  # task_id
                 })
                 res1 = cilent.sops.create_task({
-                    "bk_app_code": "mydjango1",
-                    "bk_app_secret": "99d97ec5-4864-4716-a877-455a6a8cf9ef",
+                    "bk_app_code": APP_ID,
+                    "bk_app_secret": APP_TOKEN,
                     "bk_biz_id": "2",
                     "template_id": "5",
                     "name": "zz",
@@ -329,8 +331,8 @@ def get_user_muenu(request):
     #根据菜单和角色表查出该角色对应的菜单
     role_muenus = rm.objects.filter(roleid=1)
     temp_list = []
-    for i in role_muenus:
-        muenuid = model_to_dict(i)['muenuid']
+    for r_m in role_muenus:
+        muenuid = model_to_dict(r_m)['muenuid']
         muenu = Muenu.objects.get(id=muenuid)
         temp = {}
         temp = model_to_dict(muenu)
@@ -412,33 +414,33 @@ def get_roleAmuenus(request):
     roles = Role.objects.all()
     menus = Muenu.objects.all()
     tree=[]
-    for x in roles:
-        temp = {}
+    for role in roles:
+        treeItem = {}
         #获取所有菜单
-        muenu_ids = rm.objects.filter(roleid=x.rid)
+        muenu_ids = rm.objects.filter(roleid=role.rid)
         #菜单名称
-        temp['label']=x.rname
+        treeItem['label']=role.rname
         #每个菜单对应的id
-        temp['id']=x.rid
+        treeItem['id']=role.rid
         childrens=[]
         for menu in menus:
-            chi={}
+            child={}
             #树对应的Id,以及label,经过处理的树id不重复
-            chi['id']=(x.rid+1)*100+menu.id
-            chi['label']=menu.mname
-            childrens.append(chi)
+            child['id']=(role.rid+1)*100+menu.id
+            child['label']=menu.mname
+            childrens.append(child)
         #返回树的数据
-        temp['children']=childrens
-        tree.append(temp)
+        treeItem['children']=childrens
+        tree.append(treeItem)
     return tree
 
 #获取已经勾选Id
 def checked_menu(request):
-    objs=rm.objects.all()
+    rm_all=rm.objects.all()
     ids=[]
-    for obj in objs:
+    for rl in rm_all:
         #获取经过处理的树Id
-        temp_id=(obj.roleid+1)*100+obj.muenuid
+        temp_id=(rl.roleid+1)*100+rl.muenuid
         ids.append(temp_id)
     return  ids
 
@@ -447,8 +449,8 @@ def checked_menu(request):
 def savemnus(request):
     ids = json.loads(request.body)
     #保留角色菜单中间表
-    res = rm.objects.all()
-    ms = res
+    rm_all = rm.objects.all()
+    r_all = rm_all
     x = 0
     z = 0
     parent_id = []
@@ -459,14 +461,14 @@ def savemnus(request):
     #如果获取的是对象数组，则变动了
     else:
         #保存角色菜单前先删除中间表，中间表不为空则删除
-        if res is not None:
+        if rm_all is not None:
             de = rm.objects.all().delete()
             try:
-                for i in ids:
-                    if ('children' not in i) and ('label' in i):
+                for id in ids:
+                    if ('children' not in id) and ('label' in id):
                         #逐个树id还原成菜单id(之前经过处理 树id = (角色id+1)*100+菜单Id)
-                        x = i['id'] / 100
-                        z = i['id'] % 100
+                        x = id['id'] / 100
+                        z = id['id'] % 100
                         x = int(x)
                         res1 = rm.objects.create(roleid=x-1, muenuid=z)
                     else:
@@ -475,7 +477,7 @@ def savemnus(request):
                                      get_active_user(request)['data']['bk_username'], '成功', '无')
                 add_log(info)
             except Exception as e:
-                for i in ms:
+                for i in r_all:
                     rm.objects.create(roleid=model_to_dict(i)['roleid'],muenuid=model_to_dict(i)['muenuid'])
                 info = make_log_info(u'逐条增加菜单与角色中间表', u'业务日志', u'rm', sys._getframe().f_code.co_name,
                                      get_active_user(request)['data']['bk_username'], '失败',repr(e))
@@ -484,7 +486,12 @@ def savemnus(request):
 
 #获得数据库连接对象
 def get_db():
-    res = settings_development.DATABASES['default']
+    if default.RUN_MODE == 'PRODUCT':
+        res = settings_production.DATABASES['default']
+    elif default.RUN_MODE == 'TEST':
+        res = settings_testing.DATABASES['default']
+    else:
+        res = settings_development.DATABASES['default']
     db = MySQLdb.connect(res['HOST'], res['USER'], res['PASSWORD'],res['NAME'],charset='utf8')
     return db
 
