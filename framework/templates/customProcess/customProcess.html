@@ -531,7 +531,7 @@
             //增加/修改流程节点
             defineOrChangeProcess: function() {
                 if(this.customProcessStatus){
-                    this.$confirm('当前流程正在使用中, 强行修改将会导致执行状态信息丢失，是否继续?', '提示', {
+                    this.$confirm('当前流程正在使用中, 强制修改将会导致执行状态信息丢失，是否继续?', '提示', {
                       confirmButtonText: '确定',
                       cancelButtonText: '取消',
                       type: 'warning',
@@ -700,7 +700,7 @@
                 if(!this.customProcessStatus){
                     alertMessage = '确认删除当前过程通知吗？';
                 }else{
-                    alertMessage = '当前正在执行流程，如果选择删除，该流程将会被强制取消，继续吗？';
+                    alertMessage = '当前流程正在使用，是否强制删除？';
                 }
                 this.$confirm(alertMessage, '提示', {
                     confirmButtonText: '确定',
