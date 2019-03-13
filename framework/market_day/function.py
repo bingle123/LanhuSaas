@@ -75,6 +75,7 @@ def addperdic_task():
 
 #添加一个监控项定时任务
 def add_unit_task(add_dicx):
+    # print add_dicx
     type=add_dicx['monitor_type']
     schename = add_dicx['monitor_name']
     id=Monitor.objects.filter(monitor_name=schename).last().id
@@ -91,7 +92,7 @@ def add_unit_task(add_dicx):
     endhour,endmin=tran_time_china(temp_date,timezone=timezone)
     endtime=endhour+":"+endmin
     period = int(add_dicx['period'])
-    if type=='基本单元类型':
+    if type==1:
         ctime = {
             'hour': starthour,
             'minute': startmin,
@@ -108,7 +109,7 @@ def add_unit_task(add_dicx):
         }
         #创建一个基本监控项采集的开始任务
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,task_args=info, desc=schename)
-    elif type=='图表单元类型':
+    elif type==2:
         ctime = {
             'hour': starthour,
             'minute': startmin,
@@ -127,7 +128,7 @@ def add_unit_task(add_dicx):
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,
                                task_args=info, desc=schename)
 
-    elif type=='作业单元类型':
+    elif type==3:
         ctime = {
             'hour': starthour,
             'minute': startmin,
@@ -147,7 +148,7 @@ def add_unit_task(add_dicx):
         }
         #创建一个作业采集的开始任务
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_two', crontab_time=ctime,task_args=info, desc=schename)
-    elif type=='流程单元类型':
+    elif type==4:
         template_list=add_dicx['jion_id']
         node_times=add_dicx['node_times']
         constants=add_dicx['constants']

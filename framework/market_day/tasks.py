@@ -21,6 +21,7 @@ from datetime import datetime
 from customProcess.function import clear_execute_status
 from market_day.function import check_jobday
 from monitor_item.models import *
+from history_chart.function import select_scene_operation
 
 @task
 def crawl_task(**i):
@@ -87,7 +88,7 @@ def crawl_task(**i):
             logging.error(u'消息日志保存成功')
     return 'success'
 
-#基本监控项和图标监控项的采集开始task
+#基本监控项和图表监控项的采集开始task
 @task
 def gather_data_task_one(**i):
     # 启动一个
@@ -241,6 +242,10 @@ def count_time(**i):
 @periodic_task(run_every=crontab(hour=0,minute=0))
 def clear_status_task():
     clear_execute_status()
+
+@periodic_task(run_every=crontab(hour=3,minute=0))
+def select_scene_operation_task():
+    select_scene_operation_task()
 
 
 

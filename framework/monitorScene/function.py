@@ -275,13 +275,13 @@ def scene_show(res):
         limit = res['limit']
         page = res['page']
         if type == 0:
-            base_unit = Monitor.objects.filter (monitor_type='基本单元类型')
+            base_unit = Monitor.objects.filter (monitor_type='1')
             base_page_data, base_page_count = tools.page_paging (base_unit, limit, page)
-            chart_unit = Monitor.objects.filter (monitor_type='图表单元类型')
+            chart_unit = Monitor.objects.filter (monitor_type='2')
             chart_page_data, chart_page_count = tools.page_paging (chart_unit, limit, page)
-            job_unit = Monitor.objects.filter (monitor_type='作业单元类型')
+            job_unit = Monitor.objects.filter (monitor_type='3')
             job_page_data, job_page_count = tools.page_paging (job_unit, limit, page)
-            flow_unit = Monitor.objects.filter (monitor_type='流程单元类型')
+            flow_unit = Monitor.objects.filter (monitor_type='4')
             flow_page_data, flow_page_count = tools.page_paging (flow_unit, limit, page)
             base_list = tools.obt_dic (base_page_data, base_page_count)
             chart_list = tools.obt_dic (chart_page_data, chart_page_count)
@@ -294,21 +294,21 @@ def scene_show(res):
                 'flow_list': flow_list,
             }
         elif type == 1:
-            base_unit = Monitor.objects.filter (monitor_type='基本单元类型')
+            base_unit = Monitor.objects.filter (monitor_type='1')
             base_page_data, base_page_count = tools.page_paging (base_unit, limit, page)
             base_list = tools.obt_dic (base_page_data, base_page_count)
             res_dic = {
                 'base_list': base_list,
             }
         elif type == 2:
-            chart_unit = Monitor.objects.filter (monitor_type='图表单元类型')
+            chart_unit = Monitor.objects.filter (monitor_type='2')
             chart_page_data, chart_page_count = tools.page_paging (chart_unit, limit, page)
             chart_list = tools.obt_dic (chart_page_data, chart_page_count)
             res_dic = {
                 'chart_list': chart_list,
             }
         elif type == 3:
-            job_unit = Monitor.objects.filter (monitor_type='作业单元类型')
+            job_unit = Monitor.objects.filter (monitor_type='3')
             job_page_data, job_page_count = tools.page_paging (job_unit, limit, page)
             job_list = tools.obt_dic (job_page_data, job_page_count)
             job_status_list = []
@@ -324,7 +324,7 @@ def scene_show(res):
                 'job_list': job_list,
             }
         elif type == 4:
-            flow_unit = Monitor.objects.filter (monitor_type='流程单元类型')
+            flow_unit = Monitor.objects.filter (monitor_type='4')
             flow_page_data, flow_page_count = tools.page_paging (flow_unit, limit, page)
             flow_list = tools.obt_dic (flow_page_data, flow_page_count)
             res_dic = {
@@ -410,7 +410,7 @@ def getBySceneId(request,id):
         dic_data.append(item)
     return tools.success_result(dic_data)
 
-
+#轮播测试
 def alternate_play_test(request):
     res = json.loads (request.body)
     #接收参数
@@ -420,6 +420,7 @@ def alternate_play_test(request):
     res_list = get_scenes(pos_id,start,end)
     return res_list
 
+#大屏轮播
 def alternate_play(request):
     # 获取当前用户
     username = get_active_user(request)['data']['bk_username']
@@ -430,7 +431,7 @@ def alternate_play(request):
     res_list = get_scenes(pos_id,'','')
     return  res_list
 
-
+#获取轮播页面
 def get_scenes(pos_id,start,end):
     """
     :param position: 岗位名id
@@ -441,20 +442,20 @@ def get_scenes(pos_id,start,end):
     res_list = []
     scenes = []
     # 获取岗位对应的场景
-    scene = position_scene.objects.filter (position_id=pos_id)
+    position_scenes = position_scene.objects.filter (position_id=pos_id)
     #判断是否为轮播测试；false就是测试
-    ff=False
+    is_alternate_test=False
     if start == '' and end == '':
-        ff=True
-    for x in scene:
-        scenes.append (x.scene_id)
+        is_alternate_test=True
+    for pos_scene in position_scenes:
+        scenes.append (pos_scene.scene_id)
     # 遍历scenes,获取每个场景对应的监控项
-    for z in scenes:
+    for scene in scenes:
         # 场景
-        temp_scene = Scene.objects.get(id=z)
+        temp_scene = Scene.objects.get(id=scene)
         #
         flag=True
-        if ff:
+        if is_alternate_test:
             id=temp_scene.scene_area
             timezone = Area.objects.get(id=id).timezone
             tz = pytz.timezone(timezone)
@@ -469,15 +470,15 @@ def get_scenes(pos_id,start,end):
             flow_list = []
             job_list = []
             temp_list = []
-            scene_monitor_id = []
+            scene_monitor_ids = []
             # 场景对应的监控项id
-            scene_monitor = Scene_monitor.objects.filter(scene_id = z)
-            for k in scene_monitor:
+            scene_monitors = Scene_monitor.objects.filter(scene_id = scene)
+            for scene_mon in scene_monitors:
                 #items_id.append(k.item_id)
-                scene_monitor_id.append(k.id)
+                scene_monitor_ids.append(scene_mon.id)
             # 遍历场景的场景—监控项ID
-            for j in scene_monitor_id:
-                item_id = Scene_monitor.objects.get(id=j).item_id
+            for scene_mon_id in scene_monitor_ids:
+                item_id = Scene_monitor.objects.get(id=scene_mon_id).item_id
                 # 获取基本数据
                 item = Monitor.objects.get(id=item_id)
                 # 转成字典
@@ -510,7 +511,7 @@ def get_scenes(pos_id,start,end):
                 # # 拼接监控项基础数据和采集数据
                 # item_dict = dict (item_dict, **dic)
                 #拼接tl_scene_monitor信息
-                scene_monitor = Scene_monitor.objects.get(id = j)
+                scene_monitor = Scene_monitor.objects.get(id = scene_mon_id)
                 scene_monitor_dict = {
                     'x':scene_monitor.x,
                     'y':scene_monitor.y,
@@ -520,13 +521,13 @@ def get_scenes(pos_id,start,end):
                 }
                 item_dict = dict (item_dict, **scene_monitor_dict)
                 # 按不同的监控项类型保存
-                if u'基本单元类型' == item.monitor_type:
+                if 1 == item.monitor_type:
                     base_list.append (item_dict)
-                if u'图表单元类型' == item.monitor_type:
+                if 2 == item.monitor_type:
                     chart_list.append (item_dict)
-                if u'流程单元类型' == item.monitor_type:
+                if 3 == item.monitor_type:
                     flow_list.append (item_dict)
-                if u'作业单元类型' == item.monitor_type:
+                if 4 == item.monitor_type:
                     jobs = Job.objects.filter(job_id = item.jion_id)
                     status = jobs.last().status
                     temp_dict = {
@@ -542,7 +543,7 @@ def get_scenes(pos_id,start,end):
             }
             temp_list.append (data)
             scene_dict = {
-                'scene_id': z,
+                'scene_id': scene,
                 'scene_content':temp_list
             }
             res_list.append(scene_dict)

@@ -280,7 +280,7 @@
                          </el-table-column>
                          <el-table-column prop="failure_num" label="执行失败数" style="width: 15%" align="center">
                          </el-table-column>
-                         <el-table-column prop="failure_num" label="告警数量" style="width: 15%" align="center">
+                         <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center">
                          </el-table-column>
                      </el-table>
                      <el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
@@ -521,7 +521,7 @@ let vm = new Vue({
                 if(value == 'sceneOperation'){
                      axios({
                         method: 'post',
-                        url: '${SITE_URL}history_chart/select_scene_operation',
+                        url: '${SITE_URL}history_chart/show_operation_report',
                         data: {
                             page: vm.page,
                             limit: 10
@@ -581,7 +581,10 @@ let vm = new Vue({
             },
             //再选日期
             sceneTChang(value){
+
                 vm.scene_time = value;
+
+
             },
             //再初始化图
             draw_line(value) {
@@ -790,10 +793,13 @@ let vm = new Vue({
                                 if(res.data.results < 3){
                                     alert('日期间隔需要大于3天');
                                     //$('#get_days,#scene_et').css('display','none');
+                                }else if(res.data.results > 15){
+                                    alert('日期最多选15天，请重新选择');
                                 }else{
                                     alert('此期间不足3条数据');
                                    // $('#get_days,#scene_et').css('display','none');
                                 }
+
                             }else{
                                 vm.qnmb = res.data.results;
                                 vm.dayData = res.data.results;

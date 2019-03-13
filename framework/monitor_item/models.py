@@ -9,7 +9,7 @@ class Monitor(models.Model):
     单元信息表
     """
     monitor_name = models.CharField(verbose_name=u'监控项名称', max_length=50)
-    monitor_type = models.CharField(verbose_name=u'监控项类型', max_length=10)
+    monitor_type = models.PositiveIntegerField(verbose_name=u'监控项类型')
     jion_id = models.PositiveIntegerField(verbose_name=u'关联ID')
     gather_rule = models.CharField(verbose_name=u'采集规则', max_length=500)
     gather_params = models.CharField(verbose_name=u'采集参数', max_length=500)
