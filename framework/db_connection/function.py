@@ -209,7 +209,7 @@ def get_all_db_connection(request):
 
 #获取作业状态以及作业步骤状态
 def get_jobInstance(request):
-    monitor = Monitor.objects.filter(status=0, monitor_type='作业单元类型')
+    monitor = Monitor.objects.filter(status=0, monitor_type=3)
     jion_list = []
     dic = []
     for x in monitor:

@@ -340,11 +340,15 @@ def gather_data(**info):
         # 将采集的数据保存到td_gather_data中
         for item in data_set:
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'], data_value=item['value']).save()
+    # 处理监控项空格参数
     elif "space_interface" == gather_type:
+        # 结果状态为3的是成功其他为失败
         if info['data_key'] == 3:
+            # 存储成功数据
             TDGatherData (item_id=info['id'], gather_time=GATHER_TIME, data_key=info['data_key'], data_value=info['data_value'],
                           gather_error_log=None,instance_id = info['instance_id']).save()
         else:
+            # 存储失败数据及日志
             TDGatherData (item_id=info['id'], gather_time=GATHER_TIME, data_key=info['data_key'], data_value=info['data_value'],
                           gather_error_log=info['gather_error_log'],instance_id = info['instance_id']).save ()
     # 数据采集完毕后使用告警规则检查数据合法性

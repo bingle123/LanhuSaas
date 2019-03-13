@@ -151,7 +151,7 @@ def mail_send(request):
 
 def get_scene_type(request):
     """
-    获取场景信息
+    获取场景分组信息
     :param request:
     :return:
     """
@@ -239,4 +239,10 @@ def get_crawl_content(request):
     page = request_body['page']
     limit = request_body['limit']
     res = function.get_crawl_content(title_content, crawl_name, page, limit)
+    return render_json(res)
+
+
+def start_crawl_test(request):
+
+    res = function.start_crawl(request)
     return render_json(res)
