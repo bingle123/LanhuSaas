@@ -177,11 +177,11 @@ def send_notification(notification):
             if None is access_token:
                 access_token = wechat_access_token()
                 # token获取异常，检查APPID和secret是否正确
-                if None is access_token:
-                    print 'Wechat access token get fail'
-                    send_flag = False
-                    infos.append(u'微信发送失败!Token获取异常!')
-                    break
+            if None is access_token:
+                print 'Wechat access token get fail'
+                send_flag = False
+                infos.append(u'微信发送失败!Token获取异常!')
+                break
             # 根据获取的当前用户的openid和获取的token发送指定内容的推送消息给用户
             if None is rec_info.open_id or '' == rec_info.open_id.strip():
                 infos.append(u'%s：微信发送失败!用户openid未设置' % receiver)

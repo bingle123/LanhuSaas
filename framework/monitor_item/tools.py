@@ -6,14 +6,14 @@ from common.log import logger
 import base64
 from account.models import *
 from blueking.component.shortcuts import *
-from gatherData.function import gather_data
+from gather_data.function import gather_data
 from datetime import datetime
 import time
 import json
 from django.core.paginator import Paginator
 from monitor_item.models import Job
-from gatherData.function import gather_data_migrate
-from gatherData import models as mo
+from gather_data.function import gather_data_migrate
+from gather_data import models as mo
 from notification.function import rule_check
 from market_day import celery_opt as co
 from market_day.models import HeaderData as hd

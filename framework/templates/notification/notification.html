@@ -150,6 +150,7 @@
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
         return config
     });
+    //自定义上限值校验
     const upperLimitCheck= (rule, value, callback) => {
         var lv = $('#lowerValue');
         if (value != null && value.length > 0) {
@@ -168,6 +169,7 @@
             callback();
         }
     };
+    //自定义下限值校验
     const lowerLimitCheck = (rule, value, callback) => {
         if (value != null && value.length > 0) {
             var uv = $('#upperValue');

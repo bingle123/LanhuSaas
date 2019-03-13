@@ -13,8 +13,8 @@ import pymysql as MySQLdb
 from market_day import function
 from market_day import celery_opt as co
 from db_connection.function import decrypt_str
-from gatherData.function import gather_data, get_db
-from gatherData.models import TDGatherData
+from gather_data.function import gather_data, get_db
+from gather_data.models import TDGatherData
 import sys
 from logmanagement.function import add_log, make_log_info, get_active_user
 import datetime

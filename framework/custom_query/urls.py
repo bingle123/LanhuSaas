@@ -13,17 +13,13 @@ from django.conf.urls import patterns
 
 
 urlpatterns = patterns(
-    'customProcess.views',
+    'custom_query.views',
     (r'^index$', 'show_index'),                                          # 首页
-    (r'^select_all_nodes$', 'select_all_nodes'),
-    (r'^add_node$', 'add_node'),
-    (r'^update_node_status$', 'update_node_status'),
-    (r'^change_status_flag$', 'change_status_flag'),
-    (r'^del_node$', 'del_node'),
-    (r'^select_node$', 'select_node'),
-    (r'^truncate_node$', 'truncate_node'),
-    (r'^clear_execute_status$', 'clear_execute_status'),
-    (r'^select_all_bkusers$', 'select_all_bkusers'),
-    (r'^send_notification$', 'send_notification'),
-    (r'^select_nodes_pagination$', 'select_nodes_pagination')
+    (r'^select_queries_pagination$', 'select_queries_pagination'),
+    (r'^del_query$', 'del_query'),
+    (r'^select_query$', 'select_query'),
+    (r'^add_query$', 'add_query'),
+    (r'^load_all_tables_name$', 'load_all_tables_name'),
+    (r'^load_all_fields_name$', 'load_all_fields_name'),
+    (r'sql_test','sql_test'),
 )
