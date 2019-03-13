@@ -6,45 +6,11 @@ from db_connection.models import *
 from db_connection.function import *
 from django.core.paginator import *
 import MySQLdb
-from gatherData.models import *
+from gather_data.models import *
 from position.models import user_info
 from system_config.function import *
 from position.models import *
 from shell_app.tools import *
-
-
-# 获取所有告警规则-已弃用，改为分页获取
-def select_all_rules():
-    alert_rules = TbAlertRule.objects.order_by('item_id').all()
-    rule_list = []
-    for alert_rule in alert_rules:
-        create_time = alert_rule.create_time
-        edit_time = alert_rule.edit_time
-        upper_limit = alert_rule.upper_limit
-        lower_limit = alert_rule.lower_limit
-        alert_rule.create_time = None
-        alert_rule.edit_time = None
-        alert_rule.upper_limit = None
-        alert_rule.lower_limit = None
-        temp = model_to_dict(alert_rule)
-        if create_time is None:
-            temp['create_time'] = ''
-        else:
-            temp['create_time'] = create_time.strftime('%Y-%m-%d %H:%M:%S')
-        if edit_time is None:
-            temp['edit_time'] = ''
-        else:
-            temp['edit_time'] = edit_time.strftime('%Y-%m-%d %H:%M:%S')
-        if upper_limit is None:
-            temp['upper_limit'] = ''
-        else:
-            temp['upper_limit'] = str(upper_limit)
-        if lower_limit is None:
-            temp['lower_limit'] = ''
-        else:
-            temp['lower_limit'] = str(lower_limit)
-        rule_list.append(temp)
-    return rule_list
 
 
 # 分页获取告警规则

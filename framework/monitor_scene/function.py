@@ -9,11 +9,11 @@ from models import position_scene
 from monitor_item.models import Scene_monitor, Monitor, Job,Scene_monitor
 from monitor_item import tools
 from position.models import pos_info, user_info
-from gatherData.models import TDGatherData
+from gather_data.models import TDGatherData
 import sys
 from logmanagement.function import add_log, make_log_info, get_active_user
 from db_connection.function import get_db
-from gatherData.function import gather_data
+from gather_data.function import gather_data
 from datetime import datetime
 import pytz
 from position.models import *
