@@ -140,7 +140,7 @@
             <el-col :span="24">
                 <div id="system_state" class="title">
                     <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">系统状态</span>
-                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;float: right;margin-right: 10px">{{ now_date_name }}:{{ now_date_time }}</span>
+                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;float: right;margin-right: 10px" v-text="now_date_name+now_date_time"></span>
                 </div>
             </el-col>
         </el-row>
@@ -451,12 +451,8 @@
                 },
 
             ],
-
-
-            //////////////////
             now_date_time:'',
             now_date_name:'',
-
         },
         methods: {
 
@@ -517,18 +513,20 @@
             get_date(){
                 axios.post('${SITE_URL}home_page/get_time/').then((res)=>{
                     ve.now_date_time = res.data['time_date']
-                    ve.now_date_name = res.data['today_name']
+                    ve.now_date_name = res.data['today_name']+":"
+                    console.log(res.data)
                 })
             },
-            timer(){
-                return setTimeout(()=>{
-                    ve.get_date()
-                },1000)
+            get_alert_data(){
+                axios.post('${SITE_URL}home_page/scenes_alert/').then((res)=>{
+                    console.log(res)
+                })
             },
         }
     });
+    ve.get_date();
     ve.show_chart1();
-    ve.timer();
+    ve.get_alert_data();
 </script>
 
 </html>
