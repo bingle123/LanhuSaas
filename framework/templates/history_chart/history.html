@@ -79,7 +79,7 @@
                         </el-col>
                     </el-row>
                 </div>
-                <el-col :span="5" style="margin-top: 5px">
+                <el-col :span="4" style="margin-top: 5px">
                     <el-select placeholder="请选择日志类型" v-model="log_type" @change="change_type">
                         <el-option label="日志查询" value="log"></el-option>
                         <el-option label="执行告警信息查询" value="alert"></el-option>
@@ -91,16 +91,16 @@
                 </el-col>
 
                 <div id="hide_m" style="display:none">
-                    <el-row type="flex">
-                        <el-col :span="2"><a>场景：</a></el-col>
-                        <el-col :span="3" style="margin-top: 5px">
+                    <el-row type="flex" align="middle">
+                        <el-col :span="1"  style="margin-left: 20px">场景:</el-col>
+                        <el-col :span="3">
 
                             <el-select placeholder="请选择场景" v-model="Cscene" value-key="id" @change="chose_scenes">
                                 <el-option v-for="item in scenes_data" :label="item.sname" :key="item.id"
                                            :value="item"></el-option>
                             </el-select>
                         </el-col>
-                        <el-col :span="2"><span>日期:</span></el-col>
+                        <el-col :span="1"  style="margin-left: 20px">日期:</el-col>
                         <el-col :span="3" style="margin-top: 5px">
                             <el-date-picker
                                     v-model="scene_time"
