@@ -152,7 +152,7 @@ INSTALLED_APPS = (
     'guotai',
     'monitor_item',
     'db_connection_manage',
-    'monitorScene',
+    'monitor_scene',
     'system_config',
     'position',
     'market_day',
