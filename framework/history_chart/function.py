@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
 
-from gatherDataHistory.models import TDGatherHistory
+from gather_data_history.models import TDGatherHistory
 from logmanagement.models import *
 from django.core.paginator import *
 from db_connection.function import get_db
@@ -15,8 +15,8 @@ from conf import settings_development
 import MySQLdb
 import time
 from datetime import datetime,date,timedelta
-from gatherData.models import TDGatherData
-from gatherDataHistory.models import TDGatherHistory
+from gather_data.models import TDGatherData
+from gather_data_history.models import TDGatherHistory
 from market_day.models import Holiday
 from models import operation_report
 
@@ -679,65 +679,65 @@ def monthly_select(request):
     dic_list=[]
     for i in res:
         if(str(i.date)[5:7] == '01'):
-            total +=i.scene_num
-            Success_num += i.success_num
-            failure_num +=i.failed_num
-            alert_num +=i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif(str(i.date)[5:7] == '02'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '03'):
             total += int(i.scene_num)
             Success_num += int(i.success_num)
             failure_num += int(i.failed_num)
             alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '04'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '05'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '06'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '07'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '08'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '09'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '10'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '11'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '12'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
     if(str(i.date)[:7] == str(i.date)[:5]+'01'):
         success_rate = round(Success_num / total, 4)
         success_rate = str(success_rate * 100) + '%'

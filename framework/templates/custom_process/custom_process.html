@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>定制过程通知</title>
     <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
-    <link rel="stylesheet" href="${STATIC_URL}css/customProcess/customProcess.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/custom_process/custom_process.css">
     <script type="text/javascript" src="${STATIC_URL}js/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
@@ -313,7 +313,7 @@
                 };
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}customProcess/select_nodes_pagination',
+                    url: '${SITE_URL}custom_process/select_nodes_pagination',
                     data: data
                 }).then((res) => {
                     loading.close();
@@ -349,7 +349,7 @@
                 this.customProcessNotifyButtonText = '正在发送...';
                 this.customProcessNotifyButtonType = 'info';
                 this.customProcessNotifyButtonDisabled = true;
-                var url = '${SITE_URL}customProcess/send_notification';
+                var url = '${SITE_URL}custom_process/send_notification';
                 var nofityData = {
                     'receivers': this.customProcessReceivers,
                     'content': this.customProcessNoticeContent
@@ -409,7 +409,7 @@
             generateCurrentProcessInfo: function() {
                 const loading = this.customProcessPopupLoading();
                 //上传当前节点执行信息
-                var url = '${SITE_URL}customProcess/update_node_status';
+                var url = '${SITE_URL}custom_process/update_node_status';
                 var execTime = this.formatDateTime(new Date());
                 //此处执行人固定，实际使用时应该从接口取用户名称
                 var execPerson = this.currentUser;
@@ -447,7 +447,7 @@
             customProcessNextNode: function() {
                 const loading = this.customProcessPopupLoading();
                 //上传当前节点已执行状态
-                var url = '${SITE_URL}customProcess/change_status_flag';
+                var url = '${SITE_URL}custom_process/change_status_flag';
                 var statusData = {};
                 statusData.node_id = this.customProcessTableData[this.customProcessStep].id;
                 statusData.is_done = 'y';
@@ -508,7 +508,7 @@
             //切换修改节点信息的界面
             customProcessEditNode: function(id) {
                 const loading = this.customProcessPopupLoading();
-                var url = '${SITE_URL}customProcess/select_node';
+                var url = '${SITE_URL}custom_process/select_node';
                 var editData = {};
                 editData.id = id;
                 axios({
@@ -537,7 +537,7 @@
                       type: 'warning',
                       center: true
                     }).then(() => {
-                        var url = '${SITE_URL}customProcess/clear_execute_status';
+                        var url = '${SITE_URL}custom_process/clear_execute_status';
                         const loading = this.customProcessPopupLoading();
                         axios({
                             method: 'post',
@@ -577,7 +577,7 @@
                     center: true
                 }).then(() => {
                     const loading = this.customProcessPopupLoading();
-                    var url = '${SITE_URL}customProcess/del_node';
+                    var url = '${SITE_URL}custom_process/del_node';
                     var delData = {};
                     delData.id = id;
                     axios({
@@ -626,7 +626,7 @@
                         return false;
                     }else {
                         const loading = this.customProcessPopupLoading();
-                        var url = '${SITE_URL}customProcess/add_node';
+                        var url = '${SITE_URL}custom_process/add_node';
                         if(1 != this.customProcessNode.receivers.length){
                             this.customProcessNode.receivers = this.customProcessNode.receivers.join(',');
                         }else{
@@ -710,7 +710,7 @@
                 }).then(() => {
                     const loading = this.customProcessPopupLoading();
                     //数据库删除所有节点信息
-                    var url = '${SITE_URL}customProcess/truncate_node';
+                    var url = '${SITE_URL}custom_process/truncate_node';
                     axios({
                         method: 'post',
                         url: url
@@ -749,7 +749,7 @@
             customProcessSelectAllNodes: function() {
                 const loading = this.customProcessPopupLoading();
                 this.customProcessTableData = null;
-                var url = '${SITE_URL}customProcess/select_all_nodes';
+                var url = '${SITE_URL}custom_process/select_all_nodes';
                 var count = 0;
                 axios({
                     method: 'post',
@@ -802,7 +802,7 @@
             },
             loadBkUsers: function(){
                 const loading = this.customProcessPopupLoading();
-                var url = '${SITE_URL}customProcess/select_all_bkusers';
+                var url = '${SITE_URL}custom_process/select_all_bkusers';
                 axios({
                     method: 'post',
                     url: url

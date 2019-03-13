@@ -242,7 +242,7 @@
                         'sql': this.customQueryData.query_sql
                     };
                     axios({
-                        url: '${SITE_URL}customQuery/sql_test',
+                        url: '${SITE_URL}custom_query/sql_test',
                         method: 'post',
                         data: data
                     }).then((res) => {
@@ -295,7 +295,7 @@
                         'sql': row.query_sql
                     };
                     axios({
-                        url: '${SITE_URL}customQuery/sql_test',
+                        url: '${SITE_URL}custom_query/sql_test',
                         method: 'post',
                         data: data
                     }).then((res) => {
@@ -414,7 +414,7 @@
                     };
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}customQuery/select_queries_pagination',
+                        url: '${SITE_URL}custom_query/select_queries_pagination',
                         data: data
                     }).then((res) => {
                         loading.close();
@@ -434,7 +434,7 @@
                 //自定义查询编辑
                 customQueryEdit: function (id) {
                     const loading = this.customQueryPopupLoading();
-                    var url = '${SITE_URL}customQuery/select_query';
+                    var url = '${SITE_URL}custom_query/select_query';
                     var editData = {};
                     editData.id = id;
                     axios({
@@ -461,7 +461,7 @@
                         type: 'warning',
                         center: true
                     }).then(() => {
-                        var url = '${SITE_URL}customQuery/del_query';
+                        var url = '${SITE_URL}custom_query/del_query';
                         var delData = {};
                         delData.id = id;
                         axios({
@@ -503,7 +503,7 @@
                         });
                     } else {
                         const loading = this.customQueryPopupLoading();
-                        var url = '${SITE_URL}customQuery/add_query';
+                        var url = '${SITE_URL}custom_query/add_query';
                         axios({
                             method: 'post',
                             url: url,
