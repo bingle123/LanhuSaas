@@ -55,8 +55,7 @@ def select_all_rules(request):
     limit = res1['limit']
     page = res1['page']
     #数据库的连接配置
-    DATABASES = settings_development.DATABASES['default']
-    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'], db=DATABASES['NAME'],charset="utf8")
+    db = get_db()
     cursor = db.cursor()
     cursor.execute("select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "
                    "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "
@@ -103,9 +102,7 @@ def select_rules_pagination(request):
     if(res1['date_Choice']):
         res3 = res1['date_Choice'][0]
         res4 = res1['date_Choice'][1]
-    DATABASES = settings_development.DATABASES['default']
-    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                         db=DATABASES['NAME'], charset="utf8")
+    db = get_db()
     cursor = db.cursor()
     sql = "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "\
           "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "\
@@ -248,9 +245,7 @@ def about_select(request):
           "FROM tb_monitor_scene AS a, tl_scene_monitor AS b  " \
           "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d " \
           "WHERE c.item_id = d.id ) e;"
-    DATABASES = settings_development.DATABASES['default']
-    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                         db=DATABASES['NAME'], charset="utf8")
+    db = get_db()
     cursor = db.cursor()
     cursor.execute(sql)
     res = cursor.fetchall()
@@ -303,9 +298,7 @@ def about_search(request):
         sql = sql+" and (e.scene_id LIKE '%"+keyword+"%' or e.item_id LIKE '%"+keyword+"%' or e.monitor_name LIKE '%"+keyword+"%')"
     if(res1['date_Choice']):
         sql = sql+" and e.start_time between '"+res3+"' and '"+res4+"'"
-    DATABASES = settings_development.DATABASES['default']
-    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                         db=DATABASES['NAME'], charset="utf8")
+    db = get_db()
     cursor = db.cursor()
     cursor.execute(sql)
     #执行sql并分页
