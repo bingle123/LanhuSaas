@@ -13,7 +13,7 @@ from position.models import *
 from shell_app.tools import *
 
 
-# 获取所有告警规则
+# 获取所有告警规则-已弃用，改为分页获取
 def select_all_rules():
     alert_rules = TbAlertRule.objects.order_by('item_id').all()
     rule_list = []
@@ -66,6 +66,7 @@ def select_rules_pagination(page_info):
     except EmptyPage:
         selected_set = paginator.page(paginator.num_pages)
     for selected_data in selected_set:
+        # datetime类型不支持转换，取出来置空后在使用model_to_dict转换
         create_time = selected_data.create_time
         edit_time = selected_data.edit_time
         upper_limit = selected_data.upper_limit
@@ -75,6 +76,7 @@ def select_rules_pagination(page_info):
         selected_data.upper_limit = None
         selected_data.lower_limit = None
         temp = model_to_dict(selected_data)
+        # 手动转换datetime类型的数据，放入dict中
         if create_time is None:
             temp['create_time'] = ''
         else:
@@ -100,6 +102,7 @@ def select_rules_pagination(page_info):
 # 根据id获取告警规则
 def select_rule(rule_data):
     alert_rule = TbAlertRule.objects.filter(id=rule_data['id']).get()
+    # datetime与decimal类型不支持转换，取出来置空后在使用model_to_dict转换
     create_time = alert_rule.create_time
     edit_time = alert_rule.edit_time
     upper_limit = alert_rule.upper_limit
@@ -109,6 +112,7 @@ def select_rule(rule_data):
     alert_rule.upper_limit = None
     alert_rule.lower_limit = None
     selected_rule = model_to_dict(alert_rule)
+    # 手动转换datetime和decimal类型的数据，放入dict中
     if create_time is None:
         selected_rule['create_time'] = ''
     else:
@@ -131,6 +135,7 @@ def select_rule(rule_data):
 # 根据ID删除告警规则
 def del_rule(rule_data):
     user_count = TlAlertUser.objects.filter(rule_id=rule_data['id']).count()
+    # 判断该告警规则是否被某用户订阅，如果已被用户订阅，先让用户确认是否强制删除
     if 0 != user_count:
         return "restrict"
     else:
@@ -140,7 +145,9 @@ def del_rule(rule_data):
 
 # 根据ID强制删除告警规则
 def force_del_rule(rule_data):
+    # 删除该用户订阅该告警规则的记录
     TlAlertUser.objects.filter(rule_id=rule_data['id']).delete()
+    # 删除该告警规则
     TbAlertRule.objects.filter(id=rule_data['id']).delete()
     return "ok"
 
@@ -148,9 +155,11 @@ def force_del_rule(rule_data):
 # 告警规则添加
 def add_rule(rule_data):
     status_dic = dict()
-    print rule_data
+    # print rule_data
     TbAlertRule(**rule_data).save()
+    # 获取当前数据总条数
     items_count = TbAlertRule.objects.count()
+    # 获取当前的总页数
     pages = items_count // 5
     if 0 != items_count % 5:
         pages = pages + 1
