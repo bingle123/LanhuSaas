@@ -7,7 +7,7 @@ from django.core.paginator import *
 from db_connection.function import get_db
 from system_config.function import *
 from notification.models import *
-from monitorScene.models import *
+from monitor_scene.models import *
 from monitor_item import tools
 from monitor_item import models
 from monitor_item.models import Scene_monitor,Monitor,Job
@@ -103,7 +103,6 @@ def select_rules_pagination(request):
     if(res1['date_Choice']):
         res3 = res1['date_Choice'][0]
         res4 = res1['date_Choice'][1]
-        print res3,res4
     DATABASES = settings_development.DATABASES['default']
     db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
                          db=DATABASES['NAME'], charset="utf8")
@@ -124,7 +123,6 @@ def select_rules_pagination(request):
     if(date_Choice):
         sql=sql+"and f.alert_time between  '" + res3 + "'  and '" + res4 + "'"
     sql=sql+" ORDER BY e.scene_name"
-    print sql
     cursor.execute(sql)
     res = cursor.fetchall()
     p = Paginator(res, limit)
@@ -191,7 +189,6 @@ def select_log(request):
     res2 = res['keyword']                   #关键字
     res3 = ""                               #开始时间
     res4 = ""                               #结束时间
-    print res['date_Choice']
     if(res['date_Choice']):
         res3 = res['date_Choice'][0]
         res4 = res['date_Choice'][1]
@@ -200,29 +197,23 @@ def select_log(request):
 
     #if组合判断查询的数据
     if(res1 != ""and res2 == "" and res3 == "" and res4 == ""):
-        print 123
         log = tmp.filter(Q(log_type__icontains=res1))
     elif(res2 != "" and res1 == "" and res3 == "" and res4 == ""):
-        print 234
         log = tmp.filter(Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-        class_name__icontains=res2) | Q(method__icontains=res2))
+        class_name__icontains=res2) | Q(method__icontains=res2) |Q(succeed__icontains=res2))
     elif(res3 != ""and res1 == "" and res2 == ""):
-        print 345
         log = tmp.filter(Q(create_time__range=(res3,res4)))
     elif(res1 != "" and res2 != "" and res3 == "" and res4 ==""):
-        print 456
         log = tmp.filter(Q(log_type__icontains=res1) & (Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-            class_name__icontains=res2) | Q(method__icontains=res2)))
+            class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2)))
     elif (res1 != "" and res2 != ""and res3!="" and res4!=""):
-        print 567
         log = tmp.filter((Q(log_type__icontains=res1)) & (Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-            class_name__icontains=res2) | Q(method__icontains=res2))& (Q(create_time__range=(res3,res4))))
+            class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2))& (Q(create_time__range=(res3,res4))))
     elif(res3!="" and res4!="" and res1!="" and res2 == ""):
-        print 111
         log = tmp.filter(Q(log_type__icontains=res1) & Q(create_time__range=(res3, res4)))
     elif(res3!="" and res4!="" and res2!="" and res1 == ""):
         log = tmp.filter((Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-        class_name__icontains=res2) | Q(method__icontains=res2))& Q(create_time__range=(res3, res4)))
+        class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2))& Q(create_time__range=(res3, res4)))
     elif(res1 == ""and res2 == "" and res3 == "" and res4 == ""):
         log = Operatelog.objects.all()
 
@@ -293,7 +284,6 @@ def about_search(request):
     page = res1['page']
     search = res1['search'].strip()     #场景名称搜索
     keyword = res1['keyword']      #关键字搜索
-    print res1['date_Choice']
     res3 = ""                               #按时间搜索的开始时间
     res4 = ""                               #按时间搜索的结束时间
     if (res1['date_Choice']):
@@ -318,7 +308,6 @@ def about_search(request):
                          db=DATABASES['NAME'], charset="utf8")
     cursor = db.cursor()
     cursor.execute(sql)
-    print sql
     #执行sql并分页
     res = cursor.fetchall()
     p = Paginator(res, limit)
@@ -346,6 +335,7 @@ def about_search(request):
 
 #别动
 def select_scenes(request):
+    #查询所有场景，遍历场景名称和id
     scenes = Scene.objects.all()
     list_data = list()
     dic_data = {}
@@ -358,7 +348,7 @@ def select_scenes(request):
     return tools.success_result(list_data)
 
 #封装方法，别动
-def getPant_list(scene_list,d_data,all_itemid,count):
+def getPant_list(scene_list,d_data,all_itemid):
     last_list = []
     AllList = []
     new_AllList = []
@@ -497,9 +487,7 @@ def selectScenes_ById(request):
             return tools.success_result(Alldays)
         # 有效天大于3天小于7天，取所有天数
         else:
-            return getPant_list(scene_list, d_data, all_itemid, count)
-
-
+            return getPant_list(scene_list, d_data, all_itemid)
 
 
 
@@ -691,65 +679,65 @@ def monthly_select(request):
     dic_list=[]
     for i in res:
         if(str(i.date)[5:7] == '01'):
-            total +=i.scene_num
-            Success_num += i.success_num
-            failure_num +=i.failed_num
-            alert_num +=i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif(str(i.date)[5:7] == '02'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '03'):
             total += int(i.scene_num)
             Success_num += int(i.success_num)
             failure_num += int(i.failed_num)
             alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '04'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '05'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '06'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '07'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '08'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '09'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '10'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '11'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '12'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
     if(str(i.date)[:7] == str(i.date)[:5]+'01'):
         success_rate = round(Success_num / total, 4)
         success_rate = str(success_rate * 100) + '%'

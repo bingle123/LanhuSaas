@@ -340,6 +340,8 @@
             },
             //新增爬虫配置
             addCrawl() {
+                //防止新增有ID回去更改
+                this.crawl_form.id = '';
                 axios({
                     url: '${SITE_URL}system_config/manage_crawl/',
                     method: 'post',

@@ -74,6 +74,14 @@ def obt_dic(page_data,page_count):
     """
     obj_list = []
     for i in page_data:
+        if i.monitor_type == 1:
+            i.monitor_type = u'基本监控项'
+        elif i.monitor_type == 2:
+            i.monitor_type = u'图表监控项'
+        elif i.monitor_type == 3:
+            i.monitor_type = u'作业监控项'
+        elif i.monitor_type == 4:
+            i.monitor_type = u'流程监控项'
         obj_dic = model_to_dict(i)
         obj_dic['page_count'] = page_count
         obj_dic['edit_time'] = str(i.edit_time)
@@ -81,15 +89,9 @@ def obt_dic(page_data,page_count):
         obj_dic['start_time'] = str(i.start_time)
         obj_dic['end_time'] = str(i.end_time)
         obj_dic['status'] = str(i.status)
-        if obt_dic['monitor_type'] ==1:
-            obt_dic['monitor_type'] = '基本监控项'
-        elif obt_dic['monitor_type'] ==2:
-            obt_dic['monitor_type'] = '图表监控项'
-        elif obt_dic['monitor_type'] == 3:
-            obt_dic['monitor_type'] = '作业监控项'
-        elif obt_dic['monitor_type'] == 4:
-            obt_dic['monitor_type'] = '流程监控项'
-        obj_list.append (obj_dic)
+
+
+        obj_list.append(obj_dic)
     return obj_list
 
 

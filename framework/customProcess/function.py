@@ -13,8 +13,11 @@ def select_all_nodes():
     node_list = []
     for node in node_info:
         dic1 = model_to_dict(node)
+        # 获取该节点对应的节点状态
         temp = TdCustProcessLog.objects.filter(node_id=node.id).get()
+        # 临时保存节点的执行时间
         do_time_ori = temp.do_time
+        # 节点执行时间置空，防止datetime类型在model_to_dict时转换报错
         temp.do_time = None
         dic2 = model_to_dict(temp)
         # 由于model_to_dict方法不支持datetime类型的数据直接转换字典，手动转换
@@ -22,7 +25,9 @@ def select_all_nodes():
             dic2['do_time'] = ''
         else:
             dic2['do_time'] = do_time_ori.strftime('%Y-%m-%d %H:%M:%S')
+        # 将节点状态放置到节点的status字段中
         dic1['status'] = dic2
+        # 将当前遍历的节点添加到列表中
         node_list.append(dic1)
     return node_list
 
@@ -31,33 +36,47 @@ def select_all_nodes():
 def select_nodes_pagination(node_info):
     result_dict = dict()
     list_set = list()
+    # 获取前台传递的参数：需要第几页的数据
     page = node_info['page']
+    # 获取前台传递的参数：每页有多少条数据
     limit = node_info['limit']
+    # 获取当前所有节点
     nodes_list = TbCustProcess.objects.all()
+    # 对所有节点进行分页处理
     paginator = Paginator(nodes_list, limit)
+    # 获取指定页的数据
     try:
         selected_set = paginator.page(page)
     except PageNotAnInteger:
         selected_set = paginator.page(1)
     except EmptyPage:
         selected_set = paginator.page(paginator.num_pages)
+    # 将当前页所有数据转换为字典对象，并添加到list中，统一传递到前端
     for selected_data in selected_set:
         temp = model_to_dict(selected_data)
         list_set.append(temp)
+    # 当前页的所有数据
     result_dict['items'] = list_set
+    # 当前的总页数
     result_dict['pages'] = paginator.num_pages
     return result_dict
 
 
-# 添加一个定制过程节点
+# 添加或修改一个定制过程节点
 def add_node(node):
     status_dic = dict()
+    # 添加/删除节点
     TbCustProcess(**node).save()
+    # 获取当前操作的节点
     last_node = TbCustProcess.objects.last()
+    # 判断该节点是否存在节点状态信息
     has_record = TdCustProcessLog.objects.filter(node_id=last_node.id).count()
+    # 如果该节点还没有状态信息则为添加的情况，新增一个状态信息，默认为未开始执行
     if 0 == has_record:
         TdCustProcessLog(node_id=last_node.id).save()
+    # 获取当前所有节点的数量
     items_count = TbCustProcess.objects.count()
+    # 默认每页5条记录，获取总页数
     pages = items_count // 5
     if 0 != items_count % 5:
         pages = pages + 1
@@ -71,6 +90,8 @@ def select_all_bkusers():
     users_list = list()
     bk_users = user_info.objects.all().filter(notice_style__isnull=False)
     for bk_user in bk_users:
+        if bk_user.notice_style not in ('wechat','sms','email'):
+            continue
         user_dict = model_to_dict(bk_user)
         users_list.append(user_dict)
     return users_list

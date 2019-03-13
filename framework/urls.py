@@ -36,7 +36,7 @@ urlpatterns = patterns(
     url(r'^db_connection_manage/', include('db_connection_manage.urls')),
     # 系统设置
     url(r'^system_config/', include('system_config.urls')),
-    url(r'^monitorScene/', include('monitorScene.urls')),
+    url(r'^monitor_scene/', include('monitor_scene.urls')),
     # 岗位管理
     url(r'^position/', include('position.urls')),
     url(r'market_day/', include('market_day.urls')),
@@ -54,7 +54,7 @@ urlpatterns = patterns(
     # 自定义查询
     url(r'^customQuery/', include('customQuery.urls')),
     #首页
-    # url(r'^home_page/', include('home_page.urls')),
+    url(r'^home_page/', include('home_page.urls')),
 
 )
 

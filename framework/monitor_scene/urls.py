@@ -12,7 +12,7 @@ See the License for the specific language governing permissions and limitations 
 from django.conf.urls import patterns
 
 urlpatterns = patterns(
-    'monitorScene.views',
+    'monitor_scene.views',
     (r'^$', 'index'),  # 首页--服务器选择页面
     (r'demo', 'demo'),
     (r'^monitor_show/$', 'monitor_show'),

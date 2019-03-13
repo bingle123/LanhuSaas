@@ -21,6 +21,7 @@
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
     <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
+    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/fontawesome/css/font-awesome.css" rel="stylesheet">
 </head>
 <style>
     .key {
@@ -30,7 +31,7 @@
     ul {
         list-style: none;
     }
-
+    div{border-radius: 5px;}
     .el-row {
         border: none;
     }
@@ -45,8 +46,8 @@
         border: none;
     }
 
-    p, i {
-        text-align: center;
+    p{
+
     }
 
     .score_input {
@@ -76,18 +77,61 @@
         background: rgb(255,255,255);
         line-height: 72px
     }
+    .el-collapse-item__header{
+        border-bottom: 2px solid #f6f6f6!important;
+        line-height: 54px!important;
+    }
+    .ifa{
+        min-height: 1500px;
+    }
+    .title .el-select .el-input__inner {
+
+        font-size: 16px;
+        font-family: PingFangSC-Medium;
+        color: #303133;
+        font-weight: bold;
+    }
+    p{
+
+        font-family: PingFang-SC-Medium;
+        font-size: 16px;
+        color: rgba(0,0,0,0.85);
+        line-height: 44px;
+        margin-left: 20px;
+        position: absolute;
+    }
+    .span_style{
+        display:block;
+        text-align:center;
+        line-height:55px;
+        width: 100%;
+        height: 55px;
+        border-radius: 5px;
+    }
+    .error{background:red}
+    .success{background:#409EFF}
+    .progress{background:orange}
+    .red_class{
+        color:red
+    }
+    .blue_class{
+        color:blue
+    }
+    .orange_class{
+        color:orange;
+    }
+    .grey_class{
+        color: #B0B8C2;
+    }
 </style>
 
 <body style="background: rgb(246,246,246)">
 <div id="maintenanceIndex">
-
-
-
         <!--首页-->
         <el-row>
             <el-col :span="24">
                 <div id="maintenanceTitle" style="background: rgb(246,246,246)">
-                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;">首页</span>
+                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: rgba(0,0,0,0.85);margin-left: 10px">首页</span>
                 </div>
             </el-col>
         </el-row>
@@ -95,8 +139,8 @@
         <el-row class="row_margin row_shadow">
             <el-col :span="24">
                 <div id="system_state" class="title">
-                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;margin-left: 10px">系统状态</span>
-                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;float: right;margin-right: 10px">交易日：2019年03月15日 23:45</span>
+                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">系统状态</span>
+                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;float: right;margin-right: 10px" v-text="now_date_name+now_date_time"></span>
                 </div>
             </el-col>
         </el-row>
@@ -105,22 +149,33 @@
             <el-col :span="6">
                 <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
                     <p>健康度</p>
+                    <div style="text-align: center;padding-top: 44px">
+                        <el-progress type="circle" :percentage="percentage" status="text">{{ percentage }}%</el-progress>
+                    </div>
                 </div>
             </el-col>
             <el-col :span="6">
                 <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
                     <p>场景状态</p>
+                    <div style="text-align: center;width: 95%;height: 200px" id="maintenancePie1">
+
+                    </div>
                 </div>
             </el-col>
             <el-col :span="6">
                 <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
                     <p>告警数</p>
+                    <div style="text-align: center;padding-top: 44px">
+                        <el-progress type="circle" :percentage="100" status="text" color="red">{{ alarm_number }}</el-progress>
+                    </div>
                 </div>
             </el-col>
             <el-col :span="6">
                 <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
                     <p>自定义添加</p>
-                    <i></i>
+                    <div style="text-align: center;padding-top: 80px">
+                        <i class="fa fa-3x fa-plus" style="color: #D8D8D8"></i>
+                    </div>
                 </div>
             </el-col>
         </el-row>
@@ -128,97 +183,78 @@
         <el-row class="row_shadow">
             <el-col :span="24">
                 <div id="system_run_show" class="title" style="margin-bottom: 5px">
-                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;margin-left: 10px">各系统运行情况展示</span>
+                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">各系统运行情况展示</span>
                 </div>
             </el-col>
         </el-row>
         <!--情况展示-->
         <el-row :gutter="10" style="margin: 0 0 20px 0;background: rgb(255,255,255);">
-            <el-col :span="3" style="margin: 20px auto">
-                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
+            <el-col v-for="(i,index) in system_run_data" :key="index" :span="3" style="margin: 20px auto">
+                <span class="span_style" :class=i.status>{{ i.name }}</span>
             </el-col>
-            <el-col :span="3" style="margin: 20px auto">
-                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
-            </el-col>
-            <el-col :span="3" style="margin: 20px auto">
-                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
-            </el-col>
-            <el-col :span="3" style="margin: 20px auto">
-                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
-            </el-col>
-            <el-col :span="3" style="margin: 20px auto">
-                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
-            </el-col>
-            <el-col :span="3" style="margin: 20px auto">
-                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
-            </el-col>
-            <el-col :span="3" style="margin: 20px auto">
-                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
-            </el-col>
-            <el-col :span="3" style="margin: 20px auto">
-                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
-            </el-col>
-            <el-col :span="3" style="margin: 20px auto">
-                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
-            </el-col>
-            <el-col :span="3" style="margin: 20px auto">
-                <span style="display:block;text-align:center;line-height:55px;width: 100%;height: 55px;background: #015991">集中交易系统</span>
-            </el-col>
+
         </el-row>
         <!--告警-->
         <el-row class="row_margin row_shadow" style="margin-bottom: 10px;background: rgb(255,255,255);">
             <el-col :span="24">
-                <div id="system_state" class="title">
-                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;margin-left: 10px">告警</span>
-                    <span style="font-size: 30px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;float: right;margin-right: 20px"><i class="el-icon-arrow-up"></i></span>
-                </div>
-            </el-col>
-            <el-col :span="22" :offset="1">
-                <el-table :data="scene_table_data" style="width: 100%;margin-bottom: 50px;">
-                  <el-table-column prop="scene_id" label="场景id" width="100"></el-table-column>
-                  <el-table-column prop="scene_name" label="场景名称" width="150"></el-table-column>
-                  <el-table-column prop="scene_node" label="节点" width="150"></el-table-column>
-                  <el-table-column prop="start_time" label="开始时间" width="450"></el-table-column>
-                  <el-table-column prop="end_time" label="截至时间" width="450"></el-table-column>
-                  <el-table-column prop="scene_status" label="状态" width="150"></el-table-column>
-                </el-table>
+                <el-collapse accordion>
+                    <el-collapse-item>
+                        <template slot="title">
+                            <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">告警</span>
+                        </template>
+                        <el-col :span="22" :offset="1">
+                            <el-table :data="alarm_table_data" style="width: 100%;margin-bottom: 50px;">
+                                <el-table-column prop="alarm_contents" label="警告内容" width="350"></el-table-column>
+                                <el-table-column prop="alarm_time" label="时间" width="350"></el-table-column>
+                                <el-table-column prop="alarm_level" label="级别" width="350">
+                                    <template scope="scope">
+                                        <span :class="{red_class: (scope.row.alarm_level === '危险')}">{{ scope.row.alarm_level }}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="alarm_status" label="状态" width="350"></el-table-column>
+
+                            </el-table>
+                        </el-col>
+
+                    </el-collapse-item>
+                </el-collapse>
             </el-col>
         </el-row>
         <!--场景-->
         <el-row class="row_shadow" style="margin-bottom: 10px;">
             <el-col :span="24" style="border: none">
                 <div id="system_run_show" style="background: rgb(255,255,255);line-height: 72px;">
-                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;margin-left: 10px">场景</span>
+                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">场景</span>
                 </div>
             </el-col>
         </el-row>
         <!--场景内容-->
         <el-row class="row_shadow" style="margin-bottom: 10px;background: rgb(255,255,255);">
             <el-col :span="24"class="title" style="border-bottom: 2px solid #f6f6f6">
-                <el-col :span="7" :offset="1" style="border: none;">
-                    <label for="" style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;">场景时间段：</label>
-                    <el-select v-model="value" placeholder="请选择">
+                <el-col :span="7" :offset="1">
+                    <label for="" style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;">场景时间段：</label>
+                    <el-select v-model="value1" placeholder="请选择">
                         <el-option
-                          v-for="item in options"
+                          v-for="item in options1"
                           :key="item.value"
                           :label="item.label"
                           :value="item.value">
                         </el-option>
                     </el-select>
                 </el-col>
-                <el-col :span="7" :offset="1" style="border: none;">
-                    <label for="" style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;">状态：</label>
-                    <el-select v-model="value" placeholder="请选择">
+                <el-col :span="7" :offset="1">
+                    <label for="" style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;">状态：</label>
+                    <el-select v-model="value2" placeholder="请选择">
                         <el-option
-                          v-for="item in options"
+                          v-for="item in options2"
                           :key="item.value"
                           :label="item.label"
                           :value="item.value">
                         </el-option>
                     </el-select>
                 </el-col>
-                <el-col :span="8" style="border: none;">
-                    <el-button type="primary" style="float:right;margin:20px 20px 0 0;font-size: 18px;font-family: PingFangSC-Regular;color: rgb(255, 255, 255);;font-weight: bold;">已完成场景</el-button>
+                <el-col :span="8">
+                    <el-button type="primary" style="float:right;margin:20px 20px 0 0;font-size: 16px;font-family: PingFangSC-Medium;color: rgb(255, 255, 255);;font-weight: bold;">已完成场景</el-button>
                 </el-col>
             </el-col>
             <el-col :span="22" :offset="1">
@@ -228,32 +264,46 @@
                   <el-table-column prop="scene_node" label="节点" width="150"></el-table-column>
                   <el-table-column prop="start_time" label="开始时间" width="450"></el-table-column>
                   <el-table-column prop="end_time" label="截至时间" width="450"></el-table-column>
-                  <el-table-column prop="scene_status" label="状态" width="150"></el-table-column>
+                  <el-table-column prop="scene_status" label="状态" width="150">
+                      <template scope="scope">
+                          <span :class="{red_class: scope.row.scene_status === '异常', orange_class: (scope.row.scene_status === '提醒'),grey_class: (scope.row.scene_status === '未执行')}">{{ scope.row.scene_status }}</span>
+                      </template>
+                  </el-table-column>
                 </el-table>
             </el-col>
         </el-row>
         <!--自定义报表-->
         <el-row class="row_margin row_shadow">
             <el-col :span="24">
-                <div id="system_state" class="title">
-                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;margin-left: 10px">自定义报表</span>
-                    <span style="font-size: 30px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;float: right;margin-right: 20px"><i class="el-icon-arrow-up"></i></span>
-                </div>
+                <el-collapse accordion>
+                    <el-collapse-item>
+                        <template slot="title">
+                            <span style="line-height:54px;font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">自定义报表</span>
+                        </template>
+                        <el-col :span="22" :offset="1">
+                            <el-table :data="scene_table_data" style="width: 100%;margin-bottom: 50px;">
+                                <el-table-column prop="scene_id" label="场景id" width="100"></el-table-column>
+                                <el-table-column prop="scene_name" label="场景名称" width="150"></el-table-column>
+                                <el-table-column prop="scene_node" label="节点" width="150"></el-table-column>
+                                <el-table-column prop="start_time" label="开始时间" width="450"></el-table-column>
+                                <el-table-column prop="end_time" label="截至时间" width="450"></el-table-column>
+                                <el-table-column prop="scene_status" label="状态" width="150"></el-table-column>
+                            </el-table>
+                        </el-col>
+
+                    </el-collapse-item>
+                </el-collapse>
             </el-col>
         </el-row>
         <!--自定义添加-->
         <el-row class="row_margin row_shadow">
             <el-col :span="24">
                 <div id="system_state" class="title">
-                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;margin-left: 10px">自定义添加</span>
-                    <span style="font-size: 30px;font-family: PingFangSC-Regular;color: #303133;font-weight: bold;float: right;margin-right: 20px"><i class="el-icon-circle-plus-outline"></i></span>
+                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">自定义添加</span>
+                    <span style="font-size: 30px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;float: right;margin-right: 20px"><i class="el-icon-circle-plus-outline"></i></span>
                 </div>
             </el-col>
         </el-row>
-
-
-
-
 </div>
 </body>
 <script type="text/javascript">
@@ -263,29 +313,16 @@
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
         return config
     });
+    window.onresize = function() {
+        $('#maintenancePie1').width('100%');
+        ve.myChart.resize();
+    };
     var ve = new Vue({
         el: '#maintenanceIndex',
         data: {
-            maintenanceTableData: [{
-                sum: 56,
-                done: 8,
-                doneRate: '14.29%',
-                error: 6,
-                errorRate: '10.71%',
-                doing: 10,
-                unexec: 32,
-            }],
-            x: 2,
-            isfram: 1,
-            scenes: '',
-            items_data: '',
-            drigging_id: 1,
-            show_c: '',
-            selector_id:'',
-            selector_type:'',
-            selector_canvas:'',
-            selector_template:'',
-            options: [{
+            percentage:100,
+            options1: [
+                {
               value: '选项1',
               label: '黄金糕'
             }, {
@@ -301,81 +338,195 @@
               value: '选项5',
               label: '北京烤鸭'
             }],
-            value: '',
-            scene_table_data: [{
+            value1:'',
+            options2: [
+                {
+              value: '选项1',
+              label: '黄金糕'
+            }, {
+              value: '选项2',
+              label: '双皮奶'
+            }, {
+              value: '选项3',
+              label: '蚵仔煎'
+            }, {
+              value: '选项4',
+              label: '龙须面'
+            }, {
+              value: '选项5',
+              label: '北京烤鸭'
+            }],
+            value2: '',
+            scene_table_data: [
+                {
+                scene_id:1,
+                scene_name: '王小虎',
+                scene_node: '1',
+                start_time: '2016-05-02',
+                end_time: '2016-05-02',
+                scene_status:'异常'
+              },{
+                scene_id:1,
+                scene_name: '王小虎',
+                scene_node: '1',
+                start_time: '2016-05-02',
+                end_time: '2016-05-02',
+                scene_status:'提醒'
+              },{
                 scene_id:1,
                 scene_name: '王小虎',
                 scene_node: '1',
                 start_time: '2016-05-02',
                 end_time: '2016-05-02',
                 scene_status:'正在执行'
-              },{
-                id:1,
+              },
+                {
+                scene_id:1,
                 scene_name: '王小虎',
                 scene_node: '1',
                 start_time: '2016-05-02',
                 end_time: '2016-05-02',
-                scene_status:'正在执行'
-              },{
-                id:1,
-                scene_name: '王小虎',
-                scene_node: '1',
-                start_time: '2016-05-02',
-                end_time: '2016-05-02',
-                scene_status:'正在执行'
+                scene_status:'未执行'
               },
               ],
+            myChart:'',
+            alarm_number:'12',
+            system_run_data:[
+                {
+                    name:'集中交易系统',
+                    status:'success'
+                },
+                {
+                    name:'公募基金系统',
+                    status:'success'
+                },
+                {
+                    name:'集中运营系统',
+                    status:'success'
+                },
+                {
+                    name:'集中交易系统',
+                    status:'progress'
+                },
+                {
+                    name:'公募基金系统',
+                    status:'progress'
+                },
+                {
+                    name:'集中运营系统',
+                    status:'progress'
+                },
+                {
+                    name:'集中交易系统',
+                    status:'error'
+                },
+                {
+                    name:'公募基金系统',
+                    status:'error'
+                },
+                {
+                    name:'集中运营系统',
+                    status:'error'
+                },
+
+            ],
+            alarm_table_data:[
+                {
+                    alarm_contents:'计算数据导入',
+                    alarm_time:'2019-02-27 14:33:50',
+                    alarm_level:'危险',
+                    alarm_status:'告警'
+                },
+                {
+                    alarm_contents:'新意接口导出',
+                    alarm_time:'2019-02-28 14:33:50',
+                    alarm_level:'危险',
+                    alarm_status:'告警'
+                },
+                {
+                    alarm_contents:'结算数据处理',
+                    alarm_time:'2019-02-26 14:33:50',
+                    alarm_level:'一般',
+                    alarm_status:'告警'
+                },
+
+            ],
+            now_date_time:'',
+            now_date_name:'',
         },
         methods: {
-            hiden() {
-                window.location.reload()
-            },
-            scene() {
-                ve.isfram = 2
-                axios.post('${SITE_URL}monitorScene/getSceneByid/' + ve.x + '/',)
-                    .then((res) => {
-                            ve.items_data = res.data.results
-                            if (ve.items_data != '') {
-                                ve.echar_pattern()
-                            }
-                        }
-                    );
-            },
-            echar_pattern() {
-                for (var i = 0; i < ve.items_data.length; i++) {
-                    if (ve.items_data[i]['monitor_type'] == '作业单元类型') {
-                        //"<div type=\""+ 'job'+ve.items_data[i]['id'] + "\" style=\"position:absolute;left:" + ve.items_data[i]['x']+'px;' + "top:" + ve.items_data[i]['y']+'px;' +"width:"+ve.items_data[i]['width']+'px;'+"height:"+ve.items_data[i]['height']+'px;'+ "\"></div>"
-                        $('#mychart').append("<div type=\"" + 'job' + ve.items_data[i]['id'] + "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"></div>");
-                        job_monitor(ve.items_data[i])
 
-                    } else if (ve.items_data[i]['monitor_type'] == '图表单元类型') {
-                        ve.drigging_id = ve.drigging_id + 1;
-                        ve.show_c = 'show' + ve.drigging_id;
-                        $('#mychart').append("<div id=\"" + ve.show_c + "\" style= \"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"><div style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' +"top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"></div></div>");
-                        show_chart(ve.items_data[i]['id'], ve.items_data[i]['gather_params'], ve.items_data[i]['height'], ve.items_data[i]['width'], ve.show_c, ve.items_data[i]['contents'])
-                    } else if (ve.items_data[i]['monitor_type'] == '流程单元类型') {
-
-                        ve.drigging_id = ve.drigging_id + 1;
-                        ve.selector_id = 'flow' + ve.drigging_id;
-                        ve.selector_type = 'flow_monitor' + ve.drigging_id
-                        ve.selector_canvas = 'canvas' + ve.drigging_id
-                        ve.selector_template = 'template' + ve.drigging_id
-                        $('#mychart').append("<div type =\"" + ve.selector_type + "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"></div>");
-                        //$('#mychart').append("<div id=\"" + ve.selector_id + "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\">" +
-                           // "<div id=\"" + ve.selector_canvas+ "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"></div>" +
-                           // "<div id=\"" + ve.selector_template+ "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "width:" + ve.items_data[i]['width'] + 'px;' + "height:" + ve.items_data[i]['height'] + 'px;' + "\"></div></div>");
-                        flow_monitor([{"id": ve.items_data[i]['jion_id']}], ve.drigging_id)
-
-                    } else {
-                        //"<div type=\"" + 'basic'+ve.items_data[i]['id'] + "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;'+"top:" + ve.items_data[i]['y'] + 'px;' + "\"></div>"
-                        $('#mychart').append("<div type=\"" + 'basic' + ve.items_data[i]['id'] + "\" style=\"position:absolute;left:" + ve.items_data[i]['x'] + 'px;' + "top:" + ve.items_data[i]['y'] + 'px;' + "\"></div>");
-                        base_monitor(ve.items_data[i]['id'], ve.items_data[i]['font_size'], ve.items_data[i]['height'], ve.items_data[i]['width'], ve.items_data[i]['contents'])
-                    }
+            show_chart1(){
+                if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
+                    this.myChart.dispose();
                 }
+                this.myChart = echarts.init(document.getElementById('maintenancePie1'), 'macarons');
+                var option = {
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    color:['red','orange','#409EFF'],
+                    legend: {
+                        orient : 'vertical',
+                        x : 'right',
+                        y : 'bottom',
+                        data:['危险','预警','正常']
+                    },
+                    calculable : true,
+                    series : [
+                        {
+                            name:'访问来源',
+                            type:'pie',
+                            radius : ['50%', '60%'],
+                            itemStyle : {
+                                normal : {
+                                    label : {
+                                        show : false
+                                    },
+                                    labelLine : {
+                                        show : false
+                                    }
+                                },
+                                emphasis : {
+                                    label : {
+                                        show : true,
+                                        position : 'center',
+                                        textStyle : {
+                                            fontSize : '16',
+                                            fontWeight : 'bold'
+                                        }
+                                    }
+                                }
+                            },
+                            data:[
+                                {value:335, name:'危险'},
+                                {value:310, name:'预警'},
+                                {value:234, name:'正常'},
+
+                            ]
+                        }
+                    ]
+                };
+                this.myChart.setOption(option);
+            },
+            get_date(){
+                axios.post('${SITE_URL}home_page/get_time/').then((res)=>{
+                    ve.now_date_time = res.data['time_date']
+                    ve.now_date_name = res.data['today_name']+":"
+                    console.log(res.data)
+                })
+            },
+            get_alert_data(){
+                axios.post('${SITE_URL}home_page/scenes_alert/').then((res)=>{
+                    console.log(res)
+                })
             },
         }
     });
-
+    ve.get_date();
+    ve.show_chart1();
+    ve.get_alert_data();
 </script>
 
 </html>

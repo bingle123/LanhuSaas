@@ -52,6 +52,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='position_scene',
             name='scene',
-            field=models.ForeignKey(related_name='scene_id', to='monitorScene.Scene'),
+            field=models.ForeignKey(related_name='scene_id', to='monitor_scene.Scene'),
         ),
     ]

@@ -50,11 +50,13 @@ def selecthor(request):
     search = res['search']
     page = res['page']
     limit = res['limit']
+    #如果搜索内容为空，搜索所有
     if None is not search and '' != search:
         sciencenews = Conn.objects.filter(Q(connname__contains=search)|Q(type__contains=search)|Q(ip__contains=search)\
                                       |Q(port__contains=search)|Q(username__contains=search)|Q(databasename__contains=search))
     else:
         sciencenews = Conn.objects.all()
+    #将数据分页
     p = Paginator(sciencenews, limit)
     try:
         selected_set = p.page(page) #获取第page页的数据
@@ -65,7 +67,9 @@ def selecthor(request):
         password = conn['password']
         conn['password'] = decrypt_str(password)
         list_set.append(conn)
+    #返回页码内容
     result_dict['items'] = list_set
+    #返回总页数
     result_dict['pages'] = p.num_pages
     return result_dict
 
@@ -80,10 +84,12 @@ def saveconn_all(request):
         res['createname'] = user['data']['bk_username']
         res['editname'] = user['data']['bk_username']
 
+        #密码加密后保存
         password = encryption_str(res['password'])
         res['password'] = password
         re = Conn(**res).save()
         status_dic = {}
+        #计算总页数，取5有余就+1页
         items_count = Conn.objects.count()
         pages = items_count / 5
         if 0 != items_count % 5:
@@ -104,17 +110,16 @@ def saveconn_all(request):
 #修改
 def editconn(request):
     try:
+        #拿到当前用户，保存为修改人
         res = json.loads(request.body)
         cilent = tools.interface_param(request)
         user = cilent.bk_login.get_user({})
         res['editname'] = user['data']['bk_username']
         res['edittime'] = datetime.datetime.now()
-
+        #点修改密码进行解密
         password = encryption_str(res['password'])
         res['password'] = password
         re1 = Conn.objects.filter(id=res['id']).update(**res)
-
-
         info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,get_active_user(request)['data']['bk_username'], '成功', '无')
         add_log(info)
         return tools.success_result(re1)
@@ -132,8 +137,8 @@ def delete_conn(request,id):
         info = make_log_info(u'删除数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
         add_log(info)
-
         status_dic = {}
+        #删除完后重新计算页数
         items_count = Conn.objects.count()
         pages = items_count / 5
         if 0 != items_count % 5:
@@ -318,8 +323,10 @@ def selecthor2(request):
 #获取角色对应的菜单名和Url
 def get_user_muenu(request):
     cilent = tools.interface_param(request)
+    #蓝鲸平台获取当前用户，取得当前用户的角色id
     # user = cilent.bk_login.get_user({})
     # bk_roleid = user['data']['bk_role']
+    #根据菜单和角色表查出该角色对应的菜单
     role_muenus = rm.objects.filter(roleid=1)
     temp_list = []
     for i in role_muenus:
@@ -340,6 +347,7 @@ def addmuenus(request):
         res = json.loads(request.body)
         re = Muenu(**res).save()
         items_count = Muenu.objects.count()
+        #增加菜单后重新查看总页数
         pages = items_count / 5
         if 0 != items_count % 5:
             pages = pages + 1
@@ -367,7 +375,6 @@ def edit_muenu(request):
         info = make_log_info(u'修改菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
         add_log(info)
-
         return tools.success_result(re1)
     except Exception as e:
         res1 = tools.error_result(e)
@@ -379,6 +386,7 @@ def edit_muenu(request):
 
 #删除菜单
 def delete_muenu(request,id):
+    #先删除菜单，再删除该菜单下的所有角色，两表无外键Id
     try:
         Muenu.objects.get(id=id).delete()
         rm.objects.filter(muenuid=id).all().delete()
@@ -406,15 +414,20 @@ def get_roleAmuenus(request):
     tree=[]
     for x in roles:
         temp = {}
+        #获取所有菜单
         muenu_ids = rm.objects.filter(roleid=x.rid)
+        #菜单名称
         temp['label']=x.rname
+        #每个菜单对应的id
         temp['id']=x.rid
         childrens=[]
         for menu in menus:
             chi={}
+            #树对应的Id,以及label,经过处理的树id不重复
             chi['id']=(x.rid+1)*100+menu.id
             chi['label']=menu.mname
             childrens.append(chi)
+        #返回树的数据
         temp['children']=childrens
         tree.append(temp)
     return tree
@@ -424,28 +437,34 @@ def checked_menu(request):
     objs=rm.objects.all()
     ids=[]
     for obj in objs:
+        #获取经过处理的树Id
         temp_id=(obj.roleid+1)*100+obj.muenuid
         ids.append(temp_id)
     return  ids
 
 
-#获取所有节点菜单
+#更新角色菜单权限
 def savemnus(request):
     ids = json.loads(request.body)
+    #保留角色菜单中间表
     res = rm.objects.all()
     ms = res
     x = 0
     z = 0
     parent_id = []
     son_id = []
+    #获取拿到数据第一个值，如果为数字型数组，则权限未发生变动
     if isinstance(ids[0],int):
         return 1
+    #如果获取的是对象数组，则变动了
     else:
+        #保存角色菜单前先删除中间表，中间表不为空则删除
         if res is not None:
             de = rm.objects.all().delete()
             try:
                 for i in ids:
                     if ('children' not in i) and ('label' in i):
+                        #逐个树id还原成菜单id(之前经过处理 树id = (角色id+1)*100+菜单Id)
                         x = i['id'] / 100
                         z = i['id'] % 100
                         x = int(x)

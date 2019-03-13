@@ -16,6 +16,7 @@ from db_connection.function import get_db
 from gatherData.function import gather_data
 from datetime import datetime
 import pytz
+from position.models import *
 from market_day.models import Area
 from market_day.function import tran_time_china,tran_china_time_other,check_jobday
 
@@ -410,7 +411,7 @@ def getBySceneId(request,id):
         dic_data.append(item)
     return tools.success_result(dic_data)
 
-
+#轮播测试
 def alternate_play_test(request):
     res = json.loads (request.body)
     #接收参数
@@ -420,6 +421,7 @@ def alternate_play_test(request):
     res_list = get_scenes(pos_id,start,end)
     return res_list
 
+#大屏轮播
 def alternate_play(request):
     # 获取当前用户
     username = get_active_user(request)['data']['bk_username']
@@ -430,7 +432,7 @@ def alternate_play(request):
     res_list = get_scenes(pos_id,'','')
     return  res_list
 
-
+#获取轮播页面
 def get_scenes(pos_id,start,end):
     """
     :param position: 岗位名id
@@ -441,20 +443,20 @@ def get_scenes(pos_id,start,end):
     res_list = []
     scenes = []
     # 获取岗位对应的场景
-    scene = position_scene.objects.filter (position_id=pos_id)
+    position_scenes = position_scene.objects.filter (position_id=pos_id)
     #判断是否为轮播测试；false就是测试
-    ff=False
+    is_alternate_test=False
     if start == '' and end == '':
-        ff=True
-    for x in scene:
-        scenes.append (x.scene_id)
+        is_alternate_test=True
+    for pos_scene in position_scenes:
+        scenes.append (pos_scene.scene_id)
     # 遍历scenes,获取每个场景对应的监控项
-    for z in scenes:
+    for scene in scenes:
         # 场景
-        temp_scene = Scene.objects.get(id=z)
+        temp_scene = Scene.objects.get(id=scene)
         #
         flag=True
-        if ff:
+        if is_alternate_test:
             id=temp_scene.scene_area
             timezone = Area.objects.get(id=id).timezone
             tz = pytz.timezone(timezone)
@@ -469,15 +471,15 @@ def get_scenes(pos_id,start,end):
             flow_list = []
             job_list = []
             temp_list = []
-            scene_monitor_id = []
+            scene_monitor_ids = []
             # 场景对应的监控项id
-            scene_monitor = Scene_monitor.objects.filter(scene_id = z)
-            for k in scene_monitor:
+            scene_monitors = Scene_monitor.objects.filter(scene_id = scene)
+            for scene_mon in scene_monitors:
                 #items_id.append(k.item_id)
-                scene_monitor_id.append(k.id)
+                scene_monitor_ids.append(scene_mon.id)
             # 遍历场景的场景—监控项ID
-            for j in scene_monitor_id:
-                item_id = Scene_monitor.objects.get(id=j).item_id
+            for scene_mon_id in scene_monitor_ids:
+                item_id = Scene_monitor.objects.get(id=scene_mon_id).item_id
                 # 获取基本数据
                 item = Monitor.objects.get(id=item_id)
                 # 转成字典
@@ -510,7 +512,7 @@ def get_scenes(pos_id,start,end):
                 # # 拼接监控项基础数据和采集数据
                 # item_dict = dict (item_dict, **dic)
                 #拼接tl_scene_monitor信息
-                scene_monitor = Scene_monitor.objects.get(id = j)
+                scene_monitor = Scene_monitor.objects.get(id = scene_mon_id)
                 scene_monitor_dict = {
                     'x':scene_monitor.x,
                     'y':scene_monitor.y,
@@ -542,7 +544,7 @@ def get_scenes(pos_id,start,end):
             }
             temp_list.append (data)
             scene_dict = {
-                'scene_id': z,
+                'scene_id': scene,
                 'scene_content':temp_list
             }
             res_list.append(scene_dict)

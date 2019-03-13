@@ -60,6 +60,7 @@ def gather_test_init():
 
 # 采集参数解析
 def gather_param_parse(info):
+    # 声明全局变量-采集时间
     global GATHER_TIME
     # 采集参数对象
     gather_params = dict()
@@ -175,7 +176,7 @@ def fi_kv_process(json_dict):
     for key, value in json_dict.items():
         temp = dict()
         if isinstance(value, dict):
-            # json字符串编码为避免生成unicode字符串需加上ensure_ascii=False
+            # json字符串编码为避免生成字符集问题需加上ensure_ascii=False
             temp['value'] = json.dumps(value, ensure_ascii=False)
         else:
             temp['value'] = value
@@ -186,7 +187,7 @@ def fi_kv_process(json_dict):
 
 # 采集方法，返回参数gather_status为ok采集正常，返回empty采集结果为空，返回error采集规则错误
 def gather_data(**info):
-
+    # 声明全局变量-采集时间
     global GATHER_TIME
     # 采集测试参数初始化，实际使用时关闭
     # info = gather_test_init()
@@ -359,6 +360,7 @@ def gather_data(**info):
 
 
 def execute_script(client, script_content, script_params, item_id, execute_type, execute_server):
+    # 声明全局变量-采集时间
     global GATHER_TIME
     # 蓝鲸业务ID，暂固定为2
     biz_id = '2'
@@ -388,6 +390,7 @@ def execute_script(client, script_content, script_params, item_id, execute_type,
 
 
 def get_execute_result(client, job_instance_id, item_id, execute_type):
+    # 声明全局变量-采集时间
     global GATHER_TIME
     # 向蓝鲸平台请求执行作业平台日志
     job_log_bk_params = {
