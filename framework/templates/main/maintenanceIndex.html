@@ -81,9 +81,6 @@
         border-bottom: 2px solid #f6f6f6!important;
         line-height: 54px!important;
     }
-    .ifa{
-        min-height: 1500px;
-    }
     .title .el-select .el-input__inner {
 
         font-size: 16px;
@@ -166,7 +163,7 @@
                 <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
                     <p>告警数</p>
                     <div style="text-align: center;padding-top: 44px">
-                        <el-progress type="circle" :percentage="100" status="text" color="red">{{ alarm_number }}</el-progress>
+                        <el-progress type="circle" :percentage="100" status="text" color="red">{{ alert_number }}</el-progress>
                     </div>
                 </div>
             </el-col>
@@ -203,15 +200,15 @@
                             <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">告警</span>
                         </template>
                         <el-col :span="22" :offset="1">
-                            <el-table :data="alarm_table_data" style="width: 100%;margin-bottom: 50px;">
-                                <el-table-column prop="alarm_contents" label="警告内容" width="350"></el-table-column>
-                                <el-table-column prop="alarm_time" label="时间" width="350"></el-table-column>
-                                <el-table-column prop="alarm_level" label="级别" width="350">
+                            <el-table :data="alert_table_data" style="width: 100%;margin-bottom: 50px;">
+                                <el-table-column prop="alert_content" label="警告内容" width="350"></el-table-column>
+                                <el-table-column prop="alert_time" label="时间" width="350"></el-table-column>
+                                <el-table-column prop="alert_level" label="级别" width="350">
                                     <template scope="scope">
-                                        <span :class="{red_class: (scope.row.alarm_level === '危险')}">{{ scope.row.alarm_level }}</span>
+                                        <span :class="{red_class: (scope.row.alert_level === '危险')}">{{ scope.row.alert_level }}</span>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="alarm_status" label="状态" width="350"></el-table-column>
+                                <el-table-column prop="alert_status" label="状态" width="350"></el-table-column>
 
                             </el-table>
                         </el-col>
@@ -320,7 +317,7 @@
     var ve = new Vue({
         el: '#maintenanceIndex',
         data: {
-            percentage:100,
+            percentage:0,
             options1: [
                 {
               value: '选项1',
@@ -390,7 +387,7 @@
               },
               ],
             myChart:'',
-            alarm_number:'12',
+            alert_number:0,
             system_run_data:[
                 {
                     name:'集中交易系统',
@@ -430,27 +427,7 @@
                 },
 
             ],
-            alarm_table_data:[
-                {
-                    alarm_contents:'计算数据导入',
-                    alarm_time:'2019-02-27 14:33:50',
-                    alarm_level:'危险',
-                    alarm_status:'告警'
-                },
-                {
-                    alarm_contents:'新意接口导出',
-                    alarm_time:'2019-02-28 14:33:50',
-                    alarm_level:'危险',
-                    alarm_status:'告警'
-                },
-                {
-                    alarm_contents:'结算数据处理',
-                    alarm_time:'2019-02-26 14:33:50',
-                    alarm_level:'一般',
-                    alarm_status:'告警'
-                },
-
-            ],
+            alert_table_data:[],          //告警表格数据
             now_date_time:'',
             now_date_name:'',
         },
@@ -515,16 +492,27 @@
                     ve.now_date_time = res.data['time_date']
                     ve.now_date_name = res.data['today_name']+":"
                     console.log(res.data)
+                }).catch(function (e) {
+                    ve.$message.error('获取时间失败！');
                 })
             },
             get_alert_data(){
                 axios.post('${SITE_URL}home_page/scenes_alert/').then((res)=>{
-                    console.log(res)
+                    ve.percentage=res.data['last_score'];
+                    ve.alert_number=res.data['alert_count'];
+                    ve.alert_table_data=res.data['alert_data'];
+
+                    console.log(ve.alert_table_data)
+                }).catch(function (e) {
+                    ve.$message.error('获取数据失败！');
                 })
             },
         }
     });
     ve.get_date();
+    setInterval(function () {
+        ve.get_date();
+    },10000)
     ve.show_chart1();
     ve.get_alert_data();
 </script>

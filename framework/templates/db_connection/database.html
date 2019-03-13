@@ -280,16 +280,11 @@
 
         },
         methods: {
-            lcz(){
-                axios.post('${SITE_URL}home_page/get_date/').then((res)=>{
-                    console.log(res)
-                })
-            },
-            //搜索
+            //点击搜索按钮，执行跳页方法
             select_table() {
                 ve.current_change(1)
             },
-            //换页
+            //点击页码，翻页
             current_change(value) {
                 axios({
                     method: 'post',

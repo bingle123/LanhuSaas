@@ -79,7 +79,7 @@
                         </el-col>
                     </el-row>
                 </div>
-                <el-col :span="5" style="margin-top: 5px">
+                <el-col :span="4" style="margin-top: 5px">
                     <el-select placeholder="请选择日志类型" v-model="log_type" @change="change_type">
                         <el-option label="日志查询" value="log"></el-option>
                         <el-option label="执行告警信息查询" value="alert"></el-option>
@@ -91,16 +91,16 @@
                 </el-col>
 
                 <div id="hide_m" style="display:none">
-                    <el-row type="flex">
-                        <el-col :span="2"><a>场景：</a></el-col>
-                        <el-col :span="3" style="margin-top: 5px">
+                    <el-row type="flex" align="middle">
+                        <el-col :span="1"  style="margin-left: 20px">场景:</el-col>
+                        <el-col :span="3">
 
                             <el-select placeholder="请选择场景" v-model="Cscene" value-key="id" @change="chose_scenes">
                                 <el-option v-for="item in scenes_data" :label="item.sname" :key="item.id"
                                            :value="item"></el-option>
                             </el-select>
                         </el-col>
-                        <el-col :span="2"><span>日期:</span></el-col>
+                        <el-col :span="1"  style="margin-left: 20px">日期:</el-col>
                         <el-col :span="3" style="margin-top: 5px">
                             <el-date-picker
                                     v-model="scene_time"
@@ -780,9 +780,9 @@ let vm = new Vue({
             //最后画图，出表
             drawging_() {
                 if (vm.Cscene == '') {
-                    alert('请选择场景');
+                    this.$message('请选择场景');
                 } else if (vm.scene_time == '') {
-                    alert('请选择日期');
+                     this.$message('请选择日期');
                 } else {
                     axios({
                         method: 'post',
@@ -793,20 +793,20 @@ let vm = new Vue({
                         },
                     }).then((res) => {
                         if(res.data.code == 1){
-                            alert('此场景没有监控项')
+                            this.$message('此场景没有监控项');
                             $("#scene_et").html('');
                             $("#get_days").css('display','none');
                         }else {
                             vm.pattern_data = res.data.results;
                             if(typeof res.data.results == 'number'){
                                 if(res.data.results < 3){
-                                    alert('日期间隔需要大于3天');
+                                    this.$message('日期间隔需要大于3天');
                                     $("#scene_et").html('');
                                     $("#get_days").css('display','none');
                                 }else if(res.data.results > 15){
-                                    alert('日期最多选15天，请重新选择');
+                                    this.$message('日期最多选15天，请重新选择');
                                 }else{
-                                    alert('此期间不足3条数据');
+                                    this.$message('此期间不足3条数据');
                                    $("#scene_et").html('');
                                    $("#get_days").css('display','none');
                                 }
