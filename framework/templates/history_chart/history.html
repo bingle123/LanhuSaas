@@ -460,17 +460,31 @@ let vm = new Vue({
                 vm.page = value;
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}history_chart/select_scene_operation',
+                    url: '${SITE_URL}history_chart/show_operation_report',
                     data: {
                         page: vm.page,
                         limit: 10
                     },
                 }).then((res) => {
                     this.sceneOperationRuleTableData = res.data.message;
-                    vm.sceneOperationCount = res.data.message[0].pages;
                 })
             },
-
+            //显示场景运行情况
+            show_scene_operation(){
+                vm.page = 1
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}history_chart/show_operation_report',
+                    data: {
+                        page: vm.page,
+                        limit: 10
+                    },
+                }).then((res) =>{
+                    console.log(res)
+                    vm.sceneOperationRuleTableData = res.data.message
+                    vm.sceneOperationCount = res.data.message[0].page_count;
+                })
+            },
 
             change_type(value) {
                 if (value == 'log') {
@@ -527,9 +541,9 @@ let vm = new Vue({
                             limit: 10
                         },
                 }).then((res) =>{
-                   console.log(res)
+                    console.log(res)
                     vm.sceneOperationRuleTableData = res.data.message
-
+                    vm.sceneOperationCount = res.data.message[0].page_count;
                 });
                    $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table4,#date_selection").css('display','none');
                    $('#table10').css('display','block');
@@ -557,19 +571,18 @@ let vm = new Vue({
             get_week(){
                 if (vm.weeks){
                     let date = vm.weeks
+                    vm.sceneOperationCount = 1
                     axios({
                             method: 'post',
                             url: '${SITE_URL}history_chart/get_week/',
                             data: {
                                 date:date,
-                                page: vm.page,
-                                limit: 10
                             },
                     }).then((res) =>{
                         vm.sceneOperationRuleTableData = res.data.message
                     })
                 }else {
-                    vm.show()
+                    vm.show_scene_operation()
                 }
             },
 
