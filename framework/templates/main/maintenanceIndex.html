@@ -110,6 +110,9 @@
     .error{background:red}
     .success{background:#409EFF}
     .progress{background:orange}
+    [v-cloak]{
+　　display:none
+}
 </style>
 
 <body style="background: rgb(246,246,246)">
@@ -126,8 +129,8 @@
         <el-row class="row_margin row_shadow">
             <el-col :span="24">
                 <div id="system_state" class="title">
-                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">系统状态</span>
-                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;float: right;margin-right: 10px">交易日：2019年03月15日 23:45</span>
+                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">场景状态</span>
+                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;float: right;margin-right: 10px" v-cloak>{{ now_date_name }}：{{ now_date_time }}</span>
                 </div>
             </el-col>
         </el-row>
@@ -402,10 +405,12 @@
                 },
 
             ],
+            /////////////////////////后台数据
+            now_date_time:'',
+            now_date_name:'',
 
         },
         methods: {
-
             show_chart1(){
                 if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
                     this.myChart.dispose();
@@ -459,10 +464,22 @@
                     ]
                 };
                 this.myChart.setOption(option);
-            }
+            },
+            get_date(){
+                axios.post('${SITE_URL}home_page/get_time/').then((res)=>{
+                    ve.now_date_time = res.data.time_date
+                    ve.now_date_name = res.data.today_name
+                })
+            },
+            timer(){
+                return setTimeout(()=>{
+                    ve.get_date()
+                },1000)
+            },
         }
     });
     ve.show_chart1();
+    ve.timer();
 </script>
 
 </html>
