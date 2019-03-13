@@ -9,7 +9,7 @@ from django.forms import model_to_dict
 
 import tools
 from conf import settings_development
-from gatherDataHistory.models import TDGatherHistory
+from gather_data_history.models import TDGatherHistory
 from history_chart.function import check_jobday, json
 from market_day.models import Holiday
 from monitor_scene.models import position_scene
@@ -46,6 +46,10 @@ def scenes_alert(request):
     alert_count = 0
     alert_data = []
     all_avg = 0
+    #分别是安全。预警。危险
+    safe_scene = 0
+    will_scene = 0
+    danger_scene = 0
     for i in ps:
         sid = model_to_dict(i)['scene']
         #场景和监控项关联表
@@ -76,12 +80,17 @@ def scenes_alert(request):
                             if nums == 0:
                                 all_score = 0
                             else:
-
                                 all_score = all_score - model_to_dict(x)['score'] / nums[0]
                         else:
                             pass
             except Exception as e:
                 return tools.error_result(e)
+            if all_score == 100:
+                safe_scene = safe_scene+1
+            elif all_score <100 and all_score>90:
+                will_scene = will_scene+1
+            else:
+                danger_scene = danger_scene +1
             all_avg = all_avg + all_score
 
     #所有场景下得监控项得到的权值分总和/场景数 = 权值平均分 就是从健康度
@@ -99,6 +108,9 @@ def scenes_alert(request):
             'alert_count':alert_count, #告警数
             'alert_data':alert_data,    #告警table数据
             'last_score':last_score,    #健康度
+            'safe_scene':safe_scene,
+            'will_scene':will_scene,
+            'danger_scene':danger_scene,
         }
     return dic_data
 
