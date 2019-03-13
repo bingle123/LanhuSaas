@@ -481,7 +481,7 @@
                         if (formName == 'scene') {
                             axios({
                                 method: 'post',
-                                url: '${SITE_URL}monitorScene/addSence/',
+                                url: '${SITE_URL}monitor_scene/addSence/',
                                 data: {
                                     data: vm.scene,
                                     monitor_data: vm.result_list
@@ -493,7 +493,7 @@
                         } else if (formName == 'scene_edit') {
                             axios({
                                 method: 'post',
-                                url: '${SITE_URL}monitorScene/editSence/',
+                                url: '${SITE_URL}monitor_scene/editSence/',
                                 data: {
                                     data: vm.scene_edit,
                                     monitor_data: vm.result_list
@@ -534,7 +534,7 @@
             paging(){
                axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/paging/',
+                    url: '${SITE_URL}monitor_scene/paging/',
                     data:{
                         page:vm.page,
                         limit:10
@@ -585,7 +585,7 @@
 
                 axios({
                     method:'post',
-                    url:'${SITE_URL}monitorScene/scene_data/',
+                    url:'${SITE_URL}monitor_scene/scene_data/',
                     data:value,
                 }).then(function (res) {
                     vm.result_list_edit=res.data.results;
@@ -614,7 +614,7 @@
                         if(result_list_edit[i].monitor_type=='基本单元类型'){
                             let res = await axios({
                                 method:'post',
-                                url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                                url:'${SITE_URL}monitor_scene/monitor_scene_show/',
                                 data:result_list_edit[i].item_id,
                             })
                             vm.monitor_data = res.data.results;
@@ -624,7 +624,7 @@
                         if(result_list_edit[i].monitor_type=='图表单元类型'){
                             let res = await axios({
                                 method:'post',
-                                url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                                url:'${SITE_URL}monitor_scene/monitor_scene_show/',
                                 data:result_list_edit[i].item_id,
                             })
                             vm.monitor_data = res.data.results;
@@ -634,7 +634,7 @@
                         if(result_list_edit[i].monitor_type=='作业单元类型'){
                             let res = await axios({
                                 method:'post',
-                                url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                                url:'${SITE_URL}monitor_scene/monitor_scene_show/',
                                 data:result_list_edit[i].item_id,
                             });
                             vm.monitor_data = res.data.results;
@@ -645,7 +645,7 @@
                         if(result_list_edit[i].monitor_type=='流程单元类型'){
                             let res = await axios({
                                 method:'post',
-                                url:'${SITE_URL}monitorScene/monitor_scene_show/',
+                                url:'${SITE_URL}monitor_scene/monitor_scene_show/',
                                 data:result_list_edit[i].item_id,
                             })
                             vm.monitor_data=res.data.results;
@@ -686,7 +686,7 @@
                     vm.scene.scene_startTime = $(".back-bar").children().eq(4).html()
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}monitorScene/select_table/',
+                        url: '${SITE_URL}monitor_scene/select_table/',
                         data: vm.search
                     }).then(function (res) {
                         vm.tableData = res.data.message;
@@ -707,7 +707,7 @@
                     },
                     axios({
                         method: 'post',
-                        url: '${SITE_URL}monitorScene/delect/',
+                        url: '${SITE_URL}monitor_scene/delect/',
                         data:  row.id
 
                     }).then((res) => {
@@ -759,7 +759,7 @@
             sen_position(){
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/pos_name/',
+                    url: '${SITE_URL}monitor_scene/pos_name/',
                 }).then(function(res) {
                        vm.pos = res.data.message
                 })
@@ -768,7 +768,7 @@
             show1(){
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/scene_show/',
+                    url: '${SITE_URL}monitor_scene/scene_show/',
                     data: {
                         limit:vm.limit,
                         type:vm.monitor_type,

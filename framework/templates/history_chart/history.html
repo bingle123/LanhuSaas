@@ -386,7 +386,7 @@ let vm = new Vue({
             },
 
             select_log(){
-               if(vm.log_type == 'log'){
+               if(vm.log_type == 'log'| vm.log_type == ''){
                    vm.page = 1
                    if (vm.keyword == "" & vm.date_Choice == "" & this.search =="") {
                        vm.show()

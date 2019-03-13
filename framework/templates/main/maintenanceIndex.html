@@ -512,8 +512,8 @@
             },
             get_date(){
                 axios.post('${SITE_URL}home_page/get_time/').then((res)=>{
-                    ve.now_date_time = res.data.time_date
-                    ve.now_date_name = res.data.today_name+": "
+                    ve.now_date_time = res.data['time_date']
+                    ve.now_date_name = res.data['today_name']+":"
                 })
             },
         }
