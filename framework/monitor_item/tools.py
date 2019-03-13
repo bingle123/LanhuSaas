@@ -372,6 +372,16 @@ def start_flow_task(**info):
 #让流程继续执行，调用v2接口
 def resume_flow(item_id,name):
     task_id=Flow.objects.filter(flow_id=item_id).last().instance_id
+    d={
+        "action": "resume",
+        "bk_biz_id": "2",
+        "task_id": task_id
+    }
+    user_account = BkUser.objects.filter(id=1).get()
+    client = get_client_by_user(user_account)
+    client.set_bk_api_ver('v2')
+    res=client.sops.operate_task(d)
+    #v2接口继续整个流程
     mess = hd.objects.get(id=1).header
     headers = json.loads(mess.decode('utf-8').replace("'", "\""))
     a_url = "http://paas.bk.com/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
@@ -385,5 +395,13 @@ def resume_flow(item_id,name):
     for key in activities:
         if name==activities[key]['name']:
             node_id = str(activities[key]['id'])
-    return res['result']
+    b_url='http://paas.bk.com/o/bk_sops/taskflow/api/nodes/action/callback/2/'
+    data={
+        'instance_id': task_id,
+        'node_id': node_id,
+        'data': {"callback": "resume"}
+    }
+    data=str(data)
+    res=requests.post(url=b_url,headers=headers)
+    return 'ok'
 

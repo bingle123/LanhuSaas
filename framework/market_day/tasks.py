@@ -245,7 +245,7 @@ def clear_status_task():
 
 @periodic_task(run_every=crontab(hour=3,minute=0))
 def select_scene_operation_task():
-    select_scene_operation_task()
+    select_scene_operation()
 
 
 
