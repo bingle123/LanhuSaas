@@ -21,7 +21,6 @@ from datetime import datetime
 #获取当前时间
 def get_time(request):
     today = datetime.now().strftime("%Y年%m月%d日 %H:%M")
-    print today
     flag = check_jobday(1,datetime.now())
     if flag==True:
         today_name = '交易日'
@@ -33,7 +32,6 @@ def get_time(request):
         'time_date':today,
         'today_name':today_name,
     }
-    print dic_data
     return dic_data
 
 #获取当前用户所对应的岗位下的所有场景监控项的告警
