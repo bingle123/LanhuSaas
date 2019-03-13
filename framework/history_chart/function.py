@@ -346,6 +346,7 @@ def about_search(request):
 
 #别动
 def select_scenes(request):
+    #查询所有场景，遍历场景名称和id
     scenes = Scene.objects.all()
     list_data = list()
     dic_data = {}
@@ -358,7 +359,7 @@ def select_scenes(request):
     return tools.success_result(list_data)
 
 #封装方法，别动
-def getPant_list(scene_list,d_data,all_itemid,count):
+def getPant_list(scene_list,d_data,all_itemid):
     last_list = []
     AllList = []
     new_AllList = []
@@ -497,9 +498,7 @@ def selectScenes_ById(request):
             return tools.success_result(Alldays)
         # 有效天大于3天小于7天，取所有天数
         else:
-            return getPant_list(scene_list, d_data, all_itemid, count)
-
-
+            return getPant_list(scene_list, d_data, all_itemid)
 
 
 
