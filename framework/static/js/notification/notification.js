@@ -1,3 +1,4 @@
+var vue = null;
 $(function(){
     var site_url = $('#siteUrl').val();
     //csrf验证
@@ -47,7 +48,7 @@ $(function(){
             }
         }
     };
-    var vue = new Vue({
+    vue = new Vue({
         el: '#alertRuleManage',
         data: {
             currentPage: 1,

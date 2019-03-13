@@ -561,13 +561,13 @@
                     if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
                         this.myChart.dispose();
                     }
+                    console.log(chartData)
                     if (chart_type == "饼图") {
                         this.myChart = echarts.init(document.getElementById('show2'), 'macarons');
                         var legendData = [];
                         for (var i = 0; i < chartData.length; i++) {
                             legendData.push(chartData[i].name)
                         }
-                        console.log(legendData)
                         option = {
                             tooltip: {
                                 trigger: 'item',

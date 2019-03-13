@@ -430,6 +430,7 @@
             alert_table_data:[],          //告警表格数据
             now_date_time:'',
             now_date_name:'',
+            scene_chart_data:[],
         },
         methods: {
 
@@ -476,12 +477,7 @@
                                     }
                                 }
                             },
-                            data:[
-                                {value:335, name:'危险'},
-                                {value:310, name:'预警'},
-                                {value:234, name:'正常'},
-
-                            ]
+                            data:ve.scene_chart_data
                         }
                     ]
                 };
@@ -501,8 +497,12 @@
                     ve.percentage=res.data['last_score'];
                     ve.alert_number=res.data['alert_count'];
                     ve.alert_table_data=res.data['alert_data'];
-
-                    console.log(ve.alert_table_data)
+                    ve.scene_chart_data=[
+                        {value:res.data['danger_scene'], name:'危险'},
+                        {value:res.data['will_scene'], name:'预警'},
+                        {value:res.data['safe_scene'], name:'正常'},
+                    ];
+                    ve.show_chart1();
                 }).catch(function (e) {
                     ve.$message.error('获取数据失败！');
                 })
@@ -513,7 +513,6 @@
     setInterval(function () {
         ve.get_date();
     },10000)
-    ve.show_chart1();
     ve.get_alert_data();
 </script>
 

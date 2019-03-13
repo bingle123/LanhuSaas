@@ -318,7 +318,7 @@
                                 <div style="padding: 0px 45% 0px 45%">
                                     <h2>预览</h2>
                                 </div>
-                                <div style="text-align:center;width: 100%;height: 40%;">
+                                <div style="text-align:center;width: 100%;height: 23%;">
                                     <div id="maintenanceIndex">
                                         <el-row>
                                             <el-col :span="24">
@@ -412,7 +412,7 @@
                             <div style="padding: 0px 45% 0px 45%">
                                 <h2>预览</h2>
                             </div>
-                            <div style="text-align:center;width: 100%;min-height:40%;height: auto;background-color: whitesmoke;">
+                            <div style="text-align:center;width: 100%;min-height:23%;height: auto;background-color: whitesmoke;">
                                 <div style="height: 60px"></div>
                                 <div id="job_text" style="max-width: 100%;margin: auto;padding-top: 20px;">
 
@@ -1309,7 +1309,7 @@
                 vm.disabled5 = true;
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
-                if (row.monitor_type == '基本监控项') {
+                if (row.monitor_type ==1) {
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
                     vm.basic.height = row.height;
@@ -1382,7 +1382,7 @@
                         vm.basic_test()
                     }
                 }
-                if (row.monitor_type == '图表监控项') {
+                if (row.monitor_type ==2) {
                     vm.disabled2 = true;
                     vm.disabled3 = false;
                     vm.disabled4 = true;
@@ -1413,7 +1413,7 @@
                             alert('拉取数据库失败！')
                         });
                 }
-                if (row.monitor_type == '作业监控项') {
+                if (row.monitor_type ==3) {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = false;
@@ -1435,7 +1435,7 @@
                     vm.job.status = row.status;
                     vm.area=row.monitor_area;
                 }
-                if (row.monitor_type == '流程监控项') {
+                if (row.monitor_type ==4) {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = true;

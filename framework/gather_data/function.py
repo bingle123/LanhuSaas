@@ -92,7 +92,8 @@ def gather_param_parse(info):
         except Exception as e:
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-2', gather_error_log=str(e)).save()
             return None
-        # 根据参数获取数据库连接配置
+        # 根据参数获取数据库连接配置\
+        print info['params']
         conn_info = Conn.objects.filter(id=info['params']).get()
         # 解密存储在数据库中的数据库密码
         conn_info.password = decrypt_str(conn_info.password)
@@ -160,11 +161,16 @@ def sql_kv_process(gather_field, sql_result):
         temp['value_str'] = ''
         data_set.append(temp)
     # 将结果集整理为key-value形式的采集数据
+    print sql_result
+    print data_set
     for unit in sql_result:
         count = 0
         for data in unit:
             t = data_set[count]
-            t['value'].append(str(data))
+            if not type(data)==unicode:
+                t['value'].append(str(data))
+            else:
+                t['value'].append(data)
             t['value_str'] = ','.join(t['value'])
             count += 1
     return data_set
