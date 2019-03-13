@@ -1,6 +1,7 @@
 .ifa {
         width: 100%;
-        height: 1200px;
+        min-height: 2000px;
+        height: auto;
     }
     a {
         color: #ffffff;

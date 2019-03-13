@@ -11,8 +11,8 @@ import urllib
 import urllib2
 import os
 import settings
-from gatherData.models import *
-from gatherDataHistory.models import *
+from gather_data.models import *
+from gather_data_history.models import *
 from notification.function import *
 from account.models import *
 from blueking.component.shortcuts import *
@@ -137,12 +137,12 @@ def gather_param_parse(info):
 # 重复的采集字段数据迁移到历史记录
 def gather_data_migrate(item_id):
     # 获取当前采集表中的数据是否为空，否则可能需要将某监控项的采集数据迁移到历史采集表中
-    length = TDGatherData.objects.count()
+    gather_data_count = TDGatherData.objects.count()
     # 数据采集表存在数据的情况
-    if 0 != length:
+    if 0 != gather_data_count:
         # 如果采集表中存在监控项id与当前采集的监控项id对应相同的数据，则将采集表中的此部分数据移至历史记录
-        length2 = TDGatherData.objects.filter(item_id=item_id).count()
-        if 0 != length2:
+        gather_data_count = TDGatherData.objects.filter(item_id=item_id).count()
+        if 0 != gather_data_count:
             # 开始迁移表数据
             migrate_data = TDGatherData.objects.filter(item_id=item_id).all()
             for data in migrate_data:

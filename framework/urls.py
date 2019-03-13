@@ -42,9 +42,9 @@ urlpatterns = patterns(
     url(r'market_day/', include('market_day.urls')),
     url(r'^db_connection/', include('db_connection.urls')),
     # 定制过程通知
-    url(r'^customProcess/', include('customProcess.urls')),
+    url(r'^custom_process/', include('custom_process.urls')),
     # 基本监控单元数据采集
-    url(r'^gatherData/', include('gatherData.urls')),
+    url(r'^gather_data/', include('gather_data.urls')),
     # 告警规则配置
     url(r'^notification/', include('notification.urls')),
     # 操作日志记录
@@ -52,9 +52,9 @@ urlpatterns = patterns(
     # 报表统计
      url(r'^history_chart/', include('history_chart.urls')),
     # 自定义查询
-    url(r'^customQuery/', include('customQuery.urls')),
-    #首页
+    url(r'^custom_query/', include('custom_query.urls')),
     url(r'^home_page/', include('home_page.urls')),
+
 
 )
 

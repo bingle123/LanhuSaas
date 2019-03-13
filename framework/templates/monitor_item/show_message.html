@@ -1309,7 +1309,7 @@
                 vm.disabled5 = true;
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
-                if (row.monitor_type == '基本监控项') {
+                if (row.monitor_type ==1) {
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
                     vm.basic.height = row.height;
@@ -1382,7 +1382,7 @@
                         vm.basic_test()
                     }
                 }
-                if (row.monitor_type == '图表监控项') {
+                if (row.monitor_type ==2) {
                     vm.disabled2 = true;
                     vm.disabled3 = false;
                     vm.disabled4 = true;
@@ -1413,7 +1413,7 @@
                             alert('拉取数据库失败！')
                         });
                 }
-                if (row.monitor_type == '作业监控项') {
+                if (row.monitor_type ==3) {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = false;
@@ -1435,7 +1435,7 @@
                     vm.job.status = row.status;
                     vm.area=row.monitor_area;
                 }
-                if (row.monitor_type == '流程监控项') {
+                if (row.monitor_type ==4) {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = true;
