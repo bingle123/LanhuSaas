@@ -514,12 +514,19 @@
                 axios.post('${SITE_URL}home_page/get_time/').then((res)=>{
                     ve.now_date_time = res.data['time_date']
                     ve.now_date_name = res.data['today_name']+":"
+                    console.log(res.data)
+                })
+            },
+            get_alert_data(){
+                axios.post('${SITE_URL}home_page/scenes_alert/').then((res)=>{
+                    console.log(res)
                 })
             },
         }
     });
-    ve.get_date()
+    ve.get_date();
     ve.show_chart1();
+    ve.get_alert_data();
 </script>
 
 </html>

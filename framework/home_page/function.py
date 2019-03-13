@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import time
-import datetime
 from decimal import Decimal
 
 import MySQLdb
@@ -17,11 +16,12 @@ from monitor_scene.models import position_scene
 from monitor_item.models import Scene_monitor
 from notification.models import TdAlertLog
 from position.models import user_info
+from datetime import datetime
 
 #获取当前时间
 def get_time(request):
-    today = time.strftime("%Y年%m月%d日 %H:%m ", time.localtime(time.time()))
-    flag = check_jobday(1,datetime.datetime.now().date())
+    today = datetime.now().strftime("%Y年%m月%d日 %H:%M")
+    flag = check_jobday(1,datetime.now())
     if flag==True:
         today_name = '交易日'
     elif flag ==False:
@@ -65,7 +65,6 @@ def scenes_alert(request):
                 res1 = cursor.fetchall()
                 nums = list(res1)
                 nums = nums[0][0]
-                print str(nums.quantize(Decimal('0.0')))
                 #如果总分为0,直接为0
                 thistory = TDGatherHistory.objects.filter(item_id=model_to_dict(x)['item_id'])
                 for hi in thistory:
@@ -89,11 +88,9 @@ def scenes_alert(request):
         last_score = all_avg / ps.__len__()
 
         alert_log = TdAlertLog.objects.filter(item_id=model_to_dict(x)['item_id'])
-        print alert_log
         for y in alert_log:
             alertd = model_to_dict(y)
             alertd['alert_time'] = y.alert_time
-            print alert_log
             if str(alertd['alert_time']).split(' ')[0] == time.strftime("%Y-%m-%d", time.localtime(time.time())):
                 alert_count = alert_count + 1
                 alertd['alert_time'] = str(alertd['alert_time'])
