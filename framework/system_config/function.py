@@ -27,7 +27,6 @@ def crawl_manage(request):
     :param request:
     :return:
     """
-    print request.body
     request_body = json.loads(request.body)
     crawl_id = request_body['id']
     crawl_name = request_body['crawl_name']
@@ -40,6 +39,7 @@ def crawl_manage(request):
     time_xpath = request_body['time_xpath']
     url_xpath = request_body['url_xpath']
     url_pre = request_body['url_pre']
+    # 获取当前用户
     active_user_dict = get_active_user(request)
     # 接收人为字符串，以@隔开
     receivers = request_body['receivers']
@@ -53,14 +53,14 @@ def crawl_manage(request):
                                                url_xpath=url_xpath, create_user=create_user, update_user=create_user,
                                                receivers=receivers, url_pre=url_pre)
             info = make_log_info(u'增加爬虫配置', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
-                                 get_active_user(request)['data']['bk_username'], '成功', '无')
+                                 get_active_user(request)['data']['bk_username'], u'成功', u'无')
             add_log(info)
-            return success_result('新增爬虫配置成功')
+            return success_result(u'新增爬虫配置成功')
         except Exception as e:
             info = make_log_info(u'增加爬虫配置', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
-                                 get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                                 get_active_user(request)['data']['bk_username'], u'失败', repr(e))
             add_log(info)
-            return error_result('新增爬虫配置信息失败' + e)
+            return error_result(u'新增爬虫配置信息失败' + e)
     # 修改
     else:
         update_user = active_user_dict['data']['bk_username']
@@ -77,12 +77,12 @@ def crawl_manage(request):
                                                                    receivers=receivers, url_pre=url_pre,
                                                                    update_time=datetime.datetime.now())
             info = make_log_info(u'编辑爬虫配置', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
-                                 get_active_user(request)['data']['bk_username'], '成功', '无')
+                                 get_active_user(request)['data']['bk_username'], u'成功', u'无')
             add_log(info)
             return success_result(u'修改爬虫配置成功')
         except Exception as e:
             info = make_log_info(u'编辑爬虫配置', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
-                                 get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                                 get_active_user(request)['data']['bk_username'], u'失败', repr(e))
             add_log(info)
             return error_result(e)
 
@@ -97,7 +97,13 @@ def get_crawls_config(request):
     page = request_body['page']
     limit = request_body['limit']
     count = CrawlerConfig.objects.all()
-    page_count = int(math.ceil(len(count) / limit) + 1)
+    # 分页刚好
+    if len(count) % limit == 0:
+        page_count = int(math.ceil(len(count) / limit))
+    # 分页数加一
+    else:
+        page_count = int(math.ceil(len(count) / limit) + 1)
+    # 开始页面
     start_page = (page - 1) * limit
     try:
         res = CrawlerConfig.objects.all().order_by('-update_time').values()[start_page:start_page + limit]
@@ -114,10 +120,9 @@ def get_crawls_config(request):
         return error_result('获取爬虫配置信息失败' + e)
 
 
-def get_crawls_all(request):
+def get_crawls_all():
     """
-
-    :param request:
+    获取所有参数爬虫配置（可不加参数）
     :return:
     """
     try:
@@ -130,7 +135,7 @@ def get_crawls_all(request):
         print result_list.__len__()
         return success_result(result_list)
     except Exception as e:
-        return error_result('获取爬虫配置信息失败' + e)
+        return error_result(u'获取爬虫配置信息失败' + e)
 
 
 def get_crawl_by_name(request):
@@ -145,16 +150,14 @@ def get_crawl_by_name(request):
     keyword = request_body['keyword']
     url = request_body['crawl_url']
     count = CrawlerConfig.objects.filter(Q(crawl_name__contains=keyword) & Q(crawl_url__contains=url))
-    print len(count)
-    if len(count) < limit:
-        page_count = len(count)
+    if len(count) % limit == 0:
+        page_count = int(math.ceil(len(count) / limit))
     else:
         page_count = int(math.ceil(len(count) / limit) + 1)
     start_page = (page - 1) * limit
     try:
         res = CrawlerConfig.objects.filter(Q(crawl_name__contains=keyword) & Q(crawl_url__contains=url)).order_by(
-            '-update_time').values()[
-              start_page:start_page + limit]
+            '-update_time').values()[start_page:start_page + limit]
         result_list = []
         for i in res:
             i['create_time'] = i['create_time'].strftime("%Y-%m-%d %H:%M:%S")
@@ -370,7 +373,6 @@ def crawl_test(request):
     :param request:
     :return:
     """
-    print request.body
     request_body = json.loads(request.body)
     crawl_url = request_body['crawl_url']
     total_xpath = request_body['total_xpath']
@@ -378,29 +380,28 @@ def crawl_test(request):
     time_xpath = request_body['time_xpath']
     url_xpath = request_body['url_xpath']
     result = crawl_temp_second(url=crawl_url, total_xpath=total_xpath, time_xpath=time_xpath, url_xpath=url_xpath,
-                        title_xpath=title_xpath)
-    print result
+                               title_xpath=title_xpath)
     return success_result(result['results'])
 
 
 def get_scene_type(type_name, page, limit):
     """
     获取场景分组类别
+    limit为0时，会取到所有内容并一页展示
     :param type_name:       场景类型名称
     :param page:
     :param limit:
     :return:
     """
-    count = SceneType.objects.all().values()
+    count = SceneType.objects.filter(Q(scene_type_name__icontains=type_name))
     if limit == 0:
         limit = len(count)
         page_count = 1
+    elif len(count) % limit == 0:
+        page_count = int(math.ceil(len(count) / limit))
     else:
         page_count = int(math.ceil(len(count) / limit) + 1)
     start_page = int(page - 1) * int(limit)
-    if type_name != '':
-        count = SceneType.objects.filter(Q(scene_type_name__icontains=type_name))
-        page_count = int(math.ceil(len(count) / limit) + 1)
     scene_type_list = SceneType.objects.filter(Q(scene_type_name__icontains=type_name)).order_by(
         '-update_time').values()[start_page:start_page + limit]
     result_list = []
@@ -485,30 +486,26 @@ def get_crawl_content(title_name, crawl_name, page, limit):
     """
     crawl_config = CrawlerConfig.objects.filter(Q(crawl_name__icontains=crawl_name)).values()
     crawl_id_list = []
-    print len(crawl_config)
     for i in crawl_config:
         crawl_id_list.append(i['id'])
-    print crawl_id_list
     count = CrawlContent.objects.filter(Q(title_content__icontains=title_name) & Q(crawl_id__in=crawl_id_list)).values()
-    print len(count)
     result_list = []
-    if len(count) == 0:
-        return success_result([])
-    elif len(count) < limit:
+    if limit == 0:
         page_count = 1
         limit = len(count)
-    else:
+    elif len(count) % limit == 0:
         page_count = int(math.ceil(len(count) / limit))
+    else:
+        page_count = int(math.ceil(len(count) / limit) + 1)
     start_page = int(page - 1) * int(limit)
-    config_object = count[start_page:start_page + limit]
-    for i in config_object:
-        i['save_time'] = i['save_time'].strftime("%Y-%m-%d %H:%M:%S")
-        i['page_count'] = page_count
-        i['page'] = page
-        i['crawl_name'] = model_to_dict(CrawlerConfig.objects.get(id=1))['crawl_name']
-        result_list.append(i)
-    return success_result(result_list)
-
-
-
-
+    try:
+        config_object = count[start_page:start_page + limit]
+        for i in config_object:
+            i['save_time'] = i['save_time'].strftime("%Y-%m-%d %H:%M:%S")
+            i['page_count'] = page_count
+            i['page'] = page
+            i['crawl_name'] = model_to_dict(CrawlerConfig.objects.get(id=1))['crawl_name']
+            result_list.append(i)
+        return success_result(result_list)
+    except Exception as e:
+        return error_result([])
