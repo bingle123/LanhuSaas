@@ -16,6 +16,7 @@ from db_connection.function import get_db
 from gatherData.function import gather_data
 from datetime import datetime
 import pytz
+from position.models import *
 from market_day.models import Area
 from market_day.function import tran_time_china,tran_china_time_other,check_jobday
 
