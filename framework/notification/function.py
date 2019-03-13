@@ -144,7 +144,6 @@ def is_data_alert(upper_limit, lower_limit, data_value):
         if float(data_value) > upper_limit or float(data_value) < lower_limit:
             # print 'FIELD : %s, ALERT!!!!! VALUE %s OUT OF RANGE' % (data.data_key, data.data_value)
             alert_flag = True
-
     # 告警规则仅配置了上限值的情况
     elif upper_limit is not None and lower_limit is None:
         if float(data_value) > upper_limit:
