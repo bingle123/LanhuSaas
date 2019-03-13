@@ -412,7 +412,7 @@
                             <div style="padding: 0px 45% 0px 45%">
                                 <h2>预览</h2>
                             </div>
-                            <div style="text-align:center;width: 100%;min-height:23%;height: auto;background-color: whitesmoke;">
+                            <div style="text-align:center;width: 100%;height: 23%;background-color: whitesmoke;">
                                 <div style="height: 60px"></div>
                                 <div id="job_text" style="max-width: 100%;margin: auto;padding-top: 20px;">
 
@@ -1917,7 +1917,7 @@
                     'status':job_status,
                 };
                 $('#job_text').html('');
-                $('#job_text').append('<div type=\"job'+item_id+'\"></div>');
+                $('#job_text').append('<div type=\"job'+item_id+'\" style=\"margin:0 auto;\"></div>');
                 job_monitor_active(job_params);
 
             },
@@ -1926,10 +1926,15 @@
                 setTimeout(function () {
                     vm.disabled1 = false;
                 }, 3000);
-                $('.unexecuted').css('display','none');
-                $('.success').css('display','none');
-                $('.error').css('display','none');
-                $('.loading').css('display','block');
+                var job_params1={
+                        'id':'item_id',
+                        'width' :vm.job.width,
+                        'height':vm.job.height,
+                        'status':2,
+                    };
+                    $('#job_text').html('');
+                    $('#job_text').append('<div type=\"jobitem_id\" style=\"margin:0 auto;\"></div>');
+                    job_monitor_active(job_params1);
                 axios({
                     url:'${SITE_URL}monitor_item/job_test/',
                     method:'post',
@@ -1941,17 +1946,30 @@
                     },
                 }).then((res) =>{
                     let status=res['data']['result'];
-                    if(status){
-                        $('.unexecuted').css('display','none');
-                        $('.success').css('display','block');
-                        $('.error').css('display','none');
-                        $('.loading').css('display','none');
-                    }else {
-                        $('.unexecuted').css('display','none');
-                        $('.success').css('display','none');
-                        $('.error').css('display','block');
-                        $('.loading').css('display','none');
+                    let job_status=0;
+                    switch (status) {
+                        case true:
+                            job_status=1;
+                            console.log(1)
+                            break;
+                        case false:
+                            job_status=-1;
+                            console.log(-1)
+                            break;
+                        default:
+                            job_status=2;
+                            console.log(2)
                     }
+                    let item_id='item_id'
+                    var job_params={
+                        'id':item_id,
+                        'width' :vm.job.width,
+                        'height':vm.job.height,
+                        'status':job_status,
+                    };
+                    $('#job_text').html('');
+                    $('#job_text').append('<div type=\"job'+item_id+'\" style=\"margin:0 auto;\"></div>');
+                    job_monitor_active(job_params);
                 })
             },
             rowclass({row, rowIndex}) {
