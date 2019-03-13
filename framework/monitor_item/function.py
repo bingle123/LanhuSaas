@@ -138,16 +138,16 @@ def add_unit(request):
         monitor_type = res['monitor_type']
         #  根据前台来的单元类型进行分类
         if res['monitor_type'] == 'first':
-            monitor_type = '基本监控项'
+            monitor_type = 1
         if res['monitor_type'] == 'second':
-            monitor_type = '图表单元类型'
+            monitor_type = 2
         if res['monitor_type'] == 'third':
-            monitor_type = '作业单元类型'
+            monitor_type = 3
             #  作业监控项的把作业id和name分别存放
             add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
             add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
         if res['monitor_type'] == 'fourth':
-            monitor_type = '流程单元类型'
+            monitor_type = 4
             add_dic['jion_id'] = res['flow']['jion_id']
             add_dic['gather_params'] = add_dic['node_name']
             add_dic.pop('node_name')
@@ -229,6 +229,7 @@ def edit_unit(request):
         if res['monitor_type'] == 'fourth':
             add_dic['node_times'] = node_times
             add_dic['constants'] = constants
+            add_dic['monitor_type']='fourth'
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
