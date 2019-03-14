@@ -67,22 +67,38 @@
             font-size: 16px;
             position: absolute;
             background: rgba(255,255,255,0.1);
-            top: -36px;
+            top: -37px;
             left: 0;
-            width: 50px;
+            width: 80px;
             height: 36px;
             display: none;
+            border: 1px solid black;
+            border-radius: 5px;
         }
         .right_click{
             position: absolute;
-            width: 100px;
+            width: 120px;
             display: none;
+            background: #00baff;
+            border: 2px solid #283593;
+            border-radius: 5px;
         }
         .right_click span{
             width: 100px;
             display: inline-block;
             font-size: 16px;
+            color: #ffffff;
             line-height: 36px;
+            position: relative;
+        }
+        .right_click span:after{
+            position: absolute;
+            content: '';
+            height: 2px;
+            width: 118px;
+            top: 36px;
+            left: 0;
+            background: black;
         }
         .save{
                 display: block;
@@ -875,6 +891,14 @@
     });
     document.oncontextmenu = function(){
     　　return false;
+    };
+    document.onclick=function(e){
+    　　if(e.target.className!='right_click'){
+    　　　　$('.right_click').css('display','none');
+    　　}
+        if(e.target.className!='score_input'){
+    　　　　$('.score_input').css('display','none');
+    　　}
     };
     $(function () {
         $('.save').click(function () {

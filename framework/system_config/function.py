@@ -553,9 +553,10 @@ def test(request):
             add_log(info)
         # 爬虫失败
         elif crawl_result['code'] == 1:
-            info = make_log_info(crawl_name + u'爬虫失败', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
-                                 u'admin', u'失败', u'无')
-            add_log(info)
+            # info = make_log_info(crawl_name + '爬虫失败', '业务日志', 'CrawlerConfig', sys._getframe().f_code.co_name,
+            #                      'admin', '失败', '无')
+            # add_log(info)
+            pass
         # 爬虫成功，且有数据
         else:
             # 发送人地址列表
