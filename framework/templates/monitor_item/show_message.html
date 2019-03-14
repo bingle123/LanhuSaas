@@ -99,7 +99,7 @@
                 </el-table-column>
             </el-table>
             <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
-                           @current-change="current_change1"></el-pagination>
+                           @current-change="current_change1" :current-page="page"></el-pagination>
         </div>
     </div>
     <!-- div1 end-->
@@ -1294,6 +1294,7 @@
                     }).then((res) => {
                         vm.sites = res.data.message;
                         vm.page_count = res.data.message[0].page_count;
+
                     })
                 }
 

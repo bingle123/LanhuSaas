@@ -142,7 +142,7 @@
                         </el-table-column>
                     </el-table>
                     <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
-                                   @current-change="current_change"></el-pagination>
+                                   @current-change="current_change" :current-page="page"></el-pagination>
                 </div>
 
                 <div id="table2" style="display:none">
@@ -167,7 +167,7 @@
                     </el-table>
                     <el-pagination :page-count="alertRulesCount" background layout="prev, pager, next"
                                    style="float:right"
-                                   @current-change="alertRulePageChange"></el-pagination>
+                                   @current-change="alertRulePageChange" :current-page="alertRulesCount"></el-pagination>
                 </div>
                 <div id="table3" style="display:none">
                     <el-table :data="aboutTableDate">
@@ -255,7 +255,7 @@
                          </el-table-column>
                      </el-table>
                      <el-pagination :page-count="sceneOperationCount" background layout="prev, pager, next" style="float:right"
-                               @current-change="sceneOperationpage"></el-pagination>
+                               @current-change="sceneOperationpage" :current-page="sceneOperationCount"></el-pagination>
                 </div>
 
                      <!--<el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
