@@ -126,7 +126,7 @@
                         this.options = json;
                     }
                 }).catch((res) => {
-                    console.log('获取用户错误')
+                    vm.$massage.error('获取用户错误')
                 })
             },
              async alternate_play_test(){
@@ -138,7 +138,9 @@
                          'start':vm.start,
                          'end':vm.end
                      }
-                  });
+                  }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
                  vm.imgList = res.data.message;
             },
             scene_change(value1, value2) {
@@ -218,7 +220,9 @@
                                     $('p:contains('+res.data.message[j].data_key+')').parents().siblings('.node-icon').children().html('<div class=\"keepOn\"><p>是否继续</p><span class="keepOn_yes">是</span><span class="keepOn_no">否</span></div>')
                                 }
                             }
-                        })
+                        }).catch(function (e) {
+                            vm.$massage.error('获取数据失败！');
+                        });
                     },1000)
 
 

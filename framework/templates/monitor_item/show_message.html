@@ -34,62 +34,18 @@
         .el-table--border th {
             padding: 5px
         }
-
-        .newline {
+        .newline{
             word-wrap: break-word;
             word-break: break-all;
             overflow: hidden;
         }
 
-        .circle1 {
-            display: inline-block;
-            margin-left: 5px;
-            width: 20px;
-            height: 20px;
-            background-color: lawngreen;
-            border-radius: 50%;
-            -moz-border-radius: 50%;
-            -webkit-border-radius: 50%;
-        }
-
-        .circle2 {
-            display: inline-block;
-            margin-left: 5px;
-            width: 20px;
-            height: 20px;
-            background-color: darkgreen;
-            border-radius: 50%;
-            -moz-border-radius: 50%;
-            -webkit-border-radius: 50%;
-        }
-
-        .circle3 {
-            display: inline-block;
-            margin-left: 5px;
-            width: 20px;
-            height: 20px;
-            background-color: grey;
-            border-radius: 50%;
-            -moz-border-radius: 50%;
-            -webkit-border-radius: 50%;
-        }
-
-        .circle4 {
-            display: inline-block;
-            margin-left: 5px;
-            width: 20px;
-            height: 20px;
-            background-color: red;
-            border-radius: 50%;
-            -moz-border-radius: 50%;
-            -webkit-border-radius: 50%;
-        }
-
-        .asd {
-            display: inline-block;
-        }
-
-        .score_input {
+        .circle1{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
+        .circle2{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:darkgreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
+        .circle3{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
+        .circle4{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:red;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
+        .asd{display: inline-block;}
+        .score_input{
             font-size: 16px;
             position: absolute;
             background: rgba(255, 255, 255, 0.1);
@@ -1393,14 +1349,14 @@
                     vm.basic.gather_rule = row.gather_rule;
                     vm.basic.contents = row.contents;
                     vm.basic.status = row.status;
-                    vm.area = row.monitor_area;
+                    vm.area=row.monitor_area;
                     if (vm.sql_file_interface == 'sql') {
-                        vm.sql_file_interface = 3;
+                        vm.sql_file_interface =3;
                         axios({
                             method: 'post',
                             url: '${SITE_URL}db_connection/get_conname/',
-                            data: row.params,
-                        }).then((res) => {
+                            data:row.params,
+                        }).then((res)=> {
                             console.log(res)
                             //vm.server_url = res['data']['results']['connname'];
                             vm.sql_id = res['data']['results']['id'];
@@ -1410,8 +1366,8 @@
                             vm.basic_width();
                             vm.sycontent();
                             vm.basic_test()
-                        }).catch((error) => {
-                            alert('拉取数据库失败！')
+                        }).catch(function (e) {
+                            vm.$massage.error('获取数据库失败！');
                         });
                         vm.sql1 = 'block';
                         vm.file1 = 'none';
@@ -1419,8 +1375,8 @@
                         vm.basic.gather_params = 'sql'
                     }
                     if (vm.sql_file_interface == 'file') {
-                        vm.sql_file_interface = 6;
-                        arr = row.params.split("#");
+                        vm.sql_file_interface =6;
+                        arr=row.params.split("#");
                         vm.server_url = arr[0];
                         vm.file_param = arr[1];
                         vm.typeid = '2';
@@ -1435,8 +1391,8 @@
                         vm.basic_test()
                     }
                     if (vm.sql_file_interface == 'interface') {
-                        vm.sql_file_interface = 9;
-                        arr = row.params.split("#");
+                        vm.sql_file_interface =9;
+                        arr=row.params.split("#");
                         vm.server_url = arr[0];
                         vm.file_param = arr[1];
                         vm.typeid = '3';
@@ -1451,7 +1407,7 @@
                         vm.basic_test()
                     }
                 }
-                if (row.monitor_type == '图表监控项') {
+                if (row.monitor_type =='图表监控项') {
                     console.log(row)
                     vm.disabled2 = true;
                     vm.disabled3 = false;
@@ -1470,20 +1426,20 @@
                     vm.chart.end_time = row.end_time;
                     vm.chart.gather_rule = row.gather_rule;
                     vm.chart.status = row.status;
-                    vm.area = row.monitor_area;
+                    vm.area=row.monitor_area;
                     axios({
-                        method: 'post',
-                        url: '${SITE_URL}db_connection/get_conname/',
-                        data: row.params,
-                    }).then((res) => {
+                            method: 'post',
+                            url: '${SITE_URL}db_connection/get_conname/',
+                            data:row.params,
+                        }).then((res)=> {
 
-                        vm.chart.params = res['data']['results']['connname'];
-                        vm.show_content();
-                    }).catch((error) => {
-                        alert('拉取数据库失败！')
-                    });
+                            vm.chart.params = res['data']['results']['connname'];
+                            vm.show_content();
+                        }).catch(function (e) {
+                            vm.$massage.error('获取数据库失败！');
+                        });
                 }
-                if (row.monitor_type == '作业监控项') {
+                if (row.monitor_type =='作业监控项') {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = false;
@@ -1504,9 +1460,9 @@
                     vm.job.gather_params = row.gather_params;
                     vm.job.params = row.params;
                     vm.job.status = row.status;
-                    vm.area = row.monitor_area;
+                    vm.area=row.monitor_area;
                 }
-                if (row.monitor_type == '流程监控项') {
+                if (row.monitor_type =='流程监控项') {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = true;
@@ -1524,13 +1480,13 @@
                     vm.flow.period = row.period;
                     vm.flow.node_name = row.gather_params;
                     vm.flow.gather_rule = {
-                        'name': row.gather_rule,
-                        'id': row.jion_id
+                        'name':row.gather_rule,
+                        'id':row.jion_id
                     };
-                    vm.area = row.monitor_area;
-                    var id1 = row.jion_id
-                    var id = [{
-                        'id': id1
+                    vm.area=row.monitor_area;
+                    var id1=row.jion_id
+                    var id=[{
+                        'id':id1
                     }]
                     vm.flow_change(id)
                 }
@@ -1816,7 +1772,9 @@
                         let old_html = $('#canvas').html()
                         $('#canvas').html('<div style="transform: scale(0.65)">' + old_html + '</div>')
                     }
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
 
             },
             node_name(value) {
@@ -1829,7 +1787,9 @@
                 }).then(function (res) {
                     vm.activities_node_name = res.data.activities
 
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
             },
             Rendering_start_time() {
                 $('p:contains(' + vm.flow.node_name + ')').parent().find('.start_time').text(vm.activities_node_time.start_time)
@@ -1883,11 +1843,15 @@
                                         $('p:contains(' + res.data.message[i].data_key + ')').parent().siblings('.node-icon').css('background', '#f56c6c')
                                     }
                                 }
-                            })
-                        }, 13000)
+                        }).catch(function (e) {
+                            vm.$massage.error('获取数据失败！');
+                        });
+                        },13000)
 
-                    })
-                } else if (vm.liucheng == 'none') {
+                    }).catch(function (e) {
+                        vm.$massage.error('获取数据失败！');
+                    });
+                }else if(vm.liucheng == 'none'){
 
                     var period = $('#period').val()
                     var template_list = vm.template_list
@@ -1898,7 +1862,9 @@
                         data: {}
                     }).then(function () {
 
-                    })
+                    }).catch(function (e) {
+                        vm.$massage.error('获取数据失败！');
+                    });
                 }
 
             },
@@ -2039,7 +2005,9 @@
                     $('#job_text').html('');
                     $('#job_text').append('<div type=\"job' + item_id + '\" style=\"margin:0 auto;\"></div>');
                     job_monitor_active(job_params);
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
             },
             rowclass({row, rowIndex}) {
                 return 'background:#F7F7F7'
@@ -2072,9 +2040,9 @@
                         this.sites1 = json;
                     }
 
-                }).catch((res) => {
-                    console.log('获取数据库连接错误')
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
             },
             //初始化
             Initialization() {
@@ -2252,8 +2220,7 @@
                 vm.echart_height();
                 vm.echart_width();
             },
-            chart_get_test() {
-                console.log(vm.chart.params)
+            chart_get_test(){
                 axios({
                     url: '${SITE_URL}monitor_item/chart_get_test/',
                     method: 'post',
@@ -2280,8 +2247,8 @@
                     vm.show_chart();
                     vm.echart_height();
                     vm.echart_width();
-                }).catch((res) => {
-                    console.log(res)
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
                 });
             },
             echart_height() {
@@ -2299,11 +2266,11 @@
                         id: value.id,
                         monitor_name: value.monitor_name
                     },
-                }).then((res) => {
-                    if (res.data.code == 1) {
-                        alert(res.data.message)
-                    }
-                })
+                }).then((res) =>{
+                    if (res.data.code == 1) {alert(res.data.message)}
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
             },
         },
         mounted() {
