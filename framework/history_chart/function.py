@@ -42,7 +42,7 @@ def show_all(request):
             'class_name': x.class_name,
             'method': x.method,
             'create_time': str(x.create_time),
-            'succeed': x.succeed,
+            'succeed': x.is_success,
             'message': x.message,
             'page_count': int(pages)
         }
