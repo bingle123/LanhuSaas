@@ -263,6 +263,20 @@
                           -->
                     </div>
                  <div id="table4" style="display:none">
+                     <div class="container">
+                         <el-col :span="12" style="margin: -67px 0 0 266px;;text-align: left">
+                          <div class="block">
+                            <span >年</span>
+                            <el-date-picker
+                              v-model="years"
+                              type="year"
+                              placeholder="选择年"
+                              value-format="yyyy">
+                            </el-date-picker>
+                            <el-button icon="el-icon-search" circle  v-on:click="get_year"></el-button>
+                          </div>
+                         </el-col>
+                     </div>
                      <div id="scene_et_table4" style="width:1000px;height: 500px;margin: 20px;margin-top: 80px;">
                      </div>
                      <div id="get_days" style="display: none">
@@ -281,9 +295,10 @@
                          <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center">
                          </el-table-column>
                      </el-table>
-                     <el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
+
+                     <!--<el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
                                    style="float:right"
-                                   @current-change=""></el-pagination>
+                                   @current-change=""></el-pagination>-->
                     </div>
             </div>
         </el-card>
@@ -329,6 +344,7 @@ let vm = new Vue({
             monthly_operation_statistics:'',
             monthly_operationTableData:'',
             weeks:'',                                    //运行情况周数查询
+            years:'',
         },
         methods: {
             show() {
@@ -553,8 +569,7 @@ let vm = new Vue({
                    method:'post',
                    url:'${SITE_URL}history_chart/monthly_select',
                    data:{
-                        page: vm.page,
-                        limit: 10
+                        date:vm.years
                    }
                }).then(function (res) {
                     vm.monthly_operationTableData = res.data.message;
@@ -584,7 +599,20 @@ let vm = new Vue({
                     vm.show_scene_operation()
                 }
             },
-
+            get_year(){
+                if(vm.years){
+                    let date = vm.years
+                    axios({
+                            method: 'post',
+                            url: '${SITE_URL}history_chart/monthly_select/',
+                            data: {
+                                date:date,
+                            },
+                    }).then((res) =>{
+                        vm.monthly_operationTableData = res.data.message
+                    })
+                }
+            },
 
             //先选场景
             chose_scenes(value) {
