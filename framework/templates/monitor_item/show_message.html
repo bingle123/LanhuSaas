@@ -1275,7 +1275,9 @@
                     vm.page_count = res.data.results.res_list[0].page_count;
                     vm.job2 = res.data.results.job;
                     vm.flow2 = res.data.results.flow;
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
             },
             select1() {
                 vm.centerDialogVisible = false;
@@ -1294,7 +1296,9 @@
                     }).then((res) => {
                         vm.sites = res.data.message;
                         vm.page_count = res.data.message[0].page_count;
-                    })
+                    }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                    });
                 }
 
             },
@@ -1342,8 +1346,8 @@
                             vm.basic_width();
                             vm.sycontent();
                             vm.basic_test()
-                        }).catch((error) => {
-                            alert('拉取数据库失败！')
+                        }).catch(function (e) {
+                            vm.$massage.error('获取数据库失败！');
                         });
                         vm.sql1 = 'block';
                         vm.file1 = 'none';
@@ -1411,8 +1415,8 @@
 
                             vm.chart.params = res['data']['results']['connname'];
                             vm.show_content();
-                        }).catch((error) => {
-                            alert('拉取数据库失败！')
+                        }).catch(function (e) {
+                            vm.$massage.error('获取数据库失败！');
                         });
                 }
                 if (row.monitor_type =='作业监控项') {
@@ -1752,7 +1756,9 @@
                         let old_html  = $('#canvas').html()
                         $('#canvas').html('<div style="transform: scale(0.65)">'+old_html+'</div>')
                     }
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
 
             },
             node_name(value){
@@ -1765,7 +1771,9 @@
                 }).then(function (res) {
                     vm.activities_node_name=res.data.activities
 
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
             },
             Rendering_start_time(){
                 $('p:contains('+vm.flow.node_name+')').parent().find('.start_time').text(vm.activities_node_time.start_time)
@@ -1819,10 +1827,14 @@
                                          $('p:contains('+res.data.message[i].data_key+')').parent().siblings('.node-icon').css('background','#f56c6c')
                                     }
                                 }
-                        })
+                        }).catch(function (e) {
+                            vm.$massage.error('获取数据失败！');
+                        });
                         },13000)
 
-                    })
+                    }).catch(function (e) {
+                        vm.$massage.error('获取数据失败！');
+                    });
                 }else if(vm.liucheng == 'none'){
 
                     var period = $('#period').val()
@@ -1834,7 +1846,9 @@
                         data: {}
                     }).then(function () {
 
-                    })
+                    }).catch(function (e) {
+                        vm.$massage.error('获取数据失败！');
+                    });
                 }
 
             },
@@ -1973,7 +1987,9 @@
                     $('#job_text').html('');
                     $('#job_text').append('<div type=\"job'+item_id+'\" style=\"margin:0 auto;\"></div>');
                     job_monitor_active(job_params);
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
             },
             rowclass({row, rowIndex}) {
                 return 'background:#F7F7F7'
@@ -2005,9 +2021,9 @@
                         this.sites1 = json;
                     }
 
-                }).catch((res) => {
-                    console.log('获取数据库连接错误')
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
             },
             //初始化
             Initialization(){
@@ -2186,7 +2202,6 @@
                 vm.echart_width();
             },
             chart_get_test(){
-                console.log(vm.chart.params)
                 axios({
                     url:'${SITE_URL}monitor_item/chart_get_test/',
                     method:'post',
@@ -2213,8 +2228,8 @@
                     vm.show_chart();
                     vm.echart_height();
                     vm.echart_width();
-                }).catch((res) =>{
-                    console.log(res)
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
                 });
             },
             echart_height(){
@@ -2234,7 +2249,9 @@
                     },
                 }).then((res) =>{
                     if (res.data.code == 1) {alert(res.data.message)}
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
             },
         },
         mounted() {
