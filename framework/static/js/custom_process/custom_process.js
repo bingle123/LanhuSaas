@@ -437,10 +437,18 @@ $(function(){
                             this.customProcessNode.receivers = this.customProcessNode.receivers[0];
                         }
                         this.customProcessNodeInitSeq = null;
+                        var data = {};
+                        data['node'] = this.customProcessNode;
+                        if('edit' == this.customProcessTableStatus){
+                            data['method'] = 'edit';
+                        }
+                        else if('add' == this.customProcessTableStatus){
+                            data['method'] = 'add';
+                        }
                         axios({
                             method: 'post',
                             url: url,
-                            data: this.customProcessNode,
+                            data: data,
                         }).then((res) =>{
                             loading.close();
                             if('ok' == res.data.message){
