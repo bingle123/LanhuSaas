@@ -51,7 +51,7 @@ axios.interceptors.request.use((config) => {
             search: '',
             value1: '',
             value12: '',
-            jobInstance: [],
+            positiontable: [],
             data2: '',
             value2: '',
             filterText: '',
@@ -89,8 +89,13 @@ axios.interceptors.request.use((config) => {
                         limit: 10
                     },
                 }).then((res) => {
-                    vm.jobInstance = res.data.message;
-                    vm.page_count = res.data.message[0].page_count;
+                    if(res.data.message.length == 0){
+                        vm.page_count=1
+                        vm.positiontable = []
+                    }else{
+                        vm.positiontable = res.data.message;
+                        vm.page_count = res.data.message[0].page_count;
+                    }
                 })
             },
             synchronize() {  //与蓝鲸用户同步
@@ -109,8 +114,7 @@ axios.interceptors.request.use((config) => {
                         limit: 10
                     },
                 }).then(function (res) {
-                    console.log(res.data.message)
-                    vm.jobInstance = res.data.message;
+                    vm.positiontable = res.data.message;
                     vm.page_count = res.data.message[0].page_count;
                 })
             },
@@ -138,7 +142,7 @@ axios.interceptors.request.use((config) => {
                             type: 'false',
                             message: '删除失败!请先移除该岗位的所有人员！',})
                         }
-
+                        vm.page = 1;
                         vm.show();
                     })
                 }).catch(() => {
@@ -162,8 +166,13 @@ axios.interceptors.request.use((config) => {
                         limit: 10
                     },
                 }).then((res) => {
-                    vm.jobInstance = res.data.message;
-                    vm.page_count = res.data.message[0].page_count;
+                    if(res.data.message.length == 0){
+                        vm.page_count=1
+                        vm.positiontable = []
+                    }else{
+                        vm.positiontable = res.data.message;
+                        vm.page_count = res.data.message[0].page_count;
+                    }
                 })
             },
             add_pos(formName) {                                              //增加岗位
