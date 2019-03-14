@@ -561,9 +561,8 @@
                             <div style="padding: 0px 45% 0px 45%">
                                 <h2>预览</h2>
                             </div>
-                            <div id="flow_canvas"
-                                 style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;">
-                                <div id="flow1" class="clearfix workflow-box" style="width: 100%;position: relative;">
+                            <div id="flow_canvas" style="text-align:center;width: 100%;height: 26%;overflow: scroll;">
+                                <div id="flow1" class="clearfix workflow-box" style="width:1000px;position: relative;">
 
                                         <div class="workflow-canvas" style="margin-left: 0px;padding-left: 0px">
                                             <!-- 画布模板 start -->
@@ -580,24 +579,17 @@
                                     <!-- template 模板-->
                                         <div class="jtk-delete jtk-none ">删除节点</div>
                                         <div id="template" class="jtk-none">
-                                            <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
-                                                 data-type="EmptyEndEvent">
-                                                <div class="node-wrapper">
-                                                    <div class="node-icon-start">
-                                                        <i class="bk-icon icon-star-shape"></i>
-                                                    </div>
+                                            <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}" data-type="EmptyEndEvent">
+                                               <div class="node-wrapper">
+                                                    <img src="${STATIC_URL}img/canvas/endpoint.png" style="top: 5px;left: 20px;position: absolute;">
                                                 </div>
                                             </div>
-                                             <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
-                                                  data-type="EmptyStartEvent">
+                                             <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}" data-type="EmptyStartEvent">
                                                 <div class="node-wrapper">
-                                                    <div class="node-icon-start">
-                                                        <i class="bk-icon icon-star-shape"></i>
-                                                    </div>
+                                                    <img src="${STATIC_URL}img/canvas/Start.png" style="top: 5px;left: 20px;position: absolute;">
                                                 </div>
                                             </div>
-                                            <div class="jtk-window jtk-node workfolw-node database-node" id="{charts}"
-                                                 data-type="ServiceActivity">
+                                            <div class="jtk-window jtk-node workfolw-node database-node" id="{charts}" data-type="ServiceActivity">
                                                 <div class="node-wrapper">
                                                     <div class="node-content" style="position: relative">
                                                         <div class="start_time"
@@ -606,12 +598,20 @@
                                                              style="position: absolute;width: 70px;height: 20px;top: -26px;right: 0px;"></div>
                                                         <p class="node-title"></p>
                                                     </div>
-                                                    <div class="node-icon">
-                                                        <i class="bk-icon icon-data"></i>
+                                                    <div class="node-icon" style="top: 26px;width: 100%;height: 100%;">
                                                     </div>
                                                 </div>
                                             </div>
-
+                                           <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}" data-type="ConvergeGateway">
+                                                 <div class="node-wrapper">
+                                                    <img src="${STATIC_URL}img/canvas/convergegateway.png">
+                                                </div>
+                                            </div>
+                                            <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}" data-type="ParallelGateway">
+                                                <div class="node-wrapper">
+                                                    <img src="${STATIC_URL}img/canvas/ParallelGateway.png">
+                                                </div>
+                                            </div>
                                             <div class="jtk-window jtk-node workfolw-node cog-node" id="{charts}"
                                                  data-type="dataCog">
                                                 <div class="node-wrapper">
@@ -1318,7 +1318,9 @@
                             vm.page_count = res.data.results[0].page_count;
                         }
 
-                    })
+                    }).catch(function (e) {
+                    vm.$message.error('获取数据失败！');
+                    });
                 }
 
             },
@@ -1367,7 +1369,7 @@
                             vm.sycontent();
                             vm.basic_test()
                         }).catch(function (e) {
-                            vm.$massage.error('获取数据库失败！');
+                            vm.$message.error('获取数据库失败！');
                         });
                         vm.sql1 = 'block';
                         vm.file1 = 'none';
@@ -1436,7 +1438,7 @@
                             vm.chart.params = res['data']['results']['connname'];
                             vm.show_content();
                         }).catch(function (e) {
-                            vm.$massage.error('获取数据库失败！');
+                            vm.$message.error('获取数据库失败！');
                         });
                 }
                 if (row.monitor_type =='作业监控项') {
@@ -1675,10 +1677,11 @@
                     }
                 }).then(function (res) {
                     {
-                        vm.template_list.id = res.data.template_id[0].id
-                        vm.template_list.name = res.data.template_id[0].name
+                        console.log(res)
+                        vm.template_list.id=res.data.template_id[0].id
+                        vm.template_list.name=res.data.template_id[0].name
                         vm.constants = res.data.constants
-                        var aa = " <div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width: 100%;position: relative;\">\n" +
+                        var aa="     <div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width:1000px;position: relative;\">\n" +
                             "\n" +
                             "                                        <div class=\"workflow-canvas\" style=\"margin-left: 0px;padding-left: 0px\">\n" +
                             "                                            <!-- 画布模板 start -->\n" +
@@ -1695,36 +1698,37 @@
                             "    <!-- template 模板-->\n" +
                             "                                        <div class=\"jtk-delete jtk-none \">删除节点</div>\n" +
                             "                                        <div id=\"template\" class=\"jtk-none\">\n" +
-                            "                                            <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\"\n" +
-                            "                                                 data-type=\"EmptyEndEvent\">\n" +
-                            "                                                <div class=\"node-wrapper\">\n" +
-                            "                                                    <div class=\"node-icon-start\">\n" +
-                            "                                                        <i class=\"bk-icon icon-star-shape\"></i>\n" +
-                            "                                                    </div>\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\" data-type=\"EmptyEndEvent\">\n" +
+                            "                                               <div class=\"node-wrapper\">\n" +
+                            "                                                    <img src=\"${STATIC_URL}img/canvas/endpoint.png\" style=\"top: 5px;left: 20px;position: absolute;\">\n" +
                             "                                                </div>\n" +
                             "                                            </div>\n" +
-                            "                                             <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\"\n" +
-                            "                                                  data-type=\"EmptyStartEvent\">\n" +
+                            "                                             <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\" data-type=\"EmptyStartEvent\">\n" +
                             "                                                <div class=\"node-wrapper\">\n" +
-                            "                                                    <div class=\"node-icon-start\">\n" +
-                            "                                                        <i class=\"bk-icon icon-star-shape\"></i>\n" +
-                            "                                                    </div>\n" +
+                            "                                                    <img src=\"${STATIC_URL}img/canvas/Start.png\" style=\"top: 5px;left: 20px;position: absolute;\">\n" +
                             "                                                </div>\n" +
                             "                                            </div>\n" +
-                            "                                            <div class=\"jtk-window jtk-node workfolw-node database-node\" id=\"{charts}\"\n" +
-                            "                                                 data-type=\"ServiceActivity\">\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node database-node\" id=\"{charts}\" data-type=\"ServiceActivity\">\n" +
                             "                                                <div class=\"node-wrapper\">\n" +
                             "                                                    <div class=\"node-content\" style=\"position: relative\">\n" +
                             "                                                        <div class=\"start_time\" style=\"position: absolute;width: 70px;height: 20px;top: -26px;left: 0px;\"></div>\n" +
                             "                                                        <div class=\"end_time\" style=\"position: absolute;width: 70px;height: 20px;top: -26px;right: 0px;\"></div>\n" +
                             "                                                        <p class=\"node-title\"></p>\n" +
                             "                                                    </div>\n" +
-                            "                                                    <div class=\"node-icon\">\n" +
-                            "                                                        <i class=\"bk-icon icon-data\"></i>\n" +
+                            "                                                    <div class=\"node-icon\" style=\"top: 26px;width: 100%;height: 20px;\">\n" +
                             "                                                    </div>\n" +
                             "                                                </div>\n" +
                             "                                            </div>\n" +
-                            "\n" +
+                            "                                           <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\" data-type=\"ConvergeGateway\">\n" +
+                            "                                                 <div class=\"node-wrapper\">\n" +
+                            "                                                    <img src=\"${STATIC_URL}img/canvas/convergegateway.png\">\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
+                            "                                            <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\" data-type=\"ParallelGateway\">\n" +
+                            "                                                <div class=\"node-wrapper\">\n" +
+                            "                                                    <img src=\"${STATIC_URL}img/canvas/ParallelGateway.png\">\n" +
+                            "                                                </div>\n" +
+                            "                                            </div>\n" +
                             "                                            <div class=\"jtk-window jtk-node workfolw-node cog-node\" id=\"{charts}\"\n" +
                             "                                                 data-type=\"dataCog\">\n" +
                             "                                                <div class=\"node-wrapper\">\n" +
@@ -1752,7 +1756,9 @@
                             "                                    </div>"
                         $('#flow_canvas').html(aa)
                         vm.location = res.data.activities
+                        console.log(vm.location)
                         vm.line = res.data.flows
+                        console.log(vm.line)
                         //显示流程单元中的预览图
                         $('#flow1').dataflow({
 
@@ -1768,12 +1774,11 @@
                                 }
                         });
 
-                        $('.node-icon').css('top', '-7px')
-                        let old_html = $('#canvas').html()
-                        $('#canvas').html('<div style="transform: scale(0.65)">' + old_html + '</div>')
+                        let old_html  = $('#canvas').html()
+                        $('#canvas').html('<div style="transform: scale(0.65)">'+old_html+'</div>')
                     }
                 }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
 
             },
@@ -1788,7 +1793,7 @@
                     vm.activities_node_name = res.data.activities
 
                 }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
             },
             Rendering_start_time() {
@@ -1844,12 +1849,12 @@
                                     }
                                 }
                         }).catch(function (e) {
-                            vm.$massage.error('获取数据失败！');
+                            vm.$message.error('获取数据失败！');
                         });
                         },13000)
 
                     }).catch(function (e) {
-                        vm.$massage.error('获取数据失败！');
+                        vm.$message.error('获取数据失败！');
                     });
                 }else if(vm.liucheng == 'none'){
 
@@ -1863,7 +1868,7 @@
                     }).then(function () {
 
                     }).catch(function (e) {
-                        vm.$massage.error('获取数据失败！');
+                        vm.$message.error('获取数据失败！');
                     });
                 }
 
@@ -2006,7 +2011,7 @@
                     $('#job_text').append('<div type=\"job' + item_id + '\" style=\"margin:0 auto;\"></div>');
                     job_monitor_active(job_params);
                 }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
             },
             rowclass({row, rowIndex}) {
@@ -2041,7 +2046,7 @@
                     }
 
                 }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
             },
             //初始化
@@ -2248,7 +2253,7 @@
                     vm.echart_height();
                     vm.echart_width();
                 }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
             },
             echart_height() {
@@ -2269,7 +2274,7 @@
                 }).then((res) =>{
                     if (res.data.code == 1) {alert(res.data.message)}
                 }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
             },
         },
