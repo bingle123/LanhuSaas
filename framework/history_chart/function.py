@@ -195,7 +195,7 @@ def select_log(request):
     if(res1 != ""and res2 == "" and res3 == "" and res4 == ""):
         log = tmp.filter(Q(log_type__icontains=res1))
     elif(res2 != "" and res1 == "" and res3 == "" and res4 == ""):
-        log = tmp.filter(Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
+        log = tmp.filter(Q(id=res2)|Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
         class_name__icontains=res2) | Q(method__icontains=res2) |Q(is_success__icontains=res2))
     elif(res3 != ""and res1 == "" and res2 == ""):
         log = tmp.filter(Q(create_time__range=(res3,res4)))
