@@ -1300,6 +1300,7 @@
             },
             //编辑单元
             edit_unit(row) {
+                console.log(row)
                 this.get_db_connections();
                 vm.add_pamas = 1;
                 vm.centerDialogVisible = true;
@@ -1309,7 +1310,7 @@
                 vm.disabled5 = true;
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
-                if (row.monitor_type ==1) {
+                if (row.monitor_type =='基本监控项') {
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
                     vm.basic.height = row.height;
@@ -1382,7 +1383,8 @@
                         vm.basic_test()
                     }
                 }
-                if (row.monitor_type ==2) {
+                if (row.monitor_type =='图表监控项') {
+                    console.log(row)
                     vm.disabled2 = true;
                     vm.disabled3 = false;
                     vm.disabled4 = true;
@@ -1413,12 +1415,13 @@
                             alert('拉取数据库失败！')
                         });
                 }
-                if (row.monitor_type ==3) {
+                if (row.monitor_type =='作业监控项') {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = false;
                     vm.disabled5 = true;
                     vm.monitor_type = 'third';
+                    console.log(row)
                     vm.job.font_size = row.font_size;
                     vm.job.height = row.height;
                     vm.job.width = row.width;
@@ -1435,7 +1438,7 @@
                     vm.job.status = row.status;
                     vm.area=row.monitor_area;
                 }
-                if (row.monitor_type ==4) {
+                if (row.monitor_type =='流程监控项') {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = true;
