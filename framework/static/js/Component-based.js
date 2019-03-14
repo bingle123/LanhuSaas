@@ -38,14 +38,16 @@ function job_monitor_active(job_params) {
     }
     $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
     $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
-    $('[type='+selector_id+']').css('height',job_params.height+50+'px');
+    var height=Number(job_params.height)+50;
+    console.log(height)
+    $('[type='+selector_id+']').css('height',height+'px');
     $('[type='+selector_id+']').css('width',job_params.width);
     $('[type='+selector_id+']').find("*").css('font-size',job_params.font_size);
 }
 function show_chart_active(item_id,chart_type,height,width,drigging_id){
     var new_res=[]
     var chartdata=[]
-    $.get("/monitorScene/get_chart_data/"+item_id,function (res) {
+    $.get("/monitor_scene/get_chart_data/"+item_id,function (res) {
         res=res.message
         console.log(res)
        for(r in res){
@@ -239,7 +241,7 @@ function base_monitor_active(item_id,font_size,height,width,content) {
             con.push(temp)
         }
         console.log(con)
-     $.get("/monitorScene/get_basic_data/"+item_id,function (res){
+     $.get("/monitor_scene/get_basic_data/"+item_id,function (res){
         var selector_id='basic'+item_id
         var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
          var content=''

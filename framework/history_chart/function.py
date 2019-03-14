@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
 
-from gatherDataHistory.models import TDGatherHistory
+from gather_data_history.models import TDGatherHistory
 from logmanagement.models import *
 from django.core.paginator import *
 from db_connection.function import get_db
 from system_config.function import *
 from notification.models import *
-from monitorScene.models import *
+from monitor_scene.models import *
 from monitor_item import tools
 from monitor_item import models
 from monitor_item.models import Scene_monitor,Monitor,Job
@@ -15,8 +15,8 @@ from conf import settings_development
 import MySQLdb
 import time
 from datetime import datetime,date,timedelta
-from gatherData.models import TDGatherData
-from gatherDataHistory.models import TDGatherHistory
+from gather_data.models import TDGatherData
+from gather_data_history.models import TDGatherHistory
 from market_day.models import Holiday
 from models import operation_report
 
@@ -44,7 +44,7 @@ def show_all(request):
             'create_time': str(x.create_time),
             'succeed': x.succeed,
             'message': x.message,
-            'page_count': pages
+            'page_count': int(pages)
         }
         res_list.append(dic)
     return  res_list
@@ -55,8 +55,7 @@ def select_all_rules(request):
     limit = res1['limit']
     page = res1['page']
     #数据库的连接配置
-    DATABASES = settings_development.DATABASES['default']
-    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'], db=DATABASES['NAME'],charset="utf8")
+    db = get_db()
     cursor = db.cursor()
     cursor.execute("select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "
                    "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "
@@ -103,10 +102,7 @@ def select_rules_pagination(request):
     if(res1['date_Choice']):
         res3 = res1['date_Choice'][0]
         res4 = res1['date_Choice'][1]
-        print res3,res4
-    DATABASES = settings_development.DATABASES['default']
-    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                         db=DATABASES['NAME'], charset="utf8")
+    db = get_db()
     cursor = db.cursor()
     sql = "select distinct e.scene_id,e.id,e.monitor_name,e.scene_name,f.alert_title,f.alert_content,f.alert_time,f.persons "\
           "FROM(SELECT c.scene_id,c.item_id,c.scene_name,d.id,d.monitor_name "\
@@ -124,7 +120,6 @@ def select_rules_pagination(request):
     if(date_Choice):
         sql=sql+"and f.alert_time between  '" + res3 + "'  and '" + res4 + "'"
     sql=sql+" ORDER BY e.scene_name"
-    print sql
     cursor.execute(sql)
     res = cursor.fetchall()
     p = Paginator(res, limit)
@@ -191,7 +186,6 @@ def select_log(request):
     res2 = res['keyword']                   #关键字
     res3 = ""                               #开始时间
     res4 = ""                               #结束时间
-    print res['date_Choice']
     if(res['date_Choice']):
         res3 = res['date_Choice'][0]
         res4 = res['date_Choice'][1]
@@ -200,25 +194,19 @@ def select_log(request):
 
     #if组合判断查询的数据
     if(res1 != ""and res2 == "" and res3 == "" and res4 == ""):
-        print 123
         log = tmp.filter(Q(log_type__icontains=res1))
     elif(res2 != "" and res1 == "" and res3 == "" and res4 == ""):
-        print 234
         log = tmp.filter(Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
         class_name__icontains=res2) | Q(method__icontains=res2) |Q(succeed__icontains=res2))
     elif(res3 != ""and res1 == "" and res2 == ""):
-        print 345
         log = tmp.filter(Q(create_time__range=(res3,res4)))
     elif(res1 != "" and res2 != "" and res3 == "" and res4 ==""):
-        print 456
         log = tmp.filter(Q(log_type__icontains=res1) & (Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
             class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2)))
     elif (res1 != "" and res2 != ""and res3!="" and res4!=""):
-        print 567
         log = tmp.filter((Q(log_type__icontains=res1)) & (Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
             class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2))& (Q(create_time__range=(res3,res4))))
     elif(res3!="" and res4!="" and res1!="" and res2 == ""):
-        print 111
         log = tmp.filter(Q(log_type__icontains=res1) & Q(create_time__range=(res3, res4)))
     elif(res3!="" and res4!="" and res2!="" and res1 == ""):
         log = tmp.filter((Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
@@ -257,9 +245,7 @@ def about_select(request):
           "FROM tb_monitor_scene AS a, tl_scene_monitor AS b  " \
           "WHERE a.id = b.scene_id ) AS c, tb_monitor_item AS d " \
           "WHERE c.item_id = d.id ) e;"
-    DATABASES = settings_development.DATABASES['default']
-    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                         db=DATABASES['NAME'], charset="utf8")
+    db = get_db()
     cursor = db.cursor()
     cursor.execute(sql)
     res = cursor.fetchall()
@@ -293,7 +279,6 @@ def about_search(request):
     page = res1['page']
     search = res1['search'].strip()     #场景名称搜索
     keyword = res1['keyword']      #关键字搜索
-    print res1['date_Choice']
     res3 = ""                               #按时间搜索的开始时间
     res4 = ""                               #按时间搜索的结束时间
     if (res1['date_Choice']):
@@ -313,12 +298,9 @@ def about_search(request):
         sql = sql+" and (e.scene_id LIKE '%"+keyword+"%' or e.item_id LIKE '%"+keyword+"%' or e.monitor_name LIKE '%"+keyword+"%')"
     if(res1['date_Choice']):
         sql = sql+" and e.start_time between '"+res3+"' and '"+res4+"'"
-    DATABASES = settings_development.DATABASES['default']
-    db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                         db=DATABASES['NAME'], charset="utf8")
+    db = get_db()
     cursor = db.cursor()
     cursor.execute(sql)
-    print sql
     #执行sql并分页
     res = cursor.fetchall()
     p = Paginator(res, limit)
@@ -346,6 +328,7 @@ def about_search(request):
 
 #别动
 def select_scenes(request):
+    #查询所有场景，遍历场景名称和id
     scenes = Scene.objects.all()
     list_data = list()
     dic_data = {}
@@ -358,56 +341,62 @@ def select_scenes(request):
     return tools.success_result(list_data)
 
 #封装方法，别动
-def getPant_list(scene_list,d_data,all_itemid,count):
+def getPant_list(scene_list,d_data,all_itemid):
     last_list = []
-    AllList = []
-    new_AllList = []
+    All_date = []
+    new_Alldate = []
 
-
-    for s in scene_list:
-        AllList.append(str(s[0]).split(' ')[0])
-    for All in AllList:
-        if All not in new_AllList:
-            new_AllList.append(All)
+    #所有场景日期
+    for scene in scene_list:
+        All_date.append(str(scene[0]).split(' ')[0])
+    #日期去重
+    for dates in All_date:
+        if dates not in new_Alldate:
+            new_Alldate.append(dates)
     #循环去重之后的日期,
-    for l in new_AllList:
+    for new_data in new_Alldate:
+        #成功数
         success_items = 0
+        #失败数
         failed_items = 0
+        #告警总数
         alertNums = 0
+        #单元总数
         itemNums = 0
-        for x in d_data:
-            if str(x).split(' ')[0] == l:
+        #遍历有错误的日期 == 去重之后有错误的日期，比对有一个就错误数+1
+        for alert_data in d_data:
+            if str(alert_data).split(' ')[0] == new_data:
                 failed_items += 1
-
-        for y in AllList:
-            if l == y:
+        for data_count in All_date:
+            if new_data == data_count:
                 itemNums = itemNums +1
         success_items = itemNums - failed_items
         be_list = []
         #取得当日一个场景下的时间最小值和最大值
-        for i in all_itemid:
-            ts = TDGatherHistory.objects.filter(item_id=i)
+        for itemid in all_itemid:
+            ts = TDGatherHistory.objects.filter(item_id=itemid)
             for t in ts:
                 tds = model_to_dict(t)
                 tds['gather_time'] = t.gather_time
-                if str(tds['gather_time']).split(' ')[0] == l:
+                if str(tds['gather_time']).split(' ')[0] == new_data:
                     be_list.append(tds['gather_time'])
         mx = max(be_list)
         mi = min(be_list)
+        #时间间隔
         time_consum = mx - mi
         time_consum = str(time_consum)
-        alog = TdAlertLog.objects.filter(item_id=i)
+        alog = TdAlertLog.objects.filter(item_id=itemid)
         #告警数
         for al in alog:
             alertlog = model_to_dict(al)
             alertlog['alert_time'] = al.alert_time
-            if str(alertlog['alert_time']).split(' ')[0] ==l:
+            if str(alertlog['alert_time']).split(' ')[0] ==new_data:
                 alertNums +=1
         persent = (success_items/itemNums) *100
         mx = str(mx)
         mi = str(mi)
         dic_data = {
-            'timedata':l,
+            'timedata':new_data,
             'begin_time':mi,
             'end_time':mx,
             'success_items':success_items,
@@ -438,29 +427,28 @@ def selectScenes_ById(request):
     all_itemid = []
     # 所有监控项,字符串拼接
     str1 = ""
-    for i in sm:
-        all_itemid.append(model_to_dict(i)['item_id'])
+    for scen_monitor in sm:
+        all_itemid.append(model_to_dict(scen_monitor)['item_id'])
     for i, index in enumerate(all_itemid):
         if (i + 1) < all_itemid.__len__():
             str1 = str(index) + ","
         else:
             str1 += str(index)
     try:
-        sql = "SELECT * from (select max(a.gather_time) AS mtime,a.item_id " \
-              "FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx," \
-              "tt.gather_time,tt.gather_error_log,tt.item_id	" \
-              "FROM td_gather_history tt WHERE	item_id IN (" + str1 + ")) AS t WHERE   " \
-            "gather_time BETWEEN '" + b_time + "'  AND '" + e_time + "' ORDER BY item_id,gather_time) a	group by " \
+        sql = "SELECT * from (select max(a.gather_time) AS mtime,a.item_id "\
+              "FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx,"\
+              "tt.gather_time,tt.gather_error_log,tt.item_id	"\
+              "FROM td_gather_history tt WHERE	item_id IN (" + str1 + ")) AS t WHERE  "\
+            "gather_time BETWEEN '" + b_time + "'  AND '" + e_time + "' ORDER BY item_id,gather_time) a	group by "\
             "a.item_id,a.xx)  as m ORDER BY m.mtime"
-        DATABASES = settings_development.DATABASES['default']
-        db = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
+        db = get_db()
         cursor = db.cursor()
         cursor.execute(sql)
         res1 = cursor.fetchall()
     except Exception as e:
         return tools.error_result(e)
     scene_list = list(res1)
+    #所有有错误的日期
     d_data = []
     h1_new = None
     for i in scene_list:
@@ -478,9 +466,7 @@ def selectScenes_ById(request):
     # 查到的总天数
     try:
         sql1 = "select count(*) from (select DISTINCT DATE_FORMAT(tb.mtime,'%y-%m-%d') gather_time from (SELECT * from (select max(a.gather_time) AS mtime,a.item_id FROM (SELECT  t.* FROM (SELECT  DATE_FORMAT(tt.gather_time, '%Y-%m-%d') AS xx,tt.gather_time,tt.gather_error_log,tt.item_id	FROM td_gather_history tt WHERE	item_id IN (" + str1 + ")) AS t WHERE   gather_time BETWEEN '" + b_time + "'  AND '" + e_time + "' ORDER BY item_id,gather_time) a	group by a.item_id,a.xx)  as m ORDER BY m.mtime)as tb)as tf"
-        DATABASES = settings_development.DATABASES['default']
-        db1 = MySQLdb.connect(host=DATABASES['HOST'], user=DATABASES['USER'], passwd=DATABASES['PASSWORD'],
-                             db=DATABASES['NAME'], charset="utf8")
+        db1 = get_db()
         cursor1 = db1.cursor()
         cursor1.execute(sql1)
         count = cursor1.fetchone()
@@ -497,9 +483,7 @@ def selectScenes_ById(request):
             return tools.success_result(Alldays)
         # 有效天大于3天小于7天，取所有天数
         else:
-            return getPant_list(scene_list, d_data, all_itemid, count)
-
-
+            return getPant_list(scene_list, d_data, all_itemid)
 
 
 
@@ -691,65 +675,65 @@ def monthly_select(request):
     dic_list=[]
     for i in res:
         if(str(i.date)[5:7] == '01'):
-            total +=i.scene_num
-            Success_num += i.success_num
-            failure_num +=i.failed_num
-            alert_num +=i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif(str(i.date)[5:7] == '02'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '03'):
             total += int(i.scene_num)
             Success_num += int(i.success_num)
             failure_num += int(i.failed_num)
             alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '04'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '05'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '06'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '07'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '08'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '09'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '10'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '11'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
         elif (str(i.date)[5:7] == '12'):
-            total += i.scene_num
-            Success_num += i.success_num
-            failure_num += i.failed_num
-            alert_num += i.alert_num
+            total += int(i.scene_num)
+            Success_num += int(i.success_num)
+            failure_num += int(i.failed_num)
+            alert_num += int(i.alert_num)
     if(str(i.date)[:7] == str(i.date)[:5]+'01'):
         success_rate = round(Success_num / total, 4)
         success_rate = str(success_rate * 100) + '%'

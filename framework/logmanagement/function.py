@@ -72,7 +72,7 @@ def show_all(request):
             'class_name': x.class_name,
             'method': x.method,
             'create_time': str(x.create_time),
-            'succeed': x.succeed,
+            'is_success': x.is_success,
             'message': x.message,
             'page_count': pages
         }
@@ -90,7 +90,7 @@ def select_log(request):
     res_list = []
     tmp = Operatelog.objects.all()
     log = tmp.filter(Q(log_type__icontains=res1) | Q(log_name__icontains=res1) | Q(user_name__icontains=res1) | Q(
-        class_name__icontains=res1) | Q(method__icontains=res1))
+        class_name__icontains=res1) | Q(method__icontains=res1)| Q(is_success=res1))
     p = Paginator(log, limit)
     count = p.page_range
     pages = count[-1]
@@ -104,7 +104,7 @@ def select_log(request):
             'class_name': x.class_name,
             'method': x.method,
             'create_time': str(x.create_time),
-            'succeed': x.succeed,
+            'is_success': x.is_success,
             'message': x.message,
             'page_count': pages
         }

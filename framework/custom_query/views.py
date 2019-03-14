@@ -8,7 +8,7 @@ import sys
 
 
 def show_index(request):
-    return render_mako_context(request, './customQuery/customQuery.html')
+    return render_mako_context(request, './custom_query/custom_query.html')
 
 
 def select_queries_pagination(request):

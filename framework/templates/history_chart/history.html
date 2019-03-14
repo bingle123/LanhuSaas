@@ -79,7 +79,7 @@
                         </el-col>
                     </el-row>
                 </div>
-                <el-col :span="5" style="margin-top: 5px">
+                <el-col :span="4" style="margin-top: 5px">
                     <el-select placeholder="请选择日志类型" v-model="log_type" @change="change_type">
                         <el-option label="日志查询" value="log"></el-option>
                         <el-option label="执行告警信息查询" value="alert"></el-option>
@@ -91,16 +91,16 @@
                 </el-col>
 
                 <div id="hide_m" style="display:none">
-                    <el-row type="flex">
-                        <el-col :span="2"><a>场景：</a></el-col>
-                        <el-col :span="3" style="margin-top: 5px">
+                    <el-row type="flex" align="middle">
+                        <el-col :span="1"  style="margin-left: 20px">场景:</el-col>
+                        <el-col :span="3">
 
                             <el-select placeholder="请选择场景" v-model="Cscene" value-key="id" @change="chose_scenes">
                                 <el-option v-for="item in scenes_data" :label="item.sname" :key="item.id"
                                            :value="item"></el-option>
                             </el-select>
                         </el-col>
-                        <el-col :span="2"><span>日期:</span></el-col>
+                        <el-col :span="1"  style="margin-left: 20px">日期:</el-col>
                         <el-col :span="3" style="margin-top: 5px">
                             <el-date-picker
                                     v-model="scene_time"
@@ -195,7 +195,7 @@
 
                 <div id="scene_compare" style="display:none">
                     <!--画图开始-->
-                    <div id="scene_et" style="width: 600px;height: 400px;margin: 60px">
+                    <div id="scene_et" style="width: 700px;height: 400px;margin: 60px">
                     </div>
                     <!--画图结束勿动-->
                     <!--场景比对table-->
@@ -228,19 +228,17 @@
 
                 <div id="table10" style="display:none">
                         <div class="container">
-                            <el-col :span="5" style="margin-top: 5px">
+                            <el-col :span="12" style="margin-top: 5px;text-align: left">
                                 <div class="block">
-                                    <span class="demonstration">选择周</span>
+                                    <span class="demonstration">周</span>
                                     <el-date-picker
                                       v-model="weeks"
                                       type="week"
                                       format="yyyy 第 WW 周"
                                       placeholder="选择周">
                                     </el-date-picker>
+                                    <el-button icon="el-icon-search" circle  v-on:click="get_week"></el-button>
                                 </div>
-                            </el-col>
-                            <el-col :span="3" style="margin-top: 5px">
-                                <el-button icon="el-icon-search" circle  v-on:click="get_week"></el-button>
                             </el-col>
                      <el-table :data="sceneOperationRuleTableData" style="width: 100%;margin-top: 20px">
                          <el-table-column prop="date" label="时间" style="width: 15%" align="center">
@@ -265,7 +263,7 @@
                           -->
                     </div>
                  <div id="table4" style="display:none">
-                     <div id="scene_et_table4" style="width: 600px;height: 400px;margin: 60px">
+                     <div id="scene_et_table4" style="width:1000px;height: 500px;margin: 20px">
                      </div>
                      <div id="get_days" style="display: none">
                      </div>
@@ -323,9 +321,9 @@ let vm = new Vue({
             Cscene: '',
             Cscene_id:'',
             scene_time: '',
-            qnmb: [],
+            pattern_data: [],
             dayData:[],
-
+            aboutRulesCount:'',
 
             sCount: 1,
             monthly_operation_statistics:'',
@@ -343,6 +341,7 @@ let vm = new Vue({
                         limit: 10
                     },
                 }).then(function (res) {
+                    console.log(res)
                     vm.Operatelog = res.data.message;
                     vm.page_count = res.data.message[0].page_count;
                 });
@@ -386,7 +385,7 @@ let vm = new Vue({
             },
 
             select_log(){
-               if(vm.log_type == 'log'){
+               if(vm.log_type == 'log'| vm.log_type == ''){
                    vm.page = 1
                    if (vm.keyword == "" & vm.date_Choice == "" & this.search =="") {
                        vm.show()
@@ -460,17 +459,31 @@ let vm = new Vue({
                 vm.page = value;
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}history_chart/select_scene_operation',
+                    url: '${SITE_URL}history_chart/show_operation_report',
                     data: {
                         page: vm.page,
                         limit: 10
                     },
                 }).then((res) => {
                     this.sceneOperationRuleTableData = res.data.message;
-                    vm.sceneOperationCount = res.data.message[0].pages;
                 })
             },
-
+            //显示场景运行情况
+            show_scene_operation(){
+                vm.page = 1
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}history_chart/show_operation_report',
+                    data: {
+                        page: vm.page,
+                        limit: 10
+                    },
+                }).then((res) =>{
+                    console.log(res)
+                    vm.sceneOperationRuleTableData = res.data.message
+                    vm.sceneOperationCount = res.data.message[0].page_count;
+                })
+            },
 
             change_type(value) {
                 if (value == 'log') {
@@ -527,9 +540,9 @@ let vm = new Vue({
                             limit: 10
                         },
                 }).then((res) =>{
-                   console.log(res)
+                    console.log(res)
                     vm.sceneOperationRuleTableData = res.data.message
-
+                    vm.sceneOperationCount = res.data.message[0].page_count;
                 });
                    $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table4,#date_selection").css('display','none');
                    $('#table10').css('display','block');
@@ -557,19 +570,18 @@ let vm = new Vue({
             get_week(){
                 if (vm.weeks){
                     let date = vm.weeks
+                    vm.sceneOperationCount = 1
                     axios({
                             method: 'post',
                             url: '${SITE_URL}history_chart/get_week/',
                             data: {
                                 date:date,
-                                page: vm.page,
-                                limit: 10
                             },
                     }).then((res) =>{
                         vm.sceneOperationRuleTableData = res.data.message
                     })
                 }else {
-                    vm.show()
+                    vm.show_scene_operation()
                 }
             },
 
@@ -581,10 +593,7 @@ let vm = new Vue({
             },
             //再选日期
             sceneTChang(value){
-
                 vm.scene_time = value;
-
-
             },
             //再初始化图
             draw_line(value) {
@@ -706,8 +715,6 @@ let vm = new Vue({
                     this.$set(list_x,i,value[i]['success_rate']);
                     this.$set(date,i,value[i]['date']);
                 }
-                console.log(list_all,list_s,list_f,list_x,)
-
                 vm.myChart = echarts.init(document.getElementById('scene_et_table4'));
                 option = {
                     title: {
@@ -772,9 +779,9 @@ let vm = new Vue({
             //最后画图，出表
             drawging_() {
                 if (vm.Cscene == '') {
-                    alert('请选择场景');
+                    this.$message('请选择场景');
                 } else if (vm.scene_time == '') {
-                    alert('请选择日期');
+                     this.$message('请选择日期');
                 } else {
                     axios({
                         method: 'post',
@@ -785,25 +792,28 @@ let vm = new Vue({
                         },
                     }).then((res) => {
                         if(res.data.code == 1){
-                            alert('此场景没有监控项')
-                            //$('#get_days,#scene_et').css('display','none');
+                            this.$message('此场景没有监控项');
+                            $("#scene_et").html('');
+                            $("#get_days").css('display','none');
                         }else {
-                            vm.qnmb = res.data.results;
+                            vm.pattern_data = res.data.results;
                             if(typeof res.data.results == 'number'){
                                 if(res.data.results < 3){
-                                    alert('日期间隔需要大于3天');
-                                    //$('#get_days,#scene_et').css('display','none');
+                                    this.$message('日期间隔需要大于3天');
+                                    $("#scene_et").html('');
+                                    $("#get_days").css('display','none');
                                 }else if(res.data.results > 15){
-                                    alert('日期最多选15天，请重新选择');
+                                    this.$message('日期最多选15天，请重新选择');
                                 }else{
-                                    alert('此期间不足3条数据');
-                                   // $('#get_days,#scene_et').css('display','none');
+                                    this.$message('此期间不足3条数据');
+                                   $("#scene_et").html('');
+                                   $("#get_days").css('display','none');
                                 }
 
                             }else{
-                                vm.qnmb = res.data.results;
+                                vm.pattern_data = res.data.results;
                                 vm.dayData = res.data.results;
-                                vm.draw_line(vm.qnmb);
+                                vm.draw_line(vm.pattern_data);
                                 $('#get_days,#scene_et').css('display','block');
                                 }
                             }});
