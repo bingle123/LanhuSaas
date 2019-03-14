@@ -48,19 +48,21 @@
         .score_input{
             font-size: 16px;
             position: absolute;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             top: -36px;
             left: 0;
             width: 50px;
             height: 36px;
             display: none;
         }
-        .right_click{
+
+        .right_click {
             position: absolute;
             width: 100px;
             display: none;
         }
-        .right_click span{
+
+        .right_click span {
             width: 100px;
             display: inline-block;
             font-size: 16px;
@@ -92,9 +94,10 @@
                         <el-button size="mini" type="text" v-on:click="edit_unit(scope.row)">编辑</el-button>
                         <el-button size="mini" type="text" v-on:click="delete_unit(scope.row)">删除</el-button>
                         <el-tooltip :content="scope.row.status" placement="top">
-                            <el-switch  v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949" @change="switch_change(scope.row)"
+                            <el-switch v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949"
+                                       @change="switch_change(scope.row)"
                                        active-value="1" inactive-value="0"></el-switch>
-                            </el-tooltip>
+                        </el-tooltip>
                     </template>
                 </el-table-column>
             </el-table>
@@ -115,10 +118,10 @@
             <span>监控项执行日历</span>
             <el-select v-model="area" placeholder="请选择日历的地区">
                 <el-option
-                  v-for="item in areas"
-                  :key="item.value"
-                  :label="item.area"
-                  :value="item.value">
+                        v-for="item in areas"
+                        :key="item.value"
+                        :label="item.area"
+                        :value="item.value">
                 </el-option>
             </el-select>
         </div>
@@ -139,7 +142,7 @@
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item prop="height">
-                                            <el-input type="number" min="0"  v-model.number="numberValidateForm.age"
+                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="basic.height"
                                                       placeholder="请输入高度" @change="basic_height"></el-input>
                                         </el-form-item>
@@ -147,14 +150,16 @@
                                     <el-col class="line" :span="2">Ⅹ</el-col>
                                     <el-col :span="11">
                                         <el-form-item prop="width">
-                                              <el-input class="max" type="number" min="0" max="600" v-model.number="numberValidateForm.age"
+                                              <el-input class="max" type="number" min="0" max="600"
+                                                        v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="basic.width"
                                                         placeholder="请输入宽度" @change="basic_width"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="显示内容" prop="contents" style="width: 96%">
-                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000" @change="sycontent"
+                                        <el-input v-model="basic.contents" placeholder="上证指数:3000  深证指数:3000"
+                                                  @change="sycontent"
                                                   type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
@@ -193,13 +198,14 @@
                                     </el-form-item>
                                 </div>
                                 <el-form-item label="数据采集规则" style="width: 96%">
-                                    <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq" type="textarea"></el-input>
+                                    <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq"
+                                              type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="basic.start_time"
-                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm" >
+                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
@@ -207,7 +213,7 @@
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="basic.end_time"
-                                                            placeholder="结束时间点" format="HH:mm" value-format="HH:mm" >
+                                                            placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
@@ -224,7 +230,8 @@
                             <div style="padding: 0px 45% 0px 45%">
                                 <h2>预览</h2>
                             </div>
-                            <div style="text-align:center;width: 100%;min-height:40%;height: auto;background-color: whitesmoke; position: relative" id="text1">
+                            <div style="text-align:center;width: 100%;min-height:40%;height: auto;background-color: whitesmoke; position: relative"
+                                 id="text1">
                                 <!--<div id = "text2" style="position:absolute;left:230px;top:150px;"> -->
                                 <div id="text2" style="margin:auto;">
                                 </div>
@@ -348,7 +355,8 @@
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="job" :rules="rules3" ref="job" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
-                                    <el-select v-model="job.font_size" @change="change_job_fontSize" placeholder="请选择字号">
+                                    <el-select v-model="job.font_size" @change="change_job_fontSize"
+                                               placeholder="请选择字号">
                                         <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -371,7 +379,8 @@
                                 </el-form-item>
                                 <el-form-item label="显示内容" style="width: 96%" prop="contents">
                                     <el-input type="textarea" v-model="job.contents"
-                                              placeholder="上证指数:3000  深证指数:3000" @change="change_job_contents"></el-input>
+                                              placeholder="上证指数:3000  深证指数:3000"
+                                              @change="change_job_contents"></el-input>
                                 </el-form-item>
                                 <el-form-item label="作业模板" prop="gather_rule">
                                     <el-select v-model="job.gather_rule" placeholder="请选择作业模板">
@@ -422,7 +431,7 @@
                             <div style="padding: 0px 10%">
                                 <div style="height: 20px"></div>
                                 <el-button type="primary" :disabled="disabled1" v-on:click="job_test">采集测试</el-button>
-                                <el-checkbox v-model="checked1" @change="change2" >启动脚本</el-checkbox>
+                                <el-checkbox v-model="checked1" @change="change2">启动脚本</el-checkbox>
                                 <div :style="{ display: zuoye }">
                                     <el-alert title="启动作业可能会对系统造成不可逆的变更，请谨慎勾选此项！" type="warning" show-icon show-icon
                                               true-label="1" false-label="0"></el-alert>
@@ -440,14 +449,15 @@
                             <el-form :model="flow" :rules="rules4" ref="flow" label-width="100px">
 
                                 <el-form-item label="流程模板" prop="gather_rule">
-                                    <el-select v-model="flow.gather_rule" placeholder="请选择模板" @change="flow_change"	>
+                                    <el-select v-model="flow.gather_rule" placeholder="请选择模板" @change="flow_change">
                                         <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id"></el-option>
                                     </el-select>
                                 </el-form-item>
 
                                 <el-form-item label="节点">
                                         <el-select v-model="flow.node_name" placeholder="请选择节点">
-                                          <el-option v-for="i in activities_node_name" :label="i.name" :value="i.name"></el-option>
+                                          <el-option v-for="i in activities_node_name" :label="i.name"
+                                                     :value="i.name"></el-option>
                                         </el-select>
                                  </el-form-item>
 
@@ -456,7 +466,8 @@
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="activities_node_time.start_time"
-                                                            placeholder="开始时间点" @change="Rendering_start_time" format="HH:mm" value-format="HH:mm">
+                                                            placeholder="开始时间点" @change="Rendering_start_time"
+                                                            format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
@@ -464,7 +475,8 @@
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 96%" v-model="activities_node_time.end_time"
-                                                            placeholder="结束时间点" @change="Rendering_end_time" format="HH:mm" value-format="HH:mm">
+                                                            placeholder="结束时间点" @change="Rendering_end_time"
+                                                            format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                     </el-col>
@@ -483,7 +495,10 @@
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item prop="height">
-                                            <el-input disabled="disabled"  type="number" min="0" v-model.number="numberValidateForm.age" auto-complete="off" v-model="flow.height" placeholder="请输入高度" @change="flow_height"></el-input>
+                                            <el-input disabled="disabled" type="number" min="0"
+                                                      v-model.number="numberValidateForm.age" auto-complete="off"
+                                                      v-model="flow.height" placeholder="请输入高度"
+                                                      @change="flow_height"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
@@ -491,7 +506,7 @@
                                         <el-form-item prop="width">
                                               <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="flow.width" placeholder="请输入宽度"
-                                                        @change="flow_width" disabled="disabled" ></el-input>
+                                                        @change="flow_width" disabled="disabled"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
@@ -535,7 +550,8 @@
                                 </el-form-item>
                                 </div>
                                  <el-form-item label="采集周期" prop="period">
-                                            <el-input type="number" min="0" id="period" v-model.number="numberValidateForm.age"
+                                            <el-input type="number" min="0" id="period"
+                                                      v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="flow.period" style="width: 96%"
                                                       placeholder="请输入采集周期(秒)"></el-input>
                                 </el-form-item>
@@ -545,7 +561,8 @@
                             <div style="padding: 0px 45% 0px 45%">
                                 <h2>预览</h2>
                             </div>
-                            <div id="flow_canvas" style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;">
+                            <div id="flow_canvas"
+                                 style="text-align:center;width: 100%;height: 40%;background-color: whitesmoke;">
                                 <div id="flow1" class="clearfix workflow-box" style="width: 100%;position: relative;">
 
                                         <div class="workflow-canvas" style="margin-left: 0px;padding-left: 0px">
@@ -560,7 +577,7 @@
 
                                         </div>
 
-    <!-- template 模板-->
+                                    <!-- template 模板-->
                                         <div class="jtk-delete jtk-none ">删除节点</div>
                                         <div id="template" class="jtk-none">
                                             <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
@@ -583,8 +600,10 @@
                                                  data-type="ServiceActivity">
                                                 <div class="node-wrapper">
                                                     <div class="node-content" style="position: relative">
-                                                        <div class="start_time" style="position: absolute;width: 70px;height: 20px;top: -26px;left: 0px;"></div>
-                                                        <div class="end_time" style="position: absolute;width: 70px;height: 20px;top: -26px;right: 0px;"></div>
+                                                        <div class="start_time"
+                                                             style="position: absolute;width: 70px;height: 20px;top: -26px;left: 0px;"></div>
+                                                        <div class="end_time"
+                                                             style="position: absolute;width: 70px;height: 20px;top: -26px;right: 0px;"></div>
                                                         <p class="node-title"></p>
                                                     </div>
                                                     <div class="node-icon">
@@ -656,30 +675,30 @@
         el: '#app',
         data: {
             message: '',                                           //弹框提示信息
-            constants:'',
-            unit_id1:0,
-            location : '',
-            line:'',
-            old_html:'',
-            msg1:'',
-            sql_id:'',
-            template_list:{
-                name:'',
-                id:''
+            constants: '',
+            unit_id1: 0,
+            location: '',
+            line: '',
+            old_html: '',
+            msg1: '',
+            sql_id: '',
+            template_list: {
+                name: '',
+                id: ''
             },
-            add_pamas:0,                                        //新增编辑判断
-            font_size_range:[20,22,24,26,28,30,32,34,36,38,40],   //字体大小
+            add_pamas: 0,                                        //新增编辑判断
+            font_size_range: [20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40],   //字体大小
             job2: [],                                   //作业模板
             flow2: [],                                  //流程模板
-            activities_node_name:[],                    //节点名称
-            activities_node_time:{                      //节点时间
+            activities_node_name: [],                    //节点名称
+            activities_node_time: {                      //节点时间
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
             },
             page_count: 100,                            //总页码数
             page: 1,                                    //分页页码数
             sites: [],                                  //table内容
-            sites1:[],
+            sites1: [],
             contents: '',                               //搜索输入框内容
             checked1: false,                           //作业启动选框
             checked2: false,                           //流程启动选框
@@ -688,8 +707,8 @@
             disabled3: false,                            //图表单元
             disabled4: false,                            //作业单元
             disabled5: false,                            //流程单元
-            areas:[],
-            area:1,
+            areas: [],
+            area: 1,
             caiji1: 'block',
             caiji2: 'none',
             monitor_name: '',                             //单元名称
@@ -721,7 +740,7 @@
                 contents: '',                          //显示内容
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
-                monitor_area:''                             //日历地区
+                monitor_area: ''                             //日历地区
             },             //基本单元
             rules1: {
                 font_size: [
@@ -755,7 +774,7 @@
                 gather_rule: '',                     //采集规则
                 gather_params: '',                   //节点
                 params: '',                         //监控参数
-                monitor_area:''                             //日历地区
+                monitor_area: ''                             //日历地区
             },             //图表单元
             rules2: {
                 font_size: [
@@ -791,7 +810,7 @@
                 gather_rule: '',                     //NODE_KEY
                 gather_params: '',                   //作业模板
                 params: '',                         //执行服务器
-                monitor_area:''                             //日历地区
+                monitor_area: ''                             //日历地区
             },                //作业单元
             rules3: {
                 font_size: [
@@ -827,8 +846,8 @@
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
                 gather_params: '',                   //流程模板
-                node_name:'',
-                monitor_area:''                             //日历地区
+                node_name: '',
+                monitor_area: ''                             //日历地区
             },              //流程单元
             rules4: {
                 font_size: [
@@ -861,7 +880,7 @@
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
                 gather_params: 'sql',                   //采集参数
-                monitor_area:''                             //日历地区
+                monitor_area: ''                             //日历地区
             },
             chart1: {                                //图表单元
                 monitor_name: '',                    //单元名称
@@ -877,7 +896,7 @@
                 gather_rule: '',                     //采集规则
                 gather_params: '',                   //节点
                 params: '',                          //监控参数
-                monitor_area:''                             //日历地区
+                monitor_area: ''                             //日历地区
             },
             job1: {                                   //作业单元
                 monitor_name: '',                    //单元名称
@@ -893,7 +912,7 @@
                 gather_rule: '',                     //NODE_KEY
                 gather_params: '',                   //作业模板
                 params: '',                         //执行服务器
-                monitor_area:''                             //日历地区
+                monitor_area: ''                             //日历地区
             },
             flow7: {                                //流程单元
                 monitor_name: '',                    //单元名称
@@ -909,111 +928,110 @@
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
                 gather_params: '',                   //流程模板
-                monitor_area:''                             //日历地区
+                monitor_area: ''                             //日历地区
             },
             myChart: null,
-            chart_content:'',
-            chartData:'',
-            person_count:'',
+            chart_content: '',
+            chartData: '',
+            person_count: '',
         },
         methods: {
-            basic_size(){
-                $("#text2").find("*").css("font-size",this.basic.font_size)
+            basic_size() {
+                $("#text2").find("*").css("font-size", this.basic.font_size)
             },
-            basic_height(){
-                $('#text2').css('height',this.basic.height)
+            basic_height() {
+                $('#text2').css('height', this.basic.height)
             },
-            basic_width(){
-                $("#text2").css("width",this.basic.width)
+            basic_width() {
+                $("#text2").css("width", this.basic.width)
             },
-            get_header_data(){
-            axios.get('/market_day/get_header/').then(function (res) {
-            })
+            get_header_data() {
+                axios.get('/market_day/get_header/').then(function (res) {
+                })
             },
-            get_all_area(){
-            axios({
-                method:'get',
-                url:'/market_day/get_all_area',
-            }).then(function (res) {
-                res=res.data.message
-                vm.areas=[]
-                for (var i=0;i<res.length;i++){
-                    var label=res[i].country+"("+res[i].timezone+")"
-                    temp={
-                        'area':label,
-                        'value':res[i].id
-                    }
-                    vm.areas.push(temp)
+            get_all_area() {
+                axios({
+                    method: 'get',
+                    url: '/market_day/get_all_area',
+                }).then(function (res) {
+                    res = res.data.message
+                    vm.areas = []
+                    for (var i = 0; i < res.length; i++) {
+                        var label = res[i].country + "(" + res[i].timezone + ")"
+                        temp = {
+                            'area': label,
+                            'value': res[i].id
+                        }
+                        vm.areas.push(temp)
                     }
                 })
             },
-            sycontent(){
+            sycontent() {
                 let tempcontents = vm.basic.contents
                 $("#text2").html("")
-                $("#text2").append("<div class=\"newline\" style=\"font-size:"+ vm.basic.font_size+"px;\">"+tempcontents+"</div>")
-                if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
+                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + tempcontents + "</div>")
+                if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1) {
                     var temp1 = tempcontents.split("#");
-                    var temp2=[];
-                    var temp3=[];
-                    var temp4=[];
-                    var str=[];
-                    for(var i=1;i<temp1.length;i=i+2){
+                    var temp2 = [];
+                    var temp3 = [];
+                    var temp4 = [];
+                    var str = [];
+                    for (var i = 1; i < temp1.length; i = i + 2) {
                         temp2.push(temp1[i]);
                     }
-                    for(var i=0;i<temp2.length;i++){
+                    for (var i = 0; i < temp2.length; i++) {
                         temp3.push(temp2[i].split("="))
                     }
-                    for(var i=0;i<temp3.length;i++){
+                    for (var i = 0; i < temp3.length; i++) {
                         temp4.push(temp3[i][1])
                     }
-                    for(i=0;i<temp2.length;i++){
-                        str[i]='#'+temp2[i]+'#'
+                    for (i = 0; i < temp2.length; i++) {
+                        str[i] = '#' + temp2[i] + '#'
                     }
                     $("#text2").html("")
-                     for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
-                         if(j<temp4.length){
-                             $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size +"px;\">" + temp1[i] + temp4[j]+ "</div>");
-                         }
-                         else{
-                              $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i]+ "</div>");
-                         }
-                     }
-                  }
-                if(vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1){
+                    for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
+                        if (j < temp4.length) {
+                            $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + temp4[j] + "</div>");
+                        } else {
+                            $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + "</div>");
+                        }
+                    }
+                }
+                if (vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1) {
                     var icon1 = tempcontents.split("@");
-                    var icon2=[];
-                    var icon3=[];
-                    var icon4=[-2];
-                    var icon=[];
-                    for(var i=1;i<icon1.length;i=i+2){
+                    var icon2 = [];
+                    var icon3 = [];
+                    var icon4 = [-2];
+                    var icon = [];
+                    for (var i = 1; i < icon1.length; i = i + 2) {
                         icon2.push(icon1[i]);
                     }
-                    for(var i=0;i<icon2.length;i++){
+                    for (var i = 0; i < icon2.length; i++) {
                         icon3.push(icon2[i].split("="));
                     }
-                    for(var i=0;i<icon3.length;i++){
+                    for (var i = 0; i < icon3.length; i++) {
                         icon4.pop();
                         icon4.push(icon3[i][1]);
                     }
                     $("#text2").html("")
-                    $("#text2").append("<div class = \"asd\">"+icon1[0]+"</div>");
-                    if(icon4 ){
+                    $("#text2").append("<div class = \"asd\">" + icon1[0] + "</div>");
+                    if (icon4) {
                         icon4.push("-2")
-                     }
+                    }
                     if (icon4[0] == 1) {
-                         $("#text2").append("<div class=\"circle1\"></div>");
-                     }
-                     if (icon4[0] == 2) {
-                         $("#text2").append("<div class=\"circle2\"></div>");
-                     }
-                     if (icon4[0] == 0) {
-                         $("#text2").append("<div class=\"circle4\"></div>");
-                     }
-                     if (icon4[0] == -1 || icon4 == -2) {
-                         $("#text2").append("<div class=\"circle3\"></div>");
-                     }
-                 }
-                if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
+                        $("#text2").append("<div class=\"circle1\"></div>");
+                    }
+                    if (icon4[0] == 2) {
+                        $("#text2").append("<div class=\"circle2\"></div>");
+                    }
+                    if (icon4[0] == 0) {
+                        $("#text2").append("<div class=\"circle4\"></div>");
+                    }
+                    if (icon4[0] == -1 || icon4 == -2) {
+                        $("#text2").append("<div class=\"circle3\"></div>");
+                    }
+                }
+                if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
                     var temp1 = tempcontents.split("#");
                     var temp2 = [];
                     var temp3 = [];
@@ -1047,7 +1065,7 @@
                     for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
 
                         if (i == flag2) {
-                            $("#text2").append("<div class=\"asd\" style=\"font-size:"+vm.basic.font_size +"px;\">" + icon1[0] + "</div>");
+                            $("#text2").append("<div class=\"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
                             if (icon4 == 1) {
                                 $("#text2").append("<div class=\"circle1\"></div>");
                             }
@@ -1061,87 +1079,86 @@
                                 $("#text2").append("<div class=\"circle3\"></div>");
                             }
                         } else {
-                            $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size +"px;\">" + temp1[i] + temp4[j] + "</div>");
+                            $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + temp4[j] + "</div>");
                         }
                     }
                 }
             },
-            basic_test(){
+            basic_test() {
                 let params = '';
                 if (vm.sql_file_interface == 3) {
-                     params = vm.server_url
+                    params = vm.server_url
                 }
-                if (vm.sql_file_interface == 6  || vm.sql_file_interface == 9) {
-                     params = vm.server_url +'#'+ vm.file_param
+                if (vm.sql_file_interface == 6 || vm.sql_file_interface == 9) {
+                    params = vm.server_url + '#' + vm.file_param
                 }
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor_item/basic_test/',
                     data: {
-                        id:vm.unit_id,
-                        params:params,
-                        gather_rule:vm.basic.gather_rule,
-                        gather_params:vm.basic.gather_params,
+                        id: vm.unit_id,
+                        params: params,
+                        gather_rule: vm.basic.gather_rule,
+                        gather_params: vm.basic.gather_params,
                     },
                 }).then(function (res) {
                     let tempcontents2 = vm.basic.contents
                     $("#text2").html("")
-                    $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size +"px;\">"+tempcontents2+"</div>")
-                    if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1){
+                    $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + tempcontents2 + "</div>")
+                    if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1) {
                         var temp1 = tempcontents2.split("#");
-                        var temp2=[];
-                        var temp3=[];
-                        var temp4=[];
+                        var temp2 = [];
+                        var temp3 = [];
+                        var temp4 = [];
 
-                        for(var i=1;i<temp1.length;i=i+2){
+                        for (var i = 1; i < temp1.length; i = i + 2) {
                             temp2.push(temp1[i]);
                         }
-                        for(var i=0;i<temp2.length;i++){
+                        for (var i = 0; i < temp2.length; i++) {
                             temp3.push(temp2[i].split("="))
                         }
-                        for(var i=0;i<temp3.length;i++){
+                        for (var i = 0; i < temp3.length; i++) {
                             temp4.push(temp3[i][0])
                         }
                         $("#text2").html("")
-                         for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
-                             if(j<temp4.length){
-                                 $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size +"px;\">" + temp1[i] + res.data.message[0][temp4[j]]+ "</div>");
-                             }
-                             else{
-                                  $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size +"px;\">" + temp1[i]+ "</div>");
-                             }
-                         }
-                      }
-                    if(vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1){
+                        for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
+                            if (j < temp4.length) {
+                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                            } else {
+                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + "</div>");
+                            }
+                        }
+                    }
+                    if (vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1) {
                         var icon1 = tempcontents2.split("@");
-                        var icon2=[];
-                        var icon3=[];
-                        var icon4='';
-                        if(res.data.message[0]['DB_CONNECTION']){
-                              icon4=res.data.message[0]['DB_CONNECTION'];
+                        var icon2 = [];
+                        var icon3 = [];
+                        var icon4 = '';
+                        if (res.data.message[0]['DB_CONNECTION']) {
+                            icon4 = res.data.message[0]['DB_CONNECTION'];
                         }
-                        if(res.data.message[0]['URL_CONNECTION']){
-                              icon4=res.data.message[0]['URL_CONNECTION'];
+                        if (res.data.message[0]['URL_CONNECTION']) {
+                            icon4 = res.data.message[0]['URL_CONNECTION'];
                         }
-                        if(res.data.message[0]['FILE_EXIST']){
-                              icon4=res.data.message[0]['FILE_EXIST'];
+                        if (res.data.message[0]['FILE_EXIST']) {
+                            icon4 = res.data.message[0]['FILE_EXIST'];
                         }
                         $("#text2").html("")
-                        $("#text2").append("<div class = \"asd\" style=\"font-size:"+ vm.basic.font_size +"px;\">"+icon1[0]+"</div>");
+                        $("#text2").append("<div class = \"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
                         if (icon4 == 1) {
-                             $("#text2").append("<div class=\"circle1\"></div>");
-                         }
-                         if (icon4 == 2) {
-                             $("#text2").append("<div class=\"circle2\"></div>");
-                         }
-                         if (icon4 == 0) {
-                             $("#text2").append("<div class=\"circle3\"></div>");
-                         }
-                         if (icon4 == -1 || icon4 == -2) {
-                             $("#text2").append("<div class=\"circle4\"></div>");
-                         }
-                     }
-                    if(vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
+                            $("#text2").append("<div class=\"circle1\"></div>");
+                        }
+                        if (icon4 == 2) {
+                            $("#text2").append("<div class=\"circle2\"></div>");
+                        }
+                        if (icon4 == 0) {
+                            $("#text2").append("<div class=\"circle3\"></div>");
+                        }
+                        if (icon4 == -1 || icon4 == -2) {
+                            $("#text2").append("<div class=\"circle4\"></div>");
+                        }
+                    }
+                    if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
                         var temp1 = tempcontents2.split("#");
                         var temp2 = [];
                         var temp3 = [];
@@ -1170,36 +1187,36 @@
                             }
                         }
                         icon3 = icon2[1].split("=")
-                        if(res.data.message[0]['DB_CONNECTION']){
-                              icon4=res.data.message[0]['DB_CONNECTION'];
+                        if (res.data.message[0]['DB_CONNECTION']) {
+                            icon4 = res.data.message[0]['DB_CONNECTION'];
                         }
-                        if(res.data.message[0]['URL_CONNECTION']){
-                              icon4=res.data.message[0]['URL_CONNECTION'];
+                        if (res.data.message[0]['URL_CONNECTION']) {
+                            icon4 = res.data.message[0]['URL_CONNECTION'];
                         }
-                        if(res.data.message[0]['FILE_EXIST']){
-                              icon4=res.data.message[0]['FILE_EXIST'];
+                        if (res.data.message[0]['FILE_EXIST']) {
+                            icon4 = res.data.message[0]['FILE_EXIST'];
                         }
                         $("#text2").html("")
                         for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                             if (i == flag2) {
-                                $("#text2").append("<div class = \"asd\" style=\"font-size:"+ vm.basic.font_size +"px;\">"+icon1[0]+"</div>");
+                                $("#text2").append("<div class = \"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
                                 if (icon4 == 1) {
-                                     $("#text2").append("<div class=\"circle1\"></div>");
-                                 }
-                                 if (icon4 == 2) {
-                                     $("#text2").append("<div class=\"circle2\"></div>");
-                                 }
-                                 if (icon4 == 0) {
-                                     $("#text2").append("<div class=\"circle3\"></div>");
-                                 }
-                                 if (icon4 == -1 || icon4 == -1) {
-                                     $("#text2").append("<div class=\"circle4\"></div>");
-                                 }
+                                    $("#text2").append("<div class=\"circle1\"></div>");
+                                }
+                                if (icon4 == 2) {
+                                    $("#text2").append("<div class=\"circle2\"></div>");
+                                }
+                                if (icon4 == 0) {
+                                    $("#text2").append("<div class=\"circle3\"></div>");
+                                }
+                                if (icon4 == -1 || icon4 == -1) {
+                                    $("#text2").append("<div class=\"circle4\"></div>");
+                                }
                             } else {
-                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size +"px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
                             }
                         }
-                     }
+                    }
                 })
             },
             // 保存
@@ -1249,10 +1266,11 @@
                             url: '${SITE_URL}monitor_item/delete/',
                             data: {
                                 unit_id: row.id,
-                                monitor_name:row.monitor_name,
+                                monitor_name: row.monitor_name,
                                 monitor_type: row.monitor_type,
                             }
                         }).then((res) => {
+                            vm.page = 1;
                             vm.show()
                         }),);
                 }).catch(() => {
@@ -1292,8 +1310,13 @@
                             limit: 10
                         }
                     }).then((res) => {
-                        vm.sites = res.data.message;
-                        vm.page_count = res.data.message[0].page_count;
+                        if (res.data.results.length == 0) {
+                            vm.sites = [];
+                            vm.page_count = 1
+                        } else {
+                            vm.sites = res.data.results;
+                            vm.page_count = res.data.results[0].page_count;
+                        }
 
                     })
                 }
@@ -1311,7 +1334,7 @@
                 vm.disabled5 = true;
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
-                if (row.monitor_type =='基本监控项') {
+                if (row.monitor_type == '基本监控项') {
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
                     vm.basic.height = row.height;
@@ -1343,8 +1366,8 @@
                             vm.basic_width();
                             vm.sycontent();
                             vm.basic_test()
-                        }).catch((error) => {
-                            alert('拉取数据库失败！')
+                        }).catch(function (e) {
+                            vm.$massage.error('获取数据库失败！');
                         });
                         vm.sql1 = 'block';
                         vm.file1 = 'none';
@@ -1412,8 +1435,8 @@
 
                             vm.chart.params = res['data']['results']['connname'];
                             vm.show_content();
-                        }).catch((error) => {
-                            alert('拉取数据库失败！')
+                        }).catch(function (e) {
+                            vm.$massage.error('获取数据库失败！');
                         });
                 }
                 if (row.monitor_type =='作业监控项') {
@@ -1478,7 +1501,7 @@
                     if (vm.file_param == undefined) {
                         vm.basic.params = vm.server_url
                     } else {
-                        vm.basic.params = vm.server_url +'#'+ vm.file_param
+                        vm.basic.params = vm.server_url + '#' + vm.file_param
                     }
                     vm.basic.monitor_name = vm.monitor_name;
                     vm.basic.monitor_type = vm.monitor_type
@@ -1486,15 +1509,15 @@
                         vm.unit_id = -1;
                         vm.message = '请选择数据库或者填写服务器和url!'
                     }
-                    if (vm.basic.gather_rule == ''){
+                    if (vm.basic.gather_rule == '') {
                         vm.unit_id = -1;
                         vm.message = '请输入数据采集规则!'
                     }
-                    if (vm.basic.start_time == ''){
+                    if (vm.basic.start_time == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择开始时间!'
                     }
-                    if (vm.basic.end_time == ''){
+                    if (vm.basic.end_time == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择结束时间!'
                     }
@@ -1502,19 +1525,19 @@
                     vm.result_data = vm.chart;
                     vm.chart.monitor_name = vm.monitor_name;
                     vm.chart.monitor_type = vm.monitor_type;
-                    if (vm.chart.params == ''){
+                    if (vm.chart.params == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择数据库!'
                     }
-                    if (vm.chart.gather_rule == ''){
+                    if (vm.chart.gather_rule == '') {
                         vm.unit_id = -1;
                         vm.message = '请输入采集规则!'
                     }
-                    if (vm.chart.start_time == ''){
+                    if (vm.chart.start_time == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择开始时间!'
                     }
-                    if (vm.chart.end_time == ''){
+                    if (vm.chart.end_time == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择结束时间!'
                     }
@@ -1522,26 +1545,26 @@
                     vm.result_data = vm.job;
                     vm.job.monitor_name = vm.monitor_name;
                     vm.job.monitor_type = vm.monitor_type
-                    if (vm.job.gather_rule == ''){
+                    if (vm.job.gather_rule == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择作业模板!'
                     }
-                    var reg =/^(?:(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:1[0-9][0-9]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:2[0-4][0-9])|(?:25[0-5])|(?:1[0-9][0-9])|(?:[1-9][0-9])|(?:[0-9]))$/;
+                    var reg = /^(?:(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:1[0-9][0-9]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:2[0-4][0-9])|(?:25[0-5])|(?:1[0-9][0-9])|(?:[1-9][0-9])|(?:[0-9]))$/;
                     var re = new RegExp(reg);
-                    if(vm.job.params==null || vm.job.params==''){
+                    if (vm.job.params == null || vm.job.params == '') {
                         vm.unit_id = -1;
                         vm.message = "IP不可为空!";
                     }
-                    if(!re.test(vm.job.params)) {
+                    if (!re.test(vm.job.params)) {
                         vm.unit_id = -1;
                         vm.message = "请填写有效的IP地址!";
                     }
 
-                    if (vm.job.start_time == ''){
+                    if (vm.job.start_time == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择开始时间!'
                     }
-                    if (vm.job.end_time == ''){
+                    if (vm.job.end_time == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择结束时间!'
                     }
@@ -1549,7 +1572,7 @@
                     vm.result_data = vm.flow;
                     vm.flow.monitor_name = vm.monitor_name;
                     vm.flow.monitor_type = vm.monitor_type;
-                    if (vm.flow.gather_rule == ''){
+                    if (vm.flow.gather_rule == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择流程模板!'
                     }
@@ -1579,7 +1602,7 @@
                     flow.period = vm.flow.period;
                     flow.constants = vm.constants;
                 }
-                if (vm.monitor_name == ''){
+                if (vm.monitor_name == '') {
                     vm.message = '请输入监控项名称!';
                     vm.unit_id = -1;
                 }
@@ -1588,19 +1611,18 @@
                         method: 'post',
                         url: '${SITE_URL}monitor_item/edit/',
                         data: {
-                            'flow':flow,
+                            'flow': flow,
                             data: vm.result_data,
                             monitor_type: vm.monitor_type,
                             monitor_name: vm.monitor_name,
                             unit_id: vm.unit_id,
-                            monitor_area:vm.area
+                            monitor_area: vm.area
                         }
                     }).then((res) => {
                         if (res['data']['code'] == 1) {
                             alert("保存失败!");
                             vm.centerDialogVisible = true;
-                        }
-                        else {
+                        } else {
                             alert(vm.message);
                             vm.centerDialogVisible = false;
                         }
@@ -1613,18 +1635,17 @@
                         method: 'post',
                         url: '${SITE_URL}monitor_item/add/',
                         data: {
-                            'flow':flow,
+                            'flow': flow,
                             data: vm.result_data,
                             monitor_type: vm.monitor_type,
                             monitor_name: vm.monitor_name,
-                            monitor_area:vm.area
+                            monitor_area: vm.area
                         },
                     }).then((res) => {
                         if (res['data']['code'] == 1) {
-                        alert("保存失败!");
-                        vm.centerDialogVisible = true;
-                        }
-                        else {
+                            alert("保存失败!");
+                            vm.centerDialogVisible = true;
+                        } else {
                             alert(vm.message);
                             vm.centerDialogVisible = false;
                         }
@@ -1632,34 +1653,32 @@
                     }).catch((error) => {
                         alert('保存出错!')
                     });
-                }
-                else {
+                } else {
                     alert(vm.message);
                     vm.centerDialogVisible = true;
-                    if (vm.add_pamas == 0){
+                    if (vm.add_pamas == 0) {
                         vm.unit_id = 0
-                    }
-                    else{
+                    } else {
                         vm.unit_id = vm.unit_id1
                     }
                 }
             },
-            flow_change(value){
+            flow_change(value) {
                 vm.node_name(value)
-                vm.location =''
-                vm.line=''
+                vm.location = ''
+                vm.line = ''
                 axios({
-                    method:'post',
-                    url:'${SITE_URL}monitor_item/flow_change/',
+                    method: 'post',
+                    url: '${SITE_URL}monitor_item/flow_change/',
                     data: {
-                        template_id:value
+                        template_id: value
                     }
                 }).then(function (res) {
                     {
-                        vm.template_list.id=res.data.template_id[0].id
-                        vm.template_list.name=res.data.template_id[0].name
+                        vm.template_list.id = res.data.template_id[0].id
+                        vm.template_list.name = res.data.template_id[0].name
                         vm.constants = res.data.constants
-                        var aa=" <div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width: 100%;position: relative;\">\n" +
+                        var aa = " <div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width: 100%;position: relative;\">\n" +
                             "\n" +
                             "                                        <div class=\"workflow-canvas\" style=\"margin-left: 0px;padding-left: 0px\">\n" +
                             "                                            <!-- 画布模板 start -->\n" +
@@ -1749,44 +1768,48 @@
                                 }
                         });
 
-                        $('.node-icon').css('top','-7px')
-                        let old_html  = $('#canvas').html()
-                        $('#canvas').html('<div style="transform: scale(0.65)">'+old_html+'</div>')
+                        $('.node-icon').css('top', '-7px')
+                        let old_html = $('#canvas').html()
+                        $('#canvas').html('<div style="transform: scale(0.65)">' + old_html + '</div>')
                     }
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
 
             },
-            node_name(value){
+            node_name(value) {
                 axios({
-                    method:'post',
-                    url:'${SITE_URL}monitor_item/node_name/',
-                    data:{
-                        'id':value
+                    method: 'post',
+                    url: '${SITE_URL}monitor_item/node_name/',
+                    data: {
+                        'id': value
                     }
                 }).then(function (res) {
-                    vm.activities_node_name=res.data.activities
+                    vm.activities_node_name = res.data.activities
 
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
             },
-            Rendering_start_time(){
-                $('p:contains('+vm.flow.node_name+')').parent().find('.start_time').text(vm.activities_node_time.start_time)
+            Rendering_start_time() {
+                $('p:contains(' + vm.flow.node_name + ')').parent().find('.start_time').text(vm.activities_node_time.start_time)
             },
-            Rendering_end_time(){
-                $('p:contains('+vm.flow.node_name+')').parent().find('.end_time').text(vm.activities_node_time.end_time)
+            Rendering_end_time() {
+                $('p:contains(' + vm.flow.node_name + ')').parent().find('.end_time').text(vm.activities_node_time.end_time)
             },
             canvas_new() {
-                if(vm.liucheng == 'block'){
-                    var node_id=''
-                    var start_time=''
-                    var end_time=''
-                    var node_times=[]
-                    for(var i=2;i<=vm.location.length-1;i++){
-                            var node_time={}
-                            node_time.node_id= vm.location[i].id ,
-                            node_time.starttime= $('#' + vm.location[i].id + '').find('.start_time').text(),
-                             node_time.endtime= $('#' + vm.location[i].id + '').find('.end_time').text()
-                            node_time.node_name=   $('#' + vm.location[i].id + '').find('.node-title').text()
-                            node_times.push(node_time)
+                if (vm.liucheng == 'block') {
+                    var node_id = ''
+                    var start_time = ''
+                    var end_time = ''
+                    var node_times = []
+                    for (var i = 2; i <= vm.location.length - 1; i++) {
+                        var node_time = {}
+                        node_time.node_id = vm.location[i].id ,
+                            node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
+                            node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
+                        node_time.node_name = $('#' + vm.location[i].id + '').find('.node-title').text()
+                        node_times.push(node_time)
 
                     }
                     var period = $('#period').val()
@@ -1798,32 +1821,36 @@
                             'period': period,
                             'template_list': template_list,
                             'node_times': node_times,
-                            'monitor_name':vm.monitor_name,
-                            'monitor_type':vm.monitor_type,
-                            'constants':vm.constants
+                            'monitor_name': vm.monitor_name,
+                            'monitor_type': vm.monitor_type,
+                            'constants': vm.constants
                         }
                     }).then(function (res) {
                         setInterval(function () {
                             axios({
-                            method:'post',
-                            url:'${SITE_URL}monitor_item/node_state/',
-                            data:{
-                                'item_id':res.data
-                            }
-                        }).then(function (res) {
-                            len =res.data.message.length
-                                for(var i=0;i<=len-1;i++){
-                                       data_key=res.data.message[i].data_value
-                                    if(data_key == '1'||data_key=='4'){
-                                          $('p:contains('+res.data.message[i].data_key+')').parent().siblings('.node-icon').css('background','#67c23a')
-                                    }else if(data_key == '0'|| data_key == '2'|| data_key == '3'){
-                                         $('p:contains('+res.data.message[i].data_key+')').parent().siblings('.node-icon').css('background','#f56c6c')
+                                method: 'post',
+                                url: '${SITE_URL}monitor_item/node_state/',
+                                data: {
+                                    'item_id': res.data
+                                }
+                            }).then(function (res) {
+                                len = res.data.message.length
+                                for (var i = 0; i <= len - 1; i++) {
+                                    data_key = res.data.message[i].data_value
+                                    if (data_key == '1' || data_key == '4') {
+                                        $('p:contains(' + res.data.message[i].data_key + ')').parent().siblings('.node-icon').css('background', '#67c23a')
+                                    } else if (data_key == '0' || data_key == '2' || data_key == '3') {
+                                        $('p:contains(' + res.data.message[i].data_key + ')').parent().siblings('.node-icon').css('background', '#f56c6c')
                                     }
                                 }
-                        })
+                        }).catch(function (e) {
+                            vm.$massage.error('获取数据失败！');
+                        });
                         },13000)
 
-                    })
+                    }).catch(function (e) {
+                        vm.$massage.error('获取数据失败！');
+                    });
                 }else if(vm.liucheng == 'none'){
 
                     var period = $('#period').val()
@@ -1835,25 +1862,29 @@
                         data: {}
                     }).then(function () {
 
-                    })
+                    }).catch(function (e) {
+                        vm.$massage.error('获取数据失败！');
+                    });
                 }
 
             },
             add_unit(row) {                         //新增单元
-                     {   if (vm.add_pamas == 1) {
-                         vm.Initialization();
-                        }
-                         vm.add_pamas = 0;
-                         vm.monitor_name = '';
-                         vm.disabled2 = false;
-                         vm.disabled3 = false;
-                         vm.disabled4 = false;
-                         vm.disabled5 = false;
-                         vm.monitor_type = 'first';
-                         vm.unit_id = row;
-                         vm.centerDialogVisible = true;
-                         this.get_db_connections();
-                    };
+                {
+                    if (vm.add_pamas == 1) {
+                        vm.Initialization();
+                    }
+                    vm.add_pamas = 0;
+                    vm.monitor_name = '';
+                    vm.disabled2 = false;
+                    vm.disabled3 = false;
+                    vm.disabled4 = false;
+                    vm.disabled5 = false;
+                    vm.monitor_type = 'first';
+                    vm.unit_id = row;
+                    vm.centerDialogVisible = true;
+                    this.get_db_connections();
+                }
+                ;
             },
             del() {
                 vm.edit(0)
@@ -1901,27 +1932,27 @@
                     vm.liucheng = 'none';
                 }
             },
-            change_job_fontSize(){       //修改作业单元中预览字体
-                $('#job_text').find("*").css('font-size',this.job.font_size);
+            change_job_fontSize() {       //修改作业单元中预览字体
+                $('#job_text').find("*").css('font-size', this.job.font_size);
             },
-            change_job_height(){       //修改作业单元中预览高度
-                $('#job_text').css('height',this.job.height);
+            change_job_height() {       //修改作业单元中预览高度
+                $('#job_text').css('height', this.job.height);
             },
-            change_job_width(){       //修改作业单元中预览宽度
-                $('#job_text').css('width',this.job.width);
+            change_job_width() {       //修改作业单元中预览宽度
+                $('#job_text').css('width', this.job.width);
             },
-            change_job_contents(){       //作业单元显示内容
-                let contents=vm.job.contents;
+            change_job_contents() {       //作业单元显示内容
+                let contents = vm.job.contents;
                 let job_status = contents.split('@')[1].split('=')[1];
-                let item_id='item_id'
-                var job_params={
-                    'id':item_id,
-                    'width' :vm.job.width,
-                    'height':vm.job.height,
-                    'status':job_status,
+                let item_id = 'item_id'
+                var job_params = {
+                    'id': item_id,
+                    'width': vm.job.width,
+                    'height': vm.job.height,
+                    'status': job_status,
                 };
                 $('#job_text').html('');
-                $('#job_text').append('<div type=\"job'+item_id+'\" style=\"margin:0 auto;\"></div>');
+                $('#job_text').append('<div type=\"job' + item_id + '\" style=\"margin:0 auto;\"></div>');
                 job_monitor_active(job_params);
 
             },
@@ -1930,51 +1961,53 @@
                 setTimeout(function () {
                     vm.disabled1 = false;
                 }, 3000);
-                var job_params1={
-                        'id':'item_id',
-                        'width' :vm.job.width,
-                        'height':vm.job.height,
-                        'status':2,
-                    };
-                    $('#job_text').html('');
-                    $('#job_text').append('<div type=\"jobitem_id\" style=\"margin:0 auto;\"></div>');
-                    job_monitor_active(job_params1);
+                var job_params1 = {
+                    'id': 'item_id',
+                    'width': vm.job.width,
+                    'height': vm.job.height,
+                    'status': 2,
+                };
+                $('#job_text').html('');
+                $('#job_text').append('<div type=\"jobitem_id\" style=\"margin:0 auto;\"></div>');
+                job_monitor_active(job_params1);
                 axios({
-                    url:'${SITE_URL}monitor_item/job_test/',
-                    method:'post',
+                    url: '${SITE_URL}monitor_item/job_test/',
+                    method: 'post',
                     data: {
 
                         'gather_params': vm.job.gather_params,
                         'job_id': vm.job.gather_rule,
-                        'params':vm.job.params,
+                        'params': vm.job.params,
                     },
-                }).then((res) =>{
-                    let status=res['data']['result'];
-                    let job_status=0;
+                }).then((res) => {
+                    let status = res['data']['result'];
+                    let job_status = 0;
                     switch (status) {
                         case true:
-                            job_status=1;
+                            job_status = 1;
                             console.log(1)
                             break;
                         case false:
-                            job_status=-1;
+                            job_status = -1;
                             console.log(-1)
                             break;
                         default:
-                            job_status=2;
+                            job_status = 2;
                             console.log(2)
                     }
-                    let item_id='item_id'
-                    var job_params={
-                        'id':item_id,
-                        'width' :vm.job.width,
-                        'height':vm.job.height,
-                        'status':job_status,
+                    let item_id = 'item_id'
+                    var job_params = {
+                        'id': item_id,
+                        'width': vm.job.width,
+                        'height': vm.job.height,
+                        'status': job_status,
                     };
                     $('#job_text').html('');
-                    $('#job_text').append('<div type=\"job'+item_id+'\" style=\"margin:0 auto;\"></div>');
+                    $('#job_text').append('<div type=\"job' + item_id + '\" style=\"margin:0 auto;\"></div>');
                     job_monitor_active(job_params);
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
             },
             rowclass({row, rowIndex}) {
                 return 'background:#F7F7F7'
@@ -2002,16 +2035,17 @@
                             j.value = res.data.results[i].id;
                             j.label = res.data.results[i].connname;
                             json.push(j);
-                        };
+                        }
+                        ;
                         this.sites1 = json;
                     }
 
-                }).catch((res) => {
-                    console.log('获取数据库连接错误')
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
             },
             //初始化
-            Initialization(){
+            Initialization() {
                 Object.assign(vm.basic, {});
                 Object.assign(vm.basic, vm.basic1);
                 Object.assign(vm.job, {});
@@ -2032,8 +2066,8 @@
                 if (vm.chart.gather_params == "饼图") {
                     this.myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
                     let legendData = [];
-                    for(let i=0;i<vm.chartData.length;i++){
-                        this.$set(legendData,i,vm.chartData[i].name);
+                    for (let i = 0; i < vm.chartData.length; i++) {
+                        this.$set(legendData, i, vm.chartData[i].name);
                     }
 
                     option = {
@@ -2050,7 +2084,7 @@
                         },
                         series: [
                             {
-                                name:vm.person_count,
+                                name: vm.person_count,
                                 type: 'pie',
                                 radius: '50%',
                                 center: ['50%', '30%'],
@@ -2086,11 +2120,11 @@
                 if (vm.chart.gather_params == "柱状图") {
 
                     this.myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
-                    let barX=[];
-                    let barCount=[];
-                    for(var i=0;i<vm.chartData.length;i++){
-                        this.$set(barX,i,vm.chartData[i].name);
-                        this.$set(barCount,i,vm.chartData[i].value);
+                    let barX = [];
+                    let barCount = [];
+                    for (var i = 0; i < vm.chartData.length; i++) {
+                        this.$set(barX, i, vm.chartData[i].name);
+                        this.$set(barCount, i, vm.chartData[i].value);
                     }
                     option = {
                         tooltip: {
@@ -2132,9 +2166,9 @@
                     this.myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
                     let lineX = [];
                     let lineCount = [];
-                    for(var i=0;i<vm.chartData.length;i++){
-                        this.$set(lineX,i,vm.chartData[i].name);
-                        this.$set(lineCount,i,vm.chartData[i].value);
+                    for (var i = 0; i < vm.chartData.length; i++) {
+                        this.$set(lineX, i, vm.chartData[i].name);
+                        this.$set(lineCount, i, vm.chartData[i].value);
                     }
                     option = {
                         tooltip: {
@@ -2171,60 +2205,59 @@
                 vm.echart_height();
                 vm.echart_width();
             },
-            show_content(){
-                let content=vm.chart.contents;
+            show_content() {
+                let content = vm.chart.contents;
                 let obj = JSON.parse(content);
                 let echartData = [];
-                for(let i=0;i<obj.X.v.length;i++){
-                    let obj_1={};
-                    obj_1.name=obj.X.v[i];
-                    obj_1.value=obj.Y.v[i];
-                    this.$set(echartData,i,obj_1);
+                for (let i = 0; i < obj.X.v.length; i++) {
+                    let obj_1 = {};
+                    obj_1.name = obj.X.v[i];
+                    obj_1.value = obj.Y.v[i];
+                    this.$set(echartData, i, obj_1);
                 }
-                vm.chartData=echartData;
+                vm.chartData = echartData;
                 vm.show_chart();
                 vm.echart_height();
                 vm.echart_width();
             },
             chart_get_test(){
-                console.log(vm.chart.params)
                 axios({
-                    url:'${SITE_URL}monitor_item/chart_get_test/',
-                    method:'post',
-                    data:{
-                        database_id:vm.chart.params,
-                        sql:vm.chart.gather_rule,
+                    url: '${SITE_URL}monitor_item/chart_get_test/',
+                    method: 'post',
+                    data: {
+                        database_id: vm.chart.params,
+                        sql: vm.chart.gather_rule,
                     },
                 }).then((res) => {
-                    if(res.data.result){
+                    if (res.data.result) {
                         this.$message({
-                            message:'数据采集成功，请选择图表类型进行查看！',
-                            type:'success',
-                            center:true
+                            message: '数据采集成功，请选择图表类型进行查看！',
+                            type: 'success',
+                            center: true
                         })
-                    }else{
+                    } else {
                         this.$message({
-                            message:'数据采集失败，请检查数据配置或采集规则！',
-                            type:'warning',
-                            center:true
+                            message: '数据采集失败，请检查数据配置或采集规则！',
+                            type: 'warning',
+                            center: true
                         })
                     }
-                    vm.chartData=res.data.results;
-                    vm.person_count=res.data.column_name_list[0];
+                    vm.chartData = res.data.results;
+                    vm.person_count = res.data.column_name_list[0];
                     vm.show_chart();
                     vm.echart_height();
                     vm.echart_width();
-                }).catch((res) =>{
-                    console.log(res)
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
                 });
             },
-            echart_height(){
-                $('#maintenanceIndex').find("canvas").css('height',vm.chart.height);
+            echart_height() {
+                $('#maintenanceIndex').find("canvas").css('height', vm.chart.height);
             },
-            echart_width(){
-                $('#maintenanceIndex').find("canvas").css('width',vm.chart.width)
+            echart_width() {
+                $('#maintenanceIndex').find("canvas").css('width', vm.chart.width)
             },
-            switch_change(value){
+            switch_change(value) {
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor_item/change_status/',
@@ -2235,7 +2268,9 @@
                     },
                 }).then((res) =>{
                     if (res.data.code == 1) {alert(res.data.message)}
-                })
+                }).catch(function (e) {
+                    vm.$massage.error('获取数据失败！');
+                });
             },
         },
         mounted() {
