@@ -176,8 +176,18 @@ axios.interceptors.request.use((config) => {
                             url: '/position/add_pos/',
                             data: this.form,
                         }).then((res) => {
-                            vm.dialogFormVisible3 = false;
-                            window.location.href = "/position/position"
+                            if(res.data.result){
+                                this.$message({
+                                type: 'success',
+                                message: '新增岗位成功!',})
+                                vm.dialogFormVisible3 = false;
+                                window.location.href = "/position/position"
+                            }else{
+                                this.$message({
+                                type: 'false',
+                                message: '新增岗位失败!岗位已经存在',})
+                            }
+
                         })
                     }
                 });
