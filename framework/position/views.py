@@ -28,8 +28,8 @@ def delete_pos(request):
 
 
 def add_pos(request):
-    function.add_pos(request)
-    return render_json(0)
+    r = function.add_pos(request)
+    return render_json(r)
 
 
 def add_person(request):
