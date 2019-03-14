@@ -36,7 +36,8 @@ def get_time(request):
 
 #获取当前用户所对应的岗位下的所有场景监控项的告警
 def scenes_alert(request):
-    #admin的场景对应94没数据 除数是0会报错
+    #测试数据，目前写死的名字
+    #获取当前用户拿name
     user = user_info.objects.get(user_name='yanchunlei')
     position_id = model_to_dict(user)['user_pos']
     #一个职位下得所有场景
@@ -114,8 +115,4 @@ def scenes_alert(request):
     return dic_data
 
 
-
-
-
-
-
+# def get_scene(request):

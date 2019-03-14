@@ -162,7 +162,7 @@ INSTALLED_APPS = (
     'notification',
     'logmanagement',
     'history_chart',
-    #'home_page',
+    'home_page',
 )
 
 # ==============================================================================
