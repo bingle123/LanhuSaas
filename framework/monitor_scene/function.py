@@ -526,9 +526,10 @@ def get_scenes(pos_id,start,end):
                     base_list.append (item_dict)
                 if 2 == item.monitor_type:
                     chart_list.append (item_dict)
-                if 3 == item.monitor_type:
-                    flow_list.append (item_dict)
                 if 4 == item.monitor_type:
+                    flow_list.append (item_dict)
+                if 3 == item.monitor_type:
+                    print item.jion_id
                     jobs = Job.objects.filter(job_id = item.jion_id)
                     status = jobs.last().status
                     temp_dict = {

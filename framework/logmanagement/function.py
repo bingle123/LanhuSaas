@@ -11,19 +11,19 @@ from shell_app import tools
 def add_log(info):
     res = info
     r1 = Operatelog.objects.create(log_type=res['log_type'], log_name=res['log_name'], class_name=res['class_name'],
-                                   method=res['method'], user_name=res['user_name'], succeed=res['succeed'],
+                                   method=res['method'], user_name=res['user_name'], is_success=res['is_success'],
                                    message=res['message'])
     return r1
 
 
-def make_log_info(log_type, log_name, class_name, method, user_name, succeed, message):
+def make_log_info(log_type, log_name, class_name, method, user_name, is_success, message):
     """
     :param log_type: 操作类型
     :param log_name:日志名称
     :param class_name:类名称
     :param method:方法名称
     :param user_name:用户名称
-    :param succeed:是否成功
+    :param is_success:是否成功
     :param message:备注
     :return:
     """
@@ -33,7 +33,7 @@ def make_log_info(log_type, log_name, class_name, method, user_name, succeed, me
         'class_name': class_name,
         'method': method,
         'user_name': user_name,
-        'succeed': succeed,
+        'is_success': is_success,
         'message': message
     }
     return info
