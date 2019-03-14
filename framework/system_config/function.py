@@ -506,8 +506,9 @@ def get_crawl_content(title_name, crawl_name, page, limit):
             i['save_time'] = i['save_time'].strftime("%Y-%m-%d %H:%M:%S")
             i['page_count'] = page_count
             i['page'] = page
-            i['crawl_name'] = model_to_dict(CrawlerConfig.objects.get(id=1))['crawl_name']
+            i['crawl_name'] = model_to_dict(CrawlerConfig.objects.get(id=i['crawl_id']))['crawl_name']
             result_list.append(i)
+        print result_list
         return success_result(result_list)
     except Exception as e:
         return error_result([])
