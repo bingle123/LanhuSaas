@@ -13,13 +13,6 @@ from django.conf.urls import patterns
 
 
 urlpatterns = patterns(
-    'customQuery.views',
-    (r'^index$', 'show_index'),                                          # 首页
-    (r'^select_queries_pagination$', 'select_queries_pagination'),
-    (r'^del_query$', 'del_query'),
-    (r'^select_query$', 'select_query'),
-    (r'^add_query$', 'add_query'),
-    (r'^load_all_tables_name$', 'load_all_tables_name'),
-    (r'^load_all_fields_name$', 'load_all_fields_name'),
-    (r'sql_test','sql_test'),
+    'gather_data.views',
+    (r'^gather_data$', 'gather_data'),                                          # 采集数据
 )
