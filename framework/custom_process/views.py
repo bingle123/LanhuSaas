@@ -9,7 +9,7 @@ from logmanagement.function import add_log,make_log_info,get_active_user
 
 
 def show_index(request):
-    return render_mako_context(request, './customProcess/customProcess.html')
+    return render_mako_context(request, './custom_process/custom_process.html')
 
 
 def select_all_nodes(request):

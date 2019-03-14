@@ -7,7 +7,7 @@ from db_connection.function import *
 from django.core.paginator import *
 import MySQLdb
 from system_config.function import *
-from customQuery.models import *
+from custom_query.models import *
 from datetime import datetime,timedelta
 
 

@@ -11,8 +11,8 @@ import urllib
 import urllib2
 import os
 import settings
-from gatherData.models import *
-from gatherDataHistory.models import *
+from gather_data.models import *
+from gather_data_history.models import *
 from notification.function import *
 from account.models import *
 from blueking.component.shortcuts import *
@@ -92,7 +92,8 @@ def gather_param_parse(info):
         except Exception as e:
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-2', gather_error_log=str(e)).save()
             return None
-        # 根据参数获取数据库连接配置
+        # 根据参数获取数据库连接配置\
+        print info['params']
         conn_info = Conn.objects.filter(id=info['params']).get()
         # 解密存储在数据库中的数据库密码
         conn_info.password = decrypt_str(conn_info.password)
@@ -137,12 +138,12 @@ def gather_param_parse(info):
 # 重复的采集字段数据迁移到历史记录
 def gather_data_migrate(item_id):
     # 获取当前采集表中的数据是否为空，否则可能需要将某监控项的采集数据迁移到历史采集表中
-    length = TDGatherData.objects.count()
+    gather_data_count = TDGatherData.objects.count()
     # 数据采集表存在数据的情况
-    if 0 != length:
+    if 0 != gather_data_count:
         # 如果采集表中存在监控项id与当前采集的监控项id对应相同的数据，则将采集表中的此部分数据移至历史记录
-        length2 = TDGatherData.objects.filter(item_id=item_id).count()
-        if 0 != length2:
+        gather_data_count = TDGatherData.objects.filter(item_id=item_id).count()
+        if 0 != gather_data_count:
             # 开始迁移表数据
             migrate_data = TDGatherData.objects.filter(item_id=item_id).all()
             for data in migrate_data:
@@ -160,11 +161,16 @@ def sql_kv_process(gather_field, sql_result):
         temp['value_str'] = ''
         data_set.append(temp)
     # 将结果集整理为key-value形式的采集数据
+    print sql_result
+    print data_set
     for unit in sql_result:
         count = 0
         for data in unit:
             t = data_set[count]
-            t['value'].append(str(data))
+            if not type(data)==unicode:
+                t['value'].append(str(data))
+            else:
+                t['value'].append(data)
             t['value_str'] = ','.join(t['value'])
             count += 1
     return data_set

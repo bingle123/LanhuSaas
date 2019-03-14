@@ -1,202 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>定制过程通知</title>
-    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
-    <link rel="stylesheet" href="${STATIC_URL}css/customProcess/customProcess.css">
-    <script type="text/javascript" src="${STATIC_URL}js/jquery-3.1.1.min.js"></script>
-    <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>
-    <script type="text/javascript" src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
-    <!-- vue的ajax依赖-->
-    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
-</head>
-<body>
-    <div id="customProcess">
-        <el-dialog title="定制过程通知" :visible.sync="addDialogVisible" width="80%" :close-on-click-modal="false" center @closed="customProcessListNode">
-            <div v-if="customProcessTableStatus == 'list'">
-                <el-row>
-                    <el-col :span="24">
-                        <div>过程通知节点列表</div>
-                        <hr>
-                    </el-col>
-                </el-row>
-                <div style="text-align: right">
-                    <el-button type="primary" size="medium" @click="customProcessAddNode()">新增过程节点</el-button>
-                </div>
-                <el-table :data="customProcessTableListData" id="customProcessTable">
-                    <el-table-column prop="node_name" label="节点名称">
-                    </el-table-column>
-                    <el-table-column prop="send_content" label="通知内容">
-                    </el-table-column>
-                    <el-table-column prop="seq" label="节点顺序">
-                    </el-table-column>
-                    <el-table-column prop="receivers" label="通知接收人">
-                    </el-table-column>
-                    <el-table-column prop="operation" label="操作">
-                        <template slot-scope="scope">
-                            <el-button type="text" size="small" @click="customProcessEditNode(scope.row.id)">编辑</el-button>
-                            <el-button type="text" size="small" @click="customProcessDeleteNode(scope.row.id)">删除</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <el-row>
-                    <el-pagination :page-count="customProcessPageCount" :current-page="currentPage" background layout="prev, pager, next" style="float:right" @current-change="customProcessPageChange"></el-pagination>
-                </el-row>
-                <el-row class="customProcessFormButton">
-                    <el-button type="primary" @click="addDialogVisible = false">关 闭</el-button>
-                </el-row>
-            </div>
-            <div v-if="customProcessTableStatus == 'add'">
-                <el-row>
-                    <el-col :span="24">
-                        <div>过程通知节点添加</div>
-                        <hr>
-                    </el-col>
-                </el-row>
-                <el-form :rules="rules" :model="customProcessNode" ref="customProcessNode" label-position="right" label-width="100px">
-                    <el-row>
-                        <el-col :span="11" :offset="1">
-                            <el-form-item label="节点名称:" prop="node_name">
-                                <el-input v-model="customProcessNode.node_name"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="11" :offset="1">
-                            <el-form-item label="通知内容:" prop="send_content">
-                                <el-input v-model="customProcessNode.send_content"></el-input>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="11" :offset="1">
-                            <el-form-item label="节点顺序:" prop="seq">
-                                <el-input v-model="customProcessNode.seq"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="11" :offset="1">
-                            <el-form-item label="通知接收人:" prop="receivers">
-                                <el-select v-model="customProcessNode.receivers" multiple collapse-tags filterable placeholder="请选择" style="width: 100%">
-	                                <el-option v-for="bkUser in bkUsers" :key="bkUser.id" :label="bkUser.user_name" :value="bkUser.user_name"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row class="customProcessFormButton">
-                        <el-button @click="customProcessListNode()">取 消</el-button>
-                        <el-button type="primary" @click="customProcessSaveNodeInfo('customProcessNode')">添 加</el-button>
-                    </el-row>
-                    </el-form-item>
-                </el-form>
-            </div>
-            <div v-if="customProcessTableStatus == 'edit'">
-                <el-row>
-                    <el-col :span="24">
-                        <div>过程通知节点修改</div>
-                        <hr>
-                    </el-col>
-                </el-row>
-                <el-form :rules="rules" :model="customProcessNode" ref="customProcessNode" label-position="right" label-width="100px">
-                    <el-row>
-                        <el-col :span="11" :offset="1">
-                            <el-form-item label="节点名称:" prop="node_name">
-                                <el-input v-model="customProcessNode.node_name"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="11" :offset="1">
-                            <el-form-item label="通知内容:" prop="send_content">
-                                <el-input v-model="customProcessNode.send_content"></el-input>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="11" :offset="1">
-                            <el-form-item label="节点顺序:" prop="seq">
-                                <el-input v-model="customProcessNode.seq"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="11" :offset="1">
-                            <el-form-item label="通知接收人:" prop="receivers">
-                                <el-select v-model="customProcessNode.receivers" :value-key="customProcessNode.receivers" multiple collapse-tags filterable placeholder="请选择" style="width: 100%">
-	                                <el-option v-for="bkUser in bkUsers" :key="bkUser.id" :label="bkUser.user_name" :value="bkUser.user_name" ></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                    <el-row class="customProcessFormButton">
-                        <el-button @click="customProcessListNode()">取 消</el-button>
-                        <el-button type="primary" @click="customProcessSaveNodeInfo('customProcessNode')">修 改</el-button>
-                    </el-row>
-                    </el-form-item>
-                </el-form>
-            </div>
-        </el-dialog>
-        <el-dialog title="发送通知" :visible.sync="customProcessSendMsgDialogVisible" width="60%" :before-close="customProcessHandleClose" center>
-            <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                    通知人：<span>{{ customProcessReceivers }}</span>
-                </div>
-                通知内容：<span>{{ customProcessNoticeContent }}</span>
-            </el-card>
-            <span slot="footer" class="dialog-footer">
-                <el-button :type="customProcessNotifyButtonType" :disabled="customProcessNotifyButtonDisabled" @click="customProcessSendNotification">{{ customProcessNotifyButtonText }}</el-button>
-            </span>
-        </el-dialog>
-        <el-row>
-            <el-col :span="24">
-                <el-breadcrumb separator-class="el-icon-arrow-right">
-                    <el-breadcrumb-item>首页</el-breadcrumb-item>
-                    <el-breadcrumb-item>执行定制过程通知设置</el-breadcrumb-item>
-                </el-breadcrumb>
-            </el-col>
-        </el-row>
-        <el-row>
-            <el-col :span="24">
-                <el-card shadow="always" class="box-card">
-                    <el-row>
-                        <el-col :span="24">
-                            <div id="customProcessTitle">执行定制过程通知设置</div>
-                            <hr>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="24">
-                            <el-row>
-                                <el-col :span="24" style="text-align: center">
-                                    <el-button :type="customProcessStartButtonType" @click="customProcessBegin()" :disabled="customProcessStartButtonDisabled" v-if="customProcessStepSum > 0">{{ customProcessStartButtonText }}</el-button>
-                                </el-col>
-                            </el-row>
-                            <el-row>
-                                <el-col :span="24" v-if="customProcessStepSum == 0">
-                                    <div id="customProcessContent">
-                                        <el-alert id="customProcessWarn" title="当前无任何过程通知" type="warning" show-icon center></el-alert>
-                                    </div>
-                                </el-col>
-                                <el-col :span="6" :offset="11" style="padding-top: 50px;" v-show="customProcessStepSum > 0">
-                                    <div id="customProcessStepsHeight">
-                                        <el-steps id="customMainProcess" direction="vertical" :active="customProcessStep" finish-status="success" process-status="finish">
-                                            <el-step :title="processData.node_name" v-for="processData in customProcessTableData"></el-step>
-                                        </el-steps>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                            <el-row>
-                                <el-col :span="24">
-                                    <div id="customProcessAddButton">
-                                        <el-button-group>
-                                            <el-button type="success" size="small" @click="defineOrChangeProcess()">添加 / 修改过程通知</el-button>
-                                            <el-button type="danger" size="small" @click="customProcessDelete()" :disabled="!customProcessHasNode">删除当前过程通知</el-button>
-                                        </el-button-group>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                        </el-col>
-                    </el-row>
-                </el-card>
-            </el-col>
-        </el-row>
-    </div>
-</body>
-<script>
+var vue = null;
+$(function(){
+    var site_url = $('#siteUrl').val();
     //csrf验证
     axios.interceptors.request.use((config) => {
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
@@ -231,7 +35,7 @@
             return callback();
         }
     };
-    var vue = new Vue({
+    vue = new Vue({
         el: '#customProcess',
         data: {
             currentUser: null,
@@ -296,7 +100,7 @@
             customProcessCurrUser: function(){
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}position/get_active_user',
+                    url: site_url + 'position/get_active_user',
                 }).then((res) => {
                     this.currentUser=res.data.message
                 }).catch((res) => {
@@ -313,7 +117,7 @@
                 };
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}customProcess/select_nodes_pagination',
+                    url: site_url + 'custom_process/select_nodes_pagination',
                     data: data
                 }).then((res) => {
                     loading.close();
@@ -349,7 +153,7 @@
                 this.customProcessNotifyButtonText = '正在发送...';
                 this.customProcessNotifyButtonType = 'info';
                 this.customProcessNotifyButtonDisabled = true;
-                var url = '${SITE_URL}customProcess/send_notification';
+                var url = site_url + 'custom_process/send_notification';
                 var nofityData = {
                     'receivers': this.customProcessReceivers,
                     'content': this.customProcessNoticeContent
@@ -409,7 +213,7 @@
             generateCurrentProcessInfo: function() {
                 const loading = this.customProcessPopupLoading();
                 //上传当前节点执行信息
-                var url = '${SITE_URL}customProcess/update_node_status';
+                var url = site_url + 'custom_process/update_node_status';
                 var execTime = this.formatDateTime(new Date());
                 //此处执行人固定，实际使用时应该从接口取用户名称
                 var execPerson = this.currentUser;
@@ -447,7 +251,7 @@
             customProcessNextNode: function() {
                 const loading = this.customProcessPopupLoading();
                 //上传当前节点已执行状态
-                var url = '${SITE_URL}customProcess/change_status_flag';
+                var url = site_url + 'custom_process/change_status_flag';
                 var statusData = {};
                 statusData.node_id = this.customProcessTableData[this.customProcessStep].id;
                 statusData.is_done = 'y';
@@ -508,7 +312,7 @@
             //切换修改节点信息的界面
             customProcessEditNode: function(id) {
                 const loading = this.customProcessPopupLoading();
-                var url = '${SITE_URL}customProcess/select_node';
+                var url = site_url + 'custom_process/select_node';
                 var editData = {};
                 editData.id = id;
                 axios({
@@ -537,7 +341,7 @@
                       type: 'warning',
                       center: true
                     }).then(() => {
-                        var url = '${SITE_URL}customProcess/clear_execute_status';
+                        var url = site_url + 'custom_process/clear_execute_status';
                         const loading = this.customProcessPopupLoading();
                         axios({
                             method: 'post',
@@ -577,7 +381,7 @@
                     center: true
                 }).then(() => {
                     const loading = this.customProcessPopupLoading();
-                    var url = '${SITE_URL}customProcess/del_node';
+                    var url = site_url + 'custom_process/del_node';
                     var delData = {};
                     delData.id = id;
                     axios({
@@ -626,7 +430,7 @@
                         return false;
                     }else {
                         const loading = this.customProcessPopupLoading();
-                        var url = '${SITE_URL}customProcess/add_node';
+                        var url = site_url + 'custom_process/add_node';
                         if(1 != this.customProcessNode.receivers.length){
                             this.customProcessNode.receivers = this.customProcessNode.receivers.join(',');
                         }else{
@@ -710,7 +514,7 @@
                 }).then(() => {
                     const loading = this.customProcessPopupLoading();
                     //数据库删除所有节点信息
-                    var url = '${SITE_URL}customProcess/truncate_node';
+                    var url = site_url + 'custom_process/truncate_node';
                     axios({
                         method: 'post',
                         url: url
@@ -749,7 +553,7 @@
             customProcessSelectAllNodes: function() {
                 const loading = this.customProcessPopupLoading();
                 this.customProcessTableData = null;
-                var url = '${SITE_URL}customProcess/select_all_nodes';
+                var url = site_url + 'custom_process/select_all_nodes';
                 var count = 0;
                 axios({
                     method: 'post',
@@ -802,7 +606,7 @@
             },
             loadBkUsers: function(){
                 const loading = this.customProcessPopupLoading();
-                var url = '${SITE_URL}customProcess/select_all_bkusers';
+                var url = site_url + 'custom_process/select_all_bkusers';
                 axios({
                     method: 'post',
                     url: url
@@ -866,6 +670,4 @@
             this.get_header_data();
         }
     });
-
-</script>
-</html>
+});

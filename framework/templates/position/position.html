@@ -274,7 +274,7 @@
                         }
                         else{
                             this.$message({
-                            type: 'success',
+                            type: 'false',
                             message: '删除失败!请先移除该岗位的所有人员！',})
                         }
 
@@ -339,9 +339,16 @@
                                 pos_name: this.form2.tempjobname,
                             }
                         }).then((res) => {
-                            vm.dialogFormVisible2 = false
-                            if (res.data.message != null) {
+                            if(res.data.result){
+                                this.$message({
+                                type: 'success',
+                                message: '编辑成功!',})
+                                vm.dialogFormVisible2 = false
                                 window.location.href = "${SITE_URL}position/position"
+                            }else{
+                                this.$message({
+                                type: 'false',
+                                message: '编辑失败!请先检查后在进行修改',})
                             }
                         })
                     }
