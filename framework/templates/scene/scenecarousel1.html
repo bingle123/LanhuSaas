@@ -126,7 +126,7 @@
                         this.options = json;
                     }
                 }).catch((res) => {
-                    vm.$massage.error('获取用户错误')
+                    vm.$message.error('获取用户错误')
                 })
             },
              async alternate_play_test(){
@@ -139,7 +139,7 @@
                          'end':vm.end
                      }
                   }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
                  vm.imgList = res.data.message;
             },
@@ -221,7 +221,7 @@
                                 }
                             }
                         }).catch(function (e) {
-                            vm.$massage.error('获取数据失败！');
+                            vm.$message.error('获取数据失败！');
                         });
                     },1000)
 

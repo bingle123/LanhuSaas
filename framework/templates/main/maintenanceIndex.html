@@ -311,6 +311,7 @@
             <el-col :span="24">
                 <div id="system_state" class="title">
                     <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">系统状态</span>
+                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;float: right;margin-right: 10px" v-text="now_date_name+now_date_time"></span>
                 </div>
             </el-col>
         </el-row>
@@ -776,7 +777,7 @@
                         flow_monitor(jion_id, value + '_' + flow_list[i].order);
                     }
                 }).catch(function (e) {
-                    ve.$massage.error('获取数据失败！');
+                    ve.$message.error('获取数据失败！');
                 });
             },
         }
