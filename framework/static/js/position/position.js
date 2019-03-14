@@ -142,7 +142,7 @@ axios.interceptors.request.use((config) => {
                             type: 'false',
                             message: '删除失败!请先移除该岗位的所有人员！',})
                         }
-
+                        vm.page = 1;
                         vm.show();
                     })
                 }).catch(() => {
