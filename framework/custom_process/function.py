@@ -65,15 +65,14 @@ def select_nodes_pagination(node_info):
 # 添加或修改一个定制过程节点
 def add_node(node):
     status_dic = dict()
-    # 添加/删除节点
-    TbCustProcess(**node).save()
-    # 获取当前操作的节点
-    last_node = TbCustProcess.objects.last()
-    # 判断该节点是否存在节点状态信息
-    has_record = TdCustProcessLog.objects.filter(node_id=last_node.id).count()
-    # 如果该节点还没有状态信息则为添加的情况，新增一个状态信息，默认为未开始执行
-    if 0 == has_record:
+    # 添加节点并获取当前操作的节点
+    if 'add' == node['method']:
+        print 'ADD'
+        last_node = TbCustProcess.objects.create(**node['node'])
         TdCustProcessLog(node_id=last_node.id).save()
+    elif 'edit' == node['method']:
+        print 'EDIT'
+        TbCustProcess(**node['node']).save()
     # 获取当前所有节点的数量
     items_count = TbCustProcess.objects.count()
     # 默认每页5条记录，获取总页数

@@ -24,6 +24,7 @@ def add_node(request):
         info = make_log_info(u'增加或更新自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
+        print e
         info = make_log_info(u'增加或更新自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
     add_log(info)

@@ -99,7 +99,7 @@
                 </el-table-column>
             </el-table>
             <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
-                           @current-change="current_change1"></el-pagination>
+                           @current-change="current_change1" :current-page="page"></el-pagination>
         </div>
     </div>
     <!-- div1 end-->
@@ -1275,9 +1275,7 @@
                     vm.page_count = res.data.results.res_list[0].page_count;
                     vm.job2 = res.data.results.job;
                     vm.flow2 = res.data.results.flow;
-                }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
-                });
+                })
             },
             select1() {
                 vm.centerDialogVisible = false;
