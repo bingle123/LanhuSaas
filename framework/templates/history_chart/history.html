@@ -325,7 +325,7 @@ let vm = new Vue({
             scene_time: '',
             pattern_data: [],
             dayData:[],
-
+            aboutRulesCount:'',
 
             sCount: 1,
             monthly_operation_statistics:'',
@@ -343,6 +343,7 @@ let vm = new Vue({
                         limit: 10
                     },
                 }).then(function (res) {
+                    console.log(res)
                     vm.Operatelog = res.data.message;
                     vm.page_count = res.data.message[0].page_count;
                 });

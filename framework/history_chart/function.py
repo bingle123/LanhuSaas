@@ -44,7 +44,7 @@ def show_all(request):
             'create_time': str(x.create_time),
             'succeed': x.succeed,
             'message': x.message,
-            'page_count': pages
+            'page_count': int(pages)
         }
         res_list.append(dic)
     return  res_list
