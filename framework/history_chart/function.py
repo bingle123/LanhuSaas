@@ -13,7 +13,6 @@ from monitor_item import models
 from monitor_item.models import Scene_monitor,Monitor,Job
 from conf import settings_development
 import MySQLdb
-import time
 from datetime import datetime,date,timedelta
 from gather_data.models import TDGatherData
 from gather_data_history.models import TDGatherHistory
@@ -42,7 +41,7 @@ def show_all(request):
             'class_name': x.class_name,
             'method': x.method,
             'create_time': str(x.create_time),
-            'succeed': x.succeed,
+            'is_success': x.is_success,
             'message': x.message,
             'page_count': int(pages)
         }
@@ -169,7 +168,7 @@ def select_rules_pagination(request):
 #             'class_name': x.class_name,
 #             'method': x.method,
 #             'create_time': str(x.create_time),
-#             'succeed': x.succeed,
+#             'is_success': x.is_success,
 #             'message': x.message,
 #             'page_count': pages
 #         }
@@ -196,21 +195,21 @@ def select_log(request):
     if(res1 != ""and res2 == "" and res3 == "" and res4 == ""):
         log = tmp.filter(Q(log_type__icontains=res1))
     elif(res2 != "" and res1 == "" and res3 == "" and res4 == ""):
-        log = tmp.filter(Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-        class_name__icontains=res2) | Q(method__icontains=res2) |Q(succeed__icontains=res2))
+        log = tmp.filter(Q(id=res2)|Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
+        class_name__icontains=res2) | Q(method__icontains=res2) |Q(is_success__icontains=res2))
     elif(res3 != ""and res1 == "" and res2 == ""):
         log = tmp.filter(Q(create_time__range=(res3,res4)))
     elif(res1 != "" and res2 != "" and res3 == "" and res4 ==""):
         log = tmp.filter(Q(log_type__icontains=res1) & (Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-            class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2)))
+            class_name__icontains=res2) | Q(method__icontains=res2)|Q(is_success__icontains=res2)))
     elif (res1 != "" and res2 != ""and res3!="" and res4!=""):
         log = tmp.filter((Q(log_type__icontains=res1)) & (Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-            class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2))& (Q(create_time__range=(res3,res4))))
+            class_name__icontains=res2) | Q(method__icontains=res2)|Q(is_success__icontains=res2))& (Q(create_time__range=(res3,res4))))
     elif(res3!="" and res4!="" and res1!="" and res2 == ""):
         log = tmp.filter(Q(log_type__icontains=res1) & Q(create_time__range=(res3, res4)))
     elif(res3!="" and res4!="" and res2!="" and res1 == ""):
         log = tmp.filter((Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-        class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2))& Q(create_time__range=(res3, res4)))
+        class_name__icontains=res2) | Q(method__icontains=res2)|Q(is_success__icontains=res2))& Q(create_time__range=(res3, res4)))
     elif(res1 == ""and res2 == "" and res3 == "" and res4 == ""):
         log = Operatelog.objects.all()
 
@@ -228,7 +227,7 @@ def select_log(request):
             'class_name': x.class_name,
             'method': x.method,
             'create_time': str(x.create_time),
-            'succeed': x.succeed,
+            'is_success': x.is_success,
             'message': x.message,
             'page_count': pages
         }
@@ -667,216 +666,29 @@ def get_week(request):
 
 
 def monthly_select(request):
-    res = operation_report.objects.all()
-    total = 0
-    Success_num=0
-    failure_num = 0
-    alert_num = 0
-    dic_list=[]
-    for i in res:
-        if(str(i.date)[5:7] == '01'):
-            total += int(i.scene_num)
-            Success_num += int(i.success_num)
-            failure_num += int(i.failed_num)
-            alert_num += int(i.alert_num)
-        elif(str(i.date)[5:7] == '02'):
-            total += int(i.scene_num)
-            Success_num += int(i.success_num)
-            failure_num += int(i.failed_num)
-            alert_num += int(i.alert_num)
-        elif (str(i.date)[5:7] == '03'):
-            total += int(i.scene_num)
-            Success_num += int(i.success_num)
-            failure_num += int(i.failed_num)
-            alert_num += int(i.alert_num)
-        elif (str(i.date)[5:7] == '04'):
-            total += int(i.scene_num)
-            Success_num += int(i.success_num)
-            failure_num += int(i.failed_num)
-            alert_num += int(i.alert_num)
-        elif (str(i.date)[5:7] == '05'):
-            total += int(i.scene_num)
-            Success_num += int(i.success_num)
-            failure_num += int(i.failed_num)
-            alert_num += int(i.alert_num)
-        elif (str(i.date)[5:7] == '06'):
-            total += int(i.scene_num)
-            Success_num += int(i.success_num)
-            failure_num += int(i.failed_num)
-            alert_num += int(i.alert_num)
-        elif (str(i.date)[5:7] == '07'):
-            total += int(i.scene_num)
-            Success_num += int(i.success_num)
-            failure_num += int(i.failed_num)
-            alert_num += int(i.alert_num)
-        elif (str(i.date)[5:7] == '08'):
-            total += int(i.scene_num)
-            Success_num += int(i.success_num)
-            failure_num += int(i.failed_num)
-            alert_num += int(i.alert_num)
-        elif (str(i.date)[5:7] == '09'):
-            total += int(i.scene_num)
-            Success_num += int(i.success_num)
-            failure_num += int(i.failed_num)
-            alert_num += int(i.alert_num)
-        elif (str(i.date)[5:7] == '10'):
-            total += int(i.scene_num)
-            Success_num += int(i.success_num)
-            failure_num += int(i.failed_num)
-            alert_num += int(i.alert_num)
-        elif (str(i.date)[5:7] == '11'):
-            total += int(i.scene_num)
-            Success_num += int(i.success_num)
-            failure_num += int(i.failed_num)
-            alert_num += int(i.alert_num)
-        elif (str(i.date)[5:7] == '12'):
-            total += int(i.scene_num)
-            Success_num += int(i.success_num)
-            failure_num += int(i.failed_num)
-            alert_num += int(i.alert_num)
-    if(str(i.date)[:7] == str(i.date)[:5]+'01'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic={
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'alert_num':alert_num,
-            'date':str(i.date)[:5]+'01'
-        }
-        dic_list.append(dic)
-    elif(str(i.date)[:7] == str(i.date)[:5]+'02'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'alert_num':alert_num,
-            'date': str(i.date)[:5]+'02'
-        }
-        dic_list.append(dic)
-    elif(str(i.date[:7]) == str(i.date)[:5]+'03'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'alert_num':alert_num,
-            'date': str(i.date)[:5]+'03'
-        }
-        dic_list.append(dic)
-    elif(str(i.date)[:7] == str(i.date)[:5]+'04'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'alert_num':alert_num,
-            'date': str(i.date)[:5]+'04'
-        }
-        dic_list.append(dic)
-    elif(str(i.date)[:7] == str(i.date)[:5]+'05'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'alert_num':alert_num,
-            'date': str(i.date)[:5]+'05'
-        }
-        dic_list.append(dic)
-    elif(str(i.date)[:7] == str(i.date)[:5]+'06'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'alert_num':alert_num,
-            'date': str(i.date)[:5]+'06'
-        }
-        dic_list.append(dic)
-    elif(str(i.date)[:7] == str(i.date)[:5]+'07'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'alert_num':alert_num,
-            'date': str(i.date)[:5]+'07'
-        }
-        dic_list.append(dic)
-    elif(str(i.date)[:7] == str(i.date)[:5]+'08'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'alert_num':alert_num,
-            'date': str(i.date)[:5]+'08'
-        }
-        dic_list.append(dic)
-    elif(str(i.date)[:7] == str(i.date)[:5]+'09'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'alert_num':alert_num,
-            'date': str(i.date)[:5]+'09'
-        }
-        dic_list.append(dic)
-    elif(str(i.date)[:7] == str(i.date)[:5]+'10'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'alert_num':alert_num,
-            'date': str(i.date)[:5]+'10'
-        }
-        dic_list.append(dic)
-    elif(str(i.date)[:7] == str(i.date)[:5]+'11'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'alert_num':alert_num,
-            'date': str(i.date)[:5]+'11'
-        }
-        dic_list.append(dic)
-    elif(str(i.date)[:7] == str(i.date)[:5]+'12'):
-        success_rate = round(Success_num / total, 4)
-        success_rate = str(success_rate * 100) + '%'
-        dic = {
-            'total':total,
-            'Success_num':Success_num,
-            'failure_num':failure_num,
-            'success_rate':success_rate,
-            'alert_num':alert_num,
-            'date': str(i.date)[:5]+'12'
-        }
-
-        dic_list.append(dic)
-    return dic_list
+    #获取年份
+    year = str(json.loads(request.body)['date'])
+    if year == '':
+        year = datetime.now().strftime('%Y')
+    #初始化
+    res_list = []
+    #按月查出所有数据
+    sql = "SELECT a.date,sum(a.scene_num) scene_num,sum(a.success_num) success_num,	CONCAT(round(sum(a.success_num) / sum(a.scene_num) * 100, 2), '%') AS success_rate,sum(a.failed_num) failed_num,sum(a.alert_num) alert_num FROM(SELECT	DATE_FORMAT(date, '%Y-%m') date,scene_num,failed_num,alert_num,success_num FROM td_operation_report) a GROUP BY a.date"
+    #获取数据库来连接对象
+    db = get_db()
+    #查询
+    cursor = db.cursor()
+    cursor.execute(sql)
+    month_datas = cursor.fetchall()
+    for month_data in month_datas:
+        if str(month_data[0])[:4] == str(year):
+            month_dict = {
+                'date': month_data[0],
+                'total':month_data[1],
+                'Success_num':month_data[2],
+                'success_rate': month_data[3],
+                'failure_num':month_data[4],
+                'alert_num':month_data[5],
+            }
+            res_list.append(month_dict)
+    return res_list

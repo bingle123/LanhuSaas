@@ -91,18 +91,19 @@ def unit_show(request):
 
 # 查询函数
 def select_unit(request):
-    try:
-        res = json.loads(request.body)
-        res1 = res['data']
-        limit = res['limit']
-        page = res['page']
-        # 模糊查询
-        unit = Monitor.objects.filter(Q(monitor_name__icontains=res1) | Q(editor__icontains=res1))
-        page_data, base_page_count = tools.page_paging(unit, limit, page)
-        res_list = tools.obt_dic(page_data, base_page_count)
-        return res_list
-    except Exception as e:
-        return None
+# try:
+    res = json.loads(request.body)
+    res1 = res['data']
+    limit = res['limit']
+    page = res['page']
+    # 模糊查询
+    unit = Monitor.objects.filter(Q(monitor_name__icontains=res1) | Q(editor__icontains=res1))
+    page_data, base_page_count = tools.page_paging(unit, limit, page)
+    res_list = tools.obt_dic(page_data, base_page_count)
+    res_data = tools.success_result(res_list)
+    return res_data
+    # except Exception as e:
+    #     return None
 
 
 # 删除函数

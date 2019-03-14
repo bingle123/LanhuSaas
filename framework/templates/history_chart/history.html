@@ -136,13 +136,13 @@
                         </el-table-column>
                         <el-table-column prop="create_time" label="创建时间" width="200" align="center">
                         </el-table-column>
-                        <el-table-column prop="succeed" label="是否成功" width="150" align="center">
+                        <el-table-column prop="is_success" label="是否成功" width="150" align="center">
                         </el-table-column>
                         <el-table-column prop="message" label="备注" width="800" align="center">
                         </el-table-column>
                     </el-table>
                     <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
-                                   @current-change="current_change"></el-pagination>
+                                   @current-change="current_change" :current-page="page"></el-pagination>
                 </div>
 
                 <div id="table2" style="display:none">
@@ -167,7 +167,7 @@
                     </el-table>
                     <el-pagination :page-count="alertRulesCount" background layout="prev, pager, next"
                                    style="float:right"
-                                   @current-change="alertRulePageChange"></el-pagination>
+                                   @current-change="alertRulePageChange" :current-page="alertRulesCount"></el-pagination>
                 </div>
                 <div id="table3" style="display:none">
                     <el-table :data="aboutTableDate">
@@ -255,7 +255,7 @@
                          </el-table-column>
                      </el-table>
                      <el-pagination :page-count="sceneOperationCount" background layout="prev, pager, next" style="float:right"
-                               @current-change="sceneOperationpage"></el-pagination>
+                               @current-change="sceneOperationpage" :current-page="sceneOperationCount"></el-pagination>
                 </div>
 
                      <!--<el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
@@ -263,7 +263,21 @@
                           -->
                     </div>
                  <div id="table4" style="display:none">
-                     <div id="scene_et_table4" style="width:1000px;height: 500px;margin: 20px">
+                     <div class="container">
+                         <el-col :span="12" style="margin: -67px 0 0 266px;;text-align: left">
+                          <div class="block">
+                            <span >年</span>
+                            <el-date-picker
+                              v-model="years"
+                              type="year"
+                              placeholder="选择年"
+                              value-format="yyyy">
+                            </el-date-picker>
+                            <el-button icon="el-icon-search" circle  v-on:click="get_year"></el-button>
+                          </div>
+                         </el-col>
+                     </div>
+                     <div id="scene_et_table4" style="width:1000px;height: 500px;margin: 20px;margin-top: 80px;">
                      </div>
                      <div id="get_days" style="display: none">
                      </div>
@@ -281,9 +295,10 @@
                          <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center">
                          </el-table-column>
                      </el-table>
-                     <el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
+
+                     <!--<el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
                                    style="float:right"
-                                   @current-change=""></el-pagination>
+                                   @current-change=""></el-pagination>-->
                     </div>
             </div>
         </el-card>
@@ -329,6 +344,7 @@ let vm = new Vue({
             monthly_operation_statistics:'',
             monthly_operationTableData:'',
             weeks:'',                                    //运行情况周数查询
+            years:'',
         },
         methods: {
             show() {
@@ -553,8 +569,7 @@ let vm = new Vue({
                    method:'post',
                    url:'${SITE_URL}history_chart/monthly_select',
                    data:{
-                        page: vm.page,
-                        limit: 10
+                        date:vm.years
                    }
                }).then(function (res) {
                     vm.monthly_operationTableData = res.data.message;
@@ -584,7 +599,21 @@ let vm = new Vue({
                     vm.show_scene_operation()
                 }
             },
-
+            get_year(){
+                if(vm.years){
+                    let date = vm.years
+                    axios({
+                            method: 'post',
+                            url: '${SITE_URL}history_chart/monthly_select/',
+                            data: {
+                                date:date,
+                            },
+                    }).then((res) =>{
+                        vm.monthly_operationTableData = res.data.message
+                        vm.nmsl(vm.monthly_operationTableData)
+                    })
+                }
+            },
 
             //先选场景
             chose_scenes(value) {
@@ -715,32 +744,20 @@ let vm = new Vue({
                     this.$set(list_x,i,value[i]['success_rate']);
                     this.$set(date,i,value[i]['date']);
                 }
-                vm.myChart = echarts.init(document.getElementById('scene_et_table4'));
+                vm.myChart = echarts.init(document.getElementById('scene_et_table4'),'default');
                 option = {
                     title: {
                         text: '场景比对',
                         left: 1,
                     },
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                            }
-
+                     tooltip : {
+                        trigger: 'axis'
                     },
                     legend: {
-                        left: '25%',
                         data: ['节点数','运行成功场景单元数','运行失败数','告警数']
-                    },
-                    grid: {
-                        left: '3%',
-                        right: '4%',
-                        bottom: '3%',
-                        containLabel: true
                     },
                     xAxis: {
                         type: 'category',
-                        boundaryGap: false,
                         data: date
                     },
                     yAxis: {
@@ -752,25 +769,25 @@ let vm = new Vue({
                             name: '节点数',
                             type: 'bar',
                             data: list_all,
-                            stack:'data',
+                            stack:'data'
                         },
                         {
                             name: '运行成功场景单元数',
                             type: 'bar',
                             data: list_s,
-                            stack:'data',
+                            stack:'data'
                         },
                         {
                             name: '运行失败数',
                             type: 'bar',
                             data: list_f,
-                            stack:'data',
+                            stack:'data'
                         },
                         {
                             name: '告警数',
                             type: 'bar',
                             data: list_f,
-                            stack:'data',
+                            stack:'data'
                         },
                     ]
                 };

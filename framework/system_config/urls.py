@@ -32,5 +32,6 @@ urlpatterns = patterns(
     (r'^get_crawl_content/$', 'get_crawl_content'),                                     # 删除场景类型
     (r'^start_crawl_test/$', 'start_crawl_test'),                                     # 删除场景类型
     (r'^json_test', 'json_test'),   # 测试专用
+    (r'^test', 'test'),   # 测试专用
 
 )
