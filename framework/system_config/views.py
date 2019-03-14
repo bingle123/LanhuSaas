@@ -135,7 +135,7 @@ def json_test(request):
     :param request:
     :return:
     """
-    res = function.add_crawl_message(request)
+    res = function.get_email_address_list(request)
     return render_json(res)
 
 
@@ -245,4 +245,14 @@ def get_crawl_content(request):
 def start_crawl_test(request):
 
     res = function.start_crawl(request)
+    return render_json(res)
+
+
+def test(request):
+    """
+
+    :param request:
+    :return:
+    """
+    res = function.test(request)
     return render_json(res)
