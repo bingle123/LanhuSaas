@@ -41,7 +41,7 @@ def show_all(request):
             'class_name': x.class_name,
             'method': x.method,
             'create_time': str(x.create_time),
-            'succeed': x.is_success,
+            'is_success': x.is_success,
             'message': x.message,
             'page_count': int(pages)
         }
@@ -168,7 +168,7 @@ def select_rules_pagination(request):
 #             'class_name': x.class_name,
 #             'method': x.method,
 #             'create_time': str(x.create_time),
-#             'succeed': x.succeed,
+#             'is_success': x.is_success,
 #             'message': x.message,
 #             'page_count': pages
 #         }
@@ -196,20 +196,20 @@ def select_log(request):
         log = tmp.filter(Q(log_type__icontains=res1))
     elif(res2 != "" and res1 == "" and res3 == "" and res4 == ""):
         log = tmp.filter(Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-        class_name__icontains=res2) | Q(method__icontains=res2) |Q(succeed__icontains=res2))
+        class_name__icontains=res2) | Q(method__icontains=res2) |Q(is_success__icontains=res2))
     elif(res3 != ""and res1 == "" and res2 == ""):
         log = tmp.filter(Q(create_time__range=(res3,res4)))
     elif(res1 != "" and res2 != "" and res3 == "" and res4 ==""):
         log = tmp.filter(Q(log_type__icontains=res1) & (Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-            class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2)))
+            class_name__icontains=res2) | Q(method__icontains=res2)|Q(is_success__icontains=res2)))
     elif (res1 != "" and res2 != ""and res3!="" and res4!=""):
         log = tmp.filter((Q(log_type__icontains=res1)) & (Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-            class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2))& (Q(create_time__range=(res3,res4))))
+            class_name__icontains=res2) | Q(method__icontains=res2)|Q(is_success__icontains=res2))& (Q(create_time__range=(res3,res4))))
     elif(res3!="" and res4!="" and res1!="" and res2 == ""):
         log = tmp.filter(Q(log_type__icontains=res1) & Q(create_time__range=(res3, res4)))
     elif(res3!="" and res4!="" and res2!="" and res1 == ""):
         log = tmp.filter((Q(log_name__icontains=res2) | Q(user_name__icontains=res2) | Q(
-        class_name__icontains=res2) | Q(method__icontains=res2)|Q(succeed__icontains=res2))& Q(create_time__range=(res3, res4)))
+        class_name__icontains=res2) | Q(method__icontains=res2)|Q(is_success__icontains=res2))& Q(create_time__range=(res3, res4)))
     elif(res1 == ""and res2 == "" and res3 == "" and res4 == ""):
         log = Operatelog.objects.all()
 
@@ -227,7 +227,7 @@ def select_log(request):
             'class_name': x.class_name,
             'method': x.method,
             'create_time': str(x.create_time),
-            'succeed': x.succeed,
+            'is_success': x.is_success,
             'message': x.message,
             'page_count': pages
         }
