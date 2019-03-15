@@ -773,7 +773,7 @@ var vm = new Vue({
                         trigger: 'axis'
                     },
                     legend: {
-                        data: ['节点数','运行成功场景单元数','运行失败数','告警数']
+                        data: ['场景数','运行成功场景单元数','运行失败数','告警数']
                     },
                     xAxis: {
                         type: 'category',
@@ -785,7 +785,7 @@ var vm = new Vue({
                     },
                     series: [
                         {
-                            name: '节点数',
+                            name: '场景数',
                             type: 'bar',
                             data: list_all,
                             stack:'data'
