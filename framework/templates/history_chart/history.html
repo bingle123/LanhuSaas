@@ -142,7 +142,7 @@
                         </el-table-column>
                     </el-table>
                     <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
-                                   @current-change="current_change"></el-pagination>
+                                   @current-change="current_change" :current-page="page"></el-pagination>
                 </div>
 
                 <div id="table2" style="display:none">
@@ -167,23 +167,23 @@
                     </el-table>
                     <el-pagination :page-count="alertRulesCount" background layout="prev, pager, next"
                                    style="float:right"
-                                   @current-change="alertRulePageChange"></el-pagination>
+                                   @current-change="alertRulePageChange" :current-page="page"></el-pagination>
                 </div>
                 <div id="table3" style="display:none">
                     <el-table :data="aboutTableDate">
-                        <el-table-column prop="scene_id" label="场景ID" width="100">
+                        <el-table-column prop="scene_id" label="场景ID" width="150">
                         </el-table-column>
                         <el-table-column prop="scene_name" label=场景名字 width="200" align="center">
                         </el-table-column>
-                        <el-table-column prop="item_id" label="监控项ID" width="100" align="center">
+                        <el-table-column prop="item_id" label="监控项ID" width="150" align="center">
                         </el-table-column>
-                        <el-table-column prop="monitor_name" label="监控项名字" width="200" align="center">
+                        <el-table-column prop="monitor_name" label="监控项名字" width="500" align="center">
                         </el-table-column>
-                        <el-table-column prop="start_time" label="开始时间" width="150" align="center">
+                        <el-table-column prop="start_time" label="开始时间" width="200" align="center">
                         </el-table-column>
-                        <el-table-column prop="end_time" label="结束时间" width="150" align="center">
+                        <el-table-column prop="end_time" label="结束时间" width="200" align="center">
                         </el-table-column>
-                        <el-table-column prop="minture" label="间距分钟" width="100" align="center">
+                        <el-table-column prop="minture" label="间距分钟" width="150" align="center">
                         </el-table-column>
 
 
@@ -255,7 +255,7 @@
                          </el-table-column>
                      </el-table>
                      <el-pagination :page-count="sceneOperationCount" background layout="prev, pager, next" style="float:right"
-                               @current-change="sceneOperationpage"></el-pagination>
+                               @current-change="sceneOperationpage" :current-page="page"></el-pagination>
                 </div>
 
                      <!--<el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
@@ -312,7 +312,7 @@
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
         return config
     });
-let vm = new Vue({
+var vm = new Vue({
         el: '.content',
         data: {
             page_count: 100,                             //总页码数
@@ -377,8 +377,13 @@ let vm = new Vue({
                         limit: 10
                     },
                 }).then((res) => {
-                    vm.Operatelog = res.data.message;
-                    vm.page_count = res.data.message[0].page_count;
+                    if(res.data.message){
+                        vm.page_count = 1
+                    }
+                    else{
+                        vm.Operatelog = res.data.message;
+                        vm.page_count = res.data.message[0].page_count;
+                    }
                 })
 
             },
@@ -395,8 +400,14 @@ let vm = new Vue({
                         limit: 10
                     },
                 }).then((res) => {
-                    vm.aboutTableDate = res.data.results;
-                    vm.aboutRulesCount = res.data.results[0].pages
+                    if(res.data.message.length == 0){
+                        vm.Operatelog = []
+                        vm.page_count = 1
+                    }
+                    else {
+                        vm.aboutTableDate = res.data.results;
+                        vm.aboutRulesCount = res.data.results[0].pages
+                    }
                 })
             },
 
@@ -417,8 +428,14 @@ let vm = new Vue({
                            limit: 10
                        },
                    }).then((res) => {
-                       vm.Operatelog = res.data.message;
-                       vm.page_count = res.data.message[0].page_count;
+                       if(res.data.message.length == 0){
+                           vm.Operatelog = []
+                           vm.page_count = 1
+                       }
+                       else{
+                           vm.Operatelog = res.data.message;
+                           vm.page_count = res.data.message[0].page_count;
+                       }
                    })
                }else if(vm.log_type == 'alert'){
                  this.alertRulePageChange(1);
@@ -502,6 +519,7 @@ let vm = new Vue({
             },
 
             change_type(value) {
+                vm.page = 1
                 if (value == 'log') {
                     $("#table1,#hide_k,#block").css('display', 'block');
                     $("#table3,#scene_compare,#table2,#hide_m,#table10,#table4,#date_selection").css('display', 'none');
@@ -580,6 +598,7 @@ let vm = new Vue({
 
 
                 }
+                console.log(vm.page)
             },
 
             get_week(){
@@ -610,6 +629,7 @@ let vm = new Vue({
                             },
                     }).then((res) =>{
                         vm.monthly_operationTableData = res.data.message
+                        vm.nmsl(vm.monthly_operationTableData)
                     })
                 }
             },
@@ -743,32 +763,20 @@ let vm = new Vue({
                     this.$set(list_x,i,value[i]['success_rate']);
                     this.$set(date,i,value[i]['date']);
                 }
-                vm.myChart = echarts.init(document.getElementById('scene_et_table4'));
+                vm.myChart = echarts.init(document.getElementById('scene_et_table4'),'default');
                 option = {
                     title: {
                         text: '场景比对',
                         left: 1,
                     },
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                            }
-
+                     tooltip : {
+                        trigger: 'axis'
                     },
                     legend: {
-                        left: '25%',
-                        data: ['节点数','运行成功场景单元数','运行失败数','告警数']
-                    },
-                    grid: {
-                        left: '3%',
-                        right: '4%',
-                        bottom: '3%',
-                        containLabel: true
+                        data: ['场景数','运行成功场景单元数','运行失败数','告警数']
                     },
                     xAxis: {
                         type: 'category',
-                        boundaryGap: false,
                         data: date
                     },
                     yAxis: {
@@ -777,28 +785,28 @@ let vm = new Vue({
                     },
                     series: [
                         {
-                            name: '节点数',
+                            name: '场景数',
                             type: 'bar',
                             data: list_all,
-                            stack:'data',
+                            stack:'data'
                         },
                         {
                             name: '运行成功场景单元数',
                             type: 'bar',
                             data: list_s,
-                            stack:'data',
+                            stack:'data'
                         },
                         {
                             name: '运行失败数',
                             type: 'bar',
                             data: list_f,
-                            stack:'data',
+                            stack:'data'
                         },
                         {
                             name: '告警数',
                             type: 'bar',
                             data: list_f,
-                            stack:'data',
+                            stack:'data'
                         },
                     ]
                 };

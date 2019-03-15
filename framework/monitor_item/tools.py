@@ -89,8 +89,6 @@ def obt_dic(page_data,page_count):
         obj_dic['start_time'] = str(i.start_time)
         obj_dic['end_time'] = str(i.end_time)
         obj_dic['status'] = str(i.status)
-
-
         obj_list.append(obj_dic)
     return obj_list
 
@@ -113,7 +111,7 @@ def user_interface_param():
     :return:
     """
 
-    user_account = BkUser.objects.filter(id=1).get ()
+    user_account = BkUser.objects.filter(username='admin').get ()
     client = get_client_by_user (user_account)
     client.set_bk_api_ver ('v2')                                    # 以v2版本调用接口
     return client

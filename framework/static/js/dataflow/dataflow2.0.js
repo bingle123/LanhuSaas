@@ -268,6 +268,7 @@ console.log('init');
                             });
                             $(settings.canvas).append(str.str);
                             $(str.id).find('p').text(data.location[s].name);
+                            $(str.id).find('.title').text(data.location[s].stage_name);
                             $(str.id).css({
                                 left: data.location[s].x + 'px',
                                 top: data.location[s].y + 'px'

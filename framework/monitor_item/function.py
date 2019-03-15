@@ -91,18 +91,19 @@ def unit_show(request):
 
 # 查询函数
 def select_unit(request):
-    try:
-        res = json.loads(request.body)
-        res1 = res['data']
-        limit = res['limit']
-        page = res['page']
-        # 模糊查询
-        unit = Monitor.objects.filter(Q(monitor_name__icontains=res1) | Q(editor__icontains=res1))
-        page_data, base_page_count = tools.page_paging(unit, limit, page)
-        res_list = tools.obt_dic(page_data, base_page_count)
-        return res_list
-    except Exception as e:
-        return None
+# try:
+    res = json.loads(request.body)
+    res1 = res['data']
+    limit = res['limit']
+    page = res['page']
+    # 模糊查询
+    unit = Monitor.objects.filter(Q(monitor_name__icontains=res1) | Q(editor__icontains=res1))
+    page_data, base_page_count = tools.page_paging(unit, limit, page)
+    res_list = tools.obt_dic(page_data, base_page_count)
+    res_data = tools.success_result(res_list)
+    return res_data
+    # except Exception as e:
+    #     return None
 
 
 # 删除函数
@@ -386,19 +387,32 @@ def get_flow_desc(request):
 def flow_change(request):
     cilent = tools.interface_param(request)
     id = json.loads(request.body)
+    activities2 = []
     res = get_desc(request, id['template_id'])
     res1 = json.loads(res['pipeline_tree'])
-    activities2 = []
-    start_event = res1['start_event']  # 开始节点信息
     location = res1['location']
+    gateways = res1['gateways']
+    for i in gateways:
+        gateways1={}
+        gateways1['type'] = gateways[i]['type']
+        gateways1['id'] = gateways[i]['id']
+        gateways1['name'] = gateways[i]['name']
+        gateways1['outgoing'] = gateways[i]['outgoing']
+        gateways1['incoming'] = gateways[i]['incoming']
+        for f in location:
+            if f['id'] == gateways[i]['id']:
+                gateways1['x'] = f['x']
+                gateways1['y'] = f['y']
+                activities2.append(gateways1)
+    start_event = res1['start_event']  # 开始节点信息
     for l in location:
         if l['id']==start_event['id']:
-            start_event['x'] = l['x']*0.5
+            start_event['x'] = l['x']
             start_event['y'] = l['y']
     end_event = res1['end_event']  # 结束节点信息
     for l in location:
         if l['id']==end_event['id']:
-            end_event['x'] = l['x']*0.5
+            end_event['x'] = l['x']
             end_event['y'] = l['y']
 
     activities2.append(start_event)
@@ -409,27 +423,26 @@ def flow_change(request):
         activities1['id'] = str(activities[key]['id'])
         activities1['type'] = str(activities[key]['type'])
         activities1['name'] = activities[key]['name']
+        activities1['stage_name'] = activities[key]['stage_name']
         for l in location:
             if l['id']==activities1['id']:
-                activities1['x'] = l['x']*0.5
+                activities1['x'] = l['x']
                 activities1['y'] = l['y']
                 activities2.append(activities1)
     flows1 = []
     flows2 = res1['flows']
-    for key in flows2:
-        flows3 = {
-            'source': {
-                'arrow': 'Right',
-                'id': str(flows2[key]['source'])
-            },
-            'target': {
-                'arrow': 'Left',
-                'id': str(flows2[key]['target'])
+    for i in res1['line']:
+            flows3 = {
+                'source': {
+                    'arrow':  i['source']['arrow'],
+                    'id': i['source']['id']
+                },
+                'target': {
+                    'arrow': i['target']['arrow'],
+                    'id':   i['target']['id']
+                }
             }
-        }
-        # flows3['source'] = str(flows2[key]['source'])
-        # flows3['target'] = str(flows2[key]['target'])
-        flows1.append(flows3)
+            flows1.append(flows3)
     constants1 = []
     constants = res1['constants']
     for key in constants:
