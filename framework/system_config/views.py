@@ -257,6 +257,7 @@ def get_crawl_content(request):
     crawl_name = request_body['crawl_name']
     page = request_body['page']
     limit = request_body['limit']
+    print request_body
     res = function.get_crawl_content(title_content, crawl_name, page, limit)
     return render_json(res)
 

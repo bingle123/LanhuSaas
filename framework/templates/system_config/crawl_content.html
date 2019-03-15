@@ -113,6 +113,7 @@
                 vm.query();
             },
             query() {
+                vm.page= 1;
                 axios({
                     url: '${SITE_URL}system_config/get_crawl_content/',
                     method: 'post',
