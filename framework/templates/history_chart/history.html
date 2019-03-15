@@ -167,23 +167,23 @@
                     </el-table>
                     <el-pagination :page-count="alertRulesCount" background layout="prev, pager, next"
                                    style="float:right"
-                                   @current-change="alertRulePageChange" :current-page="alertRulesCount"></el-pagination>
+                                   @current-change="alertRulePageChange" :current-page="page"></el-pagination>
                 </div>
                 <div id="table3" style="display:none">
                     <el-table :data="aboutTableDate">
-                        <el-table-column prop="scene_id" label="场景ID" width="100">
+                        <el-table-column prop="scene_id" label="场景ID" width="150">
                         </el-table-column>
                         <el-table-column prop="scene_name" label=场景名字 width="200" align="center">
                         </el-table-column>
-                        <el-table-column prop="item_id" label="监控项ID" width="100" align="center">
+                        <el-table-column prop="item_id" label="监控项ID" width="150" align="center">
                         </el-table-column>
-                        <el-table-column prop="monitor_name" label="监控项名字" width="200" align="center">
+                        <el-table-column prop="monitor_name" label="监控项名字" width="500" align="center">
                         </el-table-column>
-                        <el-table-column prop="start_time" label="开始时间" width="150" align="center">
+                        <el-table-column prop="start_time" label="开始时间" width="200" align="center">
                         </el-table-column>
-                        <el-table-column prop="end_time" label="结束时间" width="150" align="center">
+                        <el-table-column prop="end_time" label="结束时间" width="200" align="center">
                         </el-table-column>
-                        <el-table-column prop="minture" label="间距分钟" width="100" align="center">
+                        <el-table-column prop="minture" label="间距分钟" width="150" align="center">
                         </el-table-column>
 
 
@@ -255,7 +255,7 @@
                          </el-table-column>
                      </el-table>
                      <el-pagination :page-count="sceneOperationCount" background layout="prev, pager, next" style="float:right"
-                               @current-change="sceneOperationpage" :current-page="sceneOperationCount"></el-pagination>
+                               @current-change="sceneOperationpage" :current-page="page"></el-pagination>
                 </div>
 
                      <!--<el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
@@ -312,7 +312,7 @@
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
         return config
     });
-let vm = new Vue({
+var vm = new Vue({
         el: '.content',
         data: {
             page_count: 100,                             //总页码数
@@ -519,6 +519,7 @@ let vm = new Vue({
             },
 
             change_type(value) {
+                vm.page = 1
                 if (value == 'log') {
                     $("#table1,#hide_k,#block").css('display', 'block');
                     $("#table3,#scene_compare,#table2,#hide_m,#table10,#table4,#date_selection").css('display', 'none');
@@ -597,6 +598,7 @@ let vm = new Vue({
 
 
                 }
+                console.log(vm.page)
             },
 
             get_week(){
