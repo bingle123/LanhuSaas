@@ -596,9 +596,10 @@
                                                              style="position: absolute;width: 70px;height: 20px;top: -26px;left: 0px;"></div>
                                                         <div class="end_time"
                                                              style="position: absolute;width: 70px;height: 20px;top: -26px;right: 0px;"></div>
-                                                        <p class="node-title"></p>
+                                                        <p class="node-title" style=" overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"></p>
                                                     </div>
                                                     <div class="node-icon" style="top: 26px;width: 100%;height: 100%;">
+                                                        <span class="title" style="top: -14px;height: 100%;position: relative;color: #F4FFF9; overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1675,11 +1676,10 @@
                     }
                 }).then(function (res) {
                     {
-                        console.log(res)
                         vm.template_list.id=res.data.template_id[0].id
                         vm.template_list.name=res.data.template_id[0].name
                         vm.constants = res.data.constants
-                        var aa="     <div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width:1000px;position: relative;\">\n" +
+                        var aa="  <div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width:1000px;position: relative;\">\n" +
                             "\n" +
                             "                                        <div class=\"workflow-canvas\" style=\"margin-left: 0px;padding-left: 0px\">\n" +
                             "                                            <!-- 画布模板 start -->\n" +
@@ -1693,7 +1693,7 @@
                             "\n" +
                             "                                        </div>\n" +
                             "\n" +
-                            "    <!-- template 模板-->\n" +
+                            "                                    <!-- template 模板-->\n" +
                             "                                        <div class=\"jtk-delete jtk-none \">删除节点</div>\n" +
                             "                                        <div id=\"template\" class=\"jtk-none\">\n" +
                             "                                            <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\" data-type=\"EmptyEndEvent\">\n" +
@@ -1709,11 +1709,14 @@
                             "                                            <div class=\"jtk-window jtk-node workfolw-node database-node\" id=\"{charts}\" data-type=\"ServiceActivity\">\n" +
                             "                                                <div class=\"node-wrapper\">\n" +
                             "                                                    <div class=\"node-content\" style=\"position: relative\">\n" +
-                            "                                                        <div class=\"start_time\" style=\"position: absolute;width: 70px;height: 20px;top: -26px;left: 0px;\"></div>\n" +
-                            "                                                        <div class=\"end_time\" style=\"position: absolute;width: 70px;height: 20px;top: -26px;right: 0px;\"></div>\n" +
-                            "                                                        <p class=\"node-title\"></p>\n" +
+                            "                                                        <div class=\"start_time\"\n" +
+                            "                                                             style=\"position: absolute;width: 70px;height: 20px;top: -26px;left: 0px;\"></div>\n" +
+                            "                                                        <div class=\"end_time\"\n" +
+                            "                                                             style=\"position: absolute;width: 70px;height: 20px;top: -26px;right: 0px;\"></div>\n" +
+                            "                                                        <p class=\"node-title\" style=\" overflow: hidden;text-overflow:ellipsis;white-space: nowrap;\"></p>\n" +
                             "                                                    </div>\n" +
-                            "                                                    <div class=\"node-icon\" style=\"top: 26px;width: 100%;height: 20px;\">\n" +
+                            "                                                    <div class=\"node-icon\" style=\"top: 26px;width: 100%;height: 100%;\">\n" +
+                            "                                                        <span class=\"title\" style=\"top: -14px;height: 100%;position: relative;color: #F4FFF9;\"></span>\n" +
                             "                                                    </div>\n" +
                             "                                                </div>\n" +
                             "                                            </div>\n" +
@@ -1754,9 +1757,7 @@
                             "                                    </div>"
                         $('#flow_canvas').html(aa)
                         vm.location = res.data.activities
-                        console.log(vm.location)
                         vm.line = res.data.flows
-                        console.log(vm.line)
                         //显示流程单元中的预览图
                         $('#flow1').dataflow({
 
