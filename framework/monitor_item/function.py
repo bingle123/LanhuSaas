@@ -423,6 +423,7 @@ def flow_change(request):
         activities1['id'] = str(activities[key]['id'])
         activities1['type'] = str(activities[key]['type'])
         activities1['name'] = activities[key]['name']
+        activities1['stage_name'] = activities[key]['stage_name']
         for l in location:
             if l['id']==activities1['id']:
                 activities1['x'] = l['x']
