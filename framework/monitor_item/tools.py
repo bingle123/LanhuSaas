@@ -111,7 +111,7 @@ def user_interface_param():
     :return:
     """
 
-    user_account = BkUser.objects.filter(id=1).get ()
+    user_account = BkUser.objects.filter(username='admin').get ()
     client = get_client_by_user (user_account)
     client.set_bk_api_ver ('v2')                                    # 以v2版本调用接口
     return client
