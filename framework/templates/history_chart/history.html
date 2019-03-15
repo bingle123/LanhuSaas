@@ -379,6 +379,7 @@ let vm = new Vue({
                 }).then((res) => {
                     vm.Operatelog = res.data.message;
                     vm.page_count = res.data.message[0].page_count;
+
                 })
 
             },
@@ -395,8 +396,14 @@ let vm = new Vue({
                         limit: 10
                     },
                 }).then((res) => {
-                    vm.aboutTableDate = res.data.results;
-                    vm.aboutRulesCount = res.data.results[0].pages
+                    if(res.data.message.length == 0){
+                        vm.Operatelog = []
+                        vm.page_count = 1
+                    }
+                    else {
+                        vm.aboutTableDate = res.data.results;
+                        vm.aboutRulesCount = res.data.results[0].pages
+                    }
                 })
             },
 
@@ -417,8 +424,14 @@ let vm = new Vue({
                            limit: 10
                        },
                    }).then((res) => {
-                       vm.Operatelog = res.data.message;
-                       vm.page_count = res.data.message[0].page_count;
+                       if(res.data.message.length == 0){
+                           vm.Operatelog = []
+                           vm.page_count = 1
+                       }
+                       else{
+                           vm.Operatelog = res.data.message;
+                           vm.page_count = res.data.message[0].page_count;
+                       }
                    })
                }else if(vm.log_type == 'alert'){
                  this.alertRulePageChange(1);
