@@ -585,6 +585,7 @@ var vm = new Vue({
                     vm.monthly_operationTableData = res.data.message;
                 $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table10,#date_selection").css('display','none');
                    $('#table4').css('display','block');
+                   $('#scene_et_table4').css('display','block');
                     vm.nmsl(vm.monthly_operationTableData)
                });
 
@@ -740,6 +741,7 @@ var vm = new Vue({
                 vm.myChart.setOption(option);
             },
             nmsl(value) {
+                alert(1)
                 if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
                     this.myChart.dispose();
                 }
