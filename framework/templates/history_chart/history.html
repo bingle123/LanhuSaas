@@ -188,7 +188,7 @@
                     </el-table>
                     <el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
                                    style="float:right"
-                                   @current-change="about_change"></el-pagination>
+                                   @current-change="about_change" :current-page="page"></el-pagination>
                 </div>
 
                 <div id="scene_compare" style="display:none">
@@ -585,6 +585,7 @@ var vm = new Vue({
                     vm.monthly_operationTableData = res.data.message;
                 $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table10,#date_selection").css('display','none');
                    $('#table4').css('display','block');
+                   $('#scene_et_table4').css('display','block');
                     vm.nmsl(vm.monthly_operationTableData)
                });
 
