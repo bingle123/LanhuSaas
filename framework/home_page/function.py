@@ -42,7 +42,9 @@ def scenes_alert(request):
     position_id = model_to_dict(user)['user_pos']
     #一个职位下得所有场景
     ps = position_scene.objects.filter(position_id = position_id)
-
+    if 0 == len(ps) or None is ps:
+        null_data = 'n'
+        return tools.success_result(null_data)
     alert_log = []
     alert_count = 0
     alert_data = []

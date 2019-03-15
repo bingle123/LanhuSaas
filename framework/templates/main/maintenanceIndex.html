@@ -46,8 +46,13 @@
         border: none;
     }
 
-    p{
-
+    .p_class{
+        font-family: PingFang-SC-Medium;
+        font-size: 16px;
+        color: rgba(0,0,0,0.85);
+        line-height: 44px;
+        margin-left: 20px;
+        position: absolute;
     }
 
     .score_input {
@@ -88,15 +93,7 @@
         color: #303133;
         font-weight: bold;
     }
-    p{
 
-        font-family: PingFang-SC-Medium;
-        font-size: 16px;
-        color: rgba(0,0,0,0.85);
-        line-height: 44px;
-        margin-left: 20px;
-        position: absolute;
-    }
     .span_style{
         display:block;
         text-align:center;
@@ -147,7 +144,7 @@
         <el-row :gutter="30" class="row_margin">
             <el-col :span="6">
                 <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
-                    <p>健康度</p>
+                    <p class="p_class">健康度</p>
                     <div style="text-align: center;padding-top: 44px">
                         <el-progress type="circle" :percentage="percentage" status="text">{{ percentage }}%</el-progress>
                     </div>
@@ -155,7 +152,7 @@
             </el-col>
             <el-col :span="6">
                 <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
-                    <p>场景状态</p>
+                    <p class="p_class">场景状态</p>
                     <div style="text-align: center;width: 95%;height: 200px" id="maintenancePie1">
 
                     </div>
@@ -163,7 +160,7 @@
             </el-col>
             <el-col :span="6">
                 <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
-                    <p>告警数</p>
+                    <p class="p_class">告警数</p>
                     <div style="text-align: center;padding-top: 44px">
                         <el-progress type="circle" :percentage="100" status="text" color="red">{{ alert_number }}</el-progress>
                     </div>
@@ -171,7 +168,7 @@
             </el-col>
             <el-col :span="6">
                 <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
-                    <p>自定义添加</p>
+                    <p class="p_class">自定义添加</p>
                     <div style="text-align: center;padding-top: 80px">
                         <i class="fa fa-3x fa-plus" style="color: #D8D8D8"></i>
                     </div>
@@ -728,23 +725,23 @@
                     ve.now_date_time = res.data['time_date']
                     ve.now_date_name = res.data['today_name']+":"
                     console.log(res.data)
-                }).catch(function (e) {
-                    ve.$message.error('获取时间失败！');
                 })
             },
             get_alert_data(){
                 axios.post('${SITE_URL}home_page/scenes_alert/').then((res)=>{
-                    ve.percentage=res.data['last_score'];
-                    ve.alert_number=res.data['alert_count'];
-                    ve.alert_table_data=res.data['alert_data'];
-                    ve.scene_chart_data=[
-                        {value:res.data['danger_scene'], name:'危险'},
-                        {value:res.data['will_scene'], name:'预警'},
-                        {value:res.data['safe_scene'], name:'正常'},
-                    ];
-                    ve.show_ring_chart();
-                }).catch(function (e) {
-                    ve.$message.error('获取数据失败！');
+                    if (res.data.results == 'n'){
+                        this.$message.error("此岗位没有场景!")
+                    }else{
+                        ve.percentage=res.data['last_score'];
+                        ve.alert_number=res.data['alert_count'];
+                        ve.alert_table_data=res.data['alert_data'];
+                        ve.scene_chart_data=[
+                            {value:res.data['danger_scene'], name:'危险'},
+                            {value:res.data['will_scene'], name:'预警'},
+                            {value:res.data['safe_scene'], name:'正常'},
+                        ];
+                        ve.show_ring_chart();
+                    }
                 })
             },
             scene_content_change(value) {
@@ -755,7 +752,6 @@
                         data:value
                     }
                 }).then(function (res) {
-                    console.log(res)
                     let selector = '.scene_flow_content';
                     let base_list = res.data.base_list;  //获取当前场景的基本监控项数据
                     let flow_list = res.data.flow_list;  //获取当前场景的流程监控项数据
@@ -776,9 +772,7 @@
                         //调用流程监控项的渲染方法，第一条参数必须为[{}]格式，用来调v3接口，第二条参数对应容器内部div的id
                         flow_monitor(jion_id, value + '_' + flow_list[i].order);
                     }
-                }).catch(function (e) {
-                    ve.$message.error('获取数据失败！');
-                });
+                })
             },
         }
     });
