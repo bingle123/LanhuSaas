@@ -1,7 +1,7 @@
 let vm = new Vue({
         el: '.content',
         data: {
-            page_count: 100,                             //总页码数
+            page_count: 1,                             //总页码数
             page: 1,                                   //分页页码数
             Operatelog:[],
             search: '',                                 //搜索框
@@ -32,7 +32,6 @@ let vm = new Vue({
                         limit: 10
                     },
                 }).then((res) => {
-                    console.log(res)
                     vm.Operatelog = res.data.message;
                     vm.page_count = res.data.message[0].page_count;
                 })
@@ -51,8 +50,15 @@ let vm = new Vue({
                         limit: 10
                     },
                 }).then((res) => {
-                    vm.Operatelog = res.data.message;
-                    vm.page_count = res.data.message[0].page_count;
+
+                    if(res.data.message.length == 0){
+                        vm.Operatelog = []
+                        vm.page_count = 1
+                    }else{
+                        vm.Operatelog = res.data.message;
+                        vm.page_count = res.data.message[0].page_count;
+                    }
+
                 })
            }
 

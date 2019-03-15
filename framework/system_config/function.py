@@ -506,8 +506,9 @@ def get_crawl_content(title_name, crawl_name, page, limit):
             i['save_time'] = i['save_time'].strftime("%Y-%m-%d %H:%M:%S")
             i['page_count'] = page_count
             i['page'] = page
-            i['crawl_name'] = model_to_dict(CrawlerConfig.objects.get(id=1))['crawl_name']
+            i['crawl_name'] = model_to_dict(CrawlerConfig.objects.get(id=i['crawl_id']))['crawl_name']
             result_list.append(i)
+        print result_list
         return success_result(result_list)
     except Exception as e:
         return error_result([])
@@ -553,9 +554,10 @@ def test(request):
             add_log(info)
         # 爬虫失败
         elif crawl_result['code'] == 1:
-            info = make_log_info(crawl_name + u'爬虫失败', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
-                                 u'admin', u'失败', u'无')
-            add_log(info)
+            # info = make_log_info(crawl_name + '爬虫失败', '业务日志', 'CrawlerConfig', sys._getframe().f_code.co_name,
+            #                      'admin', '失败', '无')
+            # add_log(info)
+            pass
         # 爬虫成功，且有数据
         else:
             # 发送人地址列表

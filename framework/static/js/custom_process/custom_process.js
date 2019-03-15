@@ -12,6 +12,8 @@ $(function(){
     const receiversCheck = (rule, value, callback) => {
         if(0 == vue.customProcessNode.receivers.length){
             callback(new Error('请输入通知接收人'));
+        }else if(2000 < vue.customProcessNode.receivers.length){
+            return callback('通知接收人内容长度在1~2000之间');
         }else{
             return callback();
         }
@@ -437,10 +439,18 @@ $(function(){
                             this.customProcessNode.receivers = this.customProcessNode.receivers[0];
                         }
                         this.customProcessNodeInitSeq = null;
+                        var data = {};
+                        data['node'] = this.customProcessNode;
+                        if('edit' == this.customProcessTableStatus){
+                            data['method'] = 'edit';
+                        }
+                        else if('add' == this.customProcessTableStatus){
+                            data['method'] = 'add';
+                        }
                         axios({
                             method: 'post',
                             url: url,
-                            data: this.customProcessNode,
+                            data: data,
                         }).then((res) =>{
                             loading.close();
                             if('ok' == res.data.message){
