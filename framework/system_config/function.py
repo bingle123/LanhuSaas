@@ -1,7 +1,9 @@
 # encoding:utf-8
+from component.shortcuts import get_client_by_user
 from shell_app.tools import success_result
 from shell_app.tools import error_result
 from shell_app.tools import get_active_user
+from shell_app.tools import interface_param
 from models import CrawlerConfig
 from models import CrawlContent
 from models import SceneType
@@ -197,7 +199,7 @@ def start_crawl(request):
     :param request:
     :return:
     """
-    res = get_crawls_all(request)['results']
+    res = get_crawls_all()['results']
     result_all = []
     result_error = []
     for i in res:
@@ -504,8 +506,131 @@ def get_crawl_content(title_name, crawl_name, page, limit):
             i['save_time'] = i['save_time'].strftime("%Y-%m-%d %H:%M:%S")
             i['page_count'] = page_count
             i['page'] = page
-            i['crawl_name'] = model_to_dict(CrawlerConfig.objects.get(id=1))['crawl_name']
+            i['crawl_name'] = model_to_dict(CrawlerConfig.objects.get(id=i['crawl_id']))['crawl_name']
             result_list.append(i)
+        print result_list
         return success_result(result_list)
     except Exception as e:
         return error_result([])
+
+
+def test(request):
+    """
+    爬虫优化测试
+    :param request:
+    :return:
+    """
+    res = get_crawls_all()['results']
+    result_all = []
+    result_error = []
+    user = request.user
+    for i in res:
+        id = i['id']
+        crawl_url = i['crawl_url']
+        crawl_name = i['crawl_name']
+        total_xpath = i['total_xpath']
+        title_xpath = i['title_xpath']
+        url_xpath = i['url_xpath']
+        time_xpath = i['time_xpath']
+        # 关键字
+        crawl_keyword = i['crawl_keyword']
+        # 非关键字
+        crawl_no_keyword = i['crawl_no_keyword']
+        # 静态资源前缀
+        url_pre = i['url_pre']
+
+        # 接收人--列表
+        receivers = i['receivers'].split('@')
+        # 此处要调用蓝鲸接口查询出用户邮箱
+
+        # 开始爬虫
+        crawl_result = crawl_temp(crawl_url, total_xpath, title_xpath, time_xpath, url_xpath)
+
+        print crawl_result
+        # 爬虫成功，没有数据
+        if crawl_result['code'] == 0 and crawl_result['results'] is None:
+            info = make_log_info(crawl_name + u'爬虫成功，但没有数据', u'业务日志', u'CrawlerConfig', sys._getframe().f_code.co_name,
+                                 u'admin', u'失败', u'无')
+            add_log(info)
+        # 爬虫失败
+        elif crawl_result['code'] == 1:
+            # info = make_log_info(crawl_name + '爬虫失败', '业务日志', 'CrawlerConfig', sys._getframe().f_code.co_name,
+            #                      'admin', '失败', '无')
+            # add_log(info)
+            pass
+        # 爬虫成功，且有数据
+        else:
+            # 发送人地址列表
+
+            flag = True
+            send_result = []
+            for j in crawl_result['results']:
+                # 不包含关键字
+                if crawl_no_keyword == '':
+                    if crawl_keyword in j['title']:
+                        send_result = add_crawl_content(send_result, id, url_pre, **j)
+                    else:
+                        info = make_log_info(crawl_name + u'爬虫内容存在且关键字为空', u'业务日志', u'CrawlerConfig',
+                                             sys._getframe().f_code.co_name,
+                                             u'admin', u'爬虫内容存在', u'无')
+                        add_log(info)
+                # 包含关键字
+                else:
+                    if crawl_keyword in j['title'] and crawl_no_keyword not in j['title']:
+                        send_result = add_crawl_content(send_result, id, url_pre, **j)
+                    else:
+                        info = make_log_info(crawl_name + u'爬虫内容存在', u'业务日志', u'CrawlerConfig',
+                                             sys._getframe().f_code.co_name,
+                                             u'admin', u'爬虫内容存在', u'无')
+                        add_log(info)
+            # 发送邮件列表
+            email_list = get_email_address_list(user, receivers)
+            # 发送邮件内容
+            send_content = change_to_html(send_result)
+            # 发送邮件
+            pass
+    return success_result({})
+
+
+def add_crawl_content(send_result, crawl_id, url_pre, **j):
+    """
+    新增数据库中不存在的记录
+    :param send_result:    发送的结果集,默认为空
+    :param crawl_id: 爬虫ID
+    :param url_pre: 静态资源前缀
+    :param j:
+    :return:
+    """
+    res = CrawlContent.objects.filter(title_content=j['title'])
+    if len(res) == 0:
+        title_content = j['title']
+        time_content = j['time']
+        url_content = url_pre + j['resource']
+        # 保存爬虫内容
+        CrawlContent.objects.create(crawl_id=crawl_id, title_content=title_content,
+                                    time_content=time_content, url_content=url_content)
+        send_result.append(j)
+    return send_result
+
+
+def get_email_address_list(user, user_list):
+    """
+    返回邮件发送列表
+    :param user:
+    :param user_list:       用户列表
+    :return:                eMail_List
+    """
+    client = get_client_by_user(user)  # 获取code、secret参数
+    client.set_bk_api_ver('v2')  # 以v2版本调用接口
+    param = {
+        "bk_username_list": user_list
+    }
+    res = client.bk_login.get_batch_users(param)
+    result_list = []
+    if res['data'] is None:
+        return []
+    else:
+        for i in res['data']:
+            result_list.append(res['data'][i]['email'])
+    return result_list
+

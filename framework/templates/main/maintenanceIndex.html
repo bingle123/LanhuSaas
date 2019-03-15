@@ -124,14 +124,16 @@
 
 <body style="background: rgb(246,246,246)">
 <div id="maintenanceIndex">
-        <!--首页-->
-        <el-row>
-            <el-col :span="24">
-                <div id="maintenanceTitle" style="background: rgb(246,246,246)">
-                    <span style="font-size: 18px;font-family: PingFangSC-Regular;color: rgba(0,0,0,0.85);margin-left: 10px">首页</span>
-                </div>
-            </el-col>
-        </el-row>
+    <!--首页-->
+    <el-row>
+        <el-col :span="24">
+            <div id="maintenanceTitle" style="background: rgb(246,246,246)">
+                <span style="font-size: 18px;font-family: PingFangSC-Regular;color: rgba(0,0,0,0.85);margin-left: 10px">首页</span>
+            </div>
+        </el-col>
+    </el-row>
+    <!--首页内容-->
+    <el-row>
         <!--系统状态-->
         <el-row class="row_margin row_shadow">
             <el-col :span="24">
@@ -301,6 +303,52 @@
                 </div>
             </el-col>
         </el-row>
+    </el-row>
+    <!--场景详情-->
+    <el-row>
+        <!--系统状态-->
+        <el-row class="row_margin row_shadow">
+            <el-col :span="24">
+                <div id="system_state" class="title">
+                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">系统状态</span>
+                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;float: right;margin-right: 10px" v-text="now_date_name+now_date_time"></span>
+                </div>
+            </el-col>
+        </el-row>
+        <!--业务量峰值-->
+        <el-row :gutter="30" class="row_margin">
+            <el-col :span="6">
+                <div id="business_peak1" class="row_shadow" style="width: 100%;height: 300px;background: rgb(255,255,255);">
+
+                </div>
+            </el-col>
+            <el-col :span="6">
+                <div id="business_peak2" class="row_shadow" style="width: 100%;height: 300px;background: rgb(255,255,255);">
+
+                </div>
+            </el-col>
+            <el-col :span="6">
+                <div id="business_peak3" class="row_shadow" style="width: 100%;height: 300px;background: rgb(255,255,255);">
+
+                </div>
+            </el-col>
+            <el-col :span="6">
+                <div id="business_peak4" class="row_shadow" style="width: 100%;height: 300px;background: rgb(255,255,255);">
+
+                </div>
+            </el-col>
+        </el-row>
+        <!--场景流程-->
+        <el-row class="row_margin row_shadow">
+            <el-col :span="24">
+                <div id="system_state" class="title">
+                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">场景流程</span>
+                    <div class="scene_flow_content" style="background: black;width: 100%;height: 1200px"></div>
+                </div>
+            </el-col>
+        </el-row>
+    </el-row>
+
 </div>
 </body>
 <script type="text/javascript">
@@ -312,7 +360,16 @@
     });
     window.onresize = function() {
         $('#maintenancePie1').width('100%');
-        ve.myChart.resize();
+        ve.ring_chart.resize();
+        $('#business_peak1').width('100%');
+        ve.line_chart1.resize();
+        ('#business_peak2').width('100%');
+        ve.line_chart2.resize();
+        ('#business_peak3').width('100%');
+        ve.line_chart3.resize();
+        ('#business_peak4').width('100%');
+        ve.line_chart4.resize();
+
     };
     var ve = new Vue({
         el: '#maintenanceIndex',
@@ -386,7 +443,11 @@
                 scene_status:'未执行'
               },
               ],
-            myChart:'',
+            ring_chart:'',
+            line_chart1:'',
+            line_chart2:'',
+            line_chart3:'',
+            line_chart4:'',
             alert_number:0,
             system_run_data:[
                 {
@@ -434,11 +495,11 @@
         },
         methods: {
 
-            show_chart1(){
-                if (this.myChart != null && this.myChart != "" && this.myChart != undefined) {
-                    this.myChart.dispose();
+            show_ring_chart(){
+                if (this.ring_chart != null && this.ring_chart != "" && this.ring_chart != undefined) {
+                    this.ring_chart.dispose();
                 }
-                this.myChart = echarts.init(document.getElementById('maintenancePie1'), 'macarons');
+                this.ring_chart = echarts.init(document.getElementById('maintenancePie1'), 'macarons');
                 var option = {
                     tooltip : {
                         trigger: 'item',
@@ -481,7 +542,186 @@
                         }
                     ]
                 };
-                this.myChart.setOption(option);
+                this.ring_chart.setOption(option);
+            },
+            show_line_chart(){
+                if (this.line_chart1 != null && this.line_chart1 != "" && this.line_chart1 != undefined) {
+                    this.line_chart1.dispose();
+                }
+                if (this.line_chart2 != null && this.line_chart2 != "" && this.line_chart2 != undefined) {
+                    this.line_chart2.dispose();
+                }
+                if (this.line_chart3 != null && this.line_chart3 != "" && this.line_chart3 != undefined) {
+                    this.line_chart3.dispose();
+                }
+                if (this.line_chart4 != null && this.line_chart4 != "" && this.line_chart4 != undefined) {
+                    this.line_chart4.dispose();
+                }
+                this.line_chart1 = echarts.init(document.getElementById('business_peak1'), 'default');
+                this.line_chart2 = echarts.init(document.getElementById('business_peak2'), 'default');
+                this.line_chart3 = echarts.init(document.getElementById('business_peak3'), 'default');
+                this.line_chart4 = echarts.init(document.getElementById('business_peak4'), 'default');
+                var option1 = {
+                    title : {
+                        text: '业务量峰值',
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['当前值','前五日平均值'],
+                        orient : 'vertical',
+                        x : 'right',
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            boundaryGap : false,
+                            data : ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'当前值',
+                            type:'line',
+                            data:[211, 311, 215, 813, 412, 613, 210, 811, 171, 165, 513, 192, 153, 210, 150],
+                        },
+                        {
+                            name:'前五日平均值',
+                            type:'line',
+                            data:[412, 613, 210, 813, 215, 813, 412, 613, 210, 811, 13, 210, 811, 171, 165,],
+
+                        }
+                    ]
+                };
+                var option2 = {
+                    title : {
+                        text: 'CPU',
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['当前值','前五日平均值'],
+                        orient : 'vertical',
+                        x : 'right',
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            boundaryGap : false,
+                            data : ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'当前值',
+                            type:'line',
+                            data:[211, 311, 215, 813, 412, 613, 210, 811, 171, 165, 513, 192, 153, 210, 150],
+                        },
+                        {
+                            name:'前五日平均值',
+                            type:'line',
+                            data:[412, 613, 210, 813, 215, 813, 412, 613, 210, 811, 13, 210, 811, 171, 165,],
+
+                        }
+                    ]
+                };
+                var option3 = {
+                    title : {
+                        text: '业务延时',
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['当前值','前五日平均值'],
+                        orient : 'vertical',
+                        x : 'right',
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            boundaryGap : false,
+                            data : ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'当前值',
+                            type:'line',
+                            data:[211, 311, 215, 813, 412, 613, 210, 811, 171, 165, 513, 192, 153, 210, 150],
+                        },
+                        {
+                            name:'前五日平均值',
+                            type:'line',
+                            data:[412, 613, 210, 813, 215, 813, 412, 613, 210, 811, 13, 210, 811, 171, 165,],
+
+                        }
+                    ]
+                };
+                var option4 = {
+                    title : {
+                        text: '99%水位业务指标的时延',
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['当前值','前五日平均值'],
+                        orient : 'vertical',
+                        x : 'right',
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            boundaryGap : false,
+                            data : ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15']
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'当前值',
+                            type:'line',
+                            data:[211, 311, 215, 813, 412, 613, 210, 811, 171, 165, 513, 192, 153, 210, 150],
+                        },
+                        {
+                            name:'前五日平均值',
+                            type:'line',
+                            data:[412, 613, 210, 813, 215, 813, 412, 613, 210, 811, 13, 210, 811, 171, 165,],
+
+                        }
+                    ]
+                };
+
+                this.line_chart1.setOption(option1);
+                this.line_chart2.setOption(option2);
+                this.line_chart3.setOption(option3);
+                this.line_chart4.setOption(option4);
             },
             get_date(){
                 axios.post('${SITE_URL}home_page/get_time/').then((res)=>{
@@ -502,10 +742,43 @@
                         {value:res.data['will_scene'], name:'预警'},
                         {value:res.data['safe_scene'], name:'正常'},
                     ];
-                    ve.show_chart1();
+                    ve.show_ring_chart();
                 }).catch(function (e) {
                     ve.$message.error('获取数据失败！');
                 })
+            },
+            scene_content_change(value) {
+                axios({
+                    method: 'post',
+                    url:'',
+                    data:{
+                        data:value
+                    }
+                }).then(function (res) {
+                    console.log(res)
+                    let selector = '.scene_flow_content';
+                    let base_list = res.data.base_list;  //获取当前场景的基本监控项数据
+                    let flow_list = res.data.flow_list;  //获取当前场景的流程监控项数据
+                    $(selector).html('');    //初始化场景
+                    for (let i = 0; i < base_list.length; i++) {
+                        //添加一个div容器，形如<div type="basic1"></div>
+                        $(selector).append('<div type=\"basic' + base_list[i].id + '\" style=\"position: absolute;top:' + base_list[i].y + 'px;left:' + base_list[i].x + 'px;transform: scale(' + base_list[i].scale + ')\"></div>');
+                        //调用基本监控项的渲染方法,第一个参数对应容器div的type
+                        base_monitor_active(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width,base_list[i].contents);
+                    }
+                    for (let i = 0; i < flow_list.length; i++) {
+
+                        let jion_id = [{
+                            "id": flow_list[i].jion_id
+                        }];
+                        //添加一个div容器,形如<div><div id="flow1_1"></div></div>
+                        $(selector).append('<div class=\"flow_monitor\" type=\"'+flow_list[i].id+'\" style=\"position: absolute;top:' + flow_list[i].y + 'px;left:' + flow_list[i].x + 'px;transform: scale(' + flow_list[i].scale + ')\"><div type=\"flow_monitor' + value + '_' + flow_list[i].order + '\"></div></div>');
+                        //调用流程监控项的渲染方法，第一条参数必须为[{}]格式，用来调v3接口，第二条参数对应容器内部div的id
+                        flow_monitor(jion_id, value + '_' + flow_list[i].order);
+                    }
+                }).catch(function (e) {
+                    ve.$message.error('获取数据失败！');
+                });
             },
         }
     });
@@ -514,6 +787,7 @@
         ve.get_date();
     },10000)
     ve.get_alert_data();
+    ve.show_line_chart();
 </script>
 
 </html>

@@ -120,11 +120,12 @@ def delete_pos(request):
 #增加岗位
 def add_pos(request):
     try:
+        re = ''
         res = json.loads(request.body)
         #获取当前用户
         nowPerson = get_active_user(request)['data']['bk_username']
         res['creator'] = nowPerson
-        re = pos_info.objects.create(**res)
+        pos_info.objects.create(**res)
         info = make_log_info(u'增加岗位', u'业务日志', u'pos_info',sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功','无')
     except Exception, e:
         re = tools.error_result(e)

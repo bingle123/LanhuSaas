@@ -12,7 +12,7 @@ class Operatelog(models.Model):
     class_name = models.CharField(verbose_name=u'类名称', max_length=100)
     method = models.CharField(verbose_name=u'方法名称', max_length=500)
     create_time = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
-    succeed = models.CharField(verbose_name=u'是否成功', max_length=50)
+    is_success = models.CharField(verbose_name=u'是否成功', max_length=50)
     message = models.CharField(verbose_name=u'备注', max_length=500)
     class Meta:
         verbose_name = u'操作日志记录'

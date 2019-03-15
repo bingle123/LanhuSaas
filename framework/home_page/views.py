@@ -11,3 +11,7 @@ def get_time(request):
 def scenes_alert(request):
     res = function.scenes_alert(request)
     return render_json(res)
+
+# def get_scene(request):
+#     res = function.get_scene(request)
+#     return render_json(res)
