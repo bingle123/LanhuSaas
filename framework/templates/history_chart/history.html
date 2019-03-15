@@ -377,9 +377,13 @@ let vm = new Vue({
                         limit: 10
                     },
                 }).then((res) => {
-                    vm.Operatelog = res.data.message;
-                    vm.page_count = res.data.message[0].page_count;
-
+                    if(res.data.message){
+                        vm.page_count = 1
+                    }
+                    else{
+                        vm.Operatelog = res.data.message;
+                        vm.page_count = res.data.message[0].page_count;
+                    }
                 })
 
             },
