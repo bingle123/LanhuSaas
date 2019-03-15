@@ -17,7 +17,7 @@ from shell_app.tools import *
 def select_rules_pagination(page_info):
     result_dict = dict()
     list_set = list()
-    search = page_info['search']
+    search = page_info['search'].strip()
     page = page_info['page']
     limit = page_info['limit']
     if None is not search and '' != search:
