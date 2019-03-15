@@ -48,7 +48,7 @@ def selecthor(request):
     result_dict = dict()
     list_set = list()
     res = json.loads(request.body)
-    search = res['search']
+    search = res['search'].strip()
     page = res['page']
     limit = res['limit']
     #如果搜索内容为空，搜索所有
@@ -299,7 +299,7 @@ def selecthor2(request):
     res = json.loads(request.body)
     result_dict = dict()
     list_set = list()
-    search = res['search']
+    search = res['search'].strip()
     page = res['page']
     limit = res['limit']
     if None is not search and '' != search:
