@@ -7,6 +7,7 @@ import crawl_template
 import function
 import sys
 from logmanagement.function import add_log, make_log_info, get_active_user
+import datetime
 
 
 # Create your views here.
@@ -176,16 +177,19 @@ def add_scene_type(request):
     """
     try:
         request_body = json.loads(request.body)
+        start_time = datetime.datetime.strptime(request_body['start_time'], "%H:%M")
+        stop_time = datetime.datetime.strptime(request_body['stop_time'], "%H:%M")
         scene_type_name = request_body['name']
         client = tools.interface_param(request)
         user = client.bk_login.get_user({})
-        res = function.add_scene_type(user['data']['bk_username'], scene_type_name)
+        res = function.add_scene_type(user['data']['bk_username'], scene_type_name, start_time, stop_time)
         info = make_log_info(u'增加场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
         info = make_log_info(u'增加场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    add_log(info)
+        res = {}
+    # add_log(info)
     return render_json(res)
 
 
@@ -195,20 +199,35 @@ def edit_scene_type_by_uuid(request):
     :param request:
     :return:
     """
-    try:
-        request_body = json.loads(request.body)
-        scene_type_name = request_body['name']
-        uuid = request_body['uuid']
-        client = tools.interface_param(request)
-        user = client.bk_login.get_user({})
-        res = function.edit_scene_type_by_uuid(uuid, user['data']['bk_username'], scene_type_name)
-        info = make_log_info(u'编辑场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
-    except Exception as e:
-        info = make_log_info(u'编辑场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    add_log(info)
+    request_body = json.loads(request.body)
+    print request_body['start_time']
+    print request_body['stop_time']
+    start_time = datetime.datetime.strptime(request_body['start_time'], "%H:%M:%S")
+    stop_time = datetime.datetime.strptime(request_body['stop_time'], "%H:%M:%S")
+    scene_type_name = request_body['name']
+    uuid = request_body['uuid']
+    client = tools.interface_param(request)
+    user = client.bk_login.get_user({})
+    res = function.edit_scene_type_by_uuid(uuid, user['data']['bk_username'], scene_type_name, start_time, stop_time)
     return render_json(res)
+    # try:
+    #     request_body = json.loads(request.body)
+    #     request_body['start_time']
+    #     start_time = datetime.datetime.strptime(request_body['start_time'], "%H:%M")
+    #     stop_time = datetime.datetime.strptime(request_body['stop_time'], "%H:%M:%s")
+    #     scene_type_name = request_body['name']
+    #     uuid = request_body['uuid']
+    #     client = tools.interface_param(request)
+    #     user = client.bk_login.get_user({})
+    #     res = function.edit_scene_type_by_uuid(uuid, user['data']['bk_username'], scene_type_name, start_time, stop_time)
+    #     info = make_log_info(u'编辑场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+    #                          get_active_user(request)['data']['bk_username'], '成功', '无')
+    # except Exception as e:
+    #     info = make_log_info(u'编辑场景类型', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
+    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    #     # add_log(info)
+    #     res = {}
+    # return render_json(res)
 
 
 def delete_scene_by_uuid(request):
@@ -228,7 +247,7 @@ def delete_scene_by_uuid(request):
     except Exception as e:
         info = make_log_info(u'删除场景分组', u'业务日志', u'SceneType', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    add_log(info)
+        add_log(info)
     return render_json(res)
 
 
@@ -238,6 +257,7 @@ def get_crawl_content(request):
     crawl_name = request_body['crawl_name']
     page = request_body['page']
     limit = request_body['limit']
+    print request_body
     res = function.get_crawl_content(title_content, crawl_name, page, limit)
     return render_json(res)
 
