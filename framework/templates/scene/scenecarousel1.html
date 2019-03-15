@@ -113,7 +113,7 @@
             get_pos(){
                  axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/get_all_pos/',
+                    url: '${SITE_URL}monitor_scene/get_all_pos/',
                 }).then((res)=> {
                     let json = [];
                     if (res.data.message.length > 0) {
@@ -126,20 +126,20 @@
                         this.options = json;
                     }
                 }).catch((res) => {
-                    vm.$massage.error('获取用户错误')
+                    vm.$message.error('获取用户错误')
                 })
             },
              async alternate_play_test(){
                   var res= await axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/alternate_play_test/',
+                    url: '${SITE_URL}monitor_scene/alternate_play_test/',
                      data :{
                         'pos_id':vm.position,
                          'start':vm.start,
                          'end':vm.end
                      }
                   }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
                  vm.imgList = res.data.message;
             },
@@ -221,7 +221,7 @@
                                 }
                             }
                         }).catch(function (e) {
-                            vm.$massage.error('获取数据失败！');
+                            vm.$message.error('获取数据失败！');
                         });
                     },1000)
 

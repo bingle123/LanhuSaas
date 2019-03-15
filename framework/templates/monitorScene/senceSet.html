@@ -506,7 +506,7 @@
                                 vm.isAdd = 1;
                                 vm.select_table()
                             }).catch(function (e) {
-                                vm.$massage.error('获取数据失败！');
+                                vm.$message.error('获取数据失败！');
                             });
                         } else if (formName == 'scene_edit') {
                             axios({
@@ -520,7 +520,7 @@
                                 vm.isAdd = 1;
                                 vm.select_table()
                             }).catch(function (e) {
-                                vm.$massage.error('获取数据失败！');
+                                vm.$message.error('获取数据失败！');
                             });
                         }
                         $('.monitor_content').html('');
@@ -546,7 +546,7 @@
                     vm.areas.push(temp)
                     }
                 }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
             },
             current_change(value) {
@@ -565,7 +565,7 @@
                     vm.tableData = res.data.message;
                     vm.page_count = res.data.message[0].page_count;
                 }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
             },
             rowclass({row, rowIndex}) {
@@ -617,7 +617,7 @@
                     vm.scale=parseFloat(res.data.results[0].scale);
                     vm.multiple = Math.round((vm.scale-1)*10);
                 }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
             },
             hide() {
@@ -645,7 +645,7 @@
                                 url:'${SITE_URL}monitor_scene/monitor_scene_show/',
                                 data:result_list_edit[i].item_id,
                             }).catch(function (e) {
-                                vm.$massage.error('获取数据失败！');
+                                vm.$message.error('获取数据失败！');
                             });
                             vm.monitor_data = res.data.results;
                             $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"basic'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"></div>');
@@ -657,7 +657,7 @@
                                 url:'${SITE_URL}monitor_scene/monitor_scene_show/',
                                 data:result_list_edit[i].item_id,
                             }).catch(function (e) {
-                                vm.$massage.error('获取数据失败！');
+                                vm.$message.error('获取数据失败！');
                             });
                             vm.monitor_data = res.data.results;
                             $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px;top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"><div id=\"chart'+result_list_edit[i].order+'\" style=\"background:beige;height:'+(vm.monitor_data[0].height-2)+'px;width:'+(vm.monitor_data[0].width-2)+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
@@ -669,7 +669,7 @@
                                 url:'${SITE_URL}monitor_scene/monitor_scene_show/',
                                 data:result_list_edit[i].item_id,
                             }).catch(function (e) {
-                                vm.$massage.error('获取数据失败！');
+                                vm.$message.error('获取数据失败！');
                             });
                             vm.monitor_data = res.data.results;
                             let job_params = vm.monitor_data[0];
@@ -682,7 +682,7 @@
                                 url:'${SITE_URL}monitor_scene/monitor_scene_show/',
                                 data:result_list_edit[i].item_id,
                             }).catch(function (e) {
-                                vm.$massage.error('获取数据失败！');
+                                vm.$message.error('获取数据失败！');
                             });
                             vm.monitor_data=res.data.results;
                             let jion_id=[{
@@ -727,7 +727,7 @@
                     }).then(function (res) {
                         vm.tableData = res.data.message;
                     }).catch(function (e) {
-                        vm.$massage.error('获取数据失败！');
+                        vm.$message.error('获取数据失败！');
                     });
                 }
 
@@ -801,7 +801,7 @@
                 }).then(function(res) {
                        vm.pos = res.data.message
                 }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
             },
 
@@ -842,7 +842,7 @@
                         vm.flow_page_count=res.data.results.flow_list[0].page_count;
                     }
                 }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
             },
             add_base_monitor(i){
@@ -897,6 +897,7 @@
             },
             monitor_type_switch(value){
                 vm.monitor_type = value;
+                vm.page1=1;
                 vm.show1()
             },
 

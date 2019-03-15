@@ -85,9 +85,9 @@
             async get_scenes() {
                 let res = await axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/alternate_play/',
+                    url: '${SITE_URL}monitor_scene/alternate_play/',
                 }).catch(function (e) {
-                    vm.$massage.error('获取数据失败！');
+                    vm.$message.error('获取数据失败！');
                 });
                 vm.imgList = res.data.message;   //获取场景
             },
@@ -170,7 +170,7 @@
                                 }
                             }
                         }).catch(function (e) {
-                            vm.$massage.error('获取数据失败！');
+                            vm.$message.error('获取数据失败！');
                         });
                     },1000)
 
