@@ -94,8 +94,6 @@ $(function(){
                 return 'background:#F7F7F7'
             },
 
-
-
             //保存
             saveconn(formName){
                this.$refs[formName].validate((valid) => {
