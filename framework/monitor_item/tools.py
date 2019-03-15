@@ -89,8 +89,6 @@ def obt_dic(page_data,page_count):
         obj_dic['start_time'] = str(i.start_time)
         obj_dic['end_time'] = str(i.end_time)
         obj_dic['status'] = str(i.status)
-
-
         obj_list.append(obj_dic)
     return obj_list
 

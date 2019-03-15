@@ -85,7 +85,9 @@
             async get_scenes() {
                 let res = await axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/alternate_play/',
+                    url: '${SITE_URL}monitor_scene/alternate_play/',
+                }).catch(function (e) {
+                    vm.$message.error('获取数据失败！');
                 });
                 vm.imgList = res.data.message;   //获取场景
             },
@@ -167,7 +169,9 @@
                                     $('p:contains('+res.data.message[j].data_key+')').parents().siblings('.node-icon').children().html('<div class=\"keepOn\"><p>是否继续</p><span class="keepOn_yes">是</span><span class="keepOn_no">否</span></div>')
                                 }
                             }
-                        })
+                        }).catch(function (e) {
+                            vm.$message.error('获取数据失败！');
+                        });
                     },1000)
 
 
