@@ -182,7 +182,7 @@ def select_log(request):
     page = res['page']
     search = res['search'].strip()          #场景名
     res1 = search                           #场景名
-    res2 = res['keyword']                   #关键字
+    res2 = res['keyword'].strip()                   #关键字
     res3 = ""                               #开始时间
     res4 = ""                               #结束时间
     if(res['date_Choice']):
