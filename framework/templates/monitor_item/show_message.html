@@ -1580,7 +1580,7 @@
                         vm.message = '请选择流程模板!'
                     }
                     var node_times = [];
-                    for (var i = 2; i <= vm.location.length - 1; i++) {
+                    for (var i = 4; i <= vm.location.length - 1; i++) {
                         node_time.node_id = vm.location[i].id ,
                             node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
                             node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
