@@ -120,8 +120,8 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
-                       @current-change="changePage"></el-pagination>
+        <el-pagination :page-count="page_count" background layout="sizes, prev, pager, next" style="float:right"
+                           @current-change="changePage"  @size-change="changeSize" :page-sizes="[5, 10, 20, 50]" :page-size="5"></el-pagination>
     </el-card>
     <!--end 卡片 列表页-->
 
@@ -298,7 +298,7 @@
             },
             page_count: 100,
             page: 1,
-            limit: 2,
+            limit: 5,
             user_list: [],
             filterText: '',
             defaultProps: {
@@ -310,6 +310,10 @@
             checked_list:[],
         },
         methods: {
+            changeSize(value){
+                vm.limit = value;
+                vm.get_crawl_by_name();
+            },
             changeDiaLog() {//跳转爬虫配置新增页面
                 this.showDiaLog == true ? this.showDiaLog = false : this.showDiaLog = true;
                 this.loading = true;
@@ -447,7 +451,7 @@
                 axios({
                     url: '${SITE_URL}system_config/get_crawls/',
                     method: 'post',
-                    data: {page: vm.page, limit: 2}
+                    data: {page: vm.page, limit: vm.limit}
                 }).then((res) => {
                     console.log(res);
                     if (res.data.code == 0) {

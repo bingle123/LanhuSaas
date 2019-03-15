@@ -56,3 +56,5 @@ class SceneType(models.Model):
     create_time = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)  # 新建后无法更改
     update_user = models.CharField(verbose_name=u'最后修改用户', max_length=64)
     update_time = models.DateTimeField(verbose_name=u'最后修改时间', auto_now=True)  # 跟新数据库，字段自动更新
+    start_time = models.TimeField(verbose_name=u'开始时间')
+    stop_time = models.TimeField(verbose_name=u'结束时间')

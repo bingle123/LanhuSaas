@@ -49,7 +49,7 @@
                 </el-col>
                 <el-col :span="4" style="float: right">
                     <div class="grid-content bg-purple">
-                        <el-button type="primary" @click="dialogFormVisible = true">新增场景分组信息</el-button>
+                        <el-button type="primary" @click="add_scene_type_diaLog">新增场景分组信息</el-button>
                     </div>
                 </el-col>
             </el-row>
@@ -87,7 +87,10 @@
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button size="mini" type="text" v-on:click="edit_scene_type_by_uuid(scope.row.scene_type_id,scope.row.scene_type_name)">编辑
+                        <el-button size="mini" type="text"
+                                   v-on:click="edit_scene_type_by_uuid(scope.row.scene_type_id,scope.row.scene_type_name
+                                   ,scope.row.start_time,scope.row.stop_time)">
+                            编辑
                         </el-button>
                         <el-button size="mini" type="text" v-on:click="delete_scene_by_uuid(scope.row.scene_type_id)">
                             删除
@@ -96,7 +99,9 @@
                     </template>
                 </el-table-column>
             </el-table>
-                    <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="changePage"></el-pagination>
+
+            <el-pagination :page-count="page_count" background layout="sizes, prev, pager, next" style="float:right"
+                           @current-change="changePage"  @size-change="changeSize" :page-sizes="[5, 10, 20, 50]" :page-size="5"></el-pagination>
 
         </template>
 
@@ -106,6 +111,15 @@
         <el-form>
             <el-form-item label="场景分组名称">
                 <el-input v-model="form.name"></el-input>
+            </el-form-item>
+             <el-form-item label="时间范围选择">
+                <br>
+                <el-time-picker style="width: 30%" v-model="form.start_time"
+                                placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
+                </el-time-picker>-----
+                <el-time-picker style="width: 30%" v-model="form.stop_time"
+                                placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
+                </el-time-picker>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -117,6 +131,16 @@
         <el-form>
             <el-form-item label="场景分组名称">
                 <el-input v-model="form.name"></el-input>
+            </el-form-item>
+
+            <el-form-item label="时间范围选择">
+                <br>
+                <el-time-picker style="width: 30%" v-model="form.start_time"
+                                placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
+                </el-time-picker>-----
+                <el-time-picker style="width: 30%" v-model="form.stop_time"
+                                placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
+                </el-time-picker>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -143,15 +167,29 @@
             tableData: [],
             dialogFormVisible: false,
             dialogFormVisible_edit: false,
-            form:{
-                name:'',
-                uuid:'',
+            form: {
+                name: '',
+                uuid: '',
+                start_time:'',
+                stop_time:'',
             },
-            query_name:'',
-            page:1,
-            page_count:100,
+            query_name: '',
+            page: 1,
+            page_count: 1,
+            limit:5,
         },
         methods: {
+            changeSize(value){
+                vm.limit = value;
+                vm.get_scene_type();
+            },
+            add_scene_type_diaLog(){
+                vm.dialogFormVisible = true;
+                vm.form.uuid = '';
+                vm.start_time = '';
+                vm.stop_time = '';
+                vm.name = '';
+            },
             changePage(value) {
                 vm.page = value;
                 vm.get_scene_type();
@@ -159,11 +197,11 @@
             get_scene_type() {
                 axios({
                     url: '${SITE_URL}system_config/get_scene_type/',
-                    method:'post',
-                    data:{'query_name':vm.query_name,page:vm.page, limit:4}
+                    method: 'post',
+                    data: {'query_name': vm.query_name, page: vm.page, limit: vm.limit}
                 }).then((res) => {
                     console.log(res);
-                    if (res.data.results.length != 0){
+                    if (res.data.results.length != 0) {
                         vm.tableData = res.data.results;
                         vm.page_count = res.data.results[0]['page_count']
                     }
@@ -204,10 +242,13 @@
                 });
 
             },
-            edit_scene_type_by_uuid(uuid, scene_type_name) {
+            edit_scene_type_by_uuid(uuid, scene_type_name, start_time, stop_time) {
                 vm.dialogFormVisible_edit = true;
                 vm.form.name = scene_type_name;
-                vm.form.uuid = uuid
+                vm.form.uuid = uuid;
+                vm.form.start_time = start_time;
+                vm.form.stop_time = stop_time;
+
             },
             add_scene_type() {
                 axios({
@@ -217,13 +258,13 @@
                 }).then((res) => {
                     console.log(vm.form)
                     console.log(res);
-                    if (res.data.code == 0){
+                    if (res.data.code == 0) {
                         vm.$message.info('新增场景类型成功');
                         vm.get_scene_type();
                         vm.dialogFormVisible = false;
                         vm.form.name = '';
-                    }else {
-                        vm.$message.error('新增场景类型失败'+res.data.message)
+                    } else {
+                        vm.$message.error('新增场景类型失败' + res.data.message)
                     }
                 }).catch((res) => {
                     console.log(res);
@@ -234,26 +275,26 @@
                 axios({
                     url: '${SITE_URL}system_config/edit_scene_type_by_uuid/',
                     method: 'post',
-                    data: {name:vm.form.name,uuid:vm.form.uuid}
+                    data: {name: vm.form.name, uuid: vm.form.uuid, start_time: vm.form.start_time, stop_time: vm.form.stop_time}
                 }).then((res) => {
                     console.log(res);
-                    if (res.data.code == 0){
+                    if (res.data.code == 0) {
                         vm.$message.info('修改成功');
                         vm.get_scene_type();
                         vm.dialogFormVisible_edit = false;
-                    }else {
-                        vm.$message.error('修改失败'+ res.data.message)
+                    } else {
+                        vm.$message.error('修改失败' + res.data.message)
                     }
                 }).catch((res) => {
-                    vm.$message.error('删除失败'+res);
+                    vm.$message.error('删除失败' + res);
                     console.log(res);
                 })
             },
             query_scene_type() {
                 axios({
                     url: '${SITE_URL}system_config/get_scene_type/',
-                    method:'post',
-                    data:{query_name:vm.query_name,page:1,limit:4}
+                    method: 'post',
+                    data: {query_name: vm.query_name, page: 1, limit: vm.limit}
                 }).then((res) => {
                     console.log(res);
                     vm.tableData = res.data.results;

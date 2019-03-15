@@ -141,7 +141,7 @@
                         <el-table-column prop="message" label="备注" width="800" align="center">
                         </el-table-column>
                     </el-table>
-                    <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                    <el-pagination :page-count="page_count1" background layout="prev, pager, next" style="float:right"
                                    @current-change="current_change" :current-page="page"></el-pagination>
                 </div>
 
@@ -185,8 +185,6 @@
                         </el-table-column>
                         <el-table-column prop="minture" label="间距分钟" width="150" align="center">
                         </el-table-column>
-
-
                     </el-table>
                     <el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
                                    style="float:right"
@@ -220,8 +218,7 @@
                          <el-table-column prop="alertNums" label="告警数量" style="width: 15%" align="center">
                          </el-table-column>
                      </el-table>
-                    <!-- <el-pagination :page-count="dayDataCount" background layout="prev, pager, next" style="float:right"
-                               @current-change="dayDatapage"></el-pagination>-->
+
                     </div>
                     <!--场景比对结束-->
                 </div>
@@ -258,9 +255,6 @@
                                @current-change="sceneOperationpage" :current-page="page"></el-pagination>
                 </div>
 
-                     <!--<el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
-                               @current-change="sceneOperationTableData"></el-pagination>
-                          -->
                     </div>
                  <div id="table4" style="display:none">
                      <div class="container">
@@ -296,9 +290,7 @@
                          </el-table-column>
                      </el-table>
 
-                     <!--<el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
-                                   style="float:right"
-                                   @current-change=""></el-pagination>-->
+
                     </div>
             </div>
         </el-card>
@@ -315,16 +307,16 @@
 var vm = new Vue({
         el: '.content',
         data: {
-            page_count: 100,                             //总页码数
+            page_count1: 100,                             //总页码数
             alertRulesCount:1,
             sceneOperationCount:1,
             page: 1,                                   //分页页码数
             Operatelog:[],
             search: '',                                 //搜索框
             log_type: '',                                //日志类型
-            alertRuleTableData: null,
+            alertRuleTableData: [],
             sceneOperationRuleTableData:[],
-            aboutTableDate: null,
+            aboutTableDate: [],
             keyword: '',                                 //关键字内容
             date_Choice: '',                            //时间选择
             date_selection: '',                            //时间选择
@@ -332,17 +324,17 @@ var vm = new Vue({
             scenes_tab: '',
 
             myChart: '',
-            scenes_data: '',
+            scenes_data: [],
             Cscene: '',
             Cscene_id:'',
             scene_time: '',
             pattern_data: [],
             dayData:[],
-            aboutRulesCount:'',
+            aboutRulesCount:1,
 
             sCount: 1,
             monthly_operation_statistics:'',
-            monthly_operationTableData:'',
+            monthly_operationTableData:[],
             weeks:'',                                    //运行情况周数查询
             years:'',
         },
@@ -359,7 +351,7 @@ var vm = new Vue({
                 }).then(function (res) {
                     console.log(res)
                     vm.Operatelog = res.data.message;
-                    vm.page_count = res.data.message[0].page_count;
+                    vm.page_count1 = res.data.message[0].page_count;
                 });
 
             },
@@ -378,11 +370,11 @@ var vm = new Vue({
                     },
                 }).then((res) => {
                     if(res.data.message){
-                        vm.page_count = 1
+                        vm.page_count1 = 1
                     }
                     else{
                         vm.Operatelog = res.data.message;
-                        vm.page_count = res.data.message[0].page_count;
+                        vm.page_count1 = res.data.message[0].page_count;
                     }
                 })
 
@@ -402,7 +394,7 @@ var vm = new Vue({
                 }).then((res) => {
                     if(res.data.message.length == 0){
                         vm.Operatelog = []
-                        vm.page_count = 1
+                        vm.page_count1 = 1
                     }
                     else {
                         vm.aboutTableDate = res.data.results;
@@ -430,11 +422,11 @@ var vm = new Vue({
                    }).then((res) => {
                        if(res.data.message.length == 0){
                            vm.Operatelog = []
-                           vm.page_count = 1
+                           vm.page_count1 = 1
                        }
                        else{
                            vm.Operatelog = res.data.message;
-                           vm.page_count = res.data.message[0].page_count;
+                           vm.page_count1 = res.data.message[0].page_count;
                        }
                    })
                }else if(vm.log_type == 'alert'){
@@ -482,7 +474,7 @@ var vm = new Vue({
                        }
                    }).then(function (res) {
                         vm.Operatelog = res.data.message;
-                       vm.page_count = res.data.message[0].page_count;
+                       vm.page_count1 = res.data.message[0].page_count;
                    })
                 }
             },
@@ -536,7 +528,7 @@ var vm = new Vue({
                 }).then((res) => {
                     this.alertRuleTableData = res.data.results;
                     vm.alertRulesCount = res.data.results[0].pages
-                    console.log(vm.page_count)
+                    console.log(vm.page_count1)
                 })
                     $("#table2,#hide_k,#block").css('display', 'block');
                     $("#table3,#scene_compare,#table1,#hide_m,#table10,#table4,#date_selection").css('display', 'none');
@@ -593,6 +585,7 @@ var vm = new Vue({
                     vm.monthly_operationTableData = res.data.message;
                 $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table10,#date_selection").css('display','none');
                    $('#table4').css('display','block');
+                   $('#scene_et_table4').css('display','block');
                     vm.nmsl(vm.monthly_operationTableData)
                });
 
