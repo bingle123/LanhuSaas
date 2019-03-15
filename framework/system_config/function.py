@@ -410,6 +410,8 @@ def get_scene_type(type_name, page, limit):
     for i in scene_type_list:
         i['create_time'] = i['create_time'].strftime("%Y-%m-%d %H:%M:%S")
         i['update_time'] = i['update_time'].strftime("%Y-%m-%d %H:%M:%S")
+        i['start_time'] = i['start_time'].strftime("%H:%M:%S")
+        i['stop_time'] = i['stop_time'].strftime("%H:%M:%S")
         i['page_count'] = page_count
         i['page'] = page
         result_list.append(i)
@@ -430,21 +432,27 @@ def delete_scene_by_uuid(scene_type_id):
         return error_result(e)
 
 
-def edit_scene_type_by_uuid(scene_type_id, edit_user, scene_type_name):
+def edit_scene_type_by_uuid(scene_type_id, edit_user, scene_type_name, start_time, stop_time):
     """
     根据UUID修改场景类型
     :param scene_type_id:   场景类型UUID
     :param edit_user:       编辑者
     :param scene_type_name: 场景类型名称
+    :param start_time:      开始时间
+    :param stop_time:       结束时间
     :return:
     """
     scene_type = SceneType.objects.filter(scene_type_name=scene_type_name)
-    if scene_type.__len__() == 0:
+    scene_type_tow = SceneType.objects.filter(scene_type_id=scene_type_id)
+    print scene_type_tow.__len__()
+    print scene_type.__len__()
+    if scene_type.__len__() <= scene_type_tow.__len__():
         try:
             with transaction.atomic():
                 SceneType.objects.filter(scene_type_id=scene_type_id).update(update_user=edit_user,
                                                                              scene_type_name=scene_type_name,
-                                                                             update_time=datetime.datetime.now())
+                                                                             update_time=datetime.datetime.now(),
+                                                                             start_time=start_time, stop_time=stop_time)
                 return success_result({})
         except Exception as e:
             return error_result(e)
@@ -452,11 +460,13 @@ def edit_scene_type_by_uuid(scene_type_id, edit_user, scene_type_name):
         return error_result(u'场景类型已经存在')
 
 
-def add_scene_type(create_user, scene_type_name):
+def add_scene_type(create_user, scene_type_name, start_time, stop_time):
     """
     新增场景类型
     :param create_user:         创建者
     :param scene_type_name:     场景类型名称
+    :param start_time:
+    :param stop_time:
     :return:
     """
     # 生成UUID
@@ -469,7 +479,8 @@ def add_scene_type(create_user, scene_type_name):
         try:
             with transaction.atomic():
                 SceneType.objects.create(scene_type_id=scene_type_id, create_user=create_user,
-                                         scene_type_name=scene_type_name, update_user=create_user)
+                                         scene_type_name=scene_type_name, update_user=create_user,
+                                         start_time=start_time, stop_time=stop_time)
                 return success_result(u'新增场景类型成功')
         except Exception as e:
             return error_result(e)

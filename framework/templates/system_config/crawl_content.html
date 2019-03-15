@@ -81,8 +81,8 @@
                         width="180">
                 </el-table-column>
             </el-table>
-            <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
-                           @current-change="changePage"></el-pagination>
+            <el-pagination :page-count="page_count" background layout="sizes, prev, pager, next" style="float:right"
+                           @current-change="changePage"  @size-change="changeSize" :page-sizes="[5, 10, 20, 50]" :page-size="5"></el-pagination>
         </template>
 
     </el-card>
@@ -104,10 +104,14 @@
             crawl_name: '',
             page: 1,
             page_count: 1,
-            limit: 2,
+            limit: 5,
             tableData: [],
         },
         methods: {
+            changeSize(value){
+                vm.limit = value;
+                vm.query();
+            },
             query() {
                 axios({
                     url: '${SITE_URL}system_config/get_crawl_content/',
