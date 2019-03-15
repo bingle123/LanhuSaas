@@ -113,7 +113,7 @@
             get_pos(){
                  axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/get_all_pos/',
+                    url: '${SITE_URL}monitor_scene/get_all_pos/',
                 }).then((res)=> {
                     let json = [];
                     if (res.data.message.length > 0) {
@@ -132,7 +132,7 @@
              async alternate_play_test(){
                   var res= await axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/alternate_play_test/',
+                    url: '${SITE_URL}monitor_scene/alternate_play_test/',
                      data :{
                         'pos_id':vm.position,
                          'start':vm.start,

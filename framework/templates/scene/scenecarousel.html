@@ -85,7 +85,7 @@
             async get_scenes() {
                 let res = await axios({
                     method: 'post',
-                    url: '${SITE_URL}monitorScene/alternate_play/',
+                    url: '${SITE_URL}monitor_scene/alternate_play/',
                 }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
                 });

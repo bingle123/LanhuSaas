@@ -325,7 +325,7 @@ def about_search(request):
     res2 = tools.success_result(res_list2)
     return res2
 
-#别动
+#下拉框获取所有场景
 def select_scenes(request):
     #查询所有场景，遍历场景名称和id
     scenes = Scene.objects.all()
