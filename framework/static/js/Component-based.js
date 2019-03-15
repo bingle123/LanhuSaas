@@ -5,7 +5,6 @@ axios.interceptors.request.use((config) => {
         return config
     });
 function job_monitor(job_params){
-    console.log(job_params);
     selector_id='job'+job_params.id
     // var status=job_params.status
     // if(status==0){
@@ -39,7 +38,6 @@ function job_monitor_active(job_params) {
     $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
     $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
     var height=Number(job_params.height)+50;
-    console.log(height)
     $('[type='+selector_id+']').css('height',height+'px');
     $('[type='+selector_id+']').css('width',job_params.width);
     $('[type='+selector_id+']').find("*").css('font-size',job_params.font_size);
@@ -49,7 +47,6 @@ function show_chart_active(item_id,chart_type,height,width,drigging_id){
     var chartdata=[]
     $.get("/monitor_scene/get_chart_data/"+item_id,function (res) {
         res=res.message
-        console.log(res)
        for(r in res){
            if(isNotANumber(res[r].values[0])){
                new_res[1]=res[r]
@@ -101,7 +98,6 @@ function show_chart(item_id,chartData,person_count,chart_type,height,width,drigg
         $('#'+drigging_id).css('height',height);
         $('#'+drigging_id).css('width',width);
         if (chart_type == "饼图") {
-            console.log(barCount,barX,chartData)
             myChart = echarts.init(document.getElementById(drigging_id).firstElementChild, 'macarons');
             var legendData = [];
                     for(var i=0;i<chartData.length;i++){
@@ -240,7 +236,6 @@ function base_monitor_active(item_id,font_size,height,width,content) {
             }
             con.push(temp)
         }
-        console.log(con)
      $.get("/monitor_scene/get_basic_data/"+item_id,function (res){
         var selector_id='basic'+item_id
         var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
@@ -285,7 +280,6 @@ function base_monitor_active(item_id,font_size,height,width,content) {
 }
 function base_monitor(item_id,font_size,height,width,content) {
     selector_id='basic'+item_id
-    console.log(content)
     var circle1='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
     var circle4='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:red;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
     var circle3='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
@@ -331,7 +325,6 @@ function base_monitor(item_id,font_size,height,width,content) {
             var icon3=[];
             var icon4=[-2];
             var icon=[];
-            console.log(icon1)
             for(var i=1;i<icon1.length;i=i+2){
                 icon2.push(icon1[i]);
             }
@@ -525,15 +518,12 @@ function flow_monitor(value1,value2){
                     }
                 }).then(function (res) {
                     {
-                        console.log(res);
                         location = res.data.activities
                         line = res.data.flows
-                        console.log(line[0]['source']['id'])
                         for(var i=0;i<line.length;i++){
                            line[i].source.id =line[i].source.id+value2
                            line[i].target.id =line[i].target.id+value2
                         }
-                        console.log(line)
                         for(var i=0;i<location.length;i++){
                            location[i]['id'] = location[i]['id']+value2
                         }
