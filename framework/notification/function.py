@@ -214,7 +214,7 @@ def send_alert(**msg):
     TdAlertLog.objects.create(**msg)
 
 
-#发送微信告警
+# 发送微信告警
 def wechat_alert(msgs):
     for msg in msgs:
         alert_title = msg['alert_title']
