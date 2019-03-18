@@ -260,9 +260,11 @@ def flow_gather_task(**info):
     activities = res1['activities']
     req_data=[]
     for key in activities:
+        print activities[key]
         activities1 = {}
         activities1['id'] = str(activities[key]['id'])
         activities1['name'] = activities[key]['name']
+        activities1['code'] = activities[key]['component']['code']
         req_data.append(activities1)
     data=[]
     #最后根据v2，v3的结果中的id匹配得到最后的名字对应状态结果集
@@ -272,6 +274,7 @@ def flow_gather_task(**info):
                 temp={}
                 temp['name']=req['name']
                 temp['status']=v2['status']
+                temp['code'] = req['code']
                 data.append(temp)
     task_name=info['task_name']
     gather_data_migrate(item_id=item_id)
@@ -306,6 +309,8 @@ def flow_gather_task(**info):
                     strnow = datetime.strftime(datetime.now(), '%H:%M')
                     if strnow>node['endtime']:
                         status=5
+            if d['code']=='pause_node':
+                status=2
         elif s=='SUSPENDED':
             status=2
         elif s == 'REVOKED':
