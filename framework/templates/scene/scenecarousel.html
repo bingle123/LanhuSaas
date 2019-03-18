@@ -213,11 +213,13 @@
         $(document).on("click", ".keepOn_yes", function (e) {
             e.preventDefault();
             var id=$(this).parents('.flow_monitor').attr('type');
+            var name=$(this).parent(".node-wrapper").find("p").content;
             axios({
                 method: 'post',
                         url: '${SITE_URL}monitor_item/resume_flow/',
                         data: {
-                            'item_id': id
+                            'item_id': id,
+                            'name':name
                         }
             }).then(function (res) {
                 console.log(res);
