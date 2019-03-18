@@ -377,6 +377,7 @@ def start_flow_task(**info):
 #让流程继续执行，调用v2接口
 def resume_flow(item_id,name):
     task_id=Flow.objects.filter(flow_id=item_id).last().instance_id
+    task_id=188
     d={
         "action": "resume",
         "bk_biz_id": "2",
@@ -400,13 +401,25 @@ def resume_flow(item_id,name):
     for key in activities:
         if name==activities[key]['name']:
             node_id = str(activities[key]['id'])
-    b_url='http://paas.bk.com/o/bk_sops/taskflow/api/nodes/action/callback/2/'
-    data={
-        'instance_id': task_id,
-        'node_id': node_id,
-        'data': {"callback": "resume"}
+    url = "http://paas.bk.com/o/bk_sops/taskflow/api/nodes/action/callback/2/"
+    payload = "instance_id="+str(task_id)+"&node_id="+node_id+"&data=%7B%22callback%22%3A%22resume%22%7D&undefined="
+    headers = {
+        'Content-Type': "application/x-www-form-urlencoded",
+        'Accept': "application/json, text/plain, */*",
+        'Accept-Encoding': "gzip, deflate",
+        'Accept-Language': "zh-CN,zh;q=0.9",
+        'Connection': "keep-alive",
+        'Content-Length': "97",
+        'Cookie': headers['Cookie'],
+        'Host': "paas.bk.com",
+        'Origin': "http://paas.bk.com",
+        'Referer': "http://paas.bk.com/o/bk_sops/taskflow/execute/2/?instance_id="+str(task_id),
+        'User-Agent': "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36",
+        'X-CSRFToken': "TRcGm7VPnTWNMYgC9r34TsvBmIncTRls",
+        'X-Requested-With': "XMLHttpRequest",
+        'cache-control': "no-cache",
+        'Postman-Token': "d4f27086-758e-40aa-813f-067b45422393"
     }
-    data=str(data)
-    res=requests.post(url=b_url,headers=headers)
-    return 'ok'
+    response = requests.request("POST", url, data=payload, headers=headers)
+    return 'success'
 
