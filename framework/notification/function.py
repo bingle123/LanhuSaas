@@ -17,7 +17,7 @@ from shell_app.tools import *
 def select_rules_pagination(page_info):
     result_dict = dict()
     list_set = list()
-    search = page_info['search']
+    search = page_info['search'].strip()
     page = page_info['page']
     limit = page_info['limit']
     if None is not search and '' != search:
@@ -214,7 +214,7 @@ def send_alert(**msg):
     TdAlertLog.objects.create(**msg)
 
 
-#发送微信告警
+# 发送微信告警
 def wechat_alert(msgs):
     for msg in msgs:
         alert_title = msg['alert_title']

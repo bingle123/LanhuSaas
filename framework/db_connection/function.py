@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
 import json
-import time
 from django.forms.models import model_to_dict
 from db_connection.models import *
 from shell_app import tools
@@ -49,7 +48,7 @@ def selecthor(request):
     result_dict = dict()
     list_set = list()
     res = json.loads(request.body)
-    search = res['search']
+    search = res['search'].strip()
     page = res['page']
     limit = res['limit']
     #如果搜索内容为空，搜索所有
@@ -244,7 +243,7 @@ def get_jobInstance(request):
 @periodic_task(run_every=5)
 def get_flowStatus(request):
     try:
-        flow = Monitor.objects.filter(status=0, monitor_type='流程元类型')
+        flow = Monitor.objects.filter(status=0, monitor_type=4)#流程元类型
         flow_list = []
         dic = []
         for x in flow:
@@ -252,7 +251,6 @@ def get_flowStatus(request):
         for y in flow_list:
             flows = Flow.objects.filter(flow_id=y)
             for i in flows:
-
                 cilent = tools.interface_param(request)
                 res = cilent.sops.get_task_status({
                     "bk_app_code": APP_ID,
@@ -301,7 +299,7 @@ def selecthor2(request):
     res = json.loads(request.body)
     result_dict = dict()
     list_set = list()
-    search = res['search']
+    search = res['search'].strip()
     page = res['page']
     limit = res['limit']
     if None is not search and '' != search:
@@ -338,8 +336,6 @@ def get_user_muenu(request):
         temp = model_to_dict(muenu)
         temp_list.append(temp)
     return tools.success_result(temp_list)
-
-
 
 
 #增加菜单
@@ -422,11 +418,12 @@ def get_roleAmuenus(request):
         treeItem['label']=role.rname
         #每个菜单对应的id
         treeItem['id']=role.rid
+        #二级目录都是菜单
         childrens=[]
         for menu in menus:
             child={}
             #树对应的Id,以及label,经过处理的树id不重复
-            child['id']=(role.rid+1)*100+menu.id
+            child['id']=(role.rid+1)*1000+menu.id
             child['label']=menu.mname
             childrens.append(child)
         #返回树的数据
@@ -436,12 +433,14 @@ def get_roleAmuenus(request):
 
 #获取已经勾选Id
 def checked_menu(request):
+    #中间表
     rm_all=rm.objects.all()
     ids=[]
     for rl in rm_all:
         #获取经过处理的树Id
-        temp_id=(rl.roleid+1)*100+rl.muenuid
+        temp_id=(rl.roleid+1)*1000+rl.muenuid
         ids.append(temp_id)
+    print ids
     return  ids
 
 
@@ -467,8 +466,8 @@ def savemnus(request):
                 for id in ids:
                     if ('children' not in id) and ('label' in id):
                         #逐个树id还原成菜单id(之前经过处理 树id = (角色id+1)*100+菜单Id)
-                        x = id['id'] / 100
-                        z = id['id'] % 100
+                        x = id['id'] // 1000
+                        z = id['id'] % 1000
                         x = int(x)
                         res1 = rm.objects.create(roleid=x-1, muenuid=z)
                     else:

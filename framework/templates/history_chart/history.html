@@ -141,7 +141,7 @@
                         <el-table-column prop="message" label="备注" width="800" align="center">
                         </el-table-column>
                     </el-table>
-                    <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                    <el-pagination :page-count="page_count1" background layout="prev, pager, next" style="float:right"
                                    @current-change="current_change" :current-page="page"></el-pagination>
                 </div>
 
@@ -167,30 +167,28 @@
                     </el-table>
                     <el-pagination :page-count="alertRulesCount" background layout="prev, pager, next"
                                    style="float:right"
-                                   @current-change="alertRulePageChange" :current-page="alertRulesCount"></el-pagination>
+                                   @current-change="alertRulePageChange" :current-page="page"></el-pagination>
                 </div>
                 <div id="table3" style="display:none">
                     <el-table :data="aboutTableDate">
-                        <el-table-column prop="scene_id" label="场景ID" width="100">
+                        <el-table-column prop="scene_id" label="场景ID" width="150">
                         </el-table-column>
                         <el-table-column prop="scene_name" label=场景名字 width="200" align="center">
                         </el-table-column>
-                        <el-table-column prop="item_id" label="监控项ID" width="100" align="center">
+                        <el-table-column prop="item_id" label="监控项ID" width="150" align="center">
                         </el-table-column>
-                        <el-table-column prop="monitor_name" label="监控项名字" width="200" align="center">
+                        <el-table-column prop="monitor_name" label="监控项名字" width="500" align="center">
                         </el-table-column>
-                        <el-table-column prop="start_time" label="开始时间" width="150" align="center">
+                        <el-table-column prop="start_time" label="开始时间" width="200" align="center">
                         </el-table-column>
-                        <el-table-column prop="end_time" label="结束时间" width="150" align="center">
+                        <el-table-column prop="end_time" label="结束时间" width="200" align="center">
                         </el-table-column>
-                        <el-table-column prop="minture" label="间距分钟" width="100" align="center">
+                        <el-table-column prop="minture" label="间距分钟" width="150" align="center">
                         </el-table-column>
-
-
                     </el-table>
                     <el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
                                    style="float:right"
-                                   @current-change="about_change"></el-pagination>
+                                   @current-change="about_change" :current-page="page"></el-pagination>
                 </div>
 
                 <div id="scene_compare" style="display:none">
@@ -220,8 +218,7 @@
                          <el-table-column prop="alertNums" label="告警数量" style="width: 15%" align="center">
                          </el-table-column>
                      </el-table>
-                    <!-- <el-pagination :page-count="dayDataCount" background layout="prev, pager, next" style="float:right"
-                               @current-change="dayDatapage"></el-pagination>-->
+
                     </div>
                     <!--场景比对结束-->
                 </div>
@@ -255,12 +252,9 @@
                          </el-table-column>
                      </el-table>
                      <el-pagination :page-count="sceneOperationCount" background layout="prev, pager, next" style="float:right"
-                               @current-change="sceneOperationpage" :current-page="sceneOperationCount"></el-pagination>
+                               @current-change="sceneOperationpage" :current-page="page"></el-pagination>
                 </div>
 
-                     <!--<el-pagination :page-count="sceneOperationTableData" background layout="prev, pager, next" style="float:right"
-                               @current-change="sceneOperationTableData"></el-pagination>
-                          -->
                     </div>
                  <div id="table4" style="display:none">
                      <div class="container">
@@ -296,9 +290,7 @@
                          </el-table-column>
                      </el-table>
 
-                     <!--<el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
-                                   style="float:right"
-                                   @current-change=""></el-pagination>-->
+
                     </div>
             </div>
         </el-card>
@@ -312,19 +304,19 @@
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
         return config
     });
-let vm = new Vue({
+var vm = new Vue({
         el: '.content',
         data: {
-            page_count: 100,                             //总页码数
+            page_count1: 100,                             //总页码数
             alertRulesCount:1,
             sceneOperationCount:1,
             page: 1,                                   //分页页码数
             Operatelog:[],
             search: '',                                 //搜索框
             log_type: '',                                //日志类型
-            alertRuleTableData: null,
+            alertRuleTableData: [],
             sceneOperationRuleTableData:[],
-            aboutTableDate: null,
+            aboutTableDate: [],
             keyword: '',                                 //关键字内容
             date_Choice: '',                            //时间选择
             date_selection: '',                            //时间选择
@@ -332,17 +324,17 @@ let vm = new Vue({
             scenes_tab: '',
 
             myChart: '',
-            scenes_data: '',
+            scenes_data: [],
             Cscene: '',
             Cscene_id:'',
             scene_time: '',
             pattern_data: [],
             dayData:[],
-            aboutRulesCount:'',
+            aboutRulesCount:1,
 
             sCount: 1,
             monthly_operation_statistics:'',
-            monthly_operationTableData:'',
+            monthly_operationTableData:[],
             weeks:'',                                    //运行情况周数查询
             years:'',
         },
@@ -359,7 +351,7 @@ let vm = new Vue({
                 }).then(function (res) {
                     console.log(res)
                     vm.Operatelog = res.data.message;
-                    vm.page_count = res.data.message[0].page_count;
+                    vm.page_count1 = res.data.message[0].page_count;
                 });
 
             },
@@ -377,8 +369,13 @@ let vm = new Vue({
                         limit: 10
                     },
                 }).then((res) => {
-                    vm.Operatelog = res.data.message;
-                    vm.page_count = res.data.message[0].page_count;
+                    if(res.data.message){
+                        vm.page_count1 = 1
+                    }
+                    else{
+                        vm.Operatelog = res.data.message;
+                        vm.page_count1 = res.data.message[0].page_count;
+                    }
                 })
 
             },
@@ -395,8 +392,14 @@ let vm = new Vue({
                         limit: 10
                     },
                 }).then((res) => {
-                    vm.aboutTableDate = res.data.results;
-                    vm.aboutRulesCount = res.data.results[0].pages
+                    if(res.data.message.length == 0){
+                        vm.Operatelog = []
+                        vm.page_count1 = 1
+                    }
+                    else {
+                        vm.aboutTableDate = res.data.results;
+                        vm.aboutRulesCount = res.data.results[0].pages
+                    }
                 })
             },
 
@@ -417,8 +420,14 @@ let vm = new Vue({
                            limit: 10
                        },
                    }).then((res) => {
-                       vm.Operatelog = res.data.message;
-                       vm.page_count = res.data.message[0].page_count;
+                       if(res.data.message.length == 0){
+                           vm.Operatelog = []
+                           vm.page_count1 = 1
+                       }
+                       else{
+                           vm.Operatelog = res.data.message;
+                           vm.page_count1 = res.data.message[0].page_count;
+                       }
                    })
                }else if(vm.log_type == 'alert'){
                  this.alertRulePageChange(1);
@@ -465,7 +474,7 @@ let vm = new Vue({
                        }
                    }).then(function (res) {
                         vm.Operatelog = res.data.message;
-                       vm.page_count = res.data.message[0].page_count;
+                       vm.page_count1 = res.data.message[0].page_count;
                    })
                 }
             },
@@ -502,6 +511,7 @@ let vm = new Vue({
             },
 
             change_type(value) {
+                vm.page = 1
                 if (value == 'log') {
                     $("#table1,#hide_k,#block").css('display', 'block');
                     $("#table3,#scene_compare,#table2,#hide_m,#table10,#table4,#date_selection").css('display', 'none');
@@ -518,7 +528,7 @@ let vm = new Vue({
                 }).then((res) => {
                     this.alertRuleTableData = res.data.results;
                     vm.alertRulesCount = res.data.results[0].pages
-                    console.log(vm.page_count)
+                    console.log(vm.page_count1)
                 })
                     $("#table2,#hide_k,#block").css('display', 'block');
                     $("#table3,#scene_compare,#table1,#hide_m,#table10,#table4,#date_selection").css('display', 'none');
@@ -575,11 +585,13 @@ let vm = new Vue({
                     vm.monthly_operationTableData = res.data.message;
                 $("#table1,#table2,#table3,#scene_compare,#hide_k,#hide_m,#table10,#date_selection").css('display','none');
                    $('#table4').css('display','block');
+                   $('#scene_et_table4').css('display','block');
                     vm.nmsl(vm.monthly_operationTableData)
                });
 
 
                 }
+                console.log(vm.page)
             },
 
             get_week(){
@@ -754,7 +766,7 @@ let vm = new Vue({
                         trigger: 'axis'
                     },
                     legend: {
-                        data: ['节点数','运行成功场景单元数','运行失败数','告警数']
+                        data: ['场景数','运行成功场景单元数','运行失败数','告警数']
                     },
                     xAxis: {
                         type: 'category',
@@ -766,7 +778,7 @@ let vm = new Vue({
                     },
                     series: [
                         {
-                            name: '节点数',
+                            name: '场景数',
                             type: 'bar',
                             data: list_all,
                             stack:'data'

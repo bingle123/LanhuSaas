@@ -42,7 +42,9 @@ def scenes_alert(request):
     position_id = model_to_dict(user)['user_pos']
     #一个职位下得所有场景
     ps = position_scene.objects.filter(position_id = position_id)
-
+    if 0 == len(ps) or None is ps:
+        null_data = 'n'
+        return tools.success_result(null_data)
     alert_log = []
     alert_count = 0
     alert_data = []
@@ -75,6 +77,7 @@ def scenes_alert(request):
                 for hi in thistory:
                     his = model_to_dict(hi)
                     his['gather_time'] = hi.gather_time
+
                     if str(his['gather_time']).split(' ')[0] == time.strftime("%Y-%m-%d", time.localtime(time.time())):
                         # 如果当天时间此监控项出错，那么就减去此监控项得权值,如果总分为0那all_score直接为0
                         if his['gather_error_log'] != None and his['gather_error_log'] != '':
