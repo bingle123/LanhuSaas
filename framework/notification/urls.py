@@ -14,11 +14,11 @@ from django.conf.urls import patterns
 
 urlpatterns = patterns(
     'notification.views',
-    (r'^index$', 'show_index'),                                          # 首页
-    (r'^select_all_rules$', 'select_all_rules'),
-    (r'^select_rule$', 'select_rule'),
-    (r'^del_rule$', 'del_rule'),
-    (r'^force_del_rule$', 'force_del_rule'),
-    (r'^add_rule$', 'add_rule'),
-    (r'^select_rules_pagination$', 'select_rules_pagination'),
+    (r'^index$', 'show_index'),                                          # 告警规则配置页面
+    (r'^select_all_rules$', 'select_all_rules'),                         # 获取所有已配置的告警规则
+    (r'^select_rule$', 'select_rule'),                                   # 根据id获取指定的告警规则
+    (r'^del_rule$', 'del_rule'),                                         # 根据id删除指定的告警规则
+    (r'^force_del_rule$', 'force_del_rule'),                             # 在有用户订阅该告警的情况下级联删除告警规则和订阅信息
+    (r'^add_rule$', 'add_rule'),                                         # 添加告警规则
+    (r'^select_rules_pagination$', 'select_rules_pagination'),           # 分页获取指定页的告警规则
 )
