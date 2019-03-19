@@ -11,8 +11,10 @@ $(function(){
     //自定义上限值校验
     const upperLimitCheck= (rule, value, callback) => {
         var lv = $('#lowerValue');
+        //如果当前填写了上限值
         if (value != null && value.length > 0) {
             if (parseFloat(value).toString() != "NaN" && parseFloat(value) >= 0 && parseFloat(value) <= 10000) {
+                //上限值填写的标记位置true
                 vue.upper_valid_status = true;
                 lv.focus();
                 lv.blur();
@@ -20,7 +22,9 @@ $(function(){
             } else {
                 callback(new Error('上限值在0~10000之间'));
             }
+        //如果当前没有填写上限值
         } else {
+            //上限值填写的标记位置false
             vue.upper_valid_status = false;
             lv.focus();
             lv.blur();
@@ -29,9 +33,11 @@ $(function(){
     };
     //自定义下限值校验
     const lowerLimitCheck = (rule, value, callback) => {
+        //如果当前填写了下限值
         if (value != null && value.length > 0) {
             var uv = $('#upperValue');
             if (parseFloat(value).toString() != "NaN" && parseFloat(value) >= 0 && parseFloat(value) <= 10000) {
+                //判断上限值是否小于下限值
                 if(parseFloat(uv.val()) < parseFloat(value)){
                     callback(new Error('上限值不能小于下限值'));
                 }else{
@@ -40,9 +46,12 @@ $(function(){
             } else {
                 callback(new Error('下限值在0~10000之间'));
             }
+        //如果当前没有填写下限值
         } else {
+            //在上限值也没有填写的情况下报错
             if(!vue.upper_valid_status){
                 callback(new Error('上限值与下限值必须选择其一填写'))
+            //上限值已经填写的情况下，下限值可以不填写
             }else{
                 callback();
             }
@@ -68,6 +77,7 @@ $(function(){
             ruleSearch: '',
             //当前有多少页
             alertRulesCount: 0,
+            //告警规则表单校验
             rules: {
                 item_id: [
                     { required: true, message: '请输入监控项ID', trigger: 'blur' },
@@ -98,7 +108,7 @@ $(function(){
             }
         },
         methods: {
-            //加载所有告警规则信息
+            //加载所有告警规则信息--已弃用，改为分页
             loadAlertRuleInfo: function(){
                 const loading = this.alertRulePopupLoading();
                 //加载告警规则数据
@@ -159,9 +169,13 @@ $(function(){
                     data: data
                 }).then((res) => {
                     loading.close();
+                    //获取当前页的告警规则
                     this.alertRuleTableData = res.data.items;
+                    //获取告警规则总页数
                     this.alertRulesCount = res.data.pages;
+                    //当前页等于点击的页码
                     this.currentPage = page;
+                    //如果当前的页码大于服务端的页码，则将当前页指定为服务端的页面，并获取该页的数据
                     if(page > res.data.pages){
                         this.currentPage = res.data.pages;
                     }
@@ -183,7 +197,9 @@ $(function(){
                     data: editData,
                 }).then((res) =>{
                     loading.close();
+                    //获取当前编辑的告警规则信息
                     this.alertRuleData = res.data;
+                    //跳转到编辑告警规则页面
                     this.alertRuleTableStatus = 'edit';
                 }).catch((res) => {
                     loading.close();
@@ -209,12 +225,14 @@ $(function(){
                         data: delData,
                     }).then((res) =>{
                         loading.close();
+                        //当服务端返回ok则代表告警规则删除成功
                         if('ok' == res.data.message){
                             this.alertRulePageChange(this.currentPage);
                             this.$message({
                                 type: 'success',
                                 message: '删除告警规则成功!'
                             });
+                        //当服务端返回restrict则代表检测到有用户订阅了该告警规则，需要再次确认是否级联删除
                         }else if('restrict' == res.data.message){
                             this.$confirm('当前告警规则正在被用户使用，强制删除?', '提示', {
                                 confirmButtonText: '确定',
@@ -260,6 +278,7 @@ $(function(){
                 }).then((res) =>{
                     loading.close();
                     if('ok' == res.data.message){
+                        //获取当前页的告警规则
                         this.alertRulePageChange(this.currentPage);
                         this.$message({
                             type: 'success',
@@ -355,7 +374,6 @@ $(function(){
             }
         },
         mounted(){
-            //this.loadAlertRuleInfo();
             this.alertRulePageChange(1);
             this.get_header_data()
         }
