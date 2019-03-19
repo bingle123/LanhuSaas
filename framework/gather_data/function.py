@@ -249,7 +249,7 @@ def gather_data(**info):
             return "empty"
     elif "interface" == gather_type:
         # 接口方式采集数据
-        user_account = BkUser.objects.filter(id=1).get()
+        user_account = BkUser.objects.filter(username='admin').get()
         # 根据id为1的admin用户获取客户端操作快速执行脚本
         client = get_client_by_user(user_account)
         client.set_bk_api_ver('v2')
@@ -299,7 +299,7 @@ def gather_data(**info):
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'], data_value=item['value']).save()
     elif "file" == gather_type:
         # 文件方式采集数据
-        user_account = BkUser.objects.filter(id=1).get()
+        user_account = BkUser.objects.filter(username='admin').get()
         # 根据id为1的admin用户获取客户端操作快速执行脚本
         client = get_client_by_user(user_account)
         client.set_bk_api_ver('v2')
