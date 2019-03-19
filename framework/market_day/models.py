@@ -4,26 +4,34 @@ from django.db import models
 
 
 class Holiday(models.Model):
-    day=models.CharField(max_length=30)
-    flag=models.IntegerField(null=True)
-    area=models.IntegerField(null=True)
+    day = models.CharField(max_length=30)
+    flag = models.IntegerField(null=True)
+    area = models.IntegerField(null=True)
+
     def __unicode__(self):
         return self.day
+
     class Meta:
-        db_table='holiday'
+        db_table = 'holiday'
+
 
 class HeaderData(models.Model):
-    header=models.TextField()
-    edit_time=models.DateTimeField(verbose_name=u'更新时间',auto_now=True)
+    header = models.TextField()
+    edit_time = models.DateTimeField(verbose_name=u'更新时间', auto_now=True)
+
     def __unicode__(self):
         return self.day
+
     class Meta:
-        db_table='header_data'
+        db_table = 'header_data'
+
 
 class Area(models.Model):
-    country=models.CharField(u'国家',max_length=30)
-    timezone=models.CharField(u'时区',max_length=30)
+    country = models.CharField(u'国家', max_length=30)
+    timezone = models.CharField(u'时区', max_length=30)
+
     def __unicode__(self):
         return self.day
+
     class Meta:
-        db_table='area'
+        db_table = 'area'

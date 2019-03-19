@@ -3,12 +3,16 @@ from __future__ import division
 from django.db.models import Q
 from django.core.paginator import Paginator
 from logmanagement.models import *
-import datetime
 import json
 from shell_app import tools
 
 
 def add_log(info):
+    """
+
+    :param info:
+    :return:
+    """
     res = info
     r1 = Operatelog.objects.create(log_type=res['log_type'], log_name=res['log_name'], class_name=res['class_name'],
                                    method=res['method'], user_name=res['user_name'], is_success=res['is_success'],
@@ -52,7 +56,9 @@ def get_active_user(request):
 
 def show_all(request):
     """
-        显示所有操作日志
+    显示所有操作日志
+    :param request:
+    :return:
     """
     res = json.loads(request.body)
     limit = res['limit']
@@ -81,16 +87,21 @@ def show_all(request):
 
 
 def select_log(request):
+    """
+
+    :param request:
+    :return:
+    """
     res = json.loads(request.body)
     limit = res['limit']
     page = res['page']
-    #获取搜索框内容
+    # 获取搜索框内容
     search = res['search'].strip()
     res1 = search
     res_list = []
     tmp = Operatelog.objects.all()
     log = tmp.filter(Q(log_type__icontains=res1) | Q(log_name__icontains=res1) | Q(user_name__icontains=res1) | Q(
-        class_name__icontains=res1) | Q(method__icontains=res1)| Q(is_success=res1))
+        class_name__icontains=res1) | Q(method__icontains=res1) | Q(is_success=res1))
     p = Paginator(log, limit)
     count = p.page_range
     pages = count[-1]

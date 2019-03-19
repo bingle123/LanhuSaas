@@ -1,20 +1,27 @@
 # -*- coding: utf-8 -*-
 
-from models import *
-from position.models import *
+from models import TbCustProcess
+from models import TdCustProcessLog
+from position.models import user_info
 from django.forms.models import model_to_dict
-from shell_app.tools import *
+from shell_app.tools import sms_send_msg
+from shell_app.tools import mail_send_msg
+from shell_app.tools import wechat_send_msg
+from shell_app.tools import wechat_access_token
 from django.core.paginator import *
 
 
-# 获取所有定制过程节点
 def select_all_nodes():
+    """
+    获取定制流程节点
+    :return: List
+    """
     node_info = TbCustProcess.objects.order_by('seq').all()
     node_list = []
     for node in node_info:
         dic1 = model_to_dict(node)
         # 获取该节点对应的节点状态
-        temp = TdCustProcessLog.objects.filter(node_id=node.id).get()
+        temp =  TdCustProcessLog.objects.filter(node_id=node.id).get()
         # 临时保存节点的执行时间
         do_time_ori = temp.do_time
         # 节点执行时间置空，防止datetime类型在model_to_dict时转换报错
@@ -32,8 +39,12 @@ def select_all_nodes():
     return node_list
 
 
-# 分页获取定制过程节点
 def select_nodes_pagination(node_info):
+    """
+    # 分页获取定制过程节点
+    :param node_info: 包含page和limit
+    :return:
+    """
     result_dict = dict()
     list_set = list()
     # 获取前台传递的参数：需要第几页的数据
@@ -62,8 +73,12 @@ def select_nodes_pagination(node_info):
     return result_dict
 
 
-# 添加或修改一个定制过程节点
 def add_node(node):
+    """
+    添加或修改一个定制过程节点
+    :param node:
+    :return:
+    """
     status_dic = dict()
     # 添加节点并获取当前操作的节点
     if 'add' == node['method']:
@@ -84,8 +99,11 @@ def add_node(node):
     return status_dic
 
 
-# 获取所有已设置通知方式的蓝鲸用户信息
 def select_all_bkusers():
+    """
+    获取所有已设置通知方式的蓝鲸用户信息
+    :return:
+    """
     users_list = list()
     bk_users = user_info.objects.all().filter(notice_style__isnull=False)
     for bk_user in bk_users:
@@ -96,8 +114,12 @@ def select_all_bkusers():
     return users_list
 
 
-# 修改指定节点id的节点信息
 def update_node_status(node):
+    """
+    修改指定节点id的节点信息
+    :param node:
+    :return:
+    """
     selected_status = TdCustProcessLog.objects.get(node_id=node['node_id'])
     selected_status.is_done = node['is_done']
     selected_status.do_time = node['do_time']
@@ -106,22 +128,34 @@ def update_node_status(node):
     return "ok"
 
 
-# 修改指定节点id的节点状态
 def change_status_flag(node):
+    """
+    修改指定节点id的节点状态
+    :param node:
+    :return:
+    """
     selected_status = TdCustProcessLog.objects.get(node_id=node['node_id'])
     selected_status.is_done = node['is_done']
     selected_status.save()
     return "ok"
 
 
-# 删除指定节点id的节点
 def del_node(node_id):
+    """
+    删除指定节点id的节点
+    :param node_id:
+    :return:
+    """
     TbCustProcess.objects.filter(id=node_id['id']).delete()
     return "ok"
 
 
-# 获取指定节点id的节点
 def select_node(node_id):
+    """
+    获取指定节点id的节点
+    :param node_id:
+    :return:
+    """
     node = TbCustProcess.objects.filter(id=node_id['id']).get()
     node_list = []
     dic = model_to_dict(node)
@@ -129,14 +163,20 @@ def select_node(node_id):
     return node_list
 
 
-# 删除所有已存在的过程通知节点
 def truncate_node():
+    """
+    删除所有已存在的过程通知节点
+    :return:
+    """
     TbCustProcess.objects.all().delete()
     return "ok"
 
 
-# 清除所有过程通知节点的执行状态信息
 def clear_execute_status():
+    """
+    清除所有过程通知节点的执行状态信息
+    :return:
+    """
     nodes_status = TdCustProcessLog.objects.all()
     for status in nodes_status:
         status.is_done = 'n'
@@ -147,6 +187,11 @@ def clear_execute_status():
 
 
 def send_notification(notification):
+    """
+    发送通知
+    :param notification:
+    :return:
+    """
 
     # 是否存在发送错误的标志位
     send_flag = True

@@ -31,14 +31,14 @@ def create_task_crontab(name, task, task_args, crontab_time, desc):
         crontab = celery_models.CrontabSchedule.objects.create(**crontab_time)
     task.crontab = crontab  # 设置crontab
     if created:
-        task.enabled = False # 开启task
-    task.kwargs = json.dumps(task_args, ensure_ascii=False) # 传入task参数
+        task.enabled = False  # 开启task
+    task.kwargs = json.dumps(task_args, ensure_ascii=False)  # 传入task参数
     task.description = desc
     task.save()
     return True
 
 
-def create_task_interval(name, task, task_args,interval_time, desc):
+def create_task_interval(name, task, task_args, interval_time, desc):
     """
     新增定时任务
     :param name: 定时任务名称
@@ -61,16 +61,16 @@ def create_task_interval(name, task, task_args,interval_time, desc):
     if interval is None:
         # 如果没有就创建，有的话就继续复用之前的crontab
         interval = celery_models.IntervalSchedule.objects.create(**interval_time)
-    task.interval=interval  # 设置crontab
+    task.interval = interval  # 设置crontab
     if created:
-        task.enabled = True # 开启task
-    task.kwargs=json.dumps(task_args, ensure_ascii=False) #将kwargs传入
+        task.enabled = True  # 开启task
+    task.kwargs = json.dumps(task_args, ensure_ascii=False)  # 将kwargs传入
     task.description = desc
     task.save()
     return True
 
 
-def change_task_status(name,crontab_time,args):
+def change_task_status(name, crontab_time, args):
     """
     任务状态切换：open or close
     :param name: 任务名称
@@ -98,6 +98,7 @@ def change_task_status(name,crontab_time,args):
     except celery_models.PeriodicTask.DoesNotExist:
         return False
 
+
 def disable_task(name):
     """
     关闭任务
@@ -106,7 +107,7 @@ def disable_task(name):
         task = celery_models.PeriodicTask.objects.get(name=name)
         task.enabled = False  # 设置关闭
         task.save()
-        print name+u'关闭成功'
+        print name + u'关闭成功'
         return True
     except celery_models.PeriodicTask.DoesNotExist:
         return False
@@ -120,7 +121,7 @@ def enable_task(name):
         task = celery_models.PeriodicTask.objects.get(name=name)
         task.enabled = True  # 设置开启
         task.save()
-        print name+u'开启成功'
+        print name + u'开启成功'
         return True
     except celery_models.PeriodicTask.DoesNotExist:
         return False
@@ -136,7 +137,7 @@ def delete_task(name):
         task = celery_models.PeriodicTask.objects.get(name=name)
         task.enabled = False  # 设置关闭
         task.delete()
-        print name +u'删除成功'
+        print name + u'删除成功'
         return True
     except celery_models.PeriodicTask.DoesNotExist:
         return False

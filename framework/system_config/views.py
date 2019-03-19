@@ -252,6 +252,11 @@ def delete_scene_by_uuid(request):
 
 
 def get_crawl_content(request):
+    """
+    获取爬虫内容
+    :param request:
+    :return:
+    """
     request_body = json.loads(request.body)
     title_content = request_body['title_content']
     crawl_name = request_body['crawl_name']

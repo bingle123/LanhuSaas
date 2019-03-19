@@ -24,16 +24,14 @@ urlpatterns = patterns(
     url(r'^account/', include('account.urls')),
     # 应用功能开关控制--请勿修改
     url(r'^app_control/', include('app_control.urls')),
-    # 国泰君安自动化运维
-    url(r'^guotai/', include('guotai.urls')),
+
     # 在home_application(根应用)里开始开发你的应用的主要功能
     # url(r'^', include('home_application.urls')),
+
     # shell_app主页
     url(r'^', include('shell_app.urls')),
     # 监控项_APP_URL
     url(r'^monitor_item/', include('monitor_item.urls')),
-    # 数据库连接_APP_URL
-    url(r'^db_connection_manage/', include('db_connection_manage.urls')),
     # 系统设置
     url(r'^system_config/', include('system_config.urls')),
     url(r'^monitor_scene/', include('monitor_scene.urls')),
@@ -48,9 +46,9 @@ urlpatterns = patterns(
     # 告警规则配置
     url(r'^notification/', include('notification.urls')),
     # 操作日志记录
-     url(r'^logmanagement/', include('logmanagement.urls')),
+    url(r'^logmanagement/', include('logmanagement.urls')),
     # 报表统计
-     url(r'^history_chart/', include('history_chart.urls')),
+    url(r'^history_chart/', include('history_chart.urls')),
     # 自定义查询
     url(r'^custom_query/', include('custom_query.urls')),
     url(r'^home_page/', include('home_page.urls')),

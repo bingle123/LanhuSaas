@@ -11,10 +11,9 @@ See the License for the specific language governing permissions and limitations 
 
 from django.conf.urls import patterns
 
-
 urlpatterns = patterns(
     'monitor_item.views',
-    (r'^$', 'index'),                                         # 首页--服务器选择页面
+    (r'^$', 'index'),  # 首页--服务器选择页面
     (r'^show/$', 'unit_show'),
     (r'^show_message$', 'index'),
     (r'^select/$', 'select_unit'),
@@ -24,11 +23,11 @@ urlpatterns = patterns(
     (r'^basic_test/$', 'basic_test'),
     (r'^job_test/$', 'job_test'),
     (r'^chart_get_test/$', 'chart_get_test'),
-    (r'^change_status/$', 'change_status'),                 #改变监控项的启用状态
+    (r'^change_status/$', 'change_status'),  # 改变监控项的启用状态
     (r'^flow_change/$', 'flow_change'),
     (r'^node_name/$', 'node_name'),
     (r'^start_flow_task/$', 'start_flow_task'),
     (r'^node_state/$', 'node_state'),
-    (r'^resume_flow/$','resume_flow'),
+    (r'^resume_flow/$', 'resume_flow'),
     (r'^node_state_by_item_id/$', 'node_state_by_item_id'),
 )

@@ -4,11 +4,9 @@ from django.db.models import Q
 from common.log import logger
 import json
 import requests
-from models import Monitor,Job
-from monitor_scene.models import Scene
+from models import Monitor
 from db_connection.models import Conn
 from monitor_item import tools
-from django.forms.models import model_to_dict
 import pymysql as MySQLdb
 from market_day import function
 from market_day import celery_opt as co
@@ -17,13 +15,17 @@ from gather_data.function import gather_data, get_db
 from gather_data.models import TDGatherData
 import sys
 from logmanagement.function import add_log, make_log_info, get_active_user
-import datetime
 from market_day.models import HeaderData as hd
+from component.shortcuts import get_client_by_user
 
 
-# 显示函数
 def unit_show(request):
-# try:
+    """
+    显示函数
+    :param request:
+    :return:
+    """
+    # try:
     res = json.loads(request.body)
     #  个数
     limit = res['limit']
@@ -35,16 +37,27 @@ def unit_show(request):
     #  把返回的数据对象转为list
     res_list = tools.obt_dic(page_data, base_page_count)
     param = {
-        'bk_username': 'admin',
+        "bk_token": request.COOKIES['bk_token'],
         "bk_biz_id": 2,
     }
     param1 = {
         "bk_biz_id": 2,
     }
     #  用user v2的方式调用接口
-    client = tools.user_interface_param()
+    # client = tools.user_interface_param()
+    client = get_client_by_user(request.user)  # 获取code、secret参数
+    user = request.user
+    client.set_bk_api_ver('v2')  # 以v2版本调用接口
     #  调用获取作业详情接口
     res = client.job.get_job_list(param)
+
+    request.COOKIES['bk_token']
+    client = get_client_by_user(user)  # 获取code、secret参数
+    client.set_bk_api_ver('v2')  # 以v2版本调用接口
+    param = {
+        "bk_username_list": ['zork']
+    }
+    res = client.bk_login.get_batch_users(param)
     #  调用获取标准运维模板详情接口
     res1 = client.sops.get_template_list(param1)
     if res.get('result'):
@@ -89,9 +102,13 @@ def unit_show(request):
     return result
 
 
-# 查询函数
 def select_unit(request):
-# try:
+    """
+    查询函数
+    :param request:
+    :return:
+    """
+    # try:
     res = json.loads(request.body)
     res1 = res['data']
     limit = res['limit']
@@ -106,8 +123,12 @@ def select_unit(request):
     #     return None
 
 
-# 删除函数
 def delete_unit(request):
+    """
+    删除函数
+    :param request:
+    :return:
+    """
     try:
         res = json.loads(request.body)
         #  根据前台传的来的id进行删除
@@ -126,69 +147,77 @@ def delete_unit(request):
     return res1
 
 
-# 添加函数
 def add_unit(request):
+    """
+    添加函数
+    :param request:
+    :return:
+    """
     # try:
-        res = json.loads(request.body)
-        cilent = tools.user_interface_param()
-        # 获取登录用户信息
-        user = cilent.bk_login.get_user({})
-        add_dic = res['data']
-        print add_dic
-        add_flow_dic = res['flow']
-        monitor_type = res['monitor_type']
-        #  根据前台来的单元类型进行分类
-        if res['monitor_type'] == 'first':
-            monitor_type = 1
-        if res['monitor_type'] == 'second':
-            monitor_type = 2
-        if res['monitor_type'] == 'third':
-            monitor_type = 3
-            #  作业监控项的把作业id和name分别存放
-            add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
-            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
-        if res['monitor_type'] == 'fourth':
-            monitor_type = 4
-            add_dic['jion_id'] = res['flow']['jion_id']
-            add_dic['gather_params'] = add_dic['node_name']
-            add_dic.pop('node_name')
-            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
-            add_dic['params'] = res['flow']['constants']
-            add_flow_dic['monitor_area']=res['monitor_area']
-            start_list = []
-            for i in res['flow']['node_times']:
-                start_list.append(i['endtime'])
-                start_list.append(i['starttime'])
-            add_dic['start_time'] = min(start_list)
-            add_dic['end_time'] = max(start_list)
-            add_flow_dic['start_time']=add_dic['start_time']
-            add_flow_dic['end_time'] =add_dic['end_time']
-            print add_flow_dic
-        add_dic['monitor_name'] = res['monitor_name']
-        # 新增一条数据时 开关状态默认为0 关闭
-        add_dic['status'] = 0
-        add_dic['monitor_type'] = monitor_type
-        add_dic['creator'] = user['data']['bk_username']
-        add_dic['editor'] = user['data']['bk_username']
-        add_dic['monitor_area'] = res['monitor_area']
-        Monitor.objects.create(**add_dic)
-        if res['monitor_type'] == 'fourth':
-            function.add_unit_task(add_dicx=add_flow_dic)
-        else:
-            function.add_unit_task(add_dicx=add_dic)
-        result = tools.success_result(None)
-        info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+    res = json.loads(request.body)
+    cilent = tools.user_interface_param()
+    # 获取登录用户信息
+    user = cilent.bk_login.get_user({})
+    add_dic = res['data']
+    print add_dic
+    add_flow_dic = res['flow']
+    monitor_type = res['monitor_type']
+    #  根据前台来的单元类型进行分类
+    if res['monitor_type'] == 'first':
+        monitor_type = 1
+    if res['monitor_type'] == 'second':
+        monitor_type = 2
+    if res['monitor_type'] == 'third':
+        monitor_type = 3
+        #  作业监控项的把作业id和name分别存放
+        add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
+        add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+    if res['monitor_type'] == 'fourth':
+        monitor_type = 4
+        add_dic['jion_id'] = res['flow']['jion_id']
+        add_dic['gather_params'] = add_dic['node_name']
+        add_dic.pop('node_name')
+        add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+        add_dic['params'] = res['flow']['constants']
+        add_flow_dic['monitor_area'] = res['monitor_area']
+        start_list = []
+        for i in res['flow']['node_times']:
+            start_list.append(i['endtime'])
+            start_list.append(i['starttime'])
+        add_dic['start_time'] = min(start_list)
+        add_dic['end_time'] = max(start_list)
+        add_flow_dic['start_time'] = add_dic['start_time']
+        add_flow_dic['end_time'] = add_dic['end_time']
+        print add_flow_dic
+    add_dic['monitor_name'] = res['monitor_name']
+    # 新增一条数据时 开关状态默认为0 关闭
+    add_dic['status'] = 0
+    add_dic['monitor_type'] = monitor_type
+    add_dic['creator'] = user['data']['bk_username']
+    add_dic['editor'] = user['data']['bk_username']
+    add_dic['monitor_area'] = res['monitor_area']
+    Monitor.objects.create(**add_dic)
+    if res['monitor_type'] == 'fourth':
+        function.add_unit_task(add_dicx=add_flow_dic)
+    else:
+        function.add_unit_task(add_dicx=add_dic)
+    result = tools.success_result(None)
+    info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                         get_active_user(request)['data']['bk_username'], '成功', '无')
     # except Exception as e:
     #     info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
     #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
     #     result = tools.error_result(e)
     # add_log(info)
-        return result
+    return result
 
 
-# 编辑函数
 def edit_unit(request):
+    """
+    编辑函数
+    :param request:
+    :return:
+    """
     try:
         res = json.loads(request.body)
         id = res['unit_id']
@@ -230,11 +259,11 @@ def edit_unit(request):
         if res['monitor_type'] == 'fourth':
             add_dic['node_times'] = node_times
             add_dic['constants'] = constants
-            add_dic['monitor_type']='fourth'
+            add_dic['monitor_type'] = 'fourth'
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                         get_active_user(request)['data']['bk_username'], '成功', '无')
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
@@ -243,8 +272,12 @@ def edit_unit(request):
     return result
 
 
-# 基本监控项采集测试
 def basic_test(request):
+    """
+    基本监控项采集测试
+    :param request:
+    :return:
+    """
     info = json.loads(request.body)
     # 新增时测试
     if info['id'] == '':
@@ -269,8 +302,12 @@ def basic_test(request):
     return result
 
 
-# 作业采集测试
 def job_test(request):
+    """
+    作业采集测试
+    :param request:
+    :return:
+    """
     res = json.loads(request.body)
     # 采集测试id为0 用于与队列调度区分
     res['id'] = 0
@@ -278,8 +315,12 @@ def job_test(request):
     return result
 
 
-# 改变监控项的启用状态
 def change_unit_status(req):
+    """
+    改变监控项的启用状态
+    :param req:
+    :return:
+    """
     try:
         res = json.loads(req.body)
         flag = int(res['flag'])
@@ -358,9 +399,16 @@ def chart_get_test(request):
 
 
 def get_desc(request, id):
+    """
+
+    :param request:
+    :param id:
+    :return:
+    """
     mess = hd.objects.get(id=1).header
     headers = json.loads(mess.decode('utf-8').replace("'", "\""))
-    a_url = "http://paas.bk.com/o/bk_sops/api/v3/template/{}/".format(id[0]['id']);
+    # a_url = "http://paas.bk.com/o/bk_sops/api/v3/template/{}/".format(id[0]['id'])
+    a_url = "http://paas.blueking.com:8030/o/bk_sops/api/v3/template/{}/".format(id[0]['id'])
     req = requests.get(url=a_url, headers=headers)
     req.encoding = req.apparent_encoding
     req.raise_for_status()
@@ -368,6 +416,11 @@ def get_desc(request, id):
 
 
 def get_flow_desc(request):
+    """
+
+    :param request:
+    :return:
+    """
     headers = {
         'Content-Type': 'application/json;charset=utf-8',
         'Cookie': 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
@@ -385,6 +438,11 @@ def get_flow_desc(request):
 
 
 def flow_change(request):
+    """
+
+    :param request:
+    :return:
+    """
     cilent = tools.interface_param(request)
     id = json.loads(request.body)
     activities2 = []
@@ -393,7 +451,7 @@ def flow_change(request):
     location = res1['location']
     gateways = res1['gateways']
     for i in gateways:
-        gateways1={}
+        gateways1 = {}
         gateways1['type'] = gateways[i]['type']
         gateways1['id'] = gateways[i]['id']
         gateways1['name'] = gateways[i]['name']
@@ -406,12 +464,12 @@ def flow_change(request):
                 activities2.append(gateways1)
     start_event = res1['start_event']  # 开始节点信息
     for l in location:
-        if l['id']==start_event['id']:
+        if l['id'] == start_event['id']:
             start_event['x'] = l['x']
             start_event['y'] = l['y']
     end_event = res1['end_event']  # 结束节点信息
     for l in location:
-        if l['id']==end_event['id']:
+        if l['id'] == end_event['id']:
             end_event['x'] = l['x']
             end_event['y'] = l['y']
 
@@ -425,24 +483,24 @@ def flow_change(request):
         activities1['name'] = activities[key]['name']
         activities1['stage_name'] = activities[key]['stage_name']
         for l in location:
-            if l['id']==activities1['id']:
+            if l['id'] == activities1['id']:
                 activities1['x'] = l['x']
                 activities1['y'] = l['y']
                 activities2.append(activities1)
     flows1 = []
     flows2 = res1['flows']
     for i in res1['line']:
-            flows3 = {
-                'source': {
-                    'arrow':  i['source']['arrow'],
-                    'id': i['source']['id']
-                },
-                'target': {
-                    'arrow': i['target']['arrow'],
-                    'id':   i['target']['id']
-                }
+        flows3 = {
+            'source': {
+                'arrow': i['source']['arrow'],
+                'id': i['source']['id']
+            },
+            'target': {
+                'arrow': i['target']['arrow'],
+                'id': i['target']['id']
             }
-            flows1.append(flows3)
+        }
+        flows1.append(flows3)
     constants1 = []
     constants = res1['constants']
     for key in constants:
@@ -461,6 +519,11 @@ def flow_change(request):
 
 
 def node_name(request):
+    """
+
+    :param request:
+    :return:
+    """
     id = json.loads(request.body)
     res = get_desc(request, id['id'])
     res1 = json.loads(res['pipeline_tree'])
@@ -478,6 +541,11 @@ def node_name(request):
 
 
 def node_state(request):
+    """
+
+    :param request:
+    :return:
+    """
     res = json.loads(request.body)
     item_id = res['item_id']['message']
     print item_id
@@ -494,6 +562,11 @@ def node_state(request):
 
 
 def node_state_by_item_id(request):
+    """
+
+    :param request:
+    :return:
+    """
     res = json.loads(request.body)
     item_id = res['item_id']
     print item_id
