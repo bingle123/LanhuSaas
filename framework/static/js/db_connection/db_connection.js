@@ -7,15 +7,13 @@ $(function(){
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
         return config
     });
-
-
     var ve = new Vue({
         el: '#main',
         data: {
             connsearch:'',//搜索框的值
             page_count:0,//总页码
             currentPage:1, //当前页
-            isAdd: 1,
+            isAdd: 1,       //当前状态：列表/添加/修改/删除
             tableData: [],//表单展示
             editDataBase:{},
             addconn: {},//新增数据库连接
@@ -53,7 +51,7 @@ $(function(){
 
         },
         methods: {
-            //点击搜索按钮，执行跳页方法
+            //点击搜索按钮，跳转到第一页
             select_table() {
                 ve.current_change(1)
             },
@@ -102,10 +100,10 @@ $(function(){
                         return false;
                     }else {
                         axios.post(
-                        site_url + 'db_connection/saveconn/',this.addconn
+                        site_url + 'db_connection/saveconn/', this.addconn
                     ).then(function (res) {
                         if(ve.currentPage < res.data.results['page_count']){
-                            ve.currentPage = res.data.results['page_count']
+                            ve.currentPage = res.data.results['page_count'];
                             ve.hide()
                         }
                     });
@@ -116,7 +114,7 @@ $(function(){
 
             //去修改
             showe(row){
-                this.isAdd = 3
+                this.isAdd = 3;
                 this.editDataBase=row
             },
 
@@ -155,8 +153,8 @@ $(function(){
                    site_url + 'db_connection/deleteconn/'+id+'/'
                ).then((res) => {
                    if(res.data.message==0){
-                       this.$message('删除成功')
-                       data.splice(index,1)
+                       this.$message('删除成功');
+                       data.splice(index,1);
                        ve.hide()
 
                    }
@@ -173,7 +171,7 @@ $(function(){
 
             //数据库连接测试
             testConn(formName){
-                console.log(this.addconn)
+                console.log(this.addconn);
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
                         alert('验证不通过');
@@ -182,9 +180,9 @@ $(function(){
                         axios.post(site_url + 'db_connection/testConn/',this.addconn)
                             .then((res)=>{
                         if(res.data.code == 0){
-                             alert("数据库连接成功")
+                             alert("数据库连接成功");
                         }else{
-                            alert("数据库连接失败")
+                            alert("数据库连接失败");
                         }
                     })
                     }
@@ -202,9 +200,9 @@ $(function(){
                         axios.post(site_url + 'db_connection/testConn/',this.editDataBase)
                             .then((res)=>{
                         if(res.data.code == 0){
-                             alert("数据库连接成功")
+                             alert("数据库连接成功");
                         }else{
-                            alert("数据库连接失败")
+                            alert("数据库连接失败");
                         }
                     })
                     }
@@ -213,6 +211,6 @@ $(function(){
             },
         }
     });
-    ve.current_change(1)
-    ve.get_header_data()
+    ve.current_change(1);
+    ve.get_header_data();
 });
