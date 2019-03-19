@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.core.paginator import Paginator
-
 from blueking.component.shortcuts import get_client_by_request
 
 

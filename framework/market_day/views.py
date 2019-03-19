@@ -1,31 +1,57 @@
 # -*- coding:utf-8 -*-
-
-from django.shortcuts import render
 from shell_app.function import render_json
 import function
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.cache import cache_page
 import tasks
-from monitor_item import tools
-import os
 import sys
-from logmanagement.function import add_log,make_log_info,get_active_user
+from logmanagement.function import add_log, make_log_info, get_active_user
 
-def get_holiday(req,area):
-    days=function.get_holiday(req,area)
+
+def get_holiday(req, area):
+    """
+
+    :param req:
+    :param area:
+    :return:
+    """
+    days = function.get_holiday(req, area)
     return render_json(days)
+
+
 @csrf_exempt
-def get_file(req,area):
-    path=function.get_file(req,area)
+def get_file(req, area):
+    """
+
+    :param req:
+    :param area:
+    :return:
+    """
+    path = function.get_file(req, area)
     return HttpResponse('ok')
-def send_demo(req,email):
+
+
+def send_demo(req, email):
+    """
+
+    :param req:
+    :param email:
+    :return:
+    """
     print email
     tasks.sendemail.delay(email)
     return HttpResponse('success')
-def delall(req,area):
+
+
+def delall(req, area):
+    """
+
+    :param req:
+    :param area:
+    :return:
+    """
     try:
-        flag=function.delall(area)
+        flag = function.delall(area)
         info = make_log_info(u'删除全部交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
                              get_active_user(req)['data']['bk_username'], '成功', '无')
     except Exception as e:
@@ -34,7 +60,13 @@ def delall(req,area):
     add_log(info)
     return render_json(flag)
 
+
 def delone(req):
+    """
+
+    :param req:
+    :return:
+    """
     try:
         function.delone(req)
         info = make_log_info(u'变更为交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
@@ -45,7 +77,13 @@ def delone(req):
     add_log(info)
     return render_json('ok')
 
+
 def addone(req):
+    """
+
+    :param req:
+    :return:
+    """
     try:
         function.addone(req)
         info = make_log_info(u'取消交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
@@ -56,29 +94,64 @@ def addone(req):
     add_log(info)
     return render_json('ok')
 
+
 def get_all_timezone(req):
-    res=function.get_all_timezone()
+    """
+
+    :param req:
+    :return:
+    """
+    res = function.get_all_timezone()
     return render_json(res)
+
+
 def get_data_header(req):
+    """
+
+    :param req:
+    :return:
+    """
     function.get_header_data(req)
     return HttpResponse('ok')
 
+
 def add_area(req):
-    res=function.add_area(req)
+    """
+
+    :param req:
+    :return:
+    """
+    res = function.add_area(req)
     return render_json(res)
+
 
 def get_all_area(req):
-    res=function.get_all_area(req)
+    """
+
+    :param req:
+    :return:
+    """
+    res = function.get_all_area(req)
     return render_json(res)
 
-def del_area(req,name):
-    res=function.del_area(name)
+
+def del_area(req, name):
+    """
+
+    :param req:
+    :param name:
+    :return:
+    """
+    res = function.del_area(name)
     return render_json(res)
+
 
 def test(req):
-    #测试专用view
-    res=function.check_jobday(1)
+    """
+
+    :param req:
+    :return:
+    """
+    # 测试专用view
+    res = function.check_jobday(1)
     return render_json(res)
-
-
-

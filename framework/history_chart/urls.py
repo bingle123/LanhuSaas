@@ -11,24 +11,20 @@ See the License for the specific language governing permissions and limitations 
 
 from django.conf.urls import patterns
 
-
 urlpatterns = patterns(
     'history_chart.views',
-    (r'^$', 'index'),                                         # 首页--服务器选择页面
-    (r'^show_all/$', 'show_all'),                                    #显示所有操作日志
+    (r'^$', 'index'),  # 首页--服务器选择页面
+    (r'^show_all/$', 'show_all'),  # 显示所有操作日志
     (r'^select_log/$', 'select_log'),
     (r'^select_all_rules$', 'select_all_rules'),
     (r'^select_rules_pagination$', 'select_rules_pagination'),
     (r'^select_Keyword', 'select_Keyword'),
-    (r'^show_operation_report', 'show_operation_report'),         #查询场景运行情况
-    (r'^get_week', 'get_week'),                                     #场景周运行情况
+    (r'^show_operation_report', 'show_operation_report'),  # 查询场景运行情况
+    (r'^get_week', 'get_week'),  # 场景周运行情况
     (r'^about_select', 'about_select'),
     (r'^about_search', 'about_search'),
     (r'^monthly_select', 'monthly_select'),
-
-    (r'^select_scenes/$', 'select_scenes'),     #场景对比分析
-    (r'^selectScenes_ById/$', 'selectScenes_ById'),  #选择场景比对
-
-
+    (r'^select_scenes/$', 'select_scenes'),  # 场景对比分析
+    (r'^selectScenes_ById/$', 'selectScenes_ById'),  # 选择场景比对
 
 )

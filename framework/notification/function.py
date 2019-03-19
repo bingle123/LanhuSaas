@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from models import *
-from django.forms.models import model_to_dict
-from db_connection.models import *
-from db_connection.function import *
 from django.core.paginator import *
-import MySQLdb
 from gather_data.models import *
-from position.models import user_info
 from system_config.function import *
 from position.models import *
 from shell_app.tools import *
 
 
-# 分页获取告警规则
 def select_rules_pagination(page_info):
+    """
+
+    :param page_info:
+    :return:
+    """
     result_dict = dict()
     list_set = list()
     search = page_info['search'].strip()
@@ -65,8 +64,12 @@ def select_rules_pagination(page_info):
     return result_dict
 
 
-# 根据id获取告警规则
 def select_rule(rule_data):
+    """
+    根据id获取告警规则
+    :param rule_data:
+    :return:
+    """
     alert_rule = TbAlertRule.objects.filter(id=rule_data['id']).get()
     # datetime与decimal类型不支持转换，取出来置空后在使用model_to_dict转换
     create_time = alert_rule.create_time
@@ -98,8 +101,12 @@ def select_rule(rule_data):
     return selected_rule
 
 
-# 根据ID删除告警规则
 def del_rule(rule_data):
+    """
+    根据ID删除告警规则
+    :param rule_data:
+    :return:
+    """
     user_count = TlAlertUser.objects.filter(rule_id=rule_data['id']).count()
     # 判断该告警规则是否被某用户订阅，如果已被用户订阅，先让用户确认是否强制删除
     if 0 != user_count:
@@ -109,8 +116,12 @@ def del_rule(rule_data):
         return "ok"
 
 
-# 根据ID强制删除告警规则
 def force_del_rule(rule_data):
+    """
+    根据ID强制删除告警规则
+    :param rule_data:
+    :return:
+    """
     # 删除该用户订阅该告警规则的记录
     TlAlertUser.objects.filter(rule_id=rule_data['id']).delete()
     # 删除该告警规则
@@ -118,8 +129,12 @@ def force_del_rule(rule_data):
     return "ok"
 
 
-# 告警规则添加
 def add_rule(rule_data):
+    """
+    告警规则添加
+    :param rule_data:
+    :return:
+    """
     status_dic = dict()
     # print rule_data
     TbAlertRule(**rule_data).save()
@@ -135,8 +150,14 @@ def add_rule(rule_data):
     return status_dic
 
 
-# 判断当前数据是否超出限制，返回告警标志位alert_flag
 def is_data_alert(upper_limit, lower_limit, data_value):
+    """
+    判断当前数据是否超出限制，返回告警标志位alert_flag
+    :param upper_limit:
+    :param lower_limit:
+    :param data_value:
+    :return:
+    """
     alert_flag = False
     # print 'UPPER_LIMIT: %s, LOWER_LIMIT: %s' % (selected_rule.upper_limit, selected_rule.lower_limit)
     # 告警规则配置了上限值和下限值的情况
@@ -158,6 +179,11 @@ def is_data_alert(upper_limit, lower_limit, data_value):
 
 
 def rule_check(monitor_id):
+    """
+
+    :param monitor_id:
+    :return:
+    """
     print 'monitor_id=%s-----Rule checking....' % monitor_id
     # 告警信息
     alert_infos = list()
@@ -200,22 +226,31 @@ def rule_check(monitor_id):
 
 
 def send_alert(**msg):
-    alert_title=msg['alert_title']
-    alert_content=msg['alert_content']
-    staff_users_ids=msg['staff_user']
+    """
+
+    :param msg:
+    :return:
+    """
+    alert_title = msg['alert_title']
+    alert_content = msg['alert_content']
+    staff_users_ids = msg['staff_user']
     msg.update({'persons': msg.pop("staff_user")})
     print msg
-    receivers=[]
+    receivers = []
     for id in staff_users_ids:
-        eml=user_info.objects.get(id=id).email
+        eml = user_info.objects.get(id=id).email
         receivers.append(eml)
     print receivers
     mail_send(alert_title, alert_content, receivers)
     TdAlertLog.objects.create(**msg)
 
 
-# 发送微信告警
 def wechat_alert(msgs):
+    """
+    发送微信告警
+    :param msgs:
+    :return:
+    """
     for msg in msgs:
         alert_title = msg['alert_title']
         alert_content = msg['alert_content']
@@ -227,5 +262,3 @@ def wechat_alert(msgs):
             wechat_send_msg(access_token, open_id, alert_msg)
         msg.update({'persons': msg.pop("staff_user")})
         TdAlertLog.objects.create(**msg)
-
-

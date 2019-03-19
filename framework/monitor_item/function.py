@@ -24,7 +24,12 @@ from settings import BK_PAAS_HOST
 
 # 显示函数
 def unit_show(request):
-# try:
+    """
+    显示函数
+    :param request:
+    :return:
+    """
+    # try:
     res = json.loads(request.body)
     #  个数
     limit = res['limit']
@@ -94,7 +99,12 @@ def unit_show(request):
 
 # 查询函数
 def select_unit(request):
-# try:
+    """
+    查询函数
+    :param request:
+    :return:
+    """
+    # try:
     res = json.loads(request.body)
     res1 = res['data']
     limit = res['limit']
@@ -111,6 +121,11 @@ def select_unit(request):
 
 # 删除函数
 def delete_unit(request):
+    """
+    删除函数
+    :param request:
+    :return:
+    """
     try:
         res = json.loads(request.body)
         #  根据前台传的来的id进行删除
@@ -131,7 +146,12 @@ def delete_unit(request):
 
 # 添加函数
 def add_unit(request):
-    # try:
+    """
+    添加函数
+    :param request:
+    :return:
+    """
+    try:
         res = json.loads(request.body)
         cilent = tools.user_interface_param()
         # 获取登录用户信息
@@ -182,16 +202,21 @@ def add_unit(request):
         result = tools.success_result(None)
         info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
-    # except Exception as e:
-    #     info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    #     result = tools.error_result(e)
-    # add_log(info)
-        return result
+    except Exception as e:
+        info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        result = tools.error_result(e)
+    add_log(info)
+    return result
 
 
 # 编辑函数
 def edit_unit(request):
+    """
+    编辑函数
+    :param request:
+    :return:
+    """
     try:
         res = json.loads(request.body)
         id = res['unit_id']
@@ -248,6 +273,11 @@ def edit_unit(request):
 
 # 基本监控项采集测试
 def basic_test(request):
+    """
+    基本监控项采集测试
+    :param request:
+    :return:
+    """
     info = json.loads(request.body)
     # 新增时测试
     if info['id'] == '':
@@ -283,6 +313,11 @@ def job_test(request):
 
 # 改变监控项的启用状态
 def change_unit_status(req):
+    """
+    改变监控项的启用状态
+    :param req:
+    :return:
+    """
     try:
         res = json.loads(req.body)
         flag = int(res['flag'])
@@ -361,6 +396,12 @@ def chart_get_test(request):
 
 
 def get_desc(request, id):
+    """
+
+    :param request:
+    :param id:
+    :return:
+    """
     mess = hd.objects.get(id=1).header
     headers = json.loads(mess.decode('utf-8').replace("'", "\""))
     a_url = BK_PAAS_HOST + "/o/bk_sops/api/v3/template/{}/".format(id[0]['id'])
@@ -371,6 +412,11 @@ def get_desc(request, id):
 
 
 def get_flow_desc(request):
+    """
+
+    :param request:
+    :return:
+    """
     headers = {
         'Content-Type': 'application/json;charset=utf-8',
         'Cookie': 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
@@ -388,6 +434,11 @@ def get_flow_desc(request):
 
 
 def flow_change(request):
+    """
+
+    :param request:
+    :return:
+    """
     cilent = tools.interface_param(request)
     id = json.loads(request.body)
     activities2 = []
@@ -396,7 +447,7 @@ def flow_change(request):
     location = res1['location']
     gateways = res1['gateways']
     for i in gateways:
-        gateways1={}
+        gateways1 = {}
         gateways1['type'] = gateways[i]['type']
         gateways1['id'] = gateways[i]['id']
         gateways1['name'] = gateways[i]['name']
@@ -409,12 +460,12 @@ def flow_change(request):
                 activities2.append(gateways1)
     start_event = res1['start_event']  # 开始节点信息
     for l in location:
-        if l['id']==start_event['id']:
+        if l['id'] == start_event['id']:
             start_event['x'] = l['x']
             start_event['y'] = l['y']
     end_event = res1['end_event']  # 结束节点信息
     for l in location:
-        if l['id']==end_event['id']:
+        if l['id'] == end_event['id']:
             end_event['x'] = l['x']
             end_event['y'] = l['y']
 
@@ -428,24 +479,24 @@ def flow_change(request):
         activities1['name'] = activities[key]['name']
         activities1['stage_name'] = activities[key]['stage_name']
         for l in location:
-            if l['id']==activities1['id']:
+            if l['id'] == activities1['id']:
                 activities1['x'] = l['x']
                 activities1['y'] = l['y']
                 activities2.append(activities1)
     flows1 = []
     flows2 = res1['flows']
     for i in res1['line']:
-            flows3 = {
-                'source': {
-                    'arrow':  i['source']['arrow'],
-                    'id': i['source']['id']
-                },
-                'target': {
-                    'arrow': i['target']['arrow'],
-                    'id':   i['target']['id']
-                }
+        flows3 = {
+            'source': {
+                'arrow': i['source']['arrow'],
+                'id': i['source']['id']
+            },
+            'target': {
+                'arrow': i['target']['arrow'],
+                'id': i['target']['id']
             }
-            flows1.append(flows3)
+        }
+        flows1.append(flows3)
     constants1 = []
     constants = res1['constants']
     for key in constants:
@@ -464,6 +515,11 @@ def flow_change(request):
 
 
 def node_name(request):
+    """
+
+    :param request:
+    :return:
+    """
     id = json.loads(request.body)
     res = get_desc(request, id['id'])
     res1 = json.loads(res['pipeline_tree'])
@@ -481,6 +537,11 @@ def node_name(request):
 
 
 def node_state(request):
+    """
+
+    :param request:
+    :return:
+    """
     res = json.loads(request.body)
     item_id = res['item_id']['message']
     print item_id
@@ -497,6 +558,11 @@ def node_state(request):
 
 
 def node_state_by_item_id(request):
+    """
+
+    :param request:
+    :return:
+    """
     res = json.loads(request.body)
     item_id = res['item_id']
     print item_id

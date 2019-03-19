@@ -3,41 +3,41 @@ from django.db import models
 
 
 class Conn(models.Model):
-    connname = models.CharField(u'连接名称',max_length=30)
-    type = models.CharField(u'连接类型',max_length=30)
-    ip = models.CharField(u'ip地址',max_length=30)
-    port = models.CharField(u'端口',max_length=50)
-    username = models.CharField(u'用户名',max_length=155)
-    databasename = models.CharField(u'数据库名称',max_length=125)
-    password = models.CharField(u'密码',max_length=155)
+    connname = models.CharField(u'连接名称', max_length=30)
+    type = models.CharField(u'连接类型', max_length=30)
+    ip = models.CharField(u'ip地址', max_length=30)
+    port = models.CharField(u'端口', max_length=50)
+    username = models.CharField(u'用户名', max_length=155)
+    databasename = models.CharField(u'数据库名称', max_length=125)
+    password = models.CharField(u'密码', max_length=155)
     createname = models.CharField(u'创建人', max_length=64)
     createtime = models.DateTimeField(u'创建时间', auto_now_add=True)
     editname = models.CharField(u'修改人', max_length=64)
     edittime = models.DateTimeField(u'修改时间', auto_now=True)
 
     class Meta:
-        db_table='db_connection_conn'
+        db_table = 'db_connection_conn'
 
 
 class Muenu(models.Model):
-    mname = models.CharField(u'名称',max_length=255)
-    url = models.CharField(u'地址',max_length=255)
+    mname = models.CharField(u'名称', max_length=255)
+    url = models.CharField(u'地址', max_length=255)
 
     class Meta:
-        db_table='db_connection_muenu'
-
+        db_table = 'db_connection_muenu'
 
 
 class Role(models.Model):
-    rname = models.CharField(u'角色',max_length=255)
+    rname = models.CharField(u'角色', max_length=255)
     rid = models.IntegerField(u'角色Id')
 
     class Meta:
-        db_table='db_connection_role'
+        db_table = 'db_connection_role'
+
 
 class rm(models.Model):
     roleid = models.IntegerField(u'角色id')
     muenuid = models.IntegerField(u'菜单id')
 
     class Meta:
-        db_table='db_connection_rm'
+        db_table = 'db_connection_rm'
