@@ -151,7 +151,7 @@ def add_unit(request):
     :param request:
     :return:
     """
-    # try:
+    try:
         res = json.loads(request.body)
         cilent = tools.user_interface_param()
         # 获取登录用户信息
@@ -202,12 +202,12 @@ def add_unit(request):
         result = tools.success_result(None)
         info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
-    # except Exception as e:
-    #     info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    #     result = tools.error_result(e)
-    # add_log(info)
-        return result
+    except Exception as e:
+        info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        result = tools.error_result(e)
+    add_log(info)
+    return result
 
 
 # 编辑函数
