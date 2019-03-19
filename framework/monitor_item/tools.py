@@ -20,6 +20,7 @@ from market_day.models import HeaderData as hd
 from djcelery import models as celery_models
 from models import *
 import requests
+from settings import BK_PAAS_HOST
 
 
 def error_result(e):
@@ -254,7 +255,7 @@ def flow_gather_task(**info):
         temp['id'] = id
         temp['status'] = res_temp['data']['children'][id]['state']
         v2_data.append(temp)
-    a_url = "http://paas.bk.com/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
+    a_url = BK_PAAS_HOST + "/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
     req = requests.get(url=a_url, headers=headers)
     req.encoding = req.apparent_encoding
     req.raise_for_status()
@@ -399,7 +400,7 @@ def resume_flow(item_id, name):
     # v2接口继续整个流程
     mess = hd.objects.get(id=1).header
     headers = json.loads(mess.decode('utf-8').replace("'", "\""))
-    a_url = "http://paas.bk.com/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
+    a_url = BK_PAAS_HOST + "/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
     req = requests.get(url=a_url, headers=headers)
     req.encoding = req.apparent_encoding
     req.raise_for_status()
