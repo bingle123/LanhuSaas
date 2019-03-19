@@ -15,15 +15,15 @@ from django.conf.urls import patterns
 urlpatterns = patterns(
     'custom_process.views',
     (r'^index$', 'show_index'),                                          # 首页
-    (r'^select_all_nodes$', 'select_all_nodes'),
-    (r'^add_node$', 'add_node'),
-    (r'^update_node_status$', 'update_node_status'),
-    (r'^change_status_flag$', 'change_status_flag'),
-    (r'^del_node$', 'del_node'),
-    (r'^select_node$', 'select_node'),
-    (r'^truncate_node$', 'truncate_node'),
-    (r'^clear_execute_status$', 'clear_execute_status'),
-    (r'^select_all_bkusers$', 'select_all_bkusers'),
-    (r'^send_notification$', 'send_notification'),
-    (r'^select_nodes_pagination$', 'select_nodes_pagination')
+    (r'^select_all_nodes$', 'select_all_nodes'),                         # 查询所有节点信息
+    (r'^add_node$', 'add_node'),                                         # 添加流程节点
+    (r'^update_node_status$', 'update_node_status'),                     # 更新节点状态信息
+    (r'^change_status_flag$', 'change_status_flag'),                     # 变更节点执行状态
+    (r'^del_node$', 'del_node'),                                         # 删除节点信息
+    (r'^select_node$', 'select_node'),                                   # 根据id获取节点信息
+    (r'^truncate_node$', 'truncate_node'),                               # 删除所有节点信息
+    (r'^clear_execute_status$', 'clear_execute_status'),                 # 清除所有节点的状态信息
+    (r'^select_all_bkusers$', 'select_all_bkusers'),                     # 获取所有的蓝鲸用户信息
+    (r'^send_notification$', 'send_notification'),                       # 节点执行完毕发送通知
+    (r'^select_nodes_pagination$', 'select_nodes_pagination')            # 分页获取指定页节点信息
 )
