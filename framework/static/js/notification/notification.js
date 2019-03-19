@@ -60,6 +60,9 @@ $(function(){
     vue = new Vue({
         el: '#alertRuleManage',
         data: {
+            //当前用户名称
+            currentUser: null,
+            //当前处于哪一页
             currentPage: 1,
             //上限值是否验证通过标记
             upper_valid_status: false,
@@ -129,6 +132,18 @@ $(function(){
             axios.get('/market_day/get_header/').then(function (res) {
                console.log(res)
             })
+            },
+            //获取当前用户名
+            customProcessCurrUser: function(){
+                axios({
+                    method: 'post',
+                    url: site_url + 'position/get_active_user',
+                }).then((res) => {
+                    this.currentUser=res.data.message
+                }).catch((res) => {
+                    var msg = '当前用户信息获取失败！';
+                    this.alertRulePopupErrorMessage(msg + res);
+                });
             },
             //弹出错误信息
             alertRulePopupErrorMessage: function(msg) {
@@ -301,20 +316,22 @@ $(function(){
                         });
                         return false;
                     }else {
+                        //添加告警规则的情况
                         if(this.alertRuleTableStatus == 'add'){
                             this.alertRuleData.create_time = this.dataToString('yyyy-MM-dd hh:mm:ss', new Date());
-                            this.alertRuleData.creator = 'lhAdmin';
+                            this.alertRuleData.creator = this.currentUser;
                             this.alertRuleData.edit_time = this.dataToString('yyyy-MM-dd hh:mm:ss', new Date());
-                            this.alertRuleData.editor = 'lhAdmin';
+                            this.alertRuleData.editor = this.currentUser;
                             if('' == this.alertRuleData.upper_limit){
                                 this.alertRuleData.upper_limit = null;
                             }
                             if('' == this.alertRuleData.lower_limit){
                                 this.alertRuleData.lower_limit = null;
                             }
+                        //修改告警规则的情况
                         }else if(this.alertRuleTableStatus == 'edit'){
                             this.alertRuleData.edit_time = this.dataToString('yyyy-MM-dd hh:mm:ss', new Date());
-                            this.alertRuleData.editor = 'lhAdmin';
+                            this.alertRuleData.editor = this.currentUser;
                             if('' == this.alertRuleData.upper_limit){
                                 this.alertRuleData.upper_limit = null;
                             }
@@ -332,8 +349,10 @@ $(function(){
                             loading.close();
                             if('ok' == res.data.message){
                                 if(this.alertRuleTableStatus == 'edit'){
+                                    //如果是修改，完成后跳转到之前的那一页
                                     this.alertRulePageChange(this.currentPage);
                                 }else if(this.alertRuleTableStatus == 'add'){
+                                    //如果是添加，完成后跳转到最后一页，可以看到自己添加的数据
                                     this.alertRulePageChange(res.data.total_pages);
                                 }
                                 this.alertRuleList();
@@ -374,8 +393,11 @@ $(function(){
             }
         },
         mounted(){
+            //页面加载时，首先获取第一页的数据
             this.alertRulePageChange(1);
-            this.get_header_data()
+            this.get_header_data();
+            //获取当前用户信息
+            this.customProcessCurrUser();
         }
     });
 });
