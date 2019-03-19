@@ -36,10 +36,12 @@ def unit_show(request):
     res_list = tools.obt_dic(page_data, base_page_count)
     param = {
         'bk_username': 'admin',
-        "bk_biz_id": 2,
+        "bk_token": request.COOKIES['bk_token'],
+        "bk_biz_id": 2
     }
     param1 = {
-        "bk_biz_id": 2,
+        "bk_token": request.COOKIES['bk_token'],
+        "bk_biz_id": 2
     }
     #  用user v2的方式调用接口
     client = tools.user_interface_param()
