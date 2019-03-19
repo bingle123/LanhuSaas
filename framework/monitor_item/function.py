@@ -19,6 +19,7 @@ import sys
 from logmanagement.function import add_log, make_log_info, get_active_user
 import datetime
 from market_day.models import HeaderData as hd
+from settings import BK_PAAS_HOST
 
 
 # 显示函数
@@ -362,7 +363,7 @@ def chart_get_test(request):
 def get_desc(request, id):
     mess = hd.objects.get(id=1).header
     headers = json.loads(mess.decode('utf-8').replace("'", "\""))
-    a_url = "http://paas.bk.com/o/bk_sops/api/v3/template/{}/".format(id[0]['id']);
+    a_url = BK_PAAS_HOST + "/o/bk_sops/api/v3/template/{}/".format(id[0]['id'])
     req = requests.get(url=a_url, headers=headers)
     req.encoding = req.apparent_encoding
     req.raise_for_status()
