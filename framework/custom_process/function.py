@@ -146,6 +146,7 @@ def clear_execute_status():
     return "ok"
 
 
+# 流程节点执行完毕发送通知方法
 def send_notification(notification):
 
     # 是否存在发送错误的标志位
