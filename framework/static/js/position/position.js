@@ -9,9 +9,9 @@ axios.interceptors.request.use((config) => {
         data: {
             page_count: 100,                             //总页码数
             page: 1,                                   //分页页码数
-            dialogFormVisible: false,
-            dialogFormVisible2: false,
-            dialogFormVisible3: false,
+            dialogFormVisible: false,                   //新增岗位人员模态框是否显示
+            dialogFormVisible2: false,                  //编辑岗位模态框是否显示
+            dialogFormVisible3: false,                  //新增岗位模态框是否显示
             form: {
                 pos_name: '',
             }, rules: {
@@ -74,8 +74,8 @@ axios.interceptors.request.use((config) => {
                 })
             },
             ref() {
-                vm.dialogFormVisible = false,
-                    vm.users = []
+                vm.dialogFormVisible = false;
+                vm.users = [];
                 vm.select_all_user();
             },
             current_change1(value) {
@@ -202,7 +202,7 @@ axios.interceptors.request.use((config) => {
                 });
             },
             edit_posname(row) {                                     //显示弹框，传值到edit_pos
-                vm.dialogFormVisible2 = true
+                vm.dialogFormVisible2 = true;
                 vm.tempid = row.id;
                 vm.form2.tempjobname = row.pos_name;
             },
