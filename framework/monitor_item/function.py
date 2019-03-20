@@ -402,10 +402,9 @@ def get_desc(request, id):
     :param id:
     :return:
     """
-    mess = hd.objects.get(id=1).header
-    headers = json.loads(mess.decode('utf-8').replace("'", "\""))
+    cookies = request.COOKIES
     a_url = BK_PAAS_HOST + "/o/bk_sops/api/v3/template/{}/".format(id[0]['id'])
-    req = requests.get(url=a_url, headers=headers)
+    req = requests.get(url=a_url, cookies=cookies)
     req.encoding = req.apparent_encoding
     req.raise_for_status()
     return json.loads(req.text)
