@@ -11,6 +11,7 @@ import json
 from datetime import datetime
 import pytz
 from shell_app.function import get_user
+from settings import BK_PAAS_HOST
 
 
 def get_holiday(req, area):
@@ -215,7 +216,7 @@ def get_header_data(request):
     headers = {
         "Content-Type": 'application/json;charset=utf-8',
         "Cookie": 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
-        "Host": 'paas.bk.com',
+        "Host": BK_PAAS_HOST,
         "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3679.0 Safari/537.36',
         "X-CSRFToken": 'FI1fszvZzgIsYYX8n6aPMduEeAL7qTV3',
         "X-Requested-With": 'XMLHttpRequest'

@@ -187,8 +187,6 @@ def rule_check(monitor_id):
     print 'monitor_id=%s-----Rule checking....' % monitor_id
     # 告警信息
     alert_infos = list()
-    # 告警标志位
-    alert_flag = False
     # 获取当前监控项下的所有采集数据
     gather_data = TDGatherData.objects.filter(item_id=monitor_id).all()
     for data in gather_data:
@@ -219,7 +217,7 @@ def rule_check(monitor_id):
     # 如果搜集到了告警信息，将alert_infos对象传递给celery并通知处理告警
     # print len(alert_infos)
     if 0 != len(alert_infos):
-        pass
+        print 'ALERT_INFOS: %s' % alert_infos
         # 邮箱被封暂时不能用了 send_alert(**alert_info)
         # 是否使用微信告警? wechat_alert(alert_infos)
     return "ok"
