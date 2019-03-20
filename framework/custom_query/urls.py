@@ -22,4 +22,5 @@ urlpatterns = patterns(
     (r'^load_all_tables_name$', 'load_all_tables_name'),
     (r'^load_all_fields_name$', 'load_all_fields_name'),
     (r'sql_test','sql_test'),
+    (r'^ajax_test$','callback_test'),
 )
