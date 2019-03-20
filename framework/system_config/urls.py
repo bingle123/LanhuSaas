@@ -11,27 +11,26 @@ See the License for the specific language governing permissions and limitations 
 
 from django.conf.urls import patterns
 
-
 urlpatterns = patterns(
     'system_config.views',
-    (r'^crawl_config_html$', 'crawl_config_html'),                                      # 网页抓取配置首页
-    (r'^scene_type_html$', 'scene_type_html'),                                      # 网页抓取配置首页
-    (r'^crawl_content_html', 'crawl_content_html'),                                      # 网页抓取配置首页
-    (r'^manage_crawl', 'manage_crawl'),                                                 # 网页爬虫配置管理包括新增和修改
-    (r'^delete_crawl', 'delete_crawl'),                                                 # 网页爬虫配置删除
-    (r'^get_crawls/', 'get_crawls'),                                                    # 获取爬虫信息
-    (r'^get_crawl_by_name/', 'get_crawl_by_name'),                                      # 通过crawl名字获取爬虫配置
-    (r'^crawl/$', 'crawl'),                                                             # 网页爬虫配置删除
-    (r'^start_crawl', 'start_crawl'),                                                   # 开始爬虫
-    (r'^crawl_test/$', 'crawl_test'),                                                   # 开始爬虫
-    (r'^mail_send', 'mail_send'),                                                       # 发送邮件
-    (r'^get_scene_type/$', 'get_scene_type'),                                           # 获取场景类型
-    (r'^add_scene_type/$', 'add_scene_type'),                                           # 新增场景类型
-    (r'^edit_scene_type_by_uuid/$', 'edit_scene_type_by_uuid'),                         # 修改场景类型
-    (r'^delete_scene_by_uuid/$', 'delete_scene_by_uuid'),                                     # 删除场景类型
-    (r'^get_crawl_content/$', 'get_crawl_content'),                                     # 删除场景类型
-    (r'^start_crawl_test/$', 'start_crawl_test'),                                     # 删除场景类型
-    (r'^json_test', 'json_test'),   # 测试专用
-    (r'^test', 'test'),   # 测试专用
+    (r'^crawl_config_html$', 'crawl_config_html'),  # 网页抓取配置首页
+    (r'^scene_type_html$', 'scene_type_html'),  # 场景类别配置首页
+    (r'^crawl_content_html', 'crawl_content_html'),  # 爬虫内容页面
+    (r'^manage_crawl', 'manage_crawl'),  # 网页爬虫配置管理包括新增和修改
+    (r'^delete_crawl', 'delete_crawl'),  # 网页爬虫配置删除
+    (r'^get_crawls/', 'get_crawls'),  # 获取爬虫信息
+    (r'^get_crawl_by_name/', 'get_crawl_by_name'),  # 通过crawl名字获取爬虫配置
+    (r'^start_crawl', 'start_crawl'),  # 开始爬虫
+    (r'^crawl_test/$', 'crawl_test'),  # 爬虫测试
+    (r'^mail_send', 'mail_send'),  # 发送邮件
+    (r'^get_scene_type/$', 'get_scene_type'),  # 获取场景类型
+    (r'^add_scene_type/$', 'add_scene_type'),  # 新增场景类型
+    (r'^edit_scene_type_by_uuid/$', 'edit_scene_type_by_uuid'),  # 修改场景类型
+    (r'^delete_scene_by_uuid/$', 'delete_scene_by_uuid'),  # 删除场景类型
+    (r'^get_crawl_content/$', 'get_crawl_content'),  # 获取爬虫内容
+    (r'^start_crawl_test/$', 'start_crawl_test'),  # 删除场景类型
+    (r'^json_test', 'json_test'),  # 测试专用
+    (r'^crawl/$', 'crawl'),  # 爬虫测试用例
+    (r'^test', 'test'),  # 测试专用
 
 )

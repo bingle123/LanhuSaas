@@ -465,7 +465,6 @@ def get_test_json(request):
     return None
 
 
-# 以下方法暂时未用到，后面可能会用到
 def get_scene_by_staff_position_id_time_order_by_scene_order_id(request):
     """
     根据用户ID和当前时间获取场景信息----暂时保留---待废弃

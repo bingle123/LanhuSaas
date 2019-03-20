@@ -8,52 +8,83 @@ import function
 
 
 def data_base(request):
+    """
 
+    :param request:
+    :return:
+    """
     return render_mako_context(request, './db_connection/database.html')
 
-#菜单管理
+
+# 菜单管理
 def muenu_manage(request):
+    """
+
+    :param request:
+    :return:
+    """
     return render_mako_context(request, './db_connection/muenu_manage.html')
 
-#模糊查询
+
 def selecthor(request):
+    """
+    模糊查询
+    :param request:
+    :return:
+    """
     res = function.selecthor(request)
     return render_json(res)
 
-#模糊查询2
+
 def selecthor2(request):
+    """
+    模糊查询2
+    :param request:
+    :return:
+    """
     res = function.selecthor2(request)
     return render_json(res)
 
 
-# 保存
 def saveconn(request):
+    """
+    保存
+    :param request:
+    :return:
+    """
     re = function.saveconn_all(request)
     return render_json(re)
 
 
-# 修改
 def editconn(request):
+    """
+    修改
+    :param request:
+    :return:
+    """
     re = function.editconn(request)
     return render_json(re)
 
 
-# 测试
 def testConn(request):
+    """
+    测试
+    :param request:
+    :return:
+    """
     r = function.testConn(request)
     return render_json(r)
 
 
-
-def delete_conn(request,id):
-    function.delete_conn(request,id)
+def delete_conn(request, id):
+    """
+    删除
+    :param request:
+    :param id:
+    :return:
+    """
+    function.delete_conn(request, id)
     return render_json(0)
-
-
-def delete_conn(request,id):
-    function.delete_conn(request,id)
-    return render_json(0)
-
 
 
 def get_all_db_connection(request):
@@ -65,51 +96,83 @@ def get_all_db_connection(request):
     res = function.get_all_db_connection(request)
     return render_json(res)
 
-#获取所有菜单mname
+
 def get_user_muenu(request):
+    """
+    获取所有菜单
+    :param request:
+    :return:
+    """
     res = function.get_user_muenu(request)
     return render_json(res)
 
 
-
-
-
-#新增菜单
 def addmuenus(request):
+    """
+    新增菜单
+    :param request:
+    :return:
+    """
     res = function.addmuenus(request)
     return render_json(res)
 
 
-#修改菜单
 def edit_muenu(request):
+    """
+    修改菜单
+    :param request:
+    :return:
+    """
     res = function.edit_muenu(request)
     return render_json(res)
 
 
-
-#删除菜单
-def delete_muenu(request,id):
-    res = function.delete_muenu(request,id)
+def delete_muenu(request, id):
+    """
+    删除菜单
+    :param request:
+    :param id:
+    :return:
+    """
+    res = function.delete_muenu(request, id)
     return render_json(res)
 
 
-
-# 获取名称
 def get_conname(request):
+    """
+    获取名称
+    :param request:
+    :return:
+    """
     res = function.get_conname(request)
     return render_json(res)
 
-# 获取所有角色对应菜单
+
 def get_roleAmuenus(request):
+    """
+    获取所有角色对应菜单
+    :param request:
+    :return:
+    """
     res = function.get_roleAmuenus(request)
     return render_json(res)
 
-# 获取勾选id
+
 def checked_menu(request):
+    """
+    获取勾选ID
+    :param request:
+    :return:
+    """
     res = function.checked_menu(request)
     return render_json(res)
 
-# 保存勾选id
+
 def savemnus(request):
+    """
+    保存勾选ID
+    :param request:
+    :return:
+    """
     res = function.savemnus(request)
     return render_json(res)

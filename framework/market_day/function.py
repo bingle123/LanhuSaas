@@ -3,7 +3,6 @@
 from models import Holiday, HeaderData, Area
 import os
 from xlrd import open_workbook
-from conf import default
 from monitor_item.models import Monitor
 from django.forms import model_to_dict
 from django.db.models import Q
@@ -24,6 +23,12 @@ def get_holiday(req, area):
 
 # 通过节假日文件获取节假日
 def get_file(req, area):
+    """
+
+    :param req:
+    :param area:
+    :return:
+    """
     if req.method == 'POST':
         try:
             obj = req.FILES.get('file')
@@ -47,14 +52,22 @@ def get_file(req, area):
             print '文件不匹配'
 
 
-# 删除所有的节假日
 def delall(area):
+    """
+    删除所有的节假日
+    :param area:
+    :return:
+    """
     flag = Holiday.objects.filter(area=int(area)).delete()
     return flag
 
 
-# 删除指定的节假日
 def delone(req):
+    """
+    删除指定的节假日
+    :param req:
+    :return:
+    """
     res = json.loads(req.body)
     date = res['date']
     area = res['area']
@@ -62,8 +75,12 @@ def delone(req):
     return flag
 
 
-# 添加一个日期为节假日
 def addone(req):
+    """
+    添加一个日志为节假日
+    :param req:
+    :return:
+    """
     res = json.loads(req.body)
     date = res['date']
     area = res['area']
@@ -73,16 +90,22 @@ def addone(req):
     return 'ok'
 
 
-# 定时任务demo
 def addperdic_task():
+    """
+    定时任务demo
+    :return:
+    """
     flag = co.create_task_interval(name='demo_per', task='market_day.tasks.count_time', task_args=[10, 50],
                                    desc='demodemo', interval_time={'every': 10, 'period': 'seconds'})
     return flag
 
 
-# 添加一个监控项定时任务
 def add_unit_task(add_dicx):
-    # print add_dicx
+    """
+    添加一个监控项定时任务
+    :param add_dicx:
+    :return:
+    """
     type = add_dicx['monitor_type']
     print type
     schename = add_dicx['monitor_name']
@@ -181,8 +204,12 @@ def add_unit_task(add_dicx):
                                task_args=info, desc=schename)
 
 
-# 获取蓝鲸平台的头文件，并存入数据库
 def get_header_data(request):
+    """
+    获取蓝鲸平台的头文件，并存入数据库
+    :param request:
+    :return:
+    """
     role_id = get_user(request)['data']['bk_role']
     h, flag = HeaderData.objects.get_or_create(id=1)
     headers = {
@@ -204,8 +231,13 @@ def get_header_data(request):
         h.header = json.dumps(headers, ensure_ascii=False)
         h.save()
 
-# 添加一个新的日历地区
+
 def add_area(req):
+    """
+    添加一个新的日历地区
+    :param req:
+    :return:
+    """
     res = json.loads(req.body)
     name = res['country']
     timezone = res['timezone']
@@ -215,8 +247,12 @@ def add_area(req):
     return 'ok'
 
 
-# 获取所有的日历地区
 def get_all_area(req):
+    """
+    获取所有的日历地区
+    :param req:
+    :return:
+    """
     areas = Area.objects.all()
     area_dict = []
     for a in areas:
@@ -224,21 +260,32 @@ def get_all_area(req):
     return area_dict
 
 
-# 删除日历的某个地区
 def del_area(name):
+    """
+    删除日历的某个地区
+    :param name:
+    :return:
+    """
     Area.objects.get(id=name).delete()
     Holiday.objects.filter(area=name).delete()
     return 'ok'
 
 
-# 获得世界上的所有时区
 def get_all_timezone():
+    """
+    获得世界上的所有时区
+    :return:
+    """
     all = pytz.common_timezones
     return all
 
 
-# 判断今天是不是对应地区的工作日
 def check_jobday(id):
+    """
+    判断今天是不是对应地区的工作日
+    :param id:
+    :return:
+    """
     timezone = Area.objects.get(id=id).timezone
     tz = pytz.timezone(timezone)
     now = datetime.now(tz)
@@ -254,8 +301,13 @@ def check_jobday(id):
         return False
 
 
-# 将不同时区的时间转为中国时间
 def tran_time_china(tempdate, timezone):
+    """
+    将不同时区的时间转为中国时间
+    :param tempdate:
+    :param timezone:
+    :return:
+    """
     central = pytz.timezone('Asia/Shanghai')
     local_us = central.localize(tempdate)
     # 使用astimezone得出时间
@@ -263,8 +315,13 @@ def tran_time_china(tempdate, timezone):
     return str(time.hour), str(time.minute)
 
 
-# 将中国时间转为不同的时区
 def tran_china_time_other(time, timezone):
+    """
+    将中国时间转为不同的时区
+    :param time:
+    :param timezone:
+    :return:
+    """
     hour = time.hour
     min = time.minute
     tempdate = datetime(2019, 1, 2, int(hour), int(min), 0)

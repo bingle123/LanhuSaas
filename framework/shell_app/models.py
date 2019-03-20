@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-import datetime
 import tools
 # Create your models here.
 
@@ -31,7 +30,7 @@ class StaffInfoManage(models.Manager):
     """
     用户信息管理
     """
-
+    @classmethod
     def get_staff_info(self, bk_username):
         try:
             res = StaffInfo.objects.get(bk_username=bk_username)
@@ -43,6 +42,7 @@ class StaffInfoManage(models.Manager):
             result = {"code": False, "result": None, "message": u"查询失败 %s" % e}
         return result
 
+    @classmethod
     def save_staff_info(self, data):
         try:
             StaffInfo.objects.create(
@@ -78,7 +78,7 @@ class SceneManage(models.Manager):
     """
     场景表管理
     """
-
+    @classmethod
     def get_scenes_all(self):
         """
         获取所有场景
@@ -96,6 +96,7 @@ class SceneManage(models.Manager):
             result = {"code": False, "result": None, "message": u"查询失败 %s" % e}
         return result
 
+    @classmethod
     def get_scenes_by_id(self, id):
         """
         通过场景ID获取场景对象
@@ -115,6 +116,7 @@ class SceneManage(models.Manager):
             result = {"code": False, "result": None, "message": "查询失败 %s" % e}
         return result
 
+    @classmethod
     def add_scene(self, scene):
         """
         增加场景
@@ -145,6 +147,7 @@ class SceneManage(models.Manager):
             result = {"code": False, "result": None, "message": "增加场景失败 %s" % e}
         return result
 
+    @classmethod
     def get_scene_by_staff_position_id(self, staff_position_id):
         """返回json数据"""
         try:
@@ -159,6 +162,7 @@ class SceneManage(models.Manager):
             result = {"code": False, "result": None, "message": "根据场景ID查询失败 %s" % e}
         return result
 
+    @classmethod
     def get_scene_by_staff_position_id_time_order_by_scene_order_id(self, staff_position_id, now_time):
         """
         获取场景信息---顺序排序
@@ -206,7 +210,7 @@ class StaffPositionManage(models.Manager):
     """
     用户岗位表管理
     """
-
+    @classmethod
     def get_positions_all(self):
         """
         获取所有岗位信息
@@ -219,7 +223,7 @@ class StaffPositionManage(models.Manager):
         except Exception, e:
             result = {"code": False, "result": None, "message": u"查询失败 %s" % e}
         return result
-
+    @classmethod
     def get_staff_position_by_username(self, staff_position_id):
         try:
             res = StaffPosition.objects.get(staff_position_id=staff_position_id)
@@ -251,7 +255,7 @@ class StaffSceneManage(models.Manager):
     """
     用户自定义场景设置表管理
     """
-
+    @classmethod
     def save_staff_scene(self, data):
         """
         保存用户场景设置
@@ -293,7 +297,7 @@ class PositionSceneManage(models.Manager):
     """
         StaffPosition 与 Scene 关系表管理  (多对多)
     """
-
+    @classmethod
     def get_position_scene(self, position_id):
         """
         通过职位ID获取对应场景ID

@@ -11,10 +11,9 @@ See the License for the specific language governing permissions and limitations 
 
 from django.conf.urls import patterns
 
-
 urlpatterns = patterns(
     'logmanagement.views',
-    (r'^logmanagement/$', 'index'),                                          # 首页--服务器选择页面
-    (r'^show_all/$', 'show_all'),                                            #显示所有操作日志
-    (r'^select_log/$', 'select_log'),                                        #日志查询
+    (r'^logmanagement/$', 'index'),  # 首页--服务器选择页面
+    (r'^show_all/$', 'show_all'),  # 显示所有操作日志
+    (r'^select_log/$', 'select_log'),  # 日志查询
 )

@@ -10,20 +10,26 @@ $(function(){
     });
     //接收人校验
     const receiversCheck = (rule, value, callback) => {
-        if(0 == vue.customProcessNode.receivers.length){
+        //通知接收人填写为空的情况
+        if(null == vue.customProcessNode.seq || 0 == vue.customProcessNode.receivers.length){
             callback(new Error('请输入通知接收人'));
+        //通知接收人长度超过2000的情况
         }else if(2000 < vue.customProcessNode.receivers.length){
             return callback('通知接收人内容长度在1~2000之间');
+        //通知接收人填写符合校验的情况
         }else{
             return callback();
         }
     };
     //节点顺序校验
     const seqCheck = (rule, value, callback) => {
+        //未填写任何节点顺序的情况
         if(null == vue.customProcessNode.seq || 0 == vue.customProcessNode.seq.length){
             callback(new Error('请输入节点顺序'));
+        //校验节点顺序填写是否符合规则
         }else if(!/^[1-9][0-9]{0,1}$/.test(vue.customProcessNode.seq)){
             return callback(new Error('节点值在1~99之间'));
+        //判断节点顺序是否被重复定义
         }else{
             $.each(vue.customProcessTableData, function(k, v){
                 if(vue.customProcessNode.seq == v.seq){
@@ -40,8 +46,11 @@ $(function(){
     vue = new Vue({
         el: '#customProcess',
         data: {
+            //当前用户名称
             currentUser: null,
+            //节点列表信息共有多少页
             customProcessPageCount: 0,
+            //节点列表当前处于第几页
             currentPage: 1,
             //用于列表显示的节点信息
             customProcessTableListData: [],
@@ -57,7 +66,9 @@ $(function(){
             customProcessStartButtonType: 'primary',
             customProcessStartButtonText: '开始执行流程',
             customProcessStartButtonDisabled: false,
+            //节点列表模态框是否显示
             addDialogVisible: false,
+            //发送通知的模态框是否显示
             customProcessSendMsgDialogVisible: false,
             //添加节点的table当前状态，list=列表显示,add=添加节点,edit=编辑节点
             customProcessTableStatus: 'list',
@@ -69,15 +80,20 @@ $(function(){
             customProcessStatus: false,
             //当前是否有流程节点标记位
             customProcessHasNode: false,
+            //通知接收人信息
             customProcessReceivers: '',
+            //通知内容信息
             customProcessNoticeContent: '',
+            //当前节点信息，用于修改节点信息的提交
             customProcessNode: {
                 /*node_name: null,
                 send_content: null,
                 seq: null,
                 receivers: null*/
             },
+            //临时变量，用于保存节点的顺序信息
             customProcessNodeInitSeq: null,
+            //节点的列表信息
             customProcessTableData: [],
             //校验规则定义
             rules: {
@@ -123,9 +139,12 @@ $(function(){
                     data: data
                 }).then((res) => {
                     loading.close();
+                    //当前页节点信息
                     this.customProcessTableListData = res.data.items;
+                    //节点信息总页数
                     this.customProcessPageCount = res.data.pages;
                     this.currentPage = page;
+                    //当前页数大于服务端分页总数的情况，获取服务端最后一页的数据，并调整当前页为服务端页面的最大值
                     if(page > res.data.pages){
                         this.currentPage = res.data.pages;
                     }
@@ -152,6 +171,7 @@ $(function(){
             },
             //发送通知
             customProcessSendNotification: function(){
+                //发送通知的按钮状态变更
                 this.customProcessNotifyButtonText = '正在发送...';
                 this.customProcessNotifyButtonType = 'info';
                 this.customProcessNotifyButtonDisabled = true;
@@ -165,19 +185,22 @@ $(function(){
                     url: url,
                     data: nofityData
                 }).then((res) =>{
+                    //通知发送完毕后，按钮复原，供下一次发送通知使用
                     this.customProcessSendMsgDialogVisible = false;
                     this.customProcessNotifyButtonText = '发送通知';
                     this.customProcessNotifyButtonType = 'primary';
                     this.customProcessNotifyButtonDisabled = false;
+                    //通知发送没有存在错误的情况
                     if('ok' == res.data.message){
                         var msg = res.data.info;
                         this.customProcessPopupSuccessMessage(msg);
                     }else{
+                    //通知发送过程中存在错误的情况
                         var msg = '通知发送失败！' + res.data.info;
                         this.customProcessPopupErrorMessage(msg);
                     }
                 }).catch((res) => {
-                    this.customProcessSendMsgDialogVisible = false;
+                    //请求发送通知过程中出现错误
                     this.customProcessSendMsgDialogVisible = false;
                     this.customProcessNotifyButtonText = '发送通知';
                     this.customProcessNotifyButtonType = 'primary';
@@ -216,9 +239,11 @@ $(function(){
                 const loading = this.customProcessPopupLoading();
                 //上传当前节点执行信息
                 var url = site_url + 'custom_process/update_node_status';
+                //执行时间取当前时间
                 var execTime = this.formatDateTime(new Date());
-                //此处执行人固定，实际使用时应该从接口取用户名称
+                //当前执行人取当前用户的名称
                 var execPerson = this.currentUser;
+                //定义当前节点正在执行的节点状态信息，后续上传至服务器保存
                 var statusData = {};
                 statusData.node_id = this.customProcessTableData[this.customProcessStep].id;
                 statusData.is_done = 'c';
@@ -239,6 +264,7 @@ $(function(){
                     var msg = '节点信息上传失败！';
                     this.customProcessPopupErrorMessage(msg);
                 });
+                //前端界面的节点状态的展示变更为正在执行，并显示相关的信息
                 var customProcessExecPerson = '<div>执行人：'+ execPerson +'</div>';
                 var customProcessExecTime = '<div>' + execTime + '</div>';
                 var customProcessExecStatus = '<div id="customProcessExecStatus">执行状态：正在执行...<i class="el-icon-loading"></i></div>';
@@ -254,6 +280,7 @@ $(function(){
                 const loading = this.customProcessPopupLoading();
                 //上传当前节点已执行状态
                 var url = site_url + 'custom_process/change_status_flag';
+                //定义当前节点的状态为已执行完成
                 var statusData = {};
                 statusData.node_id = this.customProcessTableData[this.customProcessStep].id;
                 statusData.is_done = 'y';
@@ -272,6 +299,7 @@ $(function(){
                     var msg = '节点信息上传失败！';
                     this.customProcessPopupErrorMessage(msg);
                 });
+                //前端显示的步骤条调整显示进行到下一步，当前节点显示执行完毕，移除下一步的按钮
                 this.customProcessStep += 1;
                 var customProcessExecStatus = '执行状态：执行完毕！<i class="el-icon-check"></i>';
                 var temp = $('#customProcessExecStatus');
@@ -279,13 +307,14 @@ $(function(){
                 temp.removeAttr('id');
                 $('#customProcessNextButton').remove();
                 this.customProcessSendMessage(this.customProcessStep - 1);
-                //如果当前已经执行到最后一个节点
+                //如果当前已经执行到最后一个节点，所有节点都已经执行完毕，更改按钮的显示状态
                 if(this.customProcessStep == this.customProcessStepSum){
                     this.customProcessStartButtonType = 'info';
                     this.customProcessStartButtonText = '当日流程已执行完毕';
                     //this.customProcessEnd();
                     return;
                 }
+                //生成下一个执行节点的信息
                 this.generateCurrentProcessInfo();
             },
             //发送短信通知
@@ -324,8 +353,9 @@ $(function(){
                 }).then((res) =>{
                     loading.close();
                     this.customProcessNode = res.data.message[0];
+                    //保存该节点的初始顺序，用于后续修改节点是节点顺序是否重复的判断
                     this.customProcessNodeInitSeq = this.customProcessNode.seq;
-                    //切换修改节点的时候使用逗号切割发送人信息，使select组件能识别选中默认值
+                    //切换修改节点的时候使用逗号切割发送人信息，使select组件能识别选中默认值，并切换列表展示为编辑状态
                     this.customProcessNode.receivers = this.customProcessNode.receivers.split(',');
                     this.customProcessTableStatus = 'edit';
                 }).catch((res) => {
@@ -336,6 +366,7 @@ $(function(){
             },
             //增加/修改流程节点
             defineOrChangeProcess: function() {
+                //流程正在使用的情况
                 if(this.customProcessStatus){
                     this.$confirm('当前流程正在使用中, 强制修改将会导致执行状态信息丢失，是否继续?', '提示', {
                       confirmButtonText: '确定',
@@ -343,6 +374,7 @@ $(function(){
                       type: 'warning',
                       center: true
                     }).then(() => {
+                        //点击确定时，清除所有节点的状态信息
                         var url = site_url + 'custom_process/clear_execute_status';
                         const loading = this.customProcessPopupLoading();
                         axios({
@@ -369,6 +401,7 @@ $(function(){
                             message: '取消修改过程通知'
                         });
                     });
+                //流程未在使用的情况下，可以直接进行节点信息的修改
                 }else{
                     this.customProcessPageChange(1);
                     this.addDialogVisible = true;
@@ -393,6 +426,7 @@ $(function(){
                     }).then((res) =>{
                         loading.close();
                         if('ok' == res.data.message){
+                            //重新加载当前页的节点信息
                             this.customProcessPageChange(this.currentPage);
                             this.customProcessSelectAllNodes();
                             this.customProcessListNode();
@@ -433,14 +467,17 @@ $(function(){
                     }else {
                         const loading = this.customProcessPopupLoading();
                         var url = site_url + 'custom_process/add_node';
+                        //下拉框选中的通知接收者信息是以数组形式保存的，需要转换为,间隔的字符串形式上传至服务器
                         if(1 != this.customProcessNode.receivers.length){
                             this.customProcessNode.receivers = this.customProcessNode.receivers.join(',');
                         }else{
                             this.customProcessNode.receivers = this.customProcessNode.receivers[0];
                         }
+                        //清除临时保存的节点顺序信息
                         this.customProcessNodeInitSeq = null;
                         var data = {};
                         data['node'] = this.customProcessNode;
+                        //指定当前操作类型是添加还是修改，上传服务器，根据类型做不同的处理
                         if('edit' == this.customProcessTableStatus){
                             data['method'] = 'edit';
                         }
@@ -454,13 +491,17 @@ $(function(){
                         }).then((res) =>{
                             loading.close();
                             if('ok' == res.data.message){
+                                //重新获取所有节点的信息，渲染流程节点
                                 this.customProcessSelectAllNodes();
+                                //如果是编辑节点信息，编辑完成后回到原来的那一页
                                 if('edit' == this.customProcessTableStatus){
                                     this.customProcessPageChange(this.currentPage);
                                 }
+                                //如果是添加节点信息，添加完成后将会跳转到最后一页
                                 else if('add' == this.customProcessTableStatus){
                                     this.customProcessPageChange(res.data.total_pages);
                                 }
+                                //显示节点信息的列表
                                 this.customProcessListNode();
                             }else{
                                 var msg = '请求添加/修改节点数据失败！';
@@ -482,12 +523,15 @@ $(function(){
                     type: 'warning',
                     center: true
                 }).then(() => {
+                    //开始执行流程后，开始按钮状态变更
                     this.customProcessStartButtonDisabled = true;
                     this.customProcessStartButtonType = 'success';
                     this.customProcessStartButtonText = '正在执行流程';
+                    //步骤条当前进行到第一个节点
                     this.customProcessStep = 0;
                     //流程开始执行，执行标记为置为true
                     this.customProcessStatus = true;
+                    //生成当前节点的状态信息
                     this.generateCurrentProcessInfo();
                     this.$message({
                         type: 'success',
@@ -531,12 +575,17 @@ $(function(){
                     }).then((res) =>{
                         if('ok' == res.data.message){
                             loading.close();
-                            //前端缓存数据和标记位清空
+                            //步骤条当前执行位置重置
                             this.customProcessStep = -1;
+                            //步骤条总节点的值置0
                             this.customProcessStepSum = 0;
+                            //是否包含节点信息置false
                             this.customProcessHasNode = false;
+                            //节点执行状态：未开始执行
                             this.customProcessStatus = false;
+                            //列表信息置空
                             this.customProcessTableData = [];
+                            //流程开始执行按钮重置
                             this.customProcessStartButtonType = 'primary';
                             this.customProcessStartButtonText = '开始执行流程';
                             this.customProcessStartButtonDisabled = false;

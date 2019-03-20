@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.db import models
 
+
 # Create your models here.
 class Operatelog(models.Model):
     """
@@ -14,6 +15,7 @@ class Operatelog(models.Model):
     create_time = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
     is_success = models.CharField(verbose_name=u'是否成功', max_length=50)
     message = models.CharField(verbose_name=u'备注', max_length=500)
+
     class Meta:
         verbose_name = u'操作日志记录'
         db_table = 'td_operate_log'

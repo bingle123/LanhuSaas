@@ -23,22 +23,21 @@ class TbAlertRule(models.Model):
 
 # 告警消息订阅表
 class TlAlertUser(models.Model):
-    rule_id=models.IntegerField(verbose_name=u'规则外键')
-    user_id=models.IntegerField(verbose_name=u'用户外键') #用户外键
+    rule_id = models.IntegerField(verbose_name=u'规则外键')
+    user_id = models.IntegerField(verbose_name=u'用户外键')  # 用户外键
 
     class Meta:
-        db_table='tl_alert_user'
+        db_table = 'tl_alert_user'
 
 
 # 发送告警信息日志
 class TdAlertLog(models.Model):
-    rule_id=models.IntegerField(null=True, verbose_name=u"告警规则id")
+    rule_id = models.IntegerField(null=True, verbose_name=u"告警规则id")
     item_id = models.PositiveIntegerField(verbose_name=u"监控项ID")
     alert_title = models.CharField(max_length=100, verbose_name=u"告警标题")
     alert_content = models.CharField(max_length=2000, verbose_name=u"告警内容")
     alert_time = models.DateTimeField(verbose_name=u"告警时间", auto_now_add=True)
-    persons=models.CharField(max_length=1000,verbose_name=u"给谁发的")
+    persons = models.CharField(max_length=1000, verbose_name=u"给谁发的")
 
     class Meta:
-        db_table='td_alert_log'
-
+        db_table = 'td_alert_log'

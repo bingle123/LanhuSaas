@@ -17,7 +17,6 @@ from notification.function import *
 from account.models import *
 from blueking.component.shortcuts import *
 
-
 # -------------------- 采集测试规则设定------------------------
 # 1. 针对于数据库的数据采集：
 # 采集规则的设置类似于SQL语法，但是在字段域有所不同：如@cp=china_point@表示保存在采集表中的字段名称为cp，
@@ -34,8 +33,11 @@ from blueking.component.shortcuts import *
 GATHER_TIME = ''
 
 
-# 采集测试参数初始化方法
 def gather_test_init():
+    """
+    # 采集测试参数初始化方法
+    :return:
+    """
     info = dict()
     # ------------临时测试时用的数据，实际应从info对象中获取参数,由celery提供info对象--------
     # sql测试用监控项ID：'1'
@@ -49,7 +51,8 @@ def gather_test_init():
     # sql测试用参数：'46'
     # 文件测试用参数：'192.168.1.52#./gather_data_test
     # 接口测试用参数：'http://t.weather.sojson.com/api/weather/city/101030100#{"url": "http://t.weather.sojson.com/api/weather/city/", "code": "101030100"}'
-    info['params'] = 'http://t.weather.sojson.com/api/weather/city/101030100#{"url": "http://t.weather.sojson.com/api/weather/city/", "code": "101030100"}'
+    info[
+        'params'] = 'http://t.weather.sojson.com/api/weather/city/101030100#{"url": "http://t.weather.sojson.com/api/weather/city/", "code": "101030100"}'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'cat ${file_path}'
     # 接口测试用采集规则：'dXJsPSQxCmNvZGU9JDIKYHdnZXQgLXFPIGdhdGhlcl9kYXRhX3RlbXAgJHVybCRjb2RlYApjYXQgZ2F0aGVyX2RhdGFfdGVtcAo='
@@ -58,8 +61,12 @@ def gather_test_init():
     return info
 
 
-# 采集参数解析
 def gather_param_parse(info):
+    """
+    采集参数解析
+    :param info:
+    :return:
+    """
     # 声明全局变量-采集时间
     global GATHER_TIME
     # 采集参数对象
@@ -78,7 +85,8 @@ def gather_param_parse(info):
             field_end = info['gather_rule'].find('from')
             # sql采集规则中，无论大小写都找不到所需的from字段，从而无法定位采集字段的位置，保存采集规则错误日志并立即返回
             if -1 == field_end:
-                TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-2', gather_error_log='gather rule missing \'from\' field').save()
+                TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-2',
+                             gather_error_log='gather rule missing \'from\' field').save()
                 return None
         # 获取采集规则的字段有哪些，除去空格处理
         gather_params['rule_fields_str'] = info['gather_rule'][field_start:field_end].strip(' ')
@@ -90,7 +98,8 @@ def gather_param_parse(info):
                 gather_params['gather_field'].append(field[0])
                 gather_params['target_field'].append(field[1])
         except Exception as e:
-            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-2', gather_error_log=str(e)).save()
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-2',
+                         gather_error_log=str(e)).save()
             return None
         # 根据参数获取数据库连接配置\
         print info['params']
@@ -106,7 +115,8 @@ def gather_param_parse(info):
         try:
             json_params = json.loads(interface_params[1])
         except Exception as e:
-            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='URL_CONNECTION', data_value='-3',gather_error_log=str(e)).save()
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='URL_CONNECTION', data_value='-3',
+                         gather_error_log=str(e)).save()
             return None
         # 遍历包含参数的JSON对象，根据参数名称替换对应采集规则（脚本中的参数名称）生成执行脚本
         for key, value in json_params.items():
@@ -126,7 +136,8 @@ def gather_param_parse(info):
         # 通过切割获取到服务器地址
         gather_params['extra_param']['file_server'] = file_params[0]
         # 使用填写的文件路径信息替换脚本中的${file_path}变量，生成执行脚本
-        gather_params['gather_rule'] = info['gather_rule'].replace('${file_path}', gather_params['extra_param']['file_path'])
+        gather_params['gather_rule'] = info['gather_rule'].replace('${file_path}',
+                                                                   gather_params['extra_param']['file_path'])
         print '-------------file execute script--------'
         print gather_params['gather_rule']
         print '----------------------------------------'
@@ -135,8 +146,12 @@ def gather_param_parse(info):
     return gather_params
 
 
-# 重复的采集字段数据迁移到历史记录
 def gather_data_migrate(item_id):
+    """
+    重复的采集字段数据迁移到历史记录
+    :param item_id:
+    :return:
+    """
     # 获取当前采集表中的数据是否为空，否则可能需要将某监控项的采集数据迁移到历史采集表中
     gather_data_count = TDGatherData.objects.count()
     # 数据采集表存在数据的情况
@@ -151,8 +166,13 @@ def gather_data_migrate(item_id):
             TDGatherData.objects.filter(item_id=item_id).all().delete()
 
 
-# 数据库采集的key-value定义
 def sql_kv_process(gather_field, sql_result):
+    """
+    数据库采集的key-value定义
+    :param gather_field:
+    :param sql_result:
+    :return:
+    """
     data_set = list()
     for field in gather_field:
         temp = dict()
@@ -167,7 +187,7 @@ def sql_kv_process(gather_field, sql_result):
         count = 0
         for data in unit:
             t = data_set[count]
-            if not type(data)==unicode:
+            if not type(data) == unicode:
                 t['value'].append(str(data))
             else:
                 t['value'].append(data)
@@ -176,8 +196,12 @@ def sql_kv_process(gather_field, sql_result):
     return data_set
 
 
-# 接口与接口数据采集的key-value定义
 def fi_kv_process(json_dict):
+    """
+    接口与接口数据采集的key-value定义
+    :param json_dict:
+    :return:
+    """
     data_set = list()
     for key, value in json_dict.items():
         temp = dict()
@@ -191,8 +215,12 @@ def fi_kv_process(json_dict):
     return data_set
 
 
-# 采集方法，返回参数gather_status为ok采集正常，返回empty采集结果为空，返回error采集规则错误
 def gather_data(**info):
+    """
+    采集方法，返回参数gather_status为ok采集正常，返回empty采集结果为空，返回error采集规则错误
+    :param info:
+    :return:
+    """
     # 声明全局变量-采集时间
     global GATHER_TIME
     # 采集测试参数初始化，实际使用时关闭
@@ -212,7 +240,8 @@ def gather_data(**info):
     # 采集数据库中的数据
     if "sql" == gather_type:
         # 生成数据库采集使用的sql
-        gather_sql = info['gather_rule'].replace(gather_params['rule_fields_str'], ','.join(gather_params['target_field']))
+        gather_sql = info['gather_rule'].replace(gather_params['rule_fields_str'],
+                                                 ','.join(gather_params['target_field']))
         # 获取数据库连接参数
         conn_params = gather_params['extra_param']['connection_param']
         # 连接指定数据库
@@ -221,7 +250,8 @@ def gather_data(**info):
             conn = getAny_db(conn_params.id)
             # conn = MySQLdb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
         except Exception as e:
-            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-1',gather_error_log=str(e)).save()
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-1',
+                         gather_error_log=str(e)).save()
             return "error"
         # 保存连接状态为正常
         TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='1').save()
@@ -234,7 +264,8 @@ def gather_data(**info):
             result = cursor.fetchall()
         except Exception as e:
             # 保存采集规则错误信息到采集表中
-            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-2', gather_error_log=str(e)).save()
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-2',
+                         gather_error_log=str(e)).save()
             return "error"
         # 正确采集到数据
         if 0 != len(result):
@@ -242,21 +273,23 @@ def gather_data(**info):
             data_set = sql_kv_process(gather_params['gather_field'], result)
             # 将采集的数据保存到td_gather_data中
             for item in data_set:
-                TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'], data_value=item['value_str']).save()
+                TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'],
+                             data_value=item['value_str']).save()
         else:
             # 采集是空结果集的情况
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='0').save()
             return "empty"
     elif "interface" == gather_type:
         # 接口方式采集数据
-        user_account = BkUser.objects.filter(id=1).get()
+        user_account = BkUser.objects.filter(username='admin').get()
         # 根据id为1的admin用户获取客户端操作快速执行脚本
         client = get_client_by_user(user_account)
         client.set_bk_api_ver('v2')
         # 测试开启，加载本地保存的测试接口的脚本，而不从客户端接收指定的脚本
         # info['gather_rule'] = load_script_content('URL_TEST')
         # 生成测试接口状态的脚本，以客户端填写的url替换脚本中的${url}
-        ping_script = base64.b64encode(load_script_content('URL_CONNECTION').replace('${url}', gather_params['extra_param']['url']))
+        ping_script = base64.b64encode(
+            load_script_content('URL_CONNECTION').replace('${url}', gather_params['extra_param']['url']))
         # 调用本地的蓝鲸平台快速执行脚本，检测接口状态
         res1 = execute_script(client, ping_script, None, info['id'], 'URL_CONNECTION', settings.GATHER_DATA_HOST)
         # 调用完毕返回None说明脚本执行出现了问题，直接返回
@@ -270,12 +303,14 @@ def gather_data(**info):
         # 判断接口连接状态
         ping_flag = str(res2['data'][0]['step_results'][0]['ip_logs'][0]['log_content'])
         if -1 == int(ping_flag):
-            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='URL_CONNECTION', data_value='-1', gather_error_log='request interface timeout.').save()
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='URL_CONNECTION', data_value='-1',
+                         gather_error_log='request interface timeout.').save()
             return "error"
         # 接口连接状态为正常
         TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='URL_CONNECTION', data_value='1').save()
         # 调用本地的蓝鲸平台快速执行脚本通过脚本从接口获取JSON数据
-        res3 = execute_script(client, base64.b64encode(gather_params['gather_rule']), None, info['id'], 'URL_CONNECTION', settings.GATHER_DATA_HOST)
+        res3 = execute_script(client, base64.b64encode(gather_params['gather_rule']), None, info['id'],
+                              'URL_CONNECTION', settings.GATHER_DATA_HOST)
         # 调用完毕返回None说明脚本执行出现了问题，直接返回
         if None is res3:
             return "error"
@@ -296,19 +331,22 @@ def gather_data(**info):
         data_set = fi_kv_process(json_dict)
         # 将采集的数据保存到td_gather_data中
         for item in data_set:
-            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'], data_value=item['value']).save()
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'],
+                         data_value=item['value']).save()
     elif "file" == gather_type:
         # 文件方式采集数据
-        user_account = BkUser.objects.filter(id=1).get()
+        user_account = BkUser.objects.filter(username='admin').get()
         # 根据id为1的admin用户获取客户端操作快速执行脚本
         client = get_client_by_user(user_account)
         client.set_bk_api_ver('v2')
         # 测试开启，加载本地保存的测试文件的脚本，而不从客户端接收指定的脚本
         # info['gather_rule'] = load_script_content('FILE_TEST')
         # 生成测试文件是否存在的脚本，以客户端填写的文件路径替换脚本中的${file_path}
-        file_exist_script = base64.b64encode(load_script_content('FILE_EXIST').replace('${file_path}', gather_params['extra_param']['file_path']))
+        file_exist_script = base64.b64encode(
+            load_script_content('FILE_EXIST').replace('${file_path}', gather_params['extra_param']['file_path']))
         # 调用客户端指定的蓝鲸平台服务器查找该服务器下的路径下是否存在文件
-        res1 = execute_script(client, file_exist_script, None, info['id'], 'FILE_EXIST', gather_params['extra_param']['file_server'])
+        res1 = execute_script(client, file_exist_script, None, info['id'], 'FILE_EXIST',
+                              gather_params['extra_param']['file_server'])
         # 调用完毕返回None说明脚本执行出现了问题，直接返回
         if None is res1:
             return "error"
@@ -320,12 +358,14 @@ def gather_data(**info):
         # 检测文件是否存在
         file_flag = str(res2['data'][0]['step_results'][0]['ip_logs'][0]['log_content'])
         if -1 == int(file_flag):
-            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='FILE_EXIST', data_value='-1', gather_error_log='file not exist').save()
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='FILE_EXIST', data_value='-1',
+                         gather_error_log='file not exist').save()
             return "error"
         # 文件状态存在
         TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='FILE_EXIST', data_value='1').save()
         # 调用客户端指定的蓝鲸平台服务器从指定路径下获取文件内容
-        res3 = execute_script(client, base64.b64encode(gather_params['gather_rule']), None, info['id'], 'FILE_EXIST', gather_params['extra_param']['file_server'])
+        res3 = execute_script(client, base64.b64encode(gather_params['gather_rule']), None, info['id'], 'FILE_EXIST',
+                              gather_params['extra_param']['file_server'])
         # 调用完毕返回None说明脚本执行出现了问题，直接返回
         if None is res3:
             return "error"
@@ -346,18 +386,21 @@ def gather_data(**info):
         data_set = fi_kv_process(json_dict)
         # 将采集的数据保存到td_gather_data中
         for item in data_set:
-            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'], data_value=item['value']).save()
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'],
+                         data_value=item['value']).save()
     # 处理监控项空格参数
     elif "space_interface" == gather_type:
         # 结果状态为3的是成功其他为失败
         if info['data_key'] == 3:
             # 存储成功数据
-            TDGatherData (item_id=info['id'], gather_time=GATHER_TIME, data_key=info['data_key'], data_value=info['data_value'],
-                          gather_error_log=None,instance_id = info['instance_id']).save()
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=info['data_key'],
+                         data_value=info['data_value'],
+                         gather_error_log=None, instance_id=info['instance_id']).save()
         else:
             # 存储失败数据及日志
-            TDGatherData (item_id=info['id'], gather_time=GATHER_TIME, data_key=info['data_key'], data_value=info['data_value'],
-                          gather_error_log=info['gather_error_log'],instance_id = info['instance_id']).save ()
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=info['data_key'],
+                         data_value=info['data_value'],
+                         gather_error_log=info['gather_error_log'], instance_id=info['instance_id']).save()
     # 数据采集完毕后使用告警规则检查数据合法性
     if None != info['id']:
         rule_check(info['id'])
@@ -366,6 +409,16 @@ def gather_data(**info):
 
 
 def execute_script(client, script_content, script_params, item_id, execute_type, execute_server):
+    """
+
+    :param client:
+    :param script_content:
+    :param script_params:
+    :param item_id:
+    :param execute_type:
+    :param execute_server:
+    :return:
+    """
     # 声明全局变量-采集时间
     global GATHER_TIME
     # 蓝鲸业务ID，暂固定为2
@@ -390,12 +443,21 @@ def execute_script(client, script_content, script_params, item_id, execute_type,
     res = client.job.fast_execute_script(script_bk_params)
     # 脚本执行出错
     if '0' != str(res['code']):
-        TDGatherData(item_id=item_id, gather_time=GATHER_TIME, data_key=execute_type, data_value='-2', gather_error_log=str(res['message'])).save()
+        TDGatherData(item_id=item_id, gather_time=GATHER_TIME, data_key=execute_type, data_value='-2',
+                     gather_error_log=str(res['message'])).save()
         return None
     return res
 
 
 def get_execute_result(client, job_instance_id, item_id, execute_type):
+    """
+
+    :param client:
+    :param job_instance_id:
+    :param item_id:
+    :param execute_type:
+    :return:
+    """
     # 声明全局变量-采集时间
     global GATHER_TIME
     # 向蓝鲸平台请求执行作业平台日志
@@ -406,7 +468,8 @@ def get_execute_result(client, job_instance_id, item_id, execute_type):
     res = client.job.get_job_instance_log(job_log_bk_params)
     # 脚本执行出错
     if 0 != int(res['code']):
-        TDGatherData(item_id=item_id, gather_time=GATHER_TIME, data_key=execute_type, data_value='-2', gather_error_log=str(res['message'])).save()
+        TDGatherData(item_id=item_id, gather_time=GATHER_TIME, data_key=execute_type, data_value='-2',
+                     gather_error_log=str(res['message'])).save()
         return None
     # 每隔一秒查询一次脚本是否执行完成，执行完成则获取其执行结果
     while 'True' != str(res['data'][0]['is_finished']):
@@ -415,13 +478,18 @@ def get_execute_result(client, job_instance_id, item_id, execute_type):
     # print res
     # 脚本执行出错
     if 3 != int(res['data'][0]['status']):
-        TDGatherData(item_id=item_id, gather_time=GATHER_TIME, data_key=execute_type, data_value='-2', gather_error_log='script execution failed ').save()
+        TDGatherData(item_id=item_id, gather_time=GATHER_TIME, data_key=execute_type, data_value='-2',
+                     gather_error_log='script execution failed ').save()
         return None
     return res
 
 
-# 加载本地保存的脚本文件用于测试、检查文件是否存在、接口的连通性
 def load_script_content(script_type):
+    """
+    加载本地保存的脚本文件用于测试、检查文件是否存在、接口的连通性
+    :param script_type:
+    :return:
+    """
     if 'FILE_EXIST' == script_type:
         script_path = './static/script/file_exist.sh'
     elif 'URL_CONNECTION' == script_type:

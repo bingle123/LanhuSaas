@@ -77,10 +77,10 @@ $(function(){
             get_roleAmuenus() {
                 axios.post(site_url+'db_connection/get_roleAmuenus/').then((res) => {
                     ve.dataCk = res.data.message
-                })
+                });
                 axios.post(site_url+'db_connection/checked_menu/').then((re) => {
                     ve.checkedKeys = re.data.message
-                })
+                });
                 this.isAdd = 4
             },
 
@@ -95,21 +95,21 @@ $(function(){
 
             //获取选中节点
             checked(e, dataCk) {
-                this.checkedKeys = dataCk.checkedNodes
-                ve.getchekedKeys = this.checkedKeys
+                this.checkedKeys = dataCk.checkedNodes;
+                ve.getchekedKeys = this.checkedKeys;
             },
 
             //保存节点
             savemnus(){
                 if(ve.getchekedKeys ==''){
-                    ve.getchekedKeys = ve.checkedKeys
+                    ve.getchekedKeys = ve.checkedKeys;
                 }
                 axios.post(site_url+'db_connection/savemnus/',ve.getchekedKeys).then((res)=>{
-                    console.log(res)
+                    console.log(res);
                     if (res.data.message == 1){
-                        alert('请进行修改')
+                        alert('请进行修改');
                     } else {
-                        ve.hide()
+                        ve.hide();
                     }
                 })
             },
@@ -127,8 +127,8 @@ $(function(){
                             site_url+'db_connection/addmuenus/', this.addmuenus
                         ).then(function (res) {
                             if(ve.currentPage < res.data.results['page_count']){
-                            ve.currentPage = res.data.results['page_count']
-                            ve.hide()
+                            ve.currentPage = res.data.results['page_count'];
+                            ve.hide();
                         }
                         });
                     }
@@ -138,8 +138,8 @@ $(function(){
 
             //去修改
             showe(row) {
-                this.isAdd = 3
-                this.editMuenu = row
+                this.isAdd = 3;
+                this.editMuenu = row;
             },
 
             //修改
@@ -153,7 +153,7 @@ $(function(){
                             site_url+'db_connection/edit_muenu/', this.editMuenu
                         ).then(function (res) {
                             if (res.data.code == 0) {
-                                ve.hide()
+                                ve.hide();
                             }
                         })
                     }
@@ -179,7 +179,7 @@ $(function(){
                             if (res.data.code == 0) {
                                 this.$message('删除成功');
                                 data.splice(index, 1);
-                                ve.hide()
+                                ve.hide();
                             }
                         }),
                     );
@@ -192,6 +192,6 @@ $(function(){
             },
         }
     });
-    ve.current_change(1)
-    ve.get_header_data()
+    ve.current_change(1);
+    ve.get_header_data();
 });

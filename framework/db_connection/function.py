@@ -16,15 +16,21 @@ from monitor_item.models import *
 from celery.task import periodic_task
 import datetime
 import sys
-from logmanagement.function import add_log,make_log_info,get_active_user
+from logmanagement.function import add_log, make_log_info, get_active_user
 from conf import settings_development, default, settings_production, settings_testing
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
 APP_ID = default.APP_ID
 APP_TOKEN = default.APP_TOKEN
-#加密
+
+
 def encryption_str(str):
+    """
+    加密
+    :param str:
+    :return:
+    """
     password = str.encode(encoding='utf-8')
     method = pyDes.des(Key, pyDes.CBC, Iv, pad=None, padmode=pyDes.PAD_PKCS5)
     # 执行加密码
@@ -33,8 +39,12 @@ def encryption_str(str):
     return base64.b64encode(k)
 
 
-#解密
 def decrypt_str(data):
+    """
+    解密
+    :param data:
+    :return:
+    """
     password = data.encode(encoding='utf-8')
     method = pyDes.des(Key, pyDes.CBC, Iv, pad=None, padmode=pyDes.PAD_PKCS5)
     # 对base64编码解码
@@ -43,24 +53,29 @@ def decrypt_str(data):
     return method.decrypt(k)
 
 
-#数据库链接模糊查询
 def selecthor(request):
+    """
+    数据库链接模糊查询
+    :param request:
+    :return:
+    """
     result_dict = dict()
     list_set = list()
     res = json.loads(request.body)
     search = res['search'].strip()
     page = res['page']
     limit = res['limit']
-    #如果搜索内容为空，搜索所有
+    # 如果搜索内容为空，搜索所有
     if None is not search and '' != search:
-        sciencenews = Conn.objects.filter(Q(connname__contains=search)|Q(type__contains=search)|Q(ip__contains=search)\
-                                      |Q(port__contains=search)|Q(username__contains=search)|Q(databasename__contains=search))
+        sciencenews = Conn.objects.filter(
+            Q(connname__contains=search) | Q(type__contains=search) | Q(ip__contains=search) \
+            | Q(port__contains=search) | Q(username__contains=search) | Q(databasename__contains=search))
     else:
         sciencenews = Conn.objects.all()
-    #将数据分页
+    # 将数据分页
     p = Paginator(sciencenews, limit)
     try:
-        selected_set = p.page(page) #获取第page页的数据
+        selected_set = p.page(page)  # 获取第page页的数据
     except EmptyPage:
         selected_set = p.page(p.num_pages)
     for selected_data in selected_set:
@@ -68,29 +83,33 @@ def selecthor(request):
         password = conn['password']
         conn['password'] = decrypt_str(password)
         list_set.append(conn)
-    #返回页码内容
+    # 返回页码内容
     result_dict['items'] = list_set
-    #返回总页数
+    # 返回总页数
     result_dict['pages'] = p.num_pages
     return result_dict
 
 
-# 保存
 def saveconn_all(request):
+    """
+    保存
+    :param request:
+    :return:
+    """
     try:
         res = json.loads(request.body)
         cilent = tools.interface_param(request)
         user = cilent.bk_login.get_user({})
-        #获取用户名
+        # 获取用户名
         res['createname'] = user['data']['bk_username']
         res['editname'] = user['data']['bk_username']
 
-        #密码加密后保存
+        # 密码加密后保存
         password = encryption_str(res['password'])
         res['password'] = password
         re = Conn(**res).save()
         status_dic = {}
-        #计算总页数，取5有余就+1页
+        # 计算总页数，取5有余就+1页
         items_count = Conn.objects.count()
         pages = items_count / 5
         if 0 != items_count % 5:
@@ -98,48 +117,61 @@ def saveconn_all(request):
         status_dic['message'] = 'ok'
         status_dic['page_count'] = pages
 
-        info = make_log_info(u'增加数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'成功','无')
+        info = make_log_info(u'增加数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
         add_log(info)
         return tools.success_result(status_dic)
     except Exception as e:
-        info = make_log_info(u'增加数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name, get_active_user(request)['data']['bk_username'],'失败',repr(e))
+        info = make_log_info(u'增加数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
         add_log(info)
         res1 = tools.error_result(e)
         return res1
 
 
-#修改
 def editconn(request):
+    """
+    修改
+    :param request:
+    :return:
+    """
     try:
-        #拿到当前用户，保存为修改人
+        # 拿到当前用户，保存为修改人
         res = json.loads(request.body)
         cilent = tools.interface_param(request)
         user = cilent.bk_login.get_user({})
         res['editname'] = user['data']['bk_username']
         res['edittime'] = datetime.datetime.now()
-        #点修改密码进行解密
+        # 点修改密码进行解密
         password = encryption_str(res['password'])
         res['password'] = password
         re1 = Conn.objects.filter(id=res['id']).update(**res)
-        info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,get_active_user(request)['data']['bk_username'], '成功', '无')
+        info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '成功', '无')
         add_log(info)
         return tools.success_result(re1)
     except Exception as e:
         res1 = tools.error_result(e)
-        info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,get_active_user(request)['data']['bk_username'], '失败', repr(e))
+        info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
         add_log(info)
         return res1
 
 
-# 删除
-def delete_conn(request,id):
+def delete_conn(request, id):
+    """
+    删除
+    :param request:
+    :param id:
+    :return:
+    """
     try:
         res = Conn.objects.filter(id=id).delete()
         info = make_log_info(u'删除数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
         add_log(info)
         status_dic = {}
-        #删除完后重新计算页数
+        # 删除完后重新计算页数
         items_count = Conn.objects.count()
         pages = items_count / 5
         if 0 != items_count % 5:
@@ -155,20 +187,28 @@ def delete_conn(request,id):
         return tools.error_result(res1)
 
 
-# 获取名称
 def get_conname(request):
+    """
+    获取名称
+    :param request:
+    :return:
+    """
     try:
         res = request.body
         res_obj = Conn.objects.get(id=res)
         conn = model_to_dict(res_obj)
-        reslut =  tools.success_result(conn)
+        reslut = tools.success_result(conn)
     except Exception as e:
         reslut = tools.error_result(e)
     return reslut
 
 
-# 测试
 def testConn(request):
+    """
+    测试
+    :param request:
+    :return:
+    """
     res = json.loads(request.body)
     ip = str(res['ip'])
     port = res['port']
@@ -179,10 +219,10 @@ def testConn(request):
         if res['type'] == 'MySQL':
             db = MySQLdb.connect(host=ip, user=username, passwd=password, db=databasename, port=int(port))
         elif res['type'] == 'Oracle':
-            sql = r'%s/%s@%s/%s'%(username, password, ip, databasename)
+            sql = r'%s/%s@%s/%s' % (username, password, ip, databasename)
             db = cx_Oracle.connect(sql)
         else:
-            db = pymssql.connect(host=ip+r':'+port, user=username, password=password, database=databasename)
+            db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename)
         cursor = db.cursor()
         if cursor != '':
             cursor.close()
@@ -208,8 +248,13 @@ def get_all_db_connection(request):
     except Exception as e:
         return tools.error_result(str(e))
 
-#获取作业状态以及作业步骤状态
+
 def get_jobInstance(request):
+    """
+    获取作业状态以及作业步骤状态
+    :param request:
+    :return:
+    """
     monitor = Monitor.objects.filter(status=0, monitor_type=3)
     jion_list = []
     dic = []
@@ -239,11 +284,15 @@ def get_jobInstance(request):
             return e
 
 
-# 获取流程节点状态并实时更新
 @periodic_task(run_every=5)
 def get_flowStatus(request):
+    """
+    获取流程节点状态并实时更新
+    :param request:
+    :return:
+    """
     try:
-        flow = Monitor.objects.filter(status=0, monitor_type=4)#流程元类型
+        flow = Monitor.objects.filter(status=0, monitor_type=4)  # 流程元类型
         flow_list = []
         dic = []
         for x in flow:
@@ -268,12 +317,12 @@ def get_flowStatus(request):
                 })
                 task_id = res1['data']['task_id']
                 time = datetime.datetime.now()
-                #创建节点
+                # 创建节点
                 Flow.objects.create(instance_id=task_id, status=0, start_time=None, test_flag=1, flow_id=y)
                 status = 0
                 if res['data']['state'] == 'RUNNING':
                     status = 2
-                    r = Flow.objects.filter(instance_id=task_id).update(status=status,start_time=time)
+                    r = Flow.objects.filter(instance_id=task_id).update(status=status, start_time=time)
                 elif res['data']['state'] == 'FAILED':
                     status = 3
                 elif res['data']['state'] == 'SUSPENDED':
@@ -292,10 +341,12 @@ def get_flowStatus(request):
     return r
 
 
-############################菜单#########################
-
-#菜单模糊查询
 def selecthor2(request):
+    """
+    菜单模糊查询
+    :param request:
+    :return:
+    """
     res = json.loads(request.body)
     result_dict = dict()
     list_set = list()
@@ -303,13 +354,14 @@ def selecthor2(request):
     page = res['page']
     limit = res['limit']
     if None is not search and '' != search:
-        sciencenews = Muenu.objects.filter(Q(mname__contains=search)|Q(url__contains=search)).exclude(url ='db_connection/muenu_manage/')
+        sciencenews = Muenu.objects.filter(Q(mname__contains=search) | Q(url__contains=search)).exclude(
+            url='db_connection/muenu_manage/')
     else:
-        sciencenews = Muenu.objects.all().exclude(url ='db_connection/muenu_manage/')
+        sciencenews = Muenu.objects.all().exclude(url='db_connection/muenu_manage/')
     p = Paginator(sciencenews, limit)
 
     try:
-        selected_set = p.page(page) #获取第page页的数据
+        selected_set = p.page(page)  # 获取第page页的数据
     except EmptyPage:
         selected_set = p.page(p.num_pages)
     for selected_data in selected_set:
@@ -320,13 +372,17 @@ def selecthor2(request):
     return result_dict
 
 
-#获取角色对应的菜单名和Url
 def get_user_muenu(request):
+    """
+    获取角色对应的菜单名和Url
+    :param request:
+    :return:
+    """
     cilent = tools.interface_param(request)
-    #蓝鲸平台获取当前用户，取得当前用户的角色id
+    # 蓝鲸平台获取当前用户，取得当前用户的角色id
     # user = cilent.bk_login.get_user({})
     # bk_roleid = user['data']['bk_role']
-    #根据菜单和角色表查出该角色对应的菜单
+    # 根据菜单和角色表查出该角色对应的菜单
     role_muenus = rm.objects.filter(roleid=1)
     temp_list = []
     for r_m in role_muenus:
@@ -338,14 +394,18 @@ def get_user_muenu(request):
     return tools.success_result(temp_list)
 
 
-#增加菜单
 def addmuenus(request):
+    """
+    增加菜单
+    :param request:
+    :return:
+    """
     try:
-        status_dic ={}
+        status_dic = {}
         res = json.loads(request.body)
         re = Muenu(**res).save()
         items_count = Muenu.objects.count()
-        #增加菜单后重新查看总页数
+        # 增加菜单后重新查看总页数
         pages = items_count / 5
         if 0 != items_count % 5:
             pages = pages + 1
@@ -359,14 +419,17 @@ def addmuenus(request):
     except Exception as e:
         res1 = tools.error_result(e)
         info = make_log_info(u'增加菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'],'失败',repr(e))
+                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
         add_log(info)
         return res1
 
 
-
-#修改菜单
 def edit_muenu(request):
+    """
+    修改菜单
+    :param request:
+    :return:
+    """
     try:
         res = json.loads(request.body)
         re1 = Muenu.objects.filter(id=res['id']).update(**res)
@@ -382,9 +445,14 @@ def edit_muenu(request):
         return res1
 
 
-#删除菜单
-def delete_muenu(request,id):
-    #先删除菜单，再删除该菜单下的所有角色，两表无外键Id
+def delete_muenu(request, id):
+    """
+    删除菜单
+    :param request:
+    :param id:
+    :return:
+    """
+    # 先删除菜单，再删除该菜单下的所有角色，两表无外键Id
     try:
         Muenu.objects.get(id=id).delete()
         rm.objects.filter(muenuid=id).all().delete()
@@ -405,71 +473,85 @@ def delete_muenu(request,id):
         res3 = tools.error_result(e)
         return tools.error_result(res3)
 
-#获取角色下面菜单
+
 def get_roleAmuenus(request):
+    """
+    获取角色下面的菜单
+    :param request:
+    :return:
+    """
     roles = Role.objects.all()
     menus = Muenu.objects.all()
-    tree=[]
+    tree = []
     for role in roles:
         treeItem = {}
-        #获取所有菜单
+        # 获取所有菜单
         muenu_ids = rm.objects.filter(roleid=role.rid)
-        #菜单名称
-        treeItem['label']=role.rname
-        #每个菜单对应的id
-        treeItem['id']=role.rid
-        #二级目录都是菜单
-        childrens=[]
+        # 菜单名称
+        treeItem['label'] = role.rname
+        # 每个菜单对应的id
+        treeItem['id'] = role.rid
+        # 二级目录都是菜单
+        childrens = []
         for menu in menus:
-            child={}
-            #树对应的Id,以及label,经过处理的树id不重复
-            child['id']=(role.rid+1)*1000+menu.id
-            child['label']=menu.mname
+            child = {}
+            # 树对应的Id,以及label,经过处理的树id不重复
+            child['id'] = (role.rid + 1) * 1000 + menu.id
+            child['label'] = menu.mname
             childrens.append(child)
-        #返回树的数据
-        treeItem['children']=childrens
+        # 返回树的数据
+        treeItem['children'] = childrens
         tree.append(treeItem)
     return tree
 
-#获取已经勾选Id
+
 def checked_menu(request):
-    #中间表
-    rm_all=rm.objects.all()
-    ids=[]
+    """
+    获取勾选ID
+    :param request:
+    :return:
+    """
+    # 中间表
+    rm_all = rm.objects.all()
+    ids = []
     for rl in rm_all:
-        #获取经过处理的树Id
-        temp_id=(rl.roleid+1)*1000+rl.muenuid
+        # 获取经过处理的树Id
+        temp_id = (rl.roleid + 1) * 1000 + rl.muenuid
         ids.append(temp_id)
     print ids
-    return  ids
+    return ids
 
 
-#更新角色菜单权限
 def savemnus(request):
+    """
+    更新角色菜单权限
+    :param request:
+    :return:
+    """
     ids = json.loads(request.body)
-    #保留角色菜单中间表
+    # 保留角色菜单中间表
     rm_all = rm.objects.all()
     r_all = rm_all
     x = 0
     z = 0
     parent_id = []
     son_id = []
-    #获取拿到数据第一个值，如果为数字型数组，则权限未发生变动
-    if isinstance(ids[0],int):
+    # 获取拿到数据第一个值，如果为数字型数组，则权限未发生变动
+    if isinstance(ids[0], int):
         return 1
-    #如果获取的是对象数组，则变动了
+    # 如果获取的是对象数组，则变动了
     else:
-        #保存角色菜单前先删除中间表，中间表不为空则删除
+        # 保存角色菜单前先删除中间表，中间表不为空则删除
         if rm_all is not None:
             de = rm.objects.all().delete()
             try:
                 for id in ids:
                     if ('children' not in id) and ('label' in id):
-                        #逐个树id还原成菜单id(之前经过处理 树id = (角色id+1)*100+菜单Id)
+                        # 逐个树id还原成菜单id(之前经过处理 树id = (角色id+1)*100+菜单Id)
                         x = id['id'] // 1000
                         z = id['id'] % 1000
                         x = int(x)
-                        res1 = rm.objects.create(roleid=x-1, muenuid=z)
+                        res1 = rm.objects.create(roleid=x - 1, muenuid=z)
                     else:
                         pass
                 info = make_log_info(u'逐条增加菜单与角色中间表', u'业务日志', u'rm', sys._getframe().f_code.co_name,
@@ -477,38 +559,47 @@ def savemnus(request):
                 add_log(info)
             except Exception as e:
                 for i in r_all:
-                    rm.objects.create(roleid=model_to_dict(i)['roleid'],muenuid=model_to_dict(i)['muenuid'])
+                    rm.objects.create(roleid=model_to_dict(i)['roleid'], muenuid=model_to_dict(i)['muenuid'])
                 info = make_log_info(u'逐条增加菜单与角色中间表', u'业务日志', u'rm', sys._getframe().f_code.co_name,
-                                     get_active_user(request)['data']['bk_username'], '失败',repr(e))
+                                     get_active_user(request)['data']['bk_username'], '失败', repr(e))
                 add_log(info)
                 return tools.error_result(e)
 
-#获得数据库连接对象
+
 def get_db():
+    """
+    获得数据库连接对象
+    :return:
+    """
     if default.RUN_MODE == 'PRODUCT':
         res = settings_production.DATABASES['default']
     elif default.RUN_MODE == 'TEST':
         res = settings_testing.DATABASES['default']
     else:
         res = settings_development.DATABASES['default']
-    db = MySQLdb.connect(res['HOST'], res['USER'], res['PASSWORD'],res['NAME'],charset='utf8')
+    db = MySQLdb.connect(res['HOST'], res['USER'], res['PASSWORD'], res['NAME'], charset='utf8')
     return db
 
-#通用数据库连接对象
+
 def getAny_db(id):
-    res = Conn.objects.get(id = id)
+    """
+    通用数据库连接对象
+    :param id:
+    :return:
+    """
+    res = Conn.objects.get(id=id)
     conn = model_to_dict(res)
     ip = str(conn['ip'])
     port = conn['port']
     username = conn['username']
     password = decrypt_str(conn['password'])
-
     databasename = conn['databasename']
     if conn['type'] == 'MySQL':
-        db = MySQLdb.connect(host=ip, user=username, passwd=password, db=databasename, port=int(port),charset='utf8')
+        db = MySQLdb.connect(host=ip, user=username, passwd=password, db=databasename, port=int(port), charset='utf8')
     elif conn['type'] == 'Oracle':
-        sql = r'%s/%s@%s/%s' % (username, password, ip, databasename,'charset=utf8')
+        sql = r'%s/%s@%s/%s' % (username, password, ip, databasename, 'charset=utf8')
         db = cx_Oracle.connect(sql)
     else:
-        db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename,charset='utf8')
+        db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename,
+                             charset='utf8')
     return db
