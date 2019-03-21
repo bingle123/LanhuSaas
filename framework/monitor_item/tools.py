@@ -20,6 +20,7 @@ from market_day.models import HeaderData as hd
 from djcelery import models as celery_models
 from models import *
 import requests
+from settings import BK_PAAS_HOST
 
 
 def error_result(e):
@@ -254,7 +255,7 @@ def flow_gather_task(**info):
         temp['id'] = id
         temp['status'] = res_temp['data']['children'][id]['state']
         v2_data.append(temp)
-    a_url = "http://paas.bk.com/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
+    a_url = BK_PAAS_HOST + "/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
     req = requests.get(url=a_url, headers=headers)
     req.encoding = req.apparent_encoding
     req.raise_for_status()
@@ -399,7 +400,7 @@ def resume_flow(item_id, name):
     # v2接口继续整个流程
     mess = hd.objects.get(id=1).header
     headers = json.loads(mess.decode('utf-8').replace("'", "\""))
-    a_url = "http://paas.bk.com/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
+    a_url = BK_PAAS_HOST + "/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
     req = requests.get(url=a_url, headers=headers)
     req.encoding = req.apparent_encoding
     req.raise_for_status()
@@ -410,7 +411,7 @@ def resume_flow(item_id, name):
     for key in activities:
         if name == activities[key]['name']:
             node_id = str(activities[key]['id'])
-    url = "http://paas.bk.com/o/bk_sops/taskflow/api/nodes/action/callback/2/"
+    url = BK_PAAS_HOST + "/o/bk_sops/taskflow/api/nodes/action/callback/2/"
     payload = "instance_id=" + str(
         task_id) + "&node_id=" + node_id + "&data=%7B%22callback%22%3A%22resume%22%7D&undefined="
     headers = {
@@ -422,8 +423,8 @@ def resume_flow(item_id, name):
         'Content-Length': "97",
         'Cookie': headers['Cookie'],
         'Host': "paas.bk.com",
-        'Origin': "http://paas.bk.com",
-        'Referer': "http://paas.bk.com/o/bk_sops/taskflow/execute/2/?instance_id=" + str(task_id),
+        'Origin': BK_PAAS_HOST,
+        'Referer': BK_PAAS_HOST + "/o/bk_sops/taskflow/execute/2/?instance_id=" + str(task_id),
         'User-Agent': "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.75 Safari/537.36",
         'X-CSRFToken': "TRcGm7VPnTWNMYgC9r34TsvBmIncTRls",
         'X-Requested-With': "XMLHttpRequest",
