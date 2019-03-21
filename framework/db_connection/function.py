@@ -7,7 +7,6 @@ from shell_app import tools
 import pymysql as MySQLdb
 import cx_Oracle
 import pymssql
-import datetime
 import base64
 import pyDes
 from django.db.models import Q
