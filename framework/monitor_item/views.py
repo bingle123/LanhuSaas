@@ -168,3 +168,12 @@ def node_state_by_item_id(request):
     """
     res = function.node_state_by_item_id(request)
     return render_json(res)
+
+
+def select_test(request):
+    """
+
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './monitor_item/select_item.html')

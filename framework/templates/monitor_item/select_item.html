@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 -->
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- element UI引入样式 -->
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <!--axios.min.js--vue.js的ajax支持-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<div id="vue">
+    <el-select v-model="measures" placeholder="请选择指标集" @change="provinceChanged">
+
+        <el-option
+                v-for="item in iqube_name"
+                :key="item.value"
+                :label="item.value"
+                :value="item.value">
+        </el-option>
+    </el-select>
+
+    <el-select v-model="measures_name" placeholder="请选择指标名称">
+
+        <el-option
+                v-for="item in dimensionality_list"
+                :key="item"
+                :label="item"
+                :value="item">
+        </el-option>
+    </el-select>
+</div>
+
+<script>
+    let vm = new Vue({
+        el: '#vue',
+        data: {
+            measures: '',
+            measures_name:'',
+            iqube_name: [],
+            dimensionality_list: [],
+            gather_list:[],
+        },
+        methods: {
+            //获取指标集
+            get_gather_info() {
+                axios({
+                    url: '${SITE_URL}iqube_interface/get_measures_type/'
+                }).then((res) => {
+                    vm.gather_list = res.data.results;
+                    for (let i = 0; i < res.data.results.length; i++) {
+                        // 第一个
+                        for (let j in res.data.results[i]) {
+                            temp_json = {'label': j, 'value': j};
+                            vm.iqube_name.push(temp_json)
+                        }
+                    }
+                }).catch((res) => {
+                    console.error("获取指标集失败"+str(res.results));
+                });
+            },
+            //获取指标名称
+            provinceChanged(value) {
+                console.log(value);
+                for(let i in vm.gather_list){
+                    for (let key in vm.gather_list[i]){
+                        if (key === value){
+                            console.log(vm.gather_list[i][key]);
+                            vm.dimensionality_list = vm.gather_list[i][key]
+                        }
+                    }
+                }
+            }
+        },
+    });
+    vm.get_gather_info();
+</script>
+</body>
+</html>
