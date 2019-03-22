@@ -144,7 +144,6 @@ def delete_unit(request):
     return res1
 
 
-# 添加函数
 def add_unit(request):
     """
     添加函数
@@ -152,10 +151,8 @@ def add_unit(request):
     :return:
     """
     try:
+        username = request.user.username
         res = json.loads(request.body)
-        cilent = tools.user_interface_param()
-        # 获取登录用户信息
-        user = cilent.bk_login.get_user({})
         add_dic = res['data']
         print add_dic
         add_flow_dic = res['flow']
@@ -191,8 +188,8 @@ def add_unit(request):
         # 新增一条数据时 开关状态默认为0 关闭
         add_dic['status'] = 0
         add_dic['monitor_type'] = monitor_type
-        add_dic['creator'] = user['data']['bk_username']
-        add_dic['editor'] = user['data']['bk_username']
+        add_dic['creator'] = username
+        add_dic['editor'] = username
         add_dic['monitor_area'] = res['monitor_area']
         Monitor.objects.create(**add_dic)
         if res['monitor_type'] == 'fourth':
@@ -220,8 +217,7 @@ def edit_unit(request):
     try:
         res = json.loads(request.body)
         id = res['unit_id']
-        cilent = tools.user_interface_param()
-        user = cilent.bk_login.get_user({})
+        username = request.user.username
         monitor_type = res['monitor_type']
         # 把前台来的监控项数据一次性转为字典
         add_dic = res['data']
@@ -252,7 +248,7 @@ def edit_unit(request):
         add_dic['monitor_name'] = res['monitor_name']
         add_dic['monitor_type'] = monitor_type
         # 当前用户为编辑人
-        add_dic['editor'] = user['data']['bk_username']
+        add_dic['editor'] = username
         add_dic['monitor_area'] = res['monitor_area']
         Monitor.objects.filter(id=id).update(**add_dic)
         if res['monitor_type'] == 'fourth':
