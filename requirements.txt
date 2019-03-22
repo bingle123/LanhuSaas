@@ -19,4 +19,3 @@ lxml==4.3.0
 selenium==3.141.0
 cx_Oracle==7.0.0
 pyDes==2.0.1
-pymssql==2.1.4

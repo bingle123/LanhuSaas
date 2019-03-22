@@ -23,11 +23,10 @@ from __future__ import absolute_import
 import os
 import sys
 from celery.schedules import crontab
-from kombu import Queue,Exchange
+from kombu import Queue, Exchange
 from datetime import timedelta
 # Import global settings to make it easier to extend settings.
 from django.conf.global_settings import *  # noqa
-
 
 # ==============================================================================
 # 应用基本信息配置 (请按照说明修改)
@@ -38,6 +37,12 @@ APP_ID = 'mydjango1'
 # APP_TOKEN = 'd441289d-14f9-435f-b195-499e20920e9e'
 # 上海APP_TOKEN
 APP_TOKEN = 'c6369717-7906-4699-ad0d-31f5798d5cef'
+
+# 指标集API地址
+MEASURES_API_ADDRESS = 'http://192.168.1.153:8088/webserver/metric/getMetricSetColumns.do'
+
+# 日志集API地址
+LOG_API_ADDRESS = 'http://192.168.1.153:8088/webserver/log/getLogColumns.do'
 
 # 数据采集测试用主机地址
 GATHER_DATA_HOST = '192.168.1.52'
@@ -101,9 +106,9 @@ else:
     RUN_MODE = 'DEVELOP'
     DEBUG = True
 
-
 try:
     import pymysql
+
     pymysql.install_as_MySQLdb()
 except:
     pass
@@ -131,7 +136,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'account.middlewares.LoginMiddleware',   # 登录鉴权中间件
+    'account.middlewares.LoginMiddleware',  # 登录鉴权中间件
     'common.middlewares.CheckXssMiddleware',  # Xss攻击处理中间件
 )
 
@@ -146,11 +151,8 @@ INSTALLED_APPS = (
     'app_control',
     'account',
     'home_application',
-    'news',
     'shell_app',
-    'guotai',
     'monitor_item',
-    'db_connection_manage',
     'monitor_scene',
     'system_config',
     'position',
@@ -163,6 +165,7 @@ INSTALLED_APPS = (
     'logmanagement',
     'history_chart',
     'home_page',
+    'iqube_interface',
 )
 
 # ==============================================================================
@@ -214,7 +217,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.request',
                 'django.template.context_processors.csrf',
-                'common.context_processors.mysetting',   # 自定义模版context，可在页面中使用STATIC_URL等变量
+                'common.context_processors.mysetting',  # 自定义模版context，可在页面中使用STATIC_URL等变量
                 'django.template.context_processors.i18n',
             ],
             'debug': DEBUG
@@ -224,8 +227,8 @@ TEMPLATES = [
 # ==============================================================================
 # session and cache
 # ==============================================================================
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True       # 默认为false,为true时SESSION_COOKIE_AGE无效
-SESSION_COOKIE_PATH = SITE_URL               # NOTE 不要改动，否则，可能会改成和其他app的一样，这样会影响登录
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # 默认为false,为true时SESSION_COOKIE_AGE无效
+SESSION_COOKIE_PATH = SITE_URL  # NOTE 不要改动，否则，可能会改成和其他app的一样，这样会影响登录
 
 # ===============================================================================
 # Authentication
@@ -247,8 +250,9 @@ ADMIN_USERNAME_LIST = ['admin']
 if IS_USE_CELERY:
     try:
         import djcelery
+
         INSTALLED_APPS += (
-            'djcelery',            # djcelery
+            'djcelery',  # djcelery
         )
         djcelery.setup_loader()
         if "celery" in sys.argv:
@@ -261,6 +265,7 @@ if IS_USE_CELERY:
         CELERY_RESULT_SERIALIZER = 'json'
         if RUN_MODE == 'DEVELOP':
             from celery.signals import worker_process_init
+
 
             @worker_process_init.connect
             def configure_workers(*args, **kwargs):
@@ -297,7 +302,8 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s [%(asctime)s] %(pathname)s %(lineno)d %(funcName)s %(process)d %(thread)d \n \t %(message)s \n',  # noqa
+            'format': '%(levelname)s [%(asctime)s] %(pathname)s %(lineno)d %(funcName)s %(process)d %(thread)d \n \t %(message)s \n',
+            # noqa
             'datefmt': '%Y-%m-%d %H:%M:%S'
         },
         'simple': {
@@ -336,7 +342,7 @@ LOGGING = {
             'class': LOG_CLASS,
             'formatter': 'verbose',
             'filename': os.path.join(LOGGING_DIR, 'wb_mysql.log'),
-            'maxBytes': 1024 * 1024 * 4,
+            'maxBytes': 1024 * 1024 * 30,
             'backupCount': 5
         },
     },
@@ -372,10 +378,10 @@ LOGGING = {
     }
 }
 
-#email--------------------
+# email--------------------
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.qq.com'  # 如果是 163 改成 smtp.163.com
 EMAIL_PORT = 465
-EMAIL_HOST_USER = '975495461@qq.com' # 帐号
+EMAIL_HOST_USER = '975495461@qq.com'  # 帐号
 EMAIL_HOST_PASSWORD = 'oaxklhdxakxrbfda'  # 密码
 DEFAULT_FROM_EMAIL = 'zlx<975495461@qq.com>'

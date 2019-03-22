@@ -17,7 +17,7 @@ def data_base(request):
 
 
 # 菜单管理
-def muenu_manage(request):
+def menu_manage(request):
     """
 
     :param request:
@@ -46,7 +46,7 @@ def selecthor2(request):
     return render_json(res)
 
 
-def saveconn(request):
+def save_conn(request):
     """
     保存
     :param request:
@@ -56,7 +56,7 @@ def saveconn(request):
     return render_json(re)
 
 
-def editconn(request):
+def edit_conn(request):
     """
     修改
     :param request:
@@ -66,7 +66,7 @@ def editconn(request):
     return render_json(re)
 
 
-def testConn(request):
+def test_conn(request):
     """
     测试
     :param request:
@@ -97,7 +97,7 @@ def get_all_db_connection(request):
     return render_json(res)
 
 
-def get_user_muenu(request):
+def get_user_menu(request):
     """
     获取所有菜单
     :param request:
@@ -107,7 +107,7 @@ def get_user_muenu(request):
     return render_json(res)
 
 
-def addmuenus(request):
+def add_menu(request):
     """
     新增菜单
     :param request:
@@ -117,7 +117,7 @@ def addmuenus(request):
     return render_json(res)
 
 
-def edit_muenu(request):
+def edit_menu(request):
     """
     修改菜单
     :param request:
@@ -127,7 +127,7 @@ def edit_muenu(request):
     return render_json(res)
 
 
-def delete_muenu(request, id):
+def delete_menu(request, id):
     """
     删除菜单
     :param request:
@@ -168,7 +168,7 @@ def checked_menu(request):
     return render_json(res)
 
 
-def savemnus(request):
+def save_menu(request):
     """
     保存勾选ID
     :param request:

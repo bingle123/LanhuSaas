@@ -3,6 +3,9 @@ from django.db import models
 
 
 class Conn(models.Model):
+    """
+    数据库表单
+    """
     connname = models.CharField(u'连接名称', max_length=30)
     type = models.CharField(u'连接类型', max_length=30)
     ip = models.CharField(u'ip地址', max_length=30)
@@ -20,6 +23,9 @@ class Conn(models.Model):
 
 
 class Muenu(models.Model):
+    """
+    菜单表
+    """
     mname = models.CharField(u'名称', max_length=255)
     url = models.CharField(u'地址', max_length=255)
 
@@ -28,6 +34,9 @@ class Muenu(models.Model):
 
 
 class Role(models.Model):
+    """
+    角色表
+    """
     rname = models.CharField(u'角色', max_length=255)
     rid = models.IntegerField(u'角色Id')
 
@@ -36,6 +45,9 @@ class Role(models.Model):
 
 
 class rm(models.Model):
+    """
+    菜单角色关联表
+    """
     roleid = models.IntegerField(u'角色id')
     muenuid = models.IntegerField(u'菜单id')
 

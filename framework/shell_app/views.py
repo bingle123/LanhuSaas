@@ -4,16 +4,6 @@ from common.mymako import render_mako_context
 from shell_app import function
 import json
 import tools
-import time
-
-
-def special_scene(request):
-    """
-    夜间特殊场景
-    :param request:
-    :return:
-    """
-    return render_mako_context(request, './main/special_scene.html')
 
 
 def data_base(request):
@@ -35,8 +25,11 @@ def position(request):
 
 
 def index(request):
-
-
+    """
+    主页
+    :param request:
+    :return:
+    """
     return render_mako_context(request, './main/maintenanceIndex.html')
 
 
@@ -67,15 +60,6 @@ def main(request):
     return render_mako_context(request, './common/main.html')
 
 
-def scene(request):
-    """
-    场景主页
-    :param request:
-    :return:
-    """
-    return render_mako_context(request, './scene/scene.html')
-
-
 def scene_carousel(request):
     """
     vue-场景轮播暂时页面
@@ -92,15 +76,6 @@ def scene_carousel_test(request):
     :return:
     """
     return render_mako_context(request, './scene/scenecarousel1.html')
-
-
-def add_scene(request):
-    """
-    增加场景表单HTML
-    :param request:
-    :return:
-    """
-    return render_mako_context(request, './shell_app/add_scene.html')
 
 
 def scene_list(request):
@@ -128,15 +103,6 @@ def show_select(request):
     :return: 选择服务器页面
     """
     return render_mako_context(request, './common/select.html')
-
-
-def position_setting_html(request):
-    """
-    岗位设置页面
-    :param request:
-    :return:
-    """
-    return render_mako_context(request, './shell_app/position_setting.html')
 
 
 def ming(request):
