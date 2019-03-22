@@ -43,7 +43,7 @@ def scenes_alert(request):
     """
     # 测试数据，目前写死的名字
     # 获取当前用户拿name
-    user = user_info.objects.get(user_name='yanchunlei')
+    user = user_info.objects.get(user_name=request.user.username)
     position_id = model_to_dict(user)['user_pos']
     # 一个职位下得所有场景
     ps = position_scene.objects.filter(position_id=position_id)
