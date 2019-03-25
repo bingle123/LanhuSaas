@@ -1785,7 +1785,7 @@
                         }
                         vm.show();
                     }).catch((error) => {
-                        this.$alert(vm.message,"错误")
+                        this.$alert("修改保存出错！","错误")
                     });
                 } else if (vm.unit_id == 0) {
                     axios({
