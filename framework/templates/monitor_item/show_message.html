@@ -652,6 +652,133 @@
                     </el-row>
                 </el-tab-pane>
                 <!-- 基本单元 end-->
+
+
+                <!-- 基本单元 start-->
+                <el-tab-pane :disabled="disabled6" label="作业监控项" name="five">
+                    <el-row>
+                        <el-col :span="12"><div class="grid-content bg-purple">
+                            <el-form :model="base" ref="base" :rules="rules1" label-width="100px">
+                                <el-form-item label="字号" prop="font_size">
+                                    <el-select v-model="base.font_size" placeholder="请选择字号" @change="basic_size">
+                                        <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="高Ⅹ宽" required style="width: 96%">
+                                    <el-col :span="11">
+                                        <el-form-item prop="height">
+                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="base.height"
+                                                      placeholder="请输入高度" @change="basic_height"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col class="line" :span="2">Ⅹ</el-col>
+                                    <el-col :span="11">
+                                        <el-form-item prop="width">
+                                              <el-input class="max" type="number" min="0" max="600"
+                                                        v-model.number="numberValidateForm.age"
+                                                        auto-complete="off" v-model="base.width"
+                                                        placeholder="请输入宽度" @change="basic_width"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="显示内容" prop="contents" style="width: 96%">
+                                        <el-input v-model="base.contents" placeholder="上证指数:3000  深证指数:3000"
+                                                  @change="sycontent"
+                                                  type="textarea"></el-input>
+                                </el-form-item>
+                                <el-form-item label="数据来源">
+                                    <el-radio-group v-model="sql_file_interface" @change="change1"
+                                                    style="padding: 14px">
+                                        <el-radio :label="3">数据库</el-radio>
+                                        <el-radio :label="6">文件</el-radio>
+                                        <el-radio :label="9">接口</el-radio>
+                                     </el-radio-group>
+                                </el-form-item>
+                                <el-form-item label="来源类型"  >
+                                    <el-select v-model="base.interface_type" placeholder="请选择字号" @change="change_source_type">
+                                        <el-option label="日志" value="log"></el-option>
+                                        <el-option label="指标" value="measures"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="来源名称" prop="font_size">
+                                    <el-select v-model="base.measures" placeholder="请选择指标集" @change="provinceChanged">
+                                        <el-option
+                                                v-for="item in iqube_name"
+                                                :key="item.value"
+                                                :label="item.value"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                                </el-form-item>
+                                <el-form-item label="度量值" prop="font_size">
+                                    <el-select v-model="base.measures_name" placeholder="请选择指标名称">
+                                        <el-option
+                                                v-for="item in dimensionality_list"
+                                                :key="item"
+                                                :label="item"
+                                                :value="item">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="展示规则" prop="show_rule_type">
+                                    <el-select v-model="base.show_rule_type" placeholder="请选择字号">
+                                        <el-option label="百分比" value="0"></el-option>
+                                        <el-option label="颜色" value="1"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item label="数据采集规则" style="width: 96%">
+                                    <el-input v-model="base.gather_rule" placeholder="select * from tb_hq"
+                                              type="textarea"></el-input>
+                                </el-form-item>
+
+                                <el-form-item label="采集时间段:" style="width: 96%">
+                                    <el-col :span="11">
+                                        <el-form-item>
+                                            <el-time-picker style="width: 96%" v-model="base.start_time"
+                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
+                                        </el-col>
+                                    <el-col class="line" :span="2">—</el-col>
+                                    <el-col :span="11">
+                                        <el-form-item>
+                                            <el-time-picker style="width: 96%" v-model="base.end_time"
+                                                            placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+                                </el-form-item>
+                                <el-form-item label="采集周期" prop="period">
+                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="base.period" style="width: 96%"
+                                                      placeholder="请输入采集周期(秒)"></el-input>
+                                        </el-form-item>
+                            </el-form>
+                        </div></el-col>
+                        <el-col :span="12"><div class="grid-content bg-purple-light">
+                            <div style="padding: 0px 45% 0px 45%">
+                                <h2>预览</h2>
+                            </div>
+                            <div style="text-align:center;width: 100%;min-height:40%;height: auto;background-color: whitesmoke; position: relative"
+                                 id="text1">
+                                <!--<div id = "text2" style="position:absolute;left:230px;top:150px;"> -->
+                                <div id="text2" style="margin:auto;">
+                                </div>
+                            </div>
+                            <div style="padding: 0px 20%">
+                                <div style="height: 20px"></div>
+                                <el-button type="primary" @click="base_cell_test">采集测试</el-button>
+                            </div>
+                            <div style="padding: 0px 20%">
+                                <div style="height: 20px"></div>
+                            </div>
+                        </div></el-col>
+                    </el-row>
+                </el-tab-pane>
+                <!-- 基本单元 end-->
             </el-tabs>
         </span>
         <span slot="footer" class="dialog-footer">
@@ -708,6 +835,7 @@
             disabled3: false,                            //图表单元
             disabled4: false,                            //作业单元
             disabled5: false,                            //流程单元
+            disabled6: false,
             areas: [],
             area: 1,
             caiji1: 'block',
@@ -728,6 +856,27 @@
             result_data: {},                            //传递新增数据
             monitor_type: 'first',                     //单元类型
             basic: {                                   //基本单元
+                monitor_name: '',                      //单元名称
+                monitor_type: '',                      //单元类型
+                font_size: '20',                         //字号
+                height: '20',                            //高度
+                width: '0',                             //宽度
+                start_time: '',                        //开始时间
+                end_time: '',                          //结束时间
+                period: '10',                            //采集周期
+                params: '',                            //监控参数
+                status: '',                            //监控状态
+                contents: '',                          //显示内容
+                gather_rule: '',                       //采集规则
+                gather_params: 'sql',                  //采集参数
+                monitor_area: ''                             //日历地区
+            },
+            base: {
+                //基本单元
+                measures_name:'',
+                measures:'',
+                interface_type:'',
+                show_rule_type:'',
                 monitor_name: '',                      //单元名称
                 monitor_type: '',                      //单元类型
                 font_size: '20',                         //字号
@@ -935,6 +1084,11 @@
             chart_content: '',
             chartData: '',
             person_count: '',
+            measures: '',
+            measures_name:'',
+            iqube_name: [],
+            dimensionality_list: [],
+            gather_list:[],
         },
         methods: {
             basic_size() {
@@ -2278,6 +2432,56 @@
                     vm.$message.error('获取数据失败！');
                 });
             },
+            //获取指标集
+            get_gather_info(value) {
+                axios({
+                    url: '${SITE_URL}iqube_interface/'+value,
+                }).then((res) => {
+                    vm.gather_list = res.data.results;
+                    for (let i = 0; i < res.data.results.length; i++) {
+                        // 第一个
+                        for (let j in res.data.results[i]) {
+                            temp_json = {'label': j, 'value': j};
+                            vm.iqube_name.push(temp_json)
+                        }
+                    }
+                }).catch((res) => {
+                    console.error("获取指标集失败"+str(res.results));
+                });
+            },
+            //获取指标名称
+            provinceChanged(value) {
+                console.log(value);
+                for(let i in vm.gather_list){
+                    for (let key in vm.gather_list[i]){
+                        if (key === value){
+                            console.log(vm.gather_list[i][key]);
+                            vm.dimensionality_list = vm.gather_list[i][key]
+                        }
+                    }
+                }
+            },
+            //切换来源类型
+            change_source_type(value){
+                if (value == 'log'){
+                    vm.get_gather_info('get_log_type/')
+                }else{
+                    vm.get_gather_info('get_measures_type/')
+                }
+            },
+            base_cell_test(){
+                console.log(vm.base);
+                axios({
+                    url:'${SITE_URL}iqube_interface/gather_base_test/',
+                    method:'post',
+                    data:vm.base,
+                }).then( (res) => {
+                    console.log(res)
+                }).catch( (res) => {
+                    console.error('采集失败'+str(res));
+                    vm.$message.error('采集失败！');
+                })
+            },
         },
         mounted() {
             this.get_header_data()
@@ -2285,6 +2489,7 @@
         },
     });
     vm.show();
+
 </script>
 <script>
     setInterval(function () {

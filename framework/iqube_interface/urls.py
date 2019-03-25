@@ -15,4 +15,5 @@ urlpatterns = patterns(
     'iqube_interface.views',
     ('^get_measures_type/$', 'get_measures_type'),          # 获取指标类型
     ('^get_log_type/$', 'get_log_type'),                    # 获取日志类型
+    ('^gather_base_test/$', 'gather_base_test'),                    # 基本单元采集测试
 )

@@ -41,6 +41,9 @@ APP_TOKEN = 'c6369717-7906-4699-ad0d-31f5798d5cef'
 # 指标集API地址
 MEASURES_API_ADDRESS = 'http://192.168.1.153:8088/webserver/metric/getMetricSetColumns.do'
 
+# 指标查询API
+MEASURES_QUERY_API = 'http://192.168.1.150:4242/api/query'
+
 # 日志集API地址
 LOG_API_ADDRESS = 'http://192.168.1.153:8088/webserver/log/getLogColumns.do'
 

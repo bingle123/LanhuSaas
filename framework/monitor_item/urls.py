@@ -30,4 +30,5 @@ urlpatterns = patterns(
     (r'^node_state/$', 'node_state'),
     (r'^resume_flow/$', 'resume_flow'),
     (r'^node_state_by_item_id/$', 'node_state_by_item_id'),
+    (r'^select_test/$', 'select_test'),
 )
