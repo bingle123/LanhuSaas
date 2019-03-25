@@ -68,12 +68,27 @@
             font-size: 16px;
             line-height: 36px;
         }
+        .circle-bar { margin:20px auto;font-size:100px; width: 1em; height: 1em; position: relative;  background-color: #333; }
+        .circle-bar-left,.circle-bar-right { width: 1em; height: 1em; background-color: #eee; }
+        /*
+            这里采用clip剪切了圆，实现左右两个半圆，右半圆在后面，因此在更上一层，
+            clip的用法参考：http://www.w3school.com.cn/cssref/pr_pos_clip.asp
+         */
+        .circle-bar-right { clip:rect(0,auto,auto,.5em); }
+        .circle-bar-left { clip:rect(0,.5em,auto,0); }
+
+        .mask { width: 0.8em; height: 0.8em;  background-color: #fff;text-align: center;line-height: 0.2em; color:rgba(0,0,0,0.5); }
+        .mask :first-child { font-size: 0.3em; height: 0.8em; line-height: 0.8em; display: block;  }
+        /*所有的后代都水平垂直居中，这样就是同心圆了*/
+        .circle-bar * {  position: absolute; top:0; right:0; bottom:0; left:0; margin:auto; }
+        /*自身以及子元素都是圆*/
+        .circle-bar, .circle-bar > * { border-radius: 50%; }
     </style>
 </head>
 <body>
 <div id="app">
     <!-- div1 start-->
-    <div class="div1" style="padding: 20px 40px 0px 40px;">
+    <div class="div_one" style="padding: 20px 40px 0px 40px;">
         <div>
             <el-input placeholder="请输入内容" clearable v-model="contents" style="width:30%"></el-input>
             <el-button type="primary" icon="el-icon-search" v-on:click="select1">搜索</el-button>
@@ -763,9 +778,8 @@
                                 <h2>预览</h2>
                             </div>
                             <div style="text-align:center;width: 100%;min-height:40%;height: auto;background-color: whitesmoke; position: relative"
-                                 id="text1">
-                                <!--<div id = "text2" style="position:absolute;left:230px;top:150px;"> -->
-                                <div id="text2" style="margin:auto;">
+                                 id="base_test_text">
+
                                 </div>
                             </div>
                             <div style="padding: 0px 20%">
@@ -1089,6 +1103,7 @@
             iqube_name: [],
             dimensionality_list: [],
             gather_list:[],
+            gather_base_test_data:[]
         },
         methods: {
             basic_size() {
@@ -2476,9 +2491,41 @@
                     method:'post',
                     data:vm.base,
                 }).then( (res) => {
-                    console.log(res)
+                    console.log(res);
+                    vm.gather_base_test_data=res.data.message;
+                    for(let i=0;i<vm.gather_base_test_data.length;i++){
+                        console.log(i);
+                        let data_key=[];
+                        let data_value=[];
+                        for(k in vm.gather_base_test_data[i]){
+                            data_key.push(k);
+                            data_value.push(vm.gather_base_test_data[i][k]);
+                        }
+                        let selector='.div'+i;
+                        $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block;"></div>');
+                        for(let j=0;j<data_key.length;j++){
+                            if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
+                                $(selector).append('<p>'+data_key[j]+':</p>');
+                                $(selector).append('<div class="circle-bar"><div class="circle-bar-left"></div><div class="circle-bar-right"></div><div class="mask"><span class="percent">'+data_value[j]+'</span></div></div>');
+                            }else {
+                                $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
+                            }
+                        }
+                        var percent = parseInt($('.mask :first-child').text());
+                        var baseColor = $('.circle-bar').css('background-color');
+
+                        if( percent<=50 ){
+                            $('.circle-bar-right').css('transform','rotate('+(percent*3.6)+'deg)');
+                        }else {
+                            $('.circle-bar-right').css({
+                                'transform':'rotate(0deg)',
+                                'background-color':baseColor
+                            });
+                            $('.circle-bar-left').css('transform','rotate('+((percent-50)*3.6)+'deg)');
+                        }
+                    }
                 }).catch( (res) => {
-                    console.error('采集失败'+str(res));
+                    console.error('采集失败'+res);
                     vm.$message.error('采集失败！');
                 })
             },
@@ -2499,6 +2546,10 @@
             }
         });
     }, 1)
+    $(function(){
+
+
+    })
 </script>
 
 

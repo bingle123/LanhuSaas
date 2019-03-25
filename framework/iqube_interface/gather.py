@@ -20,7 +20,7 @@ class Gather():
         else:
             api_address = MEASURES_QUERY_API
 
-        query_form = api_address + '?' + 'start=1h-ago&m=sum:sum:' + measures + '_' + measures_name + '{hostname=*}'
+        query_form = api_address + '?' + 'start=1551210759&m=sum:sum:' + measures + '_' + measures_name + '{hostname=*}'
         result_json = json.loads(requests.get(url=query_form).content)
         # 此处解析结果
         result_list = []
@@ -42,7 +42,7 @@ class Gather():
 
         # 此处规则转换
         for i in result_list:
-            i['metric'] = Gather.percent_manage(gather_rule, i['metric'])
+            i[measures + '_' + measures_name] = Gather.percent_manage(gather_rule, i[measures + '_' + measures_name])
         print result_list
         return result_list
 
