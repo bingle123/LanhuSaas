@@ -1777,15 +1777,15 @@
                         }
                     }).then((res) => {
                         if (res['data']['code'] == 1) {
-                            alert("保存失败!");
+                            this.$alert("保存失败!","错误");
                             vm.centerDialogVisible = true;
                         } else {
-                            alert(vm.message);
+                            this.$alert(vm.message,"提示")
                             vm.centerDialogVisible = false;
                         }
                         vm.show();
                     }).catch((error) => {
-                        alert(vm.message)
+                        this.$alert(vm.message,"错误")
                     });
                 } else if (vm.unit_id == 0) {
                     axios({
@@ -1800,18 +1800,17 @@
                         },
                     }).then((res) => {
                         if (res['data']['code'] == 1) {
-                            alert("保存失败!");
+                            this.$alert("新增保存失败!","错误");
                             vm.centerDialogVisible = true;
                         } else {
-                            alert(vm.message);
+                            this.$alert(vm.message,"提示");
                             vm.centerDialogVisible = false;
                         }
                         vm.show()
                     }).catch((error) => {
-                        alert('保存出错!')
+                        this.$alert('保存出错!',"错误")
                     });
                 } else {
-                    alert(vm.message);
                     vm.centerDialogVisible = true;
                     if (vm.add_pamas == 0) {
                         vm.unit_id = 0
@@ -2517,4 +2516,5 @@
 
     }, 1000)
 </script>
+
 </html>
