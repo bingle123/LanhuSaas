@@ -2493,6 +2493,7 @@
                 }).then( (res) => {
                     console.log(res);
                     vm.gather_base_test_data=res.data.message;
+                    $('#base_test_text').html('');
                     for(let i=0;i<vm.gather_base_test_data.length;i++){
                         console.log(i);
                         let data_key=[];
