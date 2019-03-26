@@ -144,23 +144,18 @@ def delete_unit(request):
     add_log(info)
     return res1
 
-"""
-@:name : add_unit
-@:param request
-@:author liuxichun
-@:description 新增监控项（1：基本监控项，2：图表监控项，3：作业监控兴，4：流程监控项）
-"""
+
 def add_unit(request):
     """
-    添加函数
-    :param request:
-    :return:
+    新增监控项（1：基本监控项，2：图表监控项，3：作业监控兴，4：流程监控项）
+    :param request:页面请求对象
+    :return:result
     """
     try:
-        #添加事物控制防止异常时事物不回滚，这里事物必须放在try...catch里面
-        #否则事物被try...catch捕获了就不起作用了
+        # 添加事物控制防止异常时事物不回滚，这里事物必须放在try...catch里面
+        # 否则事物被try...catch捕获了就不起作用了
         with transaction.atomic():
-            #修改获取用户的方式，直接从request中获取
+            # 修改获取用户的方式，直接从request中获取
             username = request.user.username
             res = json.loads(request.body)
             add_dic = res['data']
@@ -202,8 +197,8 @@ def add_unit(request):
             add_dic['editor'] = username
             add_dic['monitor_area'] = res['monitor_area']
             Monitor.objects.create(**add_dic)
-            #添加定时任务监控要求本地安装任务调度软件rabitmq
-            #正式环境服务器一般带有这个调度软件，如果没有就要安装
+            # 添加定时任务监控要求本地安装任务调度软件rabitmq
+            # 正式环境服务器一般带有这个调度软件，如果没有就要安装
             if res['monitor_type'] == 'fourth':
                 function.add_unit_task(add_dicx=add_flow_dic)
             else:
@@ -220,18 +215,12 @@ def add_unit(request):
     return result
 
 
-"""
-@:name edit_unit
-@:param request
-@:author liuxichun
-@:desc 修改监控项（1：基本监控项，2：图表监控项，3：作业监控兴，4：流程监控项）
-"""
 def edit_unit(request):
 
     """
-    编辑函数
-    :param request:
-    :return:
+    修改监控项（1：基本监控项，2：图表监控项，3：作业监控兴，4：流程监控项）
+    :param request: 页面请求对象
+    :return: result
     """
     try:
         # 添加事物控制防止异常时事物不回滚，这里事物必须放在try...catch里面
