@@ -7,6 +7,7 @@ import json
 import time
 from conf.default import MEASURES_API_ADDRESS
 
+
 class Gather():
     """
     采集类
@@ -37,6 +38,7 @@ class Gather():
         request_result = requests.get(url=query_form)
         request_code = request_result.status_code
         if request_code == 200:
+            temp_list = Gather.change_json(measures, request_result, measures_name)
             # 百分比
             if show_rule_type == '0':
 
@@ -60,15 +62,15 @@ class Gather():
                 #     map['ip'] = ip
                 #     result_list.append(map)
 
-                result_list = Gather.change_json(measures, request_result, measures_name)
                 # 此处规则转换
-                for i in result_list:
+                for i in temp_list:
                     i[measures + '_' + measures_name] = Gather.percent_manage(gather_rule, i[measures + '_' + measures_name])
                 # print result_list
-                return success_result(result_list)
+                return success_result(temp_list)
             # 显示颜色
             elif show_rule_type == '1':
 
+                # 转换颜色规则
                 color_code_map = {}
                 rule_list = gather_rule.split('@')
                 for i in rule_list:
@@ -77,15 +79,19 @@ class Gather():
                         color_code = i.split('==')[1]
                         color_code_map[color_code] = color_rgb
 
-                temp_list = Gather.change_json(measures, request_result, measures_name)
                 # 模拟数据
                 temp_list = [{"system_name": "jzjy", "ip": "192.168.1.153", "cpu_cpu_used_pct": 2, "time": "2019-03-22 19:42:12"}, {"system_name": "jzjy", "ip": "192.168.1.157", "cpu_cpu_used_pct": 0, "time": "2019-03-22 19:37:23"}, {"system_name": "jzjy", "ip": "192.168.1.165", "cpu_cpu_used_pct": 0, "time": "2019-03-22 19:41:56"}]
+
                 result_list = Gather.color_manage(color_code_map, temp_list, measures, measures_name)
                 return result_list
             # 显示单位
             elif show_rule_type == '2':
-
-                pass
+                try:
+                    for i in temp_list:
+                        i[measures + '_' + measures_name] = Gather.other_manage(i[measures + '_' + measures_name], gather_rule)
+                    return success_result(temp_list)
+                except Exception as e:
+                    return error_result(u'异常'+str(e))
         elif request_code == '500':
             return error_result(u'接口请求错误')
         elif request_code == '404':
@@ -154,3 +160,16 @@ class Gather():
             return success_result(result_list)
         except Exception as e:
             return error_result(u'颜色转换出错'+str(e))
+
+    @classmethod
+    def other_manage(cls, original_value, gather_rule):
+        """
+        其他
+        :param original_value:                 原始值
+        :param gather_rule:                     规则
+        :return:
+        """
+        rule_list = gather_rule.split('@')
+        multiple = rule_list[0]
+        unit = rule_list[1]
+        return "%.2f" % (float(original_value) * int(multiple)) + unit
