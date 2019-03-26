@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 import function
 from common.mymako import render_json, render_mako_context
+from django.conf import settings
 
 
 # Create your views here.
@@ -92,6 +94,17 @@ def synchronize(request):
     r = function.synchronize(request)
     return render_json(r)
 
+
 def get_active_user(req):
     bk_username = req.user.username
     return render_json(bk_username)
+
+# 获取退出登录地址
+def get_logout_address(request):
+    """
+    获取退出登录地址,退出登录地址不同环境可以不一样，所以要在配置中配置
+    :param request:
+    :return:
+    """
+    logout_address = settings.LOG_OUT_ADDRESS
+    return render_json(logout_address)
