@@ -123,7 +123,7 @@
     <!-- div1 end-->
 
     <!-- 对话框 start-->
-    <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%">
+    <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%" >
         <HR align=center width=100% color=#979797 SIZE=0.5>
         <div style="height: 30px"></div>
         <div>
@@ -670,7 +670,9 @@
 
 
                 <!-- 基本单元 start-->
-                <el-tab-pane :disabled="disabled6" label="基本监控单元（修改后）" name="five">
+                <el-tab-pane :disabled="disabled6" label="基本监控单元（修改后）" name="five" element-loading-text="拼命加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)" v-loading="loading">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="base" ref="base" :rules="rules1" label-width="100px">
@@ -681,7 +683,7 @@
                                 </el-form-item>
                                 <el-form-item label="高Ⅹ宽" required style="width: 96%">
                                     <el-col :span="11">
-                                        <el-form-item prop="height">
+                                        <el-form-item prop="hei ght">
                                             <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="base.height"
                                                       placeholder="请输入高度" @change="basic_height"></el-input>
@@ -711,13 +713,13 @@
                                      </el-radio-group>
                                 </el-form-item>
                                 <el-form-item label="来源类型"  >
-                                    <el-select v-model="base.interface_type" placeholder="请选择字号" @change="change_source_type">
+                                    <el-select v-model="base.interface_type" placeholder="请选择数据来源类型" @change="change_source_type">
                                         <el-option label="日志" value="log"></el-option>
                                         <el-option label="指标" value="measures"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="来源名称" prop="font_size">
-                                    <el-select v-model="base.measures" placeholder="请选择指标集" @change="provinceChanged">
+                                    <el-select v-model="base.measures" filterable placeholder="请选择指标集" @change="change_measures">
                                         <el-option
                                                 v-for="item in iqube_name"
                                                 :key="item.value"
@@ -726,9 +728,10 @@
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
+
                                 </el-form-item>
                                 <el-form-item label="度量值" prop="font_size">
-                                    <el-select v-model="base.measures_name" placeholder="请选择指标名称">
+                                    <el-select v-model="base.measures_name" filterable placeholder="请选择指标名称">
                                         <el-option
                                                 v-for="item in dimensionality_list"
                                                 :key="item"
@@ -738,7 +741,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="展示规则" prop="show_rule_type">
-                                    <el-select v-model="base.show_rule_type" placeholder="请选择字号">
+                                    <el-select v-model="base.show_rule_type" placeholder="请选择展示规则">
                                         <el-option label="百分比" value="0"></el-option>
                                         <el-option label="颜色" value="1"></el-option>
                                         <el-option label="其他" value="2"></el-option>
@@ -818,6 +821,7 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            loading:false,
             message: '',                                           //弹框提示信息
             constants: '',
             unit_id1: 0,
@@ -2450,6 +2454,7 @@
             },
             //获取指标集
             get_gather_info(value) {
+                vm.loading = true;
                 axios({
                     url: '${SITE_URL}iqube_interface/'+value,
                 }).then((res) => {
@@ -2461,12 +2466,15 @@
                             vm.iqube_name.push(temp_json)
                         }
                     }
+                    vm.loading = false;
                 }).catch((res) => {
                     console.error("获取指标集失败"+str(res.results));
+                    vm.loading = false;
                 });
+
             },
             //获取指标名称
-            provinceChanged(value) {
+            change_measures(value) {
                 console.log(value);
                 for(let i in vm.gather_list){
                     for (let key in vm.gather_list[i]){
@@ -2497,7 +2505,7 @@
                     for(let i=0;i<vm.gather_base_test_data.length;i++){
                         let data_key=[];
                         let data_value=[];
-                        for(k in vm.gather_base_test_data[i]){
+                        for(let k in vm.gather_base_test_data[i]){
                             data_key.push(k);
                             data_value.push(vm.gather_base_test_data[i][k]);
                         }
