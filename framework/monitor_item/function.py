@@ -98,9 +98,10 @@ def unit_show(request):
     return result
 
 
+# 查询监控项
 def select_unit(request):
     """
-    监控项查询
+    查询监控项
     :param request:
     :return:
     """
@@ -117,6 +118,7 @@ def select_unit(request):
     return res_data
 
 
+# 删除监控项
 def delete_unit(request):
     """
     删除监控项
@@ -142,6 +144,7 @@ def delete_unit(request):
     return result
 
 
+# 新增监控项
 def add_unit(request):
     """
     新增监控项（1：基本监控项，2：图表监控项，3：作业监控兴，4：流程监控项）
@@ -212,6 +215,7 @@ def add_unit(request):
     return result
 
 
+# 修改监控项
 def edit_unit(request):
     """
     修改监控项（1：基本监控项，2：图表监控项，3：作业监控兴，4：流程监控项）
@@ -404,7 +408,6 @@ def chart_get_test(request):
 
 def get_desc(request, id):
     """
-
     :param request:
     :param id:
     :return:
@@ -419,7 +422,6 @@ def get_desc(request, id):
 
 def get_flow_desc(request):
     """
-
     :param request:
     :return:
     """
@@ -441,7 +443,6 @@ def get_flow_desc(request):
 
 def flow_change(request):
     """
-
     :param request:
     :return:
     """
@@ -522,7 +523,6 @@ def flow_change(request):
 
 def node_name(request):
     """
-
     :param request:
     :return:
     """
@@ -544,7 +544,6 @@ def node_name(request):
 
 def node_state(request):
     """
-
     :param request:
     :return:
     """
@@ -565,7 +564,6 @@ def node_state(request):
 
 def node_state_by_item_id(request):
     """
-
     :param request:
     :return:
     """
