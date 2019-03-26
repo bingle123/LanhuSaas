@@ -93,6 +93,5 @@ def synchronize(request):
     return render_json(r)
 
 def get_active_user(req):
-    res=function.get_active_user(request=req)
-    bk_username=res['data']['bk_username']
+    bk_username = req.user.username
     return render_json(bk_username)
