@@ -98,10 +98,9 @@ def unit_show(request):
     return result
 
 
-# 查询函数
 def select_unit(request):
     """
-    查询函数
+    监控项查询
     :param request:
     :return:
     """
@@ -116,16 +115,13 @@ def select_unit(request):
     res_list = tools.obt_dic(page_data, base_page_count)
     res_data = tools.success_result(res_list)
     return res_data
-    # except Exception as e:
-    #     return None
 
 
-# 删除函数
 def delete_unit(request):
     """
-    删除函数
+    删除监控项
     :param request:
-    :return:
+    :return:result
     """
     try:
         res = json.loads(request.body)
@@ -134,15 +130,16 @@ def delete_unit(request):
         monitor_name = res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
         co.delete_task(unit_id)
-        res1 = tools.success_result(None)
+        result = tools.success_result(None)
+        # 修改获取用户的方式，直接从request中获取
         info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
     except Exception as e:
         info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        res1 = tools.error_result(e)
+                             request.user.username, '失败', repr(e))
+        result = tools.error_result(e)
     add_log(info)
-    return res1
+    return result
 
 
 def add_unit(request):
@@ -216,7 +213,6 @@ def add_unit(request):
 
 
 def edit_unit(request):
-
     """
     修改监控项（1：基本监控项，2：图表监控项，3：作业监控兴，4：流程监控项）
     :param request: 页面请求对象
