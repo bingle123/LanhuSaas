@@ -677,8 +677,9 @@
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)" v-loading="loading">
                     <el-row>
-                        <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="base" ref="base" :rules="rules1" label-width="100px">
+                        <el-col :span="12">
+                            <div class="grid-content bg-purple">
+                                <el-form :model="base" ref="base" :rules="rules1" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="base.font_size" placeholder="请选择字号" @change="basic_size">
                                         <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
@@ -770,14 +771,14 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                </el-form-item>
                                 <el-form-item label="采集周期" prop="period">
-                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
-                                                      auto-complete="off" v-model="base.period" style="width: 96%"
-                                                      placeholder="请输入采集周期(秒)"></el-input>
-                                        </el-form-item>
+                                    <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                              auto-complete="off" v-model="base.period" style="width: 96%"
+                                              placeholder="请输入采集周期(秒)"></el-input>
+                                </el-form-item>
                             </el-form>
-                        </div></el-col>
+                            </div>
+                        </el-col>
                         <el-col :span="12"><div class="grid-content bg-purple-light">
                             <div>
                             <div style="padding: 0px 45% 0px 45%">
