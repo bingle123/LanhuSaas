@@ -776,6 +776,34 @@
                                               auto-complete="off" v-model="base.period" style="width: 96%"
                                               placeholder="请输入采集周期(秒)"></el-input>
                                 </el-form-item>
+                                <el-col :span="24">
+                                    <el-form-item v-for="(i,index) in dimension_data" class="dimension_div">
+                                    <el-col :span="11">
+                                        <el-form-item label="维度名称">
+                                            <el-select v-model="i.dimension_name">
+                                                <el-option v-for="item in dimensionality_list"
+                                                :key="item"
+                                                :label="item"
+                                                :value="item">
+
+                                                </el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="11">
+                                        <el-form-item label="维度值">
+                                            <el-input v-model="i.dimension_value">
+                                            </el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="2">
+                                        <el-button type="danger" @click="delete_dimension(index)" style="width: 68px;padding: 10px;margin: 2px 10px;"><i class="el-icon-remove-outline" style="font-size: 14px;"></i>&nbsp;删除</el-button>
+                                    </el-col>
+                                </el-form-item>
+                                </el-col>
+                                <el-col :span="6" :offset="18" style="height: 48px">
+                                    <el-button type="primary" @click="add_dimension"><i class="el-icon-circle-plus-outline" style="font-size: 14px"></i>&nbsp;添加维度</el-button>
+                                </el-col>
                             </el-form>
                             </div>
                         </el-col>
@@ -1111,9 +1139,26 @@
             iqube_name: [],
             dimensionality_list: [],
             gather_list:[],
-            gather_base_test_data:[]
+            gather_base_test_data:[],
+            dimension_data:[{
+                dimension_name:'hahaha',
+                dimension_value:'123'
+            },{
+                dimension_name:'hehehe',
+                dimension_value:'456'
+            }
+            ],
         },
         methods: {
+            add_dimension(){
+                vm.$set(vm.dimension_data, vm.dimension_data.length, {
+                dimension_name:'',
+                dimension_value:''
+            });
+            },
+            delete_dimension(index){
+                vm.dimension_data.splice(index,1);
+            },
             basic_size() {
                 $("#text2").find("*").css("font-size", this.basic.font_size)
             },
