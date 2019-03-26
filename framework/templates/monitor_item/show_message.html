@@ -2522,11 +2522,9 @@
             },
             //获取指标名称
             change_measures(value) {
-                console.log(value);
                 for(let i in vm.gather_list){
                     for (let key in vm.gather_list[i]){
                         if (key === value){
-                            console.log(vm.gather_list[i][key]);
                             vm.dimensionality_list = vm.gather_list[i][key]
                         }
                     }
@@ -2541,18 +2539,17 @@
                 }
             },
             base_cell_test(){
-                console.log(vm.base);
                 axios({
                     url:'${SITE_URL}iqube_interface/gather_base_test/',
                     method:'post',
                     data:vm.base,
                 }).then( (res) => {
-                    vm.gather_base_test_data=res.data.message;
+                    vm.gather_base_test_data=res.data.results;
                     $('#base_test_text').html('');
                     for(let i=0;i<vm.gather_base_test_data.length;i++){
                         let data_key=[];
                         let data_value=[];
-                        for(let k in vm.gather_base_test_data[i]){
+                        for(k in vm.gather_base_test_data[i]){
                             data_key.push(k);
                             data_value.push(vm.gather_base_test_data[i][k]);
                         }
