@@ -673,7 +673,9 @@
 
 
                 <!-- 基本单元 start-->
-                <el-tab-pane :disabled="disabled6" label="基本监控单元（修改后）" name="five">
+                <el-tab-pane :disabled="disabled6" label="基本监控单元（修改后）" name="five" element-loading-text="拼命加载中"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)" v-loading="loading">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="base" ref="base" :rules="rules1" label-width="100px">
@@ -714,13 +716,13 @@
                                      </el-radio-group>
                                 </el-form-item>
                                 <el-form-item label="来源类型"  >
-                                    <el-select v-model="base.interface_type" placeholder="请选择字号" @change="change_source_type">
+                                    <el-select v-model="base.interface_type" placeholder="请选择数据来源类型" @change="change_source_type">
                                         <el-option label="日志" value="log"></el-option>
                                         <el-option label="指标" value="measures"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="来源名称" prop="font_size">
-                                    <el-select v-model="base.measures" placeholder="请选择指标集" @change="provinceChanged">
+                                    <el-select v-model="base.measures" filterable placeholder="请选择指标集" @change="change_measures">
                                         <el-option
                                                 v-for="item in iqube_name"
                                                 :key="item.value"
@@ -730,7 +732,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="度量值" prop="font_size">
-                                    <el-select v-model="base.measures_name" placeholder="请选择指标名称">
+                                    <el-select v-model="base.measures_name" filterable placeholder="请选择指标名称">
                                         <el-option
                                                 v-for="item in dimensionality_list"
                                                 :key="item"
@@ -740,16 +742,17 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="展示规则" prop="show_rule_type">
-                                    <el-select v-model="base.show_rule_type" placeholder="请选择字号">
+                                    <el-select v-model="base.show_rule_type" placeholder="请选择展示规则">
                                         <el-option label="百分比" value="0"></el-option>
                                         <el-option label="颜色" value="1"></el-option>
                                         <el-option label="其他" value="2"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="数据采集规则" style="width: 96%">
-                                    <el-input v-model="base.gather_rule" placeholder="select * from tb_hq"
+                                    <el-input v-model="base.gather_rule" placeholder="百分比：如：100|颜色：如：#000000==2@#ffffff==0|其他：如：100@ms"
                                               type="textarea"></el-input>
                                 </el-form-item>
+
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
@@ -757,7 +760,7 @@
                                                             placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
-                                    </el-col>
+                                        </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
@@ -767,40 +770,12 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="采集周期" prop="period">
-                                    <el-input type="number" min="0" v-model.number="numberValidateForm.age"
-                                              auto-complete="off" v-model="base.period" style="width: 96%"
-                                              placeholder="请输入采集周期(秒)">
-                                    </el-input>
                                 </el-form-item>
-                                <el-col :span="24">
-                                    <el-form-item v-for="(i,index) in dimension_data" class="dimension_div">
-                                        <el-col :span="11">
-                                            <el-form-item label="维度名称">
-                                                <el-select v-model="i.dimension_name">
-                                                    <el-option v-for="item in dimensionality_list"
-                                                    :key="item"
-                                                    :label="item"
-                                                    :value="item">
-
-                                                    </el-option>
-                                                </el-select>
-                                            </el-form-item>
-                                        </el-col>
-                                        <el-col :span="11">
-                                            <el-form-item label="维度值">
-                                                <el-input v-model="i.dimension_value">
-                                                </el-input>
-                                            </el-form-item>
-                                        </el-col>
-                                        <el-col :span="2">
-                                            <el-button type="danger" @click="delete_dimension(index)" style="width: 68px;padding: 10px;margin: 2px 10px;"><i class="el-icon-remove-outline" style="font-size: 14px;"></i>&nbsp;删除</el-button>
-                                        </el-col>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="6" :offset="18" style="height: 48px">
-                                    <el-button type="primary" @click="add_dimension"><i class="el-icon-circle-plus-outline" style="font-size: 14px"></i>&nbsp;添加维度</el-button>
-                                </el-col>
+                                <el-form-item label="采集周期" prop="period">
+                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="base.period" style="width: 96%"
+                                                      placeholder="请输入采集周期(秒)"></el-input>
+                                        </el-form-item>
                             </el-form>
                         </div></el-col>
                         <el-col :span="12"><div class="grid-content bg-purple-light">
@@ -847,6 +822,7 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            loading:false,
             message: '',                                           //弹框提示信息
             constants: '',
             unit_id1: 0,
@@ -1134,26 +1110,9 @@
             iqube_name: [],
             dimensionality_list: [],
             gather_list:[],
-            gather_base_test_data:[],
-            dimension_data:[{
-                dimension_name:'hahaha',
-                dimension_value:'123'
-            },{
-                dimension_name:'hehehe',
-                dimension_value:'456'
-            }
-            ],
+            gather_base_test_data:[]
         },
         methods: {
-            add_dimension(){
-                vm.$set(vm.dimension_data, vm.dimension_data.length, {
-                dimension_name:'',
-                dimension_value:''
-            });
-            },
-            delete_dimension(index){
-                vm.dimension_data.splice(index,1);
-            },
             basic_size() {
                 $("#text2").find("*").css("font-size", this.basic.font_size)
             },
@@ -2496,6 +2455,7 @@
             },
             //获取指标集
             get_gather_info(value) {
+                vm.loading = true;
                 axios({
                     url: '${SITE_URL}iqube_interface/'+value,
                 }).then((res) => {
@@ -2507,12 +2467,15 @@
                             vm.iqube_name.push(temp_json)
                         }
                     }
+                    vm.loading = false;
                 }).catch((res) => {
                     console.error("获取指标集失败"+str(res.results));
+                    vm.loading = false;
                 });
+
             },
             //获取指标名称
-            provinceChanged(value) {
+            change_measures(value) {
                 console.log(value);
                 for(let i in vm.gather_list){
                     for (let key in vm.gather_list[i]){
@@ -2543,7 +2506,7 @@
                     for(let i=0;i<vm.gather_base_test_data.length;i++){
                         let data_key=[];
                         let data_value=[];
-                        for(k in vm.gather_base_test_data[i]){
+                        for(let k in vm.gather_base_test_data[i]){
                             data_key.push(k);
                             data_value.push(vm.gather_base_test_data[i][k]);
                         }
