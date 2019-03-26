@@ -670,7 +670,7 @@
 
 
                 <!-- 基本单元 start-->
-                <el-tab-pane :disabled="disabled6" label="作业监控项" name="five">
+                <el-tab-pane :disabled="disabled6" label="基本监控单元（修改后）" name="five">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="base" ref="base" :rules="rules1" label-width="100px">
@@ -741,6 +741,7 @@
                                     <el-select v-model="base.show_rule_type" placeholder="请选择字号">
                                         <el-option label="百分比" value="0"></el-option>
                                         <el-option label="颜色" value="1"></el-option>
+                                        <el-option label="其他" value="2"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="数据采集规则" style="width: 96%">
@@ -774,6 +775,7 @@
                             </el-form>
                         </div></el-col>
                         <el-col :span="12"><div class="grid-content bg-purple-light">
+                            <div>
                             <div style="padding: 0px 45% 0px 45%">
                                 <h2>预览</h2>
                             </div>
