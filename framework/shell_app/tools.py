@@ -8,6 +8,8 @@ import requests
 import json
 from suds.client import Client
 from suds.transport.https import HttpAuthenticated
+from conf.default import APP_ID
+from conf.default import APP_TOKEN
 
 
 def error_result(e):
@@ -87,7 +89,12 @@ def get_active_user(request):
     :return:            dict
     """
     client = interface_param(request)
-    res = client.bk_login.get_user({})
+    res = client.bk_login.get_user({
+        "bk_app_code": APP_ID,
+        "bk_app_secret": APP_TOKEN,
+        "bk_username": request.user.username,
+
+    })
     return res
 
 

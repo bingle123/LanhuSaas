@@ -74,7 +74,7 @@
                             <span style="color: #555759; etter-spacing: 0.23px;">{{ user.name }}</span>
                             <el-dropdown :hide-on-click="false"  @command="logout">
                                 <span class="el-dropdown-link">
-                                  帮助中心<i class="el-icon-caret-bottom el-icon--right"></i>
+                                  &nbsp;&nbsp;|&nbsp;帮助中心<i class="el-icon-caret-bottom el-icon--right"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item command="a">注销</el-dropdown-item>
@@ -126,7 +126,7 @@
                 display: 'none',
             },
             business: {         //业务数据
-                name: "蓝鲸",
+                name: "看板项目",
             },
             user: {             //用户数据
                 name: "",
@@ -153,8 +153,13 @@
             handleClose(key, keyPath) { //手风琴关闭
                 console.log(key, keyPath);
             },
+            //退出登录
             logout(){
-                window.location.href='http://paas.bk.com/login/?c_url=http%3A//dev.paas.bk.com%3A8000/&app_id=mydjango1'
+                axios.get('${SITE_URL}position/get_logout_address').then((res)=>{
+                    //从配置文件获取退出登录地址
+                    var login_address = res.data.message;
+                    window.location.href=login_address;
+                });
             },
             changeCollapse() {          //更改伸缩状态
                 let res = this.isCollapse;

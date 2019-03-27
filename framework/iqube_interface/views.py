@@ -37,12 +37,23 @@ def gather_base_test(request):
     :return:
     """
     request_body = json.loads(request.body)
+    print request_body
+    # 维度列表
+    dimension_data = request_body['dimension_data']
+
+    # 构造参数
+    str = ''
+    for i in dimension_data:
+        key = i['dimension_name']
+        value = i['dimension_value']
+        str += '{'+key+'='+value+'}'
+
     interface_type = request_body['interface_type']
     measures = request_body['measures']
     measures_name = request_body['measures_name']
     show_rule_type = request_body['show_rule_type']
     gather_rule = request_body['gather_rule']
     res = Gather.gather_base_test(interface_type=interface_type, measures=measures, measures_name=measures_name,
-                                  show_rule_type=show_rule_type, gather_rule=gather_rule)
+                                  show_rule_type=show_rule_type, gather_rule=gather_rule, interface_param=str)
     return render_json(res)
     # res = Gather.gather_base_test()

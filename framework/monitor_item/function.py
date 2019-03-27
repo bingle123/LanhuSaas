@@ -98,10 +98,10 @@ def unit_show(request):
     return result
 
 
-# 查询函数
+# 查询监控项
 def select_unit(request):
     """
-    查询函数
+    查询监控项
     :param request:
     :return:
     """
@@ -116,16 +116,14 @@ def select_unit(request):
     res_list = tools.obt_dic(page_data, base_page_count)
     res_data = tools.success_result(res_list)
     return res_data
-    # except Exception as e:
-    #     return None
 
 
-# 删除函数
+# 删除监控项
 def delete_unit(request):
     """
-    删除函数
+    删除监控项
     :param request:
-    :return:
+    :return:result
     """
     try:
         res = json.loads(request.body)
@@ -134,33 +132,30 @@ def delete_unit(request):
         monitor_name = res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
         co.delete_task(unit_id)
-        res1 = tools.success_result(None)
+        result = tools.success_result(None)
+        # 修改获取用户的方式，直接从request中获取
         info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
     except Exception as e:
         info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        res1 = tools.error_result(e)
+                             request.user.username, '失败', repr(e))
+        result = tools.error_result(e)
     add_log(info)
-    return res1
+    return result
 
-"""
-@:name : add_unit
-@:param request
-@:author liuxichun
-@:description 新增监控项（1：基本监控项，2：图表监控项，3：作业监控兴，4：流程监控项）
-"""
+
+# 新增监控项
 def add_unit(request):
     """
-    添加函数
-    :param request:
-    :return:
+    新增监控项（1：基本监控项，2：图表监控项，3：作业监控兴，4：流程监控项）
+    :param request:页面请求对象
+    :return:result
     """
     try:
-        #添加事物控制防止异常时事物不回滚，这里事物必须放在try...catch里面
-        #否则事物被try...catch捕获了就不起作用了
+        # 添加事物控制防止异常时事物不回滚，这里事物必须放在try...catch里面
+        # 否则事物被try...catch捕获了就不起作用了
         with transaction.atomic():
-            #修改获取用户的方式，直接从request中获取
+            # 修改获取用户的方式，直接从request中获取
             username = request.user.username
             res = json.loads(request.body)
             add_dic = res['data']
@@ -193,7 +188,7 @@ def add_unit(request):
                 add_dic['end_time'] = max(start_list)
                 add_flow_dic['start_time']=add_dic['start_time']
                 add_flow_dic['end_time'] =add_dic['end_time']
-                print add_flow_dic
+                # print add_flow_dic
             add_dic['monitor_name'] = res['monitor_name']
             # 新增一条数据时 开关状态默认为0 关闭
             add_dic['status'] = 0
@@ -202,8 +197,8 @@ def add_unit(request):
             add_dic['editor'] = username
             add_dic['monitor_area'] = res['monitor_area']
             Monitor.objects.create(**add_dic)
-            #添加定时任务监控要求本地安装任务调度软件rabitmq
-            #正式环境服务器一般带有这个调度软件，如果没有就要安装
+            # 添加定时任务监控要求本地安装任务调度软件rabitmq
+            # 正式环境服务器一般带有这个调度软件，如果没有就要安装
             if res['monitor_type'] == 'fourth':
                 function.add_unit_task(add_dicx=add_flow_dic)
             else:
@@ -220,18 +215,12 @@ def add_unit(request):
     return result
 
 
-"""
-@:name edit_unit
-@:param request
-@:author liuxichun
-@:desc 修改监控项（1：基本监控项，2：图表监控项，3：作业监控兴，4：流程监控项）
-"""
+# 修改监控项
 def edit_unit(request):
-
     """
-    编辑函数
-    :param request:
-    :return:
+    修改监控项（1：基本监控项，2：图表监控项，3：作业监控兴，4：流程监控项）
+    :param request: 页面请求对象
+    :return: result
     """
     try:
         # 添加事物控制防止异常时事物不回滚，这里事物必须放在try...catch里面
@@ -419,7 +408,6 @@ def chart_get_test(request):
 
 def get_desc(request, id):
     """
-
     :param request:
     :param id:
     :return:
@@ -434,7 +422,6 @@ def get_desc(request, id):
 
 def get_flow_desc(request):
     """
-
     :param request:
     :return:
     """
@@ -456,7 +443,6 @@ def get_flow_desc(request):
 
 def flow_change(request):
     """
-
     :param request:
     :return:
     """
@@ -537,7 +523,6 @@ def flow_change(request):
 
 def node_name(request):
     """
-
     :param request:
     :return:
     """
@@ -559,7 +544,6 @@ def node_name(request):
 
 def node_state(request):
     """
-
     :param request:
     :return:
     """
@@ -580,7 +564,6 @@ def node_state(request):
 
 def node_state_by_item_id(request):
     """
-
     :param request:
     :return:
     """
