@@ -38,7 +38,10 @@ def gather_base_test(request):
     """
     request_body = json.loads(request.body)
     print request_body
+    # 维度列表
     dimension_data = request_body['dimension_data']
+
+    # 构造参数
     str = ''
     for i in dimension_data:
         key = i['dimension_name']
