@@ -188,7 +188,7 @@ def add_unit(request):
                 add_dic['end_time'] = max(start_list)
                 add_flow_dic['start_time']=add_dic['start_time']
                 add_flow_dic['end_time'] =add_dic['end_time']
-                print add_flow_dic
+                # print add_flow_dic
             add_dic['monitor_name'] = res['monitor_name']
             # 新增一条数据时 开关状态默认为0 关闭
             add_dic['status'] = 0
