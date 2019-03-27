@@ -42,7 +42,6 @@ def unit_show(request):
     #  把返回的数据对象转为list
     res_list = tools.obt_dic(page_data, base_page_count)
     param = {
-        'bk_username': 'admin',
         "bk_token": request.COOKIES['bk_token'],
         "bk_biz_id": 2
     }
