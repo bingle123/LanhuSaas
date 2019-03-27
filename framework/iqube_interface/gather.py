@@ -17,7 +17,7 @@ class Gather():
         pass
 
     @classmethod
-    def gather_base_test(cls, interface_type, measures, measures_name, gather_rule, show_rule_type):
+    def gather_base_test(cls, interface_type, measures, measures_name, gather_rule, show_rule_type, interface_param):
         """
         基本单元采集测试
         :param interface_type: 接口类型 log为日志,measures为指标类型
@@ -25,6 +25,7 @@ class Gather():
         :param measures_name:   指标名称
         :param gather_rule:     解析规则
         :param show_rule_type:  显示类型 0/百分比, 1/颜色, 2/不变化 增加显示类型时请增加注释
+        :param interface_param: 参数
         :return:
         """
         if interface_type == 'log':
@@ -33,7 +34,7 @@ class Gather():
             api_address = MEASURES_QUERY_API
 
         # 此处参数传递应给予改善
-        query_form = api_address + '?' + 'start=1551210759&m=sum:sum:' + measures + '_' + measures_name + '{hostname=*}'
+        query_form = api_address + '?' + 'start=1551210759&m=sum:sum:' + measures + '_' + measures_name + interface_param
 
         request_result = requests.get(url=query_form)
         request_code = request_result.status_code
@@ -102,10 +103,10 @@ class Gather():
     @classmethod
     def change_json(cls, measures, request_result, measures_name):
         """
-
-        :param measures:
-        :param request_result:
-        :param measures_name:
+        将API结果处理成最新json结果
+        :param measures:            指标集
+        :param request_result:      API请求结果
+        :param measures_name:       指标名称
         :return:
         """
         result_json = json.loads(request_result.content)

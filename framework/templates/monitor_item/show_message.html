@@ -709,13 +709,127 @@
                                                   type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
-                                    <el-radio-group v-model="sql_file_interface" @change="change1"
+                                    <el-radio-group v-model="sql_file_interface" @change="change_data_sources"
                                                     style="padding: 14px">
                                         <el-radio :label="3">数据库</el-radio>
                                         <el-radio :label="6">文件</el-radio>
                                         <el-radio :label="9">接口</el-radio>
                                      </el-radio-group>
                                 </el-form-item>
+
+                                    <div v-if="file_show">
+                                        <div :style="{ display: sql1 }">
+                                    <el-form-item label="数据库连接">
+                                        <el-select v-model="server_url" placeholder="请选择数据库">
+                                            <el-option v-for="i in sites1" :label="i.label"
+                                                       :value="i.value"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </div>
+                                <div :style="{display:file1}">
+                                    <el-form-item label="服务器">
+                                        <el-input placeholder="请输入服务器" v-model="server_url"
+                                                  style="width: 96%"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="文件路径">
+                                        <el-input placeholder="请输入文件路径" v-model="file_param"
+                                                  style="width: 96%"></el-input>
+                                    </el-form-item>
+                                </div>
+                                <div :style="{display:interface1}">
+                                    <el-form-item label="url">
+                                        <el-input placeholder="请输入url" v-model="server_url"
+                                                  style="width: 96%"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="接口参数">
+                                        <el-input type="textarea" v-model="file_param"></el-input>
+                                    </el-form-item>
+                                </div>
+                                <el-form-item label="数据采集规则" style="width: 96%">
+                                    <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq"
+                                              type="textarea"></el-input>
+                                </el-form-item>
+                                <el-form-item label="采集时间段:" style="width: 96%">
+                                    <el-col :span="11">
+                                        <el-form-item>
+                                            <el-time-picker style="width: 96%" v-model="basic.start_time"
+                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
+                                        </el-col>
+                                    <el-col class="line" :span="2">—</el-col>
+                                    <el-col :span="11">
+                                        <el-form-item>
+                                            <el-time-picker style="width: 96%" v-model="basic.end_time"
+                                                            placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+                                </el-form-item>
+                                <el-form-item label="采集周期" prop="period">
+                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="basic.period" style="width: 96%"
+                                                      placeholder="请输入采集周期(秒)"></el-input>
+                                        </el-form-item>
+                                    </div>
+                                    <div v-if="database_show">
+                                        <div :style="{ display: sql1 }">
+                                    <el-form-item label="数据库连接">
+                                        <el-select v-model="server_url" placeholder="请选择数据库">
+                                            <el-option v-for="i in sites1" :label="i.label"
+                                                       :value="i.value"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </div>
+                                <div :style="{display:file1}">
+                                    <el-form-item label="服务器">
+                                        <el-input placeholder="请输入服务器" v-model="server_url"
+                                                  style="width: 96%"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="文件路径">
+                                        <el-input placeholder="请输入文件路径" v-model="file_param"
+                                                  style="width: 96%"></el-input>
+                                    </el-form-item>
+                                </div>
+                                <div :style="{display:interface1}">
+                                    <el-form-item label="url">
+                                        <el-input placeholder="请输入url" v-model="server_url"
+                                                  style="width: 96%"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="接口参数">
+                                        <el-input type="textarea" v-model="file_param"></el-input>
+                                    </el-form-item>
+                                </div>
+                                <el-form-item label="数据采集规则" style="width: 96%">
+                                    <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq"
+                                              type="textarea"></el-input>
+                                </el-form-item>
+                                <el-form-item label="采集时间段:" style="width: 96%">
+                                    <el-col :span="11">
+                                        <el-form-item>
+                                            <el-time-picker style="width: 96%" v-model="basic.start_time"
+                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
+                                        </el-col>
+                                    <el-col class="line" :span="2">—</el-col>
+                                    <el-col :span="11">
+                                        <el-form-item>
+                                            <el-time-picker style="width: 96%" v-model="basic.end_time"
+                                                            placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
+                                            </el-time-picker>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-form-item>
+                                </el-form-item>
+                                <el-form-item label="采集周期" prop="period">
+                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="basic.period" style="width: 96%"
+                                                      placeholder="请输入采集周期(秒)"></el-input>
+                                        </el-form-item>
+                                    </div>
+                             <div v-if="interface_show">
                                 <el-form-item label="来源类型"  >
                                     <el-select v-model="base.interface_type" placeholder="请选择数据来源类型" @change="change_source_type">
                                         <el-option label="日志" value="log"></el-option>
@@ -783,9 +897,8 @@
                                             <el-select v-model="i.dimension_name">
                                                 <el-option v-for="item in dimensionality_list"
                                                 :key="item"
-                                                :label="item"
-                                                :value="item">
-
+                                                label="ip"
+                                                value="ip">
                                                 </el-option>
                                             </el-select>
                                         </el-form-item>
@@ -804,6 +917,8 @@
                                 <el-col :span="6" :offset="18" style="height: 48px">
                                     <el-button type="primary" @click="add_dimension"><i class="el-icon-circle-plus-outline" style="font-size: 14px"></i>&nbsp;添加维度</el-button>
                                 </el-col>
+                             </div>
+
                             </el-form>
                             </div>
                         </el-col>
@@ -851,6 +966,9 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            database_show:true,
+            file_show:false,
+            interface_show:false,
             loading:false,
             message: '',                                           //弹框提示信息
             constants: '',
@@ -923,10 +1041,11 @@
             },
             base: {
                 //基本单元
-                measures_name:'',
-                measures:'',
-                interface_type:'',
-                show_rule_type:'',
+                dimension_data:[],//维度名称
+                measures_name:'',//指标名称
+                measures:'',       //指标集
+                interface_type:'',//接口类型
+                show_rule_type:'',//展示规则
                 monitor_name: '',                      //单元名称
                 monitor_type: '',                      //单元类型
                 font_size: '20',                         //字号
@@ -1141,12 +1260,9 @@
             gather_list:[],
             gather_base_test_data:[],
             dimension_data:[{
-                dimension_name:'hahaha',
-                dimension_value:'123'
-            },{
-                dimension_name:'hehehe',
-                dimension_value:'456'
-            }
+                dimension_name:'ip',
+                dimension_value:'192.168.1.153'
+            },
             ],
         },
         methods: {
@@ -2539,6 +2655,7 @@
                 }
             },
             base_cell_test(){
+                vm.base.dimension_data = vm.dimension_data;
                 axios({
                     url:'${SITE_URL}iqube_interface/gather_base_test/',
                     method:'post',
@@ -2581,6 +2698,26 @@
                     vm.$message.error('采集失败！');
                 })
             },
+            change_data_sources(value){
+                if(value == 9){
+                    //接口类型
+                    vm.file_show = false;
+                    vm.interface_show = true;
+                    vm.database_show = false;
+                }else if (value == 6){
+                    //文件
+                    vm.file_show = true;
+                    vm.interface_show = false;
+                    vm.database_show = false;
+                    vm.change1(6)
+                }else if (value == 3){
+                    //数据库
+                    vm.change1(3)
+                    vm.file_show = false;
+                    vm.interface_show = false;
+                    vm.database_show = true;
+                }
+            }
         },
         mounted() {
             this.get_header_data()
