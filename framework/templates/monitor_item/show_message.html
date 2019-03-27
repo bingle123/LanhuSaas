@@ -895,10 +895,11 @@
                                     <el-col :span="11">
                                         <el-form-item label="维度名称">
                                             <el-select v-model="i.dimension_name">
-                                                <el-option v-for="item in dimensionality_list"
-                                                :key="item"
-                                                label="ip"
-                                                value="ip">
+                                                <el-option label="ip" value="ip">
+                                                </el-option>
+                                                <el-option label="appsystem" value="appsystem">
+                                                </el-option>
+                                                <el-option label="hostname" value="hostname">
                                                 </el-option>
                                             </el-select>
                                         </el-form-item>
