@@ -33,7 +33,7 @@ class Gather():
         else:
             api_address = MEASURES_QUERY_API
 
-        # 此处参数传递应给予改善
+        # 此处参数传递应给予改善, 时间需要改为当前时间的前一天
         query_form = api_address + '?' + 'start=1551210759&m=sum:sum:' + measures + '_' + measures_name + interface_param
 
         request_result = requests.get(url=query_form)

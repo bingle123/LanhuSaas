@@ -10,7 +10,7 @@ class Monitor(models.Model):
     """
     monitor_name = models.CharField(verbose_name=u'监控项名称', max_length=50)
     monitor_type = models.PositiveIntegerField(verbose_name=u'监控项类型')
-    jion_id = models.PositiveIntegerField(verbose_name=u'关联ID')
+    jion_id = models.PositiveIntegerField(verbose_name=u'关联ID', null=True)
     gather_rule = models.CharField(verbose_name=u'采集规则', max_length=500)
     gather_params = models.CharField(verbose_name=u'采集参数', max_length=500)
     params = models.CharField(verbose_name=u'监控参数', max_length=500)
@@ -27,6 +27,12 @@ class Monitor(models.Model):
     status = models.PositiveIntegerField(verbose_name=u'监控状态')
     contents = models.CharField(verbose_name=u'显示内容', max_length=500)
     monitor_area = models.IntegerField(verbose_name=u'监控项日历地区')
+    source_type = models.PositiveIntegerField(verbose_name=u'来源类型', null=True)
+    target_name = models.CharField(verbose_name=u'指标名称', max_length=40, null=True)
+    measure_name = models.CharField(verbose_name=u'度量名称', max_length=50, null=True)
+    dimension = models.CharField(verbose_name=u'维度', max_length=1000, null=True)
+    display_type = models.PositiveIntegerField(verbose_name=u'展示类型', null=True)
+    display_rule = models.CharField(verbose_name=u'展示规则', max_length=1000, null=True)
 
     def __str__(self):
         return self.id

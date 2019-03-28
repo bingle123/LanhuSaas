@@ -41,12 +41,12 @@ def gather_base_test(request):
     # 维度列表
     dimension_data = request_body['dimension_data']
 
-    # 构造参数
-    str = ''
+    # 指标的构造参数
+    str = '{hostname=*}'
     for i in dimension_data:
         key = i['dimension_name']
         value = i['dimension_value']
-        str += '{'+key+'='+value+'}'
+        str += '{' + key + '=' + value + '}'
 
     interface_type = request_body['interface_type']
     measures = request_body['measures']
