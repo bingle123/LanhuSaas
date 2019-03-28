@@ -23,7 +23,8 @@ def monitor_show(request):
     :param request:
     :return:
     """
-    monitor = Scene.objects.all()  # 搜索
+    # 搜索,按id倒排序
+    monitor = Scene.objects.all()
     res_list = []
     for i in monitor:
         dic = {
@@ -109,7 +110,7 @@ def select_table(request):
     """
     res = request.body
     res_list = []
-    monitor = Scene.objects.filter(scene_name__contains=res)
+    monitor = Scene.objects.filter(scene_name__contains=res).order_by("-id")
     for i in monitor:
         dic = {
             'id': i.id,
@@ -134,7 +135,7 @@ def select_table(request):
     return res_list
 
 
-def delect(request):
+def delete_scene(request):
     """
 
     :param request:
@@ -264,7 +265,7 @@ def pos_name(request):
         res_list.append(dic)
     return res_list
 
-
+# 场景查询方法
 def paging(request):
     """
 
@@ -275,7 +276,8 @@ def paging(request):
     page = res['page']
     limit = res['limit']
     start_page = limit * page - 9
-    monitor = Scene.objects.all()[start_page - 1:start_page + 9]
+    # 根据id倒排序
+    monitor = Scene.objects.all().order_by("-id")[start_page - 1:start_page + 9]
     monitor2 = Scene.objects.all().values('id')
     page_count = math.ceil(len(monitor2) / 10)
     res_list = []
@@ -386,7 +388,7 @@ def monitor_scene_show(id):
     :param id:
     :return:
     """
-    obj = Monitor.objects.filter(id=id)
+    obj = Monitor.objects.filter(id=id).order_by("-id")
     data_list = []
     for i in obj:
         x = model_to_dict(i)
