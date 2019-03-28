@@ -1,5 +1,5 @@
 # encoding:utf-8
-from component.shortcuts import get_client_by_user
+from blueking.component.shortcuts import get_client_by_user
 from shell_app.tools import success_result
 from shell_app.tools import error_result
 from shell_app.tools import get_active_user

@@ -32,11 +32,11 @@ from django.conf.global_settings import *  # noqa
 # 应用基本信息配置 (请按照说明修改)
 # ==============================================================================
 # 在蓝鲸智云开发者中心 -> 点击应用ID -> 基本信息 中获取 APP_ID 和 APP_TOKEN 的值
-APP_ID = 'mydjango1'
+APP_ID = 'lanhusaas'
 # 长沙APP_TOKEN
 # APP_TOKEN = 'd441289d-14f9-435f-b195-499e20920e9e'
 # 上海APP_TOKEN
-APP_TOKEN = 'c6369717-7906-4699-ad0d-31f5798d5cef'
+APP_TOKEN = '334c1932-4763-47b9-8f06-7f8c7c8b33aa'
 
 # 指标集API地址
 MEASURES_API_ADDRESS = 'http://192.168.1.153:8088/webserver/metric/getMetricSetColumns.do'

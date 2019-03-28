@@ -42,7 +42,6 @@ def unit_show(request):
     #  把返回的数据对象转为list
     res_list = tools.obt_dic(page_data, base_page_count)
     param = {
-        'bk_username': 'admin',
         "bk_token": request.COOKIES['bk_token'],
         "bk_biz_id": 2
     }
@@ -191,6 +190,7 @@ def add_unit(request):
             # 修改后的基本监控项处理
             if res['monitor_type'] == 'five':
                 monitor_type = 1
+                # print add_flow_dic
             add_dic['monitor_name'] = res['monitor_name']
             # 新增一条数据时 开关状态默认为0 关闭
             add_dic['status'] = 0
@@ -211,7 +211,6 @@ def add_unit(request):
             info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                                  request.user.username, '成功', '无')
     except Exception as e:
-        print e
         info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              request.user.username, '失败', repr(e))
         result = tools.error_result(e)
