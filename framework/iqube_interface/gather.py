@@ -110,14 +110,31 @@ class Gather():
         :return:
         """
         result_json = json.loads(request_result.content)
+
         # 此处解析结果
         result_list = []
         for i in result_json:
+            # 时间列表
             time_list = []
+            # 临时变量
+            temp_value = None
+
+            sum_value = 0
+            value_count = 0
             for key, value in i['dps'].items():
                 time_list.append(key)
+                temp_value = value
+                # 最大值
+                if value >= temp_value:
+                    metric_max = i['dps'][key]
+                    metric_max_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(key)))
+                # 平均值
+                sum_value += value
+                # 循环次数，用于计算平均值使用
+                value_count += 1
             max_time = max(time_list)
             metric = i['dps'][max_time]
+            metric_avg = sum_value / value_count
             max_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(max_time)))
             map = {}
             map[measures + '_' + measures_name] = metric
@@ -126,6 +143,11 @@ class Gather():
             ip = i['tags']['ip']
             map['system_name'] = appsystem
             map['ip'] = ip
+
+            map['metric_max'] = metric_max
+            map['metric_max_time'] = metric_max_time
+            map['metric_avg'] = metric_avg
+
             result_list.append(map)
         return result_list
 
