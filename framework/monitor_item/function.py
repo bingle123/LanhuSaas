@@ -159,7 +159,6 @@ def add_unit(request):
             username = request.user.username
             res = json.loads(request.body)
             add_dic = res['data']
-            print add_dic
             add_flow_dic = res['flow']
             monitor_type = res['monitor_type']
             #  根据前台来的单元类型进行分类
@@ -189,6 +188,9 @@ def add_unit(request):
                 add_flow_dic['start_time']=add_dic['start_time']
                 add_flow_dic['end_time'] =add_dic['end_time']
                 print add_flow_dic
+            # 修改后的基本监控项处理
+            if res['monitor_type'] == 'five':
+                monitor_type = 1
             add_dic['monitor_name'] = res['monitor_name']
             # 新增一条数据时 开关状态默认为0 关闭
             add_dic['status'] = 0
@@ -196,6 +198,7 @@ def add_unit(request):
             add_dic['creator'] = username
             add_dic['editor'] = username
             add_dic['monitor_area'] = res['monitor_area']
+            print add_dic
             Monitor.objects.create(**add_dic)
             # 添加定时任务监控要求本地安装任务调度软件rabitmq
             # 正式环境服务器一般带有这个调度软件，如果没有就要安装
@@ -208,6 +211,7 @@ def add_unit(request):
             info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                                  request.user.username, '成功', '无')
     except Exception as e:
+        print e
         info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              request.user.username, '失败', repr(e))
         result = tools.error_result(e)

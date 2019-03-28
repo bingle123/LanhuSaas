@@ -679,7 +679,7 @@
                     <el-row>
                         <el-col :span="12">
                             <div class="grid-content bg-purple">
-                                <el-form :model="base" ref="base" :rules="rules1" label-width="100px">
+                                <el-form :model="base" ref="base" :rules="basicMonitorRules" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="base.font_size" placeholder="请选择字号" @change="basic_size">
                                         <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
@@ -1065,7 +1065,11 @@
                 period: [
                     {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
                 ]
-            },                              //校验规则
+            },//基本监控项（修改后）的校验规则
+            basicMonitorRules: {
+
+            },
+            //校验规则
             basic1: {                                //基本单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
@@ -1448,6 +1452,7 @@
                 var chart = $('#pane-second').attr('style');
                 var job = $('#pane-third').attr('style');
                 var flow = $('#pane-fourth').attr('style');
+                var base = $('#pane-five').attr('style');
                 if (basic == undefined || basic == "") {
                     vm.submitForm('basic')
                 } else if (chart == undefined || chart == "") {
@@ -1456,6 +1461,8 @@
                     vm.submitForm('job')
                 } else if (flow == undefined || flow == "") {
                     vm.submitForm('flow')
+                } else if (base == undefined || base == "") {
+                    vm.submitForm('base')
                 }
             },
             current_change1(value) {
@@ -1826,6 +1833,31 @@
                     flow.width = vm.flow.width;
                     flow.period = vm.flow.period;
                     flow.constants = vm.constants;
+                //修改后的基本监控项的数据上传处理
+                }else if (vm.monitor_type == 'five') {
+                    //数据整合与处理
+                    this.base['jion_id'] = null;
+                    //this.base['monitor_name'] = this.monitor_name;
+                    //this.base['monitor_type'] = this.monitor_type;
+                    //this.base['monitor_area'] = this.area;
+                    if('log' == this.base['interface_type']){
+                        this.base['source_type'] = 0;
+                    }else if('measures' == this.base['interface_type']){
+                        this.base['source_type'] = 1;
+                    }else{
+                        this.base['source_type'] = null;
+                    }
+                    //this.base['source_type'] = this.base['interface_type'];
+                    delete this.base['interface_type'];
+                    this.base['target_name'] = this.base['measures'];
+                    delete this.base['measures'];
+                    this.base['measure_name'] = this.base['measures_name'];
+                    delete this.base['measures_name'];
+                    this.base['dimension'] = JSON.stringify(this.dimension_data);
+                    this.base['display_type'] = this.base['show_rule_type'];
+                    delete this.base['show_rule_type'];
+                    this.base['display_rule'] = this.base['gather_rule'];
+                    this.result_data = this.base;
                 }
                 if (vm.monitor_name == '') {
                     vm.message = '请输入监控项名称!';
@@ -2098,7 +2130,7 @@
             add_unit(row) {                         //新增单元
                 {
                     if (vm.add_pamas == 1) {
-                        vm.Initialization();
+                        vm.Initialization()
                     }
                     vm.add_pamas = 0;
                     vm.monitor_name = '';
@@ -2125,6 +2157,9 @@
                     vm.file_param = '';
                     vm.basic.gather_rule = '';
                     vm.basic.gather_params = 'sql'
+                    //修改后的基本监控项的采集类型设置
+                    vm.base.gather_params = 'sql';
+                    //----------------------------
                 } else if (value == 6) {
                     vm.typeid = '2';
                     vm.sql1 = 'none';
@@ -2134,6 +2169,9 @@
                     vm.file_param = '';
                     vm.basic.gather_rule = '';
                     vm.basic.gather_params = 'file';
+                    //修改后的基本监控项的采集类型设置
+                    vm.base.gather_params = 'file';
+                    //----------------------------
                 } else if (value == 9) {
                     vm.typeid = '3';
                     vm.sql1 = 'none';
@@ -2143,6 +2181,9 @@
                     vm.file_param = '';
                     vm.basic.gather_rule = '';
                     vm.basic.gather_params = 'interface';
+                    //修改后的基本监控项的采集类型设置
+                    vm.base.gather_params = 'interface';
+                    //----------------------------
                 }
             },
             change2(value) {
