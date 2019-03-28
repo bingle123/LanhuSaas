@@ -79,7 +79,11 @@ class Gather():
                 for i in rule_list:
                     if i is not None:
                         color_rgb = i.split('==')[0]
-                        color_code = i.split('==')[1]
+                        try:
+                            color_code = i.split('==')[1]
+                        except Exception as e:
+                            # 不存在默认将
+                            color_code = 'error'
                         color_code_map[color_code] = color_rgb
 
                 # 模拟数据
