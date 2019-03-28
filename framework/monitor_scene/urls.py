@@ -18,7 +18,7 @@ urlpatterns = patterns(
     (r'^monitor_show/$', 'monitor_show'),
     (r'^addSence/$', 'addSence'),
     (r'^select_table/$', 'select_table'),
-    (r'^delect/$', 'delect'),
+    (r'^del_scene/$', 'delete_scene'),
     (r'^editSence/$', 'editSence'),
     (r'^pos_name/$', 'pos_name'),
     (r'^paging/$', 'paging'),
