@@ -36,7 +36,8 @@ def unit_show(request):
     limit = res['limit']
     #  当前页面号
     page = res['page']
-    unit = Monitor.objects.all()
+    # 按id倒排序
+    unit = Monitor.objects.all().order_by('-id')
     # 进入分页函数进行分页，返回总页数和当前页数据
     page_data, base_page_count = tools.page_paging(unit, limit, page)
     #  把返回的数据对象转为list
@@ -109,8 +110,8 @@ def select_unit(request):
     res1 = res['data']
     limit = res['limit']
     page = res['page']
-    # 模糊查询
-    unit = Monitor.objects.filter(Q(monitor_name__icontains=res1) | Q(editor__icontains=res1))
+    # 模糊查询,根据id倒排序
+    unit = Monitor.objects.filter(Q(monitor_name__icontains=res1) | Q(editor__icontains=res1)).order_by("-id")
     page_data, base_page_count = tools.page_paging(unit, limit, page)
     res_list = tools.obt_dic(page_data, base_page_count)
     res_data = tools.success_result(res_list)
@@ -158,7 +159,6 @@ def add_unit(request):
             username = request.user.username
             res = json.loads(request.body)
             add_dic = res['data']
-            print add_dic
             add_flow_dic = res['flow']
             monitor_type = res['monitor_type']
             #  根据前台来的单元类型进行分类
@@ -187,7 +187,10 @@ def add_unit(request):
                 add_dic['end_time'] = max(start_list)
                 add_flow_dic['start_time']=add_dic['start_time']
                 add_flow_dic['end_time'] =add_dic['end_time']
-                # print add_flow_dic
+                print add_flow_dic
+            # 修改后的基本监控项处理
+            if res['monitor_type'] == 'five':
+                monitor_type = 1
             add_dic['monitor_name'] = res['monitor_name']
             # 新增一条数据时 开关状态默认为0 关闭
             add_dic['status'] = 0
@@ -195,6 +198,7 @@ def add_unit(request):
             add_dic['creator'] = username
             add_dic['editor'] = username
             add_dic['monitor_area'] = res['monitor_area']
+            print add_dic
             Monitor.objects.create(**add_dic)
             # 添加定时任务监控要求本地安装任务调度软件rabitmq
             # 正式环境服务器一般带有这个调度软件，如果没有就要安装
