@@ -96,6 +96,8 @@ class Gather():
                 try:
                     for i in temp_list:
                         i[measures + '_' + measures_name] = Gather.other_manage(i[measures + '_' + measures_name], gather_rule)
+                        i['metric_max'] = Gather.other_manage(i['metric_max'], gather_rule)
+                        i['metric_avg'] = Gather.other_manage(i['metric_avg'], gather_rule)
                     return success_result(temp_list)
                 except Exception as e:
                     return error_result(u'异常'+str(e))
