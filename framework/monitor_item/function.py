@@ -36,7 +36,8 @@ def unit_show(request):
     limit = res['limit']
     #  当前页面号
     page = res['page']
-    unit = Monitor.objects.all()
+    # 按id倒排序
+    unit = Monitor.objects.all().order_by('-id')
     # 进入分页函数进行分页，返回总页数和当前页数据
     page_data, base_page_count = tools.page_paging(unit, limit, page)
     #  把返回的数据对象转为list
