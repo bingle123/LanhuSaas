@@ -66,6 +66,8 @@ class Gather():
                 # 此处规则转换
                 for i in temp_list:
                     i[measures + '_' + measures_name] = Gather.percent_manage(gather_rule, i[measures + '_' + measures_name])
+                    i['metric_max'] = Gather.percent_manage(gather_rule, i['metric_max'])
+                    i['metric_avg'] = Gather.percent_manage(gather_rule, i['metric_avg'])
                 # print result_list
                 return success_result(temp_list)
             # 显示颜色
