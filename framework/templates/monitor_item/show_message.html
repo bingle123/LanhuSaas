@@ -2733,7 +2733,8 @@
                                             $('.circle-bar-left').css('transform','rotate('+((percent-50)*3.6)+'deg)');
                                         }
                                     }else {
-                                        $(selector).html('');
+                                        $('#base_test_text').html('');
+                                        vm.$message.error('百分比参数配置出错！');
                                         return
                                     }
 
@@ -2755,14 +2756,15 @@
                             $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block;"></div>');
                             for(let j=0;j<data_key.length;j++){
                                 if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
-                                    if(data_value[j].indexOf('#')>-1){
+                                    var data_value_str=data_value[j].toString();
+                                    if(data_value_str.indexOf('#')>-1){
                                         console.log(data_value[j]);
                                         $(selector).append('<p>'+data_key[j]+':<i style="color:'+data_value[j]+'" class="el-icon-star-on"></i></p>');
                                     }else {
-                                        $(selector).html('');
+                                        $('#base_test_text').html('');
+                                        vm.$message.error('颜色比参数配置出错！');
                                         return
                                     }
-
                                 }else {
                                     $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
                                 }
@@ -2785,7 +2787,8 @@
                                         console.log(data_value[j])
                                         $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
                                     }else {
-                                        $(selector).html('');
+                                        vm.$message.error('其他参数配置出错！');
+                                        $('#base_test_text').html('');
                                         return
                                     }
 
@@ -2796,7 +2799,7 @@
                         }
                     }
                 }).catch(function (e) {
-                    vm.$message.error('123');
+                    vm.$message.error('采集失败！');
                     $('#base_test_text').html('');
                 });
             },
