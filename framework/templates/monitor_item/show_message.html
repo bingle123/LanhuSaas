@@ -1970,11 +1970,13 @@
                     delete this.base['measures'];
                     this.base['measure_name'] = this.base['measures_name'];
                     delete this.base['measures_name'];
-                    this.base['dimension'] = JSON.stringify(this.dimension_data);
+                    this.base['dimension'] = JSON.stringify(JSON.stringify(this.dimension_data));
+                    delete this.base['dimension_data'];
                     this.base['display_type'] = this.base['show_rule_type'];
                     delete this.base['show_rule_type'];
                     this.base['display_rule'] = this.base['gather_rule'];
                     this.result_data = this.base;
+                    console.log(this.base)
                 }
                 if (vm.monitor_name == '') {
                     vm.message = '请输入监控项名称!';

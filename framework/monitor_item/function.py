@@ -190,7 +190,6 @@ def add_unit(request):
             # 修改后的基本监控项处理
             if res['monitor_type'] == 'five':
                 monitor_type = 1
-                # print add_flow_dic
             add_dic['monitor_name'] = res['monitor_name']
             # 新增一条数据时 开关状态默认为0 关闭
             add_dic['status'] = 0
