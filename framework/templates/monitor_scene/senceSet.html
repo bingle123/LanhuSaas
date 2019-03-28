@@ -110,6 +110,21 @@
                 left: 0;
                 top: 0;
         }
+        .circle-bar { margin:20px auto;font-size:100px; width: 1em; height: 1em; position: relative;  background-color: #333; }
+        .circle-bar-left,.circle-bar-right { width: 1em; height: 1em; background-color: #eee; }
+        /*
+            这里采用clip剪切了圆，实现左右两个半圆，右半圆在后面，因此在更上一层，
+            clip的用法参考：http://www.w3school.com.cn/cssref/pr_pos_clip.asp
+         */
+        .circle-bar-right { clip:rect(0,auto,auto,.5em); }
+        .circle-bar-left { clip:rect(0,.5em,auto,0); }
+
+        .mask { width: 0.8em; height: 0.8em;  background-color: #fff;text-align: center;line-height: 0.2em; color:rgba(0,0,0,0.5); }
+        .mask :first-child { font-size: 0.3em; height: 0.8em; line-height: 0.8em; display: block;  }
+        /*所有的后代都水平垂直居中，这样就是同心圆了*/
+        .circle-bar * {  position: absolute; top:0; right:0; bottom:0; left:0; margin:auto; }
+        /*自身以及子元素都是圆*/
+        .circle-bar, .circle-bar > * { border-radius: 50%; }
     </style>
 
 </head>
@@ -159,7 +174,7 @@
                     <template slot-scope="scope">
                     <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
                     <el-button size="mini" type="text" v-on:click="edit(scope.row)">编辑</el-button>
-                    <el-button size="mini" type="text" v-on:click="delect(scope.row)">删除</el-button>
+                    <el-button size="mini" type="text" v-on:click="del_scene(scope.row)">删除</el-button>
                     </el-tooltip>
                 </template>
                 </el-table-column>
@@ -731,25 +746,21 @@
                 }
 
             },
-            delect(row){
+            del_scene(row){
                 this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning',
                 center: true,
             }).then(() => {
-                this.$message({
-                        type: 'success',
-                        message: '删除成功!',
-                    },
-                    axios({
-                        method: 'post',
-                        url: '${SITE_URL}monitor_scene/delect/',
-                        data:  row.id
-
-                    }).then((res) => {
-                        vm.paging();
-                    }),);
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor_scene/del_scene/',
+                    data:  row.id
+                }).then((res) => {
+                    this.$alert("场景删除成功！","提示");
+                    vm.paging();
+                });
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -814,6 +825,7 @@
                         page:vm.page1
                     },
                 }).then((res)=> {
+                    console.log(res)
                     if (vm.monitor_type == 0){
                         vm.base_monitor=res.data.results.base_list;
                         vm.chart_monitor=res.data.results.chart_list;
@@ -846,7 +858,7 @@
             },
             add_base_monitor(i){
                 $('.monitor_content').append('<div class=\"Drigging\" name=\"'+i.id+'\" type=\"basic'+i.id+'\" id=\"'+vm.drigging_id+'\" style=\"transform: scale('+vm.scale+')\"></div>');
-                base_monitor(i.id,i.font_size,i.height,i.width,i.contents);
+                test_monitor(i.id,i.display_rule,i.display_type,i.measure_name,i.target_name,vm.drigging_id);
                 vm.drigging_id++
             },
             add_chart_monitor(i){

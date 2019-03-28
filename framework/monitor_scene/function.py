@@ -23,7 +23,8 @@ def monitor_show(request):
     :param request:
     :return:
     """
-    monitor = Scene.objects.all()  # 搜索
+    # 搜索,按id倒排序
+    monitor = Scene.objects.all()
     res_list = []
     for i in monitor:
         dic = {
@@ -109,7 +110,7 @@ def select_table(request):
     """
     res = request.body
     res_list = []
-    monitor = Scene.objects.filter(scene_name__contains=res)
+    monitor = Scene.objects.filter(scene_name__contains=res).order_by("-id")
     for i in monitor:
         dic = {
             'id': i.id,
@@ -134,7 +135,7 @@ def select_table(request):
     return res_list
 
 
-def delect(request):
+def delete_scene(request):
     """
 
     :param request:
@@ -264,7 +265,7 @@ def pos_name(request):
         res_list.append(dic)
     return res_list
 
-
+# 场景查询方法
 def paging(request):
     """
 
@@ -275,7 +276,8 @@ def paging(request):
     page = res['page']
     limit = res['limit']
     start_page = limit * page - 9
-    monitor = Scene.objects.all()[start_page - 1:start_page + 9]
+    # 根据id倒排序
+    monitor = Scene.objects.all().order_by("-id")[start_page - 1:start_page + 9]
     monitor2 = Scene.objects.all().values('id')
     page_count = math.ceil(len(monitor2) / 10)
     res_list = []
@@ -307,6 +309,7 @@ def paging(request):
     return res_list
 
 
+# 场景编排区域显示的四类监控项
 def scene_show(res):
     """
     场景编排显示
@@ -319,13 +322,17 @@ def scene_show(res):
         limit = res['limit']
         page = res['page']
         if type == 0:
-            base_unit = Monitor.objects.filter(monitor_type='1')
+            # 四类监控项全部按id倒排序（基本监控项）
+            base_unit = Monitor.objects.filter(monitor_type='1').order_by("-id")
             base_page_data, base_page_count = tools.page_paging(base_unit, limit, page)
-            chart_unit = Monitor.objects.filter(monitor_type='2')
+            # 四类监控项全部按id倒排序（图表监控项）
+            chart_unit = Monitor.objects.filter(monitor_type='2').order_by("-id")
             chart_page_data, chart_page_count = tools.page_paging(chart_unit, limit, page)
-            job_unit = Monitor.objects.filter(monitor_type='3')
+            # 四类监控项全部按id倒排序（作业监控项）
+            job_unit = Monitor.objects.filter(monitor_type='3').order_by("-id")
             job_page_data, job_page_count = tools.page_paging(job_unit, limit, page)
-            flow_unit = Monitor.objects.filter(monitor_type='4')
+            # 四类监控项全部按id倒排序（流程监控项）
+            flow_unit = Monitor.objects.filter(monitor_type='4').order_by("-id")
             flow_page_data, flow_page_count = tools.page_paging(flow_unit, limit, page)
             base_list = tools.obt_dic(base_page_data, base_page_count)
             chart_list = tools.obt_dic(chart_page_data, chart_page_count)
@@ -337,22 +344,25 @@ def scene_show(res):
                 'job_list': job_list,
                 'flow_list': flow_list,
             }
+        # 基本监控项
         elif type == 1:
-            base_unit = Monitor.objects.filter(monitor_type='1')
+            base_unit = Monitor.objects.filter(monitor_type='1').order_by("-id")
             base_page_data, base_page_count = tools.page_paging(base_unit, limit, page)
             base_list = tools.obt_dic(base_page_data, base_page_count)
             res_dic = {
                 'base_list': base_list,
             }
+        # 图表监控项
         elif type == 2:
-            chart_unit = Monitor.objects.filter(monitor_type='2')
+            chart_unit = Monitor.objects.filter(monitor_type='2').order_by("-id")
             chart_page_data, chart_page_count = tools.page_paging(chart_unit, limit, page)
             chart_list = tools.obt_dic(chart_page_data, chart_page_count)
             res_dic = {
                 'chart_list': chart_list,
             }
+        # 作业监控项
         elif type == 3:
-            job_unit = Monitor.objects.filter(monitor_type='3')
+            job_unit = Monitor.objects.filter(monitor_type='3').order_by("-id")
             job_page_data, job_page_count = tools.page_paging(job_unit, limit, page)
             job_list = tools.obt_dic(job_page_data, job_page_count)
             job_status_list = []
@@ -367,8 +377,9 @@ def scene_show(res):
             res_dic = {
                 'job_list': job_list,
             }
+        # 流程监控项
         elif type == 4:
-            flow_unit = Monitor.objects.filter(monitor_type='4')
+            flow_unit = Monitor.objects.filter(monitor_type='4').order_by("-id")
             flow_page_data, flow_page_count = tools.page_paging(flow_unit, limit, page)
             flow_list = tools.obt_dic(flow_page_data, flow_page_count)
             res_dic = {
@@ -386,7 +397,7 @@ def monitor_scene_show(id):
     :param id:
     :return:
     """
-    obj = Monitor.objects.filter(id=id)
+    obj = Monitor.objects.filter(id=id).order_by("-id")
     data_list = []
     for i in obj:
         x = model_to_dict(i)

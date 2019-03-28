@@ -48,6 +48,8 @@ def gather_base_test(request):
         value = i['dimension_value']
         str += '{' + key + '=' + value + '}'
 
+    # 日志的参数构造
+
     interface_type = request_body['interface_type']
     measures = request_body['measures']
     measures_name = request_body['measures_name']

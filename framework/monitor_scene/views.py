@@ -54,13 +54,13 @@ def select_table(request):
     return render_json(res)
 
 
-def delect(request):
+def delete_scene(request):
     """
 
     :param request:
     :return:
     """
-    res = function.delect(request)
+    res = function.delete_scene(request)
     return render_json(res)
 
 
