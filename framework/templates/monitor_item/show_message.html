@@ -947,7 +947,7 @@
             </el-tabs>
         </span>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="centerDialogVisible = false">取 消</el-button>
+            <el-button @click="clear_all_temp_data()">取 消</el-button>
             <el-button type="primary" v-on:click="pefFrom">保 存</el-button>
         </span>
     </el-dialog>
@@ -967,6 +967,13 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            //四类基本监控项的初始化缓存数据
+            base_temp: null,
+            basic_temp: null,
+            chart_temp: null,
+            job_temp: null,
+            flow_temp: null,
+            //--------------------------
             database_show:true,
             file_show:false,
             interface_show:false,
@@ -1271,8 +1278,25 @@
             ],
         },
         methods: {
+            //缓存四类基本监控项的初始化数据--深度拷贝
+            store_all_init_data(){
+                this.basic_temp = $.extend(true, this.basic_temp, this.basic);
+                this.base_temp = $.extend(true, this.base_temp, this.base);
+                this.chart_temp = $.extend(true, this.chart_temp, this.chart);
+                this.job_temp = $.extend(true, this.job_temp, this.job);
+                this.flow_temp = $.extend(true, this.flow_temp, this.flow);
+            },
+            //初始化表单填写的所有缓存数据，为下一次填写数据做准备
+            clear_all_temp_data(){
+                this.centerDialogVisible = false;
+                this.base = $.extend(true, this.base, this.base_temp);
+                this.basic = $.extend(true, this.basic, this.basic_temp);
+                this.chart = $.extend(true, this.chart, this.chart_temp);
+                this.job = $.extend(true, this.job, this.job_temp);
+                this.flow = $.extend(true, this.flow, this.flow_temp);
+            },
             add_dimension(){
-                vm.$set(vm.base.dimension_data, vm.base.dimension_data.length, {
+                vm.$set(vm.dimension_data, vm.dimension_data.length, {
                 dimension_name:'',
                 dimension_value:''
             });
@@ -1677,13 +1701,19 @@
                 this.get_db_connections();
                 vm.add_pamas = 1;
                 vm.centerDialogVisible = true;
-                vm.disabled2 = false;
+                //默认编辑下显示基本监控项取消
+                //vm.disabled2 = false;
+                vm.disabled2 = true;
+                //-----------------------------
                 vm.disabled3 = true;
                 vm.disabled4 = true;
                 vm.disabled5 = true;
+                //默认编辑下显示基本监控项（修改）
+                vm.disabled6 = false;
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
                 if (row.monitor_type == '基本监控项') {
+                    /*
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
                     vm.basic.height = row.height;
@@ -1698,9 +1728,29 @@
                     vm.basic.gather_rule = row.gather_rule;
                     vm.basic.contents = row.contents;
                     vm.basic.status = row.status;
-                    vm.area=row.monitor_area;
+                    vm.area=row.monitor_area;*/
+                    //监控项类型设置
+                    this.monitor_type = 'five';
+                    //基本监控项采集类型初始化
+                    this.sql_file_interface = row.gather_params;
+                    //基本监控项（修改后）的数据初始化
+                    this.base.font_size = row.font_size;
+                    this.base.height = row.height;
+                    this.base.width = row.width;
+                    this.base.start_time = row.start_time;
+                    this.base.end_time = row.end_time;
+                    this.base.period = row.period;
+                    this.base.gather_rule = row.gather_rule;
+                    this.base.contents = row.contents;
+                    this.base.status = row.status;
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface =3;
+                        //----------------
+                        //显示数据库表单
+                        this.database_show = true;
+                        this.file_show = false;
+                        this.interface_show = false;
+                        //----------------
                         axios({
                             method: 'post',
                             url: '${SITE_URL}db_connection/get_conname/',
@@ -1725,6 +1775,12 @@
                     }
                     if (vm.sql_file_interface == 'file') {
                         vm.sql_file_interface =6;
+                        //----------------
+                        //显示文件表单
+                        this.database_show = false;
+                        this.file_show = true;
+                        this.interface_show = false;
+                        //----------------
                         arr=row.params.split("#");
                         vm.server_url = arr[0];
                         vm.file_param = arr[1];
@@ -1739,7 +1795,8 @@
                         vm.sycontent();
                         vm.basic_test()
                     }
-                    if (vm.sql_file_interface == 'interface') {
+                    //取消原有基本监控项的回显处理方法
+                    /*if (vm.sql_file_interface == 'interface') {
                         vm.sql_file_interface =9;
                         arr=row.params.split("#");
                         vm.server_url = arr[0];
@@ -1754,6 +1811,26 @@
                         vm.basic_width();
                         vm.sycontent();
                         vm.basic_test()
+                    }*/
+                    if (this.sql_file_interface == 'interface') {
+                        vm.sql_file_interface = 9;
+                        //显示关闭文件和数据库的显示，显示接口表单
+                        this.database_show = false;
+                        this.file_show = false;
+                        this.interface_show = true;
+                        this.base.gather_params = row.gather_params;
+                        if(0 == row.source_type){
+                            this.base.interface_type = 'log';
+                        }else if(1 == row.source_type){
+                            this.base.interface_type = 'measures';
+                        }else{
+                            this.base.interface_type = null;
+                        }
+                        this.base.measures = row.target_name;
+                        this.base.measures_name = row.measure_name;
+                        this.base.dimension_data = JSON.parse(row.dimension);
+                        this.base.show_rule_type = row.display_type;
+                        this.base.display_rule = row.gather_rule;
                     }
                 }
                 if (row.monitor_type =='图表监控项') {
@@ -2825,8 +2902,10 @@
             }
         },
         mounted() {
-            this.get_header_data()
-            this.get_all_area()
+            this.get_header_data();
+            this.get_all_area();
+            //缓存所有四类监控项的初始数据
+            this.store_all_init_data();
         },
     });
     vm.show();
