@@ -1,3 +1,4 @@
+    var vm = null;
     $(function(){
         //csrf验证
         axios.interceptors.request.use((config) => {
@@ -6,7 +7,7 @@
             config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
             return config
         });
-        var vm=new Vue({
+        vm = new Vue({
             el: '.content',
             data: {
                 page_count:100,//分页总页数
