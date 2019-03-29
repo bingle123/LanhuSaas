@@ -546,6 +546,8 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
         console.log(res);
         var gather_base_test_data=JSON.parse(res.dddddd);
         $('[type='+selector_id+']').html("");                  //清空dom
+        $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
+        $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div>');
         if(display_type ==0){
             for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
                 let selector='.div'+drigging_id+i;                                  //jquery选择器
@@ -641,4 +643,5 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
         vm.$message.error('采集失败！');
         $('[type='+selector_id+']').html('');
     });
+
 }
