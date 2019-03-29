@@ -98,7 +98,6 @@
             methods: {
                 submitForm(formName) {
                     this.$refs[formName].validate((valid) => {
-
                         if (valid) {
                             if (formName == 'scene') {
                                 axios({
@@ -586,9 +585,7 @@
                 $(this).find('.delete').on('click', function(e) {
                     e.stopPropagation();
                     $(this).parent().parent().remove();
-
                 })
-
             }
         });
         $(document).on("blur", ".score_input", function(){//打分输入框失去焦点隐藏
@@ -614,7 +611,6 @@
                 _y = 0 + ($(selector).height()/vm.scale) * (vm.scale - 1) / 2;
             }
             if (_x > obox.width() - $(selector).width()) {
-
                 //_x=obox.width()-$(selector).width();
                 _x = obox.width() - (($(selector).width()/vm.scale) * (vm.scale - 1) / 2 + ($(selector).width()/vm.scale));
             }
@@ -637,23 +633,16 @@
                 var l1=$(selector).siblings().eq(i).position().left;
                 console.log(t1,r1,b1,l1)
                 if(Math.abs(t-b1)<10){
-                        $(selector).css("top", b1+($(selector).height()/vm.scale)*(vm.scale-1)/2);
-
+                    $(selector).css("top", b1+($(selector).height()/vm.scale)*(vm.scale-1)/2);
                 }
                 if(Math.abs(l-r1)<10){
-
-                        $(selector).css("left", r1+($(selector).width()/vm.scale)*(vm.scale-1)/2);
-
+                    $(selector).css("left", r1+($(selector).width()/vm.scale)*(vm.scale-1)/2);
                 }
                 if(Math.abs(b-t1)<10){
-
-                        $(selector).css("top", t1-$(selector).height()/vm.scale-($(selector).height()/vm.scale)*(vm.scale-1)/2);
-
+                    $(selector).css("top", t1-$(selector).height()/vm.scale-($(selector).height()/vm.scale)*(vm.scale-1)/2);
                 }
                 if(Math.abs(r-l1)<10){
-
-                        $(selector).css("left", l1-$(selector).width()/vm.scale-($(selector).width()/vm.scale)*(vm.scale-1)/2 );
-
+                    $(selector).css("left", l1-$(selector).width()/vm.scale-($(selector).width()/vm.scale)*(vm.scale-1)/2 );
                 }
             }
         });
@@ -674,7 +663,6 @@
             }else {
                 return
             }
-
         });
     });
     setInterval(function () {
