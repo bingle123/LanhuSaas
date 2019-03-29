@@ -313,7 +313,6 @@
                     pos_name:''
                     scene_endTime:''
                 },
-
                 select_table(){
                     if(vm.search == ""){
                         vm.paging()
@@ -334,49 +333,47 @@
                 },
                 del_scene(row){
                     this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true,
-                }).then(() => {
-                    axios({
-                        method: 'post',
-                        url: '/monitor_scene/del_scene/',
-                        data:  row.id
-                    }).then((res) => {
-                        this.$alert("场景删除成功！","提示");
-                        vm.paging();
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                        center: true,
+                    }).then(() => {
+                        axios({
+                            method: 'post',
+                            url: '/monitor_scene/del_scene/',
+                            data:  row.id
+                        }).then((res) => {
+                            this.$alert("场景删除成功！","提示");
+                            vm.paging();
+                        });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
                     });
-                }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    });
-                });
                 },
-
                 //js定时调度（每5秒执行一次）
                 Time(){
                     setInterval(function () {
                         $(".back-bar").children().eq(1).mouseup(function () {
-                               var low=-$(".back-bar").children().eq(2).html()
-                               a=(Math.floor(low/60)+12)+":"+((1200+low)%60);
-                              setTimeout(function () {
+                            var low=-$(".back-bar").children().eq(2).html()
+                            a=(Math.floor(low/60)+12)+":"+((1200+low)%60);
+                            setTimeout(function () {
                                 $(".back-bar").children().eq(2).html(a)
-                                 $(".back-bar").children().eq(2).show()
-                             },100)
+                                $(".back-bar").children().eq(2).show()
+                            },100)
                         })
                         $(".back-bar").children().eq(3).mouseup(function () {
-                              var high=$(".back-bar").children().eq(4).html()
-                                b=(Math.floor(high/60)+12)+":"+((1200+high)%60);
-                             setTimeout(function () {
+                            var high=$(".back-bar").children().eq(4).html()
+                            b=(Math.floor(high/60)+12)+":"+((1200+high)%60);
+                            setTimeout(function () {
                                 $(".back-bar").children().eq(4).html(b)
-                                 $(".back-bar").children().eq(4).show()
-                             },100)
+                                $(".back-bar").children().eq(4).show()
+                            },100)
                         })
                     },500)
-
-                 $('.slider-input').jRange({
+                    $('.slider-input').jRange({
                         from: -1440,
                         to: 1440,
                         step: 1,
