@@ -150,7 +150,7 @@
                         </el-col>
                     </el-col>
                 <el-col :span='3'>
-                    <el-button type='primary'  @click='show'>新增场景</el-button>
+                    <el-button type='primary'  @click='monitor_sence_add'>新增场景</el-button>
                 </el-col>
             </el-row>
             <el-table :data='tableData' :header-cell-style='rowclass' style="width: 100%;margin-top: 10px">
@@ -173,7 +173,7 @@
                 <el-table-column prop='operation' label='操作' style="width: 30%;">
                     <template slot-scope="scope">
                     <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
-                    <el-button size="mini" type="text" v-on:click="edit(scope.row)">编辑</el-button>
+                    <el-button size="mini" type="text" v-on:click="monitor_sence_edit(scope.row)">编辑</el-button>
                     <el-button size="mini" type="text" v-on:click="del_scene(scope.row)">删除</el-button>
                     </el-tooltip>
                 </template>
@@ -303,11 +303,9 @@
                 </el-form>
             </div>
         </div>
-
         <!-- 场景编排 -->
-
-
     </el-card>
+
     <el-row class="monitor_edit">
                 <el-col :span="22">
                     <h1 style="rgba(40, 147, 108, 0.45);line-height: 60px;text-align: center">场景编排</h1>
@@ -593,17 +591,17 @@
 
                 console.log('当前页: ' + val + '')
             },
-            show() {
+            //新增场景
+            monitor_sence_add() {
                 this.isAdd = 2;
                 vm.sen_position()
                 vm.scene = vm.scene1
                 setTimeout(function () {
                      vm.Time()
-
-
                 },100)
             },
-            edit(row){
+            //场景修改
+            monitor_sence_edit(row){
                 vm.scene_edit.id = row.id
                 vm.scene_edit.scene_name = row.scene_name
                 vm.scene_edit.scene_startTime = row.scene_startTime
@@ -615,12 +613,9 @@
                 vm.monitore_edit_start(row.id)
                 setTimeout(function () {
                     vm.Time()
-
                 }, 100)
-
             },
             monitore_edit_start(value){    //获取场景监控项信息
-
                 axios({
                     method:'post',
                     url:'${SITE_URL}monitor_scene/scene_data/',
@@ -645,7 +640,7 @@
                     vm.show_num=vm.isAdd;
                     vm.isAdd=0;
                     let result_list_edit=vm.result_list_edit;
-                    console.log(result_list_edit);
+                    //console.log(result_list_edit);
                     let max=0;
                     let index=0;
                     for(var i=0;i<result_list_edit.length;i++){
@@ -653,7 +648,7 @@
                             max=result_list_edit[i].order;
                         }
                         if(result_list_edit[i].monitor_type==1){
-                            console.log(result_list_edit[i])
+                            //console.log(result_list_edit[i])
                             let res = await axios({
                                 method:'post',
                                 url:'${SITE_URL}monitor_scene/monitor_scene_show/',
@@ -713,8 +708,6 @@
                     vm.show_num=vm.isAdd;
                     vm.isAdd=0;
                 }
-
-
             },
             monitor_edit_close(){
                 $('.monitor_edit').css('display','none');
@@ -769,10 +762,9 @@
             });
             },
 
+            //js定时调度（每5秒执行一次）
             Time(){
-
                 setInterval(function () {
-
                     $(".back-bar").children().eq(1).mouseup(function () {
                            var low=-$(".back-bar").children().eq(2).html()
                            a=(Math.floor(low/60)+12)+":"+((1200+low)%60);
@@ -801,8 +793,6 @@
                     showLabels: true,
                     isRange: true
                 })
-
-
             },
             sen_position(){
                 axios({
@@ -814,8 +804,8 @@
                     vm.$message.error('获取数据失败！');
                 });
             },
-
-            show1(){
+            //根据type类型展开具体的监控项，供场景编排使用
+            show_monitor_item(){
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor_scene/scene_show/',
@@ -889,30 +879,28 @@
             current_change1(value) {
                 vm.page1 = value;
                 vm.monitor_type=1;
-                vm.show1();
+                vm.show_monitor_item();
             },
             current_change2(value) {
                 vm.page1 = value;
                 vm.monitor_type=2;
-                vm.show1();
+                vm.show_monitor_item();
             },
             current_change3(value) {
                 vm.page1 = value;
                 vm.monitor_type=3;
-                vm.show1();
+                vm.show_monitor_item();
             },
             current_change4(value) {
                 vm.page1 = value;
                 vm.monitor_type=4;
-                vm.show1();
+                vm.show_monitor_item();
             },
             monitor_type_switch(value){
                 vm.monitor_type = value;
                 vm.page1=1;
-                vm.show1()
-            },
-
-
+                vm.show_monitor_item()
+            }
         }
     });
     vm.get_all_area()
