@@ -260,6 +260,8 @@ def edit_unit(request):
                     start_list.append(data['starttime'])
                 add_dic['start_time'] = min(start_list)
                 add_dic['end_time'] = max(start_list)
+            if res['monitor_type'] == 'five':
+                monitor_type = '1'
             add_dic['monitor_name'] = res['monitor_name']
             add_dic['monitor_type'] = monitor_type
             # 当前用户为编辑人
@@ -278,6 +280,7 @@ def edit_unit(request):
             info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              request.user.username, '成功', '无')
     except Exception as e:
+        print e
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              request.user.username, '失败', repr(e))
         result = tools.error_result(e)
