@@ -136,22 +136,22 @@
                     });
                 },
                 get_all_area(){
-                axios({
-                    method:'get',
-                    url:'/market_day/get_all_area',
-                }).then(function (res) {
-                    res=res.data.message
-                    vm.areas=[]
-                    for (var i=0;i<res.length;i++){
-                        var label=res[i].country+"("+res[i].timezone+")"
-                        temp={
-                            'area':label,
-                            'value':res[i].id
-                        }
-                        vm.areas.push(temp)
+                    axios({
+                        method:'get',
+                        url:'/market_day/get_all_area',
+                    }).then(function (res){
+                        res=res.data.message
+                        vm.areas=[]
+                        for (var i=0;i<res.length;i++){
+                            var label=res[i].country+"("+res[i].timezone+")"
+                            temp={
+                                'area':label,
+                                'value':res[i].id
+                            }
+                            vm.areas.push(temp)
                         }
                     }).catch(function (e) {
-                        vm.$message.error('获取数据失败！');
+                            vm.$message.error('获取数据失败！');
                     });
                 },
                 current_change(value) {
@@ -174,14 +174,12 @@
                     });
                 },
                 rowclass({row, rowIndex}) {
-
                     return 'background:#F7F7F7'
                 },
                 handleSizeChange(val) {
                     console.log('每页' + val + '条')
                 },
                 handleCurrentChange(val) {
-
                     console.log('当前页: ' + val + '')
                 },
                 //新增场景
