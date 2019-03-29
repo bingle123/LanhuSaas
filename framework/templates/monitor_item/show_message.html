@@ -1893,7 +1893,7 @@
                 } else if (vm.monitor_type == 'third') {
                     vm.result_data = vm.job;
                     vm.job.monitor_name = vm.monitor_name;
-                    vm.job.monitor_type = vm.monitor_type
+                    vm.job.monitor_type = vm.monitor_type;
                     if (vm.job.gather_rule == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择作业模板!'
@@ -2275,7 +2275,7 @@
                     vm.server_url = '';
                     vm.file_param = '';
                     vm.basic.gather_rule = '';
-                    vm.basic.gather_params = 'sql'
+                    vm.basic.gather_params = 'sql';
                     //修改后的基本监控项的采集类型设置
                     vm.base.gather_params = 'sql';
                     //----------------------------
@@ -2814,15 +2814,16 @@
                     vm.file_show = false;
                     vm.interface_show = true;
                     vm.database_show = false;
+                    vm.change1(9);
                 }else if (value == 6){
                     //文件
                     vm.file_show = true;
                     vm.interface_show = false;
                     vm.database_show = false;
-                    vm.change1(6)
+                    vm.change1(6);
                 }else if (value == 3){
                     //数据库
-                    vm.change1(3)
+                    vm.change1(3);
                     vm.file_show = false;
                     vm.interface_show = false;
                     vm.database_show = true;

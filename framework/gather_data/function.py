@@ -248,7 +248,7 @@ def gather_data(**info):
         try:
             print 'DB_ID: %s' % conn_params.id
             conn = getAny_db(conn_params.id)
-            # conn = MySQLdb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
+            # conn = MySQ Ldb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
         except Exception as e:
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-1',
                          gather_error_log=str(e)).save()
@@ -280,6 +280,8 @@ def gather_data(**info):
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='0').save()
             return "empty"
     elif "interface" == gather_type:
+        # 接口方式采集数据
+
         # 接口方式采集数据
         user_account = BkUser.objects.filter(username='admin').get()
         # 根据id为1的admin用户获取客户端操作快速执行脚本
