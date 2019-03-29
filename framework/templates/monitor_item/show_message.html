@@ -705,7 +705,7 @@
                                 </el-form-item>
                                 <el-form-item label="显示内容" prop="contents" style="width: 96%">
                                         <el-input v-model="base.contents" placeholder="上证指数:3000  深证指数:3000"
-                                                  @change="sycontent"
+                                                  @change="content_change"
                                                   type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
@@ -2705,6 +2705,11 @@
                     data:vm.base,
                 }).then( (res) => {
                     var gather_base_test_data=res.data.results;
+                    var content='';
+                    for(x in gather_base_test_data[0]){           //遍历列表的第i个对象
+                        content+='"'+x+'":"'+x+'"@\n';
+                    }
+                    vm.base.contents=content;
                     $('#base_test_text').html('');                  //清空dom
                     if(vm.base.show_rule_type==0){
                         for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
@@ -2823,6 +2828,12 @@
                     vm.interface_show = false;
                     vm.database_show = true;
                 }
+            },
+            content_change(){
+                var content=vm.base.contents;
+                var content_str='{'+content.replace(/@\n/g,',')+'}';
+                var content_json=JSON.parse(content_str.replace(/@/g,''));
+
             }
         },
         mounted() {
