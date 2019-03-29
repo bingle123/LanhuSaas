@@ -2,6 +2,7 @@
 from conf.default import MEASURES_QUERY_API
 from shell_app.tools import success_result
 from shell_app.tools import error_result
+from gather_data.models import TDGatherData
 import requests
 import json
 import time
@@ -25,7 +26,7 @@ class Gather():
         :param measures_name:   指标名称
         :param gather_rule:     解析规则
         :param show_rule_type:  显示类型 0/百分比, 1/颜色, 2/不变化 增加显示类型时请增加注释
-        :param interface_param: 参数
+        :param interface_param: url参数
         :return:
         """
         if interface_type == 'log':
@@ -40,6 +41,7 @@ class Gather():
         request_code = request_result.status_code
         if request_code == 200:
             temp_list = Gather.change_json(measures, request_result, measures_name)
+
             # 百分比
             if show_rule_type == '0':
 
@@ -129,14 +131,14 @@ class Gather():
 
             sum_value = 0
             value_count = 0
+            metric_max = 0
             for key, value in i['dps'].items():
                 time_list.append(key)
-                temp_value = value
                 # 最大值
-                if value >= temp_value:
+                if value > metric_max:
                     metric_max = i['dps'][key]
                     metric_max_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(int(key)))
-                # 平均值
+                # 值之和
                 sum_value += value
                 # 循环次数，用于计算平均值使用
                 value_count += 1

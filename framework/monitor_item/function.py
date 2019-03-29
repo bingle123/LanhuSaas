@@ -214,7 +214,7 @@ def add_unit(request):
         info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              request.user.username, '失败', repr(e))
         result = tools.error_result(e)
-    add_log(info)
+    # add_log(info)
     return result
 
 
@@ -281,7 +281,7 @@ def edit_unit(request):
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              request.user.username, '失败', repr(e))
         result = tools.error_result(e)
-        add_log(info)
+        # add_log(info)
     return result
 
 
