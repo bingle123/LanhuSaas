@@ -967,6 +967,12 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            //基本监控项上传数据
+            base_monitor_upload_data: {},
+            //采集测试数据缓存变量
+            gather_test_data: null,
+            //采集测试数据标记位，默认为null，采集数据成功置true，采集失败置false
+            gather_data_test_flag: null,
             database_show:true,
             file_show:false,
             interface_show:false,
@@ -1271,6 +1277,122 @@
             ],
         },
         methods: {
+            //基本监控项的数据处理方法
+            base_monitor_data_process(){
+                //数据整合与处理
+                this.base_monitor_upload_data['jion_id'] = null;
+                if('log' == this.base['interface_type']){
+                    this.base_monitor_upload_data['source_type'] = 0;
+                }else if('measures' == this.base['interface_type']){
+                    this.base_monitor_upload_data['source_type'] = 1;
+                }else{
+                    this.base_monitor_upload_data['source_type'] = null;
+                }
+                //base对象被其他功能所使用，因此不能删除其属性用于上传数据，另外定义一个新的变量缓存并上传
+                this.base_monitor_upload_data['target_name'] = this.base['measures'];
+                this.base_monitor_upload_data['measure_name'] = this.base['measures_name'];
+                this.base_monitor_upload_data['dimension'] = JSON.stringify(JSON.stringify(this.dimension_data));
+                this.base_monitor_upload_data['display_type'] = this.base['show_rule_type'];
+                this.base_monitor_upload_data['display_rule'] = this.base['gather_rule'];
+                this.base_monitor_upload_data['gather_rule'] = this.base['gather_rule'];
+                this.base_monitor_upload_data['gather_params'] = this.base['gather_params'];
+                this.base_monitor_upload_data['params'] = this.base['params'];
+                this.base_monitor_upload_data['width'] = this.base['width'];
+                this.base_monitor_upload_data['height'] = this.base['height'];
+                this.base_monitor_upload_data['font_size'] = this.base['font_size'];
+                this.base_monitor_upload_data['period'] = this.base['period'];
+                this.base_monitor_upload_data['start_time'] = this.base['start_time'];
+                this.base_monitor_upload_data['end_time'] = this.base['end_time'];
+                this.base_monitor_upload_data['contents'] = this.base['contents'];
+                this.result_data = this.base_monitor_upload_data;
+                //由于调用采集测试接口需要以下参数,因此在此统一删除数据库表不存在的字段,避免监控项添加时报错
+                /*delete this.base['dimension_data'];
+                delete this.base['interface_type'];
+                delete this.base['measures'];
+                delete this.base['measures_name'];
+                delete this.base['show_rule_type'];*/
+            },
+            //采集测试的数据保存方法
+            gather_data_test_save(item_id){
+              axios({
+                    method: 'post',
+                    url: '${SITE_URL}gather_data/gather_data_save',
+                    data: {
+                        'measures': this.gather_test_data,
+                        'item_id': item_id
+                    }
+                }).then((res) => {
+                    this.$alert("保存成功!", "提示");
+                    vm.centerDialogVisible = false;
+                }).catch((error) => {
+                    vm.$alert("采集测试数据保存失败！", "错误");
+                });
+            },
+            //监控项数据编辑后的保存方法
+            monitor_data_save(unit_id, flow){
+                if (vm.monitor_name == '') {
+                    vm.message = '请输入监控项名称!';
+                    vm.unit_id = -1;
+                }
+                //unit_id大于0的情况为编辑后的数据上传
+                if(unit_id > 0){
+                    axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor_item/edit/',
+                    data: {
+                            'flow': flow,
+                            data: vm.result_data,
+                            monitor_type: vm.monitor_type,
+                            monitor_name: vm.monitor_name,
+                            unit_id: vm.unit_id,
+                            monitor_area: vm.area
+                        }
+                    }).then((res) => {
+                        if (res['data']['code'] == 1) {
+                            this.$alert("保存失败!","错误");
+                            vm.centerDialogVisible = true;
+                        } else {
+                            this.$alert(vm.message,"提示");
+                            vm.centerDialogVisible = false;
+                        }
+                        vm.show();
+                    }).catch((error) => {
+                        this.$alert("修改保存出错！","错误")
+                    });
+                }
+                //unit_id等于0的情况下为添加后的数据上传
+                else if(unit_id == 0){
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}monitor_item/add/',
+                        data: {
+                            'flow': flow,
+                            data: vm.result_data,
+                            monitor_type: vm.monitor_type,
+                            monitor_name: vm.monitor_name,
+                            monitor_area: vm.area
+                        }
+                    }).then((res) => {
+                        if (res['data']['code'] == 1) {
+                            this.$alert("新增保存失败!", "错误");
+                            vm.centerDialogVisible = true;
+                        } else {
+                            //保存采集测试的数据到服务器
+                            vm.gather_data_test_save(res.data['item_id']);
+                        }
+                        vm.show()
+                    }).catch((error) => {
+                        this.$alert('保存出错!', "错误");
+                    });
+                }else {
+                    vm.centerDialogVisible = true;
+                    if (vm.add_pamas == 0) {
+                        vm.unit_id = 0
+                    } else {
+                        vm.unit_id = vm.unit_id1
+                    }
+                }
+            },
             add_dimension(){
                 vm.$set(vm.base.dimension_data, vm.base.dimension_data.length, {
                 dimension_name:'',
@@ -1853,7 +1975,7 @@
                         vm.basic.params = vm.server_url + '#' + vm.file_param
                     }
                     vm.basic.monitor_name = vm.monitor_name;
-                    vm.basic.monitor_type = vm.monitor_type
+                    vm.basic.monitor_type = vm.monitor_type;
                     if (vm.server_url == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择数据库或者填写服务器和url!'
@@ -1870,6 +1992,8 @@
                         vm.unit_id = -1;
                         vm.message = '请选择结束时间!'
                     }
+                    //上传数据至服务器保存
+                    vm.monitor_data_save(vm.unit_id, flow);
                 } else if (vm.monitor_type == 'second') {
                     vm.result_data = vm.chart;
                     vm.chart.monitor_name = vm.monitor_name;
@@ -1890,6 +2014,8 @@
                         vm.unit_id = -1;
                         vm.message = '请选择结束时间!'
                     }
+                    //上传数据至服务器保存
+                    vm.monitor_data_save(vm.unit_id, flow);
                 } else if (vm.monitor_type == 'third') {
                     vm.result_data = vm.job;
                     vm.job.monitor_name = vm.monitor_name;
@@ -1917,6 +2043,8 @@
                         vm.unit_id = -1;
                         vm.message = '请选择结束时间!'
                     }
+                    //上传数据至服务器保存
+                    vm.monitor_data_save(vm.unit_id, flow);
                 } else if (vm.monitor_type == 'fourth') {
                     vm.result_data = vm.flow;
                     vm.flow.monitor_name = vm.monitor_name;
@@ -1939,102 +2067,48 @@
                             vm.message = '请配置每个节点的结束时间';
                         }
                     }
-                    node_times.push(node_time)
+                    node_times.push(node_time);
                     flow.node_times = node_times;
                     flow.monitor_name = vm.monitor_name;
                     flow.monitor_type = vm.monitor_type;
-                    console.log(vm.flow.gather_rule)
+                    console.log(vm.flow.gather_rule);
                     flow.jion_id = vm.flow.gather_rule[0].id;
                     flow.font_size = vm.flow.font_size;
                     flow.height = vm.flow.height;
                     flow.width = vm.flow.width;
                     flow.period = vm.flow.period;
                     flow.constants = vm.constants;
+                    //上传数据至服务器保存
+                    vm.monitor_data_save(vm.unit_id, flow);
                 //修改后的基本监控项的数据上传处理
                 }else if (vm.monitor_type == 'five') {
-                    //数据整合与处理
-                    this.base['jion_id'] = null;
-                    //this.base['monitor_name'] = this.monitor_name;
-                    //this.base['monitor_type'] = this.monitor_type;
-                    //this.base['monitor_area'] = this.area;
-                    if('log' == this.base['interface_type']){
-                        this.base['source_type'] = 0;
-                    }else if('measures' == this.base['interface_type']){
-                        this.base['source_type'] = 1;
+                    //判断是否已经进行采集测试
+                    if(null != this.gather_data_test_flag && false == this.gather_data_test_flag){
+                        this.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
+                    }else if(null == this.gather_data_test_flag){
+                        axios({
+                            url:'${SITE_URL}iqube_interface/gather_base_test/',
+                            method:'post',
+                            data:vm.base,
+                        }).then((res) => {
+                            if(0 != res.data.code){
+                                vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
+                                return;
+                            }
+                            //采集测试的数据缓存到gather_data_test_data变量中
+                            this.gather_test_data = res.data.results;
+                            //基本监控项的数据处理
+                            vm.base_monitor_data_process();
+                            //上传监控项数据至服务器保存
+                            vm.monitor_data_save(vm.unit_id, flow);
+                        }).catch(function (e) {
+                            vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
+                        });
                     }else{
-                        this.base['source_type'] = null;
-                    }
-                    //this.base['source_type'] = this.base['interface_type'];
-                    delete this.base['interface_type'];
-                    this.base['target_name'] = this.base['measures'];
-                    delete this.base['measures'];
-                    this.base['measure_name'] = this.base['measures_name'];
-                    delete this.base['measures_name'];
-                    this.base['dimension'] = JSON.stringify(JSON.stringify(this.dimension_data));
-                    delete this.base['dimension_data'];
-                    this.base['display_type'] = this.base['show_rule_type'];
-                    delete this.base['show_rule_type'];
-                    this.base['display_rule'] = this.base['gather_rule'];
-                    this.result_data = this.base;
-                    console.log(this.base)
-                }
-                if (vm.monitor_name == '') {
-                    vm.message = '请输入监控项名称!';
-                    vm.unit_id = -1;
-                }
-                if (vm.unit_id > 0) {
-                    axios({
-                        method: 'post',
-                        url: '${SITE_URL}monitor_item/edit/',
-                        data: {
-                            'flow': flow,
-                            data: vm.result_data,
-                            monitor_type: vm.monitor_type,
-                            monitor_name: vm.monitor_name,
-                            unit_id: vm.unit_id,
-                            monitor_area: vm.area
-                        }
-                    }).then((res) => {
-                        if (res['data']['code'] == 1) {
-                            this.$alert("保存失败!","错误");
-                            vm.centerDialogVisible = true;
-                        } else {
-                            this.$alert(vm.message,"提示")
-                            vm.centerDialogVisible = false;
-                        }
-                        vm.show();
-                    }).catch((error) => {
-                        this.$alert("修改保存出错！","错误")
-                    });
-                } else if (vm.unit_id == 0) {
-                    axios({
-                        method: 'post',
-                        url: '${SITE_URL}monitor_item/add/',
-                        data: {
-                            'flow': flow,
-                            data: vm.result_data,
-                            monitor_type: vm.monitor_type,
-                            monitor_name: vm.monitor_name,
-                            monitor_area: vm.area
-                        },
-                    }).then((res) => {
-                        if (res['data']['code'] == 1) {
-                            this.$alert("新增保存失败!","错误");
-                            vm.centerDialogVisible = true;
-                        } else {
-                            this.$alert(vm.message,"提示");
-                            vm.centerDialogVisible = false;
-                        }
-                        vm.show()
-                    }).catch((error) => {
-                        this.$alert('保存出错!',"错误")
-                    });
-                } else {
-                    vm.centerDialogVisible = true;
-                    if (vm.add_pamas == 0) {
-                        vm.unit_id = 0
-                    } else {
-                        vm.unit_id = vm.unit_id1
+                        //基本监控项的数据处理
+                        vm.base_monitor_data_process();
+                        //上传监控项数据至服务器保存
+                        vm.monitor_data_save(vm.unit_id, flow);
                     }
                 }
             },
@@ -2698,12 +2772,19 @@
                     vm.get_gather_info('get_measures_type/')
                 }
             },
+            //采集测试方法
             base_cell_test(){
                 axios({
                     url:'${SITE_URL}iqube_interface/gather_base_test/',
                     method:'post',
                     data:vm.base,
                 }).then( (res) => {
+                    //接口调用返回状态值不为0说明接口调用参数存在问题
+                    if(0 != res.data.code){
+                        this.gather_data_test_flag = false;
+                    }
+                    //采集测试的数据缓存到gather_data_test_data变量中
+                    this.gather_test_data = res.data.results;
                     var gather_base_test_data=res.data.results;
                     $('#base_test_text').html('');                  //清空dom
                     if(vm.base.show_rule_type==0){
@@ -2798,7 +2879,10 @@
                             }
                         }
                     }
+                    this.gather_data_test_flag = true;
                 }).catch(function (e) {
+                    //接口调用失败，采集标记位置false
+                    this.gather_data_test_flag = false;
                     vm.$message.error('采集失败！');
                     $('#base_test_text').html('');
                 });
