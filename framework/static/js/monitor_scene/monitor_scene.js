@@ -232,7 +232,6 @@
                         vm.show_num=vm.isAdd;
                         vm.isAdd=0;
                         let result_list_edit=vm.result_list_edit;
-                        //console.log(result_list_edit);
                         let max=0;
                         let index=0;
                         for(var i=0;i<result_list_edit.length;i++){
@@ -240,7 +239,6 @@
                                 max=result_list_edit[i].order;
                             }
                             if(result_list_edit[i].monitor_type==1){
-                                //console.log(result_list_edit[i])
                                 let res = await axios({
                                     method:'post',
                                     url:'/monitor_scene/monitor_scene_show/',
@@ -250,7 +248,7 @@
                                 });
                                 vm.monitor_data = res.data.results;
                                 $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"basic'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"></div>');
-                                base_monitor(vm.monitor_data[0].id,vm.monitor_data[0].font_size,vm.monitor_data[0].height,vm.monitor_data[0].width,vm.monitor_data[0].contents);
+                                test_monitor(vm.monitor_data[0].id,vm.monitor_data[0].display_rule,vm.monitor_data[0].display_type,vm.monitor_data[0].measure_name,vm.monitor_data[0].target_name,1);
                             }
                             if(result_list_edit[i].monitor_type==2){
                                 let res = await axios({
