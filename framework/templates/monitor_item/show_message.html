@@ -104,7 +104,7 @@
             <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;" border header-align="center">
                 <el-table-column prop="id" label="序号" sortable></el-table-column>
                 <el-table-column prop="monitor_name" label="监控名称" sortable></el-table-column>
-                <el-table-column prop="monitor_type" label="监控类型" sortable></el-table-column>
+                <el-table-column prop="monitor_type" label="监控类型" :formatter="format_monitor_type" sortable></el-table-column>
                 <el-table-column prop="editor" label="编辑人" sortable></el-table-column>
                 <el-table-column prop="edit_time" label="修改时间" sortable></el-table-column>
                 <el-table-column label="操作">
@@ -1277,6 +1277,20 @@
             ],
         },
         methods: {
+            //将监控项类型的编码转换成中文的名称，前台转换
+            format_monitor_type(row,column){
+                if(row.monitor_type === 1){
+                    return "基本监控项"
+                }else if(row.monitor_type === 2){
+                    return "图表监控项"
+                }else if(row.monitor_type === 3){
+                    return "作业监控项"
+                }else if(row.monitor_type === 4){
+                    return "流程监控项"
+                }else if(row.monitor_type === 5){
+                    return "基本监控项（一体化）"
+                }
+            },
             //基本监控项的数据处理方法
             base_monitor_data_process(){
                 //数据整合与处理
