@@ -15,6 +15,7 @@ import pytz
 from position.models import *
 from market_day.models import Area
 from market_day.function import tran_time_china, tran_china_time_other, check_jobday
+from django.db.models import Q
 
 
 def monitor_show(request):
@@ -322,8 +323,8 @@ def scene_show(res):
         limit = res['limit']
         page = res['page']
         if type == 0:
-            # 四类监控项全部按id倒排序（基本监控项）
-            base_unit = Monitor.objects.filter(monitor_type='1').order_by("-id")
+            # 四类监控项全部按id倒排序（基本监控项与一体化基本监控项放一起）
+            base_unit = Monitor.objects.filter(Q(monitor_type='1') | Q(monitor_type='5')).order_by("-id")
             base_page_data, base_page_count = tools.page_paging(base_unit, limit, page)
             # 四类监控项全部按id倒排序（图表监控项）
             chart_unit = Monitor.objects.filter(monitor_type='2').order_by("-id")
@@ -344,9 +345,9 @@ def scene_show(res):
                 'job_list': job_list,
                 'flow_list': flow_list,
             }
-        # 基本监控项
+        # 基本监控项与一体化基本监控项
         elif type == 1:
-            base_unit = Monitor.objects.filter(monitor_type='1').order_by("-id")
+            base_unit = Monitor.objects.filter(Q(monitor_type='1') | Q(monitor_type='5')).order_by("-id")
             base_page_data, base_page_count = tools.page_paging(base_unit, limit, page)
             base_list = tools.obt_dic(base_page_data, base_page_count)
             res_dic = {
@@ -433,6 +434,7 @@ def add_scene(res1):
         res_dic = tools.error_result(e)
     return res_dic
 
+
 # 取得图表监控项采集数据
 def get_chart_data(id):
     """
@@ -450,6 +452,7 @@ def get_chart_data(id):
             }
             datas.append(temp)
     return datas
+
 
 # 取得基本监控项采集数据
 def get_basic_data(id):
