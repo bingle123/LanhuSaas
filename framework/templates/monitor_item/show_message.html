@@ -2725,7 +2725,7 @@
                                 if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){        //判断key是否为度量值，是就进行百分百环形渲染，不是则直接喧嚷key：value
                                     if(data_value[j].indexOf('%')>-1){                              //判断是否有%，有就添加dom，没有则清空dom并返回
                                         $(selector).append('<p class="display" type="'+data_key[j]+'">' + data_key[j] + ':</p>');
-                                        $(selector).append('<div class="circle-bar display" type="'+data_key[j]+'"><div class="circle-bar-left"></div><div class="circle-bar-right"></div><div class="mask"><span class="percent">' + data_value[j] + '</span></div></div>');
+                                        $(selector).append('<div class="circle-bar  display" type="'+data_key[j]+'"><div class="circle-bar-left"></div><div class="circle-bar-right"></div><div class="mask"><span class="percent">' + data_value[j] + '</span></div></div>');
                                         var percent = parseInt($('.mask :first-child').text());
                                         var baseColor = $('.circle-bar').css('background-color');
                                         if( percent<=50 ){
@@ -2784,7 +2784,7 @@
                                 data_key.push(k);
                                 data_value.push(gather_base_test_data[i][k]);
                             }
-                            $('#base_test_text').append('<div class="div'+i+' display" style="width:33%;display: inline-block;"></div>');
+                            $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block;"></div>');
                             for(let j=0;j<data_key.length;j++){
                                 if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
                                     if(data_value[j].indexOf('ms')>-1){
