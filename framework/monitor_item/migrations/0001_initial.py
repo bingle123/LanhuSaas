@@ -63,8 +63,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('monitor_name', models.CharField(max_length=50, verbose_name='\u76d1\u63a7\u9879\u540d\u79f0')),
-                ('monitor_type', models.CharField(max_length=10, verbose_name='\u76d1\u63a7\u9879\u7c7b\u578b')),
-                ('jion_id', models.PositiveIntegerField(verbose_name='\u5173\u8054ID')),
+                ('monitor_type', models.PositiveIntegerField(verbose_name='\u76d1\u63a7\u9879\u7c7b\u578b')),
+                ('jion_id', models.PositiveIntegerField(null=True, verbose_name='\u5173\u8054ID')),
                 ('gather_rule', models.CharField(max_length=500, verbose_name='\u91c7\u96c6\u89c4\u5219')),
                 ('gather_params', models.CharField(max_length=500, verbose_name='\u91c7\u96c6\u53c2\u6570')),
                 ('params', models.CharField(max_length=500, verbose_name='\u76d1\u63a7\u53c2\u6570')),
@@ -81,6 +81,12 @@ class Migration(migrations.Migration):
                 ('status', models.PositiveIntegerField(verbose_name='\u76d1\u63a7\u72b6\u6001')),
                 ('contents', models.CharField(max_length=500, verbose_name='\u663e\u793a\u5185\u5bb9')),
                 ('monitor_area', models.IntegerField(verbose_name='\u76d1\u63a7\u9879\u65e5\u5386\u5730\u533a')),
+                ('source_type', models.PositiveIntegerField(null=True, verbose_name='\u6765\u6e90\u7c7b\u578b')),
+                ('target_name', models.CharField(max_length=40, null=True, verbose_name='\u6307\u6807\u540d\u79f0')),
+                ('measure_name', models.CharField(max_length=50, null=True, verbose_name='\u5ea6\u91cf\u540d\u79f0')),
+                ('dimension', models.CharField(max_length=1000, null=True, verbose_name='\u7ef4\u5ea6')),
+                ('display_type', models.PositiveIntegerField(null=True, verbose_name='\u5c55\u793a\u7c7b\u578b')),
+                ('display_rule', models.CharField(max_length=1000, null=True, verbose_name='\u5c55\u793a\u89c4\u5219')),
             ],
             options={
                 'db_table': 'tb_monitor_item',

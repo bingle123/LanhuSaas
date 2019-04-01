@@ -198,8 +198,7 @@ def add_unit(request):
             add_dic['creator'] = username
             add_dic['editor'] = username
             add_dic['monitor_area'] = res['monitor_area']
-            print add_dic
-            Monitor.objects.create(**add_dic)
+            last_node = Monitor.objects.create(**add_dic)
             # 添加定时任务监控要求本地安装任务调度软件rabitmq
             # 正式环境服务器一般带有这个调度软件，如果没有就要安装
             if res['monitor_type'] == 'fourth':
@@ -207,6 +206,7 @@ def add_unit(request):
             else:
                 function.add_unit_task(add_dicx=add_dic)
             result = tools.success_result(None)
+            result['item_id'] = last_node.id
             # 修改获取用户的方式，直接从request中获取
             info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                                  request.user.username, '成功', '无')
