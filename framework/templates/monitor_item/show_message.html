@@ -1846,7 +1846,7 @@
                 //-----------------------------
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
-                if (row.monitor_type == '基本监控项') {
+                if (row.monitor_type === 1) {
                     //取消原有修改基本监控项的处理方法
                     /*
                     vm.monitor_type = 'first';
