@@ -13,7 +13,7 @@ from django.conf.urls import patterns
 
 urlpatterns = patterns(
     'position.views',
-    (r'^jobM/$', 'index'),  # 首页--服务器选择页面
+    (r'^position/$', 'index'),  # 首页--服务器选择页面
     (r'^get_tree/$', 'get_tree'),
     (r'^show/$', 'show'),  # 显示数据
     (r'^select_pos/$', 'select_pos'),  # 查询
