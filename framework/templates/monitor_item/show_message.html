@@ -705,7 +705,7 @@
                                 </el-form-item>
                                 <el-form-item label="显示内容" prop="contents" style="width: 96%">
                                         <el-input v-model="base.contents" placeholder="上证指数:3000  深证指数:3000"
-                                                  @change="sycontent"
+                                                  @change="content_change"
                                                   type="textarea"></el-input>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
@@ -2786,6 +2786,11 @@
                     //采集测试的数据缓存到gather_data_test_data变量中
                     this.gather_test_data = res.data.results;
                     var gather_base_test_data=res.data.results;
+                    var content='';
+                    for(x in gather_base_test_data[0]){           //遍历列表的第i个对象
+                        content+='"'+x+'":"'+x+'"@\n';
+                    }
+                    vm.base.contents=content;
                     $('#base_test_text').html('');                  //清空dom
                     if(vm.base.show_rule_type==0){
                         for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
@@ -2800,8 +2805,8 @@
                             for(let j=0;j<data_key.length;j++){
                                 if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){        //判断key是否为度量值，是就进行百分百环形渲染，不是则直接喧嚷key：value
                                     if(data_value[j].indexOf('%')>-1){                              //判断是否有%，有就添加dom，没有则清空dom并返回
-                                        $(selector).append('<p>' + data_key[j] + ':</p>');
-                                        $(selector).append('<div class="circle-bar"><div class="circle-bar-left"></div><div class="circle-bar-right"></div><div class="mask"><span class="percent">' + data_value[j] + '</span></div></div>');
+                                        $(selector).append('<p class="display" type="'+data_key[j]+'">' + data_key[j] + ':</p>');
+                                        $(selector).append('<div class="circle-bar display" type="'+data_key[j]+'"><div class="circle-bar-left"></div><div class="circle-bar-right"></div><div class="mask"><span class="percent">' + data_value[j] + '</span></div></div>');
                                         var percent = parseInt($('.mask :first-child').text());
                                         var baseColor = $('.circle-bar').css('background-color');
                                         if( percent<=50 ){
@@ -2820,7 +2825,7 @@
                                     }
 
                                 }else {
-                                    $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
+                                    $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
                                 }
                             }
                         }
@@ -2839,15 +2844,14 @@
                                 if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
                                     var data_value_str=data_value[j].toString();
                                     if(data_value_str.indexOf('#')>-1){
-                                        console.log(data_value[j]);
-                                        $(selector).append('<p>'+data_key[j]+':<i style="color:'+data_value[j]+'" class="el-icon-star-on"></i></p>');
+                                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':<i style="color:'+data_value[j]+'" class="el-icon-star-on"></i></p>');
                                     }else {
                                         $('#base_test_text').html('');
                                         vm.$message.error('颜色比参数配置出错！');
                                         return
                                     }
                                 }else {
-                                    $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
+                                    $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
                                 }
                             }
                         }
@@ -2861,12 +2865,11 @@
                                 data_key.push(k);
                                 data_value.push(gather_base_test_data[i][k]);
                             }
-                            $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block;"></div>');
+                            $('#base_test_text').append('<div class="div'+i+' display" style="width:33%;display: inline-block;"></div>');
                             for(let j=0;j<data_key.length;j++){
                                 if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
                                     if(data_value[j].indexOf('ms')>-1){
-                                        console.log(data_value[j])
-                                        $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
+                                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
                                     }else {
                                         vm.$message.error('其他参数配置出错！');
                                         $('#base_test_text').html('');
@@ -2874,7 +2877,7 @@
                                     }
 
                                 }else {
-                                    $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
+                                    $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
                                 }
                             }
                         }
@@ -2906,6 +2909,25 @@
                     vm.file_show = false;
                     vm.interface_show = false;
                     vm.database_show = true;
+                }
+            },
+            content_change(){
+                var content=vm.base.contents;                   //显示内容数据
+                var c = content.substring(0,content.lastIndexOf('@'));      //去@符号
+                var content_str='{'+c.replace(/@\n/g,',')+'}';      //加{}
+                var content_json=JSON.parse(content_str);           //转json
+                $("#base_test_text").find('.display').hide();       //隐藏预览区域的dom
+                for(x in content_json){                             //遍历json
+                    $("#base_test_text").find('[type='+x+']').show();   //显示内容存在的key会在预览区域显示
+                    let len=$("#base_test_text p").length;
+                    for(let i=0;i<len;i++){
+                        let dom_type=$("#base_test_text p").eq(i).attr('type');//获取dom的type
+                        let value1=$("#base_test_text p").eq(i).text().split(':')[0];//获取dom的text ：前面的内容
+                        if(x==dom_type){//显示内容的key等于dom的type
+                            let text=$("#base_test_text p").eq(i).text();
+                            $("#base_test_text p").eq(i).html(text.replace(value1,content_json[x]));//将dom的text ：前面的内容替换成显示内容的value
+                        }
+                    }
                 }
             }
         },

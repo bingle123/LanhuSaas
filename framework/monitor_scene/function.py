@@ -265,12 +265,12 @@ def pos_name(request):
         res_list.append(dic)
     return res_list
 
-# 场景查询方法
+# 初始化场景查询方法
 def paging(request):
     """
 
     :param request:
-    :return:
+    :return: 返回当前页的创建信息
     """
     res = json.loads(request.body)
     page = res['page']
@@ -433,7 +433,7 @@ def add_scene(res1):
         res_dic = tools.error_result(e)
     return res_dic
 
-
+# 取得图表监控项采集数据
 def get_chart_data(id):
     """
     获得图标监控项的数据
@@ -451,7 +451,7 @@ def get_chart_data(id):
             datas.append(temp)
     return datas
 
-
+# 取得基本监控项采集数据
 def get_basic_data(id):
     """
 
