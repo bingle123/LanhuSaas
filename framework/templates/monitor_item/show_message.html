@@ -104,7 +104,7 @@
             <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;" border header-align="center">
                 <el-table-column prop="id" label="序号" sortable></el-table-column>
                 <el-table-column prop="monitor_name" label="监控名称" sortable></el-table-column>
-                <el-table-column prop="monitor_type" label="监控类型" sortable></el-table-column>
+                <el-table-column prop="monitor_type" label="监控类型" :formatter="format_monitor_type" sortable></el-table-column>
                 <el-table-column prop="editor" label="编辑人" sortable></el-table-column>
                 <el-table-column prop="edit_time" label="修改时间" sortable></el-table-column>
                 <el-table-column label="操作">
@@ -1298,6 +1298,20 @@
                     console.log('基本监控项数据来源类型错误： ' + source_type);
                 }
             },
+            //将监控项类型的编码转换成中文的名称，前台转换
+            format_monitor_type(row,column){
+                if(row.monitor_type === 1){
+                    return "基本监控项"
+                }else if(row.monitor_type === 2){
+                    return "图表监控项"
+                }else if(row.monitor_type === 3){
+                    return "作业监控项"
+                }else if(row.monitor_type === 4){
+                    return "流程监控项"
+                }else if(row.monitor_type === 5){
+                    return "基本监控项（一体化）"
+                }
+            },
             //基本监控项的数据处理方法
             base_monitor_data_process(){
                 //数据整合与处理
@@ -1915,7 +1929,8 @@
                         vm.basic_test()
                     }
                 }
-                if (row.monitor_type =='图表监控项') {
+                //图表监控项
+                if (row.monitor_type === 2) {
                     console.log(row)
                     vm.disabled2 = true;
                     vm.disabled3 = false;
@@ -1947,7 +1962,8 @@
                             vm.$message.error('获取数据库失败！');
                         });
                 }
-                if (row.monitor_type =='作业监控项') {
+                //作业监控项
+                if (row.monitor_type === 3) {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = false;
@@ -1970,7 +1986,8 @@
                     vm.job.status = row.status;
                     vm.area=row.monitor_area;
                 }
-                if (row.monitor_type =='流程监控项') {
+                //流程监控项
+                if (row.monitor_type === 4) {
                     vm.disabled2 = true;
                     vm.disabled3 = true;
                     vm.disabled4 = true;
@@ -1997,6 +2014,10 @@
                         'id':id1
                     }]
                     vm.flow_change(id)
+                }
+                //基本监控项（一体化）
+                if(row.monitor_type === 5){
+
                 }
             },
             //保存数据处理
