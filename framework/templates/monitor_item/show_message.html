@@ -1931,11 +1931,8 @@
                 }
                 //图表监控项
                 if (row.monitor_type === 2) {
-                    console.log(row)
-                    vm.disabled2 = true;
                     vm.disabled3 = false;
-                    vm.disabled4 = true;
-                    vm.disabled5 = true;
+                    console.log(row)
                     vm.monitor_type = 'second';
                     vm.chart.font_size = row.font_size;
                     vm.chart.height = row.height;
@@ -1964,10 +1961,7 @@
                 }
                 //作业监控项
                 if (row.monitor_type === 3) {
-                    vm.disabled2 = true;
-                    vm.disabled3 = true;
                     vm.disabled4 = false;
-                    vm.disabled5 = true;
                     vm.monitor_type = 'third';
                     console.log(row)
                     vm.job.font_size = row.font_size;
@@ -1988,9 +1982,6 @@
                 }
                 //流程监控项
                 if (row.monitor_type === 4) {
-                    vm.disabled2 = true;
-                    vm.disabled3 = true;
-                    vm.disabled4 = true;
                     vm.disabled5 = false;
                     vm.monitor_type = 'fourth';
                     console.log(row)
@@ -2017,7 +2008,7 @@
                 }
                 //基本监控项（一体化）
                 if(row.monitor_type === 5){
-
+                    vm.disabled6 = false;
                 }
             },
             //保存数据处理
