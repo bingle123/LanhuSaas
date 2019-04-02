@@ -1286,9 +1286,11 @@
                     this.base_gather_source_change(vm.sql_file_interface);
                     if (vm.sql_file_interface == 'interface') {
                         vm.sql_file_interface = 9;
-                        alert(JSON.parse(row.dimension).length);
-                        alert(typeof(JSON.parse(row.dimension)));
-                        vm.base['dimension_data'] = JSON.parse(row.dimension);
+                        if(row.dimension != null){
+                            vm.base['dimension_data'] = JSON.parse(row.dimension);
+                        }else{
+                            vm.base['dimension_data'] = [];
+                        }
                         vm.base['measures_name'] = row.measure_name;
                         vm.base['measures'] = row.target_name;
                         if(0 == row.source_type){
@@ -1298,7 +1300,8 @@
                         }else{
                             this.base['interface_type'] = null;
                         }
-                        vm.base['show_rule_type'] = row.display_type;
+                        //下拉框不识别number类型的数据，需要转化为字符串供下拉框回显
+                        vm.base['show_rule_type'] = row.display_type.toString();
                         vm.base['monitor_name'] = vm.monitor_name;
                         vm.base['monitor_type'] = vm.monitor_type;
                         vm.base['font_size'] = row.font_size;
@@ -1400,7 +1403,11 @@
                 //base对象被其他功能所使用，因此不能删除其属性用于上传数据，另外定义一个新的变量缓存并上传
                 this.base_monitor_upload_data['target_name'] = this.base['measures'];
                 this.base_monitor_upload_data['measure_name'] = this.base['measures_name'];
-                this.base_monitor_upload_data['dimension'] = JSON.stringify(JSON.stringify(this.base['dimension_data']));
+                if(null == this.base['dimension_data'] || 0 === this.base['dimension_data'].length){
+                    this.base_monitor_upload_data['dimension'] = null;
+                }else{
+                    this.base_monitor_upload_data['dimension'] = JSON.stringify(this.base['dimension_data']);
+                }
                 this.base_monitor_upload_data['display_type'] = this.base['show_rule_type'];
                 this.base_monitor_upload_data['display_rule'] = this.base['gather_rule'];
                 this.base_monitor_upload_data['gather_rule'] = this.base['gather_rule'];
