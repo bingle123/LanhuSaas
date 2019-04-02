@@ -126,7 +126,7 @@
     <!-- div1 end-->
 
     <!-- 对话框 start-->
-    <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%" @closed="base_monitor_cache_clean" :close-on-click-modal="false">
+    <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%" @closed="monitor_cache_clean" :close-on-click-modal="false">
         <HR align=center width=100% color=#979797 SIZE=0.5>
         <div style="height: 30px"></div>
         <div>
@@ -1277,8 +1277,10 @@
             ],
         },
         methods: {
+            //监控项数据处理，用于编辑状态下回显数据
+
             //数据添加后缓存数据清空操作
-            base_monitor_cache_clean(){
+            monitor_cache_clean(){
                 //基本监控项（修改后）的清空操作
                 if('five' == vm.monitor_type){
                     this.base['dimension_data'] = [];
