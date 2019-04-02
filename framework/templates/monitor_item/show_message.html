@@ -126,7 +126,7 @@
     <!-- div1 end-->
 
     <!-- 对话框 start-->
-    <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%">
+    <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%" @closed="base_monitor_cache_clean" :close-on-click-modal="false">
         <HR align=center width=100% color=#979797 SIZE=0.5>
         <div style="height: 30px"></div>
         <div>
@@ -1277,6 +1277,38 @@
             ],
         },
         methods: {
+            //数据添加后缓存数据清空操作
+            base_monitor_cache_clean(){
+                //基本监控项（修改后）的清空操作
+                if('five' == vm.monitor_type){
+                    this.base['dimension_data'] = [];
+                    this.base['measures_name'] = '';
+                    this.base['measures'] = '';
+                    this.base['interface_type'] = '';
+                    this.base['show_rule_type'] = '';
+                    //清空数据后默认为基本监控类型（修改后）
+                    this.base['monitor_type'] = 5;
+                    this.base['font_size'] = '20';
+                    this.base['height'] = '20';
+                    this.base['width'] = '0';
+                    this.base['start_time'] = '';
+                    this.base['end_time'] = '';
+                    this.base['period'] = '10';
+                    this.base['params'] = '';
+                    this.base['status'] = '';
+                    this.base['contents'] = '';
+                    this.base['gather_rule'] = '';
+                    //采集参数默认为interface
+                    this.base['gather_params'] = 'interface';
+                    this.base['monitor_area'] = '';
+                }
+                //采集测试标志位置空
+                vm.gather_data_test_flag = null;
+                //采集测试缓存数据清空
+                this.gather_test_data = null;
+                //采集测试的预览框清空
+                $('#base_test_text').html('');
+            },
             //基本监控项（修改后）的数据来源切换
             base_gather_source_change(source_type){
                 if('sql' == source_type || '3' == source_type){
@@ -1361,8 +1393,6 @@
                 }).then((res) => {
                     this.$alert("保存成功!", "提示");
                     vm.centerDialogVisible = false;
-                    vm.gather_data_test_flag = null;
-
                 }).catch((error) => {
                     vm.$alert("采集测试数据保存失败！", "错误");
                 });
@@ -2393,6 +2423,8 @@
                     this.monitor_type = 'five';
                     //数据来源选项默认切换为接口
                     this.sql_file_interface = 9;
+                    //采集参数gather_params默认置为interface
+                    this.base['gather_params'] = 'interface';
                     //切换基本监控项的数据来源类型展示不同的内容，默认切换为接口
                     this.base_gather_source_change('interface');
                     //--------------------------
