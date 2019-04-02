@@ -1278,7 +1278,18 @@
         },
         methods: {
             //监控项数据处理，用于编辑状态下回显数据
+            monitor_edit_data_process(row){
+                //如果监控项类型为基本基本监控单元（修改后）
+                if(5 === vm.monitor_type){
+                    //监控项类型设置
+                    this.monitor_type = 'five';
+                    //基本监控项采集类型初始化
+                    this.sql_file_interface = row.gather_params;
+                    //切换基本监控项的数据来源类型展示不同的内容
+                    this.base_gather_source_change(vm.sql_file_interface);
 
+                }
+            },
             //数据添加后缓存数据清空操作
             monitor_cache_clean(){
                 //基本监控项（修改后）的清空操作
@@ -1883,8 +1894,6 @@
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
                 if (row.monitor_type === 1) {
-                    //取消原有修改基本监控项的处理方法
-                    /*
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
                     vm.basic.height = row.height;
@@ -1899,15 +1908,7 @@
                     vm.basic.gather_rule = row.gather_rule;
                     vm.basic.contents = row.contents;
                     vm.basic.status = row.status;
-                    vm.area=row.monitor_area;*/
-                    //以下为基本监控项（修改后）的处理方法
-                    //监控项类型设置
-                    this.monitor_type = 'five';
-                    //基本监控项采集类型初始化
-                    this.sql_file_interface = row.gather_params;
-                    //切换基本监控项的数据来源类型展示不同的内容
-                    this.base_gather_source_change(vm.sql_file_interface);
-                    //---------------------------------
+                    vm.area=row.monitor_area;
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface =3;
                         axios({
@@ -2045,6 +2046,8 @@
                 //基本监控项（一体化）
                 if(row.monitor_type === 5){
                     vm.disabled6 = false;
+                    //处理监控项的数据用于修改时的数据回显
+                    this.monitor_edit_data_process(row);
                 }
             },
             //保存数据处理
