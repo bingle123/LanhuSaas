@@ -108,7 +108,7 @@ class Gather():
         elif request_code == '404':
             return error_result(u'接口找不到了')
         else:
-            return error_result(request_code + u'系统错误')
+            return error_result(request_code.__str__() + u'系统错误')
 
     @classmethod
     def change_json(cls, measures, request_result, measures_name):
