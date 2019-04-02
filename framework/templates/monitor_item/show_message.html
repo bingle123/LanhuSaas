@@ -1270,24 +1270,53 @@
             dimensionality_list: [],
             gather_list:[],
             gather_base_test_data:[],
-            dimension_data:[{
+            /*dimension_data:[{
                 dimension_name:'ip',
                 dimension_value:'192.168.1.153'
-            },
-            ],
+            }],*/
         },
         methods: {
             //监控项数据处理，用于编辑状态下回显数据
             monitor_edit_data_process(row){
                 //如果监控项类型为基本基本监控单元（修改后）
-                if(5 === vm.monitor_type){
-                    //监控项类型设置
-                    this.monitor_type = 'five';
+                if('five' == vm.monitor_type){
                     //基本监控项采集类型初始化
                     this.sql_file_interface = row.gather_params;
                     //切换基本监控项的数据来源类型展示不同的内容
                     this.base_gather_source_change(vm.sql_file_interface);
-
+                    if (vm.sql_file_interface == 'interface') {
+                        vm.sql_file_interface = 9;
+                        alert(JSON.parse(row.dimension).length);
+                        alert(typeof(JSON.parse(row.dimension)));
+                        vm.base['dimension_data'] = JSON.parse(row.dimension);
+                        vm.base['measures_name'] = row.measure_name;
+                        vm.base['measures'] = row.target_name;
+                        if(0 == row.source_type){
+                            this.base['interface_type'] = 'log';
+                        }else if(1 == row.source_type){
+                            this.base['interface_type'] = 'measures';
+                        }else{
+                            this.base['interface_type'] = null;
+                        }
+                        vm.base['show_rule_type'] = row.display_type;
+                        vm.base['monitor_name'] = vm.monitor_name;
+                        vm.base['monitor_type'] = vm.monitor_type;
+                        vm.base['font_size'] = row.font_size;
+                        vm.base['height'] = row.height;
+                        vm.base['width'] = row.width;
+                        vm.base['start_time'] = row.start_time;
+                        vm.base['end_time'] = row.end_time;
+                        vm.base['period'] = row.period;
+                        vm.base['params'] = row.params;
+                        vm.base['status'] = row.status;
+                        vm.base['contents'] = row.contents;
+                        vm.base['gather_rule'] = row.gather_rule;
+                        vm.base['gather_params'] = row.gather_params;
+                        vm.base['monitor_area'] = vm.area;
+                        console.log(vm.base);
+                    }else{
+                        alert('暂未实现！');
+                    }
                 }
             },
             //数据添加后缓存数据清空操作
@@ -1368,8 +1397,6 @@
                 }else{
                     this.base_monitor_upload_data['source_type'] = null;
                 }
-                console.log(this.dimension_data);
-                console.log(this.base['dimension_data']);
                 //base对象被其他功能所使用，因此不能删除其属性用于上传数据，另外定义一个新的变量缓存并上传
                 this.base_monitor_upload_data['target_name'] = this.base['measures'];
                 this.base_monitor_upload_data['measure_name'] = this.base['measures_name'];
@@ -2046,6 +2073,8 @@
                 //基本监控项（一体化）
                 if(row.monitor_type === 5){
                     vm.disabled6 = false;
+                    //监控项类型设置
+                    this.monitor_type = 'five';
                     //处理监控项的数据用于修改时的数据回显
                     this.monitor_edit_data_process(row);
                 }
