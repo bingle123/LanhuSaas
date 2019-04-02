@@ -39,7 +39,7 @@ APP_ID = 'lanhusaas'
 APP_TOKEN = '334c1932-4763-47b9-8f06-7f8c7c8b33aa'
 
 # 指标集API地址
-MEASURES_API_ADDRESS = 'http://192.168.1.153:8088/webserver/metric/getMetricSetColumns.do'
+MEASURES_API_ADDRESS = 'http://192.168.1.153:8088/webserver/metric/getMetricSetColumns.do'  # type: str
 
 # 指标查询API
 MEASURES_QUERY_API = 'http://192.168.1.150:4242/api/query'
@@ -69,9 +69,9 @@ DENGFEI_PASSWORD = 'test'
 # 长沙
 # BK_PAAS_HOST = 'http://paas.bk.com:80'
 # 上海
-BK_PAAS_HOST = 'http://paas.blueking.com:8030'
+BK_PAAS_HOST = 'https://paas.blueking.com'
 # 上海退出登录地址
-LOG_OUT_ADDRESS = 'http://paas.blueking.com:8030/accounts/logout/'
+LOG_OUT_ADDRESS = 'https://paas.blueking.com/accounts/logout/'
 
 # 请求官方 API 默认版本号，可选值为："v2" 或 ""；其中，"v2"表示规范化API，""表示未规范化API
 DEFAULT_BK_API_VER = 'v2'
@@ -94,7 +94,8 @@ ENVIRONMENT = os.environ.get('BK_ENV', 'development')
 APP_ID = os.environ.get('APP_ID', APP_ID)
 APP_TOKEN = os.environ.get('APP_TOKEN', APP_TOKEN)
 BK_PAAS_HOST = os.environ.get('BK_PAAS_HOST', BK_PAAS_HOST)
-
+# https方案添加
+BK_PAAS_INNER_HOST = os.environ.get('BK_PAAS_INNER_HOST', BK_PAAS_HOST)
 # 应用访问路径
 SITE_URL = '/'
 # 运行模式， DEVELOP(开发模式)， TEST(测试模式)， PRODUCT(正式模式)
