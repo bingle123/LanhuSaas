@@ -233,11 +233,14 @@
                         let result_list_edit=vm.result_list_edit;
                         let max=0;
                         let index=0;
+                         alert(result_list_edit.length)
                         for(var i=0;i<result_list_edit.length;i++){
                             if(max<result_list_edit[i].order){  //场景监控项拖拽元素唯一
                                 max=result_list_edit[i].order;
                             }
-                            if(result_list_edit[i].monitor_type==1){
+                            //监控项类型1和5都为基本监控项
+                            //1为原始基本监控项，5为一体化平台基本监控项
+                            if(result_list_edit[i].monitor_type === 1 || result_list_edit[i].monitor_type === 5){
                                 let res = await axios({
                                     method:'post',
                                     url:'/monitor_scene/monitor_scene_show/',
