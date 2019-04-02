@@ -75,6 +75,8 @@ def obt_dic(page_data, page_count):
     """
     obj_list = []
     for i in page_data:
+        """
+        # 这里不需要转换为中文，直接在前台页面上处理
         if i.monitor_type == 1:
             i.monitor_type = u'基本监控项'
         elif i.monitor_type == 2:
@@ -83,6 +85,7 @@ def obt_dic(page_data, page_count):
             i.monitor_type = u'作业监控项'
         elif i.monitor_type == 4:
             i.monitor_type = u'流程监控项'
+        """
         obj_dic = model_to_dict(i)
         obj_dic['page_count'] = page_count
         obj_dic['edit_time'] = str(i.edit_time)

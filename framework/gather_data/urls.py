@@ -15,4 +15,5 @@ from django.conf.urls import patterns
 urlpatterns = patterns(
     'gather_data.views',
     (r'^gather_data$', 'gather_data'),                                          # 采集数据
+    (r'^gather_data_save$', 'gather_data_save')                                 # 采集数据保存方法
 )

@@ -7,8 +7,13 @@ import json
 
 
 def gather_data(request):
-    #info = json.loads(request.body)
+    # info = json.loads(request.body)
     info = dict()
     status = function.gather_data(info)
     return render_json(status)
 
+
+def gather_data_save(request):
+    info = json.loads(request.body)
+    status = function.gather_data_save(info)
+    return render_json(status)

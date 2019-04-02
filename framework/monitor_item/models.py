@@ -34,9 +34,6 @@ class Monitor(models.Model):
     display_type = models.PositiveIntegerField(verbose_name=u'展示类型', null=True)
     display_rule = models.CharField(verbose_name=u'展示规则', max_length=1000, null=True)
 
-    def __str__(self):
-        return self.id
-
     class Meta:
         verbose_name = u'监控项信息表'
         verbose_name_plural = u'监控项信息'

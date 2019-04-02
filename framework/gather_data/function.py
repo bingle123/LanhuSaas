@@ -507,3 +507,9 @@ def load_script_content(script_type):
             script_content = script_content + line
             line = f.readline()
     return script_content
+
+
+# 采集数据的保存方法
+def gather_data_save(info):
+    TDGatherData(item_id=info['item_id'], gather_time=GATHER_TIME, data_key='measures', data_value=info['measures']).save()
+    return 'ok'
