@@ -324,7 +324,7 @@ def scene_show(res):
         page = res['page']
         if type == 0:
             # 四类监控项全部按id倒排序（基本监控项与一体化基本监控项放一起）
-            base_unit = Monitor.objects.filter(Q(monitor_type='1') | Q(monitor_type='5')).order_by("-id")
+            base_unit = Monitor.objects.filter(Q(monitor_type = 1) | Q(monitor_type= 5)).order_by("-id")
             base_page_data, base_page_count = tools.page_paging(base_unit, limit, page)
             # 四类监控项全部按id倒排序（图表监控项）
             chart_unit = Monitor.objects.filter(monitor_type='2').order_by("-id")
@@ -347,7 +347,7 @@ def scene_show(res):
             }
         # 基本监控项与一体化基本监控项
         elif type == 1:
-            base_unit = Monitor.objects.filter(Q(monitor_type='1') | Q(monitor_type='5')).order_by("-id")
+            base_unit = Monitor.objects.filter(Q(monitor_type=1) | Q(monitor_type=5)).order_by("-id")
             base_page_data, base_page_count = tools.page_paging(base_unit, limit, page)
             base_list = tools.obt_dic(base_page_data, base_page_count)
             res_dic = {
