@@ -1277,6 +1277,27 @@
             ],
         },
         methods: {
+            //基本监控项（修改后）的数据来源切换
+            base_gather_source_change(source_type){
+                if('sql' == source_type || '3' == source_type){
+                    //显示数据库表单
+                    this.database_show = true;
+                    this.file_show = false;
+                    this.interface_show = false;
+                }else if('interface' == source_type || '9' == source_type){
+                    //显示关闭文件和数据库的显示，显示接口表单
+                    this.database_show = false;
+                    this.file_show = false;
+                    this.interface_show = true;
+                }else if('file' == source_type || '6' == source_type){
+                    //显示文件表单
+                    this.database_show = false;
+                    this.file_show = true;
+                    this.interface_show = false;
+                }else{
+                    console.log('基本监控项数据来源类型错误： ' + source_type);
+                }
+            },
             //将监控项类型的编码转换成中文的名称，前台转换
             format_monitor_type(row,column){
                 if(row.monitor_type === 1){
@@ -1813,16 +1834,21 @@
                 this.get_db_connections();
                 vm.add_pamas = 1;
                 vm.centerDialogVisible = true;
+                //默认编辑下显示基本监控项取消
+                //vm.disabled2 = false;
                 vm.disabled2 = true;
+                //-----------------------------
                 vm.disabled3 = true;
                 vm.disabled4 = true;
                 vm.disabled5 = true;
-                vm.disabled6 = true;
+                //默认编辑下显示基本监控项（修改）
+                vm.disabled6 = false;
+                //-----------------------------
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
-                //基本监控项
                 if (row.monitor_type === 1) {
-                    vm.disabled2 = false;
+                    //取消原有修改基本监控项的处理方法
+                    /*
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
                     vm.basic.height = row.height;
@@ -1837,7 +1863,15 @@
                     vm.basic.gather_rule = row.gather_rule;
                     vm.basic.contents = row.contents;
                     vm.basic.status = row.status;
-                    vm.area=row.monitor_area;
+                    vm.area=row.monitor_area;*/
+                    //以下为基本监控项（修改后）的处理方法
+                    //监控项类型设置
+                    this.monitor_type = 'five';
+                    //基本监控项采集类型初始化
+                    this.sql_file_interface = row.gather_params;
+                    //切换基本监控项的数据来源类型展示不同的内容
+                    this.base_gather_source_change(vm.sql_file_interface);
+                    //---------------------------------
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface =3;
                         axios({
@@ -2342,14 +2376,25 @@
                     }
                     vm.add_pamas = 0;
                     vm.monitor_name = '';
+                    //取消默认添加时展示基本监控项
+                    /*
                     vm.disabled2 = false;
                     vm.disabled3 = false;
                     vm.disabled4 = false;
                     vm.disabled5 = false;
-                    vm.monitor_type = 'first';
+                    vm.monitor_type = 'first';*/
+                    //默认添加时展示基本监控项（修改后）
+                    //监控项类型设置
+                    this.monitor_type = 'five';
+                    //数据来源选项默认切换为接口
+                    this.sql_file_interface = 9;
+                    //切换基本监控项的数据来源类型展示不同的内容，默认切换为接口
+                    this.base_gather_source_change('interface');
+                    //--------------------------
                     vm.unit_id = row;
                     vm.centerDialogVisible = true;
-                    this.get_db_connections();
+                    //取消原有基本监控项时默认加载数据库连接信息
+                    //this.get_db_connections();
                 }
                 ;
             },
