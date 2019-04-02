@@ -1323,10 +1323,12 @@
                 }else{
                     this.base_monitor_upload_data['source_type'] = null;
                 }
+                console.log(this.dimension_data);
+                console.log(this.base['dimension_data']);
                 //base对象被其他功能所使用，因此不能删除其属性用于上传数据，另外定义一个新的变量缓存并上传
                 this.base_monitor_upload_data['target_name'] = this.base['measures'];
                 this.base_monitor_upload_data['measure_name'] = this.base['measures_name'];
-                this.base_monitor_upload_data['dimension'] = JSON.stringify(JSON.stringify(this.dimension_data));
+                this.base_monitor_upload_data['dimension'] = JSON.stringify(JSON.stringify(this.base['dimension_data']));
                 this.base_monitor_upload_data['display_type'] = this.base['show_rule_type'];
                 this.base_monitor_upload_data['display_rule'] = this.base['gather_rule'];
                 this.base_monitor_upload_data['gather_rule'] = this.base['gather_rule'];
@@ -1359,6 +1361,8 @@
                 }).then((res) => {
                     this.$alert("保存成功!", "提示");
                     vm.centerDialogVisible = false;
+                    vm.gather_data_test_flag = null;
+
                 }).catch((error) => {
                     vm.$alert("采集测试数据保存失败！", "错误");
                 });
@@ -1417,7 +1421,7 @@
                         }
                         vm.show()
                     }).catch((error) => {
-                        this.$alert('保存出错!', "错误");
+                        this.$alert('新增保存失败!', "错误");
                     });
                 }else {
                     vm.centerDialogVisible = true;
@@ -2134,6 +2138,7 @@
                     //判断是否已经进行采集测试
                     if(null != this.gather_data_test_flag && false == this.gather_data_test_flag){
                         this.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
+                        vm.gather_data_test_flag = null;
                     }else if(null == this.gather_data_test_flag){
                         axios({
                             url:'${SITE_URL}iqube_interface/gather_base_test/',
