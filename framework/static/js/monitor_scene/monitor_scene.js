@@ -237,7 +237,9 @@
                             if(max<result_list_edit[i].order){  //场景监控项拖拽元素唯一
                                 max=result_list_edit[i].order;
                             }
-                            if(result_list_edit[i].monitor_type==1){
+                            //监控项类型1和5都为基本监控项
+                            //1为原始基本监控项，5为一体化平台基本监控项
+                            if(result_list_edit[i].monitor_type === 1 || result_list_edit[i].monitor_type === 5){
                                 let res = await axios({
                                     method:'post',
                                     url:'/monitor_scene/monitor_scene_show/',
@@ -249,7 +251,7 @@
                                 $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"basic'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"></div>');
                                 test_monitor(vm.monitor_data[0].id,vm.monitor_data[0].display_rule,vm.monitor_data[0].display_type,vm.monitor_data[0].measure_name,vm.monitor_data[0].target_name,1);
                             }
-                            if(result_list_edit[i].monitor_type==2){
+                            if(result_list_edit[i].monitor_type === 2){
                                 let res = await axios({
                                     method:'post',
                                     url:'/monitor_scene/monitor_scene_show/',
@@ -261,7 +263,7 @@
                                 $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"background:beige;height:'+vm.monitor_data[0].height+'px;width:'+vm.monitor_data[0].width+'px;top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"><div id=\"chart'+result_list_edit[i].order+'\" style=\"background:beige;height:'+(vm.monitor_data[0].height-2)+'px;width:'+(vm.monitor_data[0].width-2)+'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
                                 show_chart(vm.monitor_data[0].id,"","", vm.monitor_data[0].gather_params, vm.monitor_data[0].height, vm.monitor_data[0].width, result_list_edit[i].order, vm.monitor_data[0].contents);
                             }
-                            if(result_list_edit[i].monitor_type==3){
+                            if(result_list_edit[i].monitor_type === 3){
                                 let res = await axios({
                                     method:'post',
                                     url:'/monitor_scene/monitor_scene_show/',
@@ -274,7 +276,7 @@
                                 $('.monitor_content').append('<div class=\"Drigging\" name=\"'+result_list_edit[i].item_id+'\" type=\"job'+result_list_edit[i].item_id+'\" id=\"'+result_list_edit[i].order+'\" style=\"top:'+result_list_edit[i].y+'px;left:'+result_list_edit[i].x+'px;transform: scale('+result_list_edit[i].scale+')\"></div>');
                                 job_monitor(job_params);
                             }
-                            if(result_list_edit[i].monitor_type==4){
+                            if(result_list_edit[i].monitor_type === 4){
                                 let res = await axios({
                                     method:'post',
                                     url:'/monitor_scene/monitor_scene_show/',
