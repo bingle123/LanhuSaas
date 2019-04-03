@@ -2850,27 +2850,34 @@
             },
             //获取指标集
             get_gather_info(value) {
-                vm.loading = true;
-                axios({
-                    url: '${SITE_URL}iqube_interface/'+value,
-                }).then((res) => {
-                    vm.gather_list = res.data.results;
-                    for (let i = 0; i < res.data.results.length; i++) {
-                        // 第一个
-                        for (let j in res.data.results[i]) {
-                            temp_json = {'label': j, 'value': j};
-                            vm.iqube_name.push(temp_json)
+                this.base.measures = '';
+                //日志监控项模拟数据,目前一体化平台没有数据
+                if("get_log_type/" == value){
+                    var temp_json = {'label': 'zy-shangpin-initial', 'value': 'zy-shangpin-initial'};
+                    vm.iqube_name.push(temp_json)
+                }else{
+                    vm.loading = true;
+                    axios({
+                        url: '${SITE_URL}iqube_interface/'+value,
+                    }).then((res) => {
+                        vm.gather_list = res.data.results;
+                        for (let i = 0; i < res.data.results.length; i++) {
+                            // 第一个
+                            for (let j in res.data.results[i]) {
+                                temp_json = {'label': j, 'value': j};
+                                vm.iqube_name.push(temp_json)
+                            }
                         }
-                    }
-                    //在第一次编辑的情况下，根据当前来源名称加载对应的候选度量值
-                    if('1' == vm.add_pamas && vm.loading == true){
-                        this.change_measures(vm.base['measures']);
-                    }
-                    vm.loading = false;
-                }).catch((res) => {
-                    console.error("获取指标集失败"+res.results);
-                    vm.loading = false;
-                });
+                        //在第一次编辑的情况下，根据当前来源名称加载对应的候选度量值
+                        if('1' == vm.add_pamas && vm.loading == true){
+                            this.change_measures(vm.base['measures']);
+                        }
+                        vm.loading = false;
+                    }).catch((res) => {
+                        console.error("获取指标集失败"+res.results);
+                        vm.loading = false;
+                    });
+                }
             },
             //获取指标名称
             change_measures(value) {
@@ -2881,6 +2888,10 @@
                 // 导致度量值候选项中末尾出现暂无数据的BUG
                 if((null != vm.base['measures_name'] || vm.base['measures_name'] != '') && !this.base_monitor_edit_init){
                     vm.base['measures_name'] = '';
+                }
+                //日志监控项模拟数据
+                if(this.base.interface_type == 'log'){
+                    vm.dimensionality_list = {0:'system-init'};
                 }
                 //如果是点击编辑后的数据初始化时触发的此函数，base_monitor_edit_init标记
                 //置为false，在下次触发change_measures函数时将清空度量值
