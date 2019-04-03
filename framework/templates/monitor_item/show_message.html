@@ -2998,16 +2998,18 @@
                             let selector='.div'+i;
                             let data_key=[];
                             let data_value=[];
+                            console.log(gather_base_test_data);
                             for(k in gather_base_test_data[i]){
                                 data_key.push(k);
                                 data_value.push(gather_base_test_data[i][k]);
                             }
+                            $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block"></div>');
                             for(let j=0;j<data_key.length;j++){
                                 if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
                                     var data_value_str=data_value[j].toString();
                                     if(data_value_str.indexOf('#')>-1){
                                         var str = data_value_str.split('#');
-                                        $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block; background-color:'+ '#'+str[1] +'"></div>');
+                                        $(selector).css('background-color', '#' + str[1]);
                                         //$(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':<i style="color:'+data_value[j]+'" class="el-icon-star-on"></i></p>');
                                         $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');
                                     }else {

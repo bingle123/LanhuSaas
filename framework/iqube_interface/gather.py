@@ -76,22 +76,23 @@ class Gather():
             elif show_rule_type == '1':
 
                 # 转换颜色规则
-                color_code_map = {}
-                rule_list = gather_rule.split('@')
-                for i in rule_list:
-                    if i is not None:
-                        color_rgb = i.split('==')[0]
-                        try:
-                            color_code = i.split('==')[1]
-                        except Exception as e:
-                            # 不存在默认将
-                            color_code = 'error'
-                        color_code_map[color_code] = color_rgb
+                # color_code_map = {}
+                # rule_list = gather_rule.split('@')
+                # for i in rule_list:
+                #     if i is not None:
+                #         color_rgb = i.split('==')[0]
+                #         try:
+                #             color_code = i.split('==')[1]
+                #         except Exception as e:
+                #             # 不存在默认将
+                #             color_code = 'error'
+                #         color_code_map[color_code] = color_rgb
 
                 # 模拟数据
-                temp_list = [{"system_name": "jzjy", "ip": "192.168.1.153", "cpu_cpu_used_pct": 2, "time": "2019-03-22 19:42:12"}, {"system_name": "jzjy", "ip": "192.168.1.157", "cpu_cpu_used_pct": 0, "time": "2019-03-22 19:37:23"}, {"system_name": "jzjy", "ip": "192.168.1.165", "cpu_cpu_used_pct": 0, "time": "2019-03-22 19:41:56"}]
-
-                result_list = Gather.color_manage(color_code_map, temp_list, measures, measures_name)
+                # temp_list = [{"system_name": "jzjy", "ip": "192.168.1.153", "cpu_cpu_used_pct": 2, "time": "2019-03-22 19:42:12"}, {"system_name": "jzjy", "ip": "192.168.1.157", "cpu_cpu_used_pct": 0, "time": "2019-03-22 19:37:23"}, {"system_name": "jzjy", "ip": "192.168.1.165", "cpu_cpu_used_pct": 0, "time": "2019-03-22 19:41:56"}]
+                # result_list = Gather.color_manage(color_code_map, temp_list, measures, measures_name)
+                rule_list = gather_rule.split('@')
+                result_list = Gather.color_manage(temp_list, rule_list, measures, measures_name)
                 return result_list
             # 显示单位
             elif show_rule_type == '2':
@@ -172,7 +173,7 @@ class Gather():
         return "%.2f%%" % (float(original_value) * int(multiple))
 
     @classmethod
-    def color_manage(cls, color_code_map, result_list, measures, measures_name):
+    def color_manage(cls, temp_list, rule_list, measures, measures_name):
         """
         颜色管理
         :param color_code_map:               颜色字典
@@ -181,19 +182,32 @@ class Gather():
         :param measures_name:           指标集名称
         :return:
         """
-        try:
-            # 颜色代码List
-            key_list = []
-            for key in color_code_map:
-                key_list.append(key)
-            for i in result_list:
-                color_code = str(i[measures + '_' + measures_name])
-                if color_code in key_list:
-                    # 新的键值为 值 + 颜色的RGB代码，前端用#分割取颜色和值，值用于显示，颜色渲染div底色
-                    i[measures + '_' + measures_name] = str(i[measures + '_' + measures_name]) + color_code_map[str(i[measures + '_' + measures_name])]
-            return success_result(result_list)
-        except Exception as e:
-            return error_result(u'颜色转换出错'+str(e))
+        # try:
+        #     # 颜色代码List
+        #     key_list = []
+        #     for key in color_code_map:
+        #         key_list.append(key)
+        #     for i in result_list:
+        #         color_code = str(i[measures + '_' + measures_name])
+        #         if color_code in key_list:
+        #             # 新的键值为 值 + 颜色的RGB代码，前端用#分割取颜色和值，值用于显示，颜色渲染div底色
+        #             i[measures + '_' + measures_name] = str(i[measures + '_' + measures_name]) + color_code_map[str(i[measures + '_' + measures_name])]
+        #     return success_result(result_list)
+        # except Exception as e:
+        #     return error_result(u'颜色转换出错'+str(e))
+        print temp_list
+        for item in temp_list:
+            if float(rule_list[0].strip().split('-')[0]) <= float(item[measures + '_' + measures_name]) < float(rule_list[0].strip().split('-')[1]):
+                item[measures + '_' + measures_name] = str(item[measures + '_' + measures_name]) + '#FF0000'
+            elif float(rule_list[1].strip().split('-')[0]) <= float(item[measures + '_' + measures_name]) < float(rule_list[1].strip().split('-')[1]):
+                item[measures + '_' + measures_name] = str(item[measures + '_' + measures_name]) + '#00FF00'
+            elif float(rule_list[2].strip().split('-')[0]) <= float(item[measures + '_' + measures_name]) < float(rule_list[2].strip().split('-')[1]):
+                item[measures + '_' + measures_name] = str(item[measures + '_' + measures_name]) + '#7A8B8B'
+            elif float(rule_list[3].strip().split('-')[0]) <= float(item[measures + '_' + measures_name]) < float(rule_list[3].strip().split('-')[1]):
+                item[measures + '_' + measures_name] = str(item[measures + '_' + measures_name]) + '#EEEE00'
+            else:
+                item[measures + '_' + measures_name] = str(item[measures + '_' + measures_name]) + '#9400D3'
+        return success_result(temp_list)
 
     @classmethod
     def other_manage(cls, original_value, gather_rule):
