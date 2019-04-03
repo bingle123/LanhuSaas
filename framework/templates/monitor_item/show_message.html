@@ -673,7 +673,7 @@
 
 
                 <!-- 基本单元 start-->
-                <el-tab-pane :disabled="disabled6" label="基本监控项（一体化平台）" name="five" element-loading-text="拼命加载中"
+                <el-tab-pane :disabled="disabled6" label="基本监控单元（修改后）" name="five" element-loading-text="拼命加载中"
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)" v-loading="loading">
                     <el-row>
@@ -847,7 +847,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="度量值" prop="font_size">
-                                    <el-select v-model="base.measures_name" filterable placeholder="请选择度量值">
+                                    <el-select v-model="base.measures_name" filterable placeholder="请选择指标名称">
                                         <el-option
                                                 v-for="item in dimensionality_list"
                                                 :key="item"
@@ -967,6 +967,8 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            //基本监控项（修改后）编辑的情况下是否为第一次加载数据标记
+            base_monitor_edit_init: true,
             //基本监控项上传数据
             base_monitor_upload_data: {},
             //采集测试数据缓存变量
@@ -1291,15 +1293,17 @@
                         }else{
                             vm.base['dimension_data'] = [];
                         }
-                        vm.base['measures_name'] = row.measure_name;
-                        vm.base['measures'] = row.target_name;
                         if(0 == row.source_type){
+                            this.change_source_type('log');
                             this.base['interface_type'] = 'log';
                         }else if(1 == row.source_type){
+                            this.change_source_type('measures');
                             this.base['interface_type'] = 'measures';
                         }else{
                             this.base['interface_type'] = null;
                         }
+                        vm.base['measures_name'] = row.measure_name;
+                        vm.base['measures'] = row.target_name;
                         //下拉框不识别number类型的数据，需要转化为字符串供下拉框回显
                         vm.base['show_rule_type'] = row.display_type.toString();
                         vm.base['monitor_name'] = vm.monitor_name;
@@ -1316,7 +1320,6 @@
                         vm.base['gather_rule'] = row.gather_rule;
                         vm.base['gather_params'] = row.gather_params;
                         vm.base['monitor_area'] = vm.area;
-                        console.log(vm.base);
                     }else{
                         alert('暂未实现！');
                     }
@@ -1353,6 +1356,10 @@
                 this.gather_test_data = null;
                 //采集测试的预览框清空
                 $('#base_test_text').html('');
+                //如果是基本监控项（修改后）的修改窗口被关闭基本监控项编辑初始化状态重置为true
+                if(1 == vm.add_pamas){
+                    this.base_monitor_edit_init = true;
+                }
             },
             //基本监控项（修改后）的数据来源切换
             base_gather_source_change(source_type){
@@ -1386,7 +1393,7 @@
                 }else if(row.monitor_type === 4){
                     return "流程监控项"
                 }else if(row.monitor_type === 5){
-                    return "基本监控项（一体化平台）"
+                    return "基本监控项（一体化）"
                 }
             },
             //基本监控项的数据处理方法
@@ -1911,7 +1918,6 @@
             },
             //编辑单元
             edit_unit(row) {
-                console.log(row);
                 this.get_db_connections();
                 vm.add_pamas = 1;
                 vm.centerDialogVisible = true;
@@ -2084,6 +2090,8 @@
                     this.monitor_type = 'five';
                     //处理监控项的数据用于修改时的数据回显
                     this.monitor_edit_data_process(row);
+                    //调用参数生成采集测试的预览图像
+                    this.base_cell_test();
                 }
             },
             //保存数据处理
@@ -2873,44 +2881,48 @@
             },
             //获取指标集
             get_gather_info(value) {
-                //初始化清空下拉框
-                vm.iqube_name = [];
-                this.base.measures = "";
-                //获取日志指标，目前日志指标都是模拟数据
-                if(value == 'get_log_type/'){
-                    var temp_json = {'label': 'zy-shangpin-initial', 'value': 'zy-shangpin-initial'};
-                    vm.iqube_name.push(temp_json)
-                }else{
-                    vm.loading = true;
-                    axios({
-                        url: '${SITE_URL}iqube_interface/'+value,
-                    }).then((res) => {
-                        vm.gather_list = res.data.results;
-                        for (let i = 0; i < res.data.results.length; i++) {
-                            // 第一个
-                            for (let j in res.data.results[i]) {
-                                temp_json = {'label': j, 'value': j};
-                                vm.iqube_name.push(temp_json)
-                            }
+                vm.loading = true;
+                axios({
+                    url: '${SITE_URL}iqube_interface/'+value,
+                }).then((res) => {
+                    vm.gather_list = res.data.results;
+                    for (let i = 0; i < res.data.results.length; i++) {
+                        // 第一个
+                        for (let j in res.data.results[i]) {
+                            temp_json = {'label': j, 'value': j};
+                            vm.iqube_name.push(temp_json)
                         }
-                        vm.loading = false;
-                    }).catch((res) => {
-                        console.error("获取指标集失败"+str(res.results));
-                        vm.loading = false;
-                    });
-                }
+                    }
+                    //在第一次编辑的情况下，根据当前来源名称加载对应的候选度量值
+                    if('1' == vm.add_pamas && vm.loading == true){
+                        this.change_measures(vm.base['measures']);
+                    }
+                    vm.loading = false;
+                }).catch((res) => {
+                    console.error("获取指标集失败"+res.results);
+                    vm.loading = false;
+                });
+
             },
-            //获取度量值
+            //获取指标名称
             change_measures(value) {
-                // 日志数据暂时是模拟值
-                if(this.base.interface_type == 'log'){
-                    vm.dimensionality_list = {'system-init': 'system-init'};
-                }else{
-                    for(let i in vm.gather_list){
-                        for (let key in vm.gather_list[i]){
-                            if (key === value){
-                                vm.dimensionality_list = vm.gather_list[i][key]
-                            }
+                //base_monitor_edit_init默认为true代表处于点击编辑后的数据初始化后的状态，
+                //这种情况下不会清除其初始化好的度量值。如果不是数据初始化后的状态，
+                // 而是通过手动点击来源名称下拉框的形式调用此函数，
+                // 将会清空其度量值，避免在改变来源名称之后还是原来的度量值名称，
+                // 导致度量值候选项中末尾出现暂无数据的BUG
+                if((null != vm.base['measures_name'] || vm.base['measures_name'] != '') && !this.base_monitor_edit_init){
+                    vm.base['measures_name'] = '';
+                }
+                //如果是点击编辑后的数据初始化时触发的此函数，base_monitor_edit_init标记
+                //置为false，在下次触发change_measures函数时将清空度量值
+                if(this.base_monitor_edit_init){
+                    this.base_monitor_edit_init = false;
+                }
+                for(let i in vm.gather_list){
+                    for (let key in vm.gather_list[i]){
+                        if (key === value){
+                            vm.dimensionality_list = vm.gather_list[i][key]
                         }
                     }
                 }
