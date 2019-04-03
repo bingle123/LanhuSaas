@@ -852,7 +852,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="展示规则" prop="show_rule_type">
-                                    <el-select v-model="base.show_rule_type" placeholder="请选择展示规则">
+                                    <el-select v-model="base.show_rule_type" placeholder="请选择展示规则" @change="add_comments">
                                         <el-option label="百分比" value="0"></el-option>
                                         <el-option label="颜色" value="1"></el-option>
                                         <el-option label="其他" value="2"></el-option>
@@ -862,7 +862,9 @@
                                     <el-input v-model="base.gather_rule" placeholder="百分比：如：100|颜色：如：#000000==2@#ffffff==0|其他：如：100@ms"
                                               type="textarea"></el-input>
                                 </el-form-item>
-
+                                 <div v-if="rules_comments">
+                                     <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：每个范围区间占一行，数值达到此范围分别展示为红、绿、灰、黄</p>
+                                 </div>
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
@@ -962,6 +964,8 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            //采集规则注释
+            rules_comments: false,
             //基本监控项（修改后）编辑的情况下是否为第一次加载数据标记
             base_monitor_edit_init: true,
             //基本监控项上传数据
@@ -1271,6 +1275,13 @@
             }],*/
         },
         methods: {
+            add_comments(){
+                if(this.base.show_rule_type == '1'){
+                    this.rules_comments = true;
+                }else{
+                    this.rules_comments = false;
+                }
+            },
             //监控项数据处理，用于编辑状态下回显数据
             monitor_edit_data_process(row){
                 //如果监控项类型为基本基本监控单元（修改后）
