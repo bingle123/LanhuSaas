@@ -91,7 +91,7 @@ class Gather():
                 # 模拟数据
                 # temp_list = [{"system_name": "jzjy", "ip": "192.168.1.153", "cpu_cpu_used_pct": 2, "time": "2019-03-22 19:42:12"}, {"system_name": "jzjy", "ip": "192.168.1.157", "cpu_cpu_used_pct": 0, "time": "2019-03-22 19:37:23"}, {"system_name": "jzjy", "ip": "192.168.1.165", "cpu_cpu_used_pct": 0, "time": "2019-03-22 19:41:56"}]
                 # result_list = Gather.color_manage(color_code_map, temp_list, measures, measures_name)
-                rule_list = gather_rule.split('@')
+                rule_list = gather_rule.split('\n')
                 result_list = Gather.color_manage(temp_list, rule_list, measures, measures_name)
                 return result_list
             # 显示单位
@@ -206,7 +206,7 @@ class Gather():
             elif float(rule_list[3].strip().split('-')[0]) <= float(item[measures + '_' + measures_name]) < float(rule_list[3].strip().split('-')[1]):
                 item[measures + '_' + measures_name] = str(item[measures + '_' + measures_name]) + '#EEEE00'
             else:
-                item[measures + '_' + measures_name] = str(item[measures + '_' + measures_name]) + '#9400D3'
+                item[measures + '_' + measures_name] = str(item[measures + '_' + measures_name]) + '#FFFFFF'
         return success_result(temp_list)
 
     @classmethod
