@@ -2851,6 +2851,7 @@
             //获取指标集
             get_gather_info(value) {
                 this.base.measures = '';
+                vm.iqube_name = [];
                 //日志监控项模拟数据,目前一体化平台没有数据
                 if("get_log_type/" == value){
                     var temp_json = {'label': 'zy-shangpin-initial', 'value': 'zy-shangpin-initial'};
