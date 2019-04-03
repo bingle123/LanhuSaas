@@ -364,7 +364,7 @@ def chart_get_test(request):
     database_id = request_body['database_id']
 
     info = {}
-    info['id'] = '71'  # id采集测试用的随意值
+    info['id'] = '-1'  # id采集测试用的随意值
     info['gather_params'] = 'sql'  # 图表监控项是sql语句查询
     info['params'] = request_body['database_id']
     info['gather_rule'] = request_body['sql']
@@ -420,31 +420,10 @@ def get_desc(request, id):
     """
     cookies = request.COOKIES
     a_url = BK_PAAS_HOST + "/o/bk_sops/api/v3/template/{}/".format(id[0]['id'])
-    req = requests.get(url=a_url, cookies=cookies)
+    req = requests.get(url=a_url, cookies=cookies,verify=False)
     req.encoding = req.apparent_encoding
     req.raise_for_status()
     return json.loads(req.text)
-
-
-def get_flow_desc(request):
-    """
-    :param request:
-    :return:
-    """
-    headers = {
-        'Content-Type': 'application/json;charset=utf-8',
-        'Cookie': 'csrftoken=bNAyZ7pBsJ1OEi8TMq1NqxNXY2CUREEO; sessionid=r9g2ofn1wb0ykd1epg8crk9l5pgyeuu2; bk_csrftoken=GdxslZh1U3YVsCthqXIv09PbVoW0AaQd; bklogin_csrftoken=z8goJXIMXil80lFT3VtLQHMClrPIExl9; blueking_language=zh-cn; bk_token=kxgoYlRp77AkbGVX85AdFVR0t6eqqHeJ-BlMXxA6oM0',
-        'Host': 'paas.bk.com',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3679.0 Safari/537.36',
-        'X-CSRFToken': 'FI1fszvZzgIsYYX8n6aPMduEeAL7qTV3',
-        'X-Requested-With': 'XMLHttpRequest'
-    }
-    csrftoken = request.COOKIES["csrftoken"];
-    Cookie = "keyA=1";
-    for key in request.COOKIES:
-        Cookie = "%s;%s=%s" % (Cookie, key, request.COOKIES[key]);
-    headers['Cookie'] = Cookie;
-    headers['X-CSRFToken'] = csrftoken;
 
 
 def flow_change(request):
@@ -555,7 +534,6 @@ def node_state(request):
     """
     res = json.loads(request.body)
     item_id = res['item_id']['message']
-    print item_id
     data = TDGatherData.objects.filter(instance_id=item_id)
     data1 = []
     for i in data:

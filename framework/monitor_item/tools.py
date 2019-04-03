@@ -259,7 +259,7 @@ def flow_gather_task(**info):
         temp['status'] = res_temp['data']['children'][id]['state']
         v2_data.append(temp)
     a_url = BK_PAAS_HOST + "/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
-    req = requests.get(url=a_url, headers=headers)
+    req = requests.get(url=a_url, headers=headers,verify=False)
     req.encoding = req.apparent_encoding
     req.raise_for_status()
     # 再从v3中取出节点对应的名字和id
@@ -404,7 +404,7 @@ def resume_flow(item_id, name):
     mess = hd.objects.get(id=1).header
     headers = json.loads(mess.decode('utf-8').replace("'", "\""))
     a_url = BK_PAAS_HOST + "/o/bk_sops/api/v3/taskflow/{}/".format(task_id);
-    req = requests.get(url=a_url, headers=headers)
+    req = requests.get(url=a_url, headers=headers,verify=False)
     req.encoding = req.apparent_encoding
     req.raise_for_status()
     res = json.loads(req.text)
