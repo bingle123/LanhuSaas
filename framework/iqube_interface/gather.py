@@ -31,6 +31,11 @@ class Gather():
         """
         if interface_type == 'log':
             api_address = MEASURES_QUERY_API
+            # 模拟数据
+            temp_list = [{"zy-shangpin-initial_system-init": "1"}]
+            rule_list = gather_rule.split('\n')
+            result_list = Gather.color_manage(temp_list, rule_list, measures, measures_name)
+            return result_list
         else:
             api_address = MEASURES_QUERY_API
 
