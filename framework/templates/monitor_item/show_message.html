@@ -673,7 +673,7 @@
 
 
                 <!-- 基本单元 start-->
-                <el-tab-pane :disabled="disabled6" label="基本监控单元（修改后）" name="five" element-loading-text="拼命加载中"
+                <el-tab-pane :disabled="disabled6" label="基本监控项（一体化平台）" name="five" element-loading-text="拼命加载中"
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)" v-loading="loading">
                     <el-row>
@@ -847,7 +847,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="度量值" prop="font_size">
-                                    <el-select v-model="base.measures_name" filterable placeholder="请选择指标名称">
+                                    <el-select v-model="base.measures_name" filterable placeholder="请选择度量值">
                                         <el-option
                                                 v-for="item in dimensionality_list"
                                                 :key="item"
@@ -1386,7 +1386,7 @@
                 }else if(row.monitor_type === 4){
                     return "流程监控项"
                 }else if(row.monitor_type === 5){
-                    return "基本监控项（一体化）"
+                    return "基本监控项（一体化平台）"
                 }
             },
             //基本监控项的数据处理方法
@@ -2873,31 +2873,44 @@
             },
             //获取指标集
             get_gather_info(value) {
-                vm.loading = true;
-                axios({
-                    url: '${SITE_URL}iqube_interface/'+value,
-                }).then((res) => {
-                    vm.gather_list = res.data.results;
-                    for (let i = 0; i < res.data.results.length; i++) {
-                        // 第一个
-                        for (let j in res.data.results[i]) {
-                            temp_json = {'label': j, 'value': j};
-                            vm.iqube_name.push(temp_json)
+                //初始化清空下拉框
+                vm.iqube_name = [];
+                this.base.measures = "";
+                //获取日志指标，目前日志指标都是模拟数据
+                if(value == 'get_log_type/'){
+                    var temp_json = {'label': 'zy-shangpin-initial', 'value': 'zy-shangpin-initial'};
+                    vm.iqube_name.push(temp_json)
+                }else{
+                    vm.loading = true;
+                    axios({
+                        url: '${SITE_URL}iqube_interface/'+value,
+                    }).then((res) => {
+                        vm.gather_list = res.data.results;
+                        for (let i = 0; i < res.data.results.length; i++) {
+                            // 第一个
+                            for (let j in res.data.results[i]) {
+                                temp_json = {'label': j, 'value': j};
+                                vm.iqube_name.push(temp_json)
+                            }
                         }
-                    }
-                    vm.loading = false;
-                }).catch((res) => {
-                    console.error("获取指标集失败"+str(res.results));
-                    vm.loading = false;
-                });
-
+                        vm.loading = false;
+                    }).catch((res) => {
+                        console.error("获取指标集失败"+str(res.results));
+                        vm.loading = false;
+                    });
+                }
             },
-            //获取指标名称
+            //获取度量值
             change_measures(value) {
-                for(let i in vm.gather_list){
-                    for (let key in vm.gather_list[i]){
-                        if (key === value){
-                            vm.dimensionality_list = vm.gather_list[i][key]
+                // 日志数据暂时是模拟值
+                if(this.base.interface_type == 'log'){
+                    vm.dimensionality_list = {'system-init': 'system-init'};
+                }else{
+                    for(let i in vm.gather_list){
+                        for (let key in vm.gather_list[i]){
+                            if (key === value){
+                                vm.dimensionality_list = vm.gather_list[i][key]
+                            }
                         }
                     }
                 }
