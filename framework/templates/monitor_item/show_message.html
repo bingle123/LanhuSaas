@@ -30,7 +30,6 @@
             width: 250px;
             height: 30px;
         }
-
         .el-table--border th {
             padding: 5px
         }
@@ -39,7 +38,6 @@
             word-break: break-all;
             overflow: hidden;
         }
-
         .circle1{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
         .circle2{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:darkgreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
         .circle3{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
@@ -55,13 +53,11 @@
             height: 36px;
             display: none;
         }
-
         .right_click {
             position: absolute;
             width: 100px;
             display: none;
         }
-
         .right_click span {
             width: 100px;
             display: inline-block;
@@ -76,7 +72,6 @@
          */
         .circle-bar-right { clip:rect(0,auto,auto,.5em); }
         .circle-bar-left { clip:rect(0,.5em,auto,0); }
-
         .mask { width: 0.8em; height: 0.8em;  background-color: #fff;text-align: center;line-height: 0.2em; color:rgba(0,0,0,0.5); }
         .mask :first-child { font-size: 0.3em; height: 0.8em; line-height: 0.8em; display: block;  }
         /*所有的后代都水平垂直居中，这样就是同心圆了*/
@@ -673,7 +668,7 @@
 
 
                 <!-- 基本单元 start-->
-                <el-tab-pane :disabled="disabled6" label="基本监控单元（修改后）" name="five" element-loading-text="拼命加载中"
+                <el-tab-pane :disabled="disabled6" label="基本监控项（一体化平台）" name="five" element-loading-text="拼命加载中"
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)" v-loading="loading">
                     <el-row>
@@ -967,6 +962,8 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            //基本监控项（修改后）编辑的情况下是否为第一次加载数据标记
+            base_monitor_edit_init: true,
             //基本监控项上传数据
             base_monitor_upload_data: {},
             //采集测试数据缓存变量
@@ -1084,7 +1081,6 @@
                 period: [
                     {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
                 ],
-
             },                              //校验规则
             chart: {                                //图表单元
                 monitor_name: '',                    //单元名称
@@ -1193,7 +1189,6 @@
                 ]
             },//基本监控项（修改后）的校验规则
             basicMonitorRules: {
-
             },
             //校验规则
             basic1: {                                //基本单元
@@ -1291,15 +1286,17 @@
                         }else{
                             vm.base['dimension_data'] = [];
                         }
-                        vm.base['measures_name'] = row.measure_name;
-                        vm.base['measures'] = row.target_name;
                         if(0 == row.source_type){
+                            this.change_source_type('log');
                             this.base['interface_type'] = 'log';
                         }else if(1 == row.source_type){
+                            this.change_source_type('measures');
                             this.base['interface_type'] = 'measures';
                         }else{
                             this.base['interface_type'] = null;
                         }
+                        vm.base['measures_name'] = row.measure_name;
+                        vm.base['measures'] = row.target_name;
                         //下拉框不识别number类型的数据，需要转化为字符串供下拉框回显
                         vm.base['show_rule_type'] = row.display_type.toString();
                         vm.base['monitor_name'] = vm.monitor_name;
@@ -1316,7 +1313,6 @@
                         vm.base['gather_rule'] = row.gather_rule;
                         vm.base['gather_params'] = row.gather_params;
                         vm.base['monitor_area'] = vm.area;
-                        console.log(vm.base);
                     }else{
                         alert('暂未实现！');
                     }
@@ -1353,6 +1349,10 @@
                 this.gather_test_data = null;
                 //采集测试的预览框清空
                 $('#base_test_text').html('');
+                //如果是基本监控项（修改后）的修改窗口被关闭基本监控项编辑初始化状态重置为true
+                if(1 == vm.add_pamas){
+                    this.base_monitor_edit_init = true;
+                }
             },
             //基本监控项（修改后）的数据来源切换
             base_gather_source_change(source_type){
@@ -1386,7 +1386,7 @@
                 }else if(row.monitor_type === 4){
                     return "流程监控项"
                 }else if(row.monitor_type === 5){
-                    return "基本监控项（一体化）"
+                    return "基本监控项（一体化平台）"
                 }
             },
             //基本监控项的数据处理方法
@@ -1645,7 +1645,6 @@
                     icon4 = icon3[1]
                     $("#text2").html("")
                     for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
-
                         if (i == flag2) {
                             $("#text2").append("<div class=\"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
                             if (icon4 == 1) {
@@ -1692,7 +1691,6 @@
                         var temp2 = [];
                         var temp3 = [];
                         var temp4 = [];
-
                         for (var i = 1; i < temp1.length; i = i + 2) {
                             temp2.push(temp1[i]);
                         }
@@ -1902,16 +1900,13 @@
                             vm.sites = res.data.results;
                             vm.page_count = res.data.results[0].page_count;
                         }
-
                     }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
                     });
                 }
-
             },
             //编辑单元
             edit_unit(row) {
-                console.log(row);
                 this.get_db_connections();
                 vm.add_pamas = 1;
                 vm.centerDialogVisible = true;
@@ -2023,7 +2018,6 @@
                             url: '${SITE_URL}db_connection/get_conname/',
                             data:row.params,
                         }).then((res)=> {
-
                             vm.chart.params = res['data']['results']['connname'];
                             vm.show_content();
                         }).catch(function (e) {
@@ -2084,6 +2078,8 @@
                     this.monitor_type = 'five';
                     //处理监控项的数据用于修改时的数据回显
                     this.monitor_edit_data_process(row);
+                    //调用参数生成采集测试的预览图像
+                    this.base_cell_test();
                 }
             },
             //保存数据处理
@@ -2158,7 +2154,6 @@
                         vm.unit_id = -1;
                         vm.message = "请填写有效的IP地址!";
                     }
-
                     if (vm.job.start_time == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择开始时间!'
@@ -2333,7 +2328,6 @@
                         vm.line = res.data.flows
                         //显示流程单元中的预览图
                         $('#flow1').dataflow({
-
                             el: '.tool', //流程拖动源
                             canvas: '#canvas', //画布
                             arrowWidth: 8,
@@ -2342,17 +2336,14 @@
                             data:
                                 {
                                     "line": vm.line, "location": vm.location
-
                                 }
                         });
-
                         let old_html  = $('#canvas').html()
                         $('#canvas').html('<div style="transform: scale(0.65)">'+old_html+'</div>')
                     }
                 }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
                 });
-
             },
             node_name(value) {
                 axios({
@@ -2363,7 +2354,6 @@
                     }
                 }).then(function (res) {
                     vm.activities_node_name = res.data.activities
-
                 }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
                 });
@@ -2387,7 +2377,6 @@
                             node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
                         node_time.node_name = $('#' + vm.location[i].id + '').find('.node-title').text()
                         node_times.push(node_time)
-
                     }
                     var period = $('#period').val()
                     var template_list = vm.template_list
@@ -2424,26 +2413,21 @@
                             vm.$message.error('获取数据失败！');
                         });
                         },13000)
-
                     }).catch(function (e) {
                         vm.$message.error('获取数据失败！');
                     });
                 }else if(vm.liucheng == 'none'){
-
                     var period = $('#period').val()
                     var template_list = vm.template_list
-
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor_item/flow_gather_test/',
                         data: {}
                     }).then(function () {
-
                     }).catch(function (e) {
                         vm.$message.error('获取数据失败！');
                     });
                 }
-
             },
             add_unit(row) {                         //新增单元
                 {
@@ -2553,7 +2537,6 @@
                 $('#job_text').html('');
                 $('#job_text').append('<div type=\"job' + item_id + '\" style=\"margin:0 auto;\"></div>');
                 job_monitor_active(job_params);
-
             },
             job_test() {
                 vm.disabled1 = true;
@@ -2573,7 +2556,6 @@
                     url: '${SITE_URL}monitor_item/job_test/',
                     method: 'post',
                     data: {
-
                         'gather_params': vm.job.gather_params,
                         'job_id': vm.job.gather_rule,
                         'params': vm.job.params,
@@ -2620,14 +2602,12 @@
             flow_width() {       //修改流程单元中的宽
                 $("#canvas").find('*').css("width", this.flow.height)
             },
-
             get_db_connections() {
                 axios({
                     url: '${SITE_URL}db_connection/get_all_db_connection/',
                     method: 'post',
                 }).then((res) => {
                     let json = [];
-
                     if (res.data.results.length > 0) {
                         for (let i = 0; i < res.data.results.length; i++) {
                             let j = {};
@@ -2638,7 +2618,6 @@
                         ;
                         this.sites1 = json;
                     }
-
                 }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
                 });
@@ -2668,7 +2647,6 @@
                     for (let i = 0; i < vm.chartData.length; i++) {
                         this.$set(legendData, i, vm.chartData[i].name);
                     }
-
                     option = {
                         tooltip: {
                             trigger: 'item',
@@ -2717,7 +2695,6 @@
                     this.myChart.setOption(option);
                 }
                 if (vm.chart.gather_params == "柱状图") {
-
                     this.myChart = echarts.init(document.getElementById('maintenancePie'), 'macarons');
                     let barX = [];
                     let barCount = [];
@@ -2885,15 +2862,31 @@
                             vm.iqube_name.push(temp_json)
                         }
                     }
+                    //在第一次编辑的情况下，根据当前来源名称加载对应的候选度量值
+                    if('1' == vm.add_pamas && vm.loading == true){
+                        this.change_measures(vm.base['measures']);
+                    }
                     vm.loading = false;
                 }).catch((res) => {
-                    console.error("获取指标集失败"+str(res.results));
+                    console.error("获取指标集失败"+res.results);
                     vm.loading = false;
                 });
-
             },
             //获取指标名称
             change_measures(value) {
+                //base_monitor_edit_init默认为true代表处于点击编辑后的数据初始化后的状态，
+                //这种情况下不会清除其初始化好的度量值。如果不是数据初始化后的状态，
+                // 而是通过手动点击来源名称下拉框的形式调用此函数，
+                // 将会清空其度量值，避免在改变来源名称之后还是原来的度量值名称，
+                // 导致度量值候选项中末尾出现暂无数据的BUG
+                if((null != vm.base['measures_name'] || vm.base['measures_name'] != '') && !this.base_monitor_edit_init){
+                    vm.base['measures_name'] = '';
+                }
+                //如果是点击编辑后的数据初始化时触发的此函数，base_monitor_edit_init标记
+                //置为false，在下次触发change_measures函数时将清空度量值
+                if(this.base_monitor_edit_init){
+                    this.base_monitor_edit_init = false;
+                }
                 for(let i in vm.gather_list){
                     for (let key in vm.gather_list[i]){
                         if (key === value){
@@ -2961,7 +2954,6 @@
                                         vm.$message.error('百分比参数配置出错！');
                                         return
                                     }
-
                                 }else {
                                     $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
                                 }
@@ -2977,12 +2969,14 @@
                                 data_key.push(k);
                                 data_value.push(gather_base_test_data[i][k]);
                             }
-                            $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block;"></div>');
                             for(let j=0;j<data_key.length;j++){
                                 if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
                                     var data_value_str=data_value[j].toString();
                                     if(data_value_str.indexOf('#')>-1){
-                                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':<i style="color:'+data_value[j]+'" class="el-icon-star-on"></i></p>');
+                                        var str = data_value_str.split('#');
+                                        $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block; background-color:'+ '#'+str[1] +'"></div>');
+                                        //$(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':<i style="color:'+data_value[j]+'" class="el-icon-star-on"></i></p>');
+                                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');
                                     }else {
                                         $('#base_test_text').html('');
                                         vm.$message.error('颜色比参数配置出错！');
@@ -3013,7 +3007,6 @@
                                         $('#base_test_text').html('');
                                         return
                                     }
-
                                 }else {
                                     $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
                                 }
@@ -3075,7 +3068,6 @@
         },
     });
     vm.show();
-
 </script>
 <script>
     setInterval(function () {
@@ -3086,25 +3078,18 @@
         });
     }, 1)
     $(function(){
-
-
     })
 </script>
 
 
 <script>
     setInterval(function () {
-
-
         //flow1_js_start
-
         //flow1_js_end
         // $('.node-wrapper').click(function () {
         //
         //     $(this).find(".node-title").attr('contenteditable','plaintext-only');
         // })
-
-
     }, 1000)
 </script>
 

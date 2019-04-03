@@ -153,9 +153,9 @@
                     <el-button type='primary'  @click='monitor_sence_add'>新增场景</el-button>
                 </el-col>
             </el-row>
-            <el-table :data='tableData' :header-cell-style='rowclass' style="width: 100%;margin-top: 10px">
+            <el-table :data='tableData' :header-cell-style='rowclass' style="width: 100%;margin-top: 10px" border header-align="center">
 
-                <el-table-column prop='id'  label='id' width='80'>
+                <el-table-column prop='id'  label='id' width='80' sortable>
                 </el-table-column>
                 <el-table-column prop='scene_name' label='场景名称'  style="width: 30%;" sortable>
                 </el-table-column>

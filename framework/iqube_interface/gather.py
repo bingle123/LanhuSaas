@@ -189,7 +189,8 @@ class Gather():
             for i in result_list:
                 color_code = str(i[measures + '_' + measures_name])
                 if color_code in key_list:
-                    i[measures + '_' + measures_name] = color_code_map[str(i[measures + '_' + measures_name])]
+                    # 新的键值为 值 + 颜色的RGB代码，前端用#分割取颜色和值，值用于显示，颜色渲染div底色
+                    i[measures + '_' + measures_name] = str(i[measures + '_' + measures_name]) + color_code_map[str(i[measures + '_' + measures_name])]
             return success_result(result_list)
         except Exception as e:
             return error_result(u'颜色转换出错'+str(e))
