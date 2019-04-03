@@ -261,7 +261,7 @@ def edit_unit(request):
                 add_dic['start_time'] = min(start_list)
                 add_dic['end_time'] = max(start_list)
             if res['monitor_type'] == 'five':
-                monitor_type = '1'
+                monitor_type = '5'
             add_dic['monitor_name'] = res['monitor_name']
             add_dic['monitor_type'] = monitor_type
             # 当前用户为编辑人
