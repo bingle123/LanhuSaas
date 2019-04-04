@@ -230,6 +230,7 @@ $(function () {
                 $('.monitor_content').html('');
             },
             async goto() {
+                $(".monitor_content").append('<canvas id="line_canvas" style="position: absolute"></canvas>');
                 if ($('.monitor_content').html() == '') {     //场景编排内容块无元素
                     $('.monitor_edit').css('display', 'block');
                     vm.show_num = vm.isAdd;
@@ -439,7 +440,7 @@ $(function () {
                 vm.drigging_id++
             },
             add_chart_monitor(i) {
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"height:' + i.height + 'px;width:' + i.width + 'pxtransform: scale(' + vm.scale + ')\"><div id=\"chart' + i.id + '\" style=\"background:beige;height:' + (i.height - 2) + 'px;width:' + (i.width - 2) + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span></div></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"height:' + i.height + 'px;position: absolute;width:' + i.width + 'pxtransform: scale(' + vm.scale + ')\"><div id=\"chart' + i.id + '\" style=\"background:beige;height:' + (i.height - 2) + 'px;width:' + (i.width - 2) + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span></div></div>')
                 show_chart(i.id, "", "", i.gather_params, i.height, i.width, vm.drigging_id, i.contents);
                 vm.drigging_id++;
             },
@@ -528,14 +529,20 @@ $(function () {
                 scale = parseFloat(style.split('scale')[1].substring(style.split('scale')[1].indexOf('(') + 1, style.split('scale')[1].indexOf(')')));
             }
             score = $('.Drigging').eq(i).find('.score_input').val();
+            next_item=$('.Drigging').eq(i).data().next_item
+            if(next_item==undefined){
+                next_item=0
+            }
             var data = {
                 'order': order,
                 'item_id': item_id,
                 'x': x,
                 'y': y,
                 'scale': scale,
-                'score': score
+                'score': score,
+                'next_item':next_item
             };
+            console.log(data)
             vm.result_list.push(data);
         }
     })
@@ -588,7 +595,7 @@ $(function () {
             $(this).find('.line').on('click', function (e) {
                 e.stopPropagation();
                 line($(this).parent().parent()[0]);
-            })
+            });
         }
     });
     $(document).on("blur", ".score_input", function () {//打分输入框失去焦点隐藏
@@ -605,9 +612,10 @@ $(function () {
             vm.pre_y = item_info.clientHeight/2+Y;
             vm.pre_id=item_info.id
         } else if (vm.line_flag == 1) {
-            $(".monitor_content").append('<canvas id="line' + item_info.id +'-'+vm.pre_id+'" class="line_p"></canvas>');
-            var c = document.getElementById("line" + item_info.id+'-'+vm.pre_id);
+            var c = document.getElementById("line_canvas");
             var id = item_info.id
+            console.log(item_info.name)
+            $("#"+vm.pre_id).data().next_item=$('#'+id).attr('name')
             var Y = $('#'+id).position().top;
             var X = $('#'+id).position().left;
             c.width = 1298.7;
@@ -615,12 +623,14 @@ $(function () {
             var ctx = c.getContext("2d");
             var x = X
             var y = item_info.clientHeight/2+Y
-            console.log(vm.pre_x, vm.pre_y)
-            console.log(x, y)
+            ctx.beginPath()
             ctx.moveTo(vm.pre_x, vm.pre_y);
             ctx.lineTo(x, y);
             ctx.stroke();
-            vm.line_flag=0
+            ctx.closePath()
+            vm.line_flag=0;
+            vm.pre_x=0;
+            vm.pre_y=0;
         }
     }
 

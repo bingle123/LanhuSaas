@@ -15,58 +15,70 @@
     <script src="https://cdn.jsdelivr.net/npm/v-charts/lib/index.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
     <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
+    <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
     <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/jrange/css/jquery.range.css" rel="stylesheet">
     <script src="${STATIC_URL}js/jquery.range-min.js"></script>
-    <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
-    <script type="text/javascript" src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
-    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
+    <script type="text/javascript"
+            src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
+    <link rel="stylesheet"
+          href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css"/>
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
     <script type="text/javascript" src="${STATIC_URL}js/monitor_scene/monitor_scene.js"></script>
     <style>
-        .content{
+        .content {
             position: relative;
         }
-        .monitor_edit{
+
+        .monitor_edit {
             display: none;
             position: absolute;
             top: 65px;
-            left:0;
+            left: 0;
             width: 100%;
         }
+
         .Drigging {
-            position:absolute;
+            position: absolute;
             border: 1px solid black;
             border-radius: 5px;
         }
-        .monitor_type{
+
+        .monitor_type {
             line-height: 48px;
             background: #28359324;
             text-align: center;
         }
-        .monitor_list{
+
+        .monitor_list {
             display: none;
         }
-        .monitor_list div{
+
+        .monitor_list div {
             text-align: center;
         }
-        .monitor_content{
-            position:relative;
+
+        .monitor_content {
+            position: relative;
         }
-        .el-row{
+
+        .el-row {
             border: 1px solid #ffffff;
         }
-        .el-col{
+
+        .el-col {
             border: 1px solid #ffffff;
         }
-        p,i{
+
+        p, i {
             text-align: center;
         }
-        .score_input{
+
+        .score_input {
             font-size: 16px;
             position: absolute;
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             top: -37px;
             left: 0;
             width: 80px;
@@ -75,7 +87,8 @@
             border: 1px solid black;
             border-radius: 5px;
         }
-        .right_click{
+
+        .right_click {
             position: absolute;
             width: 120px;
             display: none;
@@ -83,7 +96,8 @@
             border: 2px solid #283593;
             border-radius: 5px;
         }
-        .right_click span{
+
+        .right_click span {
             width: 100px;
             display: inline-block;
             font-size: 16px;
@@ -91,7 +105,8 @@
             line-height: 36px;
             position: relative;
         }
-        .right_click span:after{
+
+        .right_click span:after {
             position: absolute;
             content: '';
             height: 2px;
@@ -100,87 +115,133 @@
             left: 0;
             background: black;
         }
-        .save{
-                display: block;
-                padding: 0;
-                border: 0;
-                margin-bottom: 0;
-                text-align: center;
-                cursor: pointer;
-                left: 0;
-                top: 0;
+
+        .save {
+            display: block;
+            padding: 0;
+            border: 0;
+            margin-bottom: 0;
+            text-align: center;
+            cursor: pointer;
+            left: 0;
+            top: 0;
         }
-        .circle-bar { margin:20px auto;font-size:100px; width: 1em; height: 1em; position: relative;  background-color: #333; }
-        .circle-bar-left,.circle-bar-right { width: 1em; height: 1em; background-color: #eee; }
+
+        .circle-bar {
+            margin: 20px auto;
+            font-size: 100px;
+            width: 1em;
+            height: 1em;
+            position: relative;
+            background-color: #333;
+        }
+
+        .circle-bar-left, .circle-bar-right {
+            width: 1em;
+            height: 1em;
+            background-color: #eee;
+        }
+
         /*
             这里采用clip剪切了圆，实现左右两个半圆，右半圆在后面，因此在更上一层，
             clip的用法参考：http://www.w3school.com.cn/cssref/pr_pos_clip.asp
          */
-        .circle-bar-right { clip:rect(0,auto,auto,.5em); }
-        .circle-bar-left { clip:rect(0,.5em,auto,0); }
+        .circle-bar-right {
+            clip: rect(0, auto, auto, .5em);
+        }
 
-        .mask { width: 0.8em; height: 0.8em;  background-color: #fff;text-align: center;line-height: 0.2em; color:rgba(0,0,0,0.5); }
-        .mask :first-child { font-size: 0.3em; height: 0.8em; line-height: 0.8em; display: block;  }
+        .circle-bar-left {
+            clip: rect(0, .5em, auto, 0);
+        }
+
+        .mask {
+            width: 0.8em;
+            height: 0.8em;
+            background-color: #fff;
+            text-align: center;
+            line-height: 0.2em;
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .mask :first-child {
+            font-size: 0.3em;
+            height: 0.8em;
+            line-height: 0.8em;
+            display: block;
+        }
+
         /*所有的后代都水平垂直居中，这样就是同心圆了*/
-        .circle-bar * {  position: absolute; top:0; right:0; bottom:0; left:0; margin:auto; }
+        .circle-bar * {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto;
+        }
+
         /*自身以及子元素都是圆*/
-        .circle-bar, .circle-bar > * { border-radius: 50%; }
+        .circle-bar, .circle-bar > * {
+            border-radius: 50%;
+        }
     </style>
 
 </head>
 <body style="overflow-y: hidden">
-<div class="content" >
+<div class="content">
     <el-breadcrumb class='route' separator-class='el-icon-arrow-right'>
         <el-breadcrumb-item>首页</el-breadcrumb-item>
         <el-breadcrumb-item>场景管理</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-card class='card' shadow='always'style="margin-top: 10px" >
+    <el-card class='card' shadow='always' style="margin-top: 10px">
         <div v-if="isAdd == 1">
             <div id='pagetitle' style="margin-bottom: 10px">
                 场景管理
             </div>
             <hr id='hr'>
-            <el-row type='flex' justify='space-between' align='center' class='row'  style="margin-top: 10px">
+            <el-row type='flex' justify='space-between' align='center' class='row' style="margin-top: 10px">
                 <el-col :span="12">
-                        <el-col :span="9">
-                            <el-input v-model="search" placeholder="请输入内容"></el-input>
-                        </el-col>
-                        <el-col :span="3">
-                            <el-button type="primary" icon="el-icon-search" v-on:click="select_table">搜索</el-button>
-                        </el-col>
+                    <el-col :span="9">
+                        <el-input v-model="search" placeholder="请输入内容"></el-input>
                     </el-col>
+                    <el-col :span="3">
+                        <el-button type="primary" icon="el-icon-search" v-on:click="select_table">搜索</el-button>
+                    </el-col>
+                </el-col>
                 <el-col :span='3'>
-                    <el-button type='primary'  @click='monitor_sence_add'>新增场景</el-button>
+                    <el-button type='primary' @click='monitor_sence_add'>新增场景</el-button>
                 </el-col>
             </el-row>
-            <el-table :data='tableData' :header-cell-style='rowclass' style="width: 100%;margin-top: 10px" border header-align="center">
+            <el-table :data='tableData' :header-cell-style='rowclass' style="width: 100%;margin-top: 10px" border
+                      header-align="center">
 
-                <el-table-column prop='id'  label='id' width='80' sortable>
+                <el-table-column prop='id' label='id' width='80' sortable>
                 </el-table-column>
-                <el-table-column prop='scene_name' label='场景名称'  style="width: 30%;" sortable>
+                <el-table-column prop='scene_name' label='场景名称' style="width: 30%;" sortable>
                 </el-table-column>
-                <el-table-column prop='scene_creator' label='创建人'  style="width: 30%;" sortable>
+                <el-table-column prop='scene_creator' label='创建人' style="width: 30%;" sortable>
                 </el-table-column>
-                <el-table-column prop='scene_creator_time' label='创建时间'  style="width: 30%;" sortable>
+                <el-table-column prop='scene_creator_time' label='创建时间' style="width: 30%;" sortable>
                 </el-table-column>
-                <el-table-column prop='pos_name' label='岗位'  style="width: 30%;" sortable>
+                <el-table-column prop='pos_name' label='岗位' style="width: 30%;" sortable>
                 </el-table-column>
-                <el-table-column prop='scene_startTime' label='开始时间'  v-if="false"  style="width: 30%;" sortable>
+                <el-table-column prop='scene_startTime' label='开始时间' v-if="false" style="width: 30%;" sortable>
                 </el-table-column>
-                <el-table-column prop='scene_endTime' label='结束时间'  v-if="false"  style="width: 30%;" sortable>
+                <el-table-column prop='scene_endTime' label='结束时间' v-if="false" style="width: 30%;" sortable>
                 </el-table-column>
 
                 <el-table-column prop='operation' label='操作' style="width: 30%;">
                     <template slot-scope="scope">
-                    <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
-                    <el-button size="mini" type="text" v-on:click="monitor_sence_edit(scope.row)">编辑</el-button>
-                    <el-button size="mini" type="text" v-on:click="del_scene(scope.row)">删除</el-button>
-                    </el-tooltip>
-                </template>
+                        <!--<el-button id="button1" type="text" size="small" v-on:click="edit(scope.row.id)" >编辑</el-button>-->
+                        <el-button size="mini" type="text" v-on:click="monitor_sence_edit(scope.row)">编辑</el-button>
+                        <el-button size="mini" type="text" v-on:click="del_scene(scope.row)">删除</el-button>
+                        </el-tooltip>
+                    </template>
                 </el-table-column>
             </el-table>
             <div class='block' style='text-align:right'>
-        <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right" @current-change="current_change"></el-pagination>
+                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                               @current-change="current_change"></el-pagination>
             </div>
 
 
@@ -195,15 +256,15 @@
             <div style="margin-top: 20px">
                 <el-form ref="scene" :model="scene" :rules="rules" label-width="80px">
                     <el-form-item label="场景名称" prop="scene_name">
-                       <el-input placeholder="请输入场景名称"  v-model="scene.scene_name" style="width: 30%"></el-input>
+                        <el-input placeholder="请输入场景名称" v-model="scene.scene_name" style="width: 30%"></el-input>
                     </el-form-item>
                     <el-form-item label="轮播日历">
                         <el-select v-model="scene.area" placeholder="请选择日历的地区">
                             <el-option
-                              v-for="item in areas"
-                              :key="item.value"
-                              :label="item.area"
-                              :value="item.value">
+                                    v-for="item in areas"
+                                    :key="item.value"
+                                    :label="item.area"
+                                    :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
@@ -218,14 +279,14 @@
                         <el-col class="line" :span="1">—</el-col>
                         <el-col :span="11">
                             <el-form-item prop="scene_endTime">
-                                <el-time-picker v-model="scene.scene_endTime"  placeholder="结束时间点" format="HH:mm"
+                                <el-time-picker v-model="scene.scene_endTime" placeholder="结束时间点" format="HH:mm"
                                                 value-format="HH:mm">
                                 </el-time-picker>
                             </el-form-item>
                         </el-col>
-                     </el-form-item>
+                    </el-form-item>
                     <el-form-item label="适用岗位" prop="pos_name">
-                        <el-select  placeholder="请选择" v-model="scene.pos_name" >
+                        <el-select placeholder="请选择" v-model="scene.pos_name">
                             <el-option v-for="item in pos" :label="item.pos_name" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
@@ -234,7 +295,7 @@
                     </el-form-item>
                     <el-row type="flex" class="row-bg" justify="center">
                         <el-col :span="2">
-                            <el-button type="primary"  v-on:click="submitForm('scene')" id="button">保存</el-button>
+                            <el-button type="primary" v-on:click="submitForm('scene')" id="button">保存</el-button>
                         </el-col>
                         <el-col :span="2">
                             <el-button @click="hide" id="button">取消</el-button>
@@ -254,20 +315,20 @@
             <div style="margin-top: 20px">
                 <el-form ref="scene_edit" :model="scene_edit" :rules="rules" label-width="80px">
                     <el-form-item label="场景名称" prop="scene_name">
-                       <el-input placeholder="请输入场景名称" v-model="scene_edit.scene_name" style="width: 30%"></el-input>
+                        <el-input placeholder="请输入场景名称" v-model="scene_edit.scene_name" style="width: 30%"></el-input>
                     </el-form-item>
                     <el-form-item label="轮播日历">
                         <el-select v-model="scene_edit.area" placeholder="请选择日历的地区">
                             <el-option
-                              v-for="item in areas"
-                              :key="item.value"
-                              :label="item.area"
-                              :value="item.value">
+                                    v-for="item in areas"
+                                    :key="item.value"
+                                    :label="item.area"
+                                    :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
-                     <el-form-item label="轮播时间" >
-                          <el-col :span="5">
+                    <el-form-item label="轮播时间">
+                        <el-col :span="5">
                             <el-form-item prop="scene_startTime">
                                 <el-time-picker v-model="scene_edit.scene_startTime" placeholder="开始时间点" format="HH:mm"
                                                 value-format="HH:mm">
@@ -277,15 +338,15 @@
                         <el-col class="line" :span="1">—</el-col>
                         <el-col :span="11">
                             <el-form-item prop="scene_endTime">
-                                <el-time-picker v-model="scene_edit.scene_endTime"  placeholder="结束时间点" format="HH:mm"
+                                <el-time-picker v-model="scene_edit.scene_endTime" placeholder="结束时间点" format="HH:mm"
                                                 value-format="HH:mm">
                                 </el-time-picker>
                             </el-form-item>
                         </el-col>
-                     </el-form-item>
-                     </el-form-item>
-                    <el-form-item label="适用岗位"  prop="pos_name">
-                        <el-select  placeholder="请选择" v-model="scene_edit.pos_name" >
+                    </el-form-item>
+                    </el-form-item>
+                    <el-form-item label="适用岗位" prop="pos_name">
+                        <el-select placeholder="请选择" v-model="scene_edit.pos_name">
                             <el-option v-for="item in pos" :label="item.pos_name" :value="item.pos_name"></el-option>
                         </el-select>
                     </el-form-item>
@@ -307,98 +368,104 @@
     </el-card>
 
     <el-row class="monitor_edit">
-                <el-col :span="22">
-                    <h1 style="rgba(40, 147, 108, 0.45);line-height: 60px;text-align: center">场景编排</h1>
-                </el-col>
-                <el-col :span="2">
+        <el-col :span="22">
+            <h1 style="rgba(40, 147, 108, 0.45);line-height: 60px;text-align: center">场景编排</h1>
+        </el-col>
+        <el-col :span="2">
+            <el-col :span="24">
+                <button @click="monitor_edit_close"
+                        style="margin-top: 10px;background: beige;width: 100%;line-height: 50px;border: none;border-radius: 10px;">
                     <el-col :span="24">
-                        <button @click="monitor_edit_close" style="margin-top: 10px;background: beige;width: 100%;line-height: 50px;border: none;border-radius: 10px;">
-                            <el-col :span="24">
-                                <span class="save" >保存</span>
-                            </el-col>
-                        </button>
+                        <span class="save">保存</span>
                     </el-col>
+                </button>
+            </el-col>
+        </el-col>
+        <el-col :span="5">
+            <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245);position: relative">
+                <h2 class="monitor_title" style="line-height:48px;background:#283593;text-align: center;color: #ffffff">
+                    监控项</h2>
+                <el-col :span="24">
+                    <h3 @click="monitor_type_switch(1)" class="monitor_type">基本监控项</h3>
                 </el-col>
-                <el-col :span="5">
-                    <div style="height:auto;min-height: 600px;background: rgb(244, 244, 245);position: relative">
-                        <h2 class="monitor_title" style="line-height:48px;background:#283593;text-align: center;color: #ffffff">监控项</h2>
-                        <el-col :span="24">
-                                <h3 @click="monitor_type_switch(1)" class="monitor_type" >基本监控项</h3>
-                        </el-col>
-                        <div class="monitor_list">
-                            <el-col :span="12" v-for="(i,index) in base_monitor" :key="index">
-                                <div @click="add_base_monitor(i)">
-                                    <p>{{ i.monitor_name }}</p>
-                                    <i class="bk-icon icon-monitors"></i>
-                                </div>
+                <div class="monitor_list">
+                    <el-col :span="12" v-for="(i,index) in base_monitor" :key="index">
+                        <div @click="add_base_monitor(i)">
+                            <p>{{ i.monitor_name }}</p>
+                            <i class="bk-icon icon-monitors"></i>
+                        </div>
 
-                            </el-col>
-                            <el-col :span="24">
-                                <el-pagination :page-count="base_page_count" background layout="prev, pager, next" style="float:right"
+                    </el-col>
+                    <el-col :span="24">
+                        <el-pagination :page-count="base_page_count" background layout="prev, pager, next"
+                                       style="float:right"
                                        @current-change="current_change1"></el-pagination>
-                            </el-col>
-                        </div>
-                        <el-col :span="24">
-                                <h3 @click="monitor_type_switch(2)" class="monitor_type">图表监控项</h3>
-                        </el-col>
-                        <div class="monitor_list">
-                            <el-col :span="12" v-for="(i,index) in chart_monitor" :key="index">
-                                <div @click="add_chart_monitor(i)">
-                                    <p>{{ i.monitor_name }}</p>
-                                    <i class="bk-icon icon-panel-permission"></i>
-                                </div>
-                            </el-col>
-                            <el-col :span="24">
-                                <el-pagination :page-count="chart_page_count" background layout="prev, pager, next" style="float:right"
-                                   @current-change="current_change2"></el-pagination>
-                            </el-col>
-
-                        </div>
-                        <el-col :span="24">
-                                <h3 @click="monitor_type_switch(3)" class="monitor_type">作业监控项</h3>
-                        </el-col>
-                        <div class="monitor_list">
-                            <el-col :span="12" v-for="(i,index) in job_monitor" :key="index">
-                                <div @click="add_job_monitor(i)">
-                                    <p>{{ i.monitor_name }}</p>
-                                    <i class="bk-icon icon-monitors"></i>
-                                </div>
-                            </el-col>
-                            <el-col :span="24">
-                                <el-pagination :page-count="job_page_count" background layout="prev, pager, next" style="float:right"
-                                   @current-change="current_change3"></el-pagination>
-                            </el-col>
-
-                        </div>
-                        <el-col :span="24">
-                                <h3 @click="monitor_type_switch(4)" class="monitor_type">流程监控项</h3>
-                        </el-col>
-                        <div class="monitor_list">
-                            <el-col :span="12" v-for="(i,index) in flow_monitor" :key="index">
-                                <div @click="add_flow_monitor(i)">
-                                    <p>{{ i.monitor_name }}</p>
-                                    <i class="bk-icon icon-monitors"></i>
-                                </div>
-                            </el-col>
-                            <el-col :span="24">
-                                <el-pagination :page-count="flow_page_count" background layout="prev, pager, next" style="float:right"
-                                   @current-change="current_change4"></el-pagination>
-                            </el-col>
-
-                        </div>
-                        <div style="position: absolute;bottom: 0;right: 0;font-size:30px;width: 100%">
-                            <i class="el-icon-circle-plus-outline"></i>
-                            <i class="el-icon-remove-outline"></i>
-                        </div>
-                    </div>
-
+                    </el-col>
+                </div>
+                <el-col :span="24">
+                    <h3 @click="monitor_type_switch(2)" class="monitor_type">图表监控项</h3>
                 </el-col>
-                <el-col :span="19">
-                    <div class="monitor_content" style="min-height: 600px;background: rgb(244, 244, 245)">
+                <div class="monitor_list">
+                    <el-col :span="12" v-for="(i,index) in chart_monitor" :key="index">
+                        <div @click="add_chart_monitor(i)">
+                            <p>{{ i.monitor_name }}</p>
+                            <i class="bk-icon icon-panel-permission"></i>
+                        </div>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-pagination :page-count="chart_page_count" background layout="prev, pager, next"
+                                       style="float:right"
+                                       @current-change="current_change2"></el-pagination>
+                    </el-col>
 
-                    </div>
+                </div>
+                <el-col :span="24">
+                    <h3 @click="monitor_type_switch(3)" class="monitor_type">作业监控项</h3>
                 </el-col>
-            </el-row>
+                <div class="monitor_list">
+                    <el-col :span="12" v-for="(i,index) in job_monitor" :key="index">
+                        <div @click="add_job_monitor(i)">
+                            <p>{{ i.monitor_name }}</p>
+                            <i class="bk-icon icon-monitors"></i>
+                        </div>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-pagination :page-count="job_page_count" background layout="prev, pager, next"
+                                       style="float:right"
+                                       @current-change="current_change3"></el-pagination>
+                    </el-col>
+
+                </div>
+                <el-col :span="24">
+                    <h3 @click="monitor_type_switch(4)" class="monitor_type">流程监控项</h3>
+                </el-col>
+                <div class="monitor_list">
+                    <el-col :span="12" v-for="(i,index) in flow_monitor" :key="index">
+                        <div @click="add_flow_monitor(i)">
+                            <p>{{ i.monitor_name }}</p>
+                            <i class="bk-icon icon-monitors"></i>
+                        </div>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-pagination :page-count="flow_page_count" background layout="prev, pager, next"
+                                       style="float:right"
+                                       @current-change="current_change4"></el-pagination>
+                    </el-col>
+
+                </div>
+                <div style="position: absolute;bottom: 0;right: 0;font-size:30px;width: 100%">
+                    <i class="el-icon-circle-plus-outline"></i>
+                    <i class="el-icon-remove-outline"></i>
+                </div>
+            </div>
+
+        </el-col>
+        <el-col :span="19">
+            <div class="monitor_content" style="min-height: 600px;background: rgb(244, 244, 245)">
+
+            </div>
+        </el-col>
+    </el-row>
 </div>
 <script>
 

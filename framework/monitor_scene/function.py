@@ -60,6 +60,7 @@ def addSence(request):
     try:
         res = request.body
         senceModel = json.loads(res)
+        print senceModel
         starttime = senceModel['data']["scene_startTime"]
         endtime = senceModel['data']["scene_endTime"]
         temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
@@ -91,7 +92,8 @@ def addSence(request):
                 'y': int(i['y']),
                 'scale': i['scale'],
                 'score': int(i['score']),
-                'order': int(i['order'])
+                'order': int(i['order']),
+                'next_item':int(i['next_item'])
             }
             Scene_monitor.objects.create(**monitor_data)
         info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
@@ -192,7 +194,6 @@ def editSence(request):
         add_log(info)
         Scene_monitor.objects.filter(scene_id=model['data']['id']).delete()
         for i in model['monitor_data']:
-            print(i)
             monitor_data = {
                 'scene_id': model['data']['id'],
                 'item_id': int(i['item_id']),
@@ -200,7 +201,8 @@ def editSence(request):
                 'y': int(i['y']),
                 'scale': i['scale'],
                 'score': int(i['score']),
-                'order': int(i['order'])
+                'order': int(i['order']),
+                'next_item': int(i['next_item'])
             }
             Scene_monitor.objects.create(**monitor_data)
         info = make_log_info(u'场景编排', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
@@ -432,7 +434,7 @@ def add_scene(res1):
         res_dic = tools.success_result(None)
     except Exception as e:
         res_dic = tools.error_result(e)
-    return res_dic
+        return res_dic
 
 
 # 取得图表监控项采集数据
