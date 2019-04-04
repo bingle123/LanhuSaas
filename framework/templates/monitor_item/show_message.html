@@ -676,7 +676,7 @@
                             <div class="grid-content bg-purple">
                                 <el-form :model="base" ref="base" :rules="basicMonitorRules" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
-                                    <el-select v-model="base.font_size" placeholder="请选择字号" @change="basic_size">
+                                    <el-select v-model="base.font_size" placeholder="请选择字号" @change="base_size">
                                         <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -685,7 +685,7 @@
                                         <el-form-item prop="height">
                                             <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="base.height"
-                                                      placeholder="请输入高度" @change="basic_height"></el-input>
+                                                      placeholder="请输入高度" @change="base_height_change"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
@@ -694,7 +694,7 @@
                                               <el-input class="max" type="number" min="0" max="600"
                                                         v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="base.width"
-                                                        placeholder="请输入宽度" @change="basic_width"></el-input>
+                                                        placeholder="请输入宽度" @change="base_width_change"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
@@ -852,7 +852,7 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="展示规则" prop="show_rule_type">
-                                    <el-select v-model="base.show_rule_type" placeholder="请选择展示规则">
+                                    <el-select v-model="base.show_rule_type" placeholder="请选择展示规则" @change="add_comments">
                                         <el-option label="百分比" value="0"></el-option>
                                         <el-option label="颜色" value="1"></el-option>
                                         <el-option label="其他" value="2"></el-option>
@@ -862,7 +862,9 @@
                                     <el-input v-model="base.gather_rule" placeholder="百分比：如：100|颜色：如：#000000==2@#ffffff==0|其他：如：100@ms"
                                               type="textarea"></el-input>
                                 </el-form-item>
-
+                                 <div v-if="rules_comments">
+                                     <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：每个范围区间占一行，数值达到此范围分别展示为红、绿、灰、黄</p>
+                                 </div>
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
@@ -962,6 +964,8 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            //采集规则注释
+            rules_comments: false,
             //基本监控项（修改后）编辑的情况下是否为第一次加载数据标记
             base_monitor_edit_init: true,
             //基本监控项上传数据
@@ -1053,8 +1057,8 @@
                 monitor_name: '',                      //单元名称
                 monitor_type: '',                      //单元类型
                 font_size: '20',                         //字号
-                height: '20',                            //高度
-                width: '0',                             //宽度
+                height: '480',                            //高度
+                width: '422',                             //宽度
                 start_time: '',                        //开始时间
                 end_time: '',                          //结束时间
                 period: '10',                            //采集周期
@@ -1271,6 +1275,13 @@
             }],*/
         },
         methods: {
+            add_comments(){
+                if(this.base.show_rule_type == '1'){
+                    this.rules_comments = true;
+                }else{
+                    this.rules_comments = false;
+                }
+            },
             //监控项数据处理，用于编辑状态下回显数据
             monitor_edit_data_process(row){
                 //如果监控项类型为基本基本监控单元（修改后）
@@ -1299,6 +1310,10 @@
                         vm.base['measures'] = row.target_name;
                         //下拉框不识别number类型的数据，需要转化为字符串供下拉框回显
                         vm.base['show_rule_type'] = row.display_type.toString();
+                        //展示类型为颜色时显示提示信息
+                        if('1' == vm.base['show_rule_type']){
+                            this.rules_comments = true;
+                        }
                         vm.base['monitor_name'] = vm.monitor_name;
                         vm.base['monitor_type'] = vm.monitor_type;
                         vm.base['font_size'] = row.font_size;
@@ -1330,8 +1345,8 @@
                     //清空数据后默认为基本监控类型（修改后）
                     this.base['monitor_type'] = 5;
                     this.base['font_size'] = '20';
-                    this.base['height'] = '20';
-                    this.base['width'] = '0';
+                    this.base['height'] = '480';
+                    this.base['width'] = '422';
                     this.base['start_time'] = '';
                     this.base['end_time'] = '';
                     this.base['period'] = '10';
@@ -1349,6 +1364,8 @@
                 this.gather_test_data = null;
                 //采集测试的预览框清空
                 $('#base_test_text').html('');
+                //提示信息状态标志位置false
+                this.rules_comments = false;
                 //如果是基本监控项（修改后）的修改窗口被关闭基本监控项编辑初始化状态重置为true
                 if(1 == vm.add_pamas){
                     this.base_monitor_edit_init = true;
@@ -1520,6 +1537,10 @@
             },
             basic_size() {
                 $("#text2").find("*").css("font-size", this.basic.font_size)
+            },
+            //基本监控项修改后的字体大小变更
+            base_size(){
+                $('#base_test_text').css('font-size', this.base.font_size)
             },
             basic_height() {
                 $('#text2').css('height', this.basic.height)
@@ -2833,6 +2854,12 @@
             echart_width() {
                 $('#maintenanceIndex').find("canvas").css('width', vm.chart.width)
             },
+            base_height_change(){
+                $('#base_test_text').children().css('height', this.base.height);
+            },
+            base_width_change(){
+                $('#base_test_text').children().css('width', this.base.width);
+            },
             switch_change(value) {
                 axios({
                     method: 'post',
@@ -2850,27 +2877,35 @@
             },
             //获取指标集
             get_gather_info(value) {
-                vm.loading = true;
-                axios({
-                    url: '${SITE_URL}iqube_interface/'+value,
-                }).then((res) => {
-                    vm.gather_list = res.data.results;
-                    for (let i = 0; i < res.data.results.length; i++) {
-                        // 第一个
-                        for (let j in res.data.results[i]) {
-                            temp_json = {'label': j, 'value': j};
-                            vm.iqube_name.push(temp_json)
+                this.base.measures = '';
+                vm.iqube_name = [];
+                //日志监控项模拟数据,目前一体化平台没有数据
+                if("get_log_type/" == value){
+                    var temp_json = {'label': 'zy-shangpin-initial', 'value': 'zy-shangpin-initial'};
+                    vm.iqube_name.push(temp_json)
+                }else{
+                    vm.loading = true;
+                    axios({
+                        url: '${SITE_URL}iqube_interface/'+value,
+                    }).then((res) => {
+                        vm.gather_list = res.data.results;
+                        for (let i = 0; i < res.data.results.length; i++) {
+                            // 第一个
+                            for (let j in res.data.results[i]) {
+                                temp_json = {'label': j, 'value': j};
+                                vm.iqube_name.push(temp_json)
+                            }
                         }
-                    }
-                    //在第一次编辑的情况下，根据当前来源名称加载对应的候选度量值
-                    if('1' == vm.add_pamas && vm.loading == true){
-                        this.change_measures(vm.base['measures']);
-                    }
-                    vm.loading = false;
-                }).catch((res) => {
-                    console.error("获取指标集失败"+res.results);
-                    vm.loading = false;
-                });
+                        //在第一次编辑的情况下，根据当前来源名称加载对应的候选度量值
+                        if('1' == vm.add_pamas && vm.loading == true){
+                            this.change_measures(vm.base['measures']);
+                        }
+                        vm.loading = false;
+                    }).catch((res) => {
+                        console.error("获取指标集失败"+res.results);
+                        vm.loading = false;
+                    });
+                }
             },
             //获取指标名称
             change_measures(value) {
@@ -2881,6 +2916,10 @@
                 // 导致度量值候选项中末尾出现暂无数据的BUG
                 if((null != vm.base['measures_name'] || vm.base['measures_name'] != '') && !this.base_monitor_edit_init){
                     vm.base['measures_name'] = '';
+                }
+                //日志监控项模拟数据
+                if(this.base.interface_type == 'log'){
+                    vm.dimensionality_list = {0:'system-init'};
                 }
                 //如果是点击编辑后的数据初始化时触发的此函数，base_monitor_edit_init标记
                 //置为false，在下次触发change_measures函数时将清空度量值
@@ -2932,7 +2971,7 @@
                                 data_key.push(k);
                                 data_value.push(gather_base_test_data[i][k]);
                             }
-                            $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block;"></div>');//创建一个对应的dom
+                            $('#base_test_text').append('<div class="div'+i+'" style="display: inline-block;"></div>');//创建一个对应的dom
                             for(let j=0;j<data_key.length;j++){
                                 if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){        //判断key是否为度量值，是就进行百分百环形渲染，不是则直接喧嚷key：value
                                     if(data_value[j].indexOf('%')>-1){                              //判断是否有%，有就添加dom，没有则清空dom并返回
@@ -2965,16 +3004,18 @@
                             let selector='.div'+i;
                             let data_key=[];
                             let data_value=[];
+                            console.log(gather_base_test_data);
                             for(k in gather_base_test_data[i]){
                                 data_key.push(k);
                                 data_value.push(gather_base_test_data[i][k]);
                             }
+                            $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block"></div>');
                             for(let j=0;j<data_key.length;j++){
                                 if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
                                     var data_value_str=data_value[j].toString();
                                     if(data_value_str.indexOf('#')>-1){
                                         var str = data_value_str.split('#');
-                                        $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block; background-color:'+ '#'+str[1] +'"></div>');
+                                        $(selector).css('background-color', '#' + str[1]);
                                         //$(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':<i style="color:'+data_value[j]+'" class="el-icon-star-on"></i></p>');
                                         $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');
                                     }else {
@@ -3013,6 +3054,11 @@
                             }
                         }
                     }
+                    //字体大小变更操作
+                    this.base_size();
+                    //高宽变更操作
+                    this.base_height_change();
+                    this.base_width_change();
                     this.gather_data_test_flag = true;
                 }).catch(function (e) {
                     //接口调用失败，采集标记位置false
