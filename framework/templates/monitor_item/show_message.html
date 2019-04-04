@@ -676,7 +676,7 @@
                             <div class="grid-content bg-purple">
                                 <el-form :model="base" ref="base" :rules="basicMonitorRules" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
-                                    <el-select v-model="base.font_size" placeholder="请选择字号" @change="basic_size">
+                                    <el-select v-model="base.font_size" placeholder="请选择字号" @change="base_size">
                                         <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -685,7 +685,7 @@
                                         <el-form-item prop="height">
                                             <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="base.height"
-                                                      placeholder="请输入高度" @change="basic_height"></el-input>
+                                                      placeholder="请输入高度" @change="base_height_change"></el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col class="line" :span="2">Ⅹ</el-col>
@@ -694,7 +694,7 @@
                                               <el-input class="max" type="number" min="0" max="600"
                                                         v-model.number="numberValidateForm.age"
                                                         auto-complete="off" v-model="base.width"
-                                                        placeholder="请输入宽度" @change="basic_width"></el-input>
+                                                        placeholder="请输入宽度" @change="base_width_change"></el-input>
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
@@ -1057,8 +1057,8 @@
                 monitor_name: '',                      //单元名称
                 monitor_type: '',                      //单元类型
                 font_size: '20',                         //字号
-                height: '20',                            //高度
-                width: '0',                             //宽度
+                height: '480',                            //高度
+                width: '422',                             //宽度
                 start_time: '',                        //开始时间
                 end_time: '',                          //结束时间
                 period: '10',                            //采集周期
@@ -1345,8 +1345,8 @@
                     //清空数据后默认为基本监控类型（修改后）
                     this.base['monitor_type'] = 5;
                     this.base['font_size'] = '20';
-                    this.base['height'] = '20';
-                    this.base['width'] = '0';
+                    this.base['height'] = '480';
+                    this.base['width'] = '422';
                     this.base['start_time'] = '';
                     this.base['end_time'] = '';
                     this.base['period'] = '10';
@@ -1537,6 +1537,10 @@
             },
             basic_size() {
                 $("#text2").find("*").css("font-size", this.basic.font_size)
+            },
+            //基本监控项修改后的字体大小变更
+            base_size(){
+                $('#base_test_text').css('font-size', this.base.font_size)
             },
             basic_height() {
                 $('#text2').css('height', this.basic.height)
@@ -2850,6 +2854,12 @@
             echart_width() {
                 $('#maintenanceIndex').find("canvas").css('width', vm.chart.width)
             },
+            base_height_change(){
+                $('#base_test_text').children().css('height', this.base.height);
+            },
+            base_width_change(){
+                $('#base_test_text').children().css('width', this.base.width);
+            },
             switch_change(value) {
                 axios({
                     method: 'post',
@@ -2961,7 +2971,7 @@
                                 data_key.push(k);
                                 data_value.push(gather_base_test_data[i][k]);
                             }
-                            $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block;"></div>');//创建一个对应的dom
+                            $('#base_test_text').append('<div class="div'+i+'" style="display: inline-block;"></div>');//创建一个对应的dom
                             for(let j=0;j<data_key.length;j++){
                                 if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){        //判断key是否为度量值，是就进行百分百环形渲染，不是则直接喧嚷key：value
                                     if(data_value[j].indexOf('%')>-1){                              //判断是否有%，有就添加dom，没有则清空dom并返回
@@ -3044,6 +3054,11 @@
                             }
                         }
                     }
+                    //字体大小变更操作
+                    this.base_size();
+                    //高宽变更操作
+                    this.base_height_change();
+                    this.base_width_change();
                     this.gather_data_test_flag = true;
                 }).catch(function (e) {
                     //接口调用失败，采集标记位置false
