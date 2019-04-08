@@ -19,9 +19,9 @@ $(function () {
             search: '',//搜索框的值
             isAdd: 1,
             line_flag: 0,
-            pre_x: 0,
-            pre_y: 0,
-            pre_id:0,
+            canvas_flag: 0,
+            lines: [],
+            pre_id: 0,
             areas: [],
             imgUrl: './static/1.png',
             chartData: {
@@ -227,9 +227,12 @@ $(function () {
             hide() {
                 this.isAdd = 1;
                 vm.paging();
+                vm.canvas_flag = 0;
                 $('.monitor_content').html('');
             },
             async goto() {
+                $(".monitor_content").append('<canvas id="line_canvas" style="position: absolute"></canvas>');
+                vm.canvas_flag = 1;
                 if ($('.monitor_content').html() == '') {     //场景编排内容块无元素
                     $('.monitor_edit').css('display', 'block');
                     vm.show_num = vm.isAdd;
@@ -439,7 +442,7 @@ $(function () {
                 vm.drigging_id++
             },
             add_chart_monitor(i) {
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"height:' + i.height + 'px;width:' + i.width + 'pxtransform: scale(' + vm.scale + ')\"><div id=\"chart' + i.id + '\" style=\"background:beige;height:' + (i.height - 2) + 'px;width:' + (i.width - 2) + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span></div></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"height:' + i.height + 'px;position: absolute;width:' + i.width + 'pxtransform: scale(' + vm.scale + ')\"><div id=\"chart' + i.id + '\" style=\"background:beige;height:' + (i.height - 2) + 'px;width:' + (i.width - 2) + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span></div></div>')
                 show_chart(i.id, "", "", i.gather_params, i.height, i.width, vm.drigging_id, i.contents);
                 vm.drigging_id++;
             },
@@ -528,16 +531,22 @@ $(function () {
                 scale = parseFloat(style.split('scale')[1].substring(style.split('scale')[1].indexOf('(') + 1, style.split('scale')[1].indexOf(')')));
             }
             score = $('.Drigging').eq(i).find('.score_input').val();
+            next_item = $('.Drigging').eq(i).data().next_item
+            if (next_item == undefined) {
+                next_item = 0
+            }
             var data = {
                 'order': order,
                 'item_id': item_id,
                 'x': x,
                 'y': y,
                 'scale': scale,
-                'score': score
+                'score': score,
+                'next_item': next_item
             };
             vm.result_list.push(data);
         }
+        vm.canvas_flag=0;
     })
 });
 $(function () {
@@ -584,45 +593,24 @@ $(function () {
             $(this).find('.delete').on('click', function (e) {
                 e.stopPropagation();
                 $(this).parent().parent().remove();
+                //找出连线并删除
+                id = $(this).parent().parent()[0].id
+                for (var i = 0; i < vm.lines.length; i++) {
+                    if (vm.lines[i].pid == id || vm.lines[i].nid == id) {
+                        vm.lines.splice(i, 1)
+                    }
+                }
+                $(this).data().next_item = 0;
             })
             $(this).find('.line').on('click', function (e) {
                 e.stopPropagation();
-                line($(this).parent().parent()[0]);
-            })
+                add_line($(this).parent().parent()[0]);
+            });
         }
     });
     $(document).on("blur", ".score_input", function () {//打分输入框失去焦点隐藏
         $('.score_input').css('display', 'none');
     });
-
-    function line(item_info) {
-        if (vm.line_flag == 0) {
-            vm.line_flag = 1;
-            var id = item_info.id
-            var Y = $('#'+id).position().top;
-            var X = $('#'+id).position().left;
-            vm.pre_x = item_info.clientWidth+X;
-            vm.pre_y = item_info.clientHeight/2+Y;
-            vm.pre_id=item_info.id
-        } else if (vm.line_flag == 1) {
-            $(".monitor_content").append('<canvas id="line' + item_info.id +'-'+vm.pre_id+'" class="line_p"></canvas>');
-            var c = document.getElementById("line" + item_info.id+'-'+vm.pre_id);
-            var id = item_info.id
-            var Y = $('#'+id).position().top;
-            var X = $('#'+id).position().left;
-            c.width = 1298.7;
-            c.height = 600
-            var ctx = c.getContext("2d");
-            var x = X
-            var y = item_info.clientHeight/2+Y
-            console.log(vm.pre_x, vm.pre_y)
-            console.log(x, y)
-            ctx.moveTo(vm.pre_x, vm.pre_y);
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            vm.line_flag=0
-        }
-    }
 
     $(document).mousemove(function (e) {
         if (!flag)//如果flag为false则返回
@@ -695,6 +683,80 @@ $(function () {
             return
         }
     });
+
+    function draw_line() {
+        //让canvas append后才能执行此方法
+        if (vm.canvas_flag == 1) {
+            var c = document.getElementById("line_canvas");
+            c.width = 1298.7;
+            c.height = 600
+            ctx = c.getContext("2d");
+            for (var i = 0; i < vm.lines.length; i++) {
+                var pid = vm.lines[i].pid;
+                var nid = vm.lines[i].nid;
+                var PY = $('#' + pid).position().top;
+                var PX = $('#' + pid).position().left;
+                var NY = $('#' + nid).position().top;
+                var NX = $('#' + nid).position().left
+                var pcx = $('#' + pid)[0].clientWidth
+                var pcy = $('#' + pid)[0].clientHeight
+                var ncx = $('#' + nid)[0].clientWidth
+                var ncy = $('#' + nid)[0].clientHeight
+                //将线条的渲染分为四种情况
+                if (PY >NY && (PX < NX+ncx) && (PX + pcx > NX)) {
+                    var pre_x = pcx / 2 + PX;
+                    var pre_y = PY;
+                    var now_x = NX + ncx / 2
+                    var now_y = NY + ncy
+                } else if ((PY + pcy) < NY && (PX < NX+ncx) && (PX + pcx > NX)) {
+                    var pre_x = pcx / 2 + PX;
+                    var pre_y = PY+pcy;
+                    var now_x = NX + ncx / 2
+                    var now_y = NY
+                } else if ((PX + pcx) < NX) {
+                    var pre_x = pcx + PX;
+                    var pre_y = pcy / 2 + PY;
+                    var now_x = NX
+                    var now_y = ncy / 2 + NY
+                } else if ((PX + pcx) > NX) {
+                    var pre_x = PX;
+                    var pre_y = pcy / 2 + PY;
+                    var now_x = NX + ncx
+                    var now_y = ncy / 2 + NY
+                }
+                ctx.beginPath()
+                ctx.moveTo(pre_x, pre_y);
+                ctx.lineTo(now_x, now_y);
+                ctx.lineWidth=5
+                ctx.strokeStyle="rgb(2,100,30)";
+                ctx.stroke();
+                ctx.closePath()
+            }
+        }
+    }
+
+    function add_line(item_info) {
+        if (vm.line_flag == 0) {
+            vm.line_flag = 1;
+            vm.pre_id = item_info.id
+        } else if (vm.line_flag == 1) {
+            id = item_info.id
+            $("#" + vm.pre_id).data().next_item = $('#' + id).attr('name')
+            line = {
+                'pid': vm.pre_id,
+                'nid': id
+            }
+            vm.lines.push(line)
+            vm.line_flag = 0;
+            vm.pre_id = 0;
+        }
+    }
+
+    function flush_canvas() {
+        setInterval(draw_line, 200);
+    }
+
+    flush_canvas();
 });
 setInterval(function () {
     //flow1_js_start

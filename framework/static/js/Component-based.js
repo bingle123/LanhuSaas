@@ -543,8 +543,10 @@ function flow_monitor(value1,value2){
 function test_monitor(id,display_rule,display_type,measure_name,target_name,drigging_id){
     var selector_id='basic'+id
     $.get("/monitor_scene/get_basic_data/"+id,function (res){
-        console.log(res);
-        var gather_base_test_data=JSON.parse(res.dddddd);
+        for(i in res){
+        key=i
+        }
+        var gather_base_test_data=res[key];
         $('[type='+selector_id+']').html("");                  //清空dom
         $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
         $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span></div>');

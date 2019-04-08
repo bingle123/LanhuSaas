@@ -89,6 +89,7 @@ class Scene_monitor(models.Model):
     scale = models.DecimalField(verbose_name=u'比例', max_digits=4, decimal_places=2)
     score = models.PositiveIntegerField(verbose_name=u'打分')
     order = models.PositiveIntegerField(verbose_name=u'排序')
+    next_item = models.PositiveIntegerField(verbose_name=u'下一个监控项')
 
     class Meta:
         verbose_name = u'场景监控项'
