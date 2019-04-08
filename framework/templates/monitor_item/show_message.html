@@ -3032,6 +3032,7 @@
                         }
                     }
                     if(vm.base.show_rule_type==2){
+                        console.log(gather_base_test_data);
                         for(let i=0;i<gather_base_test_data.length;i++){
                             let selector='.div'+i;
                             let data_key=[];
@@ -3042,17 +3043,17 @@
                             }
                             $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block;"></div>');
                             for(let j=0;j<data_key.length;j++){
-                                if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
-                                    if(data_value[j].indexOf('ms')>-1){
-                                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
-                                    }else {
-                                        vm.$message.error('其他参数配置出错！');
-                                        $('#base_test_text').html('');
-                                        return
-                                    }
-                                }else {
+                                //if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
+                                    //if(data_value[j].indexOf('ms')>-1){
+                                   //     $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
+                                   // }else {
+                                  //      vm.$message.error('其他参数配置出错！');
+                                  //      $('#base_test_text').html('');
+                                  //      return
+                                 //   }
+                                //}else {
                                     $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
-                                }
+                                //}
                             }
                         }
                     }

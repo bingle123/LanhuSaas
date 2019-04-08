@@ -6,7 +6,13 @@ from gather_data.models import TDGatherData
 import requests
 import json
 import time
+import sys
 from conf.default import MEASURES_API_ADDRESS
+
+# 解决ascii编码的问题
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 
 class Gather():
@@ -38,7 +44,6 @@ class Gather():
             return result_list
         else:
             api_address = MEASURES_QUERY_API
-
         # 此处参数传递应给予改善, 时间需要改为当前时间的前一天
         query_form = api_address + '?' + 'start=1551210759&m=sum:sum:' + measures + '_' + measures_name + interface_param
 
@@ -46,7 +51,6 @@ class Gather():
         request_code = request_result.status_code
         if request_code == 200:
             temp_list = Gather.change_json(measures, request_result, measures_name)
-
             # 百分比
             if show_rule_type == '0':
 
@@ -73,8 +77,8 @@ class Gather():
                 # 此处规则转换
                 for i in temp_list:
                     i[measures + '_' + measures_name] = Gather.percent_manage(gather_rule, i[measures + '_' + measures_name])
-                    i['metric_max'] = Gather.percent_manage(gather_rule, i['metric_max'])
-                    i['metric_avg'] = Gather.percent_manage(gather_rule, i['metric_avg'])
+                    # i['metric_max'] = Gather.percent_manage(gather_rule, i['metric_max'])
+                    # i['metric_avg'] = Gather.percent_manage(gather_rule, i['metric_avg'])
                 # print result_list
                 return success_result(temp_list)
             # 显示颜色
@@ -96,18 +100,26 @@ class Gather():
                 # 模拟数据
                 # temp_list = [{"system_name": "jzjy", "ip": "192.168.1.153", "cpu_cpu_used_pct": 2, "time": "2019-03-22 19:42:12"}, {"system_name": "jzjy", "ip": "192.168.1.157", "cpu_cpu_used_pct": 0, "time": "2019-03-22 19:37:23"}, {"system_name": "jzjy", "ip": "192.168.1.165", "cpu_cpu_used_pct": 0, "time": "2019-03-22 19:41:56"}]
                 # result_list = Gather.color_manage(color_code_map, temp_list, measures, measures_name)
-                rule_list = gather_rule.split('\n')
-                result_list = Gather.color_manage(temp_list, rule_list, measures, measures_name)
-                return result_list
+                try:
+                    for i in temp_list:
+                        i[measures + '_' + measures_name] = Gather.color_manage(i[measures + '_' + measures_name], gather_rule)
+                        # i['metric_max'] = Gather.color_manage(i['metric_max'], gather_rule)
+                        # i['metric_avg'] = Gather.color_manage(i['metric_avg'], gather_rule)
+                    return success_result(temp_list)
+                except Exception as e:
+                    print e
+                    return error_result(u'异常'+str(e))
             # 显示单位
             elif show_rule_type == '2':
                 try:
                     for i in temp_list:
                         i[measures + '_' + measures_name] = Gather.other_manage(i[measures + '_' + measures_name], gather_rule)
-                        i['metric_max'] = Gather.other_manage(i['metric_max'], gather_rule)
-                        i['metric_avg'] = Gather.other_manage(i['metric_avg'], gather_rule)
+                        # i['metric_max'] = Gather.other_manage(i['metric_max'], gather_rule)
+                        # i['metric_avg'] = Gather.other_manage(i['metric_avg'], gather_rule)
+                    print temp_list
                     return success_result(temp_list)
                 except Exception as e:
+                    print e
                     return error_result(u'异常'+str(e))
         elif request_code == '500':
             return error_result(u'接口请求错误')
@@ -178,41 +190,16 @@ class Gather():
         return "%.2f%%" % (float(original_value) * int(multiple))
 
     @classmethod
-    def color_manage(cls, temp_list, rule_list, measures, measures_name):
+    def color_manage(cls, original_value, rule_list):
         """
         颜色管理
-        :param color_code_map:               颜色字典
-        :param result_list:             change_json方法返回的json,返回的List json
-        :param measures:                指标集
-        :param measures_name:           指标集名称
+
         :return:
         """
-        # try:
-        #     # 颜色代码List
-        #     key_list = []
-        #     for key in color_code_map:
-        #         key_list.append(key)
-        #     for i in result_list:
-        #         color_code = str(i[measures + '_' + measures_name])
-        #         if color_code in key_list:
-        #             # 新的键值为 值 + 颜色的RGB代码，前端用#分割取颜色和值，值用于显示，颜色渲染div底色
-        #             i[measures + '_' + measures_name] = str(i[measures + '_' + measures_name]) + color_code_map[str(i[measures + '_' + measures_name])]
-        #     return success_result(result_list)
-        # except Exception as e:
-        #     return error_result(u'颜色转换出错'+str(e))
-        print temp_list
-        for item in temp_list:
-            if float(rule_list[0].strip().split('-')[0]) <= float(item[measures + '_' + measures_name]) < float(rule_list[0].strip().split('-')[1]):
-                item[measures + '_' + measures_name] = str(item[measures + '_' + measures_name]) + '#FF0000'
-            elif float(rule_list[1].strip().split('-')[0]) <= float(item[measures + '_' + measures_name]) < float(rule_list[1].strip().split('-')[1]):
-                item[measures + '_' + measures_name] = str(item[measures + '_' + measures_name]) + '#00FF00'
-            elif float(rule_list[2].strip().split('-')[0]) <= float(item[measures + '_' + measures_name]) < float(rule_list[2].strip().split('-')[1]):
-                item[measures + '_' + measures_name] = str(item[measures + '_' + measures_name]) + '#7A8B8B'
-            elif float(rule_list[3].strip().split('-')[0]) <= float(item[measures + '_' + measures_name]) < float(rule_list[3].strip().split('-')[1]):
-                item[measures + '_' + measures_name] = str(item[measures + '_' + measures_name]) + '#EEEE00'
-            else:
-                item[measures + '_' + measures_name] = str(item[measures + '_' + measures_name]) + '#FFFFFF'
-        return success_result(temp_list)
+        unit_list = ['#FF0000', '#00FF00', '#7A8B8B', '#EEEE00', '#FFFFFF']
+        processed_rule_list = rule_list.strip().split('\n')
+        processed_val = Gather.value_range_process(processed_rule_list, original_value, unit_list)
+        return processed_val
 
     @classmethod
     def other_manage(cls, original_value, gather_rule):
@@ -222,7 +209,43 @@ class Gather():
         :param gather_rule:                     规则
         :return:
         """
-        rule_list = gather_rule.split('@')
-        multiple = rule_list[0]
-        unit = rule_list[1]
-        return "%.2f" % (float(original_value) * int(multiple)) + unit
+        rule_list = gather_rule.split('\n')
+        processed_rule_list = list()
+        unit_list = list()
+        for rule_list in rule_list:
+            temp_list = rule_list.strip().split('@')
+            processed_rule_list.append(temp_list[0])
+            unit_list.append(temp_list[1])
+        processed_val = Gather.value_range_process(processed_rule_list, original_value, unit_list)
+        return processed_val
+        # for item in rule_list:
+        #     params = item.split('@')
+        #
+        #
+        # multiple = rule_list[0]
+        # unit = rule_list[1]
+        # return "%.2f" % (float(original_value) * int(multiple)) + unit
+
+    # 针对不同数值范围添加后缀
+    @classmethod
+    def value_range_process(cls, rule_list, original_value, unit_list):
+        """
+        :param rule_list:                 校验规则
+        :param original_value:            原始值
+        :param unit_list:                 单位数组
+        :return:
+        """
+        if float(rule_list[0].strip().split('-')[0]) <= float(original_value) < float(
+                rule_list[0].strip().split('-')[1]):
+            return str(original_value) + unit_list[0].__str__()
+        elif float(rule_list[1].strip().split('-')[0]) <= float(original_value) < float(
+                rule_list[1].strip().split('-')[1]):
+            return str(original_value) + unit_list[1].__str__()
+        elif float(rule_list[2].strip().split('-')[0]) <= float(original_value) < float(
+                rule_list[2].strip().split('-')[1]):
+            return str(original_value) + unit_list[2].__str__()
+        elif float(rule_list[3].strip().split('-')[0]) <= float(original_value) < float(
+                rule_list[3].strip().split('-')[1]):
+            return str(original_value) + unit_list[3].__str__()
+        else:
+            return str(original_value) + unit_list[4].__str__()
