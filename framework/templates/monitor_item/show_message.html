@@ -973,6 +973,8 @@
             other_rules_comments: false,
             //基本监控项（修改后）编辑的情况下是否为第一次加载数据标记
             base_monitor_edit_init: true,
+            //基本监控项（修改后）添加后是否为第一次采集测试的标记
+            base_monitor_add_test_init: true,
             //基本监控项上传数据
             base_monitor_upload_data: {},
             //采集测试数据缓存变量
@@ -1385,6 +1387,8 @@
                 //如果是基本监控项（修改后）的修改窗口被关闭基本监控项编辑初始化状态重置为true
                 if(1 == vm.add_pamas){
                     this.base_monitor_edit_init = true;
+                }else if(0 == vm.add_pamas){
+                    this.base_monitor_add_test_init = true;
                 }
             },
             //基本监控项（修改后）的数据来源切换
@@ -2939,7 +2943,7 @@
                 }
                 //如果是点击编辑后的数据初始化时触发的此函数，base_monitor_edit_init标记
                 //置为false，在下次触发change_measures函数时将清空度量值
-                if(this.base_monitor_edit_init){
+                if(this.base_monitor_edit_init && '1' == vm.add_pamas){
                     this.base_monitor_edit_init = false;
                 }
                 for(let i in vm.gather_list){
@@ -2972,7 +2976,15 @@
                     //采集测试的数据缓存到gather_data_test_data变量中
                     this.gather_test_data = res.data.results;
                     var gather_base_test_data=res.data.results;
-                    //好坑，坑skr人
+                    //添加情况下的采集测试，第一次采集时显示内容会默认加载所有指标值
+                    if(vm.add_pamas == 0 && vm.base_monitor_add_test_init){
+                        var content='';
+                        for(var x in gather_base_test_data[0]){           //遍历列表的第i个对象
+                            content+='"'+x+'":"'+x+'"@\n';
+                        }
+                        vm.base.contents=content;
+                        vm.base_monitor_add_test_init = false;
+                    }
                     /*
                     var content='';
                     for(x in gather_base_test_data[0]){           //遍历列表的第i个对象
