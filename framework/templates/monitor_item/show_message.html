@@ -2956,11 +2956,13 @@
                     //采集测试的数据缓存到gather_data_test_data变量中
                     this.gather_test_data = res.data.results;
                     var gather_base_test_data=res.data.results;
+                    //好坑，坑skr人
+                    /*
                     var content='';
                     for(x in gather_base_test_data[0]){           //遍历列表的第i个对象
                         content+='"'+x+'":"'+x+'"@\n';
                     }
-                    vm.base.contents=content;
+                    vm.base.contents=content;*/
                     $('#base_test_text').html('');                  //清空dom
                     if(vm.base.show_rule_type==0){
                         for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
@@ -3054,6 +3056,8 @@
                             }
                         }
                     }
+                    //预览内容变更操作
+                    this.content_change();
                     //字体大小变更操作
                     this.base_size();
                     //高宽变更操作
@@ -3090,6 +3094,7 @@
             },
             content_change(){
                 var content=vm.base.contents;                   //显示内容数据
+                console.log(content);
                 var c = content.substring(0,content.lastIndexOf('@'));      //去@符号
                 var content_str='{'+c.replace(/@\n/g,',')+'}';      //加{}
                 var content_json=JSON.parse(content_str);           //转json
