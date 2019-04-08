@@ -862,8 +862,11 @@
                                     <el-input v-model="base.gather_rule" placeholder="百分比：如：100|颜色：如：#000000==2@#ffffff==0|其他：如：100@ms"
                                               type="textarea"></el-input>
                                 </el-form-item>
-                                 <div v-if="rules_comments">
-                                     <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：每个范围区间占一行，数值达到此范围分别展示为红、绿、灰、黄</p>
+                                 <div v-if="color_rules_comments">
+                                     <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到此范围分别展示为红、绿、灰、黄</p>
+                                 </div>
+                                 <div v-if="other_rules_comments">
+                                     <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到对应范围分别展示其“@”后的后缀</p>
                                  </div>
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
@@ -964,8 +967,10 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            //采集规则注释
-            rules_comments: false,
+            //颜色采集规则注释
+            color_rules_comments: false,
+            //其他采集规则注释
+            other_rules_comments: false,
             //基本监控项（修改后）编辑的情况下是否为第一次加载数据标记
             base_monitor_edit_init: true,
             //基本监控项上传数据
@@ -1276,11 +1281,17 @@
         },
         methods: {
             add_comments(){
-                if(this.base.show_rule_type == '1'){
-                    this.rules_comments = true;
+                if('1' == this.base.show_rule_type){
+                    this.color_rules_comments = true;
+                    this.other_rules_comments = false;
+                }else if('2' == this.base.show_rule_type){
+                    this.color_rules_comments = false;
+                    this.other_rules_comments = true;
                 }else{
-                    this.rules_comments = false;
+                    this.color_rules_comments = false;
+                    this.other_rules_comments = false;
                 }
+
             },
             //监控项数据处理，用于编辑状态下回显数据
             monitor_edit_data_process(row){
@@ -1312,7 +1323,11 @@
                         vm.base['show_rule_type'] = row.display_type.toString();
                         //展示类型为颜色时显示提示信息
                         if('1' == vm.base['show_rule_type']){
-                            this.rules_comments = true;
+                            this.color_rules_comments = true;
+                            this.other_rules_comments = false;
+                        }else if('2' == vm.base['show_rule_type']){
+                            this.other_rules_comments = true;
+                            this.color_rules_comments = false;
                         }
                         vm.base['monitor_name'] = vm.monitor_name;
                         vm.base['monitor_type'] = vm.monitor_type;
@@ -1365,7 +1380,8 @@
                 //采集测试的预览框清空
                 $('#base_test_text').html('');
                 //提示信息状态标志位置false
-                this.rules_comments = false;
+                this.color_rules_comments = false;
+                this.other_rules_comments = false;
                 //如果是基本监控项（修改后）的修改窗口被关闭基本监控项编辑初始化状态重置为true
                 if(1 == vm.add_pamas){
                     this.base_monitor_edit_init = true;
