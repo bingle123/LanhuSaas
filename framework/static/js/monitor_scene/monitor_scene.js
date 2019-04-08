@@ -216,6 +216,7 @@ $(function () {
                     url: '/monitor_scene/scene_data/',
                     data: value,
                 }).then(function (res) {
+                    console.log(res)
                     vm.result_list_edit = res.data.results;
                     vm.result_list = vm.result_list_edit;
                     vm.scale = parseFloat(res.data.results[0].scale);
@@ -231,13 +232,22 @@ $(function () {
                 $('.monitor_content').html('');
             },
             async goto() {
-                $(".monitor_content").append('<canvas id="line_canvas" style="position: absolute"></canvas>');
                 vm.canvas_flag = 1;
-                if ($('.monitor_content').html() == '') {     //场景编排内容块无元素
+                if ($('.monitor_content').html() == '') {//场景编排内容块无元素
+                    $(".monitor_content").append('<canvas id="line_canvas" style="position: absolute"></canvas>');
                     $('.monitor_edit').css('display', 'block');
                     vm.show_num = vm.isAdd;
                     vm.isAdd = 0;
                     let result_list_edit = vm.result_list_edit;
+                    for(var i=0;i<result_list_edit.length;i++){
+                        if(result_list_edit[i].next_item!=0){
+                            line={
+                                'pid':result_list_edit[i].item_id,
+                                'nid':result_list_edit[i].next_item
+                            }
+                            vm.lines.push(line)
+                        }
+                    }
                     let max = 0;
                     let index = 0;
                     for (var i = 0; i < result_list_edit.length; i++) {
@@ -547,6 +557,7 @@ $(function () {
             vm.result_list.push(data);
         }
         vm.canvas_flag=0;
+        vm.lines=[];
     })
 });
 $(function () {
@@ -694,14 +705,14 @@ $(function () {
             for (var i = 0; i < vm.lines.length; i++) {
                 var pid = vm.lines[i].pid;
                 var nid = vm.lines[i].nid;
-                var PY = $('#' + pid).position().top;
-                var PX = $('#' + pid).position().left;
-                var NY = $('#' + nid).position().top;
-                var NX = $('#' + nid).position().left
-                var pcx = $('#' + pid)[0].clientWidth
-                var pcy = $('#' + pid)[0].clientHeight
-                var ncx = $('#' + nid)[0].clientWidth
-                var ncy = $('#' + nid)[0].clientHeight
+                var PY = $("[name='"+pid+"']").position().top;
+                var PX = $("[name='"+pid+"']").position().left;
+                var NY = $("[name='"+nid+"']").position().top;
+                var NX = $("[name='"+nid+"']").position().left
+                var pcx = $("[name='"+pid+"']")[0].clientWidth
+                var pcy = $("[name='"+pid+"']")[0].clientHeight
+                var ncx = $("[name='"+nid+"']")[0].clientWidth
+                var ncy = $("[name='"+nid+"']")[0].clientHeight
                 //将线条的渲染分为四种情况
                 if (PY >NY && (PX < NX+ncx) && (PX + pcx > NX)) {
                     var pre_x = pcx / 2 + PX;
@@ -738,13 +749,14 @@ $(function () {
     function add_line(item_info) {
         if (vm.line_flag == 0) {
             vm.line_flag = 1;
-            vm.pre_id = item_info.id
+            id = item_info.id
+            vm.pre_id=$('#' + id).attr('name')
         } else if (vm.line_flag == 1) {
             id = item_info.id
             $("#" + vm.pre_id).data().next_item = $('#' + id).attr('name')
             line = {
                 'pid': vm.pre_id,
-                'nid': id
+                'nid': $('#' + id).attr('name')
             }
             vm.lines.push(line)
             vm.line_flag = 0;
