@@ -539,17 +539,18 @@ function flow_monitor(value1,value2){
                 })
 
             }
-
+//基本监控项编排展示
 function test_monitor(id,display_rule,display_type,measure_name,target_name,drigging_id){
     var selector_id='basic'+id
     $.get("/monitor_scene/get_basic_data/"+id,function (res){
         for(i in res){
         key=i
         }
-        var gather_base_test_data=res[key];
+        var gather_base_test_data=JSON.parse(res[key]);
         $('[type='+selector_id+']').html("");                  //清空dom
         $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
         $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span></div>');
+        //按百分比展示
         if(display_type ==0){
             for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
                 let selector='.div'+drigging_id+i;                                  //jquery选择器
@@ -588,6 +589,7 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
                 }
             }
         }
+        //按颜色展示
         if(display_type==1){
             for(let i=0;i<gather_base_test_data.length;i++){
                 let selector='.div'+drigging_id+i;
@@ -597,12 +599,12 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
                     data_key.push(k);
                     data_value.push(gather_base_test_data[i][k]);
                 }
-                $('[type='+selector_id+']').append('<div class="div'+i+'" style="width:33%;display: inline-block;"></div>');
+                $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'" style="width:33%;display: inline-block;"></div>');
                 for(let j=0;j<data_key.length;j++){
                     if(data_key[j]==target_name+'_'+measure_name){
                         var data_value_str=data_value[j].toString();
                         if(data_value_str.indexOf('#')>-1){
-                            $(selector).append('<p>'+data_key[j]+':<i style="color:'+data_value[j]+'" class="el-icon-star-on"></i></p>');
+                            $(selector).append('<p >'+data_key[j]+':<i style="color:'+data_value[j]+'" class="el-icon-star-on"></i></p>');
                         }else {
                             $('#base_test_text').html('');
                             vm.$message.error('颜色比参数配置出错！');
@@ -614,6 +616,7 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
                 }
             }
         }
+        //其它展示类型
         if(display_type==2){
             for(let i=0;i<gather_base_test_data.length;i++){
                 let selector='.div'+drigging_id+i;
@@ -623,7 +626,7 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
                     data_key.push(k);
                     data_value.push(gather_base_test_data[i][k]);
                 }
-                $('[type='+selector_id+']').append('<div class="div'+i+'" style="width:33%;display: inline-block;"></div>');
+                $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'" style="width:33%;display: inline-block;"></div>');
                 for(let j=0;j<data_key.length;j++){
                     if(data_key[j]==target_name+'_'+measure_name){
                         if(data_value[j].indexOf('ms')>-1){
