@@ -1293,21 +1293,25 @@
         methods: {
             //基本监控项（修改后）显示内容变更时调用的预览变更方法
             content_modified_change(){
-                this.base_monitor_other_fixed_remove();
+                this.base_monitor_other_fixed_status();
                 this.content_change();
             },
             //基本监控项显示方式为其他且显示内容为空时显示的单位
-            base_monitor_other_fixed_remove(){
-                if(vm.base.show_rule_type==2 && 0 != $('#other_fixed_show').length){
-                    $('#other_fixed_show').remove();
+            base_monitor_other_fixed_status(){
+                if(vm.base.show_rule_type==2){
+                    if('' == vm.base['contents'].replace(/^\s+|\s+$/g,"")){
+                        $('#other_fixed_show').show();
+                    }else{
+                        $('#other_fixed_show').hide();
+                    }
                 }
             },
             //基本监控项修改后显示内容重置方法
             base_monitor_show_reset(){
-                //如果显示方式为其他，且显示内容为空，移除为空时显示的当前单位
-                this.base_monitor_other_fixed_remove();
                 //base['contents']使用缓存的所有指标值显示内容替换
                 this.base['contents'] = this.base_monitor_show_cache;
+                //如果显示方式为其他，且显示内容为空，移除为空时显示的当前单位
+                this.base_monitor_other_fixed_status();
                 //更替显示内容
                 this.content_change();
             },
@@ -3080,7 +3084,6 @@
                             let selector='.div'+i;
                             let data_key=[];
                             let data_value=[];
-                            console.log(gather_base_test_data);
                             for(k in gather_base_test_data[i]){
                                 data_key.push(k);
                                 data_value.push(gather_base_test_data[i][k]);
@@ -3106,7 +3109,6 @@
                         }
                     }
                     if(vm.base.show_rule_type==2){
-                        console.log(gather_base_test_data);
                         for(let i=0;i<gather_base_test_data.length;i++){
                             let selector='.div'+i;
                             let data_key=[];
@@ -3125,6 +3127,7 @@
                                         str[0] = str[0] + str[1];
                                         selected_measure = str[1];
                                         $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');
+                                        $(selector).append('<p id="other_fixed_show" style="display: none">'+selected_measure+'</p>');
                                     }else {
                                         $('#base_test_text').html('');
                                         vm.$message.error('其他参数配置出错！');
@@ -3136,7 +3139,7 @@
                             }
                             //当显示内容为空的情况下
                             if('' == vm.base['contents'].replace(/^\s+|\s+$/g,"")){
-                                $(selector).append('<p id="other_fixed_show">'+selected_measure+'</p>');
+                                $('#other_fixed_show').show();
                             }
                         }
                     }
