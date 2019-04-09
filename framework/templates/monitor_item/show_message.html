@@ -699,9 +699,14 @@
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="显示内容" prop="contents" style="width: 96%">
+                                        <el-col :span="20">
                                         <el-input v-model="base.contents" placeholder="上证指数:3000  深证指数:3000"
                                                   @change="content_change"
                                                   type="textarea"></el-input>
+                                        </el-col>
+                                    <el-col :span="4">
+                                    <el-button type="primary" size="mini" @click="base_monitor_show_reset">默认</el-button>
+                                    </el-col>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
                                     <el-radio-group v-model="sql_file_interface" @change="change_data_sources"
@@ -967,6 +972,8 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            //基本监控项（修改后）显示内容缓存，显示所有指标
+            base_monitor_show_cache: '',
             //颜色采集规则注释
             color_rules_comments: false,
             //其他采集规则注释
@@ -975,6 +982,8 @@
             base_monitor_edit_init: true,
             //基本监控项（修改后）添加后是否为第一次采集测试的标记
             base_monitor_add_test_init: true,
+            //基本监控项（修改后）修改后是否为第一次采集测试的标记
+            base_monitor_edit_test_init: true,
             //基本监控项上传数据
             base_monitor_upload_data: {},
             //采集测试数据缓存变量
@@ -1282,6 +1291,14 @@
             }],*/
         },
         methods: {
+            //基本监控项修改后显示内容重置方法
+            base_monitor_show_reset(){
+                //base['contents']使用缓存的所有指标值显示内容替换
+                this.base['contents'] = this.base_monitor_show_cache;
+                //更替显示内容
+                this.content_change();
+            },
+            //基本监控项修改后颜色和其他选项提示信息添加方法
             add_comments(){
                 if('1' == this.base.show_rule_type){
                     this.color_rules_comments = true;
@@ -1387,9 +1404,12 @@
                 //如果是基本监控项（修改后）的修改窗口被关闭基本监控项编辑初始化状态重置为true
                 if(1 == vm.add_pamas){
                     this.base_monitor_edit_init = true;
+                    this.base_monitor_edit_test_init = true;
                 }else if(0 == vm.add_pamas){
                     this.base_monitor_add_test_init = true;
                 }
+                //缓存的当前所有指标的显示内容清空
+                vm.base_monitor_show_cache = '';
             },
             //基本监控项（修改后）的数据来源切换
             base_gather_source_change(source_type){
@@ -2499,7 +2519,6 @@
                     //取消原有基本监控项时默认加载数据库连接信息
                     //this.get_db_connections();
                 }
-                ;
             },
             del() {
                 vm.edit(0)
@@ -2976,15 +2995,28 @@
                     //采集测试的数据缓存到gather_data_test_data变量中
                     this.gather_test_data = res.data.results;
                     var gather_base_test_data=res.data.results;
-                    //添加情况下的采集测试，第一次采集时显示内容会默认加载所有指标值
-                    if(vm.add_pamas == 0 && vm.base_monitor_add_test_init){
+                    if(vm.base_monitor_edit_test_init || vm.base_monitor_add_test_init){
                         var content='';
                         for(var x in gather_base_test_data[0]){           //遍历列表的第i个对象
                             content+='"'+x+'":"'+x+'"@\n';
                         }
-                        vm.base.contents=content;
-                        vm.base_monitor_add_test_init = false;
+                        if('0' == vm.add_pamas){
+                            vm.base.contents = content;
+                            vm.base_monitor_add_test_init = false;
+                        }else if('1' == vm.add_pamas){
+                            vm.base_monitor_edit_test_init = false;
+                        }
+                        vm.base_monitor_show_cache = content;
                     }
+                    //添加情况下的采集测试，第一次采集时显示内容会默认加载所有指标值
+                    /*if(vm.add_pamas == 0 && vm.base_monitor_add_test_init){
+                        var content='';
+                        for(var x in gather_base_test_data[0]){           //遍历列表的第i个对象
+                            content+='"'+x+'":"'+x+'"@\n';
+                        }
+                        vm.base.contents = content;
+                        vm.base_monitor_show_cache = content;
+                    }*/
                     /*
                     var content='';
                     for(x in gather_base_test_data[0]){           //遍历列表的第i个对象
@@ -3123,7 +3155,6 @@
             },
             content_change(){
                 var content=vm.base.contents;                   //显示内容数据
-                console.log(content);
                 var c = content.substring(0,content.lastIndexOf('@'));      //去@符号
                 var content_str='{'+c.replace(/@\n/g,',')+'}';      //加{}
                 var content_json=JSON.parse(content_str);           //转json
