@@ -830,13 +830,13 @@
                                         </el-form-item>
                                     </div>
                              <div v-if="interface_show">
-                                <el-form-item label="来源类型"  >
+                                <el-form-item label="来源类型" prop="interface_type" >
                                     <el-select v-model="base.interface_type" placeholder="请选择数据来源类型" @change="change_source_type">
                                         <el-option label="日志" value="log"></el-option>
                                         <el-option label="指标" value="measures"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="来源名称" prop="font_size">
+                                <el-form-item label="来源名称" prop="measures">
                                     <el-select v-model="base.measures" filterable placeholder="请选择指标集" @change="change_measures">
                                         <el-option
                                                 v-for="item in iqube_name"
@@ -846,7 +846,7 @@
                                         </el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="度量值" prop="font_size">
+                                <el-form-item label="度量值" prop="measures_name">
                                     <el-select v-model="base.measures_name" filterable placeholder="请选择指标名称">
                                         <el-option
                                                 v-for="item in dimensionality_list"
@@ -863,7 +863,7 @@
                                         <el-option label="其他" value="2"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="数据采集规则" style="width: 96%">
+                                <el-form-item label="采集规则" prop="gather_rule" style="width: 90%">
                                     <el-input v-model="base.gather_rule" placeholder="百分比：如：100|颜色：如：#000000==2@#ffffff==0|其他：如：100@ms"
                                               type="textarea"></el-input>
                                 </el-form-item>
@@ -875,7 +875,7 @@
                                  </div>
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
-                                        <el-form-item>
+                                        <el-form-item prop="start_time">
                                             <el-time-picker style="width: 96%" v-model="base.start_time"
                                                             placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
@@ -883,7 +883,7 @@
                                         </el-col>
                                     <el-col class="line" :span="2">—</el-col>
                                     <el-col :span="11">
-                                        <el-form-item>
+                                        <el-form-item prop="end_time">
                                             <el-time-picker style="width: 96%" v-model="base.end_time"
                                                             placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
@@ -898,7 +898,7 @@
                                 <el-col :span="24">
                                     <el-form-item v-for="(i,index) in base.dimension_data" class="dimension_div">
                                     <el-col :span="11">
-                                        <el-form-item label="维度名称">
+                                        <el-form-item label="维度名称" :prop="'dimension_data.'+ index +'.dimension_name'" :rules="basicMonitorRules.dimension_data.dimension_name">
                                             <el-select v-model="i.dimension_name">
                                                 <el-option label="ip" value="ip">
                                                 </el-option>
@@ -910,7 +910,7 @@
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="11">
-                                        <el-form-item label="维度值">
+                                        <el-form-item label="维度值" :prop="'dimension_data.'+ index +'.dimension_value'" :rules="basicMonitorRules.dimension_data.dimension_value">
                                             <el-input v-model="i.dimension_value">
                                             </el-input>
                                         </el-form-item>
@@ -969,6 +969,32 @@
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
         return config
     });
+    //自定义校验规则
+    //基本监控项高度大小范围校验
+    const height_range_check = (rule, value, callback) => {
+        var reg = /^[0-9]*$/;
+        if(!reg.test(value)){
+            return callback(new Error('高度值必须是一个数字'));
+        }
+        var height = parseInt(value);
+        if(0 > height || 480 < height){
+            return callback(new Error('高度值范围在0-480'));
+        }
+        return callback();
+    };
+
+    const width_range_check = (rule, value, callback) => {
+        var reg = /^[0-9]*$/;
+        if(!reg.test(value)){
+            return callback(new Error('宽度值必须是一个数字'));
+        }
+        var height = parseInt(value);
+        if(0 > height || 422 < height){
+            return callback(new Error('宽度值范围在0-422'));
+        }
+        return callback();
+    };
+
     var vm = new Vue({
         el: '#app',
         data: {
@@ -1102,7 +1128,7 @@
                 ],
                 period: [
                     {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
-                ],
+                ]
             },                              //校验规则
             chart: {                                //图表单元
                 monitor_name: '',                    //单元名称
@@ -1211,6 +1237,49 @@
                 ]
             },//基本监控项（修改后）的校验规则
             basicMonitorRules: {
+                font_size: [
+                    {required: true, message: '请选择字号', trigger: 'change'}
+                ],
+                height: [
+                    {required: true, message: '请填写高度', trigger: 'blur'},
+                    {validator: height_range_check, trigger: 'blur'}
+                ],
+                width: [
+                    {required: true, message: '请填写宽度', trigger: 'blur'},
+                    {validator: width_range_check, trigger: 'blur'}
+                ],
+                interface_type: [
+                    {required: true, message: '请选择来源类型', trigger: 'change'}
+                ],
+                measures: [
+                    {required: true, message: '请选择来源名称', trigger: 'change'}
+                ],
+                measures_name: [
+                    {required: true, message: '请选择度量值', trigger: 'change'}
+                ],
+                show_rule_type: [
+                    {required: true, message: '请选择展示规则', trigger: 'change'}
+                ],
+                gather_rule: [
+                    {required: true, message: '请填写数据采集规则', trigger: 'change'}
+                ],
+                start_time: [
+                    {required: true, message: '请选择采集开始时间', trigger: 'change'}
+                ],
+                end_time: [
+                    {required: true, message: '请选择采集结束时间', trigger: 'change'}
+                ],
+                period: [
+                    {required: true, message: '请填写采集周期', trigger: 'blur'}
+                ],
+                dimension_data: {
+                    dimension_name: [
+                        {required: true, message: '请选择维度名称', trigger: 'change'}
+                    ],
+                    dimension_value: [
+                        {required: true, message: '请填写维度值', trigger: 'blur'}
+                    ]
+                }
             },
             //校验规则
             basic1: {                                //基本单元
@@ -1523,8 +1592,10 @@
             //监控项数据编辑后的保存方法
             monitor_data_save(unit_id, flow){
                 if (vm.monitor_name == '') {
-                    vm.message = '请输入监控项名称!';
+                    vm.message = '监控项名称不能为空!';
+                    this.$alert(vm.message, "错误");
                     vm.unit_id = -1;
+                    return false;
                 }
                 //unit_id大于0的情况为编辑后的数据上传
                 if(unit_id > 0){
