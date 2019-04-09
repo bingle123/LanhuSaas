@@ -1293,6 +1293,7 @@
         methods: {
             //基本监控项修改后显示内容重置方法
             base_monitor_show_reset(){
+                $('#other_fixed_show').remove();
                 //base['contents']使用缓存的所有指标值显示内容替换
                 this.base['contents'] = this.base_monitor_show_cache;
                 //更替显示内容
@@ -3000,10 +3001,10 @@
                         for(var x in gather_base_test_data[0]){           //遍历列表的第i个对象
                             content+='"'+x+'":"'+x+'"@\n';
                         }
-                        if('0' == vm.add_pamas){
+                        if('0' == vm.add_pamas && vm.base_monitor_add_test_init){
                             vm.base.contents = content;
                             vm.base_monitor_add_test_init = false;
-                        }else if('1' == vm.add_pamas){
+                        }else if('1' == vm.add_pamas && vm.base_monitor_edit_test_init){
                             vm.base_monitor_edit_test_init = false;
                         }
                         vm.base_monitor_show_cache = content;
@@ -3078,7 +3079,6 @@
                                     var data_value_str=data_value[j].toString();
                                     if(data_value_str.indexOf('#')>-1){
                                         var str = data_value_str.split('#');
-
                                         $(selector).css('background-color', '#' + str[1]);
                                         //$(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':<i style="color:'+data_value[j]+'" class="el-icon-star-on"></i></p>');
                                         $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');
@@ -3104,18 +3104,27 @@
                                 data_value.push(gather_base_test_data[i][k]);
                             }
                             $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block;"></div>');
+                            var selected_measure = null;
                             for(let j=0;j<data_key.length;j++){
-                                //if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
-                                    //if(data_value[j].indexOf('ms')>-1){
-                                   //     $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
-                                   // }else {
-                                  //      vm.$message.error('其他参数配置出错！');
-                                  //      $('#base_test_text').html('');
-                                  //      return
-                                 //   }
-                                //}else {
+                                if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
+                                    var data_value_str=data_value[j].toString();
+                                    if(data_value_str.indexOf('@')>-1){
+                                        var str = data_value_str.split('@');
+                                        str[0] = str[0] + str[1];
+                                        selected_measure = str[1];
+                                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');
+                                    }else {
+                                        $('#base_test_text').html('');
+                                        vm.$message.error('其他参数配置出错！');
+                                        return
+                                    }
+                                }else{
                                     $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
-                                //}
+                                }
+                            }
+                            //当显示内容为空的情况下
+                            if('' == vm.base['contents'].replace(/^\s+|\s+$/g,"")){
+                                $(selector).append('<p id="other_fixed_show">'+selected_measure+'</p>');
                             }
                         }
                     }

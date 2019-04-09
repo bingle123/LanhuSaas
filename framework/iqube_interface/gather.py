@@ -52,6 +52,7 @@ class Gather():
         query_form = api_address + '?' + 'start=1551210759&m=sum:sum:' + measures + '_' + measures_name + interface_param
         request_result = requests.get(url=query_form)
         request_code = request_result.status_code
+        print request_result
         if request_code == 200:
             temp_list = Gather.change_json(measures, request_result, measures_name)
             # 百分比
@@ -215,10 +216,10 @@ class Gather():
         rule_list = gather_rule.split('\n')
         processed_rule_list = list()
         unit_list = list()
-        for rule_list in rule_list:
-            temp_list = rule_list.strip().split('@')
+        for r_list in rule_list:
+            temp_list = r_list.strip().split('@')
             processed_rule_list.append(temp_list[0])
-            unit_list.append(temp_list[1])
+            unit_list.append('@' + temp_list[1])
         processed_val = Gather.value_range_process(processed_rule_list, original_value, unit_list)
         return processed_val
         # for item in rule_list:
