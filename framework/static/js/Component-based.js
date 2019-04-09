@@ -544,7 +544,7 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
     var selector_id='basic'+id
     $.get("/monitor_scene/get_basic_data/"+id,function (res){
         for(i in res){
-        key=i
+            key=i
         }
         var gather_base_test_data=JSON.parse(res[key]);
         $('[type='+selector_id+']').html("");                  //清空dom
