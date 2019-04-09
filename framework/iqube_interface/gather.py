@@ -39,9 +39,13 @@ class Gather():
             api_address = MEASURES_QUERY_API
             # 模拟数据
             temp_list = [{"zy-shangpin-initial_system-init": "1"}]
-            rule_list = gather_rule.split('\n')
-            result_list = Gather.color_manage(temp_list, rule_list, measures, measures_name)
-            return result_list
+            #rule_list = gather_rule.split('\n')
+
+            # result_list = Gather.color_manage(temp_list, rule_list, measures, measures_name)
+            for temp in temp_list:
+                temp[measures + '_' + measures_name] = Gather.color_manage(temp[measures + '_' + measures_name], gather_rule)
+            return temp_list
+            # return result_list
         else:
             api_address = MEASURES_QUERY_API
         # 此处参数传递应给予改善, 时间需要改为当前时间的前一天
