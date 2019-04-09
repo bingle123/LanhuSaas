@@ -934,7 +934,7 @@
                                 <h2>预览</h2>
                             </div>
                             <div style="text-align:center;width: 100%;min-height:40%;height: auto;background-color: whitesmoke; position: relative"
-                                 id="base_test_text">
+                                 id="base_test_text" v-loading="preview_loading">
 
                                 </div>
                             </div>
@@ -972,6 +972,8 @@
     var vm = new Vue({
         el: '#app',
         data: {
+            //预览加载变量
+            preview_loading: false,
             //基本监控项（修改后）显示内容缓存，显示所有指标
             base_monitor_show_cache: '',
             //颜色采集规则注释
@@ -3000,6 +3002,8 @@
             },
             //采集测试方法
             base_cell_test(){
+                //获取指标数据之前，预览区显示加载中
+                vm.preview_loading = true;
                 axios({
                     url:'${SITE_URL}iqube_interface/gather_base_test/',
                     method:'post',
@@ -3143,6 +3147,8 @@
                             }
                         }
                     }
+                    //已获取到指标数据预览区加载图标取消
+                    vm.preview_loading = false;
                     //预览内容变更操作
                     this.content_change();
                     //字体大小变更操作
