@@ -100,6 +100,33 @@ $(function () {
 
         },
         methods: {
+            sizeStrFun:function(){
+                //菜单 放大 缩小
+                var html="<span onclick='vm.changeSizeFun(this,1)'>放大</span>" +
+                    "<span onclick='vm.changeSizeFun(this,2)'>缩小</span>";
+                return html;
+            },
+            changeSizeFun(obj,type){
+                //放大的功能
+                var dto =$(obj).parent().parent();
+                var num = dto.css("transform");
+                if(num == undefined
+                || num =="none"){
+                    num = 1;
+                }else{
+                  var str=  dto.attr("style");
+                  var arrStr=str.split("transform");
+                  var str1=arrStr[1].substring(arrStr[1].indexOf("(")+1,arrStr[1].indexOf(")"));
+                    num =  parseFloat(str1);
+                }
+                var numTotal = parseFloat(num)+0.1 ;//原来基本上放大
+                if(type == 2){//原来基本上缩小
+                   numTotal = parseFloat(num)-0.1;
+                }
+                if(numTotal >= 0.1){
+                  dto.css("transform","scale("+numTotal+")");
+                }
+            },
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
@@ -277,7 +304,8 @@ $(function () {
                                 vm.$message.error('获取数据失败！');
                             });
                             vm.monitor_data = res.data.results;
-                            $('.monitor_content').append('<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"background:beige;height:' + vm.monitor_data[0].height + 'px;width:' + vm.monitor_data[0].width + 'px;top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"><div id=\"chart' + result_list_edit[i].order + '\" style=\"background:beige;height:' + (vm.monitor_data[0].height - 2) + 'px;width:' + (vm.monitor_data[0].width - 2) + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span></div></div>');
+                            var txt ='<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"background:beige;height:' + vm.monitor_data[0].height + 'px;width:' + vm.monitor_data[0].width + 'px;top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"><div id=\"chart' + result_list_edit[i].order + '\" style=\"background:beige;height:' + (vm.monitor_data[0].height - 2) + 'px;width:' + (vm.monitor_data[0].width - 2) + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div></div>';
+                            $('.monitor_content').append();
                             show_chart(vm.monitor_data[0].id, "", "", vm.monitor_data[0].gather_params, vm.monitor_data[0].height, vm.monitor_data[0].width, result_list_edit[i].order, vm.monitor_data[0].contents);
                         }
                         if (result_list_edit[i].monitor_type === 3) {
@@ -452,7 +480,7 @@ $(function () {
                 vm.drigging_id++
             },
             add_chart_monitor(i) {
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"height:' + i.height + 'px;position: absolute;width:' + i.width + 'pxtransform: scale(' + vm.scale + ')\"><div id=\"chart' + i.id + '\" style=\"background:beige;height:' + (i.height - 2) + 'px;width:' + (i.width - 2) + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span></div></div>')
+                $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"height:' + i.height + 'px;position: absolute;width:' + i.width + 'pxtransform: scale(' + vm.scale + ')\"><div id=\"chart' + i.id + '\" style=\"background:beige;height:' + (i.height - 2) + 'px;width:' + (i.width - 2) + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div></div>')
                 show_chart(i.id, "", "", i.gather_params, i.height, i.width, vm.drigging_id, i.contents);
                 vm.drigging_id++;
             },
@@ -678,8 +706,14 @@ $(function () {
     });
     $('.el-icon-circle-plus-outline').click(function () {
         if (vm.multiple < 2) {
-            vm.scale = vm.scale + 0.1;
-            $('.monitor_content').find('.Drigging').css('transform', 'scale(' + vm.scale + ')');
+           // vm.scale = vm.scale + 0.1;
+           // $('.monitor_content').find('.Drigging').css('transform', 'scale(' + vm.scale + ')');
+            var dris = $('.monitor_content').find('.Drigging')
+            for (var i = 0; i < dris.length; i++) {
+                var style=dris[i].style.transform;
+                var scale = parseFloat(style.replace("scale","").replace("(","").replace(")",""))+0.1;
+                 dris[i].style.transform='scale(' + scale + ')';
+            }
             vm.multiple++;
         } else {
             return
@@ -687,8 +721,16 @@ $(function () {
     });
     $('.el-icon-remove-outline').click(function () {
         if (vm.multiple > -2) {
-            vm.scale = vm.scale - 0.1;
-            $('.monitor_content').find('.Drigging').css('transform', 'scale(' + vm.scale + ')');
+           // vm.scale = vm.scale - 0.1;
+           // $('.monitor_content').find('.Drigging').css('transform', 'scale(' + vm.scale + ')');
+           var dris = $('.monitor_content').find('.Drigging')
+            for (var i = 0; i < dris.length; i++) {
+                var style=dris[i].style.transform;
+                var scale = parseFloat(style.replace("scale","").replace("(","").replace(")",""))-0.1;
+                if(scale >= 0.1){
+                  dris[i].style.transform='scale(' + scale + ')';
+                }
+            }
             vm.multiple--;
         } else {
             return
