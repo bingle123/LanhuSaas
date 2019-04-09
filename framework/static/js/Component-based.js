@@ -544,7 +544,7 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
     var selector_id='basic'+id
     $.get("/monitor_scene/get_basic_data/"+id,function (res){
         for(i in res){
-        key=i
+            key=i
         }
         var gather_base_test_data=JSON.parse(res[key]);
         $('[type='+selector_id+']').html("");                  //清空dom
@@ -604,7 +604,7 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
                     if(data_key[j]==target_name+'_'+measure_name){
                         var data_value_str=data_value[j].toString();
                         if(data_value_str.indexOf('#')>-1){
-                            $(selector).append('<p >'+data_key[j]+':<i style="color:'+data_value[j]+'" class="el-icon-star-on"></i></p>');
+                            $(selector).append('<p style="background-color:'+data_value[j]+';width: 100%;">'+data_key[j]+'</p>');
                         }else {
                             $('#base_test_text').html('');
                             vm.$message.error('颜色比参数配置出错！');
