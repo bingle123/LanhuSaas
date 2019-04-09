@@ -83,8 +83,8 @@
         }
     </style>
 </head>
-<body>
-<div id="app">
+<body >
+<div id="app" >
     <!-- div1 start-->
     <div class="div_one" style="padding: 20px 40px 0px 40px;">
         <div>
@@ -2236,8 +2236,8 @@
                     var node_times = [];
                     for (var i = 4; i <= vm.location.length - 1; i++) {
                         node_time.node_id = vm.location[i].id ,
-                            node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
-                            node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
+                        node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
+                        node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
                         node_time.node_name = $('#' + vm.location[i].id + '').find('.node-title').text()
                         if (node_time.starttime == "") {
                             vm.unit_id = -1;
@@ -3062,6 +3062,7 @@
                         }
                     }
                     if(vm.base.show_rule_type==1){
+
                         for(let i=0;i<gather_base_test_data.length;i++){
                             let selector='.div'+i;
                             let data_key=[];
@@ -3077,6 +3078,7 @@
                                     var data_value_str=data_value[j].toString();
                                     if(data_value_str.indexOf('#')>-1){
                                         var str = data_value_str.split('#');
+
                                         $(selector).css('background-color', '#' + str[1]);
                                         //$(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':<i style="color:'+data_value[j]+'" class="el-icon-star-on"></i></p>');
                                         $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');

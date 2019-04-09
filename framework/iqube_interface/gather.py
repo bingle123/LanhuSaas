@@ -35,18 +35,21 @@ class Gather():
         :param interface_param: url参数
         :return:
         """
+        # 日志数据模拟
         if interface_type == 'log':
             api_address = MEASURES_QUERY_API
             # 模拟数据
             temp_list = [{"zy-shangpin-initial_system-init": "1"}]
-            rule_list = gather_rule.split('\n')
-            result_list = Gather.color_manage(temp_list, rule_list, measures, measures_name)
-            return result_list
+            # 加入颜色展示规则
+            for temp in temp_list:
+                temp[measures + '_' + measures_name] = Gather.color_manage(temp[measures + '_' + measures_name], gather_rule)
+            # 返回统一出来的结果
+            return success_result(temp_list)
         else:
             api_address = MEASURES_QUERY_API
+
         # 此处参数传递应给予改善, 时间需要改为当前时间的前一天
         query_form = api_address + '?' + 'start=1551210759&m=sum:sum:' + measures + '_' + measures_name + interface_param
-
         request_result = requests.get(url=query_form)
         request_code = request_result.status_code
         if request_code == 200:
