@@ -573,7 +573,6 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
                             vm.$message.error('百分比参数配置出错！');
                             return
                         }
-
                     }else {
                         $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
                     }

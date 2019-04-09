@@ -3262,6 +3262,8 @@
                 var content_str='{'+c.replace(/@\n/g,',')+'}';      //加{}
                 var content_json=JSON.parse(content_str);           //转json
                 $("#base_test_text").find('.display').hide();       //隐藏预览区域的dom
+                var preview = []; //拼装预览效果的json串
+                var preview_content = "";
                 for(x in content_json){                             //遍历json
                     $("#base_test_text").find('[type='+x+']').show();   //显示内容存在的key会在预览区域显示
                     let len=$("#base_test_text p").length;
@@ -3271,8 +3273,26 @@
                         if(x==dom_type){//显示内容的key等于dom的type
                             let text=$("#base_test_text p").eq(i).text();
                             $("#base_test_text p").eq(i).html(text.replace(value1,content_json[x]));//将dom的text ：前面的内容替换成显示内容的value
+                            var content = $("#base_test_text p").eq(i).html();
+
+                            if(preview_content.indexOf("[{") == -1){
+                                preview_content += "[{"
+                            }
+                            if(preview_content.length > 2){
+                               preview_content += ","
+                            }
+                            //拼装预览内容
+                            preview_content += "\""+content.split(":")[0]+"\""+":"+"\""+content.split(":")[1]+"\"";
                         }
                     }
+                }
+                //有预览内容执行此操作
+                if(preview_content.length > 1){
+                    preview_content += "}]"
+                    preview.push(preview_content);
+                    alert(preview);
+                    var preview_json = JSON.parse(preview);
+                    this.gather_test_data = preview_json;
                 }
             }
         },
