@@ -701,7 +701,7 @@
                                 <el-form-item label="显示内容" prop="contents" style="width: 96%">
                                         <el-col :span="20">
                                         <el-input v-model="base.contents" placeholder="上证指数:3000  深证指数:3000"
-                                                  @change="content_change"
+                                                  @change="content_modified_change"
                                                   type="textarea"></el-input>
                                         </el-col>
                                     <el-col :span="4">
@@ -1291,9 +1291,21 @@
             }],*/
         },
         methods: {
+            //基本监控项（修改后）显示内容变更时调用的预览变更方法
+            content_modified_change(){
+                this.base_monitor_other_fixed_remove();
+                this.content_change();
+            },
+            //基本监控项显示方式为其他且显示内容为空时显示的单位
+            base_monitor_other_fixed_remove(){
+                if(vm.base.show_rule_type==2 && 0 != $('#other_fixed_show').length){
+                    $('#other_fixed_show').remove();
+                }
+            },
             //基本监控项修改后显示内容重置方法
             base_monitor_show_reset(){
-                $('#other_fixed_show').remove();
+                //如果显示方式为其他，且显示内容为空，移除为空时显示的当前单位
+                this.base_monitor_other_fixed_remove();
                 //base['contents']使用缓存的所有指标值显示内容替换
                 this.base['contents'] = this.base_monitor_show_cache;
                 //更替显示内容
