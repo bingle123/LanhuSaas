@@ -565,18 +565,9 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
                     if(data_key[j]==target_name+'_'+measure_name){        //判断key是否为度量值，是就进行百分百环形渲染，不是则直接喧嚷key：value
                         if(data_value[j].indexOf('%')>-1){                              //判断是否有%，有就添加dom，没有则清空dom并返回
                             $(selector).append('<p>' + data_key[j] + ':</p>');
-                            $(selector).append('<div class="circle-bar"><div class="circle-bar-left"></div><div class="circle-bar-right"></div><div class="mask"><span class="percent">' + data_value[j] + '</span></div></div>');
+                            $(selector).append('<span>' + data_value[j] + '</span>');
                             var percent = parseInt($('.mask :first-child').text());
                             var baseColor = $('.circle-bar').css('background-color');
-                            if( percent<=50 ){
-                                $('.circle-bar-right').css('transform','rotate('+(percent*3.6)+'deg)');
-                            }else {
-                                $('.circle-bar-right').css({
-                                    'transform':'rotate(0deg)',
-                                    'background-color':baseColor
-                                });
-                                $('.circle-bar-left').css('transform','rotate('+((percent-50)*3.6)+'deg)');
-                            }
                         }else {
                             $('[type='+selector_id+']').html('');
                             vm.$message.error('百分比参数配置出错！');
