@@ -670,10 +670,10 @@ function base_cell_collect_test(vm_obj, preview_type,html_obj){
     }).then( (res) => {
         //接口调用返回状态值不为0说明接口调用参数存在问题
         if(0 != res.data.code){
-            this.gather_data_test_flag = false;
+            vm_obj.gather_data_test_flag = false;
         }
         //采集测试的数据缓存到gather_data_test_data变量中
-        this.gather_test_data = res.data.results;
+        vm_obj.gather_test_data = res.data.results;
         var gather_base_test_data=res.data.results;
         if(vm_obj.base_monitor_edit_test_init || vm_obj.base_monitor_add_test_init){
             var content='';
