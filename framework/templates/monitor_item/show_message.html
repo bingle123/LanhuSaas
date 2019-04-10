@@ -2058,6 +2058,17 @@
             },
             //编辑单元
             edit_unit(row) {
+                //拼装预览参数
+                var preview_params ={
+                    id : row.id,
+                    display_rule : row.display_rule,
+                    display_type : row.display_type,
+                    measure_name : row.measure_name,
+                    target_name : row.target_name,
+                    drigging_id : '1' //预览只有一种情况，默认为1就可以了
+                };
+                vm.preview_params = preview_params;
+
                 this.get_db_connections();
                 vm.add_pamas = 1;
                 vm.centerDialogVisible = true;
@@ -2073,6 +2084,7 @@
                 //-----------------------------
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
+                //原始基本监控项
                 if (row.monitor_type === 1) {
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
@@ -2229,7 +2241,7 @@
                     this.monitor_type = 'five';
                     //处理监控项的数据用于修改时的数据回显
                     this.monitor_edit_data_process(row);
-                    //调用参数生成采集测试的预览图像
+                    // 执行采集测试
                     this.base_cell_test();
                 }
             },
@@ -3256,14 +3268,14 @@
                     vm.database_show = true;
                 }
             },
+            // 预览类容编辑
+            // 采集表中保存的是实际调用一体化平台的返回的结果，在场景编排中再根据展示规则还原预览效果
             content_change(){
                 var content=vm.base.contents;                   //显示内容数据
                 var c = content.substring(0,content.lastIndexOf('@'));      //去@符号
                 var content_str='{'+c.replace(/@\n/g,',')+'}';      //加{}
                 var content_json=JSON.parse(content_str);           //转json
                 $("#base_test_text").find('.display').hide();       //隐藏预览区域的dom
-                var preview = []; //拼装预览效果的json串
-                var preview_content = "";
                 for(x in content_json){                             //遍历json
                     $("#base_test_text").find('[type='+x+']').show();   //显示内容存在的key会在预览区域显示
                     let len=$("#base_test_text p").length;
@@ -3274,24 +3286,8 @@
                             let text=$("#base_test_text p").eq(i).text();
                             $("#base_test_text p").eq(i).html(text.replace(value1,content_json[x]));//将dom的text ：前面的内容替换成显示内容的value
                             var content = $("#base_test_text p").eq(i).html();
-
-                            if(preview_content.indexOf("[{") == -1){
-                                preview_content += "[{"
-                            }
-                            if(preview_content.length > 2){
-                               preview_content += ","
-                            }
-                            //拼装预览内容
-                            preview_content += "\""+content.split(":")[0]+"\""+":"+"\""+content.split(":")[1]+"\"";
                         }
                     }
-                }
-                //有预览内容执行此操作
-                if(preview_content.length > 1){
-                    preview_content += "}]"
-                    preview.push(preview_content);
-                    var preview_json = JSON.parse(preview);
-                    this.gather_test_data = preview_json;
                 }
             }
         },
@@ -3313,17 +3309,4 @@
     $(function(){
     })
 </script>
-
-
-<script>
-    setInterval(function () {
-        //flow1_js_start
-        //flow1_js_end
-        // $('.node-wrapper').click(function () {
-        //
-        //     $(this).find(".node-title").attr('contenteditable','plaintext-only');
-        // })
-    }, 1000)
-</script>
-
 </html>
