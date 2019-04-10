@@ -654,3 +654,173 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
     });
 
 }
+
+/**
+ * 基本监控项采集测试组件（监控项与场景编排通用）
+ * @param vm_obj
+ * @param preview_type
+ */
+function base_cell_collect_test(vm_obj, preview_type,html_obj){
+   //获取指标数据之前，预览区显示加载中
+    vm_obj.preview_loading = true;
+    axios({
+        url:'/iqube_interface/gather_base_test/',
+        method:'post',
+        data:vm_obj.base,
+    }).then( (res) => {
+        //接口调用返回状态值不为0说明接口调用参数存在问题
+        if(0 != res.data.code){
+            this.gather_data_test_flag = false;
+        }
+        //采集测试的数据缓存到gather_data_test_data变量中
+        this.gather_test_data = res.data.results;
+        var gather_base_test_data=res.data.results;
+        if(vm_obj.base_monitor_edit_test_init || vm_obj.base_monitor_add_test_init){
+            var content='';
+            for(var x in gather_base_test_data[0]){           //遍历列表的第i个对象
+                content+='"'+x+'":"'+x+'"@\n';
+            }
+            if('0' == vm_obj.add_pamas && vm_obj.base_monitor_add_test_init){
+                vm_obj.base.contents = content;
+                vm_obj.base_monitor_add_test_init = false;
+            }else if('1' == vm_obj.add_pamas && vm_obj.base_monitor_edit_test_init){
+                vm_obj.base_monitor_edit_test_init = false;
+            }
+            vm_obj.base_monitor_show_cache = content;
+        }
+        $(html_obj).html('');                  //清空dom
+        if(vm_obj.base.show_rule_type==0){
+            for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
+                let selector='.div'+i;                                  //jquery选择器
+                let data_key=[];                            //对象key的集合
+                let data_value=[];                            //对象value的集合
+                for(k in gather_base_test_data[i]){           //遍历列表的第i个对象
+                    data_key.push(k);
+                    data_value.push(gather_base_test_data[i][k]);
+                }
+                $(html_obj).append('<div class="div'+i+'" style="display: inline-block;"></div>');//创建一个对应的dom
+                for(let j=0;j<data_key.length;j++){
+                    if(data_key[j]==vm_obj.base.measures+'_'+vm_obj.base.measures_name){        //判断key是否为度量值，是就进行百分百环形渲染，不是则直接喧嚷key：value
+                        if(data_value[j].indexOf('%')>-1){                              //判断是否有%，有就添加dom，没有则清空dom并返回
+                            $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+ '</p>');
+                        }else {
+                            $(html_obj).html('');
+                            vm_obj.$message.error('百分比参数配置出错！');
+                            return
+                        }
+                    }else {
+                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
+                    }
+                }
+            }
+        }
+        if(vm_obj.base.show_rule_type==1){
+            for(let i=0;i<gather_base_test_data.length;i++){
+                let selector='.div'+i;
+                let data_key=[];
+                let data_value=[];
+                for(k in gather_base_test_data[i]){
+                    data_key.push(k);
+                    data_value.push(gather_base_test_data[i][k]);
+                }
+                $(html_obj).append('<div class="div'+i+'" style="width:33%;display: inline-block"></div>');
+                for(let j=0;j<data_key.length;j++){
+                    if(data_key[j]==vm_obj.base.measures+'_'+vm_obj.base.measures_name){
+                        var data_value_str=data_value[j].toString();
+                        if(data_value_str.indexOf('#')>-1){
+                            var str = data_value_str.split('#');
+                            $(selector).css('background-color', '#' + str[1]);
+                            $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');
+                        }else {
+                            $(html_obj).html('');
+                            vm_obj.$message.error('颜色比参数配置出错！');
+                            return
+                        }
+                    }else {
+                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
+                    }
+                }
+            }
+        }
+        if(vm_obj.base.show_rule_type==2){
+            for(let i=0;i<gather_base_test_data.length;i++){
+                let selector='.div'+i;
+                let data_key=[];
+                let data_value=[];
+                for(k in gather_base_test_data[i]){
+                    data_key.push(k);
+                    data_value.push(gather_base_test_data[i][k]);
+                }
+                $(html_obj).append('<div class="div'+i+'" style="width:33%;display: inline-block;"></div>');
+                var selected_measure = null;
+                for(let j=0;j<data_key.length;j++){
+                    if(data_key[j]==vm_obj.base.measures+'_'+vm_obj.base.measures_name){
+                        var data_value_str=data_value[j].toString();
+                        if(data_value_str.indexOf('@')>-1){
+                            var str = data_value_str.split('@');
+                            str[0] = str[0] + str[1];
+                            selected_measure = str[1];
+                            $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');
+                            $(selector).append('<p id="other_fixed_show" style="display: none">'+selected_measure+'</p>');
+                        }else {
+                            $(html_obj).html('');
+                            vm_obj.$message.error('其他参数配置出错！');
+                            return
+                        }
+                    }else{
+                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
+                    }
+                }
+                //当显示内容为空的情况下
+                if('' == vm_obj.base['contents'].replace(/^\s+|\s+$/g,"")){
+                    $('#other_fixed_show').show();
+                }
+            }
+        }
+        //已获取到指标数据预览区加载图标取消
+        vm_obj.preview_loading = false;
+        //预览内容变更操作
+        collection_content_change(vm_obj,html_obj);
+        //字体大小变更操作
+        collection_base_size(vm_obj,html_obj);
+        //高宽变更操作
+        collection_base_height_change(vm_obj,html_obj);
+        collection_base_width_change(vm_obj,html_obj);
+        vm_obj.gather_data_test_flag = true;
+
+    }).catch(function (e) {
+        //接口调用失败，采集标记位置false
+        vm_obj.gather_data_test_flag = false;
+        vm_obj.$message.error('采集失败！');
+        $('#base_test_text').html('');
+    });
+}
+function collection_content_change(vm_obj,html_obj){
+    var content=vm_obj.base.contents;                   //显示内容数据
+    var content_str = content.substring(0,content.lastIndexOf('@')); //去@符号
+    var content_obj = '{'+content_str.replace(/@\n/g,',')+'}';      //加{}
+    var content_json = JSON.parse(content_obj);           //转json
+    $(html_obj).find('.display').hide();       //隐藏预览区域的dom
+    for(x in content_json){                             //遍历json
+        $(html_obj).find('[type='+x+']').show();   //显示内容存在的key会在预览区域显示
+        let len=$(html_obj+" p").length;
+        for(let i=0;i<len;i++){
+            let dom_type=$(html_obj+" p").eq(i).attr('type');//获取dom的type
+            let value1=$(html_obj+" p").eq(i).text().split(':')[0];//获取dom的text ：前面的内容
+            if(x==dom_type){//显示内容的key等于dom的type
+                let text=$(html_obj+" p").eq(i).text();
+                $(html_obj+" p").eq(i).html(text.replace(value1,content_json[x]));//将dom的text ：前面的内容替换成显示内容的value
+                var content = $(html_obj+" p").eq(i).html();
+            }
+        }
+    }
+}
+function collection_base_size(vm_obj,html_obj){
+    $(html_obj).css('font-size', vm_obj.base.font_size)
+}
+function collection_base_height_change(vm_obj,html_obj){
+    $(html_obj).children().css('height', vm_obj.base.height);
+}
+function collection_base_width_change(vm_obj,html_obj){
+    $(html_obj).children().css('width', vm_obj.base.width);
+}
