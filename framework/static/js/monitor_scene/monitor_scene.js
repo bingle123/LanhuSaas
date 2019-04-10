@@ -633,13 +633,14 @@ $(function () {
                 e.stopPropagation();
                 $(this).parent().parent().remove();
                 //找出连线并删除
-                id = $(this).parent().parent()[0].id
+                id = $(this).parent().parent()[0].attributes.name.value
                 for (var i = 0; i < vm.lines.length; i++) {
                     if (vm.lines[i].pid == id || vm.lines[i].nid == id) {
                         vm.lines.splice(i, 1)
                     }
                 }
                 $(this).data().next_item = 0;
+                vm.line_flag=0
             })
             $(this).find('.line').on('click', function (e) {
                 e.stopPropagation();
@@ -780,8 +781,16 @@ $(function () {
                 ctx.beginPath()
                 ctx.moveTo(pre_x, pre_y);
                 ctx.lineTo(now_x, now_y);
-                ctx.lineWidth=5
-                ctx.strokeStyle="rgb(2,100,30)";
+                var arrow_length=20
+                var arrow_angle=60
+                var up=arrow_length*(Math.sin(arrow_angle*Math.PI/180))
+                var left=arrow_length*(Math.cos(arrow_angle*Math.PI/180))
+                ctx.moveTo(now_x,now_y)
+                ctx.lineTo(now_x-left,now_y+up)
+                ctx.moveTo(now_x,now_y)
+                ctx.lineTo(now_x-left,now_y-up)
+                ctx.lineWidth=3
+                ctx.strokeStyle="grey"
                 ctx.stroke();
                 ctx.closePath()
             }
@@ -793,9 +802,9 @@ $(function () {
             vm.line_flag = 1;
             id = item_info.id
             vm.pre_id=$('#' + id).attr('name')
-        } else if (vm.line_flag == 1) {
+        } else{
             id = item_info.id
-            $("#" + vm.pre_id).data().next_item = $('#' + id).attr('name')
+            $("[name='"+vm.pre_id+"']").data().next_item = $('#' + id).attr('name')
             line = {
                 'pid': vm.pre_id,
                 'nid': $('#' + id).attr('name')
