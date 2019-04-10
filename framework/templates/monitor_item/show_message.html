@@ -2058,17 +2058,6 @@
             },
             //编辑单元
             edit_unit(row) {
-                //拼装预览参数
-                var preview_params ={
-                    id : row.id,
-                    display_rule : row.display_rule,
-                    display_type : row.display_type,
-                    measure_name : row.measure_name,
-                    target_name : row.target_name,
-                    drigging_id : '1' //预览只有一种情况，默认为1就可以了
-                };
-                vm.preview_params = preview_params;
-
                 this.get_db_connections();
                 vm.add_pamas = 1;
                 vm.centerDialogVisible = true;
@@ -3283,6 +3272,7 @@
                         let dom_type=$("#base_test_text p").eq(i).attr('type');//获取dom的type
                         let value1=$("#base_test_text p").eq(i).text().split(':')[0];//获取dom的text ：前面的内容
                         if(x==dom_type){//显示内容的key等于dom的type
+
                             let text=$("#base_test_text p").eq(i).text();
                             $("#base_test_text p").eq(i).html(text.replace(value1,content_json[x]));//将dom的text ：前面的内容替换成显示内容的value
                             var content = $("#base_test_text p").eq(i).html();
