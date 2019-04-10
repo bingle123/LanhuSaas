@@ -539,17 +539,31 @@ function flow_monitor(value1,value2){
                 })
 
             }
-//基本监控项编排展示
-function test_monitor(id,display_rule,display_type,measure_name,target_name,drigging_id){
+
+/**
+ * 基本监控项预览与编排展示
+ * @param id
+ * @param display_rule
+ * @param display_type
+ * @param measure_name
+ * @param target_name
+ * @param drigging_id
+ * @param is_preview  是否预览
+ */
+function test_monitor(id,display_rule,display_type,measure_name,target_name,drigging_id,is_preview){
     var selector_id='basic'+id
+    //取得基本监控项采集数据
     $.get("/monitor_scene/get_basic_data/"+id,function (res){
         for(i in res){
             key=i
         }
+        //将采集结果转换为json
         var gather_base_test_data=JSON.parse(res[key]);
-        $('[type='+selector_id+']').html("");                  //清空dom
-        $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
-        $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
+        if(!is_preview){
+            $('[type='+selector_id+']').html("");                  //清空dom
+            $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
+            $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
+        }
         //按百分比展示
         if(display_type ==0){
             for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
