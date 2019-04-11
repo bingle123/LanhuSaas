@@ -541,120 +541,7 @@ function flow_monitor(value1,value2){
             }
 
 /**
- * 基本监控项预览与编排展示
- * @param id
- * @param display_rule
- * @param display_type
- * @param measure_name
- * @param target_name
- * @param drigging_id
- * @param is_preview  是否预览
- */
-function test_monitor(id,display_rule,display_type,measure_name,target_name,drigging_id){
-    var selector_id='basic'+id
-    //取得基本监控项采集数据
-    $.get("/monitor_scene/get_basic_data/"+id,function (res){
-        for(i in res){
-            key=i
-        }
-        //将采集结果转换为json
-        var gather_base_test_data=JSON.parse(res[key]);
-        $('[type='+selector_id+']').html("");                  //清空dom
-        $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
-        $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
-        //按百分比展示
-        if(display_type ==0){
-            for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
-                let selector='.div'+drigging_id+i;                                  //jquery选择器
-                let data_key=[];                            //对象key的集合
-                let data_value=[];                            //对象value的集合
-                for(k in gather_base_test_data[i]){           //遍历列表的第i个对象
-                    data_key.push(k);
-                    data_value.push(gather_base_test_data[i][k]);
-                }
-                $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'" style="width:33%;display: inline-block;"></div>');//创建一个对应的dom
-                for(let j=0;j<data_key.length;j++){
-                    if(data_key[j]==target_name+'_'+measure_name){        //判断key是否为度量值，是就进行百分百环形渲染，不是则直接喧嚷key：value
-                        if(data_value[j].indexOf('%')>-1){                              //判断是否有%，有就添加dom，没有则清空dom并返回
-                            $(selector).append('<p>' + data_key[j] + ':</p>');
-                            $(selector).append('<span>' + data_value[j] + '</span>');
-                            var percent = parseInt($('.mask :first-child').text());
-                            var baseColor = $('.circle-bar').css('background-color');
-                        }else {
-                            $('[type='+selector_id+']').html('');
-                            vm.$message.error('百分比参数配置出错！');
-                            return
-                        }
-                    }else {
-                        $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
-                    }
-                }
-            }
-        }
-        //按颜色展示
-        if(display_type==1){
-            for(let i=0;i<gather_base_test_data.length;i++){
-                let selector='.div'+drigging_id+i;
-                let data_key=[];
-                let data_value=[];
-                for(k in gather_base_test_data[i]){
-                    data_key.push(k);
-                    data_value.push(gather_base_test_data[i][k]);
-                }
-                $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'" style="width:33%;display: inline-block;"></div>');
-                for(let j=0;j<data_key.length;j++){
-                    if(data_key[j]==target_name+'_'+measure_name){
-                        var data_value_str=data_value[j].toString();
-                        if(data_value_str.indexOf('#')>-1){
-                            $(selector).append('<p style="background-color:'+data_value[j]+';width: 100%;">'+data_key[j]+'</p>');
-                        }else {
-                            $('#base_test_text').html('');
-                            vm.$message.error('颜色比参数配置出错！');
-                            return
-                        }
-                    }else {
-                        $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
-                    }
-                }
-            }
-        }
-        //其它展示类型
-        if(display_type==2){
-            for(let i=0;i<gather_base_test_data.length;i++){
-                let selector='.div'+drigging_id+i;
-                let data_key=[];
-                let data_value=[];
-                for(k in gather_base_test_data[i]){
-                    data_key.push(k);
-                    data_value.push(gather_base_test_data[i][k]);
-                }
-                $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'" style="width:33%;display: inline-block;"></div>');
-                for(let j=0;j<data_key.length;j++){
-                    if(data_key[j]==target_name+'_'+measure_name){
-                        if(data_value[j].indexOf('ms')>-1){
-                            console.log(data_value[j])
-                            $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
-                        }else {
-                            vm.$message.error('其他参数配置出错！');
-                            $('#base_test_text').html('');
-                            return
-                        }
-
-                    }else {
-                        $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
-                    }
-                }
-            }
-        }
-    }).catch(function (e) {
-        vm.$message.error('采集失败！');
-        $('[type='+selector_id+']').html('');
-    });
-
-}
-
-/**
- * 基本监控项预览测试组件（监控项与场景编排通用）
+ * 基本监控项预览与编排展示组件（监控项与场景编排通用）
  * @param vm_obj
  * @param preview_type 预览类型
  * @param html_obj
@@ -785,9 +672,107 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
     if("monitor_scene" == preview_type){
         //取得当前的监控项信息
         var current_monitor_item = vm_obj.current_monitor_item;
-        //执行监控项展示
-        test_monitor(current_monitor_item.id,current_monitor_item.display_rule,
-            current_monitor_item.display_type,current_monitor_item.target_name,vm_obj.drigging_id);
+
+        var selector_id='basic'+current_monitor_item.id;
+        var drigging_id = vm_obj.drigging_id;
+        //从采集表获取监控项的采集数据
+        $.get("/monitor_scene/get_basic_data/"+current_monitor_item.id,function (res){
+            for(i in res){
+                key=i
+            }
+            //将采集结果转换为json
+            var gather_base_test_data=JSON.parse(res[key]);
+            $('[type='+selector_id+']').html("");                  //清空dom
+            $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
+            $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
+            //按百分比展示
+            if(current_monitor_item.display_type ==0){
+                for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
+                    let selector='.div'+drigging_id+i;                                  //jquery选择器
+                    let data_key=[];                            //对象key的集合
+                    let data_value=[];                            //对象value的集合
+                    for(k in gather_base_test_data[i]){           //遍历列表的第i个对象
+                        data_key.push(k);
+                        data_value.push(gather_base_test_data[i][k]);
+                    }
+                    $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'" style="width:33%;display: inline-block;"></div>');//创建一个对应的dom
+                    for(let j=0;j<data_key.length;j++){
+                        if(data_key[j]==current_monitor_item.target_name+'_'+current_monitor_item.measure_name){        //判断key是否为度量值，是就进行百分百环形渲染，不是则直接喧嚷key：value
+                            if(data_value[j].indexOf('%')>-1){                              //判断是否有%，有就添加dom，没有则清空dom并返回
+                                $(selector).append('<p>' + data_key[j] + ':</p>');
+                                $(selector).append('<span>' + data_value[j] + '</span>');
+                                var percent = parseInt($('.mask :first-child').text());
+                                var baseColor = $('.circle-bar').css('background-color');
+                            }else {
+                                $('[type='+selector_id+']').html('');
+                                vm.$message.error('百分比参数配置出错！');
+                                return
+                            }
+                        }else {
+                            $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
+                        }
+                    }
+                }
+            }
+            //按颜色展示
+            if(current_monitor_item.display_type == 1){
+                for(let i=0;i<gather_base_test_data.length;i++){
+                    let selector='.div'+drigging_id+i;
+                    let data_key=[];
+                    let data_value=[];
+                    for(k in gather_base_test_data[i]){
+                        data_key.push(k);
+                        data_value.push(gather_base_test_data[i][k]);
+                    }
+                    $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'" style="width:33%;display: inline-block;"></div>');
+                    for(let j=0;j<data_key.length;j++){
+                        if(data_key[j]==current_monitor_item.target_name+'_'+current_monitor_item.measure_name){
+                            var data_value_str=data_value[j].toString();
+                            if(data_value_str.indexOf('#')>-1){
+                                $(selector).append('<p style="background-color:'+data_value[j]+';width: 100%;">'+data_key[j]+'</p>');
+                            }else {
+                                $('#base_test_text').html('');
+                                vm.$message.error('颜色比参数配置出错！');
+                                return
+                            }
+                        }else {
+                            $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
+                        }
+                    }
+                }
+            }
+            //其它展示类型
+            if(current_monitor_item.display_type==2){
+                for(let i=0;i<gather_base_test_data.length;i++){
+                    let selector='.div'+drigging_id+i;
+                    let data_key=[];
+                    let data_value=[];
+                    for(k in gather_base_test_data[i]){
+                        data_key.push(k);
+                        data_value.push(gather_base_test_data[i][k]);
+                    }
+                    $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'" style="width:33%;display: inline-block;"></div>');
+                    for(let j=0;j<data_key.length;j++){
+                        if(data_key[j]==current_monitor_item.target_name+'_'+current_monitor_item.measure_name){
+                            if(data_value[j].indexOf('ms')>-1){
+                                console.log(data_value[j])
+                                $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
+                            }else {
+                                vm.$message.error('其他参数配置出错！');
+                                $('#base_test_text').html('');
+                                return
+                            }
+
+                        }else {
+                            $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
+                        }
+                    }
+                }
+            }
+        }).catch(function (e) {
+            vm.$message.error('采集失败！');
+            $('[type='+selector_id+']').html('');
+        });
     }
 }
 
