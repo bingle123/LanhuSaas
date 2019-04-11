@@ -550,7 +550,7 @@ function flow_monitor(value1,value2){
  * @param drigging_id
  * @param is_preview  是否预览
  */
-function test_monitor(id,display_rule,display_type,measure_name,target_name,drigging_id,is_preview){
+function test_monitor(id,display_rule,display_type,measure_name,target_name,drigging_id){
     var selector_id='basic'+id
     //取得基本监控项采集数据
     $.get("/monitor_scene/get_basic_data/"+id,function (res){
@@ -559,11 +559,9 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
         }
         //将采集结果转换为json
         var gather_base_test_data=JSON.parse(res[key]);
-        if(!is_preview){
-            $('[type='+selector_id+']').html("");                  //清空dom
-            $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
-            $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
-        }
+        $('[type='+selector_id+']').html("");                  //清空dom
+        $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
+        $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
         //按百分比展示
         if(display_type ==0){
             for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
@@ -658,13 +656,19 @@ function test_monitor(id,display_rule,display_type,measure_name,target_name,drig
 /**
  * 基本监控项采集测试组件（监控项与场景编排通用）
  * @param vm_obj
- * @param preview_type
+ * @param preview_type 预览类型
+ * @param html_obj
  */
 function base_cell_collect_test(vm_obj, preview_type,html_obj){
-   //获取指标数据之前，预览区显示加载中
+    var url = null;
+    //监控项预览
+    if("monitor_item" == preview_type){
+        url = "/iqube_interface/gather_base_test/";
+    }
+    //获取指标数据之前，预览区显示加载中
     vm_obj.preview_loading = true;
     axios({
-        url:'/iqube_interface/gather_base_test/',
+        url:url,
         method:'post',
         data:vm_obj.base,
     }).then( (res) => {
@@ -795,6 +799,12 @@ function base_cell_collect_test(vm_obj, preview_type,html_obj){
         $('#base_test_text').html('');
     });
 }
+
+/**
+ * 设置预览区域的展示内容
+ * @param vm_obj
+ * @param html_obj
+ */
 function collection_content_change(vm_obj,html_obj){
     var content=vm_obj.base.contents;                   //显示内容数据
     var content_str = content.substring(0,content.lastIndexOf('@')); //去@符号
@@ -815,12 +825,30 @@ function collection_content_change(vm_obj,html_obj){
         }
     }
 }
+
+/**
+ * 设置预览区域字体
+ * @param vm_obj
+ * @param html_obj
+ */
 function collection_base_size(vm_obj,html_obj){
     $(html_obj).css('font-size', vm_obj.base.font_size)
 }
+
+/**
+ * 设置预览区域高度
+ * @param vm_obj
+ * @param html_obj
+ */
 function collection_base_height_change(vm_obj,html_obj){
     $(html_obj).children().css('height', vm_obj.base.height);
 }
+
+/**
+ * 设置预览区域宽度
+ * @param vm_obj
+ * @param html_obj
+ */
 function collection_base_width_change(vm_obj,html_obj){
     $(html_obj).children().css('width', vm_obj.base.width);
 }
