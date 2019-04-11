@@ -814,7 +814,7 @@ function base_cell_collect_test(vm_obj, preview_type,html_obj){
 }
 
 /**
- * 设置预览区域的展示内容
+ * 设置预览区域的展示内容(根据“展示规则”和“显示内容”显示预览效果)
  * @param vm_obj
  * @param html_obj
  */
