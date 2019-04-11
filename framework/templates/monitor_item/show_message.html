@@ -11,6 +11,7 @@
     <!--axios.min.js--vue.js的ajax支持-->
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
+    <script src="${STATIC_URL}js/csrftoken.js"></script>
     <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
 
@@ -1362,6 +1363,28 @@
             }],*/
         },
         methods: {
+            //获取采集测试的结果，同步调用
+            get_gather_test(){
+                $.ajax({
+                    type: "POST",
+                    data : JSON.stringify(vm.base),
+                    dataType: "JSON",
+                    async: false,
+                    url: "/iqube_interface/gather_base_test/",
+                    success: function(data) {
+                         if(0 != data.code){
+                            vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
+                            return;
+                         }
+                          //采集测试的数据缓存到gather_data_test_data变量中
+                         vm.gather_test_data = data.results;
+                    },
+                    error: function(error){
+                        vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
+                        return;
+                    }
+                });
+            },
             //基本监控项（修改后）显示内容变更时调用的预览变更方法
             content_modified_change(){
                 this.base_monitor_other_fixed_status();
@@ -2358,24 +2381,12 @@
                         this.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
                         vm.gather_data_test_flag = null;
                     }else if(null == this.gather_data_test_flag){
-                        axios({
-                            url:'${SITE_URL}iqube_interface/gather_base_test/',
-                            method:'post',
-                            data:vm.base,
-                        }).then((res) => {
-                            if(0 != res.data.code){
-                                vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
-                                return;
-                            }
-                            //采集测试的数据缓存到gather_data_test_data变量中
-                            this.gather_test_data = res.data.results;
-                            //基本监控项的数据处理
-                            vm.base_monitor_data_process();
-                            //上传监控项数据至服务器保存
-                            vm.monitor_data_save(vm.unit_id, flow);
-                        }).catch(function (e) {
-                            vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
-                        });
+                        //获取采集测试数据，调用同步服务
+                        vm.get_gather_test();
+                        //基本监控项的数据处理
+                        vm.base_monitor_data_process();
+                        //上传监控项数据至服务器保存
+                        vm.monitor_data_save(vm.unit_id, flow);
                     }else{
                         //基本监控项的数据处理
                         vm.base_monitor_data_process();
@@ -3074,8 +3085,10 @@
             },
             //采集测试方法
             base_cell_test(){
-                //预览采集，调用一体化服务
-                base_cell_collect_test(vm ,'monitor_item',"#base_test_text");
+                //同步获取采集数据
+                vm.get_gather_test();
+                //预览采集，调用预览组件
+                preview_monitor_item(vm ,'monitor_item',"#base_test_text");
             },
             change_data_sources(value){
                 if(value == 9){

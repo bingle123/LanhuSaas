@@ -480,10 +480,9 @@ $(function () {
              */
             add_base_monitor(i) {
                 $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" type=\"basic' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"transform: scale(' + vm.scale + ')\"></div>');
-                //test_monitor(i.id, i.display_rule, i.display_type, i.measure_name, i.target_name, vm.drigging_id);
                 //把当前监控项的内容赋值给vm对象，场景编排时，需要将编排的监控项根据展示规则还原成预览的效果
                 vm.current_monitor_item = i;
-                base_cell_collect_test(vm ,"monitor_scene",".monitor_content");
+                preview_monitor_item(vm ,"monitor_scene",".monitor_content");
                 vm.drigging_id++ ;
             },
             add_chart_monitor(i) {
