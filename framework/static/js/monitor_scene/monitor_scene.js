@@ -474,10 +474,17 @@ $(function () {
                     vm.$message.error('获取数据失败！');
                 });
             },
+            /**
+             * 添加基本监控项
+             * @param i
+             */
             add_base_monitor(i) {
                 $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" type=\"basic' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"transform: scale(' + vm.scale + ')\"></div>');
-                test_monitor(i.id, i.display_rule, i.display_type, i.measure_name, i.target_name, vm.drigging_id);
-                vm.drigging_id++
+                //test_monitor(i.id, i.display_rule, i.display_type, i.measure_name, i.target_name, vm.drigging_id);
+                //把当前监控项的内容赋值给vm对象，场景编排时，需要将编排的监控项根据展示规则还原成预览的效果
+                vm.current_monitor_item = i;
+                base_cell_collect_test(vm ,"monitor_scene",".monitor_content");
+                vm.drigging_id++ ;
             },
             add_chart_monitor(i) {
                 $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"height:' + i.height + 'px;position: absolute;width:' + i.width + 'pxtransform: scale(' + vm.scale + ')\"><div id=\"chart' + i.id + '\" style=\"background:beige;height:' + (i.height - 2) + 'px;width:' + (i.width - 2) + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>' + vm.sizeStrFun() + '</div></div>')

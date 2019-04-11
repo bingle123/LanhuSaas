@@ -787,7 +787,7 @@ function base_cell_collect_test(vm_obj, preview_type,html_obj){
             }
             //已获取到指标数据预览区加载图标取消
             vm_obj.preview_loading = false;
-            //预览内容变更操作
+            //预览内容变更操作(根据“展示规则”和“显示内容”显示预览效果)
             collection_content_change(vm_obj,html_obj);
             //字体大小变更操作
             collection_base_size(vm_obj,html_obj);
@@ -802,6 +802,14 @@ function base_cell_collect_test(vm_obj, preview_type,html_obj){
             vm_obj.$message.error('采集失败！');
             $('#base_test_text').html('');
         });
+    }
+    //场景编排监控项展示
+    if("monitor_scene" == preview_type){
+        //取得当前的监控项信息
+        var current_monitor_item = vm_obj.current_monitor_item;
+        //执行监控项展示
+        test_monitor(current_monitor_item.id,current_monitor_item.display_rule,
+            current_monitor_item.display_type,current_monitor_item.target_name,vm_obj.drigging_id);
     }
 }
 
