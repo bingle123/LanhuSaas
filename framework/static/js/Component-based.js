@@ -740,9 +740,12 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                                 }
                             }
                         }else{
-                            data_org.push(k);
-                            data_key.push(k);
-                            data_value.push(gather_base_test_data[i][k]);
+                            //展示内容为空，只放度量值
+                            if(gather_base_test_data[i][k].indexOf('#')>-1){
+                                data_org.push(k);
+                                data_key.push(k);
+                                data_value.push(gather_base_test_data[i][k]);
+                            }
                         }
                     }
                     var bgcolor = null;
@@ -774,18 +777,38 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
             if(current_monitor_item.display_type==2){
                 for(let i=0;i<gather_base_test_data.length;i++){
                     let selector='.div'+drigging_id+i;
-                    let data_key=[];
+                    let data_org = []
+                    let data_key = [];
                     let data_value=[];
                     for(k in gather_base_test_data[i]){
-                        data_key.push(k);
-                        data_value.push(gather_base_test_data[i][k]);
+                        //其它展示可以没有值
+                        if(!isEmptyObject(content_json)){
+                            for(x in content_json){
+                                if(x == k){
+                                    data_org.push(k)
+                                    data_key.push(content_json[x]);
+                                    data_value.push(gather_base_test_data[i][k]);
+                                }
+                            }
+                        }else{
+                            //展示内容为空，只放度量值
+                            if(gather_base_test_data[i][k].toString().indexOf('@')>-1){
+                                data_org.push(k);
+                                data_key.push(k);
+                                data_value.push(gather_base_test_data[i][k]);
+                            }
+                        }
                     }
-                    $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'" style="width:33%;display: inline-block;"></div>');
+                    $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'"></div>');
                     for(let j=0;j<data_key.length;j++){
-                        if(data_key[j]==current_monitor_item.target_name+'_'+current_monitor_item.measure_name){
-                            if(data_value[j].indexOf('ms')>-1){
-                                console.log(data_value[j])
-                                $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
+                        if(data_org[j]==current_monitor_item.target_name+'_'+current_monitor_item.measure_name){
+                            if(data_value[j].indexOf('@')>-1){
+                                //颜色展示可以没有值
+                                if(!isEmptyObject(content_json)){
+                                    $(selector).append('<p>'+data_key[j]+':'+data_value[j].split("@")[0]+'</p>');
+                                }else{
+                                    $(selector).append('<p >'+data_value[j].split("@")[1]+'</p>');
+                                }
                             }else {
                                 vm.$message.error('其他参数配置出错！');
                                 $('#base_test_text').html('');

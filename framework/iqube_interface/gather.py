@@ -113,7 +113,7 @@ class Gather():
                 except Exception as e:
                     print e
                     return error_result(u'异常'+str(e))
-            # 显示单位
+            # 其它展示
             elif show_rule_type == '2':
                 try:
                     for i in temp_list:
