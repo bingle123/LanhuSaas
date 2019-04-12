@@ -741,7 +741,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                             }
                         }else{
                             //展示内容为空，只放度量值
-                            if(gather_base_test_data[i][k].indexOf('#')>-1){
+                            if(gather_base_test_data[i][k].toString().indexOf('#')>-1){
                                 data_org.push(k);
                                 data_key.push(k);
                                 data_value.push(gather_base_test_data[i][k]);
