@@ -757,7 +757,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                                 return
                             }
                         }else {
-                            $(selector).append('<p style="background-color:#'+data_value[j].split("#")[1]+';width: 100%;">\'+data_key[j]+\'</p>');
+                            $(selector).append('<p style="background-color:#'+data_value[j].split("#")[1]+';width: 100%;">'+data_key[j]+'</p>');
                         }
                     }
                 }
