@@ -576,7 +576,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                     data_key.push(k);
                     data_value.push(gather_base_test_data[i][k]);
                 }
-                $(html_obj).append('<div class="div'+i+'" style="display: inline-block;"></div>');//创建一个对应的dom
+                $(html_obj).append('<div class="div'+i+'" style="border: 1px dashed #000;"></div>');//创建一个对应的dom
                 for(let j=0;j<data_key.length;j++){
                     if(data_key[j]==vm_obj.base.measures+'_'+vm_obj.base.measures_name){        //判断key是否为度量值，是就进行百分百环形渲染，不是则直接喧嚷key：value
                         if(data_value[j].indexOf('%')>-1){                              //判断是否有%，有就添加dom，没有则清空dom并返回
@@ -602,7 +602,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                     data_key.push(k);
                     data_value.push(gather_base_test_data[i][k]);
                 }
-                $(html_obj).append('<div class="div'+i+'" style="width:33%;display: inline-block"></div>');
+                $(html_obj).append('<div class="div'+i+'" style="border: 1px dashed #000;"></div>');
                 for(let j=0;j<data_key.length;j++){
                     if(data_key[j]==vm_obj.base.measures+'_'+vm_obj.base.measures_name){
                         var data_value_str=data_value[j].toString();
@@ -672,11 +672,15 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
     if("monitor_scene" == preview_type){
         //取得当前的监控项信息
         var current_monitor_item = vm_obj.current_monitor_item;
-
         var selector_id='basic'+current_monitor_item.id;
         var drigging_id = vm_obj.drigging_id;
+        var content = current_monitor_item.contents;                   //显示内容数据
+        var content_str = content.substring(0,content.lastIndexOf('@')); //去@符号
+        var content_obj = '{'+content_str.replace(/@\n/g,',')+'}';      //加{}
+        var content_json = JSON.parse(content_obj);
+        var selector = null;
         //从采集表获取监控项的采集数据
-        $.get("/monitor_scene/get_basic_data/"+current_monitor_item.id,function (res){
+        $.get("/monitor_scene/get_basic_data/"+current_monitor_item.id, function (res){
             for(i in res){
                 key=i
             }
@@ -688,21 +692,23 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
             //按百分比展示
             if(current_monitor_item.display_type ==0){
                 for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
-                    let selector='.div'+drigging_id+i;                                  //jquery选择器
+                    selector = '.div'+drigging_id+i;                                  //jquery选择器
                     let data_key=[];                            //对象key的集合
                     let data_value=[];                            //对象value的集合
                     for(k in gather_base_test_data[i]){           //遍历列表的第i个对象
-                        data_key.push(k);
-                        data_value.push(gather_base_test_data[i][k]);
+                        //根据显示规则展示编排预览效果,百分比展示一定会有一个值，否则异常
+                        for(x in content_json){
+                            if(x == k){
+                                data_key.push(content_json[x]);
+                                data_value.push(gather_base_test_data[i][k]);
+                            }
+                        }
                     }
-                    $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'" style="width:33%;display: inline-block;"></div>');//创建一个对应的dom
+                    $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'" style="border: 1px dashed #000;"></div>');//创建一个对应的dom
                     for(let j=0;j<data_key.length;j++){
                         if(data_key[j]==current_monitor_item.target_name+'_'+current_monitor_item.measure_name){        //判断key是否为度量值，是就进行百分百环形渲染，不是则直接喧嚷key：value
                             if(data_value[j].indexOf('%')>-1){                              //判断是否有%，有就添加dom，没有则清空dom并返回
-                                $(selector).append('<p>' + data_key[j] + ':</p>');
-                                $(selector).append('<span>' + data_value[j] + '</span>');
-                                var percent = parseInt($('.mask :first-child').text());
-                                var baseColor = $('.circle-bar').css('background-color');
+                                $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
                             }else {
                                 $('[type='+selector_id+']').html('');
                                 vm.$message.error('百分比参数配置出错！');
@@ -721,15 +727,30 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                     let data_key=[];
                     let data_value=[];
                     for(k in gather_base_test_data[i]){
-                        data_key.push(k);
-                        data_value.push(gather_base_test_data[i][k]);
+                        //颜色展示可以没有值
+                        if(content_json && content_json.length > 0){
+                            for(x in content_json){
+                                if(x == k){
+                                    data_key.push(content_json[x]);
+                                    data_value.push(gather_base_test_data[i][k]);
+                                }
+                            }
+                        }else{
+                            data_key.push(k);
+                            data_value.push(gather_base_test_data[i][k]);
+                        }
                     }
-                    $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'" style="width:33%;display: inline-block;"></div>');
+                    $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'" style="border: 1px dashed #000;"></div>');
                     for(let j=0;j<data_key.length;j++){
                         if(data_key[j]==current_monitor_item.target_name+'_'+current_monitor_item.measure_name){
                             var data_value_str=data_value[j].toString();
                             if(data_value_str.indexOf('#')>-1){
-                                $(selector).append('<p style="background-color:'+data_value[j]+';width: 100%;">'+data_key[j]+'</p>');
+                                //颜色展示可以没有值
+                                if(content_json && content_json.length > 0){
+                                    $(selector).append('<p style="background-color:#'+data_value[j].split("#")[1]+';width: 100%;">'+data_key[j]+'</p>');
+                                }else{
+                                    $(selector).append('<p style="background-color:#'+data_value[j].split("#")[1]+';width: 100%;">&nbsp;</p>');
+                                }
                             }else {
                                 $('#base_test_text').html('');
                                 vm.$message.error('颜色比参数配置出错！');
@@ -769,9 +790,17 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                     }
                 }
             }
+            vm_obj.font_size = current_monitor_item.font_size;
+            vm_obj.height = current_monitor_item.height;
+            vm_obj.width = current_monitor_item.width;
+            //字体大小变更操作
+            collection_base_size(vm_obj,'[type='+selector_id+']');
+            //高宽变更操作
+            collection_base_height_change(vm_obj,'[type='+selector_id+']');
+            collection_base_width_change(vm_obj,'[type='+selector_id+']');
         }).catch(function (e) {
-            vm.$message.error('采集失败！');
-            $('[type='+selector_id+']').html('');
+                vm.$message.error('采集失败！');
+                $('[type='+selector_id+']').html('');
         });
     }
 }
@@ -808,7 +837,13 @@ function collection_content_change(vm_obj,html_obj){
  * @param html_obj
  */
 function collection_base_size(vm_obj,html_obj){
-    $(html_obj).css('font-size', vm_obj.base.font_size)
+    var font_size = null;
+    if(!vm_obj.base){
+        font_size = vm_obj.font_size;
+    }else{
+        font_size = vm_obj.base.font_size;
+    }
+    $(html_obj).css('font-size', font_size)
 }
 
 /**
@@ -817,7 +852,15 @@ function collection_base_size(vm_obj,html_obj){
  * @param html_obj
  */
 function collection_base_height_change(vm_obj,html_obj){
-    $(html_obj).children().css('height', vm_obj.base.height);
+    var heigth = null
+    if(vm_obj.base){
+        heigth = vm_obj.base.height;
+        $(html_obj).children().css('height', heigth);
+    }else {
+        heigth = vm_obj.height;
+        $(html_obj).find("p").css('height', heigth);
+    }
+
 }
 
 /**
@@ -826,5 +869,13 @@ function collection_base_height_change(vm_obj,html_obj){
  * @param html_obj
  */
 function collection_base_width_change(vm_obj,html_obj){
-    $(html_obj).children().css('width', vm_obj.base.width);
+    var width = null
+    if(vm_obj.base){
+        width = vm_obj.base.width;
+        $(html_obj).children().css('width', width);
+    }else {
+        width = vm_obj.width;
+        $(html_obj).find("p").css('width', width);
+    }
+
 }
