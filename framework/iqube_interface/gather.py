@@ -239,16 +239,16 @@ class Gather():
         :param unit_list:                 单位数组
         :return:
         """
-        if float(rule_list[0].strip().split('-')[0]) <= float(original_value) < float(
+        if rule_list.__len__() >= 1 and float(rule_list[0].strip().split('-')[0]) <= float(original_value) < float(
                 rule_list[0].strip().split('-')[1]):
             return str(original_value) + unit_list[0].__str__()
-        elif float(rule_list[1].strip().split('-')[0]) <= float(original_value) < float(
+        elif rule_list.__len__() >= 2 and float(rule_list[1].strip().split('-')[0]) <= float(original_value) < float(
                 rule_list[1].strip().split('-')[1]):
             return str(original_value) + unit_list[1].__str__()
-        elif float(rule_list[2].strip().split('-')[0]) <= float(original_value) < float(
+        elif rule_list.__len__() >= 3 and float(rule_list[2].strip().split('-')[0]) <= float(original_value) < float(
                 rule_list[2].strip().split('-')[1]):
             return str(original_value) + unit_list[2].__str__()
-        elif float(rule_list[3].strip().split('-')[0]) <= float(original_value) < float(
+        elif rule_list.__len__() >= 4 and float(rule_list[3].strip().split('-')[0]) <= float(original_value) < float(
                 rule_list[3].strip().split('-')[1]):
             return str(original_value) + unit_list[3].__str__()
         else:
