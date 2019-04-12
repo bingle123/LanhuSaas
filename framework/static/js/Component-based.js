@@ -746,7 +746,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                             var data_value_str=data_value[j].toString();
                             if(data_value_str.indexOf('#')>-1){
                                 //颜色展示可以没有值
-                                if(content_json && content_json.length > 0){
+                                if(!isEmptyObject(content_json)){
                                     $(selector).append('<p style="background-color:#'+data_value[j].split("#")[1]+';width: 100%;">'+data_key[j]+'</p>');
                                 }else{
                                     $(selector).append('<p style="background-color:#'+data_value[j].split("#")[1]+';width: 100%;">&nbsp;</p>');
@@ -757,7 +757,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                                 return
                             }
                         }else {
-                            $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
+                            $(selector).append('<p style="background-color:#'+data_value[j].split("#")[1]+';width: 100%;">\'+data_key[j]+\'</p>');
                         }
                     }
                 }
@@ -877,5 +877,11 @@ function collection_base_width_change(vm_obj,html_obj){
         width = vm_obj.width;
         $(html_obj).find("p").css('width', width);
     }
-
+}
+//判断空对象
+function isEmptyObject(obj){
+   for(var key in obj){
+       return false
+   };
+   return true
 }
