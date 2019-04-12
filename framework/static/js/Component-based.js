@@ -728,7 +728,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                     let data_value=[];
                     for(k in gather_base_test_data[i]){
                         //颜色展示可以没有值
-                        if(content_json && content_json.length > 0){
+                        if(!isEmptyObject(content_json)){
                             for(x in content_json){
                                 if(x == k){
                                     data_key.push(content_json[x]);
