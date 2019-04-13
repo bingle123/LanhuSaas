@@ -442,7 +442,7 @@
                 <el-col :span="24">
                     <h3 @click="monitor_type_switch(4)" class="monitor_type">流程监控项</h3>
                 </el-col>
-                <div class="monitor_list">
+                <div class="monitor_list">monitor_content
                     <el-col :span="12" v-for="(i,index) in flow_monitor" :key="index">
                         <div @click="add_flow_monitor(i)">
                             <p>{{ i.monitor_name }}</p>
@@ -464,7 +464,7 @@
 
         </el-col>
         <el-col :span="19">
-            <div class="monitor_content" style="min-height: 600px;background: rgb(244, 244, 245)">
+            <div class="monitor_content" style="min-height: 600px;background-image: url('/static/img/scene_content_bg.png'); background-size: 100% 100%">
 
             </div>
         </el-col>
