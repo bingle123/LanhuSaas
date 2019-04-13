@@ -56,7 +56,7 @@ $(function() {
                 if (vm.imgList.length == 1) {    //只有一个场景
                     vm.scene_content_change(0);
                     setInterval(function () {
-                        vm.scene_content_change(0);   //十秒钟更新一次dom
+                        vm.scene_content_change(0);   //30秒钟更新一次dom
                     }, 30000)
                 }
                 if (vm.imgList.length > 1) {  //多于一个场景
@@ -132,7 +132,7 @@ $(function() {
                         }).catch(function (e) {
                             vm.$message.error('获取数据失败！');
                         });
-                    }, 1000)
+                    }, 5000)
 
 
                 }
@@ -166,9 +166,10 @@ $(function() {
     });
     vm.get_pos();
     vm.alternate_play_test();
+    //定时器执行轮播测试
     var interval = setInterval(function () {
         vm.alternate_play_test();
-    }, 10000);
+    }, 30000);
 });
 $(function () {
     $(document).on("click", ".keepOn_yes", function (e) {
