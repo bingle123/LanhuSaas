@@ -57,7 +57,7 @@ $(function() {
                     vm.scene_content_change(0);
                     setInterval(function () {
                         vm.scene_content_change(0);   //十秒钟更新一次dom
-                    }, 10000)
+                    }, 30000)
                 }
                 if (vm.imgList.length > 1) {  //多于一个场景
                     vm.scene_content_change(value1);
