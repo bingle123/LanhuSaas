@@ -1,10 +1,12 @@
-axios.interceptors.request.use((config) => {
+let vm = null;
+$(function() {
+    axios.interceptors.request.use((config) => {
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
         let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
         return config
     });
-    let vm = new Vue({
+    vm = new Vue({
         el: "#main",
         data: {
             imgList: [],
@@ -16,11 +18,11 @@ axios.interceptors.request.use((config) => {
             options: [],
         },
         methods: {
-            get_pos(){
-                 axios({
+            get_pos() {
+                axios({
                     method: 'post',
-                    url: '${SITE_URL}monitor_scene/get_all_pos/',
-                }).then((res)=> {
+                    url: '/monitor_scene/get_all_pos/',
+                }).then((res) => {
                     let json = [];
                     if (res.data.message.length > 0) {
                         for (var i = 0; i < res.data.message.length; i++) {
@@ -28,35 +30,36 @@ axios.interceptors.request.use((config) => {
                             j.value = res.data.message[i].id;
                             j.label = res.data.message[i].pos_name;
                             json.push(j);
-                        };
+                        }
+                        ;
                         this.options = json;
                     }
                 }).catch((res) => {
                     vm.$message.error('获取用户错误')
                 })
             },
-             async alternate_play_test(){
-                  var res= await axios({
+            async alternate_play_test() {
+                var res = await axios({
                     method: 'post',
-                    url: '${SITE_URL}monitor_scene/alternate_play_test/',
-                     data :{
-                        'pos_id':vm.position,
-                         'start':vm.start,
-                         'end':vm.end
-                     }
-                  }).catch(function (e) {
+                    url: '/monitor_scene/alternate_play_test/',
+                    data: {
+                        'pos_id': vm.position,
+                        'start': vm.start,
+                        'end': vm.end
+                    }
+                }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
                 });
-                 vm.imgList = res.data.message;
+                vm.imgList = res.data.message;
             },
             scene_change(value1, value2) {
-                if (vm.imgList.length==1){    //只有一个场景
+                if (vm.imgList.length == 1) {    //只有一个场景
                     vm.scene_content_change(0);
                     setInterval(function () {
                         vm.scene_content_change(0);   //十秒钟更新一次dom
-                    },10000)
+                    }, 10000)
                 }
-                if (vm.imgList.length>1) {  //多于一个场景
+                if (vm.imgList.length > 1) {  //多于一个场景
                     vm.scene_content_change(value1);
                 }
 
@@ -73,7 +76,7 @@ axios.interceptors.request.use((config) => {
                     //添加一个div容器，形如<div type="basic1"></div>
                     $(selector).append('<div type=\"basic' + base_list[i].id + '\" style=\"position: absolute;top:' + base_list[i].y + 'px;left:' + base_list[i].x + 'px;transform: scale(' + base_list[i].scale + ')\"></div>');
                     //调用基本监控项的渲染方法,第一个参数对应容器div的type
-                    base_monitor_active(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width,base_list[i].contents);
+                    base_monitor_active(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width, base_list[i].contents);
                 }
                 for (let i = 0; i < chart_list.length; i++) {
                     //添加一个div容器,形如<div id="1_1"><div id="chart1_1"></div></div>
@@ -101,36 +104,35 @@ axios.interceptors.request.use((config) => {
                         "id": flow_list[i].jion_id
                     }];
                     //添加一个div容器,形如<div><div id="flow1_1"></div></div>
-                    $(selector).append('<div class=\"flow_monitor\" type=\"'+flow_list[i].id+'\" style=\"position: absolute;top:' + flow_list[i].y + 'px;left:' + flow_list[i].x + 'px;transform: scale(' + flow_list[i].scale + ')\"><div type=\"flow_monitor' + value + '_' + flow_list[i].order + '\"></div></div>');
+                    $(selector).append('<div class=\"flow_monitor\" type=\"' + flow_list[i].id + '\" style=\"position: absolute;top:' + flow_list[i].y + 'px;left:' + flow_list[i].x + 'px;transform: scale(' + flow_list[i].scale + ')\"><div type=\"flow_monitor' + value + '_' + flow_list[i].order + '\"></div></div>');
                     //调用流程监控项的渲染方法，第一条参数必须为[{}]格式，用来调v3接口，第二条参数对应容器内部div的id
                     flow_monitor(jion_id, value + '_' + flow_list[i].order);
                     setTimeout(function () {
-                    axios({
-                        method: 'post',
-                        url: '${SITE_URL}monitor_item/node_state_by_item_id/',
-                        data: {
-                            'item_id': flow_list[i].id
-                        }
-                    }).then(function (res) {
+                        axios({
+                            method: 'post',
+                            url: '/monitor_item/node_state_by_item_id/',
+                            data: {
+                                'item_id': flow_list[i].id
+                            }
+                        }).then(function (res) {
 
-                            var len =res.data.message.length
-                            for(var j=0;j<=len-1;j++){
-                                data_key=res.data.message[j].data_value
-                                if(data_key == '1'||data_key=='4'){
-                                    $('p:contains('+res.data.message[j].data_key+')').parent().siblings('.node-icon').css('background','#67c23a');
-                                }else if(data_key == '0' || data_key == '3'){
-                                    $('p:contains('+res.data.message[j].data_key+')').parent().siblings('.node-icon').css('background','#f56c6c')
-                                }else if (data_key == '2') {
-                                    $('p:contains('+res.data.message[j].data_key+')').parent().siblings('.node-icon').css('background','#f56c6c')
-                                    $('p:contains('+res.data.message[j].data_key+')').parent().siblings('.node-icon').children().css('position','relative')
-                                    $('p:contains('+res.data.message[j].data_key+')').parents().siblings('.node-icon').children().html('<div class=\"keepOn\"><p>是否继续</p><span class="keepOn_yes">是</span><span class="keepOn_no">否</span></div>')
+                            var len = res.data.message.length
+                            for (var j = 0; j <= len - 1; j++) {
+                                data_key = res.data.message[j].data_value
+                                if (data_key == '1' || data_key == '4') {
+                                    $('p:contains(' + res.data.message[j].data_key + ')').parent().siblings('.node-icon').css('background', '#67c23a');
+                                } else if (data_key == '0' || data_key == '3') {
+                                    $('p:contains(' + res.data.message[j].data_key + ')').parent().siblings('.node-icon').css('background', '#f56c6c')
+                                } else if (data_key == '2') {
+                                    $('p:contains(' + res.data.message[j].data_key + ')').parent().siblings('.node-icon').css('background', '#f56c6c')
+                                    $('p:contains(' + res.data.message[j].data_key + ')').parent().siblings('.node-icon').children().css('position', 'relative')
+                                    $('p:contains(' + res.data.message[j].data_key + ')').parents().siblings('.node-icon').children().html('<div class=\"keepOn\"><p>是否继续</p><span class="keepOn_yes">是</span><span class="keepOn_no">否</span></div>')
                                 }
                             }
                         }).catch(function (e) {
                             vm.$message.error('获取数据失败！');
                         });
-                    },1000)
-
+                    }, 1000)
 
 
                 }
@@ -162,41 +164,41 @@ axios.interceptors.request.use((config) => {
             },
         }
     });
-
     vm.get_pos();
     vm.alternate_play_test();
     var interval = setInterval(function () {
         vm.alternate_play_test();
-    },10000);
-    $(function () {
-        $(document).on("click", ".keepOn_yes", function (e) {
-            e.preventDefault();
-            var id=$(this).parents('.flow_monitor').attr('type');
-            axios({
-                method: 'post',
-                        url: '${SITE_URL}monitor_item/resume_flow/',
-                        data: {
-                            'item_id': id
-                        }
-            }).then(function (res) {
-                console.log(res);
-            });
-            $(this).parent().hide();
+    }, 10000);
+});
+$(function () {
+    $(document).on("click", ".keepOn_yes", function (e) {
+        e.preventDefault();
+        var id=$(this).parents('.flow_monitor').attr('type');
+        axios({
+            method: 'post',
+                    url: '/monitor_item/resume_flow/',
+                    data: {
+                        'item_id': id
+                    }
+        }).then(function (res) {
+            console.log(res);
         });
-        $(document).on("click", ".keepOn_no", function (e) {
-            e.preventDefault();
-            $(this).parent().hide();
-        });
-        $(document).on("click", ".block", function (e) {
-            var elem = document.body;
-            if (elem.webkitRequestFullScreen) {
-                elem.webkitRequestFullScreen();
-            } else if (elem.mozRequestFullScreen) {
-                elem.mozRequestFullScreen();
-            } else if (elem.requestFullScreen) {
-                elem.requestFullscreen();
-            } else {
-                notice.notice_show("浏览器不支持全屏API或已被禁用", null, null, null, true, true);
-            }
-        });
+        $(this).parent().hide();
     });
+    $(document).on("click", ".keepOn_no", function (e) {
+        e.preventDefault();
+        $(this).parent().hide();
+    });
+    $(document).on("click", ".block", function (e) {
+        var elem = document.body;
+        if (elem.webkitRequestFullScreen) {
+            elem.webkitRequestFullScreen();
+        } else if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+        } else if (elem.requestFullScreen) {
+            elem.requestFullscreen();
+        } else {
+            notice.notice_show("浏览器不支持全屏API或已被禁用", null, null, null, true, true);
+        }
+    });
+});
