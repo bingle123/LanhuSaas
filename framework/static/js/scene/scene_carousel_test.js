@@ -159,7 +159,7 @@ $(function() {
                         // that.screenWidth = that.$store.state.canvasWidth
                         console.log(that.imgHeight);
                         that.timer = false;
-                    }, 400)
+                    }, 4000)
                 }
             },
         }
