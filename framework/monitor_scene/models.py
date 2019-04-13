@@ -38,3 +38,13 @@ class position_scene(models.Model):
 class Createtmp(models.Model):
     name = models.CharField(u'名称', max_length=255)
     tmpdate = models.TextField(u'数据', max_length=10000)
+
+
+class SceneColor(models.Model):
+    scene_id = models.PositiveIntegerField(verbose_name=u'场景id')
+    scene_color = models.CharField(verbose_name=u'场景字体颜色', max_length=10)
+
+    class Meta:
+        verbose_name = u'场景整体颜色配置表'
+        verbose_name_plural = u'场景整体颜色配置表'
+        db_table = "td_scene_color"

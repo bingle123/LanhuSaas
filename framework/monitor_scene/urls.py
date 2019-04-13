@@ -31,5 +31,7 @@ urlpatterns = patterns(
     (r'^scene_data/$', 'scene_data'),
     (r'^monitor_scene_show/$', 'monitor_scene_show'),
     (r'^get_all_pos/$', 'get_all_pos'),
-
+    (r'^scene_color_save/$', 'scene_color_save'),
+    (r'^scene_color_get/$', 'scene_color_get'),
+    (r'^scene_color_del/$', 'scene_color_del'),
 )

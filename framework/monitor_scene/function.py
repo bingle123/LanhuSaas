@@ -4,6 +4,7 @@ import json
 import math
 from django.forms import model_to_dict
 from models import Scene
+from models import SceneColor
 from models import position_scene
 from monitor_item.models import Monitor, Job, Scene_monitor
 from monitor_item import tools
@@ -57,6 +58,7 @@ def addSence(request):
     :param request:
     :return:
     """
+    id = None
     try:
         res = request.body
         senceModel = json.loads(res)
@@ -77,8 +79,7 @@ def addSence(request):
             "scene_creator": "admin",
             "scene_area": senceModel['data']['area']
         }
-        Scene.objects.create(**senceModel2)
-        id = Scene.objects.last()
+        id = Scene.objects.create(**senceModel2)
         senceModel3 = {
             "scene": id,
             "position_id": senceModel['data']["pos_name"]
@@ -102,7 +103,7 @@ def addSence(request):
         info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
     add_log(info)
-    return None
+    return {'scene_id': id.id}
 
 
 def select_table(request):
@@ -660,3 +661,29 @@ def get_all_pos(request):
         }
         res.append(dict)
     return res
+
+
+def scene_color_save(scene_color_info):
+    print scene_color_info
+    if 'add' == scene_color_info['type']:
+        del scene_color_info['type']
+        SceneColor.objects.create(**scene_color_info)
+    elif 'edit' == scene_color_info['type']:
+        del scene_color_info['type']
+        SceneColor.objects.update(**scene_color_info)
+    else:
+        raise RuntimeError('添加类型错误！')
+
+
+def scene_color_get(scene_id):
+    color_dict = dict()
+    color = SceneColor.objects.get(scene_id=scene_id)
+    color_dict['color'] = color.scene_color
+    return color_dict
+
+
+def scene_color_del(scene_id):
+    color_dict = dict()
+    SceneColor.objects.filter(scene_id=scene_id).delete()
+    color_dict['status'] = "ok"
+    return color_dict

@@ -64,6 +64,8 @@
 
         .monitor_content {
             position: relative;
+            background-image: url('/static/img/scene_content_bg.png');
+            background-size: 100% 100%;
         }
 
         .el-row {
@@ -456,15 +458,19 @@
                     </el-col>
 
                 </div>
-                <div style="position: absolute;bottom: 0;right: 0;font-size:30px;width: 100%">
+                <div style="position: absolute;bottom: 0;left: 0;font-size:30px; height:40px; width: 50%">
                     <i class="el-icon-circle-plus-outline"></i>
                     <i class="el-icon-remove-outline"></i>
+                </div>
+                <div style="position: absolute;bottom: 0;right: 0;font-size:15px; height:40px; width: 50%">
+                    <span style="position: relative;top: -7px;display: inline-block;line-height: 40px;">字体颜色：</span>
+                    <el-color-picker v-model="scene_font_color" size="small" @change="change_scene_color"></el-color-picker>
                 </div>
             </div>
 
         </el-col>
         <el-col :span="19">
-            <div class="monitor_content" style="min-height: 600px;background-image: url('/static/img/scene_content_bg.png'); background-size: 100% 100%">
+            <div class="monitor_content" style="min-height: 600px">
 
             </div>
         </el-col>

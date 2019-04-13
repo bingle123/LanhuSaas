@@ -10,6 +10,7 @@ $(function () {
     vm = new Vue({
         el: '.content',
         data: {
+            scene_font_color: '#000000',
             page_count: 100,//分页总页数
             page: 1,                                   //分页页码数
             start_time: '8:00',
@@ -100,6 +101,10 @@ $(function () {
 
         },
         methods: {
+            //变更场景颜色
+            change_scene_color: function(){
+                $('.monitor_content').css('color', this.scene_font_color);
+            },
             sizeStrFun: function () {
                 //菜单 放大 缩小
                 var html = "<span onclick='vm.changeSizeFun(this,1)'>放大</span>" +
@@ -139,12 +144,38 @@ $(function () {
                                     monitor_data: vm.result_list
                                 }
                             }).then(function (res) {
+                                //上传当前场景字体颜色设置
+                                var color_info = {
+                                    'scene_id' : res.data.scene_id,
+                                    'type' : 'add',
+                                    'scene_color' : vm.scene_font_color
+                                };
+                                axios({
+                                    method: 'post',
+                                    url: '/monitor_scene/scene_color_save/',
+                                    data: color_info
+                                }).catch(function (e) {
+                                    vm.$message.error('场景颜色上传失败！');
+                                });
                                 vm.isAdd = 1;
-                                vm.select_table()
+                                vm.select_table();
                             }).catch(function (e) {
                                 vm.$message.error('获取数据失败！');
                             });
                         } else if (formName == 'scene_edit') {
+                            //上传当前场景字体颜色设置
+                            var color_info = {
+                                'scene_id' : vm.scene_edit['id'],
+                                'type' : 'edit',
+                                'scene_color' : vm.scene_font_color
+                            };
+                            axios({
+                                method: 'post',
+                                url: '/monitor_scene/scene_color_save/',
+                                data: color_info
+                            }).catch(function (e) {
+                                vm.$message.error('场景颜色上传失败！');
+                            });
                             axios({
                                 method: 'post',
                                 url: '/monitor_scene/editSence/',
@@ -165,6 +196,7 @@ $(function () {
                         return false;
                     }
                 });
+
             },
             get_all_area() {
                 axios({
@@ -233,6 +265,15 @@ $(function () {
                 this.isAdd = 3
                 vm.sen_position()
                 vm.monitore_edit_start(row.id)
+                axios({
+                    method: 'post',
+                    url: '/monitor_scene/scene_color_get/',
+                    data: row.id
+                }).then((res) => {
+                    this.scene_font_color = res.data.color;
+                }).catch(function (e) {
+                    vm.$message.error('获取场景颜色设置失败！');
+                });
                 setTimeout(function () {
                     vm.Time()
                 }, 100)
@@ -277,6 +318,8 @@ $(function () {
                     }
                     let max = 0;
                     let index = 0;
+                    //调整场景的字体颜色
+                    this.change_scene_color();
                     for (var i = 0; i < result_list_edit.length; i++) {
                         if (max < result_list_edit[i].order) {  //场景监控项拖拽元素唯一
                             max = result_list_edit[i].order;
@@ -382,6 +425,14 @@ $(function () {
                     type: 'warning',
                     center: true,
                 }).then(() => {
+                    //删除场景字体颜色信息
+                    axios({
+                        method: 'post',
+                        url: '/monitor_scene/scene_color_del/',
+                        data: row.id
+                    }).catch(function (e) {
+                        vm.$message.error('场景颜色删除失败！');
+                    });
                     axios({
                         method: 'post',
                         url: '/monitor_scene/del_scene/',
@@ -714,7 +765,7 @@ $(function () {
         }
     });
     $('.el-icon-circle-plus-outline').click(function () {
-        if (vm.multiple < 2) {
+        if (vm.multiple < 4) {
             // vm.scale = vm.scale + 0.1;
             // $('.monitor_content').find('.Drigging').css('transform', 'scale(' + vm.scale + ')');
             var dris = $('.monitor_content').find('.Drigging')
@@ -729,7 +780,7 @@ $(function () {
         }
     });
     $('.el-icon-remove-outline').click(function () {
-        if (vm.multiple > -2) {
+        if (vm.multiple > -4) {
             // vm.scale = vm.scale - 0.1;
             // $('.monitor_content').find('.Drigging').css('transform', 'scale(' + vm.scale + ')');
             var dris = $('.monitor_content').find('.Drigging')

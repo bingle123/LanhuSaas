@@ -183,3 +183,19 @@ def get_all_pos(request):
 def get_scenes(request):
     res = function.get_scenes(request)
     return render_json(res)
+
+
+def scene_color_save(request):
+    scene_color = json.loads(request.body)
+    status = function.scene_color_save(scene_color)
+    return render_json(status)
+
+
+def scene_color_get(request):
+    color = function.scene_color_get(request.body)
+    return render_json(color)
+
+
+def scene_color_del(request):
+    status = function.scene_color_del(request.body)
+    return render_json(status)
