@@ -293,7 +293,9 @@ $(function () {
                             });
                             vm.monitor_data = res.data.results;
                             $('.monitor_content').append('<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" type=\"basic' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"></div>');
-                            test_monitor(vm.monitor_data[0].id, vm.monitor_data[0].display_rule, vm.monitor_data[0].display_type, vm.monitor_data[0].measure_name, vm.monitor_data[0].target_name, 1);
+                            vm.current_monitor_item = vm.monitor_data[0];
+                            preview_monitor_item(vm ,"monitor_scene",".monitor_content");
+                            //test_monitor(vm.monitor_data[0].id, vm.monitor_data[0].display_rule, vm.monitor_data[0].display_type, vm.monitor_data[0].measure_name, vm.monitor_data[0].target_name, 1);
                         }
                         if (result_list_edit[i].monitor_type === 2) {
                             let res = await axios({

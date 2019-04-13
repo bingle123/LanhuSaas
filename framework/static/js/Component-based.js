@@ -803,7 +803,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                     for(let j=0;j<data_key.length;j++){
                         if(data_org[j]==current_monitor_item.target_name+'_'+current_monitor_item.measure_name){
                             if(data_value[j].indexOf('@')>-1){
-                                //颜色展示可以没有值
+                                //其它展示可以没有值
                                 if(!isEmptyObject(content_json)){
                                     $(selector).append('<p>'+data_key[j]+':'+data_value[j].split("@")[0]+'</p>');
                                 }else{
