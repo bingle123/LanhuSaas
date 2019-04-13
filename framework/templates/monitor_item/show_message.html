@@ -11,6 +11,7 @@
     <!--axios.min.js--vue.js的ajax支持-->
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
+    <script src="${STATIC_URL}js/csrftoken.js"></script>
     <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
 
@@ -1362,6 +1363,28 @@
             }],*/
         },
         methods: {
+            //获取采集测试的结果，同步调用
+            get_gather_test(){
+                $.ajax({
+                    type: "POST",
+                    data : JSON.stringify(vm.base),
+                    dataType: "JSON",
+                    async: false,
+                    url: "/iqube_interface/gather_base_test/",
+                    success: function(data) {
+                         if(0 != data.code){
+                            vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
+                            return;
+                         }
+                          //采集测试的数据缓存到gather_data_test_data变量中
+                         vm.gather_test_data = data.results;
+                    },
+                    error: function(error){
+                        vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
+                        return;
+                    }
+                });
+            },
             //基本监控项（修改后）显示内容变更时调用的预览变更方法
             content_modified_change(){
                 this.base_monitor_other_fixed_status();
@@ -1670,7 +1693,7 @@
             },
             //基本监控项修改后的字体大小变更
             base_size(){
-                $('#base_test_text').css('font-size', this.base.font_size)
+                collection_base_size(vm,'#base_test_text')
             },
             basic_height() {
                 $('#text2').css('height', this.basic.height)
@@ -2073,6 +2096,7 @@
                 //-----------------------------
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
+                //原始基本监控项
                 if (row.monitor_type === 1) {
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
@@ -2229,7 +2253,7 @@
                     this.monitor_type = 'five';
                     //处理监控项的数据用于修改时的数据回显
                     this.monitor_edit_data_process(row);
-                    //调用参数生成采集测试的预览图像
+                    // 执行采集测试
                     this.base_cell_test();
                 }
             },
@@ -2357,24 +2381,12 @@
                         this.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
                         vm.gather_data_test_flag = null;
                     }else if(null == this.gather_data_test_flag){
-                        axios({
-                            url:'${SITE_URL}iqube_interface/gather_base_test/',
-                            method:'post',
-                            data:vm.base,
-                        }).then((res) => {
-                            if(0 != res.data.code){
-                                vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
-                                return;
-                            }
-                            //采集测试的数据缓存到gather_data_test_data变量中
-                            this.gather_test_data = res.data.results;
-                            //基本监控项的数据处理
-                            vm.base_monitor_data_process();
-                            //上传监控项数据至服务器保存
-                            vm.monitor_data_save(vm.unit_id, flow);
-                        }).catch(function (e) {
-                            vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
-                        });
+                        //获取采集测试数据，调用同步服务
+                        vm.get_gather_test();
+                        //基本监控项的数据处理
+                        vm.base_monitor_data_process();
+                        //上传监控项数据至服务器保存
+                        vm.monitor_data_save(vm.unit_id, flow);
                     }else{
                         //基本监控项的数据处理
                         vm.base_monitor_data_process();
@@ -2984,10 +2996,10 @@
                 $('#maintenanceIndex').find("canvas").css('width', vm.chart.width)
             },
             base_height_change(){
-                $('#base_test_text').children().css('height', this.base.height);
+                collection_base_height_change(vm,'#base_test_text');
             },
             base_width_change(){
-                $('#base_test_text').children().css('width', this.base.width);
+                collection_base_width_change(vm,'#base_test_text');
             },
             switch_change(value) {
                 axios({
@@ -3073,167 +3085,10 @@
             },
             //采集测试方法
             base_cell_test(){
-                //获取指标数据之前，预览区显示加载中
-                vm.preview_loading = true;
-                axios({
-                    url:'${SITE_URL}iqube_interface/gather_base_test/',
-                    method:'post',
-                    data:vm.base,
-                }).then( (res) => {
-                    //接口调用返回状态值不为0说明接口调用参数存在问题
-                    if(0 != res.data.code){
-                        this.gather_data_test_flag = false;
-                    }
-                    //采集测试的数据缓存到gather_data_test_data变量中
-                    this.gather_test_data = res.data.results;
-                    var gather_base_test_data=res.data.results;
-                    if(vm.base_monitor_edit_test_init || vm.base_monitor_add_test_init){
-                        var content='';
-                        for(var x in gather_base_test_data[0]){           //遍历列表的第i个对象
-                            content+='"'+x+'":"'+x+'"@\n';
-                        }
-                        if('0' == vm.add_pamas && vm.base_monitor_add_test_init){
-                            vm.base.contents = content;
-                            vm.base_monitor_add_test_init = false;
-                        }else if('1' == vm.add_pamas && vm.base_monitor_edit_test_init){
-                            vm.base_monitor_edit_test_init = false;
-                        }
-                        vm.base_monitor_show_cache = content;
-                    }
-                    //添加情况下的采集测试，第一次采集时显示内容会默认加载所有指标值
-                    /*if(vm.add_pamas == 0 && vm.base_monitor_add_test_init){
-                        var content='';
-                        for(var x in gather_base_test_data[0]){           //遍历列表的第i个对象
-                            content+='"'+x+'":"'+x+'"@\n';
-                        }
-                        vm.base.contents = content;
-                        vm.base_monitor_show_cache = content;
-                    }*/
-                    /*
-                    var content='';
-                    for(x in gather_base_test_data[0]){           //遍历列表的第i个对象
-                        content+='"'+x+'":"'+x+'"@\n';
-                    }
-                    vm.base.contents=content;*/
-                    $('#base_test_text').html('');                  //清空dom
-                    if(vm.base.show_rule_type==0){
-                        for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
-                            let selector='.div'+i;                                  //jquery选择器
-                            let data_key=[];                            //对象key的集合
-                            let data_value=[];                            //对象value的集合
-                            for(k in gather_base_test_data[i]){           //遍历列表的第i个对象
-                                data_key.push(k);
-                                data_value.push(gather_base_test_data[i][k]);
-                            }
-                            $('#base_test_text').append('<div class="div'+i+'" style="display: inline-block;"></div>');//创建一个对应的dom
-                            for(let j=0;j<data_key.length;j++){
-                                if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){        //判断key是否为度量值，是就进行百分百环形渲染，不是则直接喧嚷key：value
-                                    if(data_value[j].indexOf('%')>-1){                              //判断是否有%，有就添加dom，没有则清空dom并返回
-                                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+ '</p>');
-                                        //$(selector).append('<div class="circle-bar  display" type="'+data_key[j]+'"><div class="circle-bar-left"></div><div class="circle-bar-right"></div><div class="mask"><span class="percent">' + data_value[j] + '</span></div></div>');
-                                        //var percent = parseInt($('.mask :first-child').text());
-                                        //var baseColor = $('.circle-bar').css('background-color');
-                                        //if( percent<=50 ){
-                                        //    $('.circle-bar-right').css('transform','rotate('+(percent*3.6)+'deg)');
-                                        //}else {
-                                        //    $('.circle-bar-right').css({
-                                        //        'transform':'rotate(0deg)',
-                                        //        'background-color':baseColor
-                                        //    });
-                                        //    $('.circle-bar-left').css('transform','rotate('+((percent-50)*3.6)+'deg)');
-                                        //}
-                                    }else {
-                                        $('#base_test_text').html('');
-                                        vm.$message.error('百分比参数配置出错！');
-                                        return
-                                    }
-                                }else {
-                                    $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
-                                }
-                            }
-                        }
-                    }
-                    if(vm.base.show_rule_type==1){
-
-                        for(let i=0;i<gather_base_test_data.length;i++){
-                            let selector='.div'+i;
-                            let data_key=[];
-                            let data_value=[];
-                            for(k in gather_base_test_data[i]){
-                                data_key.push(k);
-                                data_value.push(gather_base_test_data[i][k]);
-                            }
-                            $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block"></div>');
-                            for(let j=0;j<data_key.length;j++){
-                                if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
-                                    var data_value_str=data_value[j].toString();
-                                    if(data_value_str.indexOf('#')>-1){
-                                        var str = data_value_str.split('#');
-                                        $(selector).css('background-color', '#' + str[1]);
-                                        //$(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':<i style="color:'+data_value[j]+'" class="el-icon-star-on"></i></p>');
-                                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');
-                                    }else {
-                                        $('#base_test_text').html('');
-                                        vm.$message.error('颜色比参数配置出错！');
-                                        return
-                                    }
-                                }else {
-                                    $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
-                                }
-                            }
-                        }
-                    }
-                    if(vm.base.show_rule_type==2){
-                        for(let i=0;i<gather_base_test_data.length;i++){
-                            let selector='.div'+i;
-                            let data_key=[];
-                            let data_value=[];
-                            for(k in gather_base_test_data[i]){
-                                data_key.push(k);
-                                data_value.push(gather_base_test_data[i][k]);
-                            }
-                            $('#base_test_text').append('<div class="div'+i+'" style="width:33%;display: inline-block;"></div>');
-                            var selected_measure = null;
-                            for(let j=0;j<data_key.length;j++){
-                                if(data_key[j]==vm.base.measures+'_'+vm.base.measures_name){
-                                    var data_value_str=data_value[j].toString();
-                                    if(data_value_str.indexOf('@')>-1){
-                                        var str = data_value_str.split('@');
-                                        str[0] = str[0] + str[1];
-                                        selected_measure = str[1];
-                                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');
-                                        $(selector).append('<p id="other_fixed_show" style="display: none">'+selected_measure+'</p>');
-                                    }else {
-                                        $('#base_test_text').html('');
-                                        vm.$message.error('其他参数配置出错！');
-                                        return
-                                    }
-                                }else{
-                                    $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
-                                }
-                            }
-                            //当显示内容为空的情况下
-                            if('' == vm.base['contents'].replace(/^\s+|\s+$/g,"")){
-                                $('#other_fixed_show').show();
-                            }
-                        }
-                    }
-                    //已获取到指标数据预览区加载图标取消
-                    vm.preview_loading = false;
-                    //预览内容变更操作
-                    this.content_change();
-                    //字体大小变更操作
-                    this.base_size();
-                    //高宽变更操作
-                    this.base_height_change();
-                    this.base_width_change();
-                    this.gather_data_test_flag = true;
-                }).catch(function (e) {
-                    //接口调用失败，采集标记位置false
-                    this.gather_data_test_flag = false;
-                    vm.$message.error('采集失败！');
-                    $('#base_test_text').html('');
-                });
+                //同步获取采集数据
+                vm.get_gather_test();
+                //预览采集，调用预览组件
+                preview_monitor_item(vm ,'monitor_item',"#base_test_text");
             },
             change_data_sources(value){
                 if(value == 9){
@@ -3256,24 +3111,10 @@
                     vm.database_show = true;
                 }
             },
+            // 预览类容编辑
+            // 采集表中保存的是实际调用一体化平台的返回的结果，在场景编排中再根据展示规则还原预览效果
             content_change(){
-                var content=vm.base.contents;                   //显示内容数据
-                var c = content.substring(0,content.lastIndexOf('@'));      //去@符号
-                var content_str='{'+c.replace(/@\n/g,',')+'}';      //加{}
-                var content_json=JSON.parse(content_str);           //转json
-                $("#base_test_text").find('.display').hide();       //隐藏预览区域的dom
-                for(x in content_json){                             //遍历json
-                    $("#base_test_text").find('[type='+x+']').show();   //显示内容存在的key会在预览区域显示
-                    let len=$("#base_test_text p").length;
-                    for(let i=0;i<len;i++){
-                        let dom_type=$("#base_test_text p").eq(i).attr('type');//获取dom的type
-                        let value1=$("#base_test_text p").eq(i).text().split(':')[0];//获取dom的text ：前面的内容
-                        if(x==dom_type){//显示内容的key等于dom的type
-                            let text=$("#base_test_text p").eq(i).text();
-                            $("#base_test_text p").eq(i).html(text.replace(value1,content_json[x]));//将dom的text ：前面的内容替换成显示内容的value
-                        }
-                    }
-                }
+                collection_content_change(vm ,"#base_test_text")
             }
         },
         mounted() {
@@ -3294,17 +3135,4 @@
     $(function(){
     })
 </script>
-
-
-<script>
-    setInterval(function () {
-        //flow1_js_start
-        //flow1_js_end
-        // $('.node-wrapper').click(function () {
-        //
-        //     $(this).find(".node-title").attr('contenteditable','plaintext-only');
-        // })
-    }, 1000)
-</script>
-
 </html>
