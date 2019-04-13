@@ -258,10 +258,16 @@ $(function () {
                 vm.canvas_flag = 0;
                 $('.monitor_content').html('');
             },
-            async goto() {
+            async goto(type) {
+                //新增
+                if("1" == type){
+                    //新增每次清空编排面板
+                    $('.monitor_content').html() == '';
+                    vm.result_list_edit = null;
+                }
                 vm.canvas_flag = 1;
                 if ($('.monitor_content').html() == '') {//场景编排内容块无元素
-                    $(".monitor_content").append('<canvas id="line_canvas" style="position: absolute"></canvas>');
+                    $(".monitor_content").append('<canvas id="line_canvas" style="position: absolute;"></canvas>');
                     $('.monitor_edit').css('display', 'block');
                     vm.show_num = vm.isAdd;
                     vm.isAdd = 0;

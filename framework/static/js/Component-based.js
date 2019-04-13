@@ -413,7 +413,6 @@ function base_monitor(item_id,font_size,height,width,content) {
 
 }
 
-
 function font_size(id,value) {
      $("#"+id+"").find('*').css("font-size", value)
      $("#"+id+"").find('*').css("height", value)
@@ -541,13 +540,29 @@ function flow_monitor(value1,value2){
             }
 
 /**
- * 基本监控项预览与编排展示组件（监控项与场景编排通用）
+ * 基本监控项预览与编排展示预览组件（监控项与场景编排通用）
  * @param vm_obj
  * @param preview_type 预览类型
  * @param html_obj
  */
 function preview_monitor_item(vm_obj, preview_type,html_obj){
-    //监控项采集预览
+    //最终预览结果
+    var preview_result = function(html_obj){
+        if("monitor_item" == preview_type){
+            //预览内容变更操作(根据“展示规则”和“显示内容”显示预览效果)
+            collection_content_change(vm_obj,html_obj);
+        }else{
+            vm_obj.font_size = current_monitor_item.font_size;
+            vm_obj.height = current_monitor_item.height;
+            vm_obj.width = current_monitor_item.width;
+        }
+        //字体大小变更操作
+        collection_base_size(vm_obj,html_obj);
+        //高宽变更操作
+        collection_base_height_change(vm_obj,html_obj);
+        collection_base_width_change(vm_obj,html_obj);
+    }
+    //监控项预览
     if("monitor_item" == preview_type){
         var gather_base_test_data=vm_obj.gather_test_data;
         //判断是否为新增或修改的初始状态
@@ -566,34 +581,8 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
         }
         //清空预览区域
         $(html_obj).html('');
-        //按百分比展示，采集数据时，后台已经做了初步数据分析带上了百分比
-        if(vm_obj.base.show_rule_type == 0){
-            for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
-                let selector='.div'+i;                                  //jquery选择器
-                let data_key=[];                            //对象key的集合
-                let data_value=[];                            //对象value的集合
-                for(k in gather_base_test_data[i]){           //遍历列表的第i个对象
-                    data_key.push(k);
-                    data_value.push(gather_base_test_data[i][k]);
-                }
-                $(html_obj).append('<div class="div'+i+'" style="border: 1px solid #000;"></div>');//创建一个对应的dom
-                for(let j=0;j<data_key.length;j++){
-                    if(data_key[j]==vm_obj.base.measures+'_'+vm_obj.base.measures_name){        //判断key是否为度量值，是就进行百分百环形渲染，不是则直接喧嚷key：value
-                        if(data_value[j].indexOf('%')>-1){                              //判断是否有%，有就添加dom，没有则清空dom并返回
-                            $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+ '</p>');
-                        }else {
-                            $(html_obj).html('');
-                            vm_obj.$message.error('百分比参数配置出错！');
-                            return
-                        }
-                    }else {
-                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
-                    }
-                }
-            }
-        }
-        // 按颜色展示
-        if(vm_obj.base.show_rule_type == 1){
+        //展示监控项的私有方法
+        let monitor_show = function(split_char){
             for(let i=0;i<gather_base_test_data.length;i++){
                 let selector='.div'+i;
                 let data_key=[];
@@ -606,66 +595,51 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                 for(let j=0;j<data_key.length;j++){
                     if(data_key[j]==vm_obj.base.measures+'_'+vm_obj.base.measures_name){
                         var data_value_str=data_value[j].toString();
-                        if(data_value_str.indexOf('#')>-1){
-                            var str = data_value_str.split('#');
-                            $(selector).css('background-color', '#' + str[1]);
-                            $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');
+                        if(data_value_str.indexOf(split_char)>-1){
+                            var str = data_value_str.split(split_char);
+                            if("#" == split_char){
+                               $(selector).css('background-color', split_char + str[1]);
+                            }
+                            if("@" == split_char){
+                                str[0] = str[0] + str[1];
+                                selected_measure = str[1];
+                                $(selector).append('<p id="other_fixed_show" style="display: none">'+selected_measure+'</p>');
+                            }
+                            if("%" == split_char){
+                                $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+ '</p>');
+                            }else{
+                                $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');
+                            }
                         }else {
                             $(html_obj).html('');
-                            vm_obj.$message.error('颜色比参数配置出错！');
+                            vm_obj.$message.error('展示规则参数配置出错！');
                             return
                         }
                     }else {
-                        $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
-                    }
-                }
-            }
-        }
-        //其它展示方式
-        if(vm_obj.base.show_rule_type==2){
-            for(let i=0;i<gather_base_test_data.length;i++){
-                let selector='.div'+i;
-                let data_key=[];
-                let data_value=[];
-                for(k in gather_base_test_data[i]){
-                    data_key.push(k);
-                    data_value.push(gather_base_test_data[i][k]);
-                }
-                $(html_obj).append('<div class="div'+i+'" style="border: 1px solid #000;"></div>');
-                var selected_measure = null;
-                for(let j=0;j<data_key.length;j++){
-                    if(data_key[j]==vm_obj.base.measures+'_'+vm_obj.base.measures_name){
-                        var data_value_str=data_value[j].toString();
-                        if(data_value_str.indexOf('@')>-1){
-                            var str = data_value_str.split('@');
-                            str[0] = str[0] + str[1];
-                            selected_measure = str[1];
-                            $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+str[0]+'</p>');
-                            $(selector).append('<p id="other_fixed_show" style="display: none">'+selected_measure+'</p>');
-                        }else {
-                            $(html_obj).html('');
-                            vm_obj.$message.error('其他参数配置出错！');
-                            return
-                        }
-                    }else{
                         $(selector).append('<p class="display" type="'+data_key[j]+'">'+data_key[j]+':'+data_value[j]+'</p>');
                     }
                 }
                 //当显示内容为空的情况下
-                if('' == vm_obj.base['contents'].replace(/^\s+|\s+$/g,"")){
+                if("@" == split_char && '' == vm_obj.base['contents'].replace(/^\s+|\s+$/g,"")){
                     $('#other_fixed_show').show();
                 }
             }
         }
+        //按百分比展示，采集数据时，后台已经做了初步数据分析带上了百分比
+        if(vm_obj.base.show_rule_type == 0){
+            monitor_show("%");
+        }
+        // 按颜色展示
+        if(vm_obj.base.show_rule_type == 1){
+            monitor_show("#");
+        }
+        //其它展示方式
+        if(vm_obj.base.show_rule_type==2){
+            monitor_show("@");
+        }
         //已获取到指标数据预览区加载图标取消
         vm_obj.preview_loading = false;
-        //预览内容变更操作(根据“展示规则”和“显示内容”显示预览效果)
-        collection_content_change(vm_obj,html_obj);
-        //字体大小变更操作
-        collection_base_size(vm_obj,html_obj);
-        //高宽变更操作
-        collection_base_height_change(vm_obj,html_obj);
-        collection_base_width_change(vm_obj,html_obj);
+        preview_result(html_obj);
         vm_obj.gather_data_test_flag = true;
     }
     //场景编排监控项展示
@@ -674,10 +648,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
         var current_monitor_item = vm_obj.current_monitor_item;
         var selector_id='basic'+current_monitor_item.id;
         var drigging_id = vm_obj.drigging_id;
-        var content = current_monitor_item.contents;                   //显示内容数据
-        var content_str = content.substring(0,content.lastIndexOf('@')); //去@符号
-        var content_obj = '{'+content_str.replace(/@\n/g,',')+'}';      //加{}
-        var content_json = JSON.parse(content_obj);
+        var content_json = content_to_json(current_monitor_item.contents);
         var selector = null;
         //从采集表获取监控项的采集数据
         $.get("/monitor_scene/get_basic_data/"+current_monitor_item.id, function (res){
@@ -689,42 +660,9 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
             $('[type='+selector_id+']').html("");                  //清空dom
             $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
             $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
-            //按百分比展示
-            if(current_monitor_item.display_type ==0){
-                for(let i=0;i<gather_base_test_data.length;i++){          //遍历后台返回的结果列表
-                    selector = '.div'+drigging_id+i;                                  //jquery选择器
-                    let data_org = [];
-                    let data_key=[];                            //对象key的集合
-                    let data_value=[];                            //对象value的集合
-                    for(k in gather_base_test_data[i]){           //遍历列表的第i个对象
-                        //根据显示规则展示编排预览效果,百分比展示一定会有一个值，否则异常
-                        for(x in content_json){
-                            if(x == k){
-                                data_org.push(k)
-                                data_key.push(content_json[x]);
-                                data_value.push(gather_base_test_data[i][k]);
-                            }
-                        }
-                    }
-                    $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'"></div>');//创建一个对应的dom
-                    for(let j=0;j<data_key.length;j++){
-                        if(data_org[j]==current_monitor_item.target_name+'_'+current_monitor_item.measure_name){        //判断key是否为度量值，是就进行百分百环形渲染，不是则直接喧嚷key：value
-                            if(data_value[j].indexOf('%')>-1){                              //判断是否有%，有就添加dom，没有则清空dom并返回
-                                $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
-                            }else {
-                                $('[type='+selector_id+']').html('');
-                                vm.$message.error('百分比参数配置出错！');
-                                return
-                            }
-                        }else {
-                            $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
-                        }
-                    }
-                }
-            }
-            //按颜色展示
-            if(current_monitor_item.display_type == 1){
-                for(let i=0;i<gather_base_test_data.length;i++){
+            var bgcolor = null;
+            let scene_show = function(split_char){
+                 for(let i=0;i<gather_base_test_data.length;i++){
                     let selector='.div'+drigging_id+i;
                     let data_org = [];
                     let data_key=[];
@@ -741,94 +679,59 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                             }
                         }else{
                             //展示内容为空，只放度量值
-                            if(gather_base_test_data[i][k].toString().indexOf('#')>-1){
+                            if(gather_base_test_data[i][k].toString().indexOf(split_char)>-1){
                                 data_org.push(k);
                                 data_key.push(k);
                                 data_value.push(gather_base_test_data[i][k]);
                             }
                         }
                     }
-                    var bgcolor = null;
                     $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'"></div>');
                     for(let j=0;j<data_key.length;j++){
                         if(data_org[j]==current_monitor_item.target_name+'_'+current_monitor_item.measure_name){
                             var data_value_str=data_value[j].toString();
-                            if(data_value_str.indexOf('#')>-1){
-                                bgcolor = data_value[j].split("#")[1];
+                            if(data_value_str.indexOf(split_char)>-1){
+                                if("#" == split_char) {
+                                    bgcolor = data_value[j].split(split_char)[1];
+                                 }
                                 //颜色展示可以没有值
                                 if(!isEmptyObject(content_json)){
-                                    $(selector).append('<p>'+data_key[j]+':'+data_value[j].split("#")[0]+'</p>');
+                                    if("%" == split_char){
+                                       $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
+                                    }else{
+                                        $(selector).append('<p>'+data_key[j]+':'+data_value[j].split(split_char)[0]+'</p>');
+                                    }
                                 }else{
                                     $(selector).append('<p >&nbsp;</p>');
+                                    if("@" == split_char){
+                                        $(selector).append('<p >'+data_value[j].split("@")[1]+'</p>');
+                                    }
                                 }
                             }else {
                                 $('#base_test_text').html('');
-                                vm.$message.error('颜色比参数配置出错！');
+                                vm.$message.error('采集规则配置出错！');
                                 return
                             }
                         }else {
                             $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
                         }
-                        $('[type='+selector_id+']').css("background","#"+bgcolor);
                     }
                 }
+            }
+            //按百分比展示
+            if(current_monitor_item.display_type ==0){
+                scene_show("%");
+            }
+            //按颜色展示
+            if(current_monitor_item.display_type == 1){
+                scene_show("#");
+                $('[type='+selector_id+']').css("background","#"+bgcolor);
             }
             //其它展示类型
             if(current_monitor_item.display_type==2){
-                for(let i=0;i<gather_base_test_data.length;i++){
-                    let selector='.div'+drigging_id+i;
-                    let data_org = []
-                    let data_key = [];
-                    let data_value=[];
-                    for(k in gather_base_test_data[i]){
-                        //其它展示可以没有值
-                        if(!isEmptyObject(content_json)){
-                            for(x in content_json){
-                                if(x == k){
-                                    data_org.push(k)
-                                    data_key.push(content_json[x]);
-                                    data_value.push(gather_base_test_data[i][k]);
-                                }
-                            }
-                        }else{
-                            //展示内容为空，只放度量值
-                            if(gather_base_test_data[i][k].toString().indexOf('@')>-1){
-                                data_org.push(k);
-                                data_key.push(k);
-                                data_value.push(gather_base_test_data[i][k]);
-                            }
-                        }
-                    }
-                    $('[type='+selector_id+']').append('<div class="div'+drigging_id+i+'"></div>');
-                    for(let j=0;j<data_key.length;j++){
-                        if(data_org[j]==current_monitor_item.target_name+'_'+current_monitor_item.measure_name){
-                            if(data_value[j].indexOf('@')>-1){
-                                //其它展示可以没有值
-                                if(!isEmptyObject(content_json)){
-                                    $(selector).append('<p>'+data_key[j]+':'+data_value[j].split("@")[0]+'</p>');
-                                }else{
-                                    $(selector).append('<p >'+data_value[j].split("@")[1]+'</p>');
-                                }
-                            }else {
-                                vm.$message.error('其他参数配置出错！');
-                                $('#base_test_text').html('');
-                                return
-                            }
-
-                        }else {
-                            $(selector).append('<p>'+data_key[j]+':'+data_value[j]+'</p>');
-                        }
-                    }
-                }
+               scene_show("@");
             }
-            vm_obj.font_size = current_monitor_item.font_size;
-            vm_obj.height = current_monitor_item.height;
-            vm_obj.width = current_monitor_item.width;
-            //字体大小变更操作
-            collection_base_size(vm_obj,'[type='+selector_id+']');
-            //高宽变更操作
-            collection_base_height_change(vm_obj,'[type='+selector_id+']');
-            collection_base_width_change(vm_obj,'[type='+selector_id+']');
+            preview_result('[type='+selector_id+']');
         }).catch(function (e) {
                 vm.$message.error('采集失败！');
                 $('[type='+selector_id+']').html('');
@@ -842,10 +745,8 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
  * @param html_obj
  */
 function collection_content_change(vm_obj,html_obj){
-    var content=vm_obj.base.contents;                   //显示内容数据
-    var content_str = content.substring(0,content.lastIndexOf('@')); //去@符号
-    var content_obj = '{'+content_str.replace(/@\n/g,',')+'}';      //加{}
-    var content_json = JSON.parse(content_obj);           //转json
+    //转json
+    var content_json = content_to_json(vm_obj.contents);
     $(html_obj).find('.display').hide();       //隐藏预览区域的dom
     for(x in content_json){                             //遍历json
         $(html_obj).find('[type='+x+']').show();   //显示内容存在的key会在预览区域显示
@@ -913,4 +814,11 @@ function isEmptyObject(obj){
        return false
    };
    return true
+}
+//将显示内容转换为json
+function content_to_json(content){
+    var content_str = content.substring(0,content.lastIndexOf('@')); //去@符号
+    var content_obj = '{'+content_str.replace(/@\n/g,',')+'}';      //加{}
+    var content_json = JSON.parse(content_obj);           //转json
+    return content_json;
 }
