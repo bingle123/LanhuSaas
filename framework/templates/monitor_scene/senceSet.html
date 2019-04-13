@@ -40,9 +40,10 @@
         }
 
         .Drigging {
+            color:white;
             position: absolute;
-            border: 1px solid black;
-            border-radius: 5px;
+            border: 1px solid white;
+            border-radius: 0px;
         }
 
         .monitor_type {
@@ -296,7 +297,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="预览区">
-                        <el-button type="info" @click="goto">场景编排</el-button>
+                        <el-button type="info" @click="goto('1')">场景编排</el-button>
                     </el-form-item>
                     <el-row type="flex" class="row-bg" justify="center">
                         <el-col :span="2">
@@ -356,7 +357,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="预览区">
-                        <el-button type="info" @click="goto">场景编排</el-button>
+                        <el-button type="info" @click="goto('2')">场景编排</el-button>
                     </el-form-item>
                     <el-row type="flex" class="row-bg" justify="center">
                         <el-col :span="2">

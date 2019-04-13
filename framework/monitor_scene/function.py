@@ -616,7 +616,7 @@ def get_scenes(pos_id, start, end):
                 }
                 item_dict = dict(item_dict, **scene_monitor_dict)
                 # 按不同的监控项类型保存
-                if 1 == item.monitor_type:
+                if 1 == item.monitor_type or 5 == item.monitor_type:
                     base_list.append(item_dict)
                 if 2 == item.monitor_type:
                     chart_list.append(item_dict)

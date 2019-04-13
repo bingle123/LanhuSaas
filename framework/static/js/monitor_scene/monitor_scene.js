@@ -299,10 +299,16 @@ $(function () {
                 vm.canvas_flag = 0;
                 $('.monitor_content').html('');
             },
-            async goto() {
+            async goto(type) {
+                //新增
+                if("1" == type){
+                    //新增每次清空编排面板
+                    $('.monitor_content').html() == '';
+                    vm.result_list_edit = null;
+                }
                 vm.canvas_flag = 1;
                 if ($('.monitor_content').html() == '') {//场景编排内容块无元素
-                    $(".monitor_content").append('<canvas id="line_canvas" style="position: absolute"></canvas>');
+                    $(".monitor_content").append('<canvas id="line_canvas" style="position: absolute;"></canvas>');
                     $('.monitor_edit').css('display', 'block');
                     vm.show_num = vm.isAdd;
                     vm.isAdd = 0;
@@ -338,7 +344,7 @@ $(function () {
                             $('.monitor_content').append('<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" type=\"basic' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"></div>');
                             vm.current_monitor_item = vm.monitor_data[0];
                             preview_monitor_item(vm ,"monitor_scene",".monitor_content");
-                            //test_monitor(vm.monitor_data[0].id, vm.monitor_data[0].display_rule, vm.monitor_data[0].display_type, vm.monitor_data[0].measure_name, vm.monitor_data[0].target_name, 1);
+                            vm.drigging_id++ ;
                         }
                         if (result_list_edit[i].monitor_type === 2) {
                             let res = await axios({
