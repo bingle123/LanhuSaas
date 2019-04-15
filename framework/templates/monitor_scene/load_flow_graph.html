@@ -79,20 +79,35 @@
 				model.beginUpdate();
 				//以下面特效
 				var cell = model.getCell('11');
-				var color = '';
+				var cell1 = model.getCell('12');
+				var color = '';var txtCpu = '';var txtNet='';
 				var rnd = Math.random() * 4;
                 if (rnd > 3)
                 {
                     color = '#f8cecc';
+                    txtCpu = 'CPU:100%';
+                    txtNet = '流量;10M/S';
                 }
                 else if (rnd > 2)
                 {
                     color = '#fff2cc';
+                    txtCpu = 'CPU:50%';
+                    txtNet = '流量;5M/S';
                 }
                 else if (rnd > 1)
                 {
                     color = '#d4e1f5';
+                    txtCpu = 'CPU:10%';
+                    txtNet = '流量;1M/S';
                 }
+                else {
+                    color = '#f4f0f5';
+                    txtCpu = 'CPU:1%';
+                    txtNet = '流量;2M/S';
+                }
+
+                cell.value = txtCpu;
+                cell1.value = txtNet;
 				graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, 'white', [cell]);
 				graph.removeCellOverlays(cell);
 
