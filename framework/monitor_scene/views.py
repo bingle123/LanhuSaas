@@ -185,17 +185,20 @@ def get_scenes(request):
     return render_json(res)
 
 
+# 场景颜色保存方法
 def scene_color_save(request):
     scene_color = json.loads(request.body)
     status = function.scene_color_save(scene_color)
     return render_json(status)
 
 
+# 根据场景ID获取场景颜色
 def scene_color_get(request):
     color = function.scene_color_get(request.body)
     return render_json(color)
 
 
+# 根据场景ID删除场景颜色
 def scene_color_del(request):
     status = function.scene_color_del(request.body)
     return render_json(status)

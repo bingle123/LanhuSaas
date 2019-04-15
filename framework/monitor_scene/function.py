@@ -663,6 +663,7 @@ def get_all_pos(request):
     return res
 
 
+# 场景颜色保存方法
 def scene_color_save(scene_color_info):
     print scene_color_info
     if 'add' == scene_color_info['type']:
@@ -675,6 +676,7 @@ def scene_color_save(scene_color_info):
         raise RuntimeError('添加类型错误！')
 
 
+# 根据场景ID获取场景颜色
 def scene_color_get(scene_id):
     color_dict = dict()
     color = SceneColor.objects.get(scene_id=scene_id)
@@ -682,6 +684,7 @@ def scene_color_get(scene_id):
     return color_dict
 
 
+# 根据场景ID删除场景颜色
 def scene_color_del(scene_id):
     color_dict = dict()
     SceneColor.objects.filter(scene_id=scene_id).delete()
