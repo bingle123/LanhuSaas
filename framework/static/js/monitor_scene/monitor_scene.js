@@ -319,9 +319,8 @@ $(function () {
                 vm.paging();
                 vm.canvas_flag = 0;
                 $('.monitor_content').html('');
+                //退出场景编辑后，颜色重置
                 vm.scene_font_color = '#AAAAAA';
-                //调整场景的字体颜色
-                this.change_scene_color();
             },
             async goto(type) {
                 //新增
@@ -412,7 +411,7 @@ $(function () {
                     }
                     vm.drigging_id = max + 1;
                     //调整场景的字体颜色
-                    this.change_scene_color();
+                    vm.change_scene_color();
                 } else {
                     $('.monitor_edit').css('display', 'block');
                     vm.show_num = vm.isAdd;
@@ -567,6 +566,7 @@ $(function () {
                 vm.current_monitor_item = i;
                 preview_monitor_item(vm ,"monitor_scene",".monitor_content");
                 vm.drigging_id++ ;
+                vm.change_scene_color();
             },
             add_chart_monitor(i) {
                 $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"height:' + i.height + 'px;position: absolute;width:' + i.width + 'pxtransform: scale(' + vm.scale + ')\"><div id=\"chart' + i.id + '\" style=\"background:beige;height:' + (i.height - 2) + 'px;width:' + (i.width - 2) + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>' + vm.sizeStrFun() + '</div></div>')
