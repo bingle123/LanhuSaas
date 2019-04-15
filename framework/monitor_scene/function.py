@@ -670,7 +670,7 @@ def scene_color_save(scene_color_info):
         SceneColor.objects.create(**scene_color_info)
     elif 'edit' == scene_color_info['type']:
         del scene_color_info['type']
-        SceneColor.objects.update(**scene_color_info)
+        SceneColor.objects.filter(scene_id=scene_color_info['scene_id']).update(**scene_color_info)
     else:
         raise RuntimeError('添加类型错误！')
 
