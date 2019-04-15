@@ -5,13 +5,19 @@
     <title>Grapheditor</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+    <style type="text/css">
+		.flow {
+		  stroke-dasharray: 8;
+		  animation: dash 0.5s linear;
+		  animation-iteration-count: infinite;
+		}
+		@keyframes dash {
+		  to {
+		    stroke-dashoffset: -16;
+		  }
+		}
+	</style>
 	<script type="text/javascript">
-		// Parses URL parameters. Supported parameters are:
-		// - lang=xy: Specifies the language of the user interface.
-		// - touch=1: Enables a touch-style user interface.
-		// - storage=local: Enables HTML5 local storage.
-		// - chrome=0: Chromeless mode.
 		var urlParams = (function(url)
 		{
 			var result = new Object();
@@ -68,12 +74,64 @@
 				var doc = mxUtils.parseXml(xml);
 				var codec = new mxCodec(doc);
 				codec.decode(doc.documentElement, graph.getModel());
+
+				var model = graph.getModel();
+				model.beginUpdate();
+				//以下面特效
+				var cell = model.getCell('11');
+				var color = '';
+				var rnd = Math.random() * 4;
+                if (rnd > 3)
+                {
+                    color = '#f8cecc';
+                }
+                else if (rnd > 2)
+                {
+                    color = '#fff2cc';
+                }
+                else if (rnd > 1)
+                {
+                    color = '#d4e1f5';
+                }
+				graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, 'white', [cell]);
+				graph.removeCellOverlays(cell);
+
+				graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, color, [cell]);
+				graph.addCellOverlay(cell, createOverlay(graph.warningImage, 'State: '+color));
+
+				model.endUpdate();
+
+				var e1 =  model.getCell('14');
+				var e2 =  model.getCell('15');
+
+				var state = graph.view.getState(e1);
+				var state1 = graph.view.getState(e2);
+				state.shape.node.getElementsByTagName('path')[0].removeAttribute('visibility');
+				state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke-width', '6');
+				state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke', 'lightGray');
+				state.shape.node.getElementsByTagName('path')[1].setAttribute('class', 'flow');
+
+				state1.shape.node.getElementsByTagName('path')[0].removeAttribute('visibility');
+				state1.shape.node.getElementsByTagName('path')[0].setAttribute('stroke-width', '6');
+				state1.shape.node.getElementsByTagName('path')[0].setAttribute('stroke', 'lightGray');
+				state1.shape.node.getElementsByTagName('path')[1].setAttribute('class', 'flow');
 			}, function()
 			{
 				document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
 			});
 		}
+        function createOverlay(image, tooltip)
+		{
+			var overlay = new mxCellOverlay(image, tooltip);
 
+			// Installs a handler for clicks on the overlay
+			overlay.addListener(mxEvent.CLICK, function(sender, evt)
+			{
+				mxUtils.alert(tooltip + '\nLast update: ' + new Date());
+			});
+
+			return overlay;
+		};
 	</script>
 <!-- Page passes the container and control to the main function -->
 <body onload="main(document.getElementById('graphContainer'));">
