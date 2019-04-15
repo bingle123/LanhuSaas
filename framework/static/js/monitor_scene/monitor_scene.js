@@ -10,7 +10,7 @@ $(function () {
     vm = new Vue({
         el: '.content',
         data: {
-            scene_font_color: '#000000',
+            scene_font_color: '#AAAAAA',
             page_count: 100,//分页总页数
             page: 1,                                   //分页页码数
             start_time: '8:00',
