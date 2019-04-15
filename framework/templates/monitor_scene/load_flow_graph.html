@@ -1,0 +1,85 @@
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=5,IE=9" ><![endif]-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grapheditor</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<script type="text/javascript">
+		// Parses URL parameters. Supported parameters are:
+		// - lang=xy: Specifies the language of the user interface.
+		// - touch=1: Enables a touch-style user interface.
+		// - storage=local: Enables HTML5 local storage.
+		// - chrome=0: Chromeless mode.
+		var urlParams = (function(url)
+		{
+			var result = new Object();
+			var idx = url.lastIndexOf('?');
+	
+			if (idx > 0)
+			{
+				var params = url.substring(idx + 1).split('&');
+				
+				for (var i = 0; i < params.length; i++)
+				{
+					idx = params[i].indexOf('=');
+					
+					if (idx > 0)
+					{
+						result[params[i].substring(0, idx)] = params[i].substring(idx + 1);
+					}
+				}
+			}
+			
+			return result;
+		})(window.location.href);
+	
+		// Default resources are included in grapheditor resources
+		mxLoadResources = false;
+		var static_url = ${STATIC_URL};
+	</script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Init.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/deflate/pako.min.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/deflate/base64.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/jscolor/jscolor.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/sanitizer/sanitizer.min.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/../../../src/js/mxClient.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/EditorUi.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Editor.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Sidebar.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Graph.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Format.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Shapes.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Actions.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Menus.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Toolbar.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Dialogs.js"></script>
+</head>
+	<script type="text/javascript">
+		// Extends EditorUi to update I/O action states based on availability of backend
+		function main(container){
+			var graph = new mxGraph(container);
+			graph.setTooltips(true);
+			graph.setEnabled(false);
+			mxUtils.get('${STATIC_URL}js/mxgraph/examples/grapheditor/www/styles/Drawing1.xml', function(xhr)
+			{
+				var xml = xhr.getText();
+				var doc = mxUtils.parseXml(xml);
+				var codec = new mxCodec(doc);
+				codec.decode(doc.documentElement, graph.getModel());
+			}, function()
+			{
+				document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
+			});
+		}
+
+	</script>
+<!-- Page passes the container and control to the main function -->
+<body onload="main(document.getElementById('graphContainer'));">
+	<!-- Acts as a container for the graph -->
+	<div id="graphContainer" style="overflow:hidden;position:relative;width:861px;height:806px;cursor:default;">
+	</div>
+	<br>
+</body>
+</html>
