@@ -850,7 +850,7 @@
                                 <el-form-item label="度量值" prop="measures_name">
                                     <el-select v-model="base.measures_name" filterable placeholder="请选择指标名称">
                                         <el-option
-                                                v-for="item in dimensionality_list"
+                                                v-for="item in metric_list"
                                                 :key="item"
                                                 :label="item"
                                                 :value="item">
@@ -901,12 +901,7 @@
                                     <el-col :span="11">
                                         <el-form-item label="维度名称" :prop="'dimension_data.'+ index +'.dimension_name'" :rules="basicMonitorRules.dimension_data.dimension_name">
                                             <el-select v-model="i.dimension_name">
-                                                <el-option label="ip" value="ip">
-                                                </el-option>
-                                                <el-option label="appsystem" value="appsystem">
-                                                </el-option>
-                                                <el-option label="hostname" value="hostname">
-                                                </el-option>
+                                                <el-option :label="i" :value="i" v-for="(i,index) in dimension_list"></el-option>
                                             </el-select>
                                         </el-form-item>
                                     </el-col>
@@ -1354,7 +1349,10 @@
             measures: '',
             measures_name:'',
             iqube_name: [],
-            dimensionality_list: [],
+            //度量值列表
+            metric_list: [],
+            //维度名称列表
+            dimension_list: [],
             gather_list:[],
             gather_base_test_data:[],
             /*dimension_data:[{
@@ -2120,7 +2118,6 @@
                             url: '${SITE_URL}db_connection/get_conname/',
                             data:row.params,
                         }).then((res)=> {
-                            console.log(res)
                             //vm.server_url = res['data']['results']['connname'];
                             vm.sql_id = res['data']['results']['id'];
                             vm.server_url = vm.sql_id;
@@ -3043,7 +3040,7 @@
                         }
                         vm.loading = false;
                     }).catch((res) => {
-                        console.error("获取指标集失败"+res.results);
+                        console.error("获取指标集失败"+res);
                         vm.loading = false;
                     });
                 }
@@ -3060,7 +3057,7 @@
                 }
                 //日志监控项模拟数据
                 if(this.base.interface_type == 'log'){
-                    vm.dimensionality_list = {0:'system-init'};
+                    vm.metric_list = {0:'system-init'};
                 }
                 //如果是点击编辑后的数据初始化时触发的此函数，base_monitor_edit_init标记
                 //置为false，在下次触发change_measures函数时将清空度量值
@@ -3070,10 +3067,12 @@
                 for(let i in vm.gather_list){
                     for (let key in vm.gather_list[i]){
                         if (key === value){
-                            vm.dimensionality_list = vm.gather_list[i][key]
+                            vm.metric_list = vm.gather_list[i][key]['metric_list']
+                            vm.dimension_list = vm.gather_list[i][key]['dimension_list']
                         }
                     }
                 }
+                console.log(vm.dimension_list);
             },
             //切换来源类型
             change_source_type(value){

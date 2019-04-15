@@ -31,8 +31,11 @@ class IqubeInterface():
                 for i in api_result['data']:
                     map = {}
                     # 度量值列表
-                    measures_list = api_result['data'][i].split('|')[1].split(',')
-                    map[i] = measures_list
+                    metric_list = api_result['data'][i].split('|')[1].split(',')
+                    dimension_list = api_result['data'][i].split('|')[0].split(',')
+                    map[i] = dict()
+                    map[i]['metric_list'] = metric_list
+                    map[i]['dimension_list'] = dimension_list
                     return_list.append(map)
                 return success_result(return_list)
             else:
