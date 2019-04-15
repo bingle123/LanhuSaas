@@ -220,7 +220,7 @@ function show_chart(item_id,chartData,person_count,chart_type,height,width,drigg
             myChart.setOption(option);
         }
 }
-function base_monitor_active(item_id,font_size,height,width,content) {
+function base_monitor_active(monitor_item, html_obj) {
         var contents=content.split('#')
         var count=(contents.length-1)/2
         var con=[]
@@ -748,7 +748,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
  */
 function collection_content_change(vm_obj,html_obj){
     //转json
-    var content_json = content_to_json(vm_obj.contents);
+    var content_json = content_to_json(vm_obj.base.contents);
     $(html_obj).find('.display').hide();       //隐藏预览区域的dom
     for(x in content_json){                             //遍历json
         $(html_obj).find('[type='+x+']').show();   //显示内容存在的key会在预览区域显示
