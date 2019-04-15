@@ -101,6 +101,15 @@ $(function () {
 
         },
         methods: {
+            //显示加载中..背景
+            popup_loading: function(){
+                return this.$loading({
+                    lock: true,
+                    text: '正在拼命加载中...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            },
             //变更场景颜色
             change_scene_color: function(){
                 $('.monitor_content').css('color', this.scene_font_color);
@@ -135,6 +144,7 @@ $(function () {
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+                        const loading = this.popup_loading();
                         if (formName == 'scene') {
                             axios({
                                 method: 'post',
@@ -154,12 +164,16 @@ $(function () {
                                     method: 'post',
                                     url: '/monitor_scene/scene_color_save/',
                                     data: color_info
+                                }).then(function (res) {
+                                    loading.close();
                                 }).catch(function (e) {
+                                    loading.close();
                                     vm.$message.error('场景颜色上传失败！');
                                 });
                                 vm.isAdd = 1;
                                 vm.select_table();
                             }).catch(function (e) {
+                                loading.close();
                                 vm.$message.error('获取数据失败！');
                             });
                         } else if (formName == 'scene_edit') {
@@ -171,22 +185,26 @@ $(function () {
                             };
                             axios({
                                 method: 'post',
-                                url: '/monitor_scene/scene_color_save/',
-                                data: color_info
-                            }).catch(function (e) {
-                                vm.$message.error('场景颜色上传失败！');
-                            });
-                            axios({
-                                method: 'post',
                                 url: '/monitor_scene/editSence/',
                                 data: {
                                     data: vm.scene_edit,
                                     monitor_data: vm.result_list
                                 }
                             }).then(function (res) {
+                                axios({
+                                    method: 'post',
+                                    url: '/monitor_scene/scene_color_save/',
+                                    data: color_info
+                                }).then(function (res) {
+                                    loading.close();
+                                }).catch(function (e) {
+                                    loading.close();
+                                    vm.$message.error('场景颜色上传失败！');
+                                });
                                 vm.isAdd = 1;
                                 vm.select_table()
                             }).catch(function (e) {
+                                loading.close();
                                 vm.$message.error('获取数据失败！');
                             });
                         }
