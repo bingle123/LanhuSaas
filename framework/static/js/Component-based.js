@@ -656,8 +656,9 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
             for(i in res){
                 key=i
             }
-            //将采集结果转换为json
-            var gather_base_test_data=JSON.parse(res[key]);
+            //将采集结果转换为json,这里的key固定为“measures”只取度量值
+            //原因是数据只从一体化平台来
+            var gather_base_test_data=JSON.parse(res["measures"]);
             $('[type='+selector_id+']').html("");                  //清空dom
             $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
             $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
@@ -692,6 +693,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                         if(data_org[j]==current_monitor_item.target_name+'_'+current_monitor_item.measure_name){
                             var data_value_str=data_value[j].toString();
                             if(data_value_str.indexOf(split_char)>-1){
+                                alert(split_char);
                                 if("#" == split_char) {
                                     bgcolor = data_value[j].split(split_char)[1];
                                  }
