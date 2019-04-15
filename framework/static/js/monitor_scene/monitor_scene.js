@@ -112,8 +112,8 @@ $(function () {
             },
             //变更场景颜色
             change_scene_color: function(){
-                $('.monitor_content').css('color', this.scene_font_color);
-                $('.Drigging').css('border', '1px solid ' + this.scene_font_color);
+                $('.monitor_content').css('color', vm.scene_font_color);
+                $('.Drigging').css('border-color', vm.scene_font_color);
             },
             sizeStrFun: function () {
                 //菜单 放大 缩小
@@ -210,6 +210,8 @@ $(function () {
                             });
                         }
                         $('.monitor_content').html('');
+                        vm.scene_font_color = '#AAAAAA';
+                        vm.change_scene_color();
                     } else {
                         console.log('提交失败!!');
                         return false;
@@ -289,7 +291,7 @@ $(function () {
                     url: '/monitor_scene/scene_color_get/',
                     data: row.id
                 }).then((res) => {
-                    this.scene_font_color = res.data.color;
+                    vm.scene_font_color = res.data.color;
                 }).catch(function (e) {
                     vm.$message.error('获取场景颜色设置失败！');
                 });
@@ -312,11 +314,14 @@ $(function () {
                     vm.$message.error('获取数据失败！');
                 });
             },
-            hide() {
+            hide: function () {
                 this.isAdd = 1;
                 vm.paging();
                 vm.canvas_flag = 0;
                 $('.monitor_content').html('');
+                vm.scene_font_color = '#AAAAAA';
+                //调整场景的字体颜色
+                this.change_scene_color();
             },
             async goto(type) {
                 //新增
@@ -405,9 +410,9 @@ $(function () {
                             flow_monitor(jion_id, result_list_edit[i].order);
                         }
                     }
+                    vm.drigging_id = max + 1;
                     //调整场景的字体颜色
                     this.change_scene_color();
-                    vm.drigging_id = max + 1;
                 } else {
                     $('.monitor_edit').css('display', 'block');
                     vm.show_num = vm.isAdd;
