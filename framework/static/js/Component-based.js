@@ -649,6 +649,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
         var selector_id='basic'+current_monitor_item.id;
         var drigging_id = vm_obj.drigging_id;
         var content_json = content_to_json(current_monitor_item.contents);
+        var display_rule = current_monitor_item.display_rule
         var selector = null;
         //从采集表获取监控项的采集数据
         $.get("/monitor_scene/get_basic_data/"+current_monitor_item.id, function (res){
@@ -704,7 +705,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                                 }else{
                                     $(selector).append('<p >&nbsp;</p>');
                                     if("@" == split_char){
-                                        $(selector).append('<p >'+data_value[j].split("@")[1]+'</p>');
+                                        $(selector).append('<p >'+display_rule.split("@")[1]+'</p>');
                                     }
                                 }
                             }else {
