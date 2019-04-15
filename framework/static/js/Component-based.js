@@ -656,8 +656,9 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
             for(i in res){
                 key=i
             }
-            //将采集结果转换为json
-            var gather_base_test_data=JSON.parse(res[key]);
+            //将采集结果转换为json,这里的key固定为“measures”
+            //原因是这里只取度量值，不考虑历史垃圾数据
+            var gather_base_test_data=JSON.parse(res["measures"]);
             $('[type='+selector_id+']').html("");                  //清空dom
             $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
             $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
@@ -705,7 +706,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                                 }else{
                                     $(selector).append('<p >&nbsp;</p>');
                                     if("@" == split_char){
-                                        $(selector).append('<p >'+display_rule.split("@")[1]+'</p>');
+                                        $(selector).append('<p >'+data_value[j].split(split_char)[1]+'</p>');
                                     }
                                 }
                             }else {
