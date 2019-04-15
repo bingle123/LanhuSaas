@@ -10,7 +10,7 @@ $(function () {
     vm = new Vue({
         el: '.content',
         data: {
-            scene_font_color: '#000000',
+            scene_font_color: '#AAAAAA',
             page_count: 100,//分页总页数
             page: 1,                                   //分页页码数
             start_time: '8:00',
@@ -112,7 +112,8 @@ $(function () {
             },
             //变更场景颜色
             change_scene_color: function(){
-                $('.monitor_content').css('color', this.scene_font_color);
+                $('.monitor_content').css('color', vm.scene_font_color);
+                $('.Drigging').css('border-color', vm.scene_font_color);
             },
             sizeStrFun: function () {
                 //菜单 放大 缩小
@@ -209,6 +210,8 @@ $(function () {
                             });
                         }
                         $('.monitor_content').html('');
+                        vm.scene_font_color = '#AAAAAA';
+                        vm.change_scene_color();
                     } else {
                         console.log('提交失败!!');
                         return false;
@@ -288,7 +291,7 @@ $(function () {
                     url: '/monitor_scene/scene_color_get/',
                     data: row.id
                 }).then((res) => {
-                    this.scene_font_color = res.data.color;
+                    vm.scene_font_color = res.data.color;
                 }).catch(function (e) {
                     vm.$message.error('获取场景颜色设置失败！');
                 });
@@ -311,11 +314,14 @@ $(function () {
                     vm.$message.error('获取数据失败！');
                 });
             },
-            hide() {
+            hide: function () {
                 this.isAdd = 1;
                 vm.paging();
                 vm.canvas_flag = 0;
                 $('.monitor_content').html('');
+                vm.scene_font_color = '#AAAAAA';
+                //调整场景的字体颜色
+                this.change_scene_color();
             },
             async goto(type) {
                 //新增
@@ -342,8 +348,6 @@ $(function () {
                     }
                     let max = 0;
                     let index = 0;
-                    //调整场景的字体颜色
-                    this.change_scene_color();
                     for (var i = 0; i < result_list_edit.length; i++) {
                         if (max < result_list_edit[i].order) {  //场景监控项拖拽元素唯一
                             max = result_list_edit[i].order;
@@ -407,6 +411,8 @@ $(function () {
                         }
                     }
                     vm.drigging_id = max + 1;
+                    //调整场景的字体颜色
+                    this.change_scene_color();
                 } else {
                     $('.monitor_edit').css('display', 'block');
                     vm.show_num = vm.isAdd;
