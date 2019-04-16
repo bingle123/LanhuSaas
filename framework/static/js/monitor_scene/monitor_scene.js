@@ -338,13 +338,15 @@ $(function () {
                     vm.show_num = vm.isAdd;
                     vm.isAdd = 0;
                     let result_list_edit = vm.result_list_edit;
-                    for (var i = 0; i < result_list_edit.length; i++) {
-                        if (result_list_edit[i].next_item != 0) {
-                            line = {
-                                'pid': result_list_edit[i].item_id,
-                                'nid': result_list_edit[i].next_item
+                    if(result_list_edit){
+                        for (var i = 0; i < result_list_edit.length; i++) {
+                            if (result_list_edit[i].next_item != 0) {
+                                line = {
+                                    'pid': result_list_edit[i].item_id,
+                                    'nid': result_list_edit[i].next_item
+                                }
+                                vm.lines.push(line)
                             }
-                            vm.lines.push(line)
                         }
                     }
                     let max = 0;
