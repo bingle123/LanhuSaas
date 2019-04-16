@@ -202,3 +202,17 @@ def scene_color_get(request):
 def scene_color_del(request):
     status = function.scene_color_del(request.body)
     return render_json(status)
+
+def load_flow_graph(request):
+    """
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './monitor_scene/load_flow_graph.html')
+
+def edit_flow_graph(request):
+    """
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './monitor_scene/edit_flow_graph.html')

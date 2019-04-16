@@ -1,0 +1,133 @@
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=5,IE=9" ><![endif]-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grapheditor</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style type="text/css">
+		.flow {
+		  stroke-dasharray: 8;
+		  animation: dash 0.5s linear;
+		  animation-iteration-count: infinite;
+		}
+		@keyframes dash {
+		  to {
+		    stroke-dashoffset: -16;
+		  }
+		}
+	</style>
+	<script type="text/javascript">
+		var static_url = ${STATIC_URL};
+	</script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Init.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/deflate/pako.min.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/deflate/base64.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/jscolor/jscolor.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/sanitizer/sanitizer.min.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/../../../src/js/mxClient.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/EditorUi.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Editor.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Sidebar.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Graph.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Format.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Shapes.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Actions.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Menus.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Toolbar.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Dialogs.js"></script>
+</head>
+	<script type="text/javascript">
+		// Extends EditorUi to update I/O action states based on availability of backend
+		function main(container){
+			var graph = new mxGraph(container);
+			graph.setTooltips(true);
+			graph.setEnabled(false);
+			mxUtils.get('${STATIC_URL}js/mxgraph/examples/grapheditor/www/styles/Drawing1.xml', function(xhr)
+			{
+				var xml = xhr.getText();
+				var doc = mxUtils.parseXml(xml);
+				var codec = new mxCodec(doc);
+				codec.decode(doc.documentElement, graph.getModel());
+
+				var model = graph.getModel();
+				model.beginUpdate();
+				//以下面特效
+				var cell = model.getCell('11');
+				var cell1 = model.getCell('12');
+				var color = '';var txtCpu = '';var txtNet='';
+				var rnd = Math.random() * 4;
+                if (rnd > 3)
+                {
+                    color = '#f8cecc';
+                    txtCpu = 'CPU:100%';
+                    txtNet = '流量;10M/S';
+                }
+                else if (rnd > 2)
+                {
+                    color = '#fff2cc';
+                    txtCpu = 'CPU:50%';
+                    txtNet = '流量;5M/S';
+                }
+                else if (rnd > 1)
+                {
+                    color = '#d4e1f5';
+                    txtCpu = 'CPU:10%';
+                    txtNet = '流量;1M/S';
+                }
+                else {
+                    color = '#f4f0f5';
+                    txtCpu = 'CPU:1%';
+                    txtNet = '流量;2M/S';
+                }
+
+                cell.value = txtCpu;
+                cell1.value = txtNet;
+				graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, 'white', [cell]);
+				graph.removeCellOverlays(cell);
+
+				graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, color, [cell]);
+				graph.addCellOverlay(cell, createOverlay(graph.warningImage, 'State: '+color));
+
+				model.endUpdate();
+
+				var e1 =  model.getCell('14');
+				var e2 =  model.getCell('15');
+
+				var state = graph.view.getState(e1);
+				var state1 = graph.view.getState(e2);
+				state.shape.node.getElementsByTagName('path')[0].removeAttribute('visibility');
+				state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke-width', '6');
+				state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke', 'lightGray');
+				state.shape.node.getElementsByTagName('path')[1].setAttribute('class', 'flow');
+
+				state1.shape.node.getElementsByTagName('path')[0].removeAttribute('visibility');
+				state1.shape.node.getElementsByTagName('path')[0].setAttribute('stroke-width', '6');
+				state1.shape.node.getElementsByTagName('path')[0].setAttribute('stroke', 'lightGray');
+				state1.shape.node.getElementsByTagName('path')[1].setAttribute('class', 'flow');
+			}, function()
+			{
+				document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
+			});
+		}
+        function createOverlay(image, tooltip)
+		{
+			var overlay = new mxCellOverlay(image, tooltip);
+
+			// Installs a handler for clicks on the overlay
+			overlay.addListener(mxEvent.CLICK, function(sender, evt)
+			{
+				mxUtils.alert(tooltip + '\nLast update: ' + new Date());
+			});
+
+			return overlay;
+		};
+	</script>
+<!-- Page passes the container and control to the main function -->
+<body onload="main(document.getElementById('graphContainer'));">
+	<!-- Acts as a container for the graph -->
+	<div id="graphContainer" style="overflow:hidden;position:relative;width:861px;height:806px;cursor:default;">
+	</div>
+	<br>
+</body>
+</html>

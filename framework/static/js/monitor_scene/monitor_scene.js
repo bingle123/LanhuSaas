@@ -364,10 +364,14 @@ $(function () {
                                 vm.$message.error('获取数据失败！');
                             });
                             vm.monitor_data = res.data.results;
-                            $('.monitor_content').append('<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" type=\"basic' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"></div>');
+                            var item = $('<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" type=\"basic' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"></div>');
+                            $('.monitor_content').append(item);
                             vm.current_monitor_item = vm.monitor_data[0];
                             preview_monitor_item(vm ,"monitor_scene",".monitor_content");
                             vm.drigging_id++ ;
+                            if(9000 <= parseInt(result_list_edit[i].item_id) <= 10000){
+                                item.css('border-width','0');
+                            }
                         }
                         if (result_list_edit[i].monitor_type === 2) {
                             let res = await axios({

@@ -34,4 +34,6 @@ urlpatterns = patterns(
     (r'^scene_color_save/$', 'scene_color_save'),
     (r'^scene_color_get/$', 'scene_color_get'),
     (r'^scene_color_del/$', 'scene_color_del'),
+    (r'^load_flow_graph/$', 'load_flow_graph'),
+    (r'^edit_flow_graph/$', 'edit_flow_graph'),
 )
