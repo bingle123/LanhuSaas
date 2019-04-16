@@ -2,6 +2,7 @@
 import function
 from common.mymako import render_json, render_mako_context
 import json
+from common.utils import get_current_time
 
 
 # Create your views here.
@@ -146,6 +147,7 @@ def get_basic_data(req, id):
     :return:
     """
     res = function.get_basic_data(id)
+    print res;
     return render_json(res)
 
 
@@ -216,3 +218,15 @@ def edit_flow_graph(request):
     :return:
     """
     return render_mako_context(request, './monitor_scene/edit_flow_graph.html')
+
+
+
+def get_system_time(request):
+    """
+    获取唯一的数据库系统时间，用于判断当前监控项是否在采集时间区域
+    :param request:
+    :return:
+    """
+    result = get_current_time()
+    return render_json({"result":result[0]})
+
