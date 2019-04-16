@@ -20,6 +20,8 @@ texteditor_content = texteditor_escape(input_content)
 """
 from common.pxfilter import XssHtml
 from common.log import logger
+from db_connection.function import get_db
+from monitor_item import tools
 
 
 def html_escape(html, is_json=False):
@@ -67,3 +69,20 @@ def texteditor_escape(str_escape):
     except Exception, e:
         logger.error(u"js脚本注入检测发生异常，错误信息：%s" % e)
         return str_escape
+
+
+def get_current_time():
+    """
+    获取当前系统时间
+    :return:
+    """
+    try:
+        sql = "SELECT DATE_FORMAT(now(), '%H:%d:%S') AS cur_time;"
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(sql)
+        res1 = cursor.fetchall()
+    except Exception as e:
+        return tools.error_result(e)
+    # scene_list = list(res1)
+    return res1

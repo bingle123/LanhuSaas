@@ -1,57 +1,62 @@
-amqp==1.4.9
+# -*- coding: utf-8 -*-
+# 工程预装模块
+# 需要额外的python包，可直接在文件后面添加
+# 请确保指定的包和版本号，可通过pip安装
+
+amqp==1.4.6
 anyjson==0.3.3
 asn1crypto==0.24.0
-attrs==18.2.0
-Automat==0.7.0
-backports.functools-lru-cache==1.5
-beautifulsoup4==4.7.1
+# attrs==18.2.0
+# Automat==0.7.0
+# backports.functools-lru-cache==1.5
+# beautifulsoup4==4.7.1
 billiard==3.3.0.23
-bs4==0.0.1
+# bs4==0.0.1
 celery==3.1.18
 cffi==1.11.5
-chardet==3.0.4
-constantly==15.1.0
-cryptography==2.4.2
-cssselect==1.0.3
-cx-Oracle==7.0.0
+chardet==2.2.1
+# constantly==15.1.0
+cryptography==2.2.2
+# cssselect==1.0.3
+# cx-Oracle==7.0.0
 Django==1.8.11
 django-celery==3.2.1
-docutils==0.14
+# docutils==0.14
 enum34==1.1.6
-fdfs-client-py==1.2.6
-freeze==1.0.10
-functools32==3.2.3.post2
+# fdfs-client-py==1.2.6
+# freeze==1.0.10
+# functools32==3.2.3.post2
 httplib2==0.9.1
-hyperlink==18.0.0
+# hyperlink==18.0.0
 idna==2.8
-incremental==17.5.0
+# incremental==17.5.0
 ipaddress==1.0.22
-kombu==3.0.37
-lxml==4.3.0
+kombu==3.0.35
+# lxml==4.3.0
 Mako==1.0.4
 MarkupSafe==0.23
-meld3==1.0.2
-mutagen==1.42.0
-parsel==1.5.1
-Pillow==5.4.1
-pyasn1==0.4.5
-pyasn1-modules==0.2.3
-pycparser==2.19
-pyDes==2.0.1
-PyDispatcher==2.0.5
-PyHamcrest==1.9.0
-pymssql==2.1.4
+meld3==1.0.0
+# mutagen==1.42.0
+# parsel==1.5.1
+Pillow==2.9.0
+pyasn1==0.4.3
+# pyasn1-modules==0.2.3
+pycparser==2.18
+# pyDes==2.0.1
+# PyDispatcher==2.0.5
+# PyHamcrest==1.9.0
+# pymssql==2.1.4
 PyMySQL==0.6.7
-pyOpenSSL==18.0.0
-pytz==2018.9
-pywin32==224
-queuelib==1.5.0
+# pyOpenSSL==18.0.0
+pytz==2016.9
+# pywin32==224
+# queuelib==1.5.0
 requests==2.9.1
-Scrapy==1.1.2
-scrapy-djangoitem==1.1.1
-selenium==3.141.0
-service-identity==18.1.0
-six==1.12.0
+# Scrapy==1.1.2
+# scrapy-djangoitem==1.1.1
+# selenium==3.141.0
+# service-identity==18.1.0
+six==1.11.0
 soupsieve==1.7.1
 suds==0.4
 supervisor==3.3.3

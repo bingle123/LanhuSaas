@@ -240,6 +240,7 @@ $(function () {
                     vm.$message.error('获取数据失败！');
                 });
             },
+            //初始加载数据
             current_change(value) {
                 vm.page = value;
                 vm.paging()
@@ -253,8 +254,14 @@ $(function () {
                         limit: 10
                     },
                 }).then(function (res) {
-                    vm.tableData = res.data.message;
-                    vm.page_count = res.data.message[0].page_count;
+                    //这里要注意，初始化是没有数据的
+                    if(res.data.message && res.data.message.length > 0){
+                        vm.tableData = res.data.message;
+                        vm.page_count = res.data.message[0].page_count;
+                    }else{
+                        vm.tableData = res.data.message;
+                        vm.page_count = 0;
+                    }
                 }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
                 });
@@ -302,6 +309,7 @@ $(function () {
                 }, 100)
             },
             monitore_edit_start(value) {    //获取场景监控项信息
+                alert(234);
                 axios({
                     method: 'post',
                     url: '/monitor_scene/scene_data/',
@@ -329,7 +337,7 @@ $(function () {
                 if("1" == type){
                     //新增每次清空编排面板
                     $('.monitor_content').html() == '';
-                    vm.result_list_edit = null;
+                    vm.result_list_edit = [];
                 }
                 vm.canvas_flag = 1;
                 if ($('.monitor_content').html() == '') {//场景编排内容块无元素
@@ -338,13 +346,15 @@ $(function () {
                     vm.show_num = vm.isAdd;
                     vm.isAdd = 0;
                     let result_list_edit = vm.result_list_edit;
-                    for (var i = 0; i < result_list_edit.length; i++) {
-                        if (result_list_edit[i].next_item != 0) {
-                            line = {
-                                'pid': result_list_edit[i].item_id,
-                                'nid': result_list_edit[i].next_item
+                    if(result_list_edit){
+                        for (var i = 0; i < result_list_edit.length; i++) {
+                            if (result_list_edit[i].next_item != 0) {
+                                line = {
+                                    'pid': result_list_edit[i].item_id,
+                                    'nid': result_list_edit[i].next_item
+                                }
+                                vm.lines.push(line)
                             }
-                            vm.lines.push(line)
                         }
                     }
                     let max = 0;

@@ -399,12 +399,10 @@
                             <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-monitors"></i>
                         </div>
-
                     </el-col>
                     <el-col :span="24">
-                        <el-pagination :page-count="base_page_count" background layout="prev, pager, next"
-                                       style="float:right"
-                                       @current-change="current_change1"></el-pagination>
+                        <el-pagination :page-count="base_page_count" :small=true layout="prev, pager, next"
+                                       @current-change="current_change1" :pager-count=5></el-pagination>
                     </el-col>
                 </div>
                 <el-col :span="24">
