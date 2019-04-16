@@ -10,7 +10,7 @@ $(function () {
     vm = new Vue({
         el: '.content',
         data: {
-            scene_font_color: '#000000',
+            scene_font_color: '#AAAAAA',
             page_count: 100,//分页总页数
             page: 1,                                   //分页页码数
             start_time: '8:00',
@@ -112,7 +112,8 @@ $(function () {
             },
             //变更场景颜色
             change_scene_color: function(){
-                $('.monitor_content').css('color', this.scene_font_color);
+                $('.monitor_content').css('color', vm.scene_font_color);
+                $('.Drigging').css('border-color', vm.scene_font_color);
             },
             sizeStrFun: function () {
                 //菜单 放大 缩小
@@ -166,8 +167,12 @@ $(function () {
                                     data: color_info
                                 }).then(function (res) {
                                     loading.close();
+                                    //上传场景颜色后，场景颜色恢复默认值
+                                    vm.scene_font_color = '#AAAAAA';
                                 }).catch(function (e) {
                                     loading.close();
+                                    //上传场景颜色失败后，场景颜色恢复默认值
+                                    vm.scene_font_color = '#AAAAAA';
                                     vm.$message.error('场景颜色上传失败！');
                                 });
                                 vm.isAdd = 1;
@@ -288,7 +293,7 @@ $(function () {
                     url: '/monitor_scene/scene_color_get/',
                     data: row.id
                 }).then((res) => {
-                    this.scene_font_color = res.data.color;
+                    vm.scene_font_color = res.data.color;
                 }).catch(function (e) {
                     vm.$message.error('获取场景颜色设置失败！');
                 });
@@ -311,11 +316,13 @@ $(function () {
                     vm.$message.error('获取数据失败！');
                 });
             },
-            hide() {
+            hide: function () {
                 this.isAdd = 1;
                 vm.paging();
                 vm.canvas_flag = 0;
                 $('.monitor_content').html('');
+                //退出场景编辑后，颜色重置
+                vm.scene_font_color = '#AAAAAA';
             },
             async goto(type) {
                 //新增
@@ -342,8 +349,6 @@ $(function () {
                     }
                     let max = 0;
                     let index = 0;
-                    //调整场景的字体颜色
-                    this.change_scene_color();
                     for (var i = 0; i < result_list_edit.length; i++) {
                         if (max < result_list_edit[i].order) {  //场景监控项拖拽元素唯一
                             max = result_list_edit[i].order;
@@ -407,6 +412,8 @@ $(function () {
                         }
                     }
                     vm.drigging_id = max + 1;
+                    //调整场景的字体颜色
+                    vm.change_scene_color();
                 } else {
                     $('.monitor_edit').css('display', 'block');
                     vm.show_num = vm.isAdd;
@@ -556,11 +563,17 @@ $(function () {
              * @param i
              */
             add_base_monitor(i) {
-                $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" type=\"basic' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"transform: scale(' + vm.scale + ')\"></div>');
+                var item = $('<div class=\"Drigging\" name=\"' + i.id + '\" type=\"basic' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"transform: scale(' + vm.scale + ')\"></div>');
+                $('.monitor_content').append(item);
                 //把当前监控项的内容赋值给vm对象，场景编排时，需要将编排的监控项根据展示规则还原成预览的效果
                 vm.current_monitor_item = i;
                 preview_monitor_item(vm ,"monitor_scene",".monitor_content");
                 vm.drigging_id++ ;
+                vm.change_scene_color();
+                //对箭头及线条去除边框操作
+                if(i.monitor_name.indexOf("箭头") != -1 || i.monitor_name.indexOf("线条") != -1){
+                    item.css('border-width', 0);
+                }
             },
             add_chart_monitor(i) {
                 $('.monitor_content').append('<div class=\"Drigging\" name=\"' + i.id + '\" id=\"' + vm.drigging_id + '\" style=\"height:' + i.height + 'px;position: absolute;width:' + i.width + 'pxtransform: scale(' + vm.scale + ')\"><div id=\"chart' + i.id + '\" style=\"background:beige;height:' + (i.height - 2) + 'px;width:' + (i.width - 2) + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>' + vm.sizeStrFun() + '</div></div>')

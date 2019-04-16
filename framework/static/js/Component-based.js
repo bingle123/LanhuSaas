@@ -220,7 +220,7 @@ function show_chart(item_id,chartData,person_count,chart_type,height,width,drigg
             myChart.setOption(option);
         }
 }
-function base_monitor_active(item_id,font_size,height,width,content) {
+function base_monitor_active(monitor_item, html_obj) {
         var contents=content.split('#')
         var count=(contents.length-1)/2
         var con=[]
@@ -656,8 +656,9 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
             for(i in res){
                 key=i
             }
-            //将采集结果转换为json
-            var gather_base_test_data=JSON.parse(res[key]);
+            //将采集结果转换为json,这里的key固定为“measures”
+            //原因是这里只取度量值，不考虑历史垃圾数据
+            var gather_base_test_data=JSON.parse(res["measures"]);
             $('[type='+selector_id+']').html("");                  //清空dom
             $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
             $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
@@ -705,7 +706,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                                 }else{
                                     $(selector).append('<p >&nbsp;</p>');
                                     if("@" == split_char){
-                                        $(selector).append('<p >'+display_rule.split("@")[1]+'</p>');
+                                        $(selector).append('<p >'+data_value[j].split(split_char)[1]+'</p>');
                                     }
                                 }
                             }else {
@@ -747,7 +748,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
  */
 function collection_content_change(vm_obj,html_obj){
     //转json
-    var content_json = content_to_json(vm_obj.contents);
+    var content_json = content_to_json(vm_obj.base.contents);
     $(html_obj).find('.display').hide();       //隐藏预览区域的dom
     for(x in content_json){                             //遍历json
         $(html_obj).find('[type='+x+']').show();   //显示内容存在的key会在预览区域显示
