@@ -1612,7 +1612,7 @@ mxGraph.prototype.collapsedImage = new mxImage(mxClient.imageBasePath + '/collap
  * Specifies the <mxImage> to indicate a expanded state.
  * Default value is mxClient.imageBasePath + '/expanded.gif'
  */
-mxGraph.prototype.expandedImage = new mxImage(mxClient.imageBasePath + '/', 9, 9);
+mxGraph.prototype.expandedImage = new mxImage(mxClient.imageBasePath + '/expanded.gif', 9, 9);
 
 /**
  * Variable: warningImage
@@ -8674,7 +8674,8 @@ mxGraph.prototype.getFoldingImage = function(state)
 		
 		if (this.isCellFoldable(state.cell, !tmp))
 		{
-			return (tmp) ? this.collapsedImage : this.expandedImage;
+			//return (tmp) ? this.collapsedImage : this.expandedImage;
+            return null;
 		}
 	}
 	
