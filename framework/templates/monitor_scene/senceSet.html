@@ -392,6 +392,9 @@
                     监控项</h2>
                 <el-col :span="24">
                     <h3 @click="monitor_type_switch(1)" class="monitor_type">基本监控项</h3>
+                    <el-input v-if="scene_basic_search_display" v-model="basic_search" placeholder="监控项名称检索.." size="mini">
+                        <el-button slot="append" icon="el-icon-search" size="mini"></el-button>
+                    </el-input>
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in base_monitor" :key="index">
