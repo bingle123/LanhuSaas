@@ -6,7 +6,7 @@
 <mxGeometry x="120" y="221" width="30" height="30" as="geometry"/></mxCell>
 <mxCell id="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=3;endArrow=block;endSize=2;endFill=1;strokeColor=black;rounded=1;" edge="1" parent="1" source="11" target="13">
 <mxGeometry relative="1" as="geometry"/></mxCell>
-<mxCell id="11" value="指标1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=56;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;" vertex="1" parent="1">
+<mxCell id="11" value="指标1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=56;fillColor=none;horizontalStack=0;resizeParent=0;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;" vertex="1" parent="1">
 <mxGeometry x="300" y="195" width="140" height="82" as="geometry"/></mxCell>
 <mxCell id="12" value="指标2" style="text;strokeColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;fillColor=#6A90CB;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="11">
 <mxGeometry y="56" width="140" height="26" as="geometry"/></mxCell>

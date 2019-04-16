@@ -48,12 +48,19 @@
 				var xml = xhr.getText();
 				var doc = mxUtils.parseXml(xml);
 				var codec = new mxCodec(doc);
-				codec.decode(doc.documentElement, graph.getModel());
+				try{
+				    codec.decode(doc.documentElement, graph.getModel());
+                }catch (e) {
+                    
+                }
+				
 
 				var model = graph.getModel();
-				model.beginUpdate();
+
 				//以下面特效
-				var cell = model.getCell('11');
+                setInterval(function(){
+                    model.beginUpdate();
+                var cell = model.getCell('11');
 				var cell1 = model.getCell('12');
 				var color = '';var txtCpu = '';var txtNet='';
 				var rnd = Math.random() * 4;
@@ -90,6 +97,8 @@
 				graph.addCellOverlay(cell, createOverlay(graph.warningImage, 'State: '+color));
 
 				model.endUpdate();
+
+                } ,3000);
 
 				var e1 =  model.getCell('14');
 				var e2 =  model.getCell('15');
