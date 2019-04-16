@@ -690,3 +690,16 @@ def scene_color_del(scene_id):
     SceneColor.objects.filter(scene_id=scene_id).delete()
     color_dict['status'] = "ok"
     return color_dict
+
+
+# 场景编排模糊检索监控项
+def monitor_scene_fuzzy_search(data):
+    if 'basic' == data['type']:
+        base_unit = Monitor.objects.filter(Q(monitor_type=1) | Q(monitor_type=5)).filter(monitor_name__contains=data['condition']).order_by("-id")
+        base_page_data, base_page_count = tools.page_paging(base_unit, data['limit'], data['page'])
+        base_list = tools.obt_dic(base_page_data, base_page_count)
+        res_dic = {
+            'base_list': base_list,
+        }
+        result = tools.success_result(res_dic)
+        return result

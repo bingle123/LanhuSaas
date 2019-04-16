@@ -37,4 +37,5 @@ urlpatterns = patterns(
     (r'^load_flow_graph/$', 'load_flow_graph'),
     (r'^edit_flow_graph/$', 'edit_flow_graph'),
     (r'^get_system_time/$', 'get_system_time'),
+    (r'^monitor_scene_fuzzy_search/$', 'monitor_scene_fuzzy_search'),
 )

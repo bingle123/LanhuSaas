@@ -230,3 +230,13 @@ def get_system_time(request):
     result = get_current_time()
     return render_json({"result":result[0]})
 
+
+def monitor_scene_fuzzy_search(request):
+    """
+    场景编排展示
+    :param request:
+    :return:
+    """
+    param = json.loads(request.body)
+    res = function.monitor_scene_fuzzy_search(param)
+    return render_json(res)

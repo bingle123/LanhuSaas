@@ -105,9 +105,27 @@ $(function () {
 
         },
         methods: {
-            scene_search: function(type){
+            scene_search: function(type, value){
                 if('basic' == type){
-                    alert($('.monitor_list').eq(0).find('p').text());
+                    var data = {
+                        'type' : 'basic',
+                        'condition': vm.basic_search,
+                        'page' : '1',
+                        'limit' : '4'
+                    };
+                    const loading = this.popup_loading();
+                    axios({
+                        method: 'post',
+                        url: '/monitor_scene/monitor_scene_fuzzy_search/',
+                        data: data
+                    }).then(function (res) {
+                        loading.close();
+                        vm.base_monitor = res.data.results.base_list;
+                        vm.base_page_count = res.data.results.base_list[0].page_count;
+                    }).catch(function (e) {
+                        loading.close();
+                        vm.$message.error('监控项信息检索失败！');
+                    });
                 }
             },
             //显示加载中..背景
@@ -388,7 +406,7 @@ $(function () {
                             vm.current_monitor_item = vm.monitor_data[0];
                             preview_monitor_item(vm ,"monitor_scene",".monitor_content");
                             vm.drigging_id++ ;
-                            id_value = parseInt(result_list_edit[i].item_id)
+                            id_value = parseInt(result_list_edit[i].item_id);
                             if(9000 <= id_value && id_value <= 10000){
                                 item.css('border-width',0);
                             }
@@ -627,7 +645,11 @@ $(function () {
             current_change1(value) {
                 vm.page1 = value;
                 vm.monitor_type = 1;
-                vm.show_monitor_item();
+                if('' != vm.basic_search){
+                    vm.scene_search('basic', vm.page1);
+                }else{
+                    vm.show_monitor_item();
+                }
             },
             current_change2(value) {
                 vm.page1 = value;
