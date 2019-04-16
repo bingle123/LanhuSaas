@@ -370,7 +370,7 @@ $(function () {
                             preview_monitor_item(vm ,"monitor_scene",".monitor_content");
                             vm.drigging_id++ ;
                             if(9000 <= parseInt(result_list_edit[i].item_id) <= 10000){
-                                item.css('border-width','0');
+                                item.css('border-width',0);
                             }
                         }
                         if (result_list_edit[i].monitor_type === 2) {
