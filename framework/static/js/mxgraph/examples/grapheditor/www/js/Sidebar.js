@@ -81,7 +81,7 @@ Sidebar.prototype.init = function()
 	var dir = STENCIL_PATH;
 	
 	this.addSearchPalette(true);
-	this.addBasePalette(false);
+	this.addBasePalette(true);
 	//this.addGeneralPalette(false);
 	//this.addMiscPalette(false);
 	//this.addAdvancedPalette(false);
@@ -898,11 +898,11 @@ Sidebar.prototype.addBasePalette = function(expand)
 
 	// Reusable cells
 	var field = new mxCell('基本监控项', new mxGeometry(0, 0, 60, 26), 'text;strokeColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;fillColor=#6A90CB;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;');
-	var plus = new mxCell('', new mxGeometry(8, 8, 14, 14), 'shape=plus;html=1;outlineConnect=0;');
-	var reduce = new mxCell('', new mxGeometry(8, 8, 14, 14), 'shape=reduce;html=1;outlineConnect=0;');
+	var plus = new mxCell('', new mxGeometry(16, 16, 28, 28), 'shape=plus;html=1;outlineConnect=0;');
+	var reduce = new mxCell('', new mxGeometry(16, 16, 28, 28), 'shape=reduce;html=1;outlineConnect=0;');
 	field.vertex = true;
 	var fns = [
-	 	this.addEntry('基本监控项', function()
+	 			this.addEntry('基本监控项', function()
 	 			{
 	 				var cell = new mxCell('指标1', new mxGeometry(0, 0, 140, 110),
 	 			    	'swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=56;fillColor=none;horizontalStack=0;' +
@@ -927,43 +927,43 @@ Sidebar.prototype.addBasePalette = function(expand)
 	 		 				cell.insert(cloneObj1);
 	 		 				return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, '监控项1');
 	 		 			}),
-	 		 			this.addEntry('基本监控项2', function()
-	 		 		 			{
-	 		 		 				var cell = new mxCell('指标1', new mxGeometry(0, 0, 140, 210),
-	 		 		 			    	'swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=36;rounded=1;'+
-	 		 		 						'fillColor=#6A90CB;horizontalStack=0;gradientColor=white;gradientDirection=east;shadow=1;' +
-	 		 		 			    	'resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;');
-	 		 		 				cell.vertex = true;
-	 		 		 				var field1 = new mxCell('基本监控项', new mxGeometry(0, 0, 140, 166), 'text;strokeColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;fillColor=none;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;');
-	 		 		 				field1.vertex = true;
-	 		 		 				var cloneObj = sb.cloneCell(field1);
-	 		 		 				cloneObj.value='指标2';
-	 		 		 				cell.insert(cloneObj);
-	 		 		 				return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, '监控项1');
-	 		 		 			}),
-	 		this.addEntry('合并', function()
+	 		 	this.addEntry('基本监控项2', function()
+	 		 		 	{
+	 		 		 		var cell = new mxCell('指标1', new mxGeometry(0, 0, 140, 210),
+	 		 		 			   'swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=36;rounded=1;'+
+	 		 		 				'fillColor=#6A90CB;horizontalStack=0;gradientColor=white;gradientDirection=east;shadow=1;' +
+	 		 		 			   'resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;');
+	 		 		 		cell.vertex = true;
+	 		 		 		var field1 = new mxCell('基本监控项', new mxGeometry(0, 0, 140, 166), 'text;strokeColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;fillColor=none;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;');
+	 		 		 		field1.vertex = true;
+	 		 		 		var cloneObj = sb.cloneCell(field1);
+	 		 		 		cloneObj.value='指标2';
+	 		 		 		cell.insert(cloneObj);
+	 		 		 		return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, '监控项1');
+	 		 		 	}),
+	 		 	this.addEntry('合并', function()
 	 		 	{
-	 			plus.vertex = true;
-	 		 	var cell = new mxCell('', new mxGeometry(0, 0, 30, 30),'ellipse;shape=startState;whiteSpace=wrap;html=1;');
-	 		 				cell.vertex = true;
-	 		 				var cloneObj = sb.cloneCell(plus);
+	 		 		plus.vertex = true;
+	 		 		var cell = new mxCell('', new mxGeometry(0, 0, 60, 60),'ellipse;shape=startState;whiteSpace=wrap;html=1;');
+	 		 		cell.vertex = true;
+	 		 		var cloneObj = sb.cloneCell(plus);
 	 		 				
-	 		 				cell.insert(cloneObj);
-	 		 				return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, '合并');
+	 		 		cell.insert(cloneObj);
+	 		 		return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, '合并');
 	 		 	}),
 	 		 	this.addEntry('分叉', function()
-	 		 		{
+	 		 	{
 	 		 		reduce.vertex = true;
-	 		 		var cell = new mxCell('', new mxGeometry(0, 0, 30, 30),'ellipse;shape=startState;whiteSpace=wrap;html=1;');
+	 		 		var cell = new mxCell('', new mxGeometry(0, 0, 60, 60),'ellipse;shape=startState;whiteSpace=wrap;html=1;');
 	 		 		cell.vertex = true;
 	 		 		var cloneObj = sb.cloneCell(reduce);
 	 		 		 				
 	 		 		cell.insert(cloneObj);
 	 		 		return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, '分叉');
-	 		 		}),
+	 		 	}),
 	 	
-	 	this.createVertexTemplateEntry('ellipse;shape=startState;whiteSpace=wrap;html=1;', 30, 30, '', '开始', null, null, '开始'),
-	 	this.createVertexTemplateEntry('ellipse;html=1;shape=endState;fillColor=#000000;', 30, 30, '', '结束', null, null, '结束'),
+	 	this.createVertexTemplateEntry('ellipse;shape=startState;whiteSpace=wrap;html=1;', 50, 50, '', '开始', null, null, '开始'),
+	 	this.createVertexTemplateEntry('ellipse;html=1;shape=endState;fillColor=#000000;', 50, 50, '', '结束', null, null, '结束'),
 	 	
 	];
 	
