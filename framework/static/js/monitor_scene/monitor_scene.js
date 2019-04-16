@@ -10,6 +10,10 @@ $(function () {
     vm = new Vue({
         el: '.content',
         data: {
+            //场景编排搜索框是否可见
+            scene_basic_search_display: false,
+            //场景编排基本监控项的检索条件
+            basic_search: '',
             scene_font_color: '#AAAAAA',
             page_count: 100,//分页总页数
             page: 1,                                   //分页页码数
@@ -101,6 +105,11 @@ $(function () {
 
         },
         methods: {
+            scene_search: function(type){
+                if('basic' == type){
+                    alert($('.monitor_list').eq(0).find('p').text());
+                }
+            },
             //显示加载中..背景
             popup_loading: function(){
                 return this.$loading({
@@ -379,7 +388,8 @@ $(function () {
                             vm.current_monitor_item = vm.monitor_data[0];
                             preview_monitor_item(vm ,"monitor_scene",".monitor_content");
                             vm.drigging_id++ ;
-                            if(9000 <= parseInt(result_list_edit[i].item_id) <= 10000){
+                            id_value = parseInt(result_list_edit[i].item_id)
+                            if(9000 <= id_value && id_value <= 10000){
                                 item.css('border-width',0);
                             }
                         }
@@ -545,7 +555,7 @@ $(function () {
                         page: vm.page1
                     },
                 }).then((res) => {
-                    console.log(res)
+                    console.log(res);
                     if (vm.monitor_type == 0) {
                         vm.base_monitor = res.data.results.base_list;
                         vm.chart_monitor = res.data.results.chart_list;
@@ -637,7 +647,10 @@ $(function () {
             monitor_type_switch(value) {
                 vm.monitor_type = value;
                 vm.page1 = 1;
-                vm.show_monitor_item()
+                vm.show_monitor_item();
+                if(1 == vm.monitor_type){
+                    vm.scene_basic_search_display = !vm.scene_basic_search_display;
+                }
             }
         }
     });
