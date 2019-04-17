@@ -269,6 +269,12 @@ function base_monitor_active(vm_obj, html_obj) {
                 let data_key = [];
                 let data_value = [];
                 for (k in gather_base_test_data[i]) {
+                    if(gather_base_test_data[i][k].toString().indexOf(split_char)>-1){
+                        //保留颜色信息
+                        if("#" == split_char){
+                            bgcolor = gather_base_test_data[i][k].split(split_char)[1];
+                        }
+                    }
                     //颜色展示可以没有值
                     if (!isEmptyObject(content_json)) {
                         for (x in content_json) {
@@ -292,9 +298,6 @@ function base_monitor_active(vm_obj, html_obj) {
                     if (data_org[j] == current_monitor_item.target_name + '_' + current_monitor_item.measure_name) {
                         var data_value_str = data_value[j].toString();
                         if (data_value_str.indexOf(split_char) > -1) {
-                            if ("#" == split_char) {
-                                bgcolor = data_value[j].split(split_char)[1];
-                            }
                             //颜色展示可以没有值
                             if (!isEmptyObject(content_json)) {
                                 if ("%" == split_char) {
