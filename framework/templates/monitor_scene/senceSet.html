@@ -26,6 +26,7 @@
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
     <script type="text/javascript" src="${STATIC_URL}js/monitor_scene/monitor_scene.js"></script>
+
     <style>
         .content {
             position: relative;
@@ -393,7 +394,7 @@
                 <el-col :span="24">
                     <h3 @click="monitor_type_switch(1)" class="monitor_type">基本监控项</h3>
                     <el-input v-if="scene_basic_search_display" v-model="basic_search" placeholder="监控项名称检索.." size="mini">
-                        <el-button slot="append" icon="el-icon-search" size="mini"></el-button>
+                        <el-button slot="append" icon="el-icon-search" size="mini" @click="scene_search('basic', 1)"></el-button>
                     </el-input>
                 </el-col>
                 <div class="monitor_list">

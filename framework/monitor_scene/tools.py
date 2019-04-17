@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.core.paginator import Paginator
 from blueking.component.shortcuts import get_client_by_request
+import time
 
 
 def error_result(e):
@@ -56,5 +57,8 @@ def interface_param(request):
     client = get_client_by_request(request)                         # 获取code、secret参数
     client.set_bk_api_ver('v2')                                     # 以v2版本调用接口
     return client
+
+
+
 
 

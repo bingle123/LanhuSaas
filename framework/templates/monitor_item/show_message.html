@@ -13,8 +13,15 @@
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
     <script src="${STATIC_URL}js/csrftoken.js"></script>
     <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
+
+    <script type="text/javascript"
+            src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
+    <link rel="stylesheet"
+          href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css"/>
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
     <script type="text/javascript" src="${STATIC_URL}assets/echarts/echarts.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/echarts/macarons.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/maintenanceIndex/maintenanceIndex.css">
@@ -3105,7 +3112,7 @@
             // 预览类容编辑
             // 采集表中保存的是实际调用一体化平台的返回的结果，在场景编排中再根据展示规则还原预览效果
             content_change(){
-                collection_content_change(vm ,"#base_test_text");
+                collection_content_change(vm ,"#base_test_text")
             }
         },
         mounted() {

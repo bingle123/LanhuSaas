@@ -3,6 +3,7 @@ import function
 from common.mymako import render_json, render_mako_context
 import json
 from common.utils import get_current_time
+from gather_data.function import gather_data_migrate,gather_data_save
 
 
 # Create your views here.
@@ -205,12 +206,14 @@ def scene_color_del(request):
     status = function.scene_color_del(request.body)
     return render_json(status)
 
+
 def load_flow_graph(request):
     """
     :param request:
     :return:
     """
     return render_mako_context(request, './monitor_scene/load_flow_graph.html')
+
 
 def edit_flow_graph(request):
     """
@@ -220,13 +223,49 @@ def edit_flow_graph(request):
     return render_mako_context(request, './monitor_scene/edit_flow_graph.html')
 
 
-
-def get_system_time(request):
+# 判断当前监控项是否需要采集
+def is_monitor_item_collect(request):
     """
     获取唯一的数据库系统时间，用于判断当前监控项是否在采集时间区域
     :param request:
     :return:
     """
+    # 将监控项信息转换为json格式
+    monitor_item = json.loads(request.body);
+    # 获取当前系统时间
     result = get_current_time()
-    return render_json({"result":result[0]})
+    # 当前时间
+    current_time = list(result[0])[0]
+    # 开始时间
+    start_time = monitor_item["start_time"]
+    # 结束时间
+    end_time = monitor_item["end_time"]
 
+    # 如果当前时间在监控项的采集时间范围内，执行采集，调用一体化服务
+    if (current_time >= start_time) and (current_time <= end_time):
+        result = function.gather_base_test(request)
+        # 历史数据迁移
+        gather_data_migrate(monitor_item["id"])
+        # print json.loads(result.content)["results"]
+        info = {
+            "item_id" : monitor_item["id"],
+            "measures" : json.loads(result.content)["results"]
+        }
+        print info
+        # 采集数据入库
+        gather_data_save(info)
+        return result
+    else :
+        return render_json({"result": "1"})
+
+
+
+def monitor_scene_fuzzy_search(request):
+    """
+    场景编排展示
+    :param request:
+    :return:
+    """
+    param = json.loads(request.body)
+    res = function.monitor_scene_fuzzy_search(param)
+    return render_json(res)
