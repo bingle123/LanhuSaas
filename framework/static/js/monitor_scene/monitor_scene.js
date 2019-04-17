@@ -10,6 +10,8 @@ $(function () {
     vm = new Vue({
         el: '.content',
         data: {
+            //场景编排数据为空提示信息标志
+            scene_empty_data_display:false,
             //场景编排搜索框是否可见
             scene_basic_search_display: false,
             //场景编排基本监控项的检索条件
@@ -105,23 +107,32 @@ $(function () {
 
         },
         methods: {
+            //场景编排模糊检索
             scene_search: function(type, value){
+                //每次检索时，默认不显示数据空的提示信息，在获取内容时再根据数据长度是否显示提示
+                vm.scene_empty_data_display = false;
                 if('basic' == type){
+                    const loading = this.popup_loading();
                     var data = {
                         'type' : 'basic',
                         'condition': vm.basic_search,
                         'page' : value,
                         'limit' : '4'
                     };
-                    const loading = this.popup_loading();
                     axios({
                         method: 'post',
                         url: '/monitor_scene/monitor_scene_fuzzy_search/',
                         data: data
                     }).then(function (res) {
                         loading.close();
+                        console.log(res);
                         vm.base_monitor = res.data.results.base_list;
-                        vm.base_page_count = res.data.results.base_list[0].page_count;
+                        if(0 == vm.base_monitor.length){
+                            vm.base_page_count = 1;
+                            vm.scene_empty_data_display = true;
+                        }else{
+                            vm.base_page_count = res.data.results.base_list[0].page_count;
+                        }
                     }).catch(function (e) {
                         loading.close();
                         vm.$message.error('监控项信息检索失败！');
