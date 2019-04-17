@@ -110,7 +110,7 @@ $(function () {
                     var data = {
                         'type' : 'basic',
                         'condition': vm.basic_search,
-                        'page' : '1',
+                        'page' : value,
                         'limit' : '4'
                     };
                     const loading = this.popup_loading();
