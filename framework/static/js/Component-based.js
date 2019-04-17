@@ -603,7 +603,8 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                     data_key.push(k);
                     data_value.push(gather_base_test_data[i][k]);
                 }
-                $(html_obj).append('<div class="div'+i+'" style="border: 1px solid #000;"></div>');
+                //border: 1px solid #000;
+                $(html_obj).append('<div class="div'+i+'" style=""></div>');
                 for(let j=0;j<data_key.length;j++){
                     if(data_key[j]==vm_obj.base.measures+'_'+vm_obj.base.measures_name){
                         var data_value_str=data_value[j].toString();

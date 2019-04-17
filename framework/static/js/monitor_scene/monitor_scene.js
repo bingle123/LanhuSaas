@@ -150,7 +150,7 @@ $(function () {
             //变更场景颜色
             change_scene_color: function(){
                 $('.monitor_content').css('color', vm.scene_font_color);
-                $('.Drigging').css('border-color', vm.scene_font_color);
+                //$('.Drigging').css('border-color', vm.scene_font_color);
             },
             sizeStrFun: function () {
                 //菜单 放大 缩小
@@ -418,6 +418,11 @@ $(function () {
                             id_value = parseInt(result_list_edit[i].item_id);
                             if(9000 <= id_value && id_value <= 10000){
                                 item.css('border-width',0);
+                            }else{
+                                item.css('background-color', '#FFFFFF');
+                                item.css('box-sizing', 'border-box');
+                                item.css('padding-left', '16px');
+                                item.css('padding-right', '16px');
                             }
                         }
                         if (result_list_edit[i].monitor_type === 2) {
@@ -624,6 +629,11 @@ $(function () {
                 //对箭头及线条去除边框操作
                 if(i.monitor_name.indexOf("箭头") != -1 || i.monitor_name.indexOf("线条") != -1){
                     item.css('border-width', 0);
+                }else{
+                    item.css('background-color', '#FFFFFF');
+                    item.css('box-sizing', 'border-box');
+                    item.css('padding-left', '16px');
+                    item.css('padding-right', '16px');
                 }
             },
             add_chart_monitor(i) {
