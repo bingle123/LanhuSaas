@@ -245,7 +245,29 @@ def scene_data(id):
             data_dic['scale'] = str(i.scale)
             monitor_data = Monitor.objects.filter(id=data_dic['item_id'])
             for i in monitor_data:
+                data_dic['monitor_name'] = i.monitor_name
                 data_dic['monitor_type'] = i.monitor_type
+                data_dic['jion_id'] = i.jion_id
+                data_dic['gather_rule'] = i.gather_rule
+                data_dic['gather_params'] = i.gather_params
+                data_dic['params'] = i.params
+                data_dic['width'] = i.width
+                data_dic['height'] = i.height
+                data_dic['font_size'] = i.font_size
+                data_dic['period'] = i.period
+                data_dic['start_time'] = str(i.start_time)
+                data_dic['end_time'] = str(i.end_time)
+                data_dic['creator'] = i.creator
+                data_dic['editor'] = i.editor
+                data_dic['status'] = i.status
+                data_dic['contents'] = i.contents
+                data_dic['monitor_area'] = i.monitor_area
+                data_dic['source_type'] = i.source_type
+                data_dic['target_name'] = i.target_name
+                data_dic['measure_name'] = i.measure_name
+                data_dic['dimension'] = i.dimension
+                data_dic['display_type'] = i.display_type
+                data_dic['display_rule'] = i.display_rule
             data_list.append(data_dic)
         res = tools.success_result(data_list)
     except Exception as e:

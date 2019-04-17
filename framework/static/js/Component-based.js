@@ -720,13 +720,13 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
     if("monitor_scene" == preview_type){
         //取得当前的监控项信息
         current_monitor_item = vm_obj.current_monitor_item;
-        var selector_id='basic'+current_monitor_item.id;
+        var selector_id='basic'+current_monitor_item.item_id;
         var drigging_id = vm_obj.drigging_id;
         var content_json = content_to_json(current_monitor_item.contents);
         var display_rule = current_monitor_item.display_rule
         var selector = null;
         //从采集表获取监控项的采集数据
-        $.get("/monitor_scene/get_basic_data/"+current_monitor_item.id, function (res){
+        $.get("/monitor_scene/get_basic_data/"+current_monitor_item.item_id, function (res){
             for(i in res){
                 key=i
             }
