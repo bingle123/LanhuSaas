@@ -359,6 +359,8 @@ $(function () {
                         vm.scale = parseFloat(res.data.results[0].scale);
                         vm.multiple = Math.round((vm.scale - 1) * 10);
                     }else{
+                        //清空缓存
+                        $(".monitor_content").html("");
                         vm.scale = parseFloat(10);
                         vm.multiple = Math.round((vm.scale - 1) * 10);
                     }
