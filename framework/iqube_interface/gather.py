@@ -200,7 +200,7 @@ class Gather():
 
         :return:
         """
-        unit_list = ['#FF0000', '#00FF00', '#7A8B8B', '#EEEE00', '#FFFFFF']
+        unit_list = ['#40C7A1', '#FF6161', '#FCB02D', '#B6B6B6', '#FFFFFF']
         processed_rule_list = rule_list.strip().split('\n')
         processed_val = Gather.value_range_process(processed_rule_list, original_value, unit_list)
         return processed_val

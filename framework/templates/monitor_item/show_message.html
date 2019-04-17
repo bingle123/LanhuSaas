@@ -868,7 +868,7 @@
                                               type="textarea"></el-input>
                                 </el-form-item>
                                  <div v-if="color_rules_comments">
-                                     <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到此范围分别展示为红、绿、灰、黄</p>
+                                     <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到此范围分别展示为绿、红、黄、灰</p>
                                  </div>
                                  <div v-if="other_rules_comments">
                                      <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到对应范围分别展示其“@”后的后缀</p>
@@ -1594,17 +1594,17 @@
                 delete this.base['show_rule_type'];*/
             },
             //采集测试的数据保存方法
-            gather_data_test_save(item_id){
+            gather_data_test_save(item_id, type){
               axios({
                     method: 'post',
                     url: '${SITE_URL}gather_data/gather_data_save',
                     data: {
                         'measures': this.gather_test_data,
-                        'item_id': item_id
+                        'item_id': item_id,
+                        'type' : type
                     }
                 }).then((res) => {
-                    this.$alert("保存成功!", "提示");
-                    vm.centerDialogVisible = false;
+                    console.log('采集测试数据保存成功');
                 }).catch((error) => {
                     vm.$alert("采集测试数据保存失败！", "错误");
                 });
@@ -1635,6 +1635,8 @@
                             this.$alert("保存失败!","错误");
                             vm.centerDialogVisible = true;
                         } else {
+                            //保存采集测试的数据到服务器
+                            vm.gather_data_test_save(vm.unit_id, 'edit');
                             this.$alert(vm.message,"提示");
                             vm.centerDialogVisible = false;
                         }
@@ -1661,7 +1663,7 @@
                             vm.centerDialogVisible = true;
                         } else {
                             //保存采集测试的数据到服务器
-                            vm.gather_data_test_save(res.data['item_id']);
+                            vm.gather_data_test_save(res.data['item_id'], 'add');
                         }
                         vm.show()
                     }).catch((error) => {
@@ -3015,6 +3017,7 @@
             //获取指标集
             get_gather_info(value) {
                 this.base.measures = '';
+                this.base.measures_name = '';
                 vm.iqube_name = [];
                 //日志监控项模拟数据,目前一体化平台没有数据
                 if("get_log_type/" == value){

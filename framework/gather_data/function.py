@@ -512,5 +512,10 @@ def load_script_content(script_type):
 # 采集数据的保存方法
 def gather_data_save(info):
     # 这里要将info['measures']json转为字符类型，监控项采集数据必须是字符个数，才能保证场景编排展示正常
-    TDGatherData(item_id=info['item_id'], gather_time=GATHER_TIME, data_key='measures', data_value=json.dumps(info['measures'])).save()
+    if 'add' == info['type']:
+        TDGatherData.objects.create(item_id=info['item_id'], data_key='measures', data_value=json.dumps(info['measures']))
+    elif 'edit' == info['type']:
+        TDGatherData.objects.filter(item_id=info['item_id']).update(data_key='measures', data_value=json.dumps(info['measures']))
+    else:
+        return "error"
     return 'ok'
