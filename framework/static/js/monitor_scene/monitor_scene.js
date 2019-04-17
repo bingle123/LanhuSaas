@@ -128,7 +128,7 @@ $(function () {
                         console.log(res);
                         vm.base_monitor = res.data.results.base_list;
                         if(0 == vm.base_monitor.length){
-                            vm.base_page_count = 1;
+                            vm.base_page_count = 0;
                             vm.scene_empty_data_display = true;
                         }else{
                             vm.base_page_count = res.data.results.base_list[0].page_count;
