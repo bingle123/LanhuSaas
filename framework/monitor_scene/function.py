@@ -17,7 +17,6 @@ from position.models import *
 from market_day.models import Area
 from market_day.function import tran_time_china, tran_china_time_other, check_jobday
 from django.db.models import Q
-from iqube_interface.views import gather_base_test
 
 
 def monitor_show(request):
@@ -693,14 +692,14 @@ def scene_color_del(scene_id):
     return color_dict
 
 
-# 采集一体化平台指标数据
-def monior_item_collect(request):
-    """
-    采集一体化平台指标数据
-    :param request:
-    :return:
-    """
-    # 执行采集
-    result = gather_base_test(request)
-
-
+# 场景编排模糊检索监控项
+def monitor_scene_fuzzy_search(data):
+    if 'basic' == data['type']:
+        base_unit = Monitor.objects.filter(Q(monitor_type=1) | Q(monitor_type=5)).filter(monitor_name__contains=data['condition']).order_by("-id")
+        base_page_data, base_page_count = tools.page_paging(base_unit, data['limit'], data['page'])
+        base_list = tools.obt_dic(base_page_data, base_page_count)
+        res_dic = {
+            'base_list': base_list,
+        }
+        result = tools.success_result(res_dic)
+        return result

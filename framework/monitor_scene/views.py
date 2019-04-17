@@ -259,3 +259,13 @@ def is_monitor_item_collect(request):
         return render_json({"result": "1"})
 
 
+
+def monitor_scene_fuzzy_search(request):
+    """
+    场景编排展示
+    :param request:
+    :return:
+    """
+    param = json.loads(request.body)
+    res = function.monitor_scene_fuzzy_search(param)
+    return render_json(res)

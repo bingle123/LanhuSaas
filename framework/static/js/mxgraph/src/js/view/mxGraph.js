@@ -8674,7 +8674,8 @@ mxGraph.prototype.getFoldingImage = function(state)
 		
 		if (this.isCellFoldable(state.cell, !tmp))
 		{
-			return (tmp) ? this.collapsedImage : this.expandedImage;
+			//return (tmp) ? this.collapsedImage : this.expandedImage;
+            return null;
 		}
 	}
 	

@@ -393,6 +393,9 @@
                     监控项</h2>
                 <el-col :span="24">
                     <h3 @click="monitor_type_switch(1)" class="monitor_type">基本监控项</h3>
+                    <el-input v-if="scene_basic_search_display" v-model="basic_search" placeholder="监控项名称检索.." size="mini">
+                        <el-button slot="append" icon="el-icon-search" size="mini" @click="scene_search('basic')"></el-button>
+                    </el-input>
                 </el-col>
                 <div class="monitor_list">
                     <el-col :span="12" v-for="(i,index) in base_monitor" :key="index">
@@ -400,12 +403,10 @@
                             <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-monitors"></i>
                         </div>
-
                     </el-col>
                     <el-col :span="24">
-                        <el-pagination :page-count="base_page_count" background layout="prev, pager, next"
-                                       style="float:right"
-                                       @current-change="current_change1"></el-pagination>
+                        <el-pagination :page-count="base_page_count" :small=true layout="prev, pager, next"
+                                       @current-change="current_change1" :pager-count=5></el-pagination>
                     </el-col>
                 </div>
                 <el-col :span="24">
