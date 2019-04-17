@@ -362,7 +362,6 @@ $(function () {
                         vm.scale = parseFloat(10);
                         vm.multiple = Math.round((vm.scale - 1) * 10);
                     }
-
                 }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
                 });
