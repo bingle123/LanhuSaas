@@ -125,7 +125,6 @@ $(function () {
                         data: data
                     }).then(function (res) {
                         loading.close();
-                        console.log(res);
                         vm.base_monitor = res.data.results.base_list;
                         if(0 == vm.base_monitor.length){
                             vm.base_page_count = 0;
