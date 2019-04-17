@@ -38,7 +38,9 @@ $(function() {
                     vm.$message.error('获取用户错误')
                 })
             },
-            async alternate_play_test() {
+            //场景轮播测试
+            async alternate_play_test() {alert("开始轮播")
+                //获取时间范围内的所有场景
                 var res = await axios({
                     method: 'post',
                     url: '/monitor_scene/alternate_play_test/',
@@ -52,32 +54,50 @@ $(function() {
                 });
                 vm.imgList = res.data.message;
             },
+            //value1 为走马灯编码，每一个走马灯对应一个场景
             scene_change(value1, value2) {
-                if (vm.imgList.length == 1) {    //只有一个场景
+                //如果只有一个场景，每10秒更新一次场景
+                if (vm.imgList.length == 1) {
                     vm.scene_content_change(0);
                     setInterval(function () {
-                        vm.scene_content_change(0);   //30秒钟更新一次dom
-                    }, 30000)
+                        vm.scene_content_change(0);
+                    }, 10000)
                 }
                 if (vm.imgList.length > 1) {  //多于一个场景
                     vm.scene_content_change(value1);
                 }
-
             },
             //更新dom
             scene_content_change(value) {
                 let selector = '.scene_content' + value;
+                //value代表场景，走马灯切换一次，就触发该方法，取得该场景下的所有监控项
                 let base_list = vm.imgList[value].scene_content[0].base_list;  //获取当前场景的基本监控项数据
                 let chart_list = vm.imgList[value].scene_content[0].chart_list;  //获取当前场景的图标监控项数据
                 let job_list = vm.imgList[value].scene_content[0].job_list;  //获取当前场景的作业监控项数据
                 let flow_list = vm.imgList[value].scene_content[0].flow_list;  //获取当前场景的流程监控项数据
-                $(selector).html('');    //初始化场景
+                //初始化场景
+                $(selector).html('');
+                //加载基本监控项
                 for (let i = 0; i < base_list.length; i++) {
                     //添加一个div容器，形如<div type="basic1"></div>
                     $(selector).append('<div type=\"basic' + base_list[i].id + '\" style=\"position: absolute;top:' + base_list[i].y + 'px;left:' + base_list[i].x + 'px;transform: scale(' + base_list[i].scale + ')\"></div>');
                     //调用基本监控项的渲染方法,第一个参数对应容器div的type
-                    base_monitor_active(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width, base_list[i].contents);
+                    base_list[i].dimension_data = JSON.parse(base_list[i].dimension);
+                    if(base_list[i].source_type == 0){
+                         base_list[i].interface_type = "log";
+                    }
+                    if(base_list[i].source_type == 1){
+                         base_list[i].interface_type = "measures";
+                    }
+                    base_list[i].show_rule_type = base_list[i].display_type;
+                    base_list[i].measures = base_list[i].target_name;
+                    //名字不一样，后台用的measures_name数据库字段是measure_name
+                    base_list[i].measures_name = base_list[i].measure_name
+                    //这里变成字符串，因为后台是用字符串判断的
+                    base_list[i].show_rule_type = base_list[i].show_rule_type+"";
+                    base_monitor_active(base_list[i],selector);
                 }
+                //加载图表监控项
                 for (let i = 0; i < chart_list.length; i++) {
                     //添加一个div容器,形如<div id="1_1"><div id="chart1_1"></div></div>
                     $(selector).append('<div id=\"' + value + '_' + chart_list[i].order + '\" style=\"position: absolute;background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px;top:' + chart_list[i].y + 'px;left:' + chart_list[i].x + 'px;transform: scale(' + chart_list[i].scale + ')\"><div id=\"chart' + value + '_' + chart_list[i].order + '\" style=\"background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
@@ -85,6 +105,7 @@ $(function() {
                     show_chart_active(chart_list[i].id, chart_list[i].gather_params, chart_list[i].height, chart_list[i].width, value + '_' + chart_list[i].order);
 
                 }
+                //加载作业监控项
                 for (let i = 0; i < job_list.length; i++) {
                     let job_params = {
                         'id': job_list[i].id,     //监控项id
@@ -98,8 +119,8 @@ $(function() {
                     //调用作业监控项的渲染方法，参数的第一条值对应容器外层div的id
                     job_monitor_active(job_params);
                 }
+                //加载流程监控项
                 for (let i = 0; i < flow_list.length; i++) {
-
                     let jion_id = [{
                         "id": flow_list[i].jion_id
                     }];
@@ -133,8 +154,6 @@ $(function() {
                             vm.$message.error('获取数据失败！');
                         });
                     }, 5000)
-
-
                 }
             },
         },
@@ -165,11 +184,12 @@ $(function() {
         }
     });
     vm.get_pos();
-    vm.alternate_play_test();
+    //vm.alternate_play_test();
     //定时器执行轮播测试
+    /*
     var interval = setInterval(function () {
         vm.alternate_play_test();
-    }, 30000);
+    }, 30000);*/
 });
 $(function () {
     $(document).on("click", ".keepOn_yes", function (e) {

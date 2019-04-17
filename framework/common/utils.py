@@ -76,13 +76,14 @@ def get_current_time():
     获取当前系统时间
     :return:
     """
+    res = ""
     try:
         sql = "SELECT DATE_FORMAT(now(), '%H:%d:%S') AS cur_time;"
         db = get_db()
         cursor = db.cursor()
         cursor.execute(sql)
-        res1 = cursor.fetchall()
+        res = cursor.fetchall()
     except Exception as e:
         return tools.error_result(e)
     # scene_list = list(res1)
-    return res1
+    return res

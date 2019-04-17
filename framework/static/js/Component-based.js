@@ -221,17 +221,29 @@ function show_chart(item_id,chartData,person_count,chart_type,height,width,drigg
         }
 }
 function base_monitor_active(monitor_item, html_obj) {
-        var contents=content.split('#')
-        var count=(contents.length-1)/2
-        var con=[]
-        for(var i=0;i<count;i++){
-            var temp={
-                'key':contents[(i*2)],
-                'value':contents[(i*2+1)].split("=")[0]
-            }
-            con.push(temp)
+    //根据监控项的采集时间段，在后台判断是否需要调用一体化平台接口获取监控数据
+    // 这里是异步处理
+    $.ajax({
+        type: "POST",
+        data : JSON.stringify(monitor_item),
+        dataType: "JSON",
+        async: true,
+        url: "/monitor_scene/is_monitor_item_collect/",
+        success: function(data) {
+
         }
-     $.get("/monitor_scene/get_basic_data/"+item_id,function (res){
+    });
+    var contents=content.split('#')
+    var count=(contents.length-1)/2
+    var con=[]
+    for(var i=0;i<count;i++){
+        var temp={
+            'key':contents[(i*2)],
+            'value':contents[(i*2+1)].split("=")[0]
+        }
+        con.push(temp)
+    }
+    $.get("/monitor_scene/get_basic_data/"+item_id,function (res){
         var selector_id='basic'+item_id
         var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
          var content=''
@@ -261,13 +273,13 @@ function base_monitor_active(monitor_item, html_obj) {
         $('[type='+selector_id+']').css({
         'text-align':'center'
     })
-        if(status==2){
-            $("#status").css('background-color','darkgreen')
-        }else if(status==-1){
-            $("#status").css('background-color','red')
-        }else if(status==0){
-            $("#status").css('background-color','grey')
-        }
+    if(status==2){
+        $("#status").css('background-color','darkgreen')
+    }else if(status==-1){
+        $("#status").css('background-color','red')
+    }else if(status==0){
+        $("#status").css('background-color','grey')
+    }
     $('[type='+selector_id+']').find("*").css("font-size",font_size)
     $('[type='+selector_id+']').css('height',height);
     $('[type='+selector_id+']').css('width',width);

@@ -336,7 +336,6 @@ $(function () {
                 }, 100)
             },
             monitore_edit_start(value) {    //获取场景监控项信息
-                alert(234);
                 axios({
                     method: 'post',
                     url: '/monitor_scene/scene_data/',
