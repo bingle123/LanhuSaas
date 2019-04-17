@@ -346,6 +346,7 @@ $(function () {
                 }, 100)
             },
             monitore_edit_start(value) {    //获取场景监控项信息
+                const loading = this.popup_loading();
                 $.ajax({
                     type: "POST",
                     data: JSON.stringify(value),
@@ -353,6 +354,7 @@ $(function () {
                     async: false,
                     url: "/monitor_scene/scene_data/",
                     success: function (data) {
+                        loading.close();
                         //防止空场景编辑异常
                         vm.result_list_edit = data.results;
                         vm.result_list = vm.result_list_edit;
