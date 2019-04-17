@@ -43,7 +43,7 @@
         .Drigging {
             position: absolute;
             border-radius: 0;
-            border: 1px solid #AAAAAA;
+            /*border: 1px solid #AAAAAA;*/
         }
 
         .monitor_type {
@@ -403,6 +403,9 @@
                             <p>{{ i.monitor_name }}</p>
                             <i class="bk-icon icon-monitors"></i>
                         </div>
+                    </el-col>
+                    <el-col v-if="scene_empty_data_display" :span="24">
+                        <el-alert title="未检索到任何数据" type="warning" :closable=false :center=true></el-alert>
                     </el-col>
                     <el-col :span="24">
                         <el-pagination :page-count="base_page_count" :small=true layout="prev, pager, next"

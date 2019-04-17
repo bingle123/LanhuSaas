@@ -10,6 +10,8 @@ $(function () {
     vm = new Vue({
         el: '.content',
         data: {
+            //场景编排数据为空提示信息标志
+            scene_empty_data_display:false,
             //场景编排搜索框是否可见
             scene_basic_search_display: false,
             //场景编排基本监控项的检索条件
@@ -105,15 +107,18 @@ $(function () {
 
         },
         methods: {
+            //场景编排模糊检索
             scene_search: function(type, value){
+                //每次检索时，默认不显示数据空的提示信息，在获取内容时再根据数据长度是否显示提示
+                vm.scene_empty_data_display = false;
                 if('basic' == type){
+                    const loading = this.popup_loading();
                     var data = {
                         'type' : 'basic',
                         'condition': vm.basic_search,
                         'page' : value,
                         'limit' : '4'
                     };
-                    const loading = this.popup_loading();
                     axios({
                         method: 'post',
                         url: '/monitor_scene/monitor_scene_fuzzy_search/',
@@ -121,7 +126,12 @@ $(function () {
                     }).then(function (res) {
                         loading.close();
                         vm.base_monitor = res.data.results.base_list;
-                        vm.base_page_count = res.data.results.base_list[0].page_count;
+                        if(0 == vm.base_monitor.length){
+                            vm.base_page_count = 0;
+                            vm.scene_empty_data_display = true;
+                        }else{
+                            vm.base_page_count = res.data.results.base_list[0].page_count;
+                        }
                     }).catch(function (e) {
                         loading.close();
                         vm.$message.error('监控项信息检索失败！');
@@ -140,7 +150,7 @@ $(function () {
             //变更场景颜色
             change_scene_color: function(){
                 $('.monitor_content').css('color', vm.scene_font_color);
-                $('.Drigging').css('border-color', vm.scene_font_color);
+                //$('.Drigging').css('border-color', vm.scene_font_color);
             },
             sizeStrFun: function () {
                 //菜单 放大 缩小
@@ -342,10 +352,16 @@ $(function () {
                     data: value,
                 }).then(function (res) {
                     console.log(res)
+                    //防止空场景编辑异常
                     vm.result_list_edit = res.data.results;
                     vm.result_list = vm.result_list_edit;
-                    vm.scale = parseFloat(res.data.results[0].scale);
-                    vm.multiple = Math.round((vm.scale - 1) * 10);
+                    if(res.data.results.length > 0){
+                        vm.scale = parseFloat(res.data.results[0].scale);
+                        vm.multiple = Math.round((vm.scale - 1) * 10);
+                    }else{
+                        vm.scale = parseFloat(10);
+                        vm.multiple = Math.round((vm.scale - 1) * 10);
+                    }
                 }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
                 });
@@ -408,6 +424,11 @@ $(function () {
                             id_value = parseInt(result_list_edit[i].item_id);
                             if(9000 <= id_value && id_value <= 10000){
                                 item.css('border-width',0);
+                            }else{
+                                item.css('background-color', '#FFFFFF');
+                                item.css('box-sizing', 'border-box');
+                                item.css('padding-left', '16px');
+                                item.css('padding-right', '16px');
                             }
                         }
                         if (result_list_edit[i].monitor_type === 2) {
@@ -614,6 +635,11 @@ $(function () {
                 //对箭头及线条去除边框操作
                 if(i.monitor_name.indexOf("箭头") != -1 || i.monitor_name.indexOf("线条") != -1){
                     item.css('border-width', 0);
+                }else{
+                    item.css('background-color', '#FFFFFF');
+                    item.css('box-sizing', 'border-box');
+                    item.css('padding-left', '16px');
+                    item.css('padding-right', '16px');
                 }
             },
             add_chart_monitor(i) {
