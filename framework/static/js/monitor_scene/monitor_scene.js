@@ -352,10 +352,17 @@ $(function () {
                     data: value,
                 }).then(function (res) {
                     console.log(res)
+                    //防止空场景编辑异常
                     vm.result_list_edit = res.data.results;
                     vm.result_list = vm.result_list_edit;
-                    vm.scale = parseFloat(res.data.results[0].scale);
-                    vm.multiple = Math.round((vm.scale - 1) * 10);
+                    if(res.data.results.length > 0){
+                        vm.scale = parseFloat(res.data.results[0].scale);
+                        vm.multiple = Math.round((vm.scale - 1) * 10);
+                    }else{
+                        vm.scale = parseFloat(10);
+                        vm.multiple = Math.round((vm.scale - 1) * 10);
+                    }
+
                 }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
                 });
