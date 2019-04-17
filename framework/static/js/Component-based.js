@@ -220,70 +220,127 @@ function show_chart(item_id,chartData,person_count,chart_type,height,width,drigg
             myChart.setOption(option);
         }
 }
-function base_monitor_active(monitor_item, html_obj) {
+function base_monitor_active(vm_obj, html_obj) {
+    var current_monitor_item = vm_obj.current_monitor_item;
+    current_monitor_item.dimension_data = JSON.parse(current_monitor_item.dimension);
+    if(current_monitor_item.source_type == 0){
+         current_monitor_item.interface_type = "log";
+    }
+    if(current_monitor_item.source_type == 1){
+         current_monitor_item.interface_type = "measures";
+    }
+    current_monitor_item.show_rule_type = current_monitor_item.display_type;
+    current_monitor_item.measures = current_monitor_item.target_name;
+    //名字不一样，后台用的measures_name数据库字段是measure_name
+    current_monitor_item.measures_name = current_monitor_item.measure_name
+    //这里变成字符串，因为后台是用字符串判断的
+    current_monitor_item.show_rule_type = current_monitor_item.show_rule_type+"";
     //根据监控项的采集时间段，在后台判断是否需要调用一体化平台接口获取监控数据
-    // 这里是异步处理
+    // 这里是异步处理,后台执行监控采集迁移入库
     $.ajax({
         type: "POST",
-        data : JSON.stringify(monitor_item),
+        data : JSON.stringify(current_monitor_item),
         dataType: "JSON",
         async: true,
         url: "/monitor_scene/is_monitor_item_collect/",
         success: function(data) {
-
         }
     });
-    var contents=content.split('#')
-    var count=(contents.length-1)/2
-    var con=[]
-    for(var i=0;i<count;i++){
-        var temp={
-            'key':contents[(i*2)],
-            'value':contents[(i*2+1)].split("=")[0]
+    //取得当前的监控项信息
+    current_monitor_item = vm_obj.current_monitor_item;
+    var selector_id='basic'+current_monitor_item.id;
+    var drigging_id = vm_obj.drigging_id;
+    var content_json = content_to_json(current_monitor_item.contents);
+    var display_rule = current_monitor_item.display_rule
+    var selector = null;
+    //从采集表获取监控项的采集数据
+    $.get("/monitor_scene/get_basic_data/"+current_monitor_item.id, function (res) {
+        for (i in res) {
+            key = i
         }
-        con.push(temp)
-    }
-    $.get("/monitor_scene/get_basic_data/"+item_id,function (res){
-        var selector_id='basic'+item_id
-        var cricle='<div id="status" style="display: inline-block;margin-left:5px;width:16px;height:16px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;"></div>'
-         var content=''
-        for(key in res){
-            if(key!='DB_CONNECTION'&&key!='URL_CONNECTION'&&key!='FILE_EXIST'){
-                for(var i=0;i<con.length;i++){
-                    if(con[i].value==key){
-                         content+='<div>'+con[i].key+':'+res[key]+'</div>'
+        //将采集结果转换为json,这里的key固定为“measures”
+        //原因是这里只取度量值，不考虑历史垃圾数据
+        var gather_base_test_data = JSON.parse(res["measures"]);
+        var bgcolor = null;
+        let scene_show = function (split_char) {
+            for (let i = 0; i < gather_base_test_data.length; i++) {
+                let selector = '.div' + drigging_id + i;
+                let data_org = [];
+                let data_key = [];
+                let data_value = [];
+                for (k in gather_base_test_data[i]) {
+                    //颜色展示可以没有值
+                    if (!isEmptyObject(content_json)) {
+                        for (x in content_json) {
+                            if (x == k) {
+                                data_org.push(k)
+                                data_key.push(content_json[x]);
+                                data_value.push(gather_base_test_data[i][k]);
+                            }
+                        }
+                    } else {
+                        //展示内容为空，只放度量值
+                        if (gather_base_test_data[i][k].toString().indexOf(split_char) > -1) {
+                            data_org.push(k);
+                            data_key.push(k);
+                            data_value.push(gather_base_test_data[i][k]);
+                        }
+                    }
+                }
+                $('[type=' + selector_id + ']').append('<div class="div' + drigging_id + i + '"></div>');
+                for (let j = 0; j < data_key.length; j++) {
+                    if (data_org[j] == current_monitor_item.target_name + '_' + current_monitor_item.measure_name) {
+                        var data_value_str = data_value[j].toString();
+                        if (data_value_str.indexOf(split_char) > -1) {
+                            if ("#" == split_char) {
+                                bgcolor = data_value[j].split(split_char)[1];
+                            }
+                            //颜色展示可以没有值
+                            if (!isEmptyObject(content_json)) {
+                                if ("%" == split_char) {
+                                    $(selector).append('<p>' + data_key[j] + ':' + data_value[j] + '</p>');
+                                } else {
+                                    $(selector).append('<p>' + data_key[j] + ':' + data_value[j].split(split_char)[0] + '</p>');
+                                }
+                            } else {
+                                $(selector).append('<p >&nbsp;</p>');
+                                if ("@" == split_char) {
+                                    $(selector).append('<p >' + data_value[j].split(split_char)[1] + '</p>');
+                                }
+                            }
+                        } else {
+                            $('#base_test_text').html('');
+                            vm.$message.error('采集规则配置出错！');
+                            return
+                        }
+                    } else {
+                        $(selector).append('<p>' + data_key[j] + ':' + data_value[j] + '</p>');
                     }
                 }
             }
         }
-        var status=1
-        for(key in res){
-            if(key=='DB_CONNECTION'){
-                status=res[key]
-                content+='<div>'+'行情数据库连接状态:'+cricle+'</div>'
-            }else if(key=='URL_CONNECTION'){
-                    status=res[key]
-                 content+='<div>'+'行情接口状态:'+cricle+'</div>'
-            }else if(key=='FILE_EXIST'){
-                    status=res[key]
-                 content+='<div>'+'深圳行情文件状态:'+cricle+'</div>'
-            }
+        //按百分比展示
+        if (current_monitor_item.display_type == 0) {
+            scene_show("%");
         }
-        $('[type='+selector_id+']').html(content)
-        $('[type='+selector_id+']').css({
-        'text-align':'center'
+        //按颜色展示
+        if (current_monitor_item.display_type == 1) {
+            scene_show("#");
+            $('[type=' + selector_id + ']').css("background", "#" + bgcolor);
+        }
+        //其它展示类型
+        if (current_monitor_item.display_type == 2) {
+            scene_show("@");
+        }
+        vm_obj.font_size = current_monitor_item.font_size;
+        vm_obj.height = current_monitor_item.height;
+        vm_obj.width = current_monitor_item.width;
+        //字体大小变更操作
+        collection_base_size(vm_obj,'[type='+selector_id+']');
+        //高宽变更操作
+        collection_base_height_change(vm_obj,'[type='+selector_id+']');
+        collection_base_width_change(vm_obj,'[type='+selector_id+']');
     })
-    if(status==2){
-        $("#status").css('background-color','darkgreen')
-    }else if(status==-1){
-        $("#status").css('background-color','red')
-    }else if(status==0){
-        $("#status").css('background-color','grey')
-    }
-    $('[type='+selector_id+']').find("*").css("font-size",font_size)
-    $('[type='+selector_id+']').css('height',height);
-    $('[type='+selector_id+']').css('width',width);
-    },dataType='json')
 }
 function base_monitor(item_id,font_size,height,width,content) {
     selector_id='basic'+item_id
@@ -558,6 +615,7 @@ function flow_monitor(value1,value2){
  * @param html_obj
  */
 function preview_monitor_item(vm_obj, preview_type,html_obj){
+    var current_monitor_item = null;
     //最终预览结果
     var preview_result = function(html_obj){
         if("monitor_item" == preview_type){
@@ -657,7 +715,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
     //场景编排监控项展示
     if("monitor_scene" == preview_type){
         //取得当前的监控项信息
-        var current_monitor_item = vm_obj.current_monitor_item;
+        current_monitor_item = vm_obj.current_monitor_item;
         var selector_id='basic'+current_monitor_item.id;
         var drigging_id = vm_obj.drigging_id;
         var content_json = content_to_json(current_monitor_item.contents);
@@ -671,9 +729,12 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
             //将采集结果转换为json,这里的key固定为“measures”
             //原因是这里只取度量值，不考虑历史垃圾数据
             var gather_base_test_data=JSON.parse(res["measures"]);
-            $('[type='+selector_id+']').html("");                  //清空dom
-            $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
-            $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
+            //场景播放不需要右键菜单
+            if(!vm_obj.play){
+                $('[type='+selector_id+']').html("");                  //清空dom
+                $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
+                $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
+            }
             var bgcolor = null;
             let scene_show = function(split_char){
                  for(let i=0;i<gather_base_test_data.length;i++){
@@ -682,6 +743,12 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                     let data_key=[];
                     let data_value=[];
                     for(k in gather_base_test_data[i]){
+                        if(gather_base_test_data[i][k].toString().indexOf(split_char)>-1){
+                            //保留颜色信息
+                            if("#" == split_char){
+                                bgcolor = gather_base_test_data[i][k].split(split_char)[1];
+                            }
+                        }
                         //颜色展示可以没有值
                         if(!isEmptyObject(content_json)){
                             for(x in content_json){
@@ -705,9 +772,6 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                         if(data_org[j]==current_monitor_item.target_name+'_'+current_monitor_item.measure_name){
                             var data_value_str=data_value[j].toString();
                             if(data_value_str.indexOf(split_char)>-1){
-                                if("#" == split_char) {
-                                    bgcolor = data_value[j].split(split_char)[1];
-                                 }
                                 //颜色展示可以没有值
                                 if(!isEmptyObject(content_json)){
                                     if("%" == split_char){
