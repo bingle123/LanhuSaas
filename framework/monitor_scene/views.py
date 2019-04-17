@@ -212,7 +212,7 @@ def load_flow_graph(request):
     :param request:
     :return:
     """
-    return render_mako_context(request, './monitor_scene/load_flow_graph.html')
+    return render_mako_context(request, './monitor_scene/load_flow_graph1.html')
 
 
 def edit_flow_graph(request):
