@@ -1001,6 +1001,8 @@
             color_rules_comments: false,
             //其他采集规则注释
             other_rules_comments: false,
+            //基本监控项（修改后）添加的情况下是否为第一次加载数据的标记
+            base_monitor_add_init: true,
             //基本监控项（修改后）编辑的情况下是否为第一次加载数据标记
             base_monitor_edit_init: true,
             //基本监控项（修改后）添加后是否为第一次采集测试的标记
@@ -1514,6 +1516,7 @@
                     this.base_monitor_edit_init = true;
                     this.base_monitor_edit_test_init = true;
                 }else if(0 == vm.add_pamas){
+                    this.base_monitor_add_init = true;
                     this.base_monitor_add_test_init = true;
                 }
                 //缓存的当前所有指标的显示内容清空
@@ -3054,8 +3057,10 @@
                 // 而是通过手动点击来源名称下拉框的形式调用此函数，
                 // 将会清空其度量值，避免在改变来源名称之后还是原来的度量值名称，
                 // 导致度量值候选项中末尾出现暂无数据的BUG
-                if((null != vm.base['measures_name'] || vm.base['measures_name'] != '') && !this.base_monitor_edit_init){
-                    vm.base['measures_name'] = '';
+                if(null != vm.base['measures_name'] || vm.base['measures_name'] != ''){
+                    if(!this.base_monitor_edit_init || !this.base_monitor_add_init){
+                        vm.base['measures_name'] = '';
+                    }
                 }
                 //日志监控项模拟数据
                 if(this.base.interface_type == 'log'){
@@ -3063,8 +3068,14 @@
                 }
                 //如果是点击编辑后的数据初始化时触发的此函数，base_monitor_edit_init标记
                 //置为false，在下次触发change_measures函数时将清空度量值
-                if(this.base_monitor_edit_init && '1' == vm.add_pamas){
-                    this.base_monitor_edit_init = false;
+                if(this.base_monitor_edit_init){
+                    if('1' == vm.add_pamas){
+                        this.base_monitor_edit_init = false;
+                    }else if('0' == vm.add_pamas){
+                        this.base_monitor_add_init = false;
+                    }else{
+                        console.log('触发类型不是添加/修改！')
+                    }
                 }
                 for(let i in vm.gather_list){
                     for (let key in vm.gather_list[i]){
