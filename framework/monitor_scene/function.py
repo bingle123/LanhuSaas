@@ -248,7 +248,7 @@ def scene_data(id):
                 # 监控项采集表中只有一条记录
                 gather_data = TDGatherData.objects.filter(item_id=monitor_item_obj.id)
                 for gather_data_obj in gather_data:
-                    data_dic[gather_data_obj.data_key] = gather_data_obj.data_value
+                    data_dic['data_value'] = gather_data_obj.data_value
                 data_dic['monitor_name'] = monitor_item_obj.monitor_name
                 data_dic['monitor_type'] = monitor_item_obj.monitor_type
                 data_dic['jion_id'] = monitor_item_obj.jion_id

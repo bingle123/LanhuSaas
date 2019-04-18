@@ -249,6 +249,7 @@ def is_monitor_item_collect(request):
         gather_data_migrate(monitor_item["id"])
         # print json.loads(result.content)["results"]
         info = {
+            "type" : "add",
             "item_id" : monitor_item["id"],
             "measures" : json.loads(result.content)["results"]
         }

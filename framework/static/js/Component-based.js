@@ -728,7 +728,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
         try{
             //将采集结果转换为json,这里的key固定为“measures”
             //原因是这里只取度量值，不考虑历史垃圾数据
-            var gather_base_test_data=JSON.parse(current_monitor_item["measures"]);
+            var gather_base_test_data=JSON.parse(current_monitor_item["data_value"]);
             $('[type='+selector_id+']').html("");                  //清空dom
             $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
             $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
