@@ -31,7 +31,6 @@ $(function() {
                             j.label = res.data.message[i].pos_name;
                             json.push(j);
                         }
-                        ;
                         this.options = json;
                     }
                 }).catch((res) => {
@@ -166,7 +165,6 @@ $(function() {
                     vm.imgHeight = '' + window.imgHeight + 'px';
                 })()
             }
-
         },
         watch: {
             imgHeight(val) {
