@@ -346,83 +346,71 @@ $(function () {
                 }, 100)
             },
             monitore_edit_start(value) {    //获取场景监控项信息
-                axios({
-                    method: 'post',
-                    url: '/monitor_scene/scene_data/',
-                    data: value,
-                }).then(function (res) {
-                    console.log(res)
-                    //防止空场景编辑异常
-                    vm.result_list_edit = res.data.results;
-                    vm.result_list = vm.result_list_edit;
-                    if(res.data.results.length > 0){
-                        vm.scale = parseFloat(res.data.results[0].scale);
-                    }else{
-                        //清空缓存
-                        $(".monitor_content").html("");
-                        vm.scale = parseFloat(1);
+                const loading = this.popup_loading();
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify(value),
+                    dataType: "JSON",
+                    async: true,
+                    url: "/monitor_scene/scene_data/",
+                    success: function (data) {
+                        //防止空场景编辑异常
+                        vm.result_list_edit = data.results;
+                        vm.result_list = vm.result_list_edit;
+                        if(data.results.length > 0){
+                            vm.scale = parseFloat(data.results[0].scale);
+                        }else{
+                            //清空缓存
+                            $(".monitor_content").html("");
+                            vm.scale = parseFloat(1);
+                        }
+                        vm.multiple = Math.round((vm.scale - 1) * 10);
+                        loading.close();
                     }
-                    vm.multiple = Math.round((vm.scale - 1) * 10);
-                }).catch(function (e) {
-                    vm.$message.error('获取数据失败！');
-                });
+                })
             },
             hide: function () {
                 this.isAdd = 1;
                 vm.paging();
                 vm.canvas_flag = 0;
                 $('.monitor_content').html('');
+                //每次取消，将缓存的数据清空
+                vm.result_list_edit = [];
                 //退出场景编辑后，颜色重置
                 vm.scene_font_color = '#AAAAAA';
             },
-            async goto(type) {
-                //新增
-                if("1" == type){
-                    //新增每次清空编排面板
-                    $('.monitor_content').html() == '';
-                    vm.result_list_edit = [];
-                }
+            async goto() {
                 vm.canvas_flag = 1;
                 if ($('.monitor_content').html() == '') {//场景编排内容块无元素
                     $(".monitor_content").append('<canvas id="line_canvas" style="position: absolute;"></canvas>');
                     $('.monitor_edit').css('display', 'block');
                     vm.show_num = vm.isAdd;
                     vm.isAdd = 0;
-                    let result_list_edit = vm.result_list_edit;
-                    if(result_list_edit){
-                        for (var i = 0; i < result_list_edit.length; i++) {
-                            if (result_list_edit[i].next_item != 0) {
-                                line = {
-                                    'pid': result_list_edit[i].item_id,
-                                    'nid': result_list_edit[i].next_item
-                                }
-                                vm.lines.push(line)
+                    //无监控项，直接返回
+                    if(vm.result_list_edit && vm.result_list_edit.length < 1){
+                        return;
+                    }
+                    for (var i = 0; i < vm.result_list_edit.length; i++) {
+                        if (vm.result_list_edit[i].next_item != 0) {
+                            line = {
+                                'pid': vm.result_list_edit[i].item_id,
+                                'nid': vm.result_list_edit[i].next_item
                             }
+                            vm.lines.push(line)
                         }
                     }
                     let max = 0;
                     let index = 0;
-                    for (var i = 0; i < result_list_edit.length; i++) {
-                        if (max < result_list_edit[i].order) {  //场景监控项拖拽元素唯一
-                            max = result_list_edit[i].order;
+                    for (var i = 0; i < vm.result_list_edit.length; i++) {
+                        if (max < vm.result_list_edit[i].order) {  //场景监控项拖拽元素唯一
+                            max = vm.result_list_edit[i].order;
                         }
                         //监控项类型1和5都为基本监控项
                         //1为原始基本监控项，5为一体化平台基本监控项
-                        if (result_list_edit[i].monitor_type === 1 || result_list_edit[i].monitor_type === 5) {
-                            let res = await axios({
-                                method: 'post',
-                                url: '/monitor_scene/monitor_scene_show/',
-                                data: result_list_edit[i].item_id,
-                            }).catch(function (e) {
-                                vm.$message.error('获取数据失败！');
-                            });
-                            vm.monitor_data = res.data.results;
-                            var item = $('<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" type=\"basic' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"></div>');
+                        if (vm.result_list_edit[i].monitor_type === 1 || vm.result_list_edit[i].monitor_type === 5) {
+                            var item = $('<div class=\"Drigging\" name=\"' + vm.result_list_edit[i].item_id + '\" type=\"basic' + vm.result_list_edit[i].item_id + '\" id=\"' + vm.result_list_edit[i].order + '\" style=\"top:' + vm.result_list_edit[i].y + 'px;left:' + vm.result_list_edit[i].x + 'px;transform: scale(' + vm.result_list_edit[i].scale + ')\"></div>');
                             $('.monitor_content').append(item);
-                            vm.current_monitor_item = vm.monitor_data[0];
-                            preview_monitor_item(vm ,"monitor_scene",".monitor_content");
-                            vm.drigging_id++ ;
-                            id_value = parseInt(result_list_edit[i].item_id);
+                            id_value = parseInt(vm.result_list_edit[i].item_id);
                             if(9000 <= id_value && id_value <= 10000){
                                 item.css('border-width',0);
                             }else{
@@ -431,38 +419,41 @@ $(function () {
                                 item.css('padding-left', '16px');
                                 item.css('padding-right', '16px');
                             }
+                            vm.current_monitor_item = vm.result_list_edit[i];
+                            preview_monitor_item(vm ,"monitor_scene",".monitor_content");
+                            vm.drigging_id++ ;
                         }
-                        if (result_list_edit[i].monitor_type === 2) {
+                        if (vm.result_list_edit[i].monitor_type === 2) {
                             let res = await axios({
                                 method: 'post',
                                 url: '/monitor_scene/monitor_scene_show/',
-                                data: result_list_edit[i].item_id,
+                                data: vm.result_list_edit[i].item_id,
                             }).catch(function (e) {
                                 vm.$message.error('获取数据失败！');
                             });
                             vm.monitor_data = res.data.results;
-                            var txt = '<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"background:beige;height:' + vm.monitor_data[0].height + 'px;width:' + vm.monitor_data[0].width + 'px;top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"><div id=\"chart' + result_list_edit[i].order + '\" style=\"background:beige;height:' + (vm.monitor_data[0].height - 2) + 'px;width:' + (vm.monitor_data[0].width - 2) + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>' + vm.sizeStrFun() + '</div></div>';
+                            var txt = '<div class=\"Drigging\" name=\"' + vm.result_list_edit[i].item_id + '\" id=\"' + vm.result_list_edit[i].order + '\" style=\"background:beige;height:' + vm.monitor_data[0].height + 'px;width:' + vm.monitor_data[0].width + 'px;top:' + vm.result_list_edit[i].y + 'px;left:' + vm.result_list_edit[i].x + 'px;transform: scale(' + vm.result_list_edit[i].scale + ')\"><div id=\"chart' + vm.result_list_edit[i].order + '\" style=\"background:beige;height:' + (vm.monitor_data[0].height - 2) + 'px;width:' + (vm.monitor_data[0].width - 2) + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>' + vm.sizeStrFun() + '</div></div>';
                             $('.monitor_content').append();
-                            show_chart(vm.monitor_data[0].id, "", "", vm.monitor_data[0].gather_params, vm.monitor_data[0].height, vm.monitor_data[0].width, result_list_edit[i].order, vm.monitor_data[0].contents);
+                            show_chart(vm.monitor_data[0].id, "", "", vm.monitor_data[0].gather_params, vm.monitor_data[0].height, vm.monitor_data[0].width, vm.result_list_edit[i].order, vm.monitor_data[0].contents);
                         }
-                        if (result_list_edit[i].monitor_type === 3) {
+                        if (vm.result_list_edit[i].monitor_type === 3) {
                             let res = await axios({
                                 method: 'post',
                                 url: '/monitor_scene/monitor_scene_show/',
-                                data: result_list_edit[i].item_id,
+                                data: vm.result_list_edit[i].item_id,
                             }).catch(function (e) {
                                 vm.$message.error('获取数据失败！');
                             });
                             vm.monitor_data = res.data.results;
                             let job_params = vm.monitor_data[0];
-                            $('.monitor_content').append('<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" type=\"job' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"></div>');
+                            $('.monitor_content').append('<div class=\"Drigging\" name=\"' + vm.result_list_edit[i].item_id + '\" type=\"job' + vm.result_list_edit[i].item_id + '\" id=\"' + vm.result_list_edit[i].order + '\" style=\"top:' + vm.result_list_edit[i].y + 'px;left:' + vm.result_list_edit[i].x + 'px;transform: scale(' + vm.result_list_edit[i].scale + ')\"></div>');
                             job_monitor(job_params);
                         }
-                        if (result_list_edit[i].monitor_type === 4) {
+                        if (vm.result_list_edit[i].monitor_type === 4) {
                             let res = await axios({
                                 method: 'post',
                                 url: '/monitor_scene/monitor_scene_show/',
-                                data: result_list_edit[i].item_id,
+                                data: vm.result_list_edit[i].item_id,
                             }).catch(function (e) {
                                 vm.$message.error('获取数据失败！');
                             });
@@ -470,8 +461,8 @@ $(function () {
                             let jion_id = [{
                                 "id": vm.monitor_data[0].jion_id
                             }];
-                            $('.monitor_content').append('<div class=\"Drigging\" name=\"' + result_list_edit[i].item_id + '\" id=\"' + result_list_edit[i].order + '\" style=\"top:' + result_list_edit[i].y + 'px;left:' + result_list_edit[i].x + 'px;transform: scale(' + result_list_edit[i].scale + ')\"><div type=\"flow_monitor' + result_list_edit[i].order + '\"></div></div>');
-                            flow_monitor(jion_id, result_list_edit[i].order);
+                            $('.monitor_content').append('<div class=\"Drigging\" name=\"' + vm.result_list_edit[i].item_id + '\" id=\"' + vm.result_list_edit[i].order + '\" style=\"top:' + vm.result_list_edit[i].y + 'px;left:' + vm.result_list_edit[i].x + 'px;transform: scale(' + vm.result_list_edit[i].scale + ')\"><div type=\"flow_monitor' + vm.result_list_edit[i].order + '\"></div></div>');
+                            flow_monitor(jion_id, vm.result_list_edit[i].order);
                         }
                     }
                     vm.drigging_id = max + 1;

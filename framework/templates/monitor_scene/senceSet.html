@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
     <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
+    <script src="${STATIC_URL}js/csrftoken.js"></script>
     <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/jrange/css/jquery.range.css" rel="stylesheet">
     <script src="${STATIC_URL}js/jquery.range-min.js"></script>
     <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
@@ -297,7 +298,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="预览区">
-                        <el-button type="info" @click="goto('1')">场景编排</el-button>
+                        <el-button type="info" @click="goto()">场景编排</el-button>
                     </el-form-item>
                     <el-row type="flex" class="row-bg" justify="center">
                         <el-col :span="2">
@@ -357,7 +358,7 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="预览区">
-                        <el-button type="info" @click="goto('2')">场景编排</el-button>
+                        <el-button type="info" @click="goto()">场景编排</el-button>
                     </el-form-item>
                     <el-row type="flex" class="row-bg" justify="center">
                         <el-col :span="2">

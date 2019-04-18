@@ -720,25 +720,19 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
     if("monitor_scene" == preview_type){
         //取得当前的监控项信息
         current_monitor_item = vm_obj.current_monitor_item;
-        var selector_id='basic'+current_monitor_item.id;
+        var selector_id='basic'+current_monitor_item.item_id;
         var drigging_id = vm_obj.drigging_id;
         var content_json = content_to_json(current_monitor_item.contents);
         var display_rule = current_monitor_item.display_rule
         var selector = null;
         //从采集表获取监控项的采集数据
-        $.get("/monitor_scene/get_basic_data/"+current_monitor_item.id, function (res){
-            for(i in res){
-                key=i
-            }
+        try{
             //将采集结果转换为json,这里的key固定为“measures”
             //原因是这里只取度量值，不考虑历史垃圾数据
-            var gather_base_test_data=JSON.parse(res["measures"]);
-            //场景播放不需要右键菜单
-            if(!vm_obj.play){
-                $('[type='+selector_id+']').html("");                  //清空dom
-                $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
-                $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
-            }
+            var gather_base_test_data=JSON.parse(current_monitor_item["measures"]);
+            $('[type='+selector_id+']').html("");                  //清空dom
+            $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
+            $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
             var bgcolor = null;
             let scene_show = function(split_char){
                  for(let i=0;i<gather_base_test_data.length;i++){
@@ -814,10 +808,9 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
                scene_show("@");
             }
             preview_result('[type='+selector_id+']');
-        }).catch(function (e) {
-                vm.$message.error('采集失败！');
-                $('[type='+selector_id+']').html('');
-        });
+        }catch(e){
+            $('[type='+selector_id+']').html('');
+        };
     }
 }
 
