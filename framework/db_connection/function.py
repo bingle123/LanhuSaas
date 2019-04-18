@@ -67,7 +67,7 @@ def selecthor(request):
     # 如果搜索内容为空，搜索所有
     if None is not search and '' != search:
         sciencenews = Conn.objects.filter(
-            Q(connname__contains=search) | Q(type__contains=search) | Q(ip__contains=search) \
+            Q(connname__contains=search) | Q(type__contains=search) | Q(ip__contains=search)
             | Q(port__contains=search) | Q(username__contains=search) | Q(databasename__contains=search))
     else:
         sciencenews = Conn.objects.all()

@@ -228,6 +228,13 @@
 </div>
 
 <script type="text/javascript">
+    //csrf验证
+    axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
     var ve = new Vue({
         el: '#main',
         data: {
@@ -289,49 +296,55 @@
                 this.addconn = null
                 this.isAdd = 2
             },
-
             hide() {
                 this.isAdd=1
                 ve.conn()
             },
-
             rowClass({row, rowIndex}) {
                 return 'background:#F7F7F7'
             },
-
-
             //搜索
             select_table() {
                 axios({
                     method: 'post',
-                    url: '${SITE_URL}DataBaseManage/selecthor/',
+                    url: '${SITE_URL}db_connection/selecthor/',
                     data: {
                         search:this.search,
                         page:ve.page,
                         limit:5,
                     }
                 }).then((res) => {
-                    ve.tableData = res.data.message;
-                    ve.page_count = res.data.message[0].page_count;
+                    //没有数据也不能异常啊
+                    if(res.data.items && res.data.items.length > 0){
+                        ve.tableData = res.data.items
+                        ve.page_count = res.data.pages;
+                    }else{
+                        ve.tableData = [];
+                        ve.page_count = 0;
+                    }
                 })
             },
             //查询所有
             conn(){
                  axios({
                     method: 'post',
-                    url: '${SITE_URL}DataBaseManage/getall/',
+                    url: '${SITE_URL}db_connection/selecthor/',
                     data:{
+                        search:"",
                         page:ve.page,
                         limit:5,
                     }
-                }).then(function(response) {
-                    ve.tableData = response.data.message
-                    ve.page_count = response.data.message[0].page_count;
+                }).then((res) => {
+                    //没有数据也不能异常啊
+                    if(res.data.items && res.data.items.length > 0){
+                        ve.tableData = res.data.items
+                        ve.page_count = res.data.pages;
+                    }else{
+                        ve.tableData = [];
+                        ve.page_count = 0;
+                    }
                 })
             },
-
-
-
             //保存
             saveconn(formName){
                this.$refs[formName].validate((valid) => {
@@ -340,12 +353,12 @@
                         return false;
                     }else {
                         axios.post(
-                        '${SITE_URL}DataBaseManage/saveconn/',this.addconn
-                    ).then(function (res) {
-                        if(res.data.message == 0){
-                            ve.hide()
-                        }
-                    });
+                            '${SITE_URL}DataBaseManage/saveconn/',this.addconn
+                        ).then(function (res) {
+                            if(res.data.message == 0){
+                                ve.hide()
+                            }
+                        });
                     }
                 });
             },
