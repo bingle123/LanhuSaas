@@ -254,13 +254,10 @@ function base_monitor_active(vm_obj, html_obj) {
     var display_rule = current_monitor_item.display_rule
     var selector = null;
     //从采集表获取监控项的采集数据
-    $.get("/monitor_scene/get_basic_data/"+current_monitor_item.id, function (res) {
-        for (i in res) {
-            key = i
-        }
+    try{
         //将采集结果转换为json,这里的key固定为“measures”
         //原因是这里只取度量值，不考虑历史垃圾数据
-        var gather_base_test_data = JSON.parse(res["measures"]);
+        var gather_base_test_data = JSON.parse(current_monitor_item["data_value"]);
         var bgcolor = null;
         let scene_show = function (split_char) {
             for (let i = 0; i < gather_base_test_data.length; i++) {
@@ -343,7 +340,9 @@ function base_monitor_active(vm_obj, html_obj) {
         //高宽变更操作
         collection_base_height_change(vm_obj,'[type='+selector_id+']');
         collection_base_width_change(vm_obj,'[type='+selector_id+']');
-    })
+    }catch(e){
+        $('[type='+selector_id+']').html('');
+    }
 }
 function base_monitor(item_id,font_size,height,width,content) {
     selector_id='basic'+item_id

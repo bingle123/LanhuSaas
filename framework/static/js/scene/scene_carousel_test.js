@@ -38,8 +38,18 @@ $(function() {
                     vm.$message.error('获取用户错误')
                 })
             },
+            //显示加载中..背景
+            popup_loading: function(){
+                return this.$loading({
+                    lock: true,
+                    text: '正在拼命加载中...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            },
             //场景轮播测试
             async alternate_play_test() {
+                const loading = this.popup_loading();
                 //获取时间范围内的所有场景
                 var res = await axios({
                     method: 'post',
@@ -53,6 +63,7 @@ $(function() {
                     vm.$message.error('获取数据失败！');
                 });
                 vm.imgList = res.data.message;
+                loading.close();
             },
             //value1 为走马灯编码，每一个走马灯对应一个场景
             scene_change(value1, value2) {

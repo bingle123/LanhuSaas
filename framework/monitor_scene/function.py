@@ -604,6 +604,9 @@ def get_scenes(pos_id, start, end):
                 item = Monitor.objects.get(id=item_id)
                 # 转成字典
                 item_dict = model_to_dict(item)
+                gather_data = TDGatherData.objects.filter(item_id=item_id)
+                for gather_data_obj in gather_data:
+                    item_dict["data_value"] = gather_data_obj.data_value
                 # 把时间类型转换为String
                 item_dict['start_time'] = str(item.start_time)
                 item_dict['end_time'] = str(item.end_time)
