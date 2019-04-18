@@ -4,6 +4,7 @@ from common.mymako import render_json, render_mako_context
 import json
 from common.utils import get_current_time
 from gather_data.function import gather_data_migrate,gather_data_save
+from iqube_interface.views import gather_base_test
 
 
 # Create your views here.
@@ -243,7 +244,7 @@ def is_monitor_item_collect(request):
 
     # 如果当前时间在监控项的采集时间范围内，执行采集，调用一体化服务
     if (current_time >= start_time) and (current_time <= end_time):
-        result = function.gather_base_test(request)
+        result = gather_base_test(request)
         # 历史数据迁移
         gather_data_migrate(monitor_item["id"])
         # print json.loads(result.content)["results"]
