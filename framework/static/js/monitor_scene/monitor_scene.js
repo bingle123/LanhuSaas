@@ -351,7 +351,7 @@ $(function () {
                     type: "POST",
                     data: JSON.stringify(value),
                     dataType: "JSON",
-                    async: false,
+                    async: true,
                     url: "/monitor_scene/scene_data/",
                     success: function (data) {
                         //防止空场景编辑异常
@@ -410,9 +410,6 @@ $(function () {
                         if (vm.result_list_edit[i].monitor_type === 1 || vm.result_list_edit[i].monitor_type === 5) {
                             var item = $('<div class=\"Drigging\" name=\"' + vm.result_list_edit[i].item_id + '\" type=\"basic' + vm.result_list_edit[i].item_id + '\" id=\"' + vm.result_list_edit[i].order + '\" style=\"top:' + vm.result_list_edit[i].y + 'px;left:' + vm.result_list_edit[i].x + 'px;transform: scale(' + vm.result_list_edit[i].scale + ')\"></div>');
                             $('.monitor_content').append(item);
-                            vm.current_monitor_item = vm.result_list_edit[i];
-                            preview_monitor_item(vm ,"monitor_scene",".monitor_content");
-                            vm.drigging_id++ ;
                             id_value = parseInt(vm.result_list_edit[i].item_id);
                             if(9000 <= id_value && id_value <= 10000){
                                 item.css('border-width',0);
@@ -422,6 +419,9 @@ $(function () {
                                 item.css('padding-left', '16px');
                                 item.css('padding-right', '16px');
                             }
+                            vm.current_monitor_item = vm.result_list_edit[i];
+                            preview_monitor_item(vm ,"monitor_scene",".monitor_content");
+                            vm.drigging_id++ ;
                         }
                         if (vm.result_list_edit[i].monitor_type === 2) {
                             let res = await axios({

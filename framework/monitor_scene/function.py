@@ -240,34 +240,38 @@ def scene_data(id):
     try:
         obj = Scene_monitor.objects.filter(scene_id=id)
         data_list = []
-        for i in obj:
-            data_dic = model_to_dict(i)
-            data_dic['scale'] = str(i.scale)
+        for scene_obj in obj:
+            data_dic = model_to_dict(scene_obj)
+            data_dic['scale'] = str(scene_obj.scale)
             monitor_data = Monitor.objects.filter(id=data_dic['item_id'])
-            for i in monitor_data:
-                data_dic['monitor_name'] = i.monitor_name
-                data_dic['monitor_type'] = i.monitor_type
-                data_dic['jion_id'] = i.jion_id
-                data_dic['gather_rule'] = i.gather_rule
-                data_dic['gather_params'] = i.gather_params
-                data_dic['params'] = i.params
-                data_dic['width'] = i.width
-                data_dic['height'] = i.height
-                data_dic['font_size'] = i.font_size
-                data_dic['period'] = i.period
-                data_dic['start_time'] = str(i.start_time)
-                data_dic['end_time'] = str(i.end_time)
-                data_dic['creator'] = i.creator
-                data_dic['editor'] = i.editor
-                data_dic['status'] = i.status
-                data_dic['contents'] = i.contents
-                data_dic['monitor_area'] = i.monitor_area
-                data_dic['source_type'] = i.source_type
-                data_dic['target_name'] = i.target_name
-                data_dic['measure_name'] = i.measure_name
-                data_dic['dimension'] = i.dimension
-                data_dic['display_type'] = i.display_type
-                data_dic['display_rule'] = i.display_rule
+            for monitor_item_obj in monitor_data:
+                # 监控项采集表中只有一条记录
+                gather_data = TDGatherData.objects.filter(item_id=monitor_item_obj.id)
+                for gather_data_obj in gather_data:
+                    data_dic[gather_data_obj.data_key] = gather_data_obj.data_value
+                data_dic['monitor_name'] = monitor_item_obj.monitor_name
+                data_dic['monitor_type'] = monitor_item_obj.monitor_type
+                data_dic['jion_id'] = monitor_item_obj.jion_id
+                data_dic['gather_rule'] = monitor_item_obj.gather_rule
+                data_dic['gather_params'] = monitor_item_obj.gather_params
+                data_dic['params'] = monitor_item_obj.params
+                data_dic['width'] = monitor_item_obj.width
+                data_dic['height'] = monitor_item_obj.height
+                data_dic['font_size'] = monitor_item_obj.font_size
+                data_dic['period'] = monitor_item_obj.period
+                data_dic['start_time'] = str(monitor_item_obj.start_time)
+                data_dic['end_time'] = str(monitor_item_obj.end_time)
+                data_dic['creator'] = monitor_item_obj.creator
+                data_dic['editor'] = monitor_item_obj.editor
+                data_dic['status'] = monitor_item_obj.status
+                data_dic['contents'] = monitor_item_obj.contents
+                data_dic['monitor_area'] = monitor_item_obj.monitor_area
+                data_dic['source_type'] = monitor_item_obj.source_type
+                data_dic['target_name'] = monitor_item_obj.target_name
+                data_dic['measure_name'] = monitor_item_obj.measure_name
+                data_dic['dimension'] = monitor_item_obj.dimension
+                data_dic['display_type'] = monitor_item_obj.display_type
+                data_dic['display_rule'] = monitor_item_obj.display_rule
             data_list.append(data_dic)
         res = tools.success_result(data_list)
     except Exception as e:
