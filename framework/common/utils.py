@@ -83,6 +83,7 @@ def get_current_time():
         cursor = db.cursor()
         cursor.execute(sql)
         res = cursor.fetchall()
+        db.close()
     except Exception as e:
         return tools.error_result(e)
     # scene_list = list(res1)
