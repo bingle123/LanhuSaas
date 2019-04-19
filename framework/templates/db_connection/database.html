@@ -353,7 +353,7 @@
                         return false;
                     }else {
                         axios.post(
-                            '${SITE_URL}DataBaseManage/saveconn/',this.addconn
+                            '${SITE_URL}db_connection/saveconn/',this.addconn
                         ).then(function (res) {
                             if(res.data.message == 0){
                                 ve.hide()
@@ -362,14 +362,11 @@
                     }
                 });
             },
-
-
             //去修改
             showe(row){
                 this.isAdd = 3
                 this.editDataBase=row
             },
-
             //修改
             editConn(formName){
                 this.$refs[formName].validate((valid) => {
@@ -377,7 +374,7 @@
                         alert('验证不通过');
                         return false;
                     }else {
-                        axios.post('${SITE_URL}DataBaseManage/editconn/',this.editDataBase)
+                        axios.post('${SITE_URL}db_connection/editconn/',this.editDataBase)
                     .then((res)=>{
                         if(res.data.message != null){
                             this.isAdd = 1
@@ -387,8 +384,6 @@
                     }
                 })
             },
-
-
             //删除
             deleteDataBase(id,index,data){
             this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
@@ -397,20 +392,14 @@
                 type: 'warning',
                 center: true
             }).then(() => {
-                this.$message({
-                        type: 'success',
-                        message: '删除成功!',
-                    },
-                    axios.post(
-                   '${SITE_URL}DataBaseManage/deleteconn/'+id+'/'
-               ).then((res) => {
-                   if(res.data.message==0){
-                       this.$message('删除成功')
-                       data.splice(index,1)
-                   }
-                    })
-                    ,
-                );
+                axios.post(
+                    '${SITE_URL}db_connection/deleteconn/'+id+'/'
+                ).then((res) => {
+                    if(res.data.message==0){
+                        this.$message('删除成功')
+                        data.splice(index,1)
+                    }
+                })
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -418,47 +407,41 @@
                 });
             });
         },
-
-            //数据库连接测试
-            testConn(formName){
-                console.log(this.addconn)
-                this.$refs[formName].validate((valid) => {
-                    if (!valid) {
-                        alert('验证不通过');
-                        return false;
-                    }else {
-                        axios.post('${SITE_URL}DataBaseManage/testConn/',this.addconn)
-                            .then((res)=>{
+        //数据库连接测试
+        testConn(formName){alert(12);
+            this.$refs[formName].validate((valid) => {
+                if (!valid) {
+                    alert('验证不通过');
+                    return false;
+                }else {
+                    axios.post('${SITE_URL}db_connection/testConn/',this.addconn).then((res)=>{
                         if(res.data.message == 1){
                              alert("数据库连接成功")
                         }else{
                             alert("数据库连接失败")
                         }
                     })
-                    }
-                })
-
-            },
-
-            //测试2
-            textconn2(formName){
-                this.$refs[formName].validate((valid) => {
-                    if (!valid) {
-                        alert('验证不通过');
-                        return false;
-                    }else {
-                        axios.post('${SITE_URL}DataBaseManage/testConn/',this.editDataBase)
-                            .then((res)=>{
-                        if(res.data.message == 1){
-                             alert("数据库连接成功")
+                }
+            })
+        },
+        //测试2
+        textconn2(formName){
+            this.$refs[formName].validate((valid) => {
+                if (!valid) {
+                    alert('验证不通过');
+                    return false;
+                }else {
+                    axios.post('${SITE_URL}db_connection/testConn/',this.editDataBase)
+                        .then((res)=>{
+                        if(res.data.results == "0"){
+                            alert("数据库连接成功")
                         }else{
                             alert("数据库连接失败")
                         }
                     })
-                    }
-                })
-
-            },
+                }
+            })
+        },
         }
     });
     ve.conn()

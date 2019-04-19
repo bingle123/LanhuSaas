@@ -112,18 +112,20 @@
                 let job_list = vm.imgList[value].scene_content[0].job_list;  //获取当前场景的作业监控项数据
                 let flow_list = vm.imgList[value].scene_content[0].flow_list;  //获取当前场景的流程监控项数据
                 $(selector).html('');    //初始化场景
+                vm.drigging_id = 1 ;
                 for (let i = 0; i < base_list.length; i++) {
                     //添加一个div容器，形如<div type="basic1"></div>
                     $(selector).append('<div type=\"basic' + base_list[i].id + '\" style=\"position: absolute;top:' + base_list[i].y + 'px;left:' + base_list[i].x + 'px;transform: scale(' + base_list[i].scale + ')\"></div>');
                     //调用基本监控项的渲染方法,第一个参数对应容器div的type
-                    base_monitor_active(base_list[i].id, base_list[i].font_size, base_list[i].height, base_list[i].width,base_list[i].contents);
+                    vm.current_monitor_item = base_list[i];
+                    base_monitor_active(vm,selector);
+                    vm.drigging_id ++ ;
                 }
                 for (let i = 0; i < chart_list.length; i++) {
                     //添加一个div容器,形如<div id="1_1"><div id="chart1_1"></div></div>
                     $(selector).append('<div id=\"' + value + '_' + chart_list[i].order + '\" style=\"position: absolute;background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px;top:' + chart_list[i].y + 'px;left:' + chart_list[i].x + 'px;transform: scale(' + chart_list[i].scale + ')\"><div id=\"chart' + value + '_' + chart_list[i].order + '\" style=\"background:beige;height:' + chart_list[i].height + 'px;width:' + chart_list[i].width + 'px\"></div><input class="score_input" type="text" value="0"><div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span></div></div>');
                     //调用图标监控项的渲染方法，最后一个参数对应容器外层div的id
                     show_chart_active(chart_list[i].id, chart_list[i].gather_params, chart_list[i].height, chart_list[i].width, value + '_' + chart_list[i].order);
-
                 }
                 for (let i = 0; i < job_list.length; i++) {
                     let job_params = {
@@ -155,7 +157,6 @@
                             'item_id': flow_list[i].id
                         }
                     }).then(function (res) {
-
                             var len =res.data.message.length
                             for(var j=0;j<=len-1;j++){
                                 data_key=res.data.message[j].data_value
