@@ -140,7 +140,7 @@
         </div>
         <div style="height: 30px"></div>
         <span>
-            <el-tabs type="card" v-model="monitor_type">
+            <el-tabs type="card" v-model="monitor_type" @tab-click="handleClick">
 
                 <!--基本单元 start-->
                 <el-tab-pane :disabled="disabled2" label="基本监控项" name="first">
@@ -668,7 +668,7 @@
 
 
                 <!-- 基本单元 start-->
-                <el-tab-pane :disabled="disabled6" label="基本监控项（一体化平台）" name="five" element-loading-text="拼命加载中"
+                <el-tab-pane :disabled="disabled6" @tab label="基本监控项（一体化平台）" name="five" element-loading-text="拼命加载中"
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)" v-loading="loading">
                     <el-row>
@@ -711,8 +711,6 @@
                                 <el-form-item label="数据来源">
                                     <el-radio-group v-model="sql_file_interface" @change="change_data_sources"
                                                     style="padding: 14px">
-                                        <el-radio :label="3">数据库</el-radio>
-                                        <el-radio :label="6">文件</el-radio>
                                         <el-radio :label="9">接口</el-radio>
                                      </el-radio-group>
                                 </el-form-item>
@@ -1362,6 +1360,13 @@
             }],*/
         },
         methods: {
+            //tab页点击事件
+            handleClick(){
+                if("five" == vm.monitor_type){
+                    vm.sql_file_interface = 9;
+                }
+                vm.change_data_sources(vm.sql_file_interface);
+            },
             //获取采集测试的结果，同步调用
             get_gather_test(){
                 $.ajax({
@@ -2601,11 +2606,11 @@
                     vm.add_pamas = 0;
                     vm.monitor_name = '';
                     //取消默认添加时展示基本监控项
-                    /*
                     vm.disabled2 = false;
                     vm.disabled3 = false;
                     vm.disabled4 = false;
                     vm.disabled5 = false;
+                    /*
                     vm.monitor_type = 'first';*/
                     //默认添加时展示基本监控项（修改后）
                     //监控项类型设置
@@ -3097,6 +3102,7 @@
             },
             //采集测试方法
             base_cell_test(){
+                //一体化指标的采集测试目前只做了接口部分的
                 //同步获取采集数据
                 vm.get_gather_test();
                 //预览采集，调用预览组件
