@@ -5,6 +5,7 @@ import json
 from common.utils import get_current_time
 from gather_data.function import gather_data_migrate,gather_data_save
 from iqube_interface.views import gather_base_test
+from django.db import transaction
 
 
 # Create your views here.
@@ -244,18 +245,19 @@ def is_monitor_item_collect(request):
 
     # 如果当前时间在监控项的采集时间范围内，执行采集，调用一体化服务
     if (current_time >= start_time) and (current_time <= end_time):
-        result = gather_base_test(request)
-        # 历史数据迁移
-        gather_data_migrate(monitor_item["id"])
-        # print json.loads(result.content)["results"]
-        info = {
-            "type" : "add",
-            "item_id" : monitor_item["id"],
-            "measures" : json.loads(result.content)["results"]
-        }
-        print info
-        # 采集数据入库
-        gather_data_save(info)
+        # 这里需要事物控制，涉及数据迁移
+        with transaction.atomic():
+            result = gather_base_test(request)
+            # 历史数据迁移
+            gather_data_migrate(monitor_item["id"])
+            # print json.loads(result.content)["results"]
+            info = {
+                "type" : "add",
+                "item_id" : monitor_item["id"],
+                "measures" : json.loads(result.content)["results"]
+            }
+            # 采集数据入库
+            gather_data_save(info)
         return result
     else :
         return render_json({"result": "1"})
