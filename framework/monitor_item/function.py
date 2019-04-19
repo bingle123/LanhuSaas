@@ -300,7 +300,9 @@ def basic_test(request):
     if info['id'] == '':
         info['id'] = 0
     result = []
-    gather_data(**info)
+    res = gather_data(**info)
+    print type(res)
+    print res.id
     gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
     # 获得数据库对象
     db = get_db()
@@ -311,7 +313,8 @@ def basic_test(request):
     for i in results:
         dic1 = {
             i[0]: i[1],
-            'gather_status': i[2]
+            'gather_status': i[2],
+            'gather_id':res.id
         }
         dic = dict(dic, **dic1)
     result.append(dic)

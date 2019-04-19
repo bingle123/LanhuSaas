@@ -210,7 +210,7 @@
                                         <el-input type="textarea" v-model="file_param"></el-input>
                                     </el-form-item>
                                 </div>
-                                <el-form-item label="数据采集规则" style="width: 96%">
+                                <el-form-item id="data_gather_rule" label="数据采集规则" style="width: 96%">
                                     <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq"
                                               type="textarea"></el-input>
                                 </el-form-item>
@@ -1854,6 +1854,7 @@
                 if (vm.sql_file_interface == 6 || vm.sql_file_interface == 9) {
                     params = vm.server_url + '#' + vm.file_param
                 }
+                alert(123)
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor_item/basic_test/',
@@ -1864,6 +1865,7 @@
                         gather_params: vm.basic.gather_params,
                     },
                 }).then(function (res) {
+                    debugger
                     let tempcontents2 = vm.basic.contents
                     $("#text2").html("")
                     $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + tempcontents2 + "</div>")
@@ -2633,6 +2635,7 @@
             },
             change1(value) {
                 if (value == 3) {
+                    $("#data_gather_rule").find("label").html("数据采集SQL");
                     vm.sql1 = 'block';
                     vm.file1 = 'none';
                     vm.interface1 = 'none';
