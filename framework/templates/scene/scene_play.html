@@ -1,8 +1,23 @@
 <!DOCTYPE html>
+<html lang="en">
+<style>
+    .ops_quality {
+        background-image: url(/static/img/ops_quality.png);
+        background-size: 100% 100%;
+    }
+    .night_duty {
+        background-image: url(/static/img/night_duty.png);
+        background-size: 100% 100%;
+    }
+    .liquidation {
+        background-image: url(/static/img/liquidation.png);
+        background-size: 100% 100%;
+    }
+</style>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+   <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
     <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
@@ -52,89 +67,76 @@
 <div id="main">
     <template>
         <div class="block">
-            <!--<span class="demonstration">Click 指示器触发</span>-->
+        <div id="1" style="height: 1200px;" class="ops_quality" :height="imgHeight">
 
-            <el-carousel id="lay_contains" trigger="click" @change="scene_change" :height="imgHeight">
-                <el-carousel-item v-for="(item,index) in imgList" :key="index">
-                    <el-row>
-                        <el-col :span="24">
-                            <div ref="imgHeight" :src="item.idView" :id="item.scene_id" :class="'scene_content'+index"
-                                 style="position: relative;">
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-carousel-item>
-            </el-carousel>
+        </div>
+        <div id="2" style="height: 1200px;display:none" class="night_duty" :height="imgHeight">
+
+        </div>
+        <div id="3" style="height: 1200px;display:none" class="liquidation" :height="imgHeight">
+
+        </div>
         </div>
     </template>
 </div>
-<!--暂时的css样式-->
-<style>
-    .el-carousel__item h3 {
-        color: #475669;
-        font-size: 14px;
-        opacity: 0.75;
-        line-height: 150px;
-        margin: 0;
-    }
-
-    .el-carousel__container {
-        background-image: url(/static/img/scene_content_bg.png);
-        background-size: 100% 100%;
-    }
-    .ops_quality {
-        background-image: url(/static/img/ops_quality.png);
-        background-size: 100% 100%;
-    }
-    .night_duty {
-        background-image: url(/static/img/night_duty.png);
-        background-size: 100% 100%;
-    }
-    .liquidation {
-        background-image: url(/static/img/liquidation.png);
-        background-size: 100% 100%;
-    }
-
-    .score_input {
-        font-size: 16px;
-        position: absolute;
-        background: rgba(255, 255, 255, 0.1);
-        top: -36px;
-        left: 0;
-        width: 50px;
-        height: 36px;
-        display: none;
-    }
-    .right_click {
-        position: absolute;
-        width: 100px;
-        display: none;
-    }
-
-    .right_click span {
-        width: 100px;
-        display: inline-block;
-        font-size: 16px;
-        line-height: 36px;
-    }
-    .keepOn{
-        position: absolute;
-        top: 32px;
-        right: 0;
-        width: 115px;
-        height: 60px;
-    }
-    .keepOn p{
-        margin-top: 5px;
-        line-height: 20px;
-        color: black;
-    }
-    .keepOn span{
-        width: 20%;
-        margin: 0 20px;
-        color: black;
-        background: #00baff;
-    }
-</style>
 </body>
+<script>
+ axios.interceptors.request.use((config) => {
+    config.headers['X-Requested-With'] = 'XMLHttpRequest';
+    let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+    config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+    return config
+});
+vm = new Vue({
+    el: "#main",
+    data: {
+        imgList: [],
+        imgHeight: '' + document.documentElement.clientHeight + 'px',
+    },
+    methods: {
+        mounted() {
+            //const that = this
+            //这里很关键；大部分博客都是这样写的，其实也没有毛病，只不过有时候不起作用；
+            window.onresize = () => {
+                return (() => {
+                    window.imgHeight = document.documentElement.clientHeight;
+                    this.imgHeight = '' + window.imgHeight + 'px';
+                })()
+            }
+        },
+        watch: {
+            imgHeight(val) {
+                if (!this.timer) {
+                    this.imgHeight = val;
+                    this.timer = true;
+                    let that = this;
+                    setTimeout(function () {
+                        // that.screenWidth = that.$store.state.canvasWidth
+                        console.log(that.imgHeight);
+                        that.timer = false;
+                    }, 400)
+                }
+            },
+        }
+    }
+});
+$(function () {alert(vm.imgHeight);
+    $(document).on("click", ".keepOn_no", function (e) {
+        e.preventDefault();
+        $(this).parent().hide();
+    });
+    $(document).on("click", ".block", function (e) {
+        var elem = document.body;
+        if (elem.webkitRequestFullScreen) {
+            elem.webkitRequestFullScreen();
+        } else if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+        } else if (elem.requestFullScreen) {
+            elem.requestFullscreen();
+        } else {
+            notice.notice_show("浏览器不支持全屏API或已被禁用", null, null, null, true, true);
+        }
+    });
+});
+</script>
 </html>
