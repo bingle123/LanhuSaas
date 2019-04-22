@@ -44,6 +44,9 @@ MEASURES_API_ADDRESS = 'http://192.168.1.153:8088/webserver/metric/getMetricSetC
 # 指标查询API
 MEASURES_QUERY_API = 'http://192.168.1.150:4242/api/query'
 
+# 系统告警查询API
+ALARM_QUERY_API = 'http://192.168.1.151/webserver-guotai/alarm/getAlarmInfoListCount.do'
+
 # 日志集API地址
 LOG_API_ADDRESS = 'http://192.168.1.153:8088/webserver/log/getLogColumns.do'
 
