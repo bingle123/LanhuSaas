@@ -186,7 +186,7 @@ def clear_execute_status():
 
 # 获取所有自定义流程节点信息，以节点顺序排序
 def get_custom_process_info():
-    sql = 'SELECT cust_pro.*, cust_pro_log.* FROM tb_cust_process AS cust_pro LEFT JOIN td_cust_process_log AS cust_pro_log ON cust_pro.id = cust_pro_log.node_id ORDER BY cust_pro.seq'
+    sql = 'SELECT cust_pro.node_name, cust_pro_log.is_done, cust_pro_log.do_time, cust_pro_log.do_person FROM tb_cust_process AS cust_pro LEFT JOIN td_cust_process_log AS cust_pro_log ON cust_pro.id = cust_pro_log.node_id ORDER BY cust_pro.seq ASC'
     # 获取数据库连接信息
     database_info = tools.get_current_database_info()
     conn = MySQLdb.connect(host=database_info['db_host'], user=database_info['db_user'], passwd=database_info['db_pwd'], db=database_info['db_name'], port=int(database_info['db_port']), charset="utf8")
