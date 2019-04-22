@@ -104,9 +104,11 @@ def get_active_user(request):
 
 # 解析为JSON字符串（支持datetime类型）
 def json_dumps_datetime(item):
-    def default(o):
-        if isinstance(o, (datetime.date, datetime.datetime)):
-            return o.isoformat()
+    def default(obj):
+        if isinstance(obj, datetime):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            return json.JSONEncoder.default(obj)
     return json.dumps(
         item,
         sort_keys=True,
