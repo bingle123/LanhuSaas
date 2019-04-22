@@ -4,11 +4,9 @@ from models import TbCustProcess
 from models import TdCustProcessLog
 from position.models import user_info
 from django.forms.models import model_to_dict
-from shell_app.tools import sms_send_msg
-from shell_app.tools import mail_send_msg
-from shell_app.tools import wechat_send_msg
-from shell_app.tools import wechat_access_token
+from shell_app import tools as tools
 from django.core.paginator import *
+import pymysql as MySQLdb
 
 
 def select_all_nodes():
@@ -186,6 +184,20 @@ def clear_execute_status():
     return "ok"
 
 
+# 获取所有自定义流程节点信息，以节点顺序排序
+def get_custom_process_info():
+    sql = 'SELECT cust_pro.*, cust_pro_log.* FROM tb_cust_process AS cust_pro LEFT JOIN td_cust_process_log AS cust_pro_log ON cust_pro.id = cust_pro_log.node_id ORDER BY cust_pro.seq'
+    # 获取数据库连接信息
+    database_info = tools.get_current_database_info()
+    conn = MySQLdb.connect(host=database_info['db_host'], user=database_info['db_user'], passwd=database_info['db_pwd'], db=database_info['db_name'], port=int(database_info['db_port']), charset="utf8")
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    # 获取执行结果并转换JSON
+    custom_process_info = tools.json_dumps_datetime(cursor.fetchall())
+    conn.close()
+    return custom_process_info
+
+
 # 流程节点执行完毕发送通知方法
 def send_notification(notification):
     """
@@ -220,7 +232,7 @@ def send_notification(notification):
         if 'wechat' == rec_info.notice_style:
             # 如果当前为第一次获取token信息
             if None is access_token:
-                access_token = wechat_access_token()
+                access_token = tools.wechat_access_token()
                 # token获取异常，检查APPID和secret是否正确
             if None is access_token:
                 print 'Wechat access token get fail'
@@ -232,7 +244,7 @@ def send_notification(notification):
                 infos.append(u'%s：微信发送失败!用户openid未设置' % receiver)
                 send_flag = False
                 continue
-            res = wechat_send_msg(access_token, rec_info.open_id, notification['content'])
+            res = tools.wechat_send_msg(access_token, rec_info.open_id, notification['content'])
             # 函数返回为None说明发送正常，否则将返回错误信息
             if None is not res:
                 infos.append(u'%s: 微信通知发送失败! %s' % (receiver, res))
@@ -252,10 +264,10 @@ def send_notification(notification):
             mail_send_list.append(receiver)
     # 短信发送列表如果不为空，则发送短信给列表中的接收者
     if None is not sms_send_list:
-        sms_send_msg(notification['content'], sms_send_list)
+        tools.sms_send_msg(notification['content'], sms_send_list)
     # 邮件发送列表如果不为空，则发送邮件给列表中的接收者
     if None is not mail_send_list:
-        mail_send_msg(u'过程通知信息', notification['content'], mail_send_list)
+        tools.mail_send_msg(u'过程通知信息', notification['content'], mail_send_list)
     # 根据当前发送状态标志位，返回前端一个相应的发送状态，用于前端判断发送是否存在问题
     if send_flag:
         status['message'] = 'ok'

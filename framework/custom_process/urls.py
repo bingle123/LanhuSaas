@@ -25,5 +25,6 @@ urlpatterns = patterns(
     (r'^clear_execute_status$', 'clear_execute_status'),                 # 清除所有节点的状态信息
     (r'^select_all_bkusers$', 'select_all_bkusers'),                     # 获取所有的蓝鲸用户信息
     (r'^send_notification$', 'send_notification'),                       # 节点执行完毕发送通知
-    (r'^select_nodes_pagination$', 'select_nodes_pagination')            # 分页获取指定页节点信息
+    (r'^select_nodes_pagination$', 'select_nodes_pagination'),            # 分页获取指定页节点信息
+    (r'^get_custom_process_info$', 'get_custom_process_info')            # 获取所有自定义流程节点信息
 )
