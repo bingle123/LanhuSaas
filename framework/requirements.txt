@@ -1,22 +1,58 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 # 工程预装模块
 # 需要额外的python包，可直接在文件后面添加
 # 请确保指定的包和版本号，可通过pip安装
 
-Django==1.8.11
-pymysql==0.6.7
-MarkupSafe==0.23
-Mako==1.0.4
-httplib2==0.9.1
-suds==0.4
+amqp==1.4.9
+anyjson==0.3.3
+asn1crypto==0.24.0
+attrs==18.2.0
+Automat==0.5.0
+backports.functools_lru_cache==1.5
+beautifulsoup4==4.7.1
+billiard==3.3.0.23
+bs4==0.0.1
 celery==3.1.18
+cffi==1.11.5
+chardet==3.0.4
+constantly==15.1.0
+cssselect==0.9.1
+cx-Oracle==7.0.0
+Django==1.8.11
 django-celery==3.2.1
-supervisor==3.3.3
-#uWSGI==2.0.13.1
-requests==2.9.1
-xlrd==1.2.0
-lxml==4.3.0
-selenium==3.141.0
-cx_Oracle==7.0.0
+docutils==0.14
+enum34==1.1.6
+# fdfs-client-py==1.2.6
+functools32==3.2.3.post2
+httplib2==0.9.1
+hyperlink==18.0.0
+idna==2.8
+incremental==16.10.1
+ipaddress==1.0.22
+kombu==3.0.37
+Mako==1.0.4
+MarkupSafe==0.23
+meld3==1.0.2
+mutagen==1.42.0
+Pillow==5.4.1
+pyasn1==0.4.5
+pyasn1-modules==0.2.3
+pycparser==2.16
 pyDes==2.0.1
-pymssql==2.1.4
+PyDispatcher==2.0.5
+PyHamcrest==1.9.0
+# pymssql==2.1.0
+PyMySQL==0.6.7
+pytz==2018.9
+pywin32==224
+queuelib==1.5.0
+requests==2.9.2
+selenium==3.141.0
+six==1.12.0
+soupsieve==1.7.1
+suds==0.4
+supervisor==3.3.3
+urllib3==1.24.1
+w3lib==1.20.0
+xlrd==0.9.3
+zope.interface==4.1.2

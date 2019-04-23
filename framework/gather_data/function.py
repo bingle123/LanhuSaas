@@ -272,17 +272,9 @@ def gather_data(**info):
             # 定义key-value
             data_set = sql_kv_process(gather_params['gather_field'], result)
             # 将采集的数据保存到td_gather_data中
-            # 将采集的数据拼成一个json串，一个监控项在采集表中只有一条记录（与一体化指标兼容）
-            gather_dict = "[{"
             for item in data_set:
-                if(gather_dict.__len__() > 2):
-                    gather_dict += ","+'"'+item['key']+'"'+":"+'"'+item['value_str']+'"'
-                else :
-                    gather_dict += '"' + item['key'] + '"' + ":" + '"' + item['value_str'] + '"'
-            gather_dict += "}]"
-            res = TDGatherData.objects.create(item_id=info['id'], gather_time=GATHER_TIME, data_key="measures",
-                         data_value=gather_dict)
-            return res
+                TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'],
+                             data_value=item['value_str']).save()
         else:
             # 采集是空结果集的情况
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='0').save()

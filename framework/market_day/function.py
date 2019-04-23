@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 from models import Holiday, HeaderData, Area
 import os
-from xlrd import open_workbook
+# from xlrd import open_workbook
 from monitor_item.models import Monitor
 from django.forms import model_to_dict
 from django.db.models import Q
@@ -40,7 +40,8 @@ def get_file(req, area):
                     for chunk in obj.chunks():
                         f.write(chunk)
                 f.close()
-            workbook = open_workbook(path)
+            # workbook = open_workbook(path)
+            workbook = None
             sheet = workbook.sheet_by_index(0)
             delall(area)
             for i in range(1, sheet.nrows):

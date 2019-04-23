@@ -1,4 +1,5 @@
 let vm = null;
+var site_url = $('#site_url').val();
 $(function() {
     axios.interceptors.request.use((config) => {
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
@@ -21,7 +22,7 @@ $(function() {
             get_pos() {
                 axios({
                     method: 'post',
-                    url: '/monitor_scene/get_all_pos/',
+                    url: site_url + 'monitor_scene/get_all_pos/',
                 }).then((res) => {
                     let json = [];
                     if (res.data.message.length > 0) {
@@ -52,7 +53,7 @@ $(function() {
                 //获取时间范围内的所有场景
                 var res = await axios({
                     method: 'post',
-                    url: '/monitor_scene/alternate_play_test/',
+                    url: site_url + '/monitor_scene/alternate_play_test/',
                     data: {
                         'pos_id': vm.position,
                         'start': vm.start,
@@ -130,7 +131,7 @@ $(function() {
                     setTimeout(function () {
                         axios({
                             method: 'post',
-                            url: '/monitor_item/node_state_by_item_id/',
+                            url: site_url + '/monitor_item/node_state_by_item_id/',
                             data: {
                                 'item_id': flow_list[i].id
                             }
@@ -195,7 +196,7 @@ $(function () {
         var id=$(this).parents('.flow_monitor').attr('type');
         axios({
             method: 'post',
-                    url: '/monitor_item/resume_flow/',
+                    url: site_url + '/monitor_item/resume_flow/',
                     data: {
                         'item_id': id
                     }

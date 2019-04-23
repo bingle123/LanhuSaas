@@ -3,7 +3,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script src="${STATIC_URL}js/net/echarts.min.js"></script>
     <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 ${STATIC_URL}assets/-->
     <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
     <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
@@ -21,25 +21,25 @@
     <!--本页面css-->
     <link href="${STATIC_URL}css/common/main.css" rel="stylesheet">
     <!--阿里巴巴矢量图标库--项目完成后请下载css并下载css引用的字体文件-->
-    <link href="http://at.alicdn.com/t/font_997278_ptr5bdmor4j.css" rel="stylesheet">
+    <link href="${STATIC_URL}css/net/font_997278_ptr5bdmor4j.css" rel="stylesheet">
     <!--以下为后台参数-->
     <!--
     "${SITE_URL}";	        // app的url前缀,在ajax调用的时候，应该加上该前缀
     "${STATIC_URL}";       // 静态资源前缀
     **/--->
     <link type="text/css" href="${STATIC_URL}css/monitorScene/style.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/v-charts/lib/index.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
-    <link href="https://magicbox.bk.tencent.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
-    <link href="https://magicbox.bk.tencent.com/static_api/v3/assets/jrange/css/jquery.range.css" rel="stylesheet">
-    <script src="https://magicbox.bk.tencent.com/static_api/v3/assets/js/jquery-1.10.2.min.js"></script>
+    <script src="${STATIC_URL}js/net/index.min.js"></script>
+    <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
+    <link href="${STATIC_URL}css/net/bk.css" rel="stylesheet">
+    <link href="${STATIC_URL}css/net/jquery.range.css" rel="stylesheet">
+    <script src="${STATIC_URL}js/net/jquery-1.10.2.min.js"></script>
     <script src="${STATIC_URL}js/jquery.range-min.js"></script>
     <script src="${STATIC_URL}js/scene/scene_carousel_test.js"></script>
     <script src="${STATIC_URL}js/csrftoken.js"></script>
 
-    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
-    <script type="text/javascript" src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
-    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css" />
+    <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
+    <script type="text/javascript" src="${STATIC_URL}js/net/jsplumb.min.js"></script>
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jsPlumbToolkit-defaults.css" />
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
     <style>
@@ -99,6 +99,7 @@
         </div>
     </template>
 </div>
+<input id="site_url" type="hidden" value="${SITE_URL}">
 <!--暂时的css样式-->
 <style>
     .el-carousel__item h3 {
@@ -110,7 +111,7 @@
     }
 
     .el-carousel__item {
-        background-image: url("/static/img/scene_content_bg.png");
+        background-image: url("${STATIC_URL}img/scene_content_bg.png");
         background-size: 100% 100%;
     }
     .score_input{

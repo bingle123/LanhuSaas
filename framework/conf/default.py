@@ -25,30 +25,32 @@ import sys
 from celery.schedules import crontab
 from kombu import Queue, Exchange
 from datetime import timedelta
-# Import global settings to make it easier to extend settings.
+# TABASE_NAMEDATABASE_NAMTABASE_NAME
 from django.conf.global_settings import *  # noqa
 
 # ==============================================================================
 # 应用基本信息配置 (请按照说明修改)
 # ==============================================================================
 # 在蓝鲸智云开发者中心 -> 点击应用ID -> 基本信息 中获取 APP_ID 和 APP_TOKEN 的值
-APP_ID = 'lanhusaas'
+APP_ID = 'bk_kanban'
+# 指定数据库名称
+#DATABASE_NAME = 'mydjango1'
 # 长沙APP_TOKEN
-# APP_TOKEN = 'd441289d-14f9-435f-b195-499e20920e9e'
+# APP_TOKEN = 'd441289d-14f9-435f-b195-499e2096868'
 # 上海APP_TOKEN
-APP_TOKEN = '334c1932-4763-47b9-8f06-7f8c7c8b33aa'
+APP_TOKEN = '317908f5-8dc1-44cc-89c8-8bf5c572ba19'
 
 # 指标集API地址
-MEASURES_API_ADDRESS = 'http://192.168.1.153:8088/webserver/metric/getMetricSetColumns.do'  # type: str
+# MEASURES_API_ADDRESS = 'http://192.168.1.153:8088/webserver/metric/getMetricSetColumns.do'  # type: str
+MEASURES_API_ADDRESS = 'http://10.240.1.72:8099/webserver/metric/getMetricSetColumns.do'  # type: str
 
 # 指标查询API
-MEASURES_QUERY_API = 'http://192.168.1.150:4242/api/query'
-
-# 系统告警查询API
-ALARM_QUERY_API = 'http://192.168.1.151/webserver-guotai/alarm/getAlarmInfoListCount.do'
+# MEASURES_QUERY_API = 'http://192.168.1.150:4242/api/query'
+MEASURES_QUERY_API = 'http://10.240.1.187:4242/api/query'
 
 # 日志集API地址
-LOG_API_ADDRESS = 'http://192.168.1.153:8088/webserver/log/getLogColumns.do'
+# LOG_API_ADDRESS = 'http://192.168.1.153:8088/webserver/log/getLogColumns.do'
+LOG_API_ADDRESS = 'http://10.240.1.72:8099/webserver/log/getLogColumns.do'
 
 # 数据采集测试用主机地址
 GATHER_DATA_HOST = '192.168.1.52'
@@ -72,9 +74,9 @@ DENGFEI_PASSWORD = 'test'
 # 长沙
 # BK_PAAS_HOST = 'http://paas.bk.com:80'
 # 上海
-BK_PAAS_HOST = 'https://paas.blueking.com'
+BK_PAAS_HOST = 'https://paas.gtjatest.com'
 # 上海退出登录地址
-LOG_OUT_ADDRESS = 'https://paas.blueking.com/accounts/logout/'
+LOG_OUT_ADDRESS = 'https://paas.gtjatest.com/accounts/logout/'
 
 # 请求官方 API 默认版本号，可选值为："v2" 或 ""；其中，"v2"表示规范化API，""表示未规范化API
 DEFAULT_BK_API_VER = 'v2'
@@ -138,7 +140,7 @@ ALLOWED_HOSTS = ['*']
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
@@ -175,6 +177,7 @@ INSTALLED_APPS = (
     'history_chart',
     'home_page',
     'iqube_interface',
+	'custom_query'
 )
 
 # ==============================================================================
