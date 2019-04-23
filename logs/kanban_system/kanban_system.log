@@ -1,0 +1,247 @@
+ERROR [2019-04-18 19:24:15] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 6476 3116 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-18 19:24:15] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 6476 3116 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-18 19:24:33] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 6476 3612 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-18 19:24:33] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 6476 3612 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-18 20:21:04] D:\py-workspace\LanhuSaas\framework\account\http.py 65 _http_request 6476 8124 
+ 	 login http request error! type: GET, url: https://paas.blueking.com/login/accounts/is_login/, data: {'bk_token': 'oOgb--YvQRovFG_rsX0RD6ilTkIGTGbZfaaFXBDamBY'} 
+Traceback (most recent call last):
+  File "D:\py-workspace\LanhuSaas\framework\account\http.py", line 53, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data, verify=False)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 67, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 53, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 468, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 576, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\adapters.py", line 437, in send
+    raise ConnectionError(e, request=request)
+ConnectionError: HTTPSConnectionPool(host='paas.blueking.com', port=443): Max retries exceeded with url: /login/accounts/is_login/?bk_token=oOgb--YvQRovFG_rsX0RD6ilTkIGTGbZfaaFXBDamBY (Caused by NewConnectionError('<requests.packages.urllib3.connection.VerifiedHTTPSConnection object at 0x00000000075C3C18>: Failed to establish a new connection: [Errno 10060] ',))
+INFO [2019-04-18 20:21:04] D:\py-workspace\LanhuSaas\framework\account\accounts.py 95 verify_bk_login 6476 8124 
+ 	 验证用户登录token无效： 
+
+ERROR [2019-04-18 20:41:14] D:\py-workspace\LanhuSaas\framework\account\http.py 65 _http_request 6476 8880 
+ 	 login http request error! type: GET, url: https://paas.blueking.com/login/accounts/is_login/, data: {'bk_token': 'oOgb--YvQRovFG_rsX0RD6ilTkIGTGbZfaaFXBDamBY'} 
+Traceback (most recent call last):
+  File "D:\py-workspace\LanhuSaas\framework\account\http.py", line 53, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data, verify=False)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 67, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 53, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 468, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 576, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\adapters.py", line 437, in send
+    raise ConnectionError(e, request=request)
+ConnectionError: HTTPSConnectionPool(host='paas.blueking.com', port=443): Max retries exceeded with url: /login/accounts/is_login/?bk_token=oOgb--YvQRovFG_rsX0RD6ilTkIGTGbZfaaFXBDamBY (Caused by NewConnectionError('<requests.packages.urllib3.connection.VerifiedHTTPSConnection object at 0x0000000005CE7208>: Failed to establish a new connection: [Errno 10060] ',))
+INFO [2019-04-18 20:41:14] D:\py-workspace\LanhuSaas\framework\account\accounts.py 95 verify_bk_login 6476 8880 
+ 	 验证用户登录token无效： 
+
+ERROR [2019-04-19 22:47:59] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 1944 4940 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-19 22:47:59] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 1944 4940 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-19 23:26:01] D:\py-workspace\LanhuSaas\framework\account\http.py 65 _http_request 1944 5044 
+ 	 login http request error! type: GET, url: https://paas.blueking.com/login/accounts/is_login/, data: {'bk_token': 'g-flpymAYFiLdavw9FLgd7uFfG7VguSJ1Kou5oF4JrQ'} 
+Traceback (most recent call last):
+  File "D:\py-workspace\LanhuSaas\framework\account\http.py", line 53, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data, verify=False)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 67, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 53, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 468, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 576, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\adapters.py", line 437, in send
+    raise ConnectionError(e, request=request)
+ConnectionError: HTTPSConnectionPool(host='paas.blueking.com', port=443): Max retries exceeded with url: /login/accounts/is_login/?bk_token=g-flpymAYFiLdavw9FLgd7uFfG7VguSJ1Kou5oF4JrQ (Caused by NewConnectionError('<requests.packages.urllib3.connection.VerifiedHTTPSConnection object at 0x0000000005DF1A90>: Failed to establish a new connection: [Errno 10060] ',))
+INFO [2019-04-19 23:26:01] D:\py-workspace\LanhuSaas\framework\account\accounts.py 95 verify_bk_login 1944 5044 
+ 	 验证用户登录token无效： 
+
+ERROR [2019-04-20 09:21:19] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 2896 4592 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 09:21:19] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 2896 4592 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 09:21:41] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 2896 4916 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 09:21:41] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 2896 4916 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 09:38:39] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 2896 5616 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 09:38:39] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 2896 5616 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 10:16:46] D:\py-workspace\LanhuSaas\framework\account\http.py 65 _http_request 5860 1700 
+ 	 login http request error! type: GET, url: https://paas.blueking.com/login/accounts/is_login/, data: {'bk_token': 'g-flpymAYFiLdavw9FLgd7uFfG7VguSJ1Kou5oF4JrQ'} 
+Traceback (most recent call last):
+  File "D:\py-workspace\LanhuSaas\framework\account\http.py", line 53, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data, verify=False)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 67, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 53, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 468, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 576, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\adapters.py", line 437, in send
+    raise ConnectionError(e, request=request)
+ConnectionError: HTTPSConnectionPool(host='paas.blueking.com', port=443): Max retries exceeded with url: /login/accounts/is_login/?bk_token=g-flpymAYFiLdavw9FLgd7uFfG7VguSJ1Kou5oF4JrQ (Caused by NewConnectionError('<requests.packages.urllib3.connection.VerifiedHTTPSConnection object at 0x0000000005C5A550>: Failed to establish a new connection: [Errno 10060] ',))
+INFO [2019-04-20 10:16:46] D:\py-workspace\LanhuSaas\framework\account\accounts.py 95 verify_bk_login 5860 1700 
+ 	 验证用户登录token无效： 
+
+ERROR [2019-04-20 11:56:41] D:\py-workspace\LanhuSaas\framework\account\http.py 65 _http_request 5860 3308 
+ 	 login http request error! type: GET, url: https://paas.blueking.com/login/accounts/is_login/, data: {'bk_token': 'fmXuK68ehG747cs4lELLIa4rGoW0OqFkR6cA2eUVHHM'} 
+Traceback (most recent call last):
+  File "D:\py-workspace\LanhuSaas\framework\account\http.py", line 53, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data, verify=False)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 67, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 53, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 468, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 576, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\adapters.py", line 437, in send
+    raise ConnectionError(e, request=request)
+ConnectionError: HTTPSConnectionPool(host='paas.blueking.com', port=443): Max retries exceeded with url: /login/accounts/is_login/?bk_token=fmXuK68ehG747cs4lELLIa4rGoW0OqFkR6cA2eUVHHM (Caused by NewConnectionError('<requests.packages.urllib3.connection.VerifiedHTTPSConnection object at 0x0000000007BE3BA8>: Failed to establish a new connection: [Errno 10060] ',))
+INFO [2019-04-20 11:56:41] D:\py-workspace\LanhuSaas\framework\account\accounts.py 95 verify_bk_login 5860 3308 
+ 	 验证用户登录token无效： 
+
+ERROR [2019-04-20 12:09:46] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 5860 5668 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 12:09:46] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 5860 5668 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 14:01:21] D:\py-workspace\LanhuSaas\framework\account\http.py 65 _http_request 6524 6508 
+ 	 login http request error! type: GET, url: https://paas.blueking.com/login/accounts/is_login/, data: {'bk_token': 'fmXuK68ehG747cs4lELLIa4rGoW0OqFkR6cA2eUVHHM'} 
+Traceback (most recent call last):
+  File "D:\py-workspace\LanhuSaas\framework\account\http.py", line 53, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data, verify=False)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 67, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 53, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 468, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 576, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\adapters.py", line 437, in send
+    raise ConnectionError(e, request=request)
+ConnectionError: HTTPSConnectionPool(host='paas.blueking.com', port=443): Max retries exceeded with url: /login/accounts/is_login/?bk_token=fmXuK68ehG747cs4lELLIa4rGoW0OqFkR6cA2eUVHHM (Caused by NewConnectionError('<requests.packages.urllib3.connection.VerifiedHTTPSConnection object at 0x0000000005CC5048>: Failed to establish a new connection: [Errno 10060] ',))
+INFO [2019-04-20 14:01:21] D:\py-workspace\LanhuSaas\framework\account\accounts.py 95 verify_bk_login 6524 6508 
+ 	 验证用户登录token无效： 
+
+ERROR [2019-04-20 14:03:51] D:\py-workspace\LanhuSaas\framework\account\http.py 65 _http_request 6524 636 
+ 	 login http request error! type: GET, url: https://paas.blueking.com/login/accounts/is_login/, data: {'bk_token': 'fmXuK68ehG747cs4lELLIa4rGoW0OqFkR6cA2eUVHHM'} 
+Traceback (most recent call last):
+  File "D:\py-workspace\LanhuSaas\framework\account\http.py", line 53, in _http_request
+    resp = requests.get(url=url, headers=headers, params=data, verify=False)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 67, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\api.py", line 53, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 468, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Python27\lib\site-packages\requests\sessions.py", line 576, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Python27\lib\site-packages\requests\adapters.py", line 437, in send
+    raise ConnectionError(e, request=request)
+ConnectionError: HTTPSConnectionPool(host='paas.blueking.com', port=443): Max retries exceeded with url: /login/accounts/is_login/?bk_token=fmXuK68ehG747cs4lELLIa4rGoW0OqFkR6cA2eUVHHM (Caused by NewConnectionError('<requests.packages.urllib3.connection.VerifiedHTTPSConnection object at 0x0000000005CB0B70>: Failed to establish a new connection: [Errno 10060] ',))
+INFO [2019-04-20 14:03:51] D:\py-workspace\LanhuSaas\framework\account\accounts.py 95 verify_bk_login 6524 636 
+ 	 验证用户登录token无效： 
+
+ERROR [2019-04-20 14:32:16] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 4432 3224 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 14:32:16] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 4432 3224 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 14:38:58] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 4432 6676 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 14:38:58] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 4432 6676 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:38:41] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 6428 6356 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:38:41] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 6428 6356 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:41:46] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 6428 636 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:41:46] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 6428 636 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:42:15] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 6428 8140 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:42:15] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 6428 8140 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:42:37] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 6428 7920 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:42:37] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 6428 7920 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:43:02] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 6428 1856 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:43:02] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 6428 1856 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:43:05] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 6428 7724 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:43:05] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 6428 7724 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:43:08] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 6428 6000 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:43:08] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 6428 6000 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:43:12] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 6428 4356 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:43:12] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 6428 4356 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:43:15] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 6428 6612 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:43:15] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 6428 6612 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:44:00] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 63 unit_show 6428 7084 
+ 	 请求作业模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
+ERROR [2019-04-20 16:44:00] D:\py-workspace\LanhuSaas\framework\monitor_item\function.py 68 unit_show 6428 7084 
+ 	 请求流程模板失败：Invalid APP Code [bk_app_code=kanban_system], please confirm if the APP Code has been registered 
+
