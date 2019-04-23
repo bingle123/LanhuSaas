@@ -153,3 +153,8 @@ def select_nodes_pagination(request):
     page_info = json.loads(request.body)
     selected_nodes = function.select_nodes_pagination(page_info)
     return render_json(selected_nodes)
+
+
+def get_custom_process_info(request):
+    process_info = function.get_custom_process_info()
+    return render_json(process_info)

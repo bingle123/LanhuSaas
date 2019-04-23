@@ -10,6 +10,10 @@ from suds.client import Client
 from suds.transport.https import HttpAuthenticated
 from conf.default import APP_ID
 from conf.default import APP_TOKEN
+from conf.default import ENVIRONMENT
+from conf.settings_development import DATABASES as DEV_DATABASES
+from conf.settings_production import DATABASES as PRD_DATABASES
+from conf.settings_testing import DATABASES as TEST_DATABASES
 
 
 def error_result(e):
@@ -96,6 +100,54 @@ def get_active_user(request):
 
     })
     return res
+
+
+# 解析为JSON字符串（支持datetime类型）
+def json_dumps_datetime(item):
+    def default(obj):
+        if isinstance(obj, datetime):
+            return obj.strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            return json.JSONEncoder.default(obj)
+    return json.dumps(
+        item,
+        sort_keys=True,
+        indent=1,
+        default=default,
+        ensure_ascii=False
+    )
+
+
+# 获取当前环境的DATABASE信息
+def get_current_database_info():
+    """
+    :return:
+     database_info['db_host']: 数据库IP
+     database_info['db_port']: 数据库端口
+     database_info['db_name']: 数据库名称
+     database_info['db_user']: 数据库用户名
+     database_info['db_pwd']: 数据库密码
+    """
+    database_info = dict()
+    if ENVIRONMENT.endswith('production'):
+        database_info['db_host'] = PRD_DATABASES['default']['HOST']
+        database_info['db_port'] = PRD_DATABASES['default']['PORT']
+        database_info['db_name'] = PRD_DATABASES['default']['NAME']
+        database_info['db_user'] = PRD_DATABASES['default']['USER']
+        database_info['db_pwd'] = PRD_DATABASES['default']['PASSWORD']
+    elif ENVIRONMENT.endswith('testing'):
+        database_info['db_host'] = TEST_DATABASES['default']['HOST']
+        database_info['db_port'] = TEST_DATABASES['default']['PORT']
+        database_info['db_name'] = TEST_DATABASES['default']['NAME']
+        database_info['db_user'] = TEST_DATABASES['default']['USER']
+        database_info['db_pwd'] = TEST_DATABASES['default']['PASSWORD']
+    else:
+        database_info['db_host'] = DEV_DATABASES['default']['HOST']
+        database_info['db_port'] = DEV_DATABASES['default']['PORT']
+        database_info['db_name'] = DEV_DATABASES['default']['NAME']
+        database_info['db_user'] = DEV_DATABASES['default']['USER']
+        database_info['db_pwd'] = DEV_DATABASES['default']['PASSWORD']
+    return database_info
 
 
 # 获取微信公众号token
