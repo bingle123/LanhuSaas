@@ -5,6 +5,7 @@ axios.interceptors.request.use((config) => {
     config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
     return config
 });
+var site_url = $('#site_url').val();
 var vm = new Vue({
     el: '#app',
     data: {
@@ -16,7 +17,7 @@ var vm = new Vue({
         areas: [],
         area:1,
         country:'',
-        file_url:'/market_day/get_file/1',
+        file_url:site_url + '/market_day/get_file/1',
         zones:[],
         zone:'',
         dialogVisible: false
@@ -73,7 +74,7 @@ var vm = new Vue({
                 }).then(() => {
                     axios({
                         method:'post',
-                        url:'/market_day/delone/',
+                        url:site_url + '/market_day/delone/',
                         data:{
                             'date':item.date,
                             'area': vm.area
@@ -103,7 +104,7 @@ var vm = new Vue({
                 }).then(() => {
                     axios({
                         method:'post',
-                        url:'/market_day/addone/',
+                        url:site_url + '/market_day/addone/',
                         data:{
                             'date':item.date,
                             'area': vm.area
@@ -208,7 +209,7 @@ var vm = new Vue({
         addarrs() {
             year = new Date().getFullYear()
             var vm=this
-            axios.get('/market_day/get_holiday/'+vm.area).then(function (res) {
+            axios.get(site_url + '/market_day/get_holiday/'+vm.area).then(function (res) {
                 for (var i = 0; i < res.data.message.length; i++) {
                     vm.markDate.push(res.data.message[i])
                 }
@@ -216,7 +217,7 @@ var vm = new Vue({
             })
         },
         get_header_data(){
-            axios.get('/market_day/get_header/').then(function (res) {
+            axios.get(site_url + '/market_day/get_header/').then(function (res) {
             })
         },
         upsuccess() {
@@ -242,7 +243,7 @@ var vm = new Vue({
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                axios.post('/market_day/delall/'+vm.area).then(function (resp) {
+                axios.post(site_url + '/market_day/delall/'+vm.area).then(function (resp) {
                     vm.$message({
                         type: 'success',
                         message: '删除成功!'
@@ -259,7 +260,7 @@ var vm = new Vue({
         get_all_area(){
             axios({
                 method:'get',
-                url:'/market_day/get_all_area',
+                url:site_url + '/market_day/get_all_area',
             }).then(function (res) {
                 res=res.data.message
                 vm.areas=[]
@@ -275,7 +276,7 @@ var vm = new Vue({
         },add_area(){
             axios({
                 method: 'post',
-                url:'/market_day/add_area',
+                url:site_url + '/market_day/add_area',
                 data:{
                     'country':vm.country,
                     'timezone':vm.zone
@@ -296,7 +297,7 @@ var vm = new Vue({
             }).then(() => {
                     axios({
                     method: 'get',
-                    url:'/market_day/del_area/'+vm.area,
+                    url:site_url + '/market_day/del_area/'+vm.area,
                 }).then(function (res) {
                     vm.$message({
                         type: 'info',
@@ -313,7 +314,7 @@ var vm = new Vue({
         },get_all_timezone(){
             axios({
                 method:'get',
-                url:'/market_day/get_all_timezone'
+                url:site_url + '/market_day/get_all_timezone'
             }).then(function (res) {
                 res=res.data.message
                 for (var i=0;i<res.length;i++){
@@ -369,7 +370,7 @@ var vm = new Vue({
         },
         area:{
             handler(val, oldVal) {
-                vm.file_url='/market_day/get_file/'+val
+                vm.file_url=site_url + '/market_day/get_file/'+val
                 vm.markDate=[]
                 this.addarrs()
             },

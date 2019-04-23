@@ -13,15 +13,15 @@
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
     <script src="${STATIC_URL}js/csrftoken.js"></script>
     <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/v-charts/lib/style.min.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
 
     <script type="text/javascript"
-            src="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/js/jsplumb.min.js"></script>
+            src="${STATIC_URL}js/net/jsplumb.min.js"></script>
     <link rel="stylesheet"
-          href="https://magicbox.bk.tencent.com/static_api/v3/assets/dataflow-2.0/css/jsPlumbToolkit-defaults.css"/>
+          href="${STATIC_URL}css/net/jsPlumbToolkit-defaults.css"/>
     <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
-    <link rel="stylesheet" href="https://magicbox.bk.tencent.com/static_api/v3/assets/bk-icon-2.0/iconfont.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
     <script type="text/javascript" src="${STATIC_URL}assets/echarts/echarts.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/echarts/macarons.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}css/maintenanceIndex/maintenanceIndex.css">
@@ -140,7 +140,7 @@
         </div>
         <div style="height: 30px"></div>
         <span>
-            <el-tabs type="card" v-model="monitor_type" @tab-click="handleClick">
+            <el-tabs type="card" v-model="monitor_type">
 
                 <!--基本单元 start-->
                 <el-tab-pane :disabled="disabled2" label="基本监控项" name="first">
@@ -210,7 +210,7 @@
                                         <el-input type="textarea" v-model="file_param"></el-input>
                                     </el-form-item>
                                 </div>
-                                <el-form-item id="data_gather_rule" label="数据采集规则" style="width: 96%">
+                                <el-form-item label="数据采集规则" style="width: 96%">
                                     <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq"
                                               type="textarea"></el-input>
                                 </el-form-item>
@@ -668,7 +668,7 @@
 
 
                 <!-- 基本单元 start-->
-                <el-tab-pane :disabled="disabled6" @tab label="基本监控项（一体化平台）" name="five" element-loading-text="拼命加载中"
+                <el-tab-pane :disabled="disabled6" label="基本监控项（一体化平台）" name="five" element-loading-text="拼命加载中"
     element-loading-spinner="el-icon-loading"
     element-loading-background="rgba(0, 0, 0, 0.8)" v-loading="loading">
                     <el-row>
@@ -711,6 +711,8 @@
                                 <el-form-item label="数据来源">
                                     <el-radio-group v-model="sql_file_interface" @change="change_data_sources"
                                                     style="padding: 14px">
+                                        <el-radio :label="3">数据库</el-radio>
+                                        <el-radio :label="6">文件</el-radio>
                                         <el-radio :label="9">接口</el-radio>
                                      </el-radio-group>
                                 </el-form-item>
@@ -1360,13 +1362,6 @@
             }],*/
         },
         methods: {
-            //tab页点击事件
-            handleClick(){
-                if("five" == vm.monitor_type){
-                    vm.sql_file_interface = 9;
-                }
-                vm.change_data_sources(vm.sql_file_interface);
-            },
             //获取采集测试的结果，同步调用
             get_gather_test(){
                 $.ajax({
@@ -1374,7 +1369,7 @@
                     data : JSON.stringify(vm.base),
                     dataType: "JSON",
                     async: false,
-                    url: "/iqube_interface/gather_base_test/",
+                    url: "{SITE_URL}/iqube_interface/gather_base_test/",
                     success: function(data) {
                          if(0 != data.code){
                             vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
@@ -1709,13 +1704,13 @@
                 $("#text2").css("width", this.basic.width)
             },
             get_header_data() {
-                axios.get('/market_day/get_header/').then(function (res) {
+                axios.get('${SITE_URL}/market_day/get_header/').then(function (res) {
                 })
             },
             get_all_area() {
                 axios({
                     method: 'get',
-                    url: '/market_day/get_all_area',
+                    url: '${SITE_URL}/market_day/get_all_area',
                 }).then(function (res) {
                     res = res.data.message
                     vm.areas = []
@@ -1854,7 +1849,6 @@
                 if (vm.sql_file_interface == 6 || vm.sql_file_interface == 9) {
                     params = vm.server_url + '#' + vm.file_param
                 }
-                alert(123)
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor_item/basic_test/',
@@ -1865,7 +1859,6 @@
                         gather_params: vm.basic.gather_params,
                     },
                 }).then(function (res) {
-                    debugger
                     let tempcontents2 = vm.basic.contents
                     $("#text2").html("")
                     $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + tempcontents2 + "</div>")
@@ -2608,11 +2601,11 @@
                     vm.add_pamas = 0;
                     vm.monitor_name = '';
                     //取消默认添加时展示基本监控项
+                    /*
                     vm.disabled2 = false;
                     vm.disabled3 = false;
                     vm.disabled4 = false;
                     vm.disabled5 = false;
-                    /*
                     vm.monitor_type = 'first';*/
                     //默认添加时展示基本监控项（修改后）
                     //监控项类型设置
@@ -2635,7 +2628,6 @@
             },
             change1(value) {
                 if (value == 3) {
-                    $("#data_gather_rule").find("label").html("数据采集SQL");
                     vm.sql1 = 'block';
                     vm.file1 = 'none';
                     vm.interface1 = 'none';
@@ -3105,7 +3097,6 @@
             },
             //采集测试方法
             base_cell_test(){
-                //一体化指标的采集测试目前只做了接口部分的
                 //同步获取采集数据
                 vm.get_gather_test();
                 //预览采集，调用预览组件

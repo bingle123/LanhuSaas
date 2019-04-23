@@ -1,3 +1,4 @@
+var site_url = $('#siteUrl').val();
 let vm = new Vue({
         el: '.content',
         data: {
@@ -11,7 +12,7 @@ let vm = new Vue({
                //显示
                 axios({
                     method: 'post',
-                    url: '/logmanagement/show_all/',
+                    url: site_url + '/logmanagement/show_all/',
                     data: {
                         page: vm.page,
                         limit: 10
@@ -25,7 +26,7 @@ let vm = new Vue({
                vm.page = value;
                 axios({
                     method: 'post',
-                    url: '/logmanagement/select_log/',
+                    url: site_url + '/logmanagement/select_log/',
                     data: {
                         search: this.search,
                         page: vm.page,
@@ -43,7 +44,7 @@ let vm = new Vue({
                 }
                 axios({
                     method: 'post',
-                    url: '/logmanagement/select_log/',
+                    url: site_url + '/logmanagement/select_log/',
                     data: {
                         search: this.search,
                         page: this.page,

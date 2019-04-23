@@ -5,10 +5,10 @@ from django.forms.models import model_to_dict
 from db_connection.models import *
 from shell_app import tools
 import pymysql as MySQLdb
-import cx_Oracle
+# import cx_Oracle
 import pymssql
 import base64
-import pyDes
+# import pyDes
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage
 from monitor_item.models import *
@@ -31,7 +31,8 @@ def encryption_str(str):
     :return:
     """
     password = str.encode(encoding='utf-8')
-    method = pyDes.des(Key, pyDes.CBC, Iv, pad=None, padmode=pyDes.PAD_PKCS5)
+    # method = pyDes.des(Key, pyDes.CBC, Iv, pad=None, padmode=pyDes.PAD_PKCS5)
+    method = None
     # 执行加密码
     k = method.encrypt(password)
     # 转base64编码并返回
@@ -45,7 +46,8 @@ def decrypt_str(data):
     :return:
     """
     password = data.encode(encoding='utf-8')
-    method = pyDes.des(Key, pyDes.CBC, Iv, pad=None, padmode=pyDes.PAD_PKCS5)
+    # method = pyDes.des(Key, pyDes.CBC, Iv, pad=None, padmode=pyDes.PAD_PKCS5)
+    method = None
     # 对base64编码解码
     k = base64.b64decode(password)
     # 再执行Des解密并返回
@@ -67,7 +69,7 @@ def selecthor(request):
     # 如果搜索内容为空，搜索所有
     if None is not search and '' != search:
         sciencenews = Conn.objects.filter(
-            Q(connname__contains=search) | Q(type__contains=search) | Q(ip__contains=search)
+            Q(connname__contains=search) | Q(type__contains=search) | Q(ip__contains=search) \
             | Q(port__contains=search) | Q(username__contains=search) | Q(databasename__contains=search))
     else:
         sciencenews = Conn.objects.all()
@@ -219,7 +221,8 @@ def testConn(request):
             db = MySQLdb.connect(host=ip, user=username, passwd=password, db=databasename, port=int(port))
         elif res['type'] == 'Oracle':
             sql = r'%s/%s@%s/%s' % (username, password, ip, databasename)
-            db = cx_Oracle.connect(sql)
+            # db = cx_Oracle.connect(sql)
+            db = None
         else:
             db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename)
         cursor = db.cursor()
@@ -283,7 +286,6 @@ def get_jobInstance(request):
             return e
 
 
-@periodic_task(run_every=5)
 def get_flowStatus(request):
     """
     获取流程节点状态并实时更新
@@ -597,7 +599,8 @@ def getAny_db(id):
         db = MySQLdb.connect(host=ip, user=username, passwd=password, db=databasename, port=int(port), charset='utf8')
     elif conn['type'] == 'Oracle':
         sql = r'%s/%s@%s/%s' % (username, password, ip, databasename, 'charset=utf8')
-        db = cx_Oracle.connect(sql)
+        # db = cx_Oracle.connect(sql)
+        db = None
     else:
         db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename,
                              charset='utf8')

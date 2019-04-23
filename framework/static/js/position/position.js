@@ -1,3 +1,4 @@
+var site_url = $('#siteUrl').val();
 axios.interceptors.request.use((config) => {
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
         let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
@@ -68,7 +69,7 @@ axios.interceptors.request.use((config) => {
             get_tree() {
                 axios({
                     method: 'post',
-                    url: '/position/get_tree/',
+                    url: site_url + '/position/get_tree/',
                 }).then(function (res) {
                     vm.data3 = res.data.message;
                 })
@@ -82,7 +83,7 @@ axios.interceptors.request.use((config) => {
                 vm.page = value;
                 axios({
                     method: 'post',
-                    url: '/position/select_pos/',
+                    url: site_url + '/position/select_pos/',
                     data: {
                         search: this.search,
                         page: vm.page,
@@ -101,14 +102,14 @@ axios.interceptors.request.use((config) => {
             synchronize() {  //与蓝鲸用户同步
                 axios({
                     method: 'post',
-                    url: '/position/synchronize/',
+                    url: site_url + '/position/synchronize/',
                 })
             },
             show() {
                 //显示首页
                 axios({
                     method: 'post',
-                    url: '/position/show/',
+                    url: site_url + '/position/show/',
                     data: {
                         page: vm.page,
                         limit: 10
@@ -127,7 +128,7 @@ axios.interceptors.request.use((config) => {
                 }).then(() => {
                     axios({
                         method: 'post',
-                        url: '/position/delete/',
+                        url: site_url + '/position/delete/',
                         data: {
                             id: row,
                         }
@@ -159,7 +160,7 @@ axios.interceptors.request.use((config) => {
                 }
                 axios({
                     method: 'post',
-                    url: '/position/select_pos/',
+                    url: site_url + '/position/select_pos/',
                     data: {
                         search: this.search,
                         page: this.page,
@@ -182,7 +183,7 @@ axios.interceptors.request.use((config) => {
                     } else {
                         axios({
                             method: 'post',
-                            url: '/position/add_pos/',
+                            url: site_url + '/position/add_pos/',
                             data: this.form,
                         }).then((res) => {
                             if(res.data.result){
@@ -190,7 +191,7 @@ axios.interceptors.request.use((config) => {
                                 type: 'success',
                                 message: '新增岗位成功!',})
                                 vm.dialogFormVisible3 = false;
-                                window.location.href = "/position/position"
+                                window.location.href = site_url + "/position/position"
                             }else{
                                 this.$message({
                                 type: 'false',
@@ -213,7 +214,7 @@ axios.interceptors.request.use((config) => {
                     } else {
                         axios({
                             method: "post",
-                            url: '/position/edit_pos/',
+                            url: site_url + '/position/edit_pos/',
                             data: {
                                 id: this.tempid,
                                 pos_name: this.form2.tempjobname,
@@ -224,7 +225,7 @@ axios.interceptors.request.use((config) => {
                                 type: 'success',
                                 message: '编辑成功!',})
                                 vm.dialogFormVisible2 = false
-                                window.location.href = "/position/position"
+                                window.location.href = site_url + "/position/position"
                             }else{
                                 this.$message({
                                 type: 'false',
@@ -258,7 +259,7 @@ axios.interceptors.request.use((config) => {
             add_person(row) {
                 axios({
                     method: 'post',
-                    url: '/position/add_person/',
+                    url: site_url + '/position/add_person/',
                     data: {
                         value2: vm.value2,
                         id: this.id,
@@ -267,13 +268,13 @@ axios.interceptors.request.use((config) => {
                     },
                 }).then((res) => {
                     vm.dialogFormVisible = false
-                    window.location.href = "/position/position"
+                    window.location.href = site_url + "/position/position"
                 })
             },
             select_all_user() {                                                      //调接口查询所有用户
                 axios({
                     method: 'post',
-                    url: '/position/get_user/',
+                    url: site_url + '/position/get_user/',
                 }).then((res) => {
                     for (var i = 0; i < res.data.message.length; i++) {
                         this.users.push(res.data.message[i])

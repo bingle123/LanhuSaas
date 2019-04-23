@@ -582,10 +582,9 @@ def get_scenes(pos_id, start, end):
             tz = pytz.timezone(timezone)
             end = datetime.now(tz).strftime('%H:%M:%S')
             start = end
-            #flag = check_jobday(id)
+            flag = check_jobday(id)
         # 判断系统时间是否在轮播时间
-        # if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start and flag == True:
-        if flag == True:
+        if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start and flag == True:
             # 初始化
             base_list = []
             chart_list = []
@@ -648,7 +647,6 @@ def get_scenes(pos_id, start, end):
                 # 按不同的监控项类型保存
                 if 1 == item.monitor_type or 5 == item.monitor_type:
                     base_list.append(item_dict)
-                """
                 if 2 == item.monitor_type:
                     chart_list.append(item_dict)
                 if 4 == item.monitor_type:
@@ -661,12 +659,12 @@ def get_scenes(pos_id, start, end):
                         'job_status': status
                     }
                     item_dict = dict(item_dict, **temp_dict)
-                    job_list.append(item_dict)"""
+                    job_list.append(item_dict)
             data = {
                 'base_list': base_list,
-                #'chart_list': chart_list,
-                #'flow_list': flow_list,
-                #'job_list': job_list,
+                'chart_list': chart_list,
+                'flow_list': flow_list,
+                'job_list': job_list,
             }
             temp_list.append(data)
             scene_dict = {
@@ -674,7 +672,6 @@ def get_scenes(pos_id, start, end):
                 'scene_content': temp_list
             }
             res_list.append(scene_dict)
-        print res_list
     return res_list
 
 

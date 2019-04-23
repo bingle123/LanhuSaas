@@ -893,7 +893,6 @@ Sidebar.prototype.insertSearchHint = function(div, searchTerm, count, page, resu
 };
 Sidebar.prototype.addBasePalette = function(expand)
 {
-	debugger;
 	var lineTags = '基本监控项';
 	var sb = this;
 
@@ -901,7 +900,6 @@ Sidebar.prototype.addBasePalette = function(expand)
 	var field = new mxCell('基本监控项', new mxGeometry(0, 0, 60, 26), 'text;strokeColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;fillColor=#6A90CB;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;');
 	var plus = new mxCell('', new mxGeometry(16, 16, 28, 28), 'shape=plus;html=1;outlineConnect=0;');
 	var reduce = new mxCell('', new mxGeometry(16, 16, 28, 28), 'shape=reduce;html=1;outlineConnect=0;');
-	var hexagon = new mxCell('', new mxGeometry(16, 16, 28, 28), 'shape=hexagon;html=1;outlineConnect=0;');
 	field.vertex = true;
 	var fns = [
 	 			this.addEntry('基本监控项', function()
@@ -959,19 +957,9 @@ Sidebar.prototype.addBasePalette = function(expand)
 	 		 		var cell = new mxCell('', new mxGeometry(0, 0, 60, 60),'ellipse;shape=startState;whiteSpace=wrap;html=1;');
 	 		 		cell.vertex = true;
 	 		 		var cloneObj = sb.cloneCell(reduce);
-
+	 		 		 				
 	 		 		cell.insert(cloneObj);
 	 		 		return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, '分叉');
-	 		 	}),
-				this.addEntry('棱', function()
-	 		 	{
-	 		 		hexagon.vertex = true;
-	 		 		var cell = new mxCell('', new mxGeometry(0, 0, 60, 60),'step;shape=startState;whiteSpace=wrap;html=1;');
-	 		 		cell.vertex = true;
-	 		 		var cloneObj = sb.cloneCell(hexagon);
-
-	 		 		cell.insert(cloneObj);
-	 		 		return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, '棱');
 	 		 	}),
 	 	
 	 	this.createVertexTemplateEntry('ellipse;shape=startState;whiteSpace=wrap;html=1;', 50, 50, '', '开始', null, null, '开始'),

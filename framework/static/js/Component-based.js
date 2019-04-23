@@ -246,8 +246,6 @@ function base_monitor_active(vm_obj, html_obj) {
         success: function(data) {
         }
     });
-    //vm_obj.play = true;
-    //preview_monitor_item(vm_obj,"monitor_scene",html_obj);
     //取得当前的监控项信息
     current_monitor_item = vm_obj.current_monitor_item;
     var selector_id='basic'+current_monitor_item.id;
@@ -642,8 +640,10 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
         //判断是否为新增或修改的初始状态
         if(vm_obj.base_monitor_edit_test_init || vm_obj.base_monitor_add_test_init){
             var content='';
-            for(var x in gather_base_test_data[0]){           //遍历列表的第i个对象
-                content+='"'+x+'":"'+x+'"@\n';
+            if (null != gather_base_test_data){
+                for(var x in gather_base_test_data[0]){           //遍历列表的第i个对象
+                    content+='"'+x+'":"'+x+'"@\n';
+                }
             }
             if('0' == vm_obj.add_pamas && vm_obj.base_monitor_add_test_init){
                 vm_obj.base.contents = content;
@@ -731,11 +731,9 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
             //将采集结果转换为json,这里的key固定为“measures”
             //原因是这里只取度量值，不考虑历史垃圾数据
             var gather_base_test_data=JSON.parse(current_monitor_item["data_value"]);
-            if(!vm_obj.play){
-                $('[type='+selector_id+']').html("");                  //清空dom
-                $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
-                $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
-            }
+            $('[type='+selector_id+']').html("");                  //清空dom
+            $('[type='+selector_id+']').append('<input class="score_input" type="text" value="0">');
+            $('[type='+selector_id+']').append('<div class="right_click"><span class="score">打分</span><span class="delete">删除监控项</span><span class="line">连线</span>'+vm.sizeStrFun()+'</div>');
             var bgcolor = null;
             let scene_show = function(split_char){
                  for(let i=0;i<gather_base_test_data.length;i++){

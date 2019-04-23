@@ -129,7 +129,7 @@ $(function(){
                 });
             },
             get_header_data(){
-            axios.get('/market_day/get_header/').then(function (res) {
+            axios.get(site_url + '/market_day/get_header/').then(function (res) {
                console.log(res)
             })
             },
