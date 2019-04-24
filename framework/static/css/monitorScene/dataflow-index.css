@@ -70,7 +70,7 @@ body {
 }
 
 .jtk-demo-canvas {
-    background: url(../img/bg.png);
+    /*background: url(../img/bg.png);*/
     overflow: hidden !important;
     border: 0;
 }
