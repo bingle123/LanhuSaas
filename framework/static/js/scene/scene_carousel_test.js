@@ -1,6 +1,7 @@
 let vm = null;
-var site_url = $('#site_url').val();
+
 $(function() {
+    var site_url = $('#site_url').val();
     axios.interceptors.request.use((config) => {
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
         let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
@@ -53,11 +54,11 @@ $(function() {
                 //获取时间范围内的所有场景
                 var res = await axios({
                     method: 'post',
-                    url: site_url + '/monitor_scene/alternate_play_test/',
+                    url: site_url + 'monitor_scene/alternate_play_test/',
                     data: {
                         'pos_id': vm.position,
                         'start': vm.start,
-                        'end': vm.end
+                        'end': vm.en
                     }
                 }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
@@ -131,7 +132,7 @@ $(function() {
                     setTimeout(function () {
                         axios({
                             method: 'post',
-                            url: site_url + '/monitor_item/node_state_by_item_id/',
+                            url: site_url + 'monitor_item/node_state_by_item_id/',
                             data: {
                                 'item_id': flow_list[i].id
                             }
@@ -196,7 +197,7 @@ $(function () {
         var id=$(this).parents('.flow_monitor').attr('type');
         axios({
             method: 'post',
-                    url: site_url + '/monitor_item/resume_flow/',
+                    url: site_url + 'monitor_item/resume_flow/',
                     data: {
                         'item_id': id
                     }
