@@ -657,6 +657,10 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
         $(html_obj).html('');
         //展示监控项的私有方法
         let monitor_show = function(split_char){
+            if(null == gather_base_test_data){
+                vm_obj.$alert("采集测试数据为空！","错误");
+                return;
+            }
             for(let i=0;i<gather_base_test_data.length;i++){
                 let selector='.div'+i;
                 let data_key=[];
