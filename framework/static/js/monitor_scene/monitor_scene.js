@@ -694,7 +694,9 @@ $(function () {
             }
         }
     });
+    //获取节假日
     vm.get_all_area()
+    //初始化查询
     vm.paging();
     $('.monitor_type').click(function () {
         $(this).parent().next('div').animate({
