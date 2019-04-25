@@ -50,9 +50,10 @@ $(function() {
             },
             //场景轮播测试
             async alternate_play_test() {
+                let res = null;
                 const loading = this.popup_loading();
                 //获取时间范围内的所有场景
-                var res = await axios({
+                res = await axios({
                     method: 'post',
                     url: site_url + 'monitor_scene/alternate_play_test/',
                     data: {
