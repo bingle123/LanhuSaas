@@ -21,6 +21,7 @@ from djcelery import models as celery_models
 from models import *
 import requests
 from settings import BK_PAAS_HOST
+from gather_data.models import TDGatherData
 
 
 def error_result(e):
@@ -93,6 +94,11 @@ def obt_dic(page_data, page_count):
         obj_dic['start_time'] = str(i.start_time)
         obj_dic['end_time'] = str(i.end_time)
         obj_dic['status'] = str(i.status)
+        # 以下两个参数很重要，新增场景中必须用到
+        obj_dic['item_id'] = str(i.id)
+        gather_data = TDGatherData.objects.filter(item_id=i.id)
+        for gather_data_obj in gather_data:
+            obj_dic['data_value'] = gather_data_obj.data_value
         obj_list.append(obj_dic)
     return obj_list
 

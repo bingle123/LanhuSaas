@@ -1,7 +1,7 @@
 let vm = null;
-
+let site_url = null;
 $(function() {
-    var site_url = $('#site_url').val();
+    site_url = $('#site_url').val();
     axios.interceptors.request.use((config) => {
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
         let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
@@ -61,10 +61,11 @@ $(function() {
                         'end': vm.en
                     }
                 }).catch(function (e) {
+                    loading.close();
                     vm.$message.error('获取数据失败！');
                 });
-                vm.imgList = res.data.message;
                 loading.close();
+                vm.imgList = res.data.message;
             },
             //value1 为走马灯编码，每一个走马灯对应一个场景
             scene_change(value1, value2) {
