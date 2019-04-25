@@ -58,7 +58,7 @@ $(function() {
                     data: {
                         'pos_id': vm.position,
                         'start': vm.start,
-                        'end': vm.en
+                        'end': vm.end
                     }
                 }).catch(function (e) {
                     loading.close();
