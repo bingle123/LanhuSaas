@@ -21,7 +21,7 @@ def select_all_nodes():
     for node in node_info:
         dic1 = model_to_dict(node)
         # 获取该节点对应的节点状态
-        temp =  TdCustProcessLog.objects.filter(node_id=node.id).get()
+        temp = TdCustProcessLog.objects.filter(node_id=node.id).get()
         # 临时保存节点的执行时间
         do_time_ori = temp.do_time
         # 节点执行时间置空，防止datetime类型在model_to_dict时转换报错
