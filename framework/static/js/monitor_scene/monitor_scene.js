@@ -1,5 +1,5 @@
 var vm = null;
-var site_url = $('#siteUrl').val();
+var site_url = "";
 $(function () {
     //csrf验证
     axios.interceptors.request.use((config) => {
@@ -122,7 +122,7 @@ $(function () {
                     };
                     axios({
                         method: 'post',
-                        url: site_url + '/monitor_scene/monitor_scene_fuzzy_search/',
+                        url: site_url + 'monitor_scene/monitor_scene_fuzzy_search/',
                         data: data
                     }).then(function (res) {
                         loading.close();
@@ -187,7 +187,7 @@ $(function () {
                         if (formName == 'scene') {
                             axios({
                                 method: 'post',
-                                url: site_url + '/monitor_scene/addSence/',
+                                url: site_url + 'monitor_scene/addSence/',
                                 data: {
                                     data: vm.scene,
                                     monitor_data: vm.result_list
@@ -201,7 +201,7 @@ $(function () {
                                 };
                                 axios({
                                     method: 'post',
-                                    url: site_url + '/monitor_scene/scene_color_save/',
+                                    url: site_url + 'monitor_scene/scene_color_save/',
                                     data: color_info
                                 }).then(function (res) {
                                     loading.close();
@@ -228,7 +228,7 @@ $(function () {
                             };
                             axios({
                                 method: 'post',
-                                url: site_url + '/monitor_scene/editSence/',
+                                url: site_url + 'monitor_scene/editSence/',
                                 data: {
                                     data: vm.scene_edit,
                                     monitor_data: vm.result_list
@@ -236,7 +236,7 @@ $(function () {
                             }).then(function (res) {
                                 axios({
                                     method: 'post',
-                                    url: site_url + '/monitor_scene/scene_color_save/',
+                                    url: site_url + 'monitor_scene/scene_color_save/',
                                     data: color_info
                                 }).then(function (res) {
                                     loading.close();
@@ -262,7 +262,7 @@ $(function () {
             get_all_area() {
                 axios({
                     method: 'get',
-                    url: site_url + '/market_day/get_all_area',
+                    url: site_url + 'market_day/get_all_area',
                 }).then(function (res) {
                     res = res.data.message
                     vm.areas = []
@@ -286,7 +286,7 @@ $(function () {
             paging() {
                 axios({
                     method: 'post',
-                    url: site_url + '/monitor_scene/paging/',
+                    url: site_url + 'monitor_scene/paging/',
                     data: {
                         page: vm.page,
                         limit: 10
@@ -335,7 +335,7 @@ $(function () {
                 vm.monitore_edit_start(row.id)
                 axios({
                     method: 'post',
-                    url: site_url + '/monitor_scene/scene_color_get/',
+                    url: site_url + 'monitor_scene/scene_color_get/',
                     data: row.id
                 }).then((res) => {
                     vm.scene_font_color = res.data.color;
@@ -353,7 +353,7 @@ $(function () {
                     data: JSON.stringify(value),
                     dataType: "JSON",
                     async: true,
-                    url: site_url + "/monitor_scene/scene_data/",
+                    url: site_url + "monitor_scene/scene_data/",
                     success: function (data) {
                         //防止空场景编辑异常
                         vm.result_list_edit = data.results;
@@ -427,7 +427,7 @@ $(function () {
                         if (vm.result_list_edit[i].monitor_type === 2) {
                             let res = await axios({
                                 method: 'post',
-                                url: site_url + '/monitor_scene/monitor_scene_show/',
+                                url: site_url + 'monitor_scene/monitor_scene_show/',
                                 data: vm.result_list_edit[i].item_id,
                             }).catch(function (e) {
                                 vm.$message.error('获取数据失败！');
@@ -440,7 +440,7 @@ $(function () {
                         if (vm.result_list_edit[i].monitor_type === 3) {
                             let res = await axios({
                                 method: 'post',
-                                url: site_url + '/monitor_scene/monitor_scene_show/',
+                                url: site_url + 'monitor_scene/monitor_scene_show/',
                                 data: vm.result_list_edit[i].item_id,
                             }).catch(function (e) {
                                 vm.$message.error('获取数据失败！');
@@ -453,7 +453,7 @@ $(function () {
                         if (vm.result_list_edit[i].monitor_type === 4) {
                             let res = await axios({
                                 method: 'post',
-                                url: site_url + '/monitor_scene/monitor_scene_show/',
+                                url: site_url + 'monitor_scene/monitor_scene_show/',
                                 data: vm.result_list_edit[i].item_id,
                             }).catch(function (e) {
                                 vm.$message.error('获取数据失败！');
@@ -494,7 +494,7 @@ $(function () {
                     vm.scene.scene_startTime = $(".back-bar").children().eq(4).html()
                     axios({
                         method: 'post',
-                        url: site_url + '/monitor_scene/select_table/',
+                        url: site_url + 'monitor_scene/select_table/',
                         data: vm.search
                     }).then(function (res) {
                         vm.tableData = res.data.message;
@@ -514,14 +514,14 @@ $(function () {
                     //删除场景字体颜色信息
                     axios({
                         method: 'post',
-                        url: site_url + '/monitor_scene/scene_color_del/',
+                        url: site_url + 'monitor_scene/scene_color_del/',
                         data: row.id
                     }).catch(function (e) {
                         vm.$message.error('场景颜色删除失败！');
                     });
                     axios({
                         method: 'post',
-                        url: site_url + '/monitor_scene/del_scene/',
+                        url: site_url + 'monitor_scene/del_scene/',
                         data: row.id
                     }).then((res) => {
                         this.$alert("场景删除成功！", "提示");
@@ -568,7 +568,7 @@ $(function () {
             sen_position() {
                 axios({
                     method: 'post',
-                    url: site_url + '/monitor_scene/pos_name/',
+                    url: site_url + 'monitor_scene/pos_name/',
                 }).then(function (res) {
                     vm.pos = res.data.message
                 }).catch(function (e) {
@@ -579,7 +579,7 @@ $(function () {
             show_monitor_item() {
                 axios({
                     method: 'post',
-                    url: site_url + '/monitor_scene/scene_show/',
+                    url: site_url + 'monitor_scene/scene_show/',
                     data: {
                         limit: vm.limit,
                         type: vm.monitor_type,
@@ -694,10 +694,7 @@ $(function () {
             }
         }
     });
-    //获取节假日
-    vm.get_all_area()
-    //初始化查询
-    vm.paging();
+
     $('.monitor_type').click(function () {
         $(this).parent().next('div').animate({
             height: 'toggle'
@@ -902,7 +899,6 @@ $(function () {
             return
         }
     });
-
     function draw_line() {
         //让canvas append后才能执行此方法
         if (vm.canvas_flag == 1) {
@@ -1008,8 +1004,12 @@ $(function () {
     function flush_canvas() {
         setInterval(draw_line, 200);
     }
-
+    site_url = $('#siteUrl').val();
     flush_canvas();
+    //获取节假日
+    vm.get_all_area()
+    //初始化查询
+    vm.paging();
 });
 setInterval(function () {
     //flow1_js_start
