@@ -4,10 +4,10 @@ from models import TbCustProcess
 from models import TdCustProcessLog
 from position.models import user_info
 from django.forms.models import model_to_dict
-from shell_app.tools import sms_send_msg
-from shell_app.tools import mail_send_msg
-from shell_app.tools import wechat_send_msg
-from shell_app.tools import wechat_access_token
+import urllib
+import urllib2
+import json
+import datetime
 from django.core.paginator import *
 
 
@@ -210,81 +210,160 @@ def clear_execute_status():
 
 
 # 流程节点执行完毕发送通知方法
-def send_notification(notification):
-    """
-    发送通知
-    :param notification:
-    :return:
-    """
+# def send_notification(notification):
+#     """
+#     发送通知
+#     :param notification:
+#     :return:
+#     """
+#
+#     # 是否存在发送错误的标志位
+#     send_flag = True
+#     # 保存发送完成的信息，以及发送是否存在错误，返回前端
+#     status = dict()
+#     # 获取接收者账号名称信息，以list保存
+#     if -1 != notification['receivers'].find(','):
+#         receivers = notification['receivers'].split(',')
+#     else:
+#         receivers = list()
+#         receivers.append(notification['receivers'])
+#     # 保存发送完成的信息
+#     infos = list()
+#     # 获取的微信token
+#     access_token = None
+#     # 短信发送列表
+#     sms_send_list = None
+#     # 邮件发送列表
+#     mail_send_list = None
+#     # 遍历前端传递的接收者列表
+#     for receiver in receivers:
+#         # 获取当前账户名称的用户信息
+#         rec_info = user_info.objects.filter(user_name=receiver).get()
+#         # 当用户的通知方式为微信通知方式的情况下--由于微信端限制，非服务号无法使用群发，因此只能在遍历用户时发送，不能统一发送
+#         if 'wechat' == rec_info.notice_style:
+#             # 如果当前为第一次获取token信息
+#             if None is access_token:
+#                 access_token = wechat_access_token()
+#                 # token获取异常，检查APPID和secret是否正确
+#             if None is access_token:
+#                 print 'Wechat access token get fail'
+#                 send_flag = False
+#                 infos.append(u'微信发送失败!Token获取异常!')
+#                 break
+#             # 根据获取的当前用户的openid和获取的token发送指定内容的推送消息给用户
+#             if None is rec_info.open_id or '' == rec_info.open_id.strip():
+#                 infos.append(u'%s：微信发送失败!用户openid未设置' % receiver)
+#                 send_flag = False
+#                 continue
+#             res = wechat_send_msg(access_token, rec_info.open_id, notification['content'])
+#             # 函数返回为None说明发送正常，否则将返回错误信息
+#             if None is not res:
+#                 infos.append(u'%s: 微信通知发送失败! %s' % (receiver, res))
+#                 # send_flag标志位置False告诉前端有发送失败的任务，前端将会以error框展示
+#                 send_flag = False
+#         # 当用户的通知方式为短信通知方式的情况下
+#         elif 'sms' == rec_info.notice_style:
+#             # 如果当前是第一次添加短信接收者信息，新建一个list用于保存
+#             if None is sms_send_list:
+#                 sms_send_list = list()
+#             sms_send_list.append(receiver)
+#         # 当用户的通知方式为邮件通知方式的情况下
+#         elif 'email' == rec_info.notice_style:
+#             # 如果当前是第一次添加邮箱接收者信息，新建一个list用于保存
+#             if None is mail_send_list:
+#                 mail_send_list = list()
+#             mail_send_list.append(receiver)
+#     # 短信发送列表如果不为空，则发送短信给列表中的接收者
+#     if None is not sms_send_list:
+#         sms_send_msg(notification['content'], sms_send_list)
+#     # 邮件发送列表如果不为空，则发送邮件给列表中的接收者
+#     if None is not mail_send_list:
+#         mail_send_msg(u'过程通知信息', notification['content'], mail_send_list)
+#     # 根据当前发送状态标志位，返回前端一个相应的发送状态，用于前端判断发送是否存在问题
+#     if send_flag:
+#         status['message'] = 'ok'
+#         status['info'] = u'通知发送成功!'
+#     else:
+#         status['message'] = 'error'
+#         status['info'] = infos
+#     # 返回发送的状态信息给前端
+#     return status
 
-    # 是否存在发送错误的标志位
-    send_flag = True
-    # 保存发送完成的信息，以及发送是否存在错误，返回前端
+# 流程节点执行完毕发送通知方法
+def send_notification(notification):
     status = dict()
+    sms_send_list = list()
+    wechat_send_list = list()
+    send_info = dict()
+    notification_data = dict()
+    notification_data['approver'] = notification['approver']
+    notification_data['changeTime'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    notification_data['changeSystem'] = u'看板系统-定制流程'
+    notification_data['alarmRuleName'] = u'节点已执行完毕'
+    send_info['content'] = notification_data
     # 获取接收者账号名称信息，以list保存
     if -1 != notification['receivers'].find(','):
         receivers = notification['receivers'].split(',')
     else:
         receivers = list()
         receivers.append(notification['receivers'])
-    # 保存发送完成的信息
-    infos = list()
-    # 获取的微信token
-    access_token = None
-    # 短信发送列表
-    sms_send_list = None
-    # 邮件发送列表
-    mail_send_list = None
     # 遍历前端传递的接收者列表
     for receiver in receivers:
         # 获取当前账户名称的用户信息
         rec_info = user_info.objects.filter(user_name=receiver).get()
-        # 当用户的通知方式为微信通知方式的情况下--由于微信端限制，非服务号无法使用群发，因此只能在遍历用户时发送，不能统一发送
+        # 当用户的通知方式为微信通知方式
         if 'wechat' == rec_info.notice_style:
-            # 如果当前为第一次获取token信息
-            if None is access_token:
-                access_token = wechat_access_token()
-                # token获取异常，检查APPID和secret是否正确
-            if None is access_token:
-                print 'Wechat access token get fail'
-                send_flag = False
-                infos.append(u'微信发送失败!Token获取异常!')
-                break
-            # 根据获取的当前用户的openid和获取的token发送指定内容的推送消息给用户
-            if None is rec_info.open_id or '' == rec_info.open_id.strip():
-                infos.append(u'%s：微信发送失败!用户openid未设置' % receiver)
-                send_flag = False
-                continue
-            res = wechat_send_msg(access_token, rec_info.open_id, notification['content'])
-            # 函数返回为None说明发送正常，否则将返回错误信息
-            if None is not res:
-                infos.append(u'%s: 微信通知发送失败! %s' % (receiver, res))
-                # send_flag标志位置False告诉前端有发送失败的任务，前端将会以error框展示
-                send_flag = False
+            # 如果当前是第一次添加微信接收者信息，新建一个list用于保存
+            if None is wechat_send_list:
+                wechat_send_list = list()
+                wechat_send_list.append(receiver)
         # 当用户的通知方式为短信通知方式的情况下
         elif 'sms' == rec_info.notice_style:
             # 如果当前是第一次添加短信接收者信息，新建一个list用于保存
             if None is sms_send_list:
                 sms_send_list = list()
             sms_send_list.append(receiver)
-        # 当用户的通知方式为邮件通知方式的情况下
-        elif 'email' == rec_info.notice_style:
-            # 如果当前是第一次添加邮箱接收者信息，新建一个list用于保存
-            if None is mail_send_list:
-                mail_send_list = list()
-            mail_send_list.append(receiver)
     # 短信发送列表如果不为空，则发送短信给列表中的接收者
-    if None is not sms_send_list:
-        sms_send_msg(notification['content'], sms_send_list)
+    if None is not wechat_send_list:
+        wechat_infos = send_msg(wechat_send_list, send_info, 'wechat')
     # 邮件发送列表如果不为空，则发送邮件给列表中的接收者
-    if None is not mail_send_list:
-        mail_send_msg(u'过程通知信息', notification['content'], mail_send_list)
+    if None is not sms_send_list:
+        sms_infos = send_msg(wechat_send_list, send_info, 'sms')
     # 根据当前发送状态标志位，返回前端一个相应的发送状态，用于前端判断发送是否存在问题
-    if send_flag:
+    if wechat_infos['send_flag'] and sms_infos['send_flag']:
         status['message'] = 'ok'
-        status['info'] = u'通知发送成功!'
+        status['info'] = u'所有通知发送成功!'
     else:
         status['message'] = 'error'
-        status['info'] = infos
+        status['info'] = wechat_infos['error_info'] + sms_infos['error_info']
     # 返回发送的状态信息给前端
     return status
+
+
+# 发送通知
+def send_msg(receivers, send_info, send_type):
+    if 'sms' == send_type:
+        req_url = 'http://10.240.1.127:8008/sms'
+    else:
+        req_url = 'http://10.181.6.160:9091/send'
+    infos = dict()
+    send_flag = True
+    error_info = list()
+    try:
+        for receiver in receivers:
+            send_info['tos'] = receiver
+            json_str = json.dumps(send_info, ensure_ascii=False)
+            utf8_str = json_str.encode('utf-8')
+            url_encoded_str = urllib.urlencode(utf8_str)
+            req = urllib2.Request(url=req_url, data=url_encoded_str)
+            res_data = urllib2.urlopen(req).read()
+            if -1 == res_data.indexOf("success"):
+                error_info.append(res_data)
+                send_flag = False
+    except Exception as e:
+        error_info = e.__str__()
+        send_flag = False
+    finally:
+        infos['send_flag'] = send_flag
+        infos['error_info'] = error_info
+        return infos
