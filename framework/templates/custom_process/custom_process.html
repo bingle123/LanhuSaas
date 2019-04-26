@@ -168,12 +168,12 @@
                                         <el-alert id="customProcessWarn" title="当前无任何过程通知" type="warning" show-icon center></el-alert>
                                     </div>
                                 </el-col>
-                                <el-col :span="6" :offset="11" style="padding-top: 50px;" v-show="customProcessStepSum > 0">
-                                    <div id="customProcessStepsHeight">
-                                        <el-steps id="customMainProcess" direction="vertical" finish-status="finish">
-                                            <el-step :title="processData.node_name" v-for="processData in customProcessTableData"></el-step>
+                                <el-col :span="24" :offset="customProcessStepOffset">
+                                    <el-col :span="6" v-for="processDataList in customProcessTableData" style="padding-top: 50px;" v-show="customProcessStepSum > 0">
+                                        <el-steps class="customMainProcess" direction="vertical" finish-status="finish" :space="200">
+                                            <el-step :title="processData.node_name" v-for="processData in processDataList"></el-step>
                                         </el-steps>
-                                    </div>
+                                    </el-col>
                                 </el-col>
                             </el-row>
                             <el-row>

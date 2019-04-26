@@ -46,6 +46,9 @@ $(function(){
     vue = new Vue({
         el: '#customProcess',
         data: {
+            //步骤条偏移值，用于居中显示步骤条
+            customProcessStepOffset: 0,
+            customProcessStepLimit: 3,
             //当前用户名称
             currentUser: null,
             //节点列表信息共有多少页
@@ -268,8 +271,10 @@ $(function(){
             },
             //发送短信通知
             customProcessSendMessage: function(nodeOrder) {
-                this.customProcessReceivers = this.customProcessTableData[nodeOrder].receivers;
-                this.customProcessNoticeContent = this.customProcessTableData[nodeOrder].send_content;
+                var step_index = parseInt(nodeOrder / this.customProcessStepLimit);
+                var item_index = parseInt(nodeOrder % this.customProcessStepLimit);
+                this.customProcessReceivers = this.customProcessTableData[step_index][item_index].receivers;
+                this.customProcessNoticeContent = this.customProcessTableData[step_index][item_index].send_content;
                 this.customProcessSendMsgDialogVisible = true;
             },
             //短信通知关闭前的确认
@@ -522,15 +527,26 @@ $(function(){
                 const loading = this.customProcessPopupLoading();
                 this.customProcessTableData = null;
                 var url = site_url + 'custom_process/select_all_nodes';
+                //limit参数为每隔多少条分配一个数组，有多少个数组就会生成多少个步骤条
+                var params = {
+                    limit: this.customProcessStepLimit
+                };
                 axios({
                     method: 'post',
                     url: url,
+                    data: params
                 }).then((res) =>{
-                    this.customProcessTableData = res.data.message;
-                    this.customProcessStepSum = this.customProcessTableData.length;
+                    this.customProcessTableData = res.data.nodes;
+                    this.customProcessStepSum = res.data.count;
+                    //计算偏移值，使步骤条居中
+                    if(this.customProcessTableData.length > 4){
+                        this.customProcessStepOffset = 0;
+                    }else{
+                        this.customProcessStepOffset = (24 - this.customProcessTableData.length * 6) / 2 + 1;
+                    }
                     //根据节点数量计算步骤条的高度
-                    var stepsHeight = this.customProcessStepSum * 200;
-                    $('#customProcessStepsHeight').css('height',stepsHeight + 'px');
+                    //var stepsHeight = params['limit'] * 200;
+                    //$('.customProcessStepsHeight').css('height',stepsHeight + 'px');
                     if(0 != this.customProcessStepSum) {
                         this.$nextTick(() => {
                             this.customProcessRenderNodeStatus();
@@ -544,6 +560,7 @@ $(function(){
                     this.customProcessPopupErrorMessage(msg);
                 });
             },
+            //
             //获取所有设置通知方式的蓝鲸用户
             loadBkUsers: function(){
                 const loading = this.customProcessPopupLoading();
@@ -553,7 +570,6 @@ $(function(){
                     url: url
                 }).then((res) =>{
                     this.bkUsers = res.data.message;
-                    console.log(res.data.message);
                     loading.close();
                 }).catch((res) => {
                     loading.close();
@@ -563,28 +579,32 @@ $(function(){
             },
             //渲染节点的状态信息
             customProcessRenderNodeStatus: function(){
-                var customMainProcesses = $('#customMainProcess').children();
-                $.each(vue.customProcessTableData, function(index, elem){
-                    //设置已经执行的步骤的状态信息
-                    if('y' == elem.status.is_done){
-                        var execTime =  vue.customProcessTableData[index].status.do_time;
-                        var execPerson = vue.customProcessTableData[index].status.do_person;
-                        var customProcessExecPerson = '<div>执行人：'+ execPerson +'</div>';
-                        var customProcessExecTime = '<div>' + execTime + '</div>';
-                        var customProcessExecStatus = '<div>执行状态：执行完毕！<i class="el-icon-check"></i></div>';
-                        var selectedProcess =  customMainProcesses.eq(index);
-                        selectedProcess.find('.el-step__description')
-                            .html(customProcessExecPerson + customProcessExecTime + customProcessExecStatus);
-                    }else{
-                    //还未执行的步骤
-                        var customProcessExecStatus = '<div class="execute_status">执行状态：未开始执行<i class="el-icon-close"></i></div>';
-                        var selectedProcess =  customMainProcesses.eq(index);
-                        var click = ' onclick="vue.customProcessConfirmNode('+ index + ',' + elem.id + ', this)"';
-                        var nextButton = '<button type="button" class="el-button el-button--success el-button--small" '+ click +'><span>确认</span></button>';
-                        selectedProcess.find('.el-step__description')
-                            .html(customProcessExecStatus);
-                        selectedProcess.find('.el-step__main').append(nextButton);
-                    }
+                var customMainProcesses = $('.customMainProcess').children();
+                var total_index = null;
+                $.each(vue.customProcessTableData, function(step_index, steps){
+                    $.each(steps, function(item_index, items){
+                        total_index = (step_index * vue.customProcessStepLimit) + item_index;
+                       //设置已经执行的步骤的状态信息
+                        if('y' == items.status.is_done){
+                            var execTime =  items.status.do_time;
+                            var execPerson = items.status.do_person;
+                            var customProcessExecPerson = '<div>执行人：'+ execPerson +'</div>';
+                            var customProcessExecTime = '<div>' + execTime + '</div>';
+                            var customProcessExecStatus = '<div>执行状态：执行完毕！<i class="el-icon-check"></i></div>';
+                            var selectedProcess =  customMainProcesses.eq(total_index);
+                            selectedProcess.find('.el-step__description')
+                                .html(customProcessExecPerson + customProcessExecTime + customProcessExecStatus);
+                        }else{
+                        //还未执行的步骤
+                            var customProcessExecStatus = '<div class="execute_status">执行状态：未开始执行<i class="el-icon-close"></i></div>';
+                            var selectedProcess =  customMainProcesses.eq(total_index);
+                            var click = ' onclick="vue.customProcessConfirmNode('+ total_index + ',' + items.id + ', this)"';
+                            var nextButton = '<button type="button" class="el-button el-button--success el-button--small" '+ click +'><span>确认</span></button>';
+                            selectedProcess.find('.el-step__description')
+                                .html(customProcessExecStatus);
+                            selectedProcess.find('.el-step__main').append(nextButton);
+                        }
+                    });
                 });
             }
         },

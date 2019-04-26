@@ -22,7 +22,8 @@ def select_all_nodes(request):
     :param request:
     :return:
     """
-    node_list = function.select_all_nodes()
+    params = json.loads(request.body)
+    node_list = function.select_all_nodes(params)
     return render_json(node_list)
 
 

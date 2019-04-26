@@ -11,13 +11,16 @@ from shell_app.tools import wechat_access_token
 from django.core.paginator import *
 
 
-def select_all_nodes():
+def select_all_nodes(params):
     """
     获取定制流程节点
     :return: List
     """
     node_info = TbCustProcess.objects.order_by('seq').all()
-    node_list = []
+    node_lists = list()
+    node_list = None
+    node_dict = dict()
+    count = 0
     for node in node_info:
         dic1 = model_to_dict(node)
         # 获取该节点对应的节点状态
@@ -34,9 +37,22 @@ def select_all_nodes():
             dic2['do_time'] = do_time_ori.strftime('%Y-%m-%d %H:%M:%S')
         # 将节点状态放置到节点的status字段中
         dic1['status'] = dic2
-        # 将当前遍历的节点添加到列表中
+        # 每满limit数量节点重新放入一个新的list中
+        if count % int(params['limit']) == 0:
+            if None is not node_list:
+                node_lists.append(node_list)
+            node_list = list()
+        # 将当前遍历的节点添加到list中
         node_list.append(dic1)
-    return node_list
+        count += 1
+    # 解决未满limit个数的list未被添加的问题
+    if count % int(params['limit']) != 0 or len(node_list) != 0:
+        node_lists.append(node_list)
+    # 节点list
+    node_dict['nodes'] = node_lists
+    # 节点总个数
+    node_dict['count'] = count
+    return node_dict
 
 
 def select_nodes_pagination(node_info):
