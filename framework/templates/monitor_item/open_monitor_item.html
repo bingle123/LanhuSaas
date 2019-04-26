@@ -1,0 +1,154 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 -->
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- element UI引入样式 -->
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <!--axios.min.js--vue.js的ajax支持-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
+    <script src="${STATIC_URL}js/csrftoken.js"></script>
+    <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
+
+    <script type="text/javascript"
+            src="${STATIC_URL}js/net/jsplumb.min.js"></script>
+    <link rel="stylesheet"
+          href="${STATIC_URL}css/net/jsPlumbToolkit-defaults.css"/>
+    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/maintenanceIndex/maintenanceIndex.css">
+</head>
+<body >
+<div id="app" style="background: #ffffff;height:300px;width:600px;" >
+    <!-- div1 start-->
+    <div class="div_one" style="padding: 20px 40px 0px 40px;">
+        <div>
+            <el-input placeholder="请输入内容" clearable v-model="contents" style="width:30%"></el-input>
+            <el-button type="primary" icon="el-icon-search" v-on:click="select1">搜索</el-button>
+        </div>
+        <div style="height: 20px"></div>
+        <div>
+            <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;" border header-align="center">
+                <el-table-column prop="id" label="序号" sortable></el-table-column>
+                <el-table-column prop="monitor_name" label="监控名称" sortable></el-table-column>
+                <el-table-column prop="monitor_type" label="监控类型" :formatter="format_monitor_type" sortable></el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <el-button size="mini" type="text" v-on:click="select_one(scope.row)">关联</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                           @current-change="current_change1" :current-page="page"></el-pagination>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    //csrf验证
+    axios.interceptors.request.use((config) => {
+        config.headers['X-Requested-With'] = 'XMLHttpRequest';
+        let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+        config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+        return config
+    });
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            page_count: 100,                            //总页码数
+            page: 1,                                    //分页页码数
+            sites: [],                                  //table内容
+            message: '',                                //弹框提示信息
+            base: {
+                //基本单元
+                dimension_data:[],//维度名称
+                measures_name:'',//指标名称
+                measures:'',       //指标集
+                interface_type:'',//接口类型
+                show_rule_type:'',//展示规则
+                monitor_name: '',                      //单元名称
+                monitor_type: '',                      //单元类型
+                font_size: '20',                         //字号
+                height: '480',                            //高度
+                width: '422',                             //宽度
+                start_time: '',                        //开始时间
+                end_time: '',                          //结束时间
+                period: '10',                            //采集周期
+                params: '',                            //监控参数
+                status: '',                            //监控状态
+                contents: '',                          //显示内容
+                gather_rule: '',                       //采集规则
+                gather_params: 'sql',                  //采集参数
+                monitor_area: ''                             //日历地区
+            },
+        },
+        methods: {
+            show() {
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor_item/show/',
+                    data: {
+                        page: vm.page,
+                        limit: 5
+                    },
+                }).then(function (res) {
+                    vm.sites = res.data.results.res_list;
+                    vm.page_count = res.data.results.res_list[0].page_count;
+                    vm.job2 = res.data.results.job;
+                    vm.flow2 = res.data.results.flow;
+                })
+            },
+            select1() {
+                vm.centerDialogVisible = false;
+                vm.page = 1;
+                if (vm.contents == "") {
+                    vm.show()
+                } else {
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}monitor_item/select/',
+                        data: {
+                            data: this.contents,
+                            page: vm.page,
+                            limit: 5
+                        }
+                    }).then((res) => {
+                        if (res.data.results.length == 0) {
+                            vm.sites = [];
+                            vm.page_count = 1
+                        } else {
+                            vm.sites = res.data.results;
+                            vm.page_count = res.data.results[0].page_count;
+                        }
+                    }).catch(function (e) {
+                    vm.$message.error('获取数据失败！');
+                    });
+                }
+            },
+            select_one(row) {
+                $("#openMonitorItem", window.parent.document).hide();
+                window.parent.relation_monitor_item_id(row.id);
+                //alert(row.id);
+            },
+            format_monitor_type(row,column){
+                if(row.monitor_type === 1){
+                    return "基本监控项"
+                }else if(row.monitor_type === 2){
+                    return "图表监控项"
+                }else if(row.monitor_type === 3){
+                    return "作业监控项"
+                }else if(row.monitor_type === 4){
+                    return "流程监控项"
+                }else if(row.monitor_type === 5){
+                    return "基本监控项（一体化平台）"
+                }
+            }
+        },
+    });
+    vm.show();
+</script>
+</html>

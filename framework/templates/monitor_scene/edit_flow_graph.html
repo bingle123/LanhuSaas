@@ -55,9 +55,88 @@
 	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Menus.js"></script>
 	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Toolbar.js"></script>
 	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Dialogs.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
 </head>
+<style>
+    .m_i{
+        position:absolute;
+        margin:auto;
+        left:0;
+        right:0;
+        top:0;
+        bottom:0;
+        width:650px;
+        height:548px;
+        z-index:10006;
+        background: white;
+        border: solid 0.5px gray;
+    }
+</style>
 <body class="geEditor">
+    <iframe id="openMonitorItem" class="m_i" width="100%" height="100%" src="${SITE_URL}monitor_item/select_monitor_item/" style="display:none;"></iframe>
 	<script type="text/javascript">
+        this.item_id = null;
+        let myNameInput = null;
+        let myNames = null;
+        let myTexts = null;
+        let myValues = null;
+        let myForm = null;
+        let myAddRemoveButton = null;
+        //弹出选择监控项窗口
+        function open_monitoy_item(nameInput,names,texts,value,form,addRemoveButton){
+            $("#openMonitorItem").show();
+            myNameInput = nameInput;
+            myNames = names;
+            myTexts = texts;
+            myValues = value;
+            myForm = form;
+            myAddRemoveButton = addRemoveButton;
+        }
+        //lxchun将流程设计器中的属性与具体监控项建立关联
+        function relation_monitor_item_id(item_id){
+            myNameInput.value = "监控项编码";
+            let name = myNameInput.value
+            this.item_id = item_id;
+            //myNameInput.style.cssText = "display:block;";
+            if (name.length > 0 && name != 'label' && name != 'placeholders' && name.indexOf(':') < 0)
+            {
+                try
+                {
+                    debugger
+                    var idx = mxUtils.indexOf(myNames, name);
+                    if (idx >= 0 && myTexts[idx] != null)
+                    {
+                        myTexts[idx].value = this.item_id;
+                        myTexts[idx].focus();
+                    }
+                    else
+                    {
+                        // Checks if the name is valid
+                        var clone = myValues.cloneNode(false);
+                        clone.setAttribute(name, '');
+                        //clone.outerHTML = "<object label=""/>"
+                        if (idx >= 0)
+                        {
+                            myNames.splice(idx, 1);
+                            myTexts.splice(idx, 1);
+                        }
+                        myNames.push(name);
+                        var text = myForm.addTextarea(name + ':', '', 2);
+                        text.style.width = '100%';
+                        myTexts.push(text);
+                        text.value = this.item_id;
+                        text.label = "你好";
+                        myAddRemoveButton(text, name);
+                        text.focus();
+                    }
+                    myNameInput.value = '';
+                }
+                catch (e)
+                {
+                    mxUtils.alert(e);
+                }
+            }
+        }
 		// Extends EditorUi to update I/O action states based on availability of backend
 		(function()
 		{
@@ -82,7 +161,7 @@
 					//}));
 				}
 			};
-			
+
 			// Adds required resources (disables loading of fallback properties, this can only
 			// be used if we know that all keys are defined in the language specific file)
 			mxResources.loadDefaultBundle = false;
