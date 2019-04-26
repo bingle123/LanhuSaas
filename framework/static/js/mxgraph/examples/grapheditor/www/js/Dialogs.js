@@ -1521,6 +1521,7 @@ var EditDataDialog = function(ui, cell)
 	newProp.style.whiteSpace = 'nowrap';
 	newProp.style.marginTop = '6px';
 
+
 	var nameInput = document.createElement('input');
 	nameInput.setAttribute('placeholder', mxResources.get('enterPropertyName'));
 	nameInput.setAttribute('type', 'text');
@@ -1534,14 +1535,16 @@ var EditDataDialog = function(ui, cell)
 	var addBtn = mxUtils.button(mxResources.get('addProperty'), function()
 	{
 		var name = nameInput.value;
-
+		//lxchun改造打开关联监控项的浮层
+		open_monitoy_item(nameInput,names,texts,value,form,addRemoveButton);
+		return;
 		// Avoid ':' in attribute names which seems to be valid in Chrome
 		if (name.length > 0 && name != 'label' && name != 'placeholders' && name.indexOf(':') < 0)
 		{
 			try
 			{
 				var idx = mxUtils.indexOf(names, name);
-				
+
 				if (idx >= 0 && texts[idx] != null)
 				{
 					texts[idx].focus();
@@ -1551,7 +1554,7 @@ var EditDataDialog = function(ui, cell)
 					// Checks if the name is valid
 					var clone = value.cloneNode(false);
 					clone.setAttribute(name, '');
-					
+
 					if (idx >= 0)
 					{
 						names.splice(idx, 1);
@@ -1591,8 +1594,8 @@ var EditDataDialog = function(ui, cell)
 			nameInput.focus();
 		}
 	};
-	
-	addBtn.setAttribute('disabled', 'disabled');
+	//lxchun改造将关联按钮初始为可用，点击执行关联监控项操作
+	//addBtn.setAttribute('disabled', 'disabled');
 	addBtn.style.marginLeft = '10px';
 	addBtn.style.width = '144px';
 	newProp.appendChild(addBtn);
@@ -1655,11 +1658,14 @@ var EditDataDialog = function(ui, cell)
 			addBtn.setAttribute('disabled', 'disabled');
 		}
 	};
-
-	mxEvent.addListener(nameInput, 'keyup', updateAddBtn);
+	//lxchun改造将输入框隐藏
+	nameInput.style.cssText = "display:none;";
+	//注释掉输入框的鼠标事件
+	//mxEvent.addListener(nameInput, 'keyup', updateAddBtn);
 	
 	// Catches all changes that don't fire a keyup (such as paste via mouse)
-	mxEvent.addListener(nameInput, 'change', updateAddBtn);
+	//lxchun改造注释掉输入框的change事件
+	//mxEvent.addListener(nameInput, 'change', updateAddBtn);
 	
 	var buttons = document.createElement('div');
 	buttons.style.cssText = 'position:absolute;left:30px;right:30px;text-align:right;bottom:30px;height:40px;'
