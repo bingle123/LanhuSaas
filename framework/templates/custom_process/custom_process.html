@@ -23,13 +23,23 @@
                         <hr>
                     </el-col>
                 </el-row>
-                <div style="text-align: right">
-                    <el-button type="primary" size="medium" @click="customProcessAddNode()">新增过程节点</el-button>
-                </div>
+                <el-row type="flex" justify="space-between" align="center" class="row">
+                    <el-col :span="12">
+                        <el-col :span="9">
+                            <el-input v-model="customProcessSearch" size="medium" placeholder="请输入节点名称"></el-input>
+                        </el-col>
+                        <el-col :span="3">
+                            <el-button type="primary" size="medium" icon="el-icon-search" v-on:click="customProcessSearchByNodeName">搜索</el-button>
+                        </el-col>
+                    </el-col>
+                    <el-col :span='12' style="text-align: right">
+                        <el-button type="primary" size="medium" @click="customProcessAddNode()">新增过程节点</el-button>
+                    </el-col>
+                </el-row>
                 <el-table :data="customProcessTableListData" id="customProcessTable">
-                    <el-table-column prop="node_name" label="节点名称">
+                    <el-table-column prop="node_name" label="节点名称" show-overflow-tooltip=true>
                     </el-table-column>
-                    <el-table-column prop="send_content" label="通知内容">
+                    <el-table-column prop="send_content" label="通知内容" show-overflow-tooltip=true>
                     </el-table-column>
                     <el-table-column prop="seq" label="节点顺序">
                     </el-table-column>

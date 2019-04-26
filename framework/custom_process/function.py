@@ -67,8 +67,13 @@ def select_nodes_pagination(node_info):
     page = node_info['page']
     # 获取前台传递的参数：每页有多少条数据
     limit = node_info['limit']
+    # 获取前台传递参数：检索条件
+    condition = node_info['condition']
     # 获取当前所有节点
-    nodes_list = TbCustProcess.objects.all()
+    if None is not condition and '' != condition:
+        nodes_list = TbCustProcess.objects.all().filter(node_name__contains=condition)
+    else:
+        nodes_list = TbCustProcess.objects.all()
     # 对所有节点进行分页处理
     paginator = Paginator(nodes_list, limit)
     # 获取指定页的数据

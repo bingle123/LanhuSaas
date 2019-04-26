@@ -46,8 +46,11 @@ $(function(){
     vue = new Vue({
         el: '#customProcess',
         data: {
+            //检索条件
+            customProcessSearch: '',
             //步骤条偏移值，用于居中显示步骤条
             customProcessStepOffset: 0,
+            //每多少个元素生成一个新的步骤条
             customProcessStepLimit: 3,
             //当前用户名称
             currentUser: null,
@@ -123,12 +126,17 @@ $(function(){
                     this.alertRulePopupErrorMessage(msg + res);
                 });
             },
+            //根据条件检索节点
+            customProcessSearchByNodeName: function(){
+                this.customProcessPageChange(1);
+            },
             //分页显示方法
             customProcessPageChange: function(page) {
                 const loading = this.customProcessPopupLoading();
                 var data = {
                     page: page,
-                    limit: 5
+                    limit: 5,
+                    condition: this.customProcessSearch
                 };
                 axios({
                     method: 'post',
@@ -292,6 +300,7 @@ $(function(){
             //切换列出所有节点的界面
             customProcessListNode: function() {
                 this.customProcessNode = {};
+                this.customProcessSearch = '';
                 this.customProcessTableStatus = 'list';
             },
             //切换修改节点信息的界面
