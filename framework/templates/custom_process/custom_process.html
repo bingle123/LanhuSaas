@@ -163,11 +163,6 @@
                     <el-row>
                         <el-col :span="24">
                             <el-row>
-                                <el-col :span="24" style="text-align: center">
-                                    <el-button :type="customProcessStartButtonType" @click="customProcessBegin()" :disabled="customProcessStartButtonDisabled" v-if="customProcessStepSum > 0">{{ customProcessStartButtonText }}</el-button>
-                                </el-col>
-                            </el-row>
-                            <el-row>
                                 <el-col :span="24" v-if="customProcessStepSum == 0">
                                     <div id="customProcessContent">
                                         <el-alert id="customProcessWarn" title="当前无任何过程通知" type="warning" show-icon center></el-alert>
@@ -175,7 +170,7 @@
                                 </el-col>
                                 <el-col :span="6" :offset="11" style="padding-top: 50px;" v-show="customProcessStepSum > 0">
                                     <div id="customProcessStepsHeight">
-                                        <el-steps id="customMainProcess" direction="vertical" :active="customProcessStep" finish-status="success" process-status="finish">
+                                        <el-steps id="customMainProcess" direction="vertical" finish-status="finish">
                                             <el-step :title="processData.node_name" v-for="processData in customProcessTableData"></el-step>
                                         </el-steps>
                                     </div>
