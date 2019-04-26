@@ -46,6 +46,12 @@ $(function(){
     vue = new Vue({
         el: '#customProcess',
         data: {
+            //检索条件
+            customProcessSearch: '',
+            //步骤条偏移值，用于居中显示步骤条
+            customProcessStepOffset: 0,
+            //每多少个元素生成一个新的步骤条
+            customProcessStepLimit: 3,
             //当前用户名称
             currentUser: null,
             //节点列表信息共有多少页
@@ -62,19 +68,13 @@ $(function(){
             customProcessNotifyButtonType: 'primary',
             customProcessNotifyButtonText: '发送通知',
             customProcessNotifyButtonDisabled: false,
-            //执行流程按钮属性控制
-            customProcessStartButtonType: 'primary',
-            customProcessStartButtonText: '开始执行流程',
-            customProcessStartButtonDisabled: false,
             //节点列表模态框是否显示
             addDialogVisible: false,
             //发送通知的模态框是否显示
             customProcessSendMsgDialogVisible: false,
             //添加节点的table当前状态，list=列表显示,add=添加节点,edit=编辑节点
             customProcessTableStatus: 'list',
-            //当前流程中节点所处的位置，初始化为-1即未开始流程，后续应从数据库表中读取该信息
-            customProcessStep: -1,
-            //当前流程中节点总数，后续应从数据库读取该信息,或直接计算processDataList的长度获得
+            //当前流程中节点总数，直接计算processDataList的长度获得
             customProcessStepSum: -1,
             //流程是否已经开始执行，应该根据数据库中的信息来判断
             customProcessStatus: false,
@@ -126,12 +126,17 @@ $(function(){
                     this.alertRulePopupErrorMessage(msg + res);
                 });
             },
+            //根据条件检索节点
+            customProcessSearchByNodeName: function(){
+                this.customProcessPageChange(1);
+            },
             //分页显示方法
             customProcessPageChange: function(page) {
                 const loading = this.customProcessPopupLoading();
                 var data = {
                     page: page,
-                    limit: 5
+                    limit: 5,
+                    condition: this.customProcessSearch
                 };
                 axios({
                     method: 'post',
@@ -234,10 +239,10 @@ $(function(){
                   type: 'success'
                 });
             },
-            //生成当前执行节点的信息
-            generateCurrentProcessInfo: function() {
+            //发送通知
+            customProcessConfirmNode: function(index, id, curr) {
                 const loading = this.customProcessPopupLoading();
-                //上传当前节点执行信息
+                //上传当前节点已执行状态
                 var url = site_url + 'custom_process/update_node_status';
                 //执行时间取当前时间
                 var execTime = this.formatDateTime(new Date());
@@ -245,8 +250,8 @@ $(function(){
                 var execPerson = this.currentUser;
                 //定义当前节点正在执行的节点状态信息，后续上传至服务器保存
                 var statusData = {};
-                statusData.node_id = this.customProcessTableData[this.customProcessStep].id;
-                statusData.is_done = 'c';
+                statusData.node_id = id;
+                statusData.is_done = 'y';
                 statusData.do_time = execTime;
                 statusData.do_person = execPerson;
                 axios({
@@ -264,63 +269,20 @@ $(function(){
                     var msg = '节点信息上传失败！';
                     this.customProcessPopupErrorMessage(msg);
                 });
-                //前端界面的节点状态的展示变更为正在执行，并显示相关的信息
                 var customProcessExecPerson = '<div>执行人：'+ execPerson +'</div>';
                 var customProcessExecTime = '<div>' + execTime + '</div>';
-                var customProcessExecStatus = '<div id="customProcessExecStatus">执行状态：正在执行...<i class="el-icon-loading"></i></div>';
-                var customProcesses = $('#customMainProcess').children();
-                var selectedProcess = customProcesses.eq(this.customProcessStep);
-                selectedProcess.find('.el-step__description')
-                        .html(customProcessExecPerson + customProcessExecTime + customProcessExecStatus);
-                var nextButton = '<button id="customProcessNextButton" type="button" class="el-button el-button--success el-button--small" onclick="vue.customProcessNextNode()"><span>下一步</span></button>';
-                selectedProcess.find('.el-step__main').append(nextButton);
-            },
-            //执行下一个节点
-            customProcessNextNode: function() {
-                const loading = this.customProcessPopupLoading();
-                //上传当前节点已执行状态
-                var url = site_url + 'custom_process/change_status_flag';
-                //定义当前节点的状态为已执行完成
-                var statusData = {};
-                statusData.node_id = this.customProcessTableData[this.customProcessStep].id;
-                statusData.is_done = 'y';
-                axios({
-                    method: 'post',
-                    url: url,
-                    data: statusData
-                }).then((res) =>{
-                    if('ok' == res.data.message){
-                        loading.close();
-                    }else{
-                        var msg = '节点信息上传失败！';
-                        this.customProcessPopupErrorMessage(msg);
-                    }
-                }).catch((res) => {
-                    var msg = '节点信息上传失败！';
-                    this.customProcessPopupErrorMessage(msg);
-                });
-                //前端显示的步骤条调整显示进行到下一步，当前节点显示执行完毕，移除下一步的按钮
-                this.customProcessStep += 1;
                 var customProcessExecStatus = '执行状态：执行完毕！<i class="el-icon-check"></i>';
-                var temp = $('#customProcessExecStatus');
-                temp.html(customProcessExecStatus);
-                temp.removeAttr('id');
-                $('#customProcessNextButton').remove();
-                this.customProcessSendMessage(this.customProcessStep - 1);
-                //如果当前已经执行到最后一个节点，所有节点都已经执行完毕，更改按钮的显示状态
-                if(this.customProcessStep == this.customProcessStepSum){
-                    this.customProcessStartButtonType = 'info';
-                    this.customProcessStartButtonText = '当日流程已执行完毕';
-                    //this.customProcessEnd();
-                    return;
-                }
-                //生成下一个执行节点的信息
-                this.generateCurrentProcessInfo();
+                var temp = $(curr).parent().find('.execute_status');
+                temp.html(customProcessExecPerson + customProcessExecTime + customProcessExecStatus);
+                $(curr).remove();
+                this.customProcessSendMessage(index);
             },
             //发送短信通知
             customProcessSendMessage: function(nodeOrder) {
-                this.customProcessReceivers = this.customProcessTableData[nodeOrder].receivers;
-                this.customProcessNoticeContent = this.customProcessTableData[nodeOrder].send_content;
+                var step_index = parseInt(nodeOrder / this.customProcessStepLimit);
+                var item_index = parseInt(nodeOrder % this.customProcessStepLimit);
+                this.customProcessReceivers = this.customProcessTableData[step_index][item_index].receivers;
+                this.customProcessNoticeContent = this.customProcessTableData[step_index][item_index].send_content;
                 this.customProcessSendMsgDialogVisible = true;
             },
             //短信通知关闭前的确认
@@ -338,6 +300,7 @@ $(function(){
             //切换列出所有节点的界面
             customProcessListNode: function() {
                 this.customProcessNode = {};
+                this.customProcessSearch = '';
                 this.customProcessTableStatus = 'list';
             },
             //切换修改节点信息的界面
@@ -367,7 +330,7 @@ $(function(){
             //增加/修改流程节点
             defineOrChangeProcess: function() {
                 //流程正在使用的情况
-                if(this.customProcessStatus){
+                /*if(this.customProcessStatus){
                     this.$confirm('当前流程正在使用中, 强制修改将会导致执行状态信息丢失，是否继续?', '提示', {
                       confirmButtonText: '确定',
                       cancelButtonText: '取消',
@@ -405,7 +368,9 @@ $(function(){
                 }else{
                     this.customProcessPageChange(1);
                     this.addDialogVisible = true;
-                }
+                }*/
+                this.customProcessPageChange(1);
+                this.addDialogVisible = true;
             },
             //从数据库中删除节点信息
             customProcessDeleteNode: function(id) {
@@ -426,7 +391,7 @@ $(function(){
                     }).then((res) =>{
                         loading.close();
                         if('ok' == res.data.message){
-                            //重新加载当前页的节点信息
+                            //重新加载当前页的节点信息,渲染流程节点
                             this.customProcessPageChange(this.currentPage);
                             this.customProcessSelectAllNodes();
                             this.customProcessListNode();
@@ -451,7 +416,7 @@ $(function(){
                 });
             },
             get_header_data(){
-            axios.get(site_url + '/market_day/get_header/').then(function (res) {
+            axios.get(site_url + 'market_day/get_header/').then(function (res) {
                console.log(res)
             })
              },
@@ -491,7 +456,7 @@ $(function(){
                         }).then((res) =>{
                             loading.close();
                             if('ok' == res.data.message){
-                                //重新获取所有节点的信息，渲染流程节点
+                                //重新获取所有节点的信息,渲染流程节点
                                 this.customProcessSelectAllNodes();
                                 //如果是编辑节点信息，编辑完成后回到原来的那一页
                                 if('edit' == this.customProcessTableStatus){
@@ -515,43 +480,7 @@ $(function(){
                     }
                 });
             },
-            //流程开始
-            customProcessBegin: function(elem) {
-                this.$confirm('即将开始执行当前流程，执行过程中将不能再随意修改节点, 是否继续?', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning',
-                    center: true
-                }).then(() => {
-                    //开始执行流程后，开始按钮状态变更
-                    this.customProcessStartButtonDisabled = true;
-                    this.customProcessStartButtonType = 'success';
-                    this.customProcessStartButtonText = '正在执行流程';
-                    //步骤条当前进行到第一个节点
-                    this.customProcessStep = 0;
-                    //流程开始执行，执行标记为置为true
-                    this.customProcessStatus = true;
-                    //生成当前节点的状态信息
-                    this.generateCurrentProcessInfo();
-                    this.$message({
-                        type: 'success',
-                        message: '开始执行流程'
-                    });
-                }).catch(() => {
-                        this.$message({
-                        type: 'info',
-                        message: '取消执行操作'
-                    });
-                });
-            },
-            //流程全部执行完毕
-            customProcessEnd: function() {
-                this.$alert('流程节点已全部执行完成！', '提示', {
-                    confirmButtonText: '确定',
-                    type: 'success',
-                    center: true
-            });
-            },
+
             //删除当前流程
             customProcessDelete: function() {
                 var alertMessage = null;
@@ -575,8 +504,6 @@ $(function(){
                     }).then((res) =>{
                         if('ok' == res.data.message){
                             loading.close();
-                            //步骤条当前执行位置重置
-                            this.customProcessStep = -1;
                             //步骤条总节点的值置0
                             this.customProcessStepSum = 0;
                             //是否包含节点信息置false
@@ -585,10 +512,6 @@ $(function(){
                             this.customProcessStatus = false;
                             //列表信息置空
                             this.customProcessTableData = [];
-                            //流程开始执行按钮重置
-                            this.customProcessStartButtonType = 'primary';
-                            this.customProcessStartButtonText = '开始执行流程';
-                            this.customProcessStartButtonDisabled = false;
                             this.$message({
                                 type: 'success',
                                 message: '流程已被删除！'
@@ -613,48 +536,31 @@ $(function(){
                 const loading = this.customProcessPopupLoading();
                 this.customProcessTableData = null;
                 var url = site_url + 'custom_process/select_all_nodes';
-                var count = 0;
+                //limit参数为每隔多少条分配一个数组，有多少个数组就会生成多少个步骤条
+                var params = {
+                    limit: this.customProcessStepLimit
+                };
                 axios({
                     method: 'post',
                     url: url,
+                    data: params
                 }).then((res) =>{
-                    this.customProcessTableData = res.data.message;
-                    this.customProcessStepSum = this.customProcessTableData.length;
+                    this.customProcessTableData = res.data.nodes;
+                    this.customProcessStepSum = res.data.count;
+                    //计算偏移值，使步骤条居中
+                    if(this.customProcessTableData.length > 4){
+                        this.customProcessStepOffset = 0;
+                    }else{
+                        this.customProcessStepOffset = (24 - this.customProcessTableData.length * 6) / 2 + 1;
+                    }
                     //根据节点数量计算步骤条的高度
-                    var stepsHeight = this.customProcessStepSum * 120;
-                    $('#customProcessStepsHeight').css('height',stepsHeight + 'px');
+                    //var stepsHeight = params['limit'] * 200;
+                    //$('.customProcessStepsHeight').css('height',stepsHeight + 'px');
                     if(0 != this.customProcessStepSum) {
-                        this.customProcessHasNode = true;
-                        //-----------当前流程节点执行位置判断----------
-                        $.each(this.customProcessTableData, function(index, elem){
-                            if(elem.status.is_done == 'c'){
-                                return false;
-                            }
-                            count++;
+                        this.$nextTick(() => {
+                            this.customProcessRenderNodeStatus();
                         });
-                        //流程节点没有开始执行或已经执行完毕的情况
-                        if(count == this.customProcessStepSum){
-                            //执行完毕
-                            if(this.customProcessTableData[count - 1].status.is_done == 'y'){
-                                this.customProcessStartButtonType = 'info';
-                                this.customProcessStartButtonDisabled = true;
-                                this.customProcessStartButtonText = '当日流程已执行完毕';
-                                this.customProcessStep = this.customProcessTableData.length;
-                                this.customProcessStatus = true;
-                            } else{ //还未开始执行
-                                this.customProcessStep = -1;
-                                this.customProcessStatus = false;
-                                this.customProcessStartButtonType = 'primary';
-                                this.customProcessStartButtonText = '开始执行流程';
-                                this.customProcessStartButtonDisabled = false;
-                            }
-                        }else{//流程节点正在执行的情况
-                            this.customProcessStartButtonType = 'success';
-                            this.customProcessStartButtonDisabled = true;
-                            this.customProcessStartButtonText = '正在执行流程';
-                            this.customProcessStep = count;
-                            this.customProcessStatus = true;
-                        }
+                        this.customProcessHasNode = true;
                     }
                     loading.close();
                 }).catch((res) => {
@@ -663,6 +569,8 @@ $(function(){
                     this.customProcessPopupErrorMessage(msg);
                 });
             },
+            //
+            //获取所有设置通知方式的蓝鲸用户
             loadBkUsers: function(){
                 const loading = this.customProcessPopupLoading();
                 var url = site_url + 'custom_process/select_all_bkusers';
@@ -671,12 +579,41 @@ $(function(){
                     url: url
                 }).then((res) =>{
                     this.bkUsers = res.data.message;
-                    console.log(res.data.message);
                     loading.close();
                 }).catch((res) => {
                     loading.close();
                     var msg = '蓝鲸用户信息加载失败！' + res;
                     this.customProcessPopupErrorMessage(msg);
+                });
+            },
+            //渲染节点的状态信息
+            customProcessRenderNodeStatus: function(){
+                var customMainProcesses = $('.customMainProcess').children();
+                var total_index = null;
+                $.each(vue.customProcessTableData, function(step_index, steps){
+                    $.each(steps, function(item_index, items){
+                        total_index = (step_index * vue.customProcessStepLimit) + item_index;
+                       //设置已经执行的步骤的状态信息
+                        if('y' == items.status.is_done){
+                            var execTime =  items.status.do_time;
+                            var execPerson = items.status.do_person;
+                            var customProcessExecPerson = '<div>执行人：'+ execPerson +'</div>';
+                            var customProcessExecTime = '<div>' + execTime + '</div>';
+                            var customProcessExecStatus = '<div>执行状态：执行完毕！<i class="el-icon-check"></i></div>';
+                            var selectedProcess =  customMainProcesses.eq(total_index);
+                            selectedProcess.find('.el-step__description')
+                                .html(customProcessExecPerson + customProcessExecTime + customProcessExecStatus);
+                        }else{
+                        //还未执行的步骤
+                            var customProcessExecStatus = '<div class="execute_status">执行状态：未开始执行<i class="el-icon-close"></i></div>';
+                            var selectedProcess =  customMainProcesses.eq(total_index);
+                            var click = ' onclick="vue.customProcessConfirmNode('+ total_index + ',' + items.id + ', this)"';
+                            var nextButton = '<button type="button" class="el-button el-button--success el-button--small" '+ click +'><span>确认</span></button>';
+                            selectedProcess.find('.el-step__description')
+                                .html(customProcessExecStatus);
+                            selectedProcess.find('.el-step__main').append(nextButton);
+                        }
+                    });
                 });
             }
         },
@@ -686,7 +623,7 @@ $(function(){
             customProcessStepSum: function(val, oldVal) {
                 if(-1 == oldVal){
                     this.$nextTick(() => {
-                        var customMainProcesses = $('#customMainProcess').children();
+                        /*var customMainProcesses = $('#customMainProcess').children();
                         $.each(this.customProcessTableData, function(index, elem){
                             //设置正在执行的步骤的状态信息
                             if(index == vue.customProcessStep){
@@ -695,7 +632,7 @@ $(function(){
                                 var customProcessExecPerson = '<div>执行人：'+ execPerson +'</div>';
                                 var customProcessExecTime = '<div>' + execTime + '</div>';
                                 var customProcessExecStatus = '<div id="customProcessExecStatus">执行状态：正在执行...<i class="el-icon-loading"></i></div>';
-                                var nextButton = '<button id="customProcessNextButton" type="button" class="el-button el-button--success el-button--small" onclick="vue.customProcessNextNode()"><span>下一步</span></button>';
+                                var nextButton = '<button id="customProcessNextButton" type="button" class="el-button el-button--success el-button--small" onclick="vue.customProcessConfirmNode()"><span>下一步</span></button>';
                                 var selectedProcess =  customMainProcesses.eq(index);
                                 selectedProcess.find('.el-step__description')
                                     .html(customProcessExecPerson + customProcessExecTime + customProcessExecStatus);
@@ -714,7 +651,8 @@ $(function(){
                             //还未执行的步骤直接返回
                                 return false;
                             }
-                        });
+                        });*/
+                        //this.customProcessRenderNodeStatus();
                     });
                 }
             }
@@ -726,7 +664,7 @@ $(function(){
             this.loadBkUsers();
             //获取当前用户信息
             this.customProcessCurrUser();
-            this.get_header_data();
+            //this.get_header_data();
         }
     });
 });

@@ -7,6 +7,8 @@
         <option name="settingsModule" value="settings.py" />
         <option name="manageScript" value="manage.py" />
         <option name="environment" value="&lt;map/&gt;" />
+        <option name="doNotUseTestRunner" value="false" />
+        <option name="trackFilePattern" value="migrations" />
       </configuration>
     </facet>
   </component>
@@ -14,7 +16,6 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/framework/common" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/framework/blueking" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/framework/shell_app" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/framework/MarketDay" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/framework" isTestSource="false" />
     </content>

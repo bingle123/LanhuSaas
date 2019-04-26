@@ -23,13 +23,23 @@
                         <hr>
                     </el-col>
                 </el-row>
-                <div style="text-align: right">
-                    <el-button type="primary" size="medium" @click="customProcessAddNode()">新增过程节点</el-button>
-                </div>
+                <el-row type="flex" justify="space-between" align="center" class="row">
+                    <el-col :span="12">
+                        <el-col :span="9">
+                            <el-input v-model="customProcessSearch" size="medium" placeholder="请输入节点名称"></el-input>
+                        </el-col>
+                        <el-col :span="3">
+                            <el-button type="primary" size="medium" icon="el-icon-search" v-on:click="customProcessSearchByNodeName">搜索</el-button>
+                        </el-col>
+                    </el-col>
+                    <el-col :span='12' style="text-align: right">
+                        <el-button type="primary" size="medium" @click="customProcessAddNode()">新增过程节点</el-button>
+                    </el-col>
+                </el-row>
                 <el-table :data="customProcessTableListData" id="customProcessTable">
-                    <el-table-column prop="node_name" label="节点名称">
+                    <el-table-column prop="node_name" label="节点名称" show-overflow-tooltip=true>
                     </el-table-column>
-                    <el-table-column prop="send_content" label="通知内容">
+                    <el-table-column prop="send_content" label="通知内容" show-overflow-tooltip=true>
                     </el-table-column>
                     <el-table-column prop="seq" label="节点顺序">
                     </el-table-column>
@@ -163,22 +173,17 @@
                     <el-row>
                         <el-col :span="24">
                             <el-row>
-                                <el-col :span="24" style="text-align: center">
-                                    <el-button :type="customProcessStartButtonType" @click="customProcessBegin()" :disabled="customProcessStartButtonDisabled" v-if="customProcessStepSum > 0">{{ customProcessStartButtonText }}</el-button>
-                                </el-col>
-                            </el-row>
-                            <el-row>
                                 <el-col :span="24" v-if="customProcessStepSum == 0">
                                     <div id="customProcessContent">
                                         <el-alert id="customProcessWarn" title="当前无任何过程通知" type="warning" show-icon center></el-alert>
                                     </div>
                                 </el-col>
-                                <el-col :span="6" :offset="11" style="padding-top: 50px;" v-show="customProcessStepSum > 0">
-                                    <div id="customProcessStepsHeight">
-                                        <el-steps id="customMainProcess" direction="vertical" :active="customProcessStep" finish-status="success" process-status="finish">
-                                            <el-step :title="processData.node_name" v-for="processData in customProcessTableData"></el-step>
+                                <el-col :span="24" :offset="customProcessStepOffset">
+                                    <el-col :span="6" v-for="processDataList in customProcessTableData" style="padding-top: 50px;" v-show="customProcessStepSum > 0">
+                                        <el-steps class="customMainProcess" direction="vertical" finish-status="finish" :space="200">
+                                            <el-step :title="processData.node_name" v-for="processData in processDataList"></el-step>
                                         </el-steps>
-                                    </div>
+                                    </el-col>
                                 </el-col>
                             </el-row>
                             <el-row>
