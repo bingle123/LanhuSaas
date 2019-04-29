@@ -177,3 +177,12 @@ def select_test(request):
     :return:
     """
     return render_mako_context(request, './monitor_item/select_item.html')
+
+
+def select_monitor_item(request):
+    """
+    选择监控项弹出窗口
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './monitor_item/open_monitor_item.html')
