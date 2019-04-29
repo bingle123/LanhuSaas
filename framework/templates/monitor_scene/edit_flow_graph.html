@@ -93,7 +93,7 @@
             myAddRemoveButton = addRemoveButton;
         }
         //lxchun将流程设计器中的属性与具体监控项建立关联
-        function relation_monitor_item_id(item_id){
+        function relation_monitor_item_id(item_id,monitor_name){
             myNameInput.value = "监控项编码";
             let name = myNameInput.value
             this.item_id = item_id;
@@ -114,7 +114,6 @@
                         // Checks if the name is valid
                         var clone = myValues.cloneNode(false);
                         clone.setAttribute(name, '');
-                        //clone.outerHTML = "<object label=""/>"
                         if (idx >= 0)
                         {
                             myNames.splice(idx, 1);
@@ -125,10 +124,10 @@
                         text.style.width = '100%';
                         myTexts.push(text);
                         text.value = this.item_id;
-                        text.label = "你好";
                         myAddRemoveButton(text, name);
                         text.focus();
                     }
+                    myValues.setAttribute("label",monitor_name);
                     myNameInput.value = '';
                 }
                 catch (e)
