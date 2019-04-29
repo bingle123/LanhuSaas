@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="${STATIC_URL}css/maintenanceIndex/maintenanceIndex.css">
 </head>
 <body >
+<div align="right" ><img src="${STATIC_URL}img/close.jpg" onclick="vm.hide_this_win()" width="20px" height="20px" align="right"></img></div>
 <div id="app" style="background: #ffffff;height:300px;width:600px;" >
     <!-- div1 start-->
     <div class="div_one" style="padding: 20px 40px 0px 40px;">
@@ -129,10 +130,17 @@
                     });
                 }
             },
+            current_change1(value) {
+                vm.page = value;
+                vm.show()
+            },
             select_one(row) {
                 $("#openMonitorItem", window.parent.document).hide();
-                window.parent.relation_monitor_item_id(row.id);
+                window.parent.relation_monitor_item_id(row.id,row.monitor_name);
                 //alert(row.id);
+            },
+            hide_this_win(){
+                $("#openMonitorItem", window.parent.document).hide();
             },
             format_monitor_type(row,column){
                 if(row.monitor_type === 1){
