@@ -183,7 +183,8 @@ $(function(){
                 var url = site_url + 'custom_process/send_notification';
                 var nofityData = {
                     'receivers': this.customProcessReceivers,
-                    'content': this.customProcessNoticeContent
+                    'content': this.customProcessNoticeContent,
+                    'approver': this.currentUser
                 };
                 axios({
                     method: 'post',
@@ -277,7 +278,7 @@ $(function(){
                 $(curr).remove();
                 this.customProcessSendMessage(index);
             },
-            //发送短信通知
+            //弹出发送通知模态框，准备好数据
             customProcessSendMessage: function(nodeOrder) {
                 var step_index = parseInt(nodeOrder / this.customProcessStepLimit);
                 var item_index = parseInt(nodeOrder % this.customProcessStepLimit);
@@ -285,9 +286,9 @@ $(function(){
                 this.customProcessNoticeContent = this.customProcessTableData[step_index][item_index].send_content;
                 this.customProcessSendMsgDialogVisible = true;
             },
-            //短信通知关闭前的确认
+            //通知关闭前的确认
             customProcessHandleClose: function() {
-                this.$confirm('确定不发送短信通知吗？').then(_ => {
+                this.$confirm('确定不发送通知吗？').then(_ => {
                     this.customProcessSendMsgDialogVisible = false;
                 }).catch(_ => {
 
