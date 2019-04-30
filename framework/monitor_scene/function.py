@@ -732,7 +732,7 @@ def monitor_scene_fuzzy_search(data):
             'base_list': base_list,
         }
         result = tools.success_result(res_dic)
-        return result
+    return result
 
 
 def save_scene_design(data):
@@ -745,5 +745,28 @@ def save_scene_design(data):
         'scene_name': data['filename'],
         'scene_content': data['xml']
     }
-    id = SceneDesign.objects.create(**scene_design);
-    return {'id': id.id}
+    scene_obj = SceneDesign.objects.create(**scene_design)
+    return {'id': scene_obj.id}
+
+
+def query_scene_design(request):
+    """
+    分页查询所有已经设计保存的场景信息
+    :param request:
+    :return:
+    """
+    res = json.loads(request.body)
+    #  个数
+    limit = res['limit']
+    #  当前页面号
+    page = res['page']
+    # 按id倒排序
+    unit = SceneDesign.objects.all().order_by('-id')
+    # 进入分页函数进行分页，返回总页数和当前页数据
+    page_data, base_page_count = tools.page_paging(unit, limit, page)
+    #  把返回的数据对象转为list
+    res_list = tools.common_obt_dic(page_data, base_page_count)
+    res_dic = {
+        'scene_list': res_list,
+    }
+    return tools.success_result(res_dic)

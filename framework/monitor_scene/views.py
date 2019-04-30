@@ -280,10 +280,28 @@ def save_scene_design(request):
     :return:
     """
     param = json.loads(request.body)
-    res = function.save_scene_design(param);
+    # 保存场景设计器设计的场景，后续逻辑还需要加校验规则
+    # 1.校验校验场景中的每个指标是否关联了监控项
+    # 2.校验场景名称是否重复
+    res = function.save_scene_design(param)
     return render_json(res)
 
 
-def openWin(request):
-
+def open_win(request):
+    """
+    打开场景选择器弹出窗口，在这个窗口选择场景进行编辑
+    :param request:
+    :return:
+    """
     return render_mako_context(request, './monitor_scene/open.html')
+
+
+def query_scene_design(request):
+    """
+    分页查询所有的场景
+    :param request:
+    :return:
+    """
+    # 分页查询所有设计好的场景
+    res = function.query_scene_design(request)
+    return render_json(res)

@@ -3417,10 +3417,10 @@ EditorUi.prototype.openFile = function()
 	{
 		this.hideDialog(cancel);
 	}));
-
+    //lxchun 调整弹出窗口的大小
 	// Removes openFile if dialog is closed
-	this.showDialog(new OpenDialog(this).container, (Editor.useLocalStorage) ? 640 : 320,
-			(Editor.useLocalStorage) ? 480 : 220, true, true, function()
+	this.showDialog(new OpenDialog(this).container, (Editor.useLocalStorage) ? 640 : 640,
+			(Editor.useLocalStorage) ? 480 : 480, true, true, function()
 	{
 		window.openFile = null;
 	});
@@ -3587,8 +3587,8 @@ EditorUi.prototype.save = function(name)
 						method: 'post',
 						url: SAVE_URL,
 						data: {
-							filename: encodeURIComponent(name),
-							xml: encodeURIComponent(xml)
+							filename: name,
+							xml: xml
 						},
 					}).then(function (res) {
 						if(res.status == 200){

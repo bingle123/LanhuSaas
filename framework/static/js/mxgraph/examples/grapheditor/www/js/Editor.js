@@ -758,7 +758,9 @@ function Dialog(editorUi, elt, w, h, modal, closable, onClose, noScroll, transpa
 	
 	w += dx;
 	h += dx;
-	
+	//lxchun
+	w = 640
+	h = 480
 	var w0 = w;
 	var h0 = h;
 	

@@ -39,5 +39,6 @@ urlpatterns = patterns(
     (r'^is_monitor_item_collect/$', 'is_monitor_item_collect'),
     (r'^monitor_scene_fuzzy_search/$', 'monitor_scene_fuzzy_search'),
     (r'^save/$', 'save_scene_design'),
-    (r'^open/$', 'openWin'),
+    (r'^open/$', 'open_win'),
+    (r'^open_scene_design/$', 'query_scene_design'),
 )
