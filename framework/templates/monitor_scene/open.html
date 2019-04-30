@@ -146,7 +146,7 @@
                         <el-radio @change.native="getCurrentRow(scope.$index,scope.row)" :label="scope.row.id" v-model="templateRadio">&nbsp;</el-radio>
                     </template>
                 </el-table-column>
-                <el-table-column prop="scene_name" min-width="70%" label="场景文件名称" sortable></el-table-column>
+                <el-table-column prop="scene_name" min-width="70%" label="场景名称" sortable></el-table-column>
             </el-table>
             <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
                            @current-change="current_change1" :current-page="page"></el-pagination>
