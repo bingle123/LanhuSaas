@@ -48,3 +48,13 @@ class SceneColor(models.Model):
         verbose_name = u'场景整体颜色配置表'
         verbose_name_plural = u'场景整体颜色配置表'
         db_table = "td_scene_color"
+
+
+class SceneDesign(models.Model):
+    scene_name = models.CharField(verbose_name=u'场景名称', max_length=50)
+    scene_content = models.TextField(u'数据', max_length=10485760)
+
+    class Meta:
+        verbose_name = u'场景编辑器配置表'
+        verbose_name_plural = u'场景编辑器配置表'
+        db_table = "td_scene_design"

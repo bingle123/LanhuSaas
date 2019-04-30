@@ -13,31 +13,27 @@
 		// - storage=local: Enables HTML5 local storage.
 		// - chrome=0: Chromeless mode.
 		var urlParams = (function(url)
-		{
+		{  url = decodeURIComponent(url)
 			var result = new Object();
 			var idx = url.lastIndexOf('?');
-	
 			if (idx > 0)
 			{
 				var params = url.substring(idx + 1).split('&');
-				
 				for (var i = 0; i < params.length; i++)
 				{
 					idx = params[i].indexOf('=');
-					
 					if (idx > 0)
 					{
 						result[params[i].substring(0, idx)] = params[i].substring(idx + 1);
 					}
 				}
 			}
-			
 			return result;
 		})(window.location.href);
 	
 		// Default resources are included in grapheditor resources
 		mxLoadResources = false;
-		var static_url = ${STATIC_URL};
+		var static_url = "${STATIC_URL}";
 	</script>
 	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Init.js"></script>
 	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/deflate/pako.min.js"></script>
@@ -56,6 +52,10 @@
 	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Toolbar.js"></script>
 	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Dialogs.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/csrftoken.js"></script>
 </head>
 <style>
     .m_i{
@@ -82,6 +82,10 @@
         let myValues = null;
         let myForm = null;
         let myAddRemoveButton = null;
+        //保存编排场景的服务地址
+        window.SAVE_URL = "${SITE_URL}monitor_scene/save/";
+        //打开场景选择器，选择要编辑的场景
+        window.OPEN_FORM = "${SITE_URL}monitor_scene/open/";
         //弹出选择监控项窗口
         function open_monitoy_item(nameInput,names,texts,value,form,addRemoveButton){
             $("#openMonitorItem").show();
@@ -137,6 +141,7 @@
             }
         }
 		// Extends EditorUi to update I/O action states based on availability of backend
+        //初始化加载编辑器
 		(function()
 		{
 			var editorUiInit = EditorUi.prototype.init;

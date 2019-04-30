@@ -4,6 +4,7 @@ import json
 import math
 from django.forms import model_to_dict
 from models import Scene
+from models import SceneDesign
 from models import SceneColor
 from models import position_scene
 from monitor_item.models import Monitor, Job, Scene_monitor
@@ -732,3 +733,17 @@ def monitor_scene_fuzzy_search(data):
         }
         result = tools.success_result(res_dic)
         return result
+
+
+def save_scene_design(data):
+    """
+    保存场景设计
+    :param data:
+    :return:
+    """
+    scene_design = {
+        'scene_name': data['filename'],
+        'scene_content': data['xml']
+    }
+    id = SceneDesign.objects.create(**scene_design);
+    return {'id': id.id}

@@ -32,12 +32,12 @@
             <el-button type="primary" icon="el-icon-search" v-on:click="select1">搜索</el-button>
         </div>
         <div style="height: 20px"></div>
-        <div>
+        <div >
             <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;" border header-align="center">
-                <el-table-column prop="id" label="序号" sortable></el-table-column>
-                <el-table-column prop="monitor_name" label="监控名称" sortable></el-table-column>
-                <el-table-column prop="monitor_type" label="监控类型" :formatter="format_monitor_type" sortable></el-table-column>
-                <el-table-column label="操作">
+                <el-table-column prop="id" min-width="15%" label="序号" sortable></el-table-column>
+                <el-table-column prop="monitor_name" min-width="40%" label="监控名称" sortable></el-table-column>
+                <el-table-column prop="monitor_type" min-width="30%" label="监控类型" :formatter="format_monitor_type" sortable></el-table-column>
+                <el-table-column label="操作" min-width="15%">
                     <template slot-scope="scope">
                         <el-button size="mini" type="text" v-on:click="select_one(scope.row)">关联</el-button>
                     </template>

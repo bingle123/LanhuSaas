@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Open Diagram</title>
+    <link rel="stylesheet" type="text/css" href="${STATIC_URL}js/mxgraph/examples/grapheditor/www/styles/grapheditor.css" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<script type="text/javascript">
+	// Reads files locally
+	function handleFiles(files)
+	{
+	    debugger
+		for (var i = 0; i < files.length; i++)
+		{
+			(function(file)
+			{
+				// Small hack to support import
+				if (window.parent.openNew)
+				{
+					window.parent.open(window.parent.location.href);
+				}
+
+				var reader = new FileReader();
+				reader.onload = function(e)
+				{
+					window.parent.openFile.setData(e.target.result, file.name);
+				};
+				reader.onerror = function(e)
+				{
+					console.log(e);
+				};
+				reader.readAsText(file);
+
+			})(files[i]);
+		}
+	};
+
+	// Handles form-submit by preparing to process response
+	function handleSubmit()
+	{
+	    /*
+		var form = window.openForm || document.getElementById('openForm');
+
+		// Checks for support of the File API for local file access
+		// except for files where the parse is on the server
+		if (window.parent.Graph.fileSupport && form.upfile.files.length > 0)
+		{
+			handleFiles(form.upfile.files);
+
+			return false;
+		}
+		else
+		{
+			if (/(\.xml)$/i.test(form.upfile.value) || /(\.txt)$/i.test(form.upfile.value) ||
+				/(\.mxe)$/i.test(form.upfile.value))
+			{
+				// Small hack to support import
+				if (window.parent.openNew)
+				{
+					window.parent.open(window.parent.location.href);
+				}
+
+				// NOTE: File is loaded via JS injection into the iframe, which in turn sets the
+				// file contents in the parent window. The new window asks its opener if any file
+				// contents are available or waits for the contents to become available.
+				return true;
+			}
+			else
+			{
+				window.parent.mxUtils.alert(window.parent.mxResources.get('invalidOrMissingFile'));
+
+				return false;
+			}
+		}*/
+	    let fileName = "test.xml";
+	    let fileResult = "%3CmxGraphModel%20dx%3D%221074%22%20dy%3D%22607%22%20grid%3D%221%22%20gridSize%3D%2210%22%20guides%3D%221%22%20tooltips%3D%221%22%20connect%3D%221%22%20arrows%3D%221%22%20fold%3D%221%22%20page%3D%221%22%20pageScale%3D%221%22%20pageWidth%3D%22827%22%20pageHeight%3D%221169%22%3E%3Croot%3E%3CmxCell%20id%3D%220%22%2F%3E%3CmxCell%20id%3D%221%22%20parent%3D%220%22%2F%3E%3CmxCell%20id%3D%225%22%20style%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLoop%3D1%3BjettySize%3Dauto%3Bhtml%3D1%3BentryX%3D0%3BentryY%3D0.5%3BentryDx%3D0%3BentryDy%3D0%3B%22%20edge%3D%221%22%20parent%3D%221%22%20source%3D%222%22%20target%3D%223%22%3E%3CmxGeometry%20relative%3D%221%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3CmxCell%20id%3D%222%22%20value%3D%22%22%20style%3D%22ellipse%3Bshape%3DstartState%3BwhiteSpace%3Dwrap%3Bhtml%3D1%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%2245%22%20y%3D%22130%22%20width%3D%2250%22%20height%3D%2250%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3CmxCell%20id%3D%227%22%20style%3D%22edgeStyle%3DorthogonalEdgeStyle%3Brounded%3D0%3BorthogonalLoop%3D1%3BjettySize%3Dauto%3Bhtml%3D1%3BentryX%3D0%3BentryY%3D0.5%3BentryDx%3D0%3BentryDy%3D0%3B%22%20edge%3D%221%22%20parent%3D%221%22%20source%3D%223%22%20target%3D%226%22%3E%3CmxGeometry%20relative%3D%221%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3CmxCell%20id%3D%223%22%20value%3D%22%E6%8C%87%E6%A0%871%22%20style%3D%22swimlane%3BfontStyle%3D0%3BchildLayout%3DstackLayout%3Bhorizontal%3D1%3BstartSize%3D56%3BfillColor%3Dnone%3BhorizontalStack%3D0%3BresizeParent%3D1%3BresizeParentMax%3D0%3BresizeLast%3D0%3Bcollapsible%3D0%3BmarginBottom%3D0%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%22190%22%20y%3D%22114%22%20width%3D%22140%22%20height%3D%2282%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3CmxCell%20id%3D%224%22%20value%3D%22%E6%8C%87%E6%A0%872%22%20style%3D%22text%3BstrokeColor%3Dnone%3Balign%3Dcenter%3BverticalAlign%3Dtop%3BspacingLeft%3D4%3BspacingRight%3D4%3BfillColor%3D%236A90CB%3Boverflow%3Dhidden%3Brotatable%3D0%3Bpoints%3D%5B%5B0%2C0.5%5D%2C%5B1%2C0.5%5D%5D%3BportConstraint%3Deastwest%3B%22%20vertex%3D%221%22%20parent%3D%223%22%3E%3CmxGeometry%20y%3D%2256%22%20width%3D%22140%22%20height%3D%2226%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3CmxCell%20id%3D%226%22%20value%3D%22%22%20style%3D%22ellipse%3Bhtml%3D1%3Bshape%3DendState%3BfillColor%3D%23000000%3B%22%20vertex%3D%221%22%20parent%3D%221%22%3E%3CmxGeometry%20x%3D%22440%22%20y%3D%22120%22%20width%3D%2250%22%20height%3D%2250%22%20as%3D%22geometry%22%2F%3E%3C%2FmxCell%3E%3C%2Froot%3E%3C%2FmxGraphModel%3E";
+	    fileResult = decodeURIComponent(fileResult);
+	    if (window.parent.openNew)
+        {
+            //打开一个新的流程设计器窗口
+            window.parent.open(window.parent.location.href);
+        }
+	    //将场景数据注入新流程设计器
+	    window.parent.openFile.setData(fileResult, fileName);
+    };
+	
+	// Hides this dialog
+	function hideWindow(cancel)
+	{
+		window.parent.openFile.cancel(cancel);
+	}
+	
+	function fileChanged()
+	{
+		var form = window.openForm || document.getElementById('openForm');
+		var openButton = document.getElementById('openButton');
+		
+		if (form.upfile.value.length > 0)
+		{
+			openButton.removeAttribute('disabled');
+		}
+		else
+		{
+			openButton.setAttribute('disabled', 'disabled');
+		}		
+	}
+
+	function main()
+	{
+	    debugger
+		if (window.parent.Editor.useLocalStorage)
+		{
+			document.body.innerHTML = '';
+			var div = document.createElement('div');
+			div.style.fontFamily = 'Arial';
+			
+			if (localStorage.length == 0)
+			{
+				window.parent.mxUtils.write(div, window.parent.mxResources.get('noFiles'));
+			}
+			else
+			{
+				var keys = [];
+				
+				for (var i = 0; i < localStorage.length; i++)
+				{
+					keys.push(localStorage.key(i));
+				}
+				
+				// Sorts the array by filename (key)
+				keys.sort(function (a, b)
+				{
+				    return a.toLowerCase().localeCompare(b.toLowerCase());
+				});
+				
+				for (var i = 0; i < keys.length; i++)
+				{
+					var link = document.createElement('a');
+					link.style.fontDecoration = 'none';
+					link.style.fontSize = '14pt';
+					var key = keys[i];
+					window.parent.mxUtils.write(link, key);
+					link.setAttribute('href', 'javascript:void(0);');
+					div.appendChild(link);
+					
+					var img = document.createElement('span');
+					img.className = 'geSprite geSprite-delete';
+					img.style.position = 'relative';
+					img.style.cursor = 'pointer';
+					img.style.display = 'inline-block';
+					div.appendChild(img);
+					
+					window.parent.mxUtils.br(div);
+					
+					window.parent.mxEvent.addListener(img, 'click', (function(k)
+					{
+						return function()
+						{
+							if (window.parent.mxUtils.confirm(window.parent.mxResources.get('delete') + ' "' + k + '"?'))
+							{
+								localStorage.removeItem(k);
+								window.location.reload();
+							}
+						};
+					})(key));
+
+					window.parent.mxEvent.addListener(link, 'click', (function(k)
+					{
+						return function()
+						{
+							try
+							{
+								window.parent.open(window.parent.location.href);
+								window.parent.openFile.setData(localStorage.getItem(k), k);
+							}
+							catch (e)
+							{
+								window.parent.mxUtils.alert(e.message);
+							}
+						};
+					})(key));
+				}
+			}
+
+			window.parent.mxUtils.br(div);
+			window.parent.mxUtils.br(div);
+			
+			var cancelBtn = window.parent.mxUtils.button(window.parent.mxResources.get('cancel'), function()
+			{
+				hideWindow(true);
+			});
+			cancelBtn.className = 'geBtn';
+			div.appendChild(cancelBtn);
+			
+			document.body.appendChild(div);
+		}
+		else
+		{
+			var editLink = document.getElementById('editLink');
+			var openButton = document.getElementById('openButton');
+			openButton.value = window.parent.mxResources.get(window.parent.openKey || 'open');
+			var cancelButton = document.getElementById('cancelButton');
+			cancelButton.value = window.parent.mxResources.get('cancel');
+			var supportedText = document.getElementById('openSupported');
+			supportedText.innerHTML = window.parent.mxResources.get('openSupported');
+			var form = window.openForm || document.getElementById('openForm');
+            openButton.removeAttribute('disabled');
+			form.setAttribute('action', window.parent.OPEN_URL);
+		}
+	};
+</script>
+<body onload="main();">
+<form method="POST" enctype="multipart/form-data" action="" name="openForm"
+	id="openForm" onsubmit="return handleSubmit();" accept-charset="UTF-8">
+<table style="width:100%;">
+<tr>
+<td style="height:40px;vertical-align:top;" colspan="2">
+<input type="file" name="upfile" onchange="fileChanged()">
+</td>
+</tr>
+<tr>
+<td colspan="2" height="120px" id="openSupported" style="font-family:arial;color:grey;font-size:9pt;vertical-align:top;text-align:left;">
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td style="vertical-align:middle;text-align:right;white-space:nowrap;">
+<input type="button" id="cancelButton" class="geBtn" value="Cancel" onclick="hideWindow(true);">
+<input type="submit" id="openButton" class="geBtn gePrimaryBtn" value="Open" disabled="disabled">
+</td>
+</tr>
+</table>
+</form>
+</body>
+</html>
