@@ -30,22 +30,6 @@
 		window.parent.openFile.cancel(cancel);
 	}
 
-	/*
-	function fileChanged()
-	{
-		var form = window.openForm || document.getElementById('openForm');
-		var openButton = document.getElementById('openButton');
-		
-		if (form.upfile.value.length > 0)
-		{
-			openButton.removeAttribute('disabled');
-		}
-		else
-		{
-			openButton.setAttribute('disabled', 'disabled');
-		}		
-	}*/
-
 	function main()
 	{
 	    debugger
@@ -155,7 +139,7 @@
     <!-- div1 start-->
     <div class="div_one" style="padding: 20px 5px 0px 5px;">
         <div >
-            <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;" border header-align="center">
+            <el-table :data='sites' style="width: 100%;" border header-align="center">
                 <el-table-column prop="id" min-width="30%" label="选择" sortable>
                     <template slot-scope="scope">
                         <!-- class="textRadio" -->
@@ -203,7 +187,7 @@
                 //场景
                 id:"",//编码
                 scene_name:'',//场景名称
-                scene_centent:''//场景内容
+                scene_content:''//场景内容o
             },
         },
         methods: {
@@ -226,6 +210,10 @@
                 vm.templateRadio = row.id;
                 vm.fileName = row.scene_name;
                 vm.fileResult = row.scene_content;
+            },
+            current_change1(value) {
+                vm.page = value;
+                vm.show()
             },
         },
     });

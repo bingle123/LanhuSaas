@@ -745,8 +745,15 @@ def save_scene_design(data):
         'scene_name': data['filename'],
         'scene_content': data['xml']
     }
-    scene_obj = SceneDesign.objects.create(**scene_design)
-    return {'id': scene_obj.id}
+    # 首先查询场景名称是否存在，存在就是编辑，不存在就执行新增
+    scene_result = SceneDesign.objects.get(scene_name = data['filename'])
+    print type(scene_result)
+    print scene_result.scene_name
+    if(scene_result.scene_name is not None):
+        SceneDesign.objects.filter(id = str(scene_result.id)).update(**scene_design)
+    else:
+        scene_obj = SceneDesign.objects.create(**scene_design)
+    return {'id': ""}
 
 
 def query_scene_design(request):

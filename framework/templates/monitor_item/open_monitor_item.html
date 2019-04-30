@@ -33,7 +33,7 @@
         </div>
         <div style="height: 20px"></div>
         <div >
-            <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;" border header-align="center">
+            <el-table :data='sites'  style="width: 100%;" border header-align="center">
                 <el-table-column prop="id" min-width="15%" label="序号" sortable></el-table-column>
                 <el-table-column prop="monitor_name" min-width="40%" label="监控名称" sortable></el-table-column>
                 <el-table-column prop="monitor_type" min-width="30%" label="监控类型" :formatter="format_monitor_type" sortable></el-table-column>
@@ -64,6 +64,7 @@
             page: 1,                                    //分页页码数
             sites: [],                                  //table内容
             message: '',                                //弹框提示信息
+            contents:'',
             base: {
                 //基本单元
                 dimension_data:[],//维度名称
@@ -81,7 +82,6 @@
                 period: '10',                            //采集周期
                 params: '',                            //监控参数
                 status: '',                            //监控状态
-                contents: '',                          //显示内容
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
                 monitor_area: ''                             //日历地区
@@ -99,8 +99,6 @@
                 }).then(function (res) {
                     vm.sites = res.data.results.res_list;
                     vm.page_count = res.data.results.res_list[0].page_count;
-                    vm.job2 = res.data.results.job;
-                    vm.flow2 = res.data.results.flow;
                 })
             },
             select1() {
@@ -113,7 +111,7 @@
                         method: 'post',
                         url: '${SITE_URL}monitor_item/select/',
                         data: {
-                            data: this.contents,
+                            data: vm.contents,
                             page: vm.page,
                             limit: 5
                         }
