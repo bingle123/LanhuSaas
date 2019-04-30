@@ -271,3 +271,19 @@ def monitor_scene_fuzzy_search(request):
     param = json.loads(request.body)
     res = function.monitor_scene_fuzzy_search(param)
     return render_json(res)
+
+
+def save_scene_design(request):
+    """
+    保存流程编辑器设计的场景
+    :param request:
+    :return:
+    """
+    param = json.loads(request.body)
+    res = function.save_scene_design(param);
+    return render_json(res)
+
+
+def openWin(request):
+
+    return render_mako_context(request, './monitor_scene/open.html')

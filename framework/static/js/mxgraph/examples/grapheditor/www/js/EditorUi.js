@@ -3578,8 +3578,23 @@ EditorUi.prototype.save = function(name)
 			{
 				if (xml.length < MAX_REQUEST_SIZE)
 				{
+					/*
 					new mxXmlRequest(SAVE_URL, 'filename=' + encodeURIComponent(name) +
 						'&xml=' + encodeURIComponent(xml)).simulate(document, '_blank');
+					*/
+					//lxchun在python环境，这里需要调用python的服务来保存编辑的场景
+					axios({
+						method: 'post',
+						url: SAVE_URL,
+						data: {
+							filename: encodeURIComponent(name),
+							xml: encodeURIComponent(xml)
+						},
+					}).then(function (res) {
+						if(res.status == 200){
+							mxUtils.alert("场景保存成功！");
+						}
+					})
 				}
 				else
 				{
