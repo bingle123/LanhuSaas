@@ -289,11 +289,19 @@ def clear_execute_status():
 #     # 返回发送的状态信息给前端
 #     return status
 
-# 流程节点执行完毕发送通知方法
 def send_notification(notification):
+    """
+    流程节点执行完毕发送通知方法（本方法中的接口需要在生产环境下才能调通，未经过测试，不保证完全可用）
+    :param notification: 前端发送的通知信息集
+    :return:
+    """
+    # 返回到前端的通知发送状态信息
     status = dict()
+    # 短信发送接收人列表
     sms_send_list = list()
+    # 微信发送接收人列表
     wechat_send_list = list()
+    # 以下为发送的通知信息字典，详细参考中畅的短信和微信接口示例代码
     send_info = dict()
     notification_data = dict()
     notification_data['approver'] = notification['approver']
@@ -340,23 +348,42 @@ def send_notification(notification):
     return status
 
 
-# 发送通知
 def send_msg(receivers, send_info, send_type):
+    """
+    调用发送通知的接口
+    :param receivers: 通知接收人列表
+    :param send_info: 发送的通知信息
+    :param send_type: 发送的类型：sms or wechat
+    :return:
+    """
+    # 发送类型为短信的情况
     if 'sms' == send_type:
         req_url = 'http://10.240.1.127:8008/sms'
+    # 发送类型为微信的情况
     else:
         req_url = 'http://10.181.6.160:9091/send'
+    # 包含发送通知结果的信息集
     infos = dict()
+    # 是否存在发送失败的通知的标记
     send_flag = True
+    # 错误信息
     error_info = list()
     try:
+        # 遍历消息接收者集
         for receiver in receivers:
+            # 消息接收者定义，详细参考中畅的短信和微信接口示例代码
             send_info['tos'] = receiver
+            # 消息字典转JSON字符串发送
             json_str = json.dumps(send_info, ensure_ascii=False)
+            # 字符串以UTF-8编码
             utf8_str = json_str.encode('utf-8')
+            # 字符串URL编码
             url_encoded_str = urllib.urlencode(utf8_str)
+            # 发送POST请求到接口
             req = urllib2.Request(url=req_url, data=url_encoded_str)
+            # 获取接口返回值
             res_data = urllib2.urlopen(req).read()
+            # 接口返回数据包含success字符串说明本次通知发送成功
             if -1 == res_data.indexOf("success"):
                 error_info.append(res_data)
                 send_flag = False
@@ -364,6 +391,7 @@ def send_msg(receivers, send_info, send_type):
         error_info = e.__str__()
         send_flag = False
     finally:
+        # 信息集包括是否有发送失败通知的标记位，及错误信息
         infos['send_flag'] = send_flag
         infos['error_info'] = error_info
         return infos
