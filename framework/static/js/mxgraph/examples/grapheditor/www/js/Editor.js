@@ -759,7 +759,7 @@ function Dialog(editorUi, elt, w, h, modal, closable, onClose, noScroll, transpa
 	w += dx;
 	h += dx;
 	//lxchun
-    if(elt.innerText.indexOf("文件名称") == -1){
+    if(elt.innerText.indexOf("场景名称") == -1){
         w = 640
 	    h = 480
     }
