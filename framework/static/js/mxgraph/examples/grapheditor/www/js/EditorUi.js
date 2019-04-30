@@ -3419,11 +3419,20 @@ EditorUi.prototype.openFile = function()
 	}));
     //lxchun 调整弹出窗口的大小
 	// Removes openFile if dialog is closed
-	this.showDialog(new OpenDialog(this).container, (Editor.useLocalStorage) ? 640 : 640,
+    if(OPEN_FORM.indexOf("open") != -1){
+        this.showDialog(new OpenDialog(this).container, (Editor.useLocalStorage) ? 640 : 640,
 			(Editor.useLocalStorage) ? 480 : 480, true, true, function()
-	{
-		window.openFile = null;
-	});
+        {
+            window.openFile = null;
+        });
+    }else{
+        this.showDialog(new OpenDialog(this).container, (Editor.useLocalStorage) ? 640 : 320,
+			(Editor.useLocalStorage) ? 480 : 220, true, true, function()
+        {
+            window.openFile = null;
+        });
+    }
+
 };
 
 /**

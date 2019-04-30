@@ -67,6 +67,21 @@ def page_paging(abj, limit, page):
     return page_data, page_count
 
 
+def common_obt_dic(page_data, page_count):
+    """
+    将分页model结果转为字典
+    :param page_data:
+    :param page_count:
+    :return: 对应值list
+    """
+    obj_list = []
+    for i in page_data:
+        obj_dic = model_to_dict(i)
+        obj_dic['page_count'] = page_count
+        obj_list.append(obj_dic)
+    return obj_list
+
+
 def obt_dic(page_data, page_count):
     """
     监控项取值
