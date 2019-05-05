@@ -18,7 +18,7 @@ from position.models import *
 from market_day.models import Area
 from market_day.function import tran_time_china, tran_china_time_other, check_jobday
 from django.db.models import Q
-
+from xml.etree import ElementTree  #引入ElementTree的包
 
 def monitor_show(request):
     """
@@ -777,3 +777,38 @@ def query_scene_design(request):
         'scene_list': res_list,
     }
     return tools.success_result(res_dic)
+
+
+
+def get_scene_find_xml(scene_id):
+    '''
+    根据场景id解析xml,
+    新增到
+    :param scene_id:
+    :return:
+    '''
+    dto = SceneDesign.objects.filter(id=scene_id).get()
+    roota=ElementTree.XML(dto.scene_content)
+    parent = roota.find("root", "mxGraphModel")
+    list = parent._children
+    for dto in list:
+        if dto.tag == "object":
+          #  print dto.attrib.get("item_id")
+          dto_item_id = dto.attrib.get("item_id")
+          if dto_item_id != None:
+             int_item_id = int(dto_item_id)
+             temp_dto =Scene_monitor.objects.filter(scene_id=scene_id,item_id= int_item_id)
+             if temp_dto.count() == 0:
+                # 只有等于零时才新增
+                scene_dto = Scene_monitor()
+                scene_dto.item_id = int_item_id
+                scene_dto.scene_id = scene_id
+                scene_dto.x = 0
+                scene_dto.y = 0
+                scene_dto.scale = 0.0
+                scene_dto.score = 0
+                scene_dto.order = 0
+                scene_dto.save()
+                print "场景 "+str(scene_id)+" "+dto_item_id+"保存成功"
+             else:
+                 print "场景 " + str(scene_id) + " " + dto_item_id + "已存在，不处理"
