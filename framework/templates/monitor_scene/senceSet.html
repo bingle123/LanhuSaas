@@ -298,9 +298,10 @@
                             <el-option v-for="item in pos" :label="item.pos_name" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
+                    <!--
                     <el-form-item label="预览区">
                         <el-button type="info" @click="goto()">场景编排</el-button>
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-row type="flex" class="row-bg" justify="center">
                         <el-col :span="2">
                             <el-button type="primary" v-on:click="submitForm('scene')" id="button">保存</el-button>

@@ -184,6 +184,7 @@ $(function () {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         const loading = this.popup_loading();
+                        // 新增场景
                         if (formName == 'scene') {
                             axios({
                                 method: 'post',
@@ -331,8 +332,10 @@ $(function () {
                 vm.scene_edit.pos_name = row.pos_name
                 vm.scene_edit.area = row.scene_area
                 this.isAdd = 3
+                /*
                 vm.sen_position()
                 vm.monitore_edit_start(row.id)
+
                 axios({
                     method: 'post',
                     url: site_url + 'monitor_scene/scene_color_get/',
@@ -344,7 +347,7 @@ $(function () {
                 });
                 setTimeout(function () {
                     vm.Time()
-                }, 100)
+                }, 100)*/
             },
             monitore_edit_start(value) {    //获取场景监控项信息
                 const loading = this.popup_loading();
@@ -381,6 +384,9 @@ $(function () {
                 vm.scene_font_color = '#AAAAAA';
             },
             async goto() {
+                //打开场景编辑器并带上场景id
+                window.parent.open(site_url+"monitor_scene/edit_flow_graph/?scene_id="+vm.scene_edit.id);
+                /*
                 vm.canvas_flag = 1;
                 if ($('.monitor_content').html() == '') {//场景编排内容块无元素
                     $(".monitor_content").append('<canvas id="line_canvas" style="position: absolute;"></canvas>');
@@ -473,7 +479,7 @@ $(function () {
                     $('.monitor_edit').css('display', 'block');
                     vm.show_num = vm.isAdd;
                     vm.isAdd = 0;
-                }
+                }*/
             },
             monitor_edit_close() {
                 $('.monitor_edit').css('display', 'none');

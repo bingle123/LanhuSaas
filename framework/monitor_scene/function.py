@@ -86,6 +86,8 @@ def addSence(request):
             "position_id": senceModel['data']["pos_name"]
         }
         position_scene.objects.create(**senceModel3)
+        # 新增场景再添加场景与监控项的对应关系，编辑时再添加这个关系
+        """
         for i in senceModel['monitor_data']:
             monitor_data = {
                 'scene_id': id.id,
@@ -98,6 +100,7 @@ def addSence(request):
                 'next_item':int(i['next_item'])
             }
             Scene_monitor.objects.create(**monitor_data)
+        """
         info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
