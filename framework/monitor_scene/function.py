@@ -328,6 +328,7 @@ def paging(request):
             'scene_editor': i.scene_editor,
             'scene_editor_time': str(i.scene_editor_time),
             'scene_area': i.scene_area,
+            'scene_content':i.scene_content,
             'pos_name': '',
             'page_count': page_count,
         }
@@ -749,13 +750,11 @@ def save_scene_design(data):
         'scene_content': data['xml']
     }
     # 首先查询场景名称是否存在，存在就是编辑，不存在就执行新增
-    scene_result = SceneDesign.objects.get(scene_name = data['filename'])
-    print type(scene_result)
-    print scene_result.scene_name
-    if(scene_result.scene_name is not None):
-        SceneDesign.objects.filter(id = str(scene_result.id)).update(**scene_design)
-    else:
+    scene_result = SceneDesign.objects.filter(scene_name = data['filename'])
+    if scene_result.__len__() == 0:
         scene_obj = SceneDesign.objects.create(**scene_design)
+    else:
+        SceneDesign.objects.filter(id=str(scene_result.id)).update(**scene_design)
     return {'id': ""}
 
 
