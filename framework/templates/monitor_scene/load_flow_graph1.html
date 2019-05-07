@@ -62,7 +62,20 @@
 				   lineFlow(model,graph,'31');lineFlow(model,graph,'32');
 				   lineFlow(model,graph,'33');lineFlow(model,graph,'34');
 				   lineFlow(model,graph,'35');lineFlow(model,graph,'36');
-				   lineFlow(model,graph,'47');lineFlow(model,graph,'48');lineFlow(model,graph,'44');
+				   lineFlow(model,graph,'47');lineFlow(model,graph,'48');
+				   lineFlow(model,graph,'44');
+				   cell = model.getCell('49')
+                   if(cell.attribute!=""){
+				       var x = cell.geometry.x;
+				       var y = cell.geometry.y;
+				       var ifr= document.getElementById("ifr_t");
+				       ifr.src = cell.attribute;
+				       ifr.style.position="absolute";
+				       ifr.style.left=x+"px";
+				       ifr.style.top= y+"px";
+				       ifr.style.display="block";
+                   }
+                  // cell.attribute
 			}, function()
 			{
 				document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
@@ -130,9 +143,10 @@
 	</script>
 <!-- Page passes the container and control to the main function -->
 <body onload="main(document.getElementById('graphContainer'));">
-	<!-- Acts as a container for the graph -->
-	<div id="graphContainer" style="overflow:hidden;position:relative;width:861px;height:886px;cursor:default;">
+ <!-- Acts as a container for the graph -->
+	<div id="graphContainer" style="overflow:hidden;position:relative;width:1100px;height:886px;cursor:default;">
 	</div>
+     <iframe id="ifr_t" style="display:none" src="" width="450" height="300" frameborder="0"></iframe>
 	<br>
 </body>
 </html>
