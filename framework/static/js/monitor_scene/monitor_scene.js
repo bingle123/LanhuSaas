@@ -387,11 +387,11 @@ $(function () {
             },
             async goto() {
                 //场景名称
-                //let scene_name = encodeURIComponent(vm.scene_edit.scene_name);
+                let scene_name = encodeURIComponent(vm.scene_edit.scene_name);
                 //场景XML
-                //let scene_content = encodeURIComponent(vm.scene_edit.scene_content);
+                let scene_content = encodeURIComponent(vm.scene_edit.scene_content);
                 //打开场景编辑器并带上场景id
-                window.open(site_url+"monitor_scene/edit_flow_graph/");
+                window.open(site_url+"monitor_scene/edit_flow_graph/?scene_name="+scene_name+"&scene_content="+scene_content);
 
                 /*
                 vm.canvas_flag = 1;

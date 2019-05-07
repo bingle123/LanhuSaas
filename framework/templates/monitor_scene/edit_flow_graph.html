@@ -204,6 +204,24 @@
 		})();
 
         window.onload = function(){
+            // 这段代码很重要，初始加载场景
+			myEditorUi.editor.graph.model.beginUpdate();
+			try
+			{
+			    myEditor.setFilename(decodeURIComponent(urlParams['scene_name']));
+			    //myEditorUi.editor.setFilename(decodeURIComponent(urlParams['scene_name'])
+				myEditorUi.editor.setGraphXml(mxUtils.parseXml(decodeURIComponent(urlParams['scene_content'])).documentElement);
+				// LATER: Why is hideDialog between begin-/endUpdate faster?
+				myEditorUi.hideDialog();
+			}
+			catch (e)
+			{
+				error = e;
+			}
+			finally
+			{
+				myEditorUi.editor.graph.model.endUpdate();
+			}
             /*
             let filename = decodeURIComponent(urlParams['scene_name']);
             let xml = decodeURIComponent(urlParams['scene_content']);
