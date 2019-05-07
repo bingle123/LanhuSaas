@@ -351,11 +351,19 @@ Actions.prototype.init = function()
 		if (graph.isEnabled() && !graph.isSelectionEmpty())
 		{
 			var cell = graph.getSelectionCell();
+			//alert(cell.attribute)
 			var value = graph.getLinkForCell(cell) || '';
-			
+			//设置默认内容
+			if (value == ""&& cell.attribute != undefined){
+				value = cell.attribute;
+				graph.setLinkForCell(cell,value);
+			}
 			ui.showLinkDialog(value, mxResources.get('apply'), function(link)
 			{
 				link = mxUtils.trim(link);
+				if(cell.attribute!=undefined){
+					cell.attribute = link;
+				}
     			graph.setLinkForCell(cell, (link.length > 0) ? link : null);
 			});
 		}
