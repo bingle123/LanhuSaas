@@ -41,4 +41,6 @@ urlpatterns = patterns(
     (r'^save/$', 'save_scene_design'),
     (r'^open/$', 'open_win'),
     (r'^open_scene_design/$', 'query_scene_design'),
+    (r'^page_query_scene/$', 'page_query_scene'),
+
 )

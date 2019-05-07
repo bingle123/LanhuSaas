@@ -86,6 +86,8 @@ def addSence(request):
             "position_id": senceModel['data']["pos_name"]
         }
         position_scene.objects.create(**senceModel3)
+        # 新增场景再添加场景与监控项的对应关系，编辑时再添加这个关系
+        """
         for i in senceModel['monitor_data']:
             monitor_data = {
                 'scene_id': id.id,
@@ -98,6 +100,7 @@ def addSence(request):
                 'next_item':int(i['next_item'])
             }
             Scene_monitor.objects.create(**monitor_data)
+        """
         info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
                              get_active_user(request)['data']['bk_username'], '成功', '无')
     except Exception as e:
@@ -325,6 +328,7 @@ def paging(request):
             'scene_editor': i.scene_editor,
             'scene_editor_time': str(i.scene_editor_time),
             'scene_area': i.scene_area,
+            'scene_content':i.scene_content,
             'pos_name': '',
             'page_count': page_count,
         }
@@ -745,15 +749,15 @@ def save_scene_design(data):
         'scene_name': data['filename'],
         'scene_content': data['xml']
     }
-    # 首先查询场景名称是否存在，存在就是编辑，不存在就执行新增
-    scene_result = SceneDesign.objects.get(scene_name = data['filename'])
-    print type(scene_result)
-    print scene_result.scene_name
-    if(scene_result.scene_name is not None):
-        SceneDesign.objects.filter(id = str(scene_result.id)).update(**scene_design)
+    # 首先查询场景名称是否存在，存在就是编辑，不存在就提示名称错误
+    scene_result = Scene.objects.filter(scene_name = data['filename'])
+    print scene_result.__len__()
+    if scene_result.__len__() == 0:
+        # scene_obj = SceneDesign.objects.create(**scene_design)
+        return {'id': "0"}
     else:
-        scene_obj = SceneDesign.objects.create(**scene_design)
-    return {'id': ""}
+        Scene.objects.filter(id=str(scene_result[0].id)).update(**scene_design)
+        return {'id': "1"}
 
 
 def query_scene_design(request):
@@ -777,7 +781,6 @@ def query_scene_design(request):
         'scene_list': res_list,
     }
     return tools.success_result(res_dic)
-
 
 
 def get_scene_find_xml(scene_id):
@@ -811,4 +814,44 @@ def get_scene_find_xml(scene_id):
                 scene_dto.save()
                 print "场景 "+str(scene_id)+" "+dto_item_id+"保存成功"
              else:
-                 print "场景 " + str(scene_id) + " " + dto_item_id + "已存在，不处理"
+                print "场景 " + str(scene_id) + " " + dto_item_id + "已存在，不处理"
+
+
+def page_query_scene(request):
+    """
+    分页查询场景
+    :param request:
+    :return:
+    """
+    res = json.loads(request.body)
+    #  个数
+    limit = res['limit']
+    #  当前页面号
+    page = res['page']
+    # 按id倒排序
+    unit = Scene.objects.all().order_by('-id')
+    # 进入分页函数进行分页，返回总页数和当前页数据
+    page_data, base_page_count = tools.page_paging(unit, limit, page)
+    res_list = [];
+    for scene_obj in page_data:
+        starttime = tran_china_time_other(scene_obj.scene_startTime, scene_obj.scene_area)
+        endtime = tran_china_time_other(scene_obj.scene_endTime, scene_obj.scene_area)
+
+        dic = {
+            'id': scene_obj.id,
+            'scene_name': scene_obj.scene_name,
+            'scene_startTime': str(starttime),
+            'scene_endTime': str(endtime),
+            'scene_creator': scene_obj.scene_creator,
+            'scene_creator_time': str(scene_obj.scene_creator_time),
+            'scene_editor': scene_obj.scene_editor,
+            'scene_editor_time': str(scene_obj.scene_editor_time),
+            'scene_area': scene_obj.scene_area,
+            'scene_content':scene_obj.scene_content,
+            'page_count': base_page_count,
+        }
+        res_list.append(dic)
+    res_dic = {
+        'scene_list': res_list,
+    }
+    return tools.success_result(res_dic)

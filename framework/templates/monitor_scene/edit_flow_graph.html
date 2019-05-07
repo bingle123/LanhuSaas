@@ -13,12 +13,13 @@
 		// - storage=local: Enables HTML5 local storage.
 		// - chrome=0: Chromeless mode.
 		var urlParams = (function(url)
-		{  url = decodeURIComponent(url)
+		{
 			var result = new Object();
 			var idx = url.lastIndexOf('?');
 			if (idx > 0)
 			{
 				var params = url.substring(idx + 1).split('&');
+
 				for (var i = 0; i < params.length; i++)
 				{
 					idx = params[i].indexOf('=');
@@ -30,7 +31,6 @@
 			}
 			return result;
 		})(window.location.href);
-	
 		// Default resources are included in grapheditor resources
 		mxLoadResources = false;
 		var static_url = "${STATIC_URL}";
@@ -75,6 +75,14 @@
 <body class="geEditor">
     <iframe id="openMonitorItem" class="m_i" width="100%" height="100%" src="${SITE_URL}monitor_item/select_monitor_item/" style="display:none;"></iframe>
 	<script type="text/javascript">
+        //csrf验证
+        axios.interceptors.request.use((config) => {
+            config.headers['X-Requested-With'] = 'XMLHttpRequest';
+            let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
+            config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
+            return config
+        });
+        // 根据场景id 获取可编辑场景的XML文档，生成编辑流程
         this.item_id = null;
         let myNameInput = null;
         let myNames = null;
@@ -82,6 +90,8 @@
         let myValues = null;
         let myForm = null;
         let myAddRemoveButton = null;
+        let myEditor = null;
+        let myEditorUi = null;
         //保存编排场景的服务地址
         window.SAVE_URL = "${SITE_URL}monitor_scene/save/";
         //打开场景选择器，选择要编辑的场景
@@ -183,14 +193,37 @@
 				// Configures the default graph theme
 				var themes = new Object();
 				themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement(); 
-				
+				myEditor = new Editor(urlParams['chrome'] == '0', themes)
 				// Main
-				new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
+				myEditorUi = new EditorUi(myEditor);
 			}, function()
 			{
 				document.body.innerHTML = '<center style="margin-top:10%;">导入错误的资源文件.</center>';
 			});
+
 		})();
+
+        window.onload = function(){
+            // 这段代码很重要，初始加载场景
+			myEditorUi.editor.graph.model.beginUpdate();
+			try
+			{
+			    //设置场景的名称
+			    myEditor.setFilename(decodeURIComponent(urlParams['scene_name']));
+			    //myEditorUi.editor.setFilename(decodeURIComponent(urlParams['scene_name'])
+				myEditorUi.editor.setGraphXml(mxUtils.parseXml(decodeURIComponent(urlParams['scene_content'])).documentElement);
+				// LATER: Why is hideDialog between begin-/endUpdate faster?
+				myEditorUi.hideDialog();
+			}
+			catch (e)
+			{
+				error = e;
+			}
+			finally
+			{
+				myEditorUi.editor.graph.model.endUpdate();
+			}
+        }
 	</script>
 </body>
 </html>
