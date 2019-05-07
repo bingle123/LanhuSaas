@@ -208,6 +208,7 @@
 			myEditorUi.editor.graph.model.beginUpdate();
 			try
 			{
+			    //设置场景的名称
 			    myEditor.setFilename(decodeURIComponent(urlParams['scene_name']));
 			    //myEditorUi.editor.setFilename(decodeURIComponent(urlParams['scene_name'])
 				myEditorUi.editor.setGraphXml(mxUtils.parseXml(decodeURIComponent(urlParams['scene_content'])).documentElement);
@@ -222,32 +223,6 @@
 			{
 				myEditorUi.editor.graph.model.endUpdate();
 			}
-            /*
-            let filename = decodeURIComponent(urlParams['scene_name']);
-            let xml = decodeURIComponent(urlParams['scene_content']);
-            var openfile = new OpenFile();
-            openfile.setConsumer(mxUtils.bind(this, function(xml, filename)
-			{
-				try
-				{
-				    myEditor = new Editor();
-					var doc = mxUtils.parseXml(xml);
-					myEditor.setGraphXml(doc.documentElement);
-					myEditor.setModified(false);
-					myEditor.undoManager.clear();
-					if (filename != null)
-					{
-						myEditor.setFilename(filename);
-						myEditorUi.updateDocumentTitle();
-					}
-					return;
-				}
-				catch (e)
-				{
-					mxUtils.alert(mxResources.get('invalidOrMissingFile') + ': ' + e.message);
-				}
-			}));
-            openfile.setData(xml, filename);*/
         }
 	</script>
 </body>
