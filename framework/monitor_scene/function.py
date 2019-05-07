@@ -813,3 +813,43 @@ def get_scene_find_xml(scene_id):
                 print "场景 "+str(scene_id)+" "+dto_item_id+"保存成功"
              else:
                 print "场景 " + str(scene_id) + " " + dto_item_id + "已存在，不处理"
+
+
+def page_query_scene(request):
+    """
+    分页查询场景
+    :param request:
+    :return:
+    """
+    res = json.loads(request.body)
+    #  个数
+    limit = res['limit']
+    #  当前页面号
+    page = res['page']
+    # 按id倒排序
+    unit = Scene.objects.all().order_by('-id')
+    # 进入分页函数进行分页，返回总页数和当前页数据
+    page_data, base_page_count = tools.page_paging(unit, limit, page)
+    res_list = [];
+    for scene_obj in page_data:
+        starttime = tran_china_time_other(scene_obj.scene_startTime, scene_obj.scene_area)
+        endtime = tran_china_time_other(scene_obj.scene_endTime, scene_obj.scene_area)
+
+        dic = {
+            'id': scene_obj.id,
+            'scene_name': scene_obj.scene_name,
+            'scene_startTime': str(starttime),
+            'scene_endTime': str(endtime),
+            'scene_creator': scene_obj.scene_creator,
+            'scene_creator_time': str(scene_obj.scene_creator_time),
+            'scene_editor': scene_obj.scene_editor,
+            'scene_editor_time': str(scene_obj.scene_editor_time),
+            'scene_area': scene_obj.scene_area,
+            'scene_content':scene_obj.scene_content,
+            'page_count': base_page_count,
+        }
+        res_list.append(dic)
+    res_dic = {
+        'scene_list': res_list,
+    }
+    return tools.success_result(res_dic)
