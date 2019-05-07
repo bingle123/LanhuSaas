@@ -3562,7 +3562,7 @@ EditorUi.prototype.saveFile = function(forceDialog)
 EditorUi.prototype.save = function(name)
 {
 	if (name != null)
-	{debugger;
+	{
 		if (this.editor.graph.isEditing())
 		{
 			this.editor.graph.stopEditing();
@@ -3609,7 +3609,6 @@ EditorUi.prototype.save = function(name)
 				{
 					mxUtils.alert(mxResources.get('drawingTooLarge'));
 					mxUtils.popup(xml);
-					
 					return;
 				}
 			}
