@@ -53,7 +53,7 @@
                     monitorFlow(model,graph,'20','21');monitorFlow(model,graph,'22','23');
                     monitorFlow(model,graph,'24','25');monitorFlow(model,graph,'41','42');
                     monitorFlow(model,graph,'29','40');monitorFlow(model,graph,'37','38');
-                    model.endUpdate();
+                   model.endUpdate();
                 } ,3000);
 
                    lineFlow(model,graph,'10');lineFlow(model,graph,'11');
@@ -64,17 +64,23 @@
 				   lineFlow(model,graph,'35');lineFlow(model,graph,'36');
 				   lineFlow(model,graph,'47');lineFlow(model,graph,'48');
 				   lineFlow(model,graph,'44');
-				   cell = model.getCell('49')
-                   if(cell.attribute!=""){
-				       var x = cell.geometry.x;
-				       var y = cell.geometry.y;
-				       var ifr= document.getElementById("ifr_t");
-				       ifr.src = cell.attribute;
-				       ifr.style.position="absolute";
-				       ifr.style.left=x+"px";
-				       ifr.style.top= y+"px";
-				       ifr.style.display="block";
+				   for(key_index in model.cells){
+				       var cell = model.cells[key_index];
+				       if(cell.attribute!=""
+                          &&cell.attribute!=undefined){
+                           var x = cell.geometry.x;
+                           var y = cell.geometry.y;
+                           var ifr= document.getElementById("ifr_t");
+                           ifr.src = cell.attribute;
+                           ifr.style.position="absolute";
+                           ifr.style.left=x+"px";
+                           ifr.style.top= y+"px";
+                           ifr.style.display="block";
+                           break;
+                       }
                    }
+				  // cell = model.getCell('49')
+
                   // cell.attribute
 			}, function()
 			{
