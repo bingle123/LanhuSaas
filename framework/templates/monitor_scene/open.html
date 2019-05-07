@@ -15,6 +15,7 @@
 	// Handles form-submit by preparing to process response
 	function handleSubmit()
 	{
+	    debugger
 	    if (window.parent.openNew)
         {
             //打开一个新的流程设计器窗口
@@ -38,7 +39,7 @@
 			document.body.innerHTML = '';
 			var div = document.createElement('div');
 			div.style.fontFamily = 'Arial';
-			
+			debugger
 			if (localStorage.length == 0)
 			{
 				window.parent.mxUtils.write(div, window.parent.mxResources.get('noFiles'));

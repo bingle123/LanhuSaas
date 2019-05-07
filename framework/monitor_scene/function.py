@@ -781,7 +781,6 @@ def query_scene_design(request):
     return tools.success_result(res_dic)
 
 
-
 def get_scene_find_xml(scene_id):
     '''
     根据场景id解析xml,
@@ -813,4 +812,4 @@ def get_scene_find_xml(scene_id):
                 scene_dto.save()
                 print "场景 "+str(scene_id)+" "+dto_item_id+"保存成功"
              else:
-                 print "场景 " + str(scene_id) + " " + dto_item_id + "已存在，不处理"
+                print "场景 " + str(scene_id) + " " + dto_item_id + "已存在，不处理"

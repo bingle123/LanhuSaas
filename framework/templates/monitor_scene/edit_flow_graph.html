@@ -90,6 +90,8 @@
         let myValues = null;
         let myForm = null;
         let myAddRemoveButton = null;
+        let myEditor = null;
+        let myEditorUi = null;
         //保存编排场景的服务地址
         window.SAVE_URL = "${SITE_URL}monitor_scene/save/";
         //打开场景选择器，选择要编辑的场景
@@ -191,25 +193,44 @@
 				// Configures the default graph theme
 				var themes = new Object();
 				themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement(); 
-				
+				myEditor = new Editor(urlParams['chrome'] == '0', themes)
 				// Main
-				new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
+				myEditorUi = new EditorUi(myEditor);
 			}, function()
 			{
 				document.body.innerHTML = '<center style="margin-top:10%;">导入错误的资源文件.</center>';
 			});
-			//加载场景流程，如果没有就为空
-			axios({
-                method: 'post',
-                url: window.parent.OPEN_URL,
-                data: {
-                    scene_id:urlParams['scene_id']
-                },
-            }).then(function (res) {
-                openFile.setData(vm.fileResult, vm.fileName)
-            })
+
 		})();
 
+        window.onload = function(){
+            /*
+            let filename = decodeURIComponent(urlParams['scene_name']);
+            let xml = decodeURIComponent(urlParams['scene_content']);
+            var openfile = new OpenFile();
+            openfile.setConsumer(mxUtils.bind(this, function(xml, filename)
+			{
+				try
+				{
+				    myEditor = new Editor();
+					var doc = mxUtils.parseXml(xml);
+					myEditor.setGraphXml(doc.documentElement);
+					myEditor.setModified(false);
+					myEditor.undoManager.clear();
+					if (filename != null)
+					{
+						myEditor.setFilename(filename);
+						myEditorUi.updateDocumentTitle();
+					}
+					return;
+				}
+				catch (e)
+				{
+					mxUtils.alert(mxResources.get('invalidOrMissingFile') + ': ' + e.message);
+				}
+			}));
+            openfile.setData(xml, filename);*/
+        }
 	</script>
 </body>
 </html>
