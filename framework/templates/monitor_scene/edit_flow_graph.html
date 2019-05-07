@@ -82,6 +82,24 @@
             config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
             return config
         });
+        function save_scene_design(name,xml){
+            axios({
+                method: 'post',
+                url: SAVE_URL,
+                data: {
+                    filename: name,
+                    xml: xml
+                },
+            }).then(function (res) {
+                if(res.status == 200){
+                    if(res.data.id == '1'){
+                        mxUtils.alert("场景保存成功！");
+                    }else{
+                        mxUtils.alert("场景名称不匹配，场景没有保存！");
+                    }
+                }
+            })
+        }
         // 根据场景id 获取可编辑场景的XML文档，生成编辑流程
         this.item_id = null;
         let myNameInput = null;
