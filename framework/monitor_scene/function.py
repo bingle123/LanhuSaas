@@ -757,6 +757,7 @@ def save_scene_design(data):
         return {'id': "0"}
     else:
         Scene.objects.filter(id=str(scene_result[0].id)).update(**scene_design)
+        get_scene_find_xml(int(scene_result[0].id))
         return {'id': "1"}
 
 
