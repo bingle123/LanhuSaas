@@ -1685,6 +1685,8 @@
                         } else {
                             //保存采集测试的数据到服务器
                             vm.gather_data_test_save(res.data['item_id'], 'add');
+                            this.$alert(vm.message,"提示");
+                            vm.centerDialogVisible = false;
                         }
                         vm.show()
                     }).catch((error) => {

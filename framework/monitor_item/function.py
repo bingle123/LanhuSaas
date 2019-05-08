@@ -159,6 +159,7 @@ def add_unit(request):
             username = request.user.username
             res = json.loads(request.body)
             add_dic = res['data']
+            del add_dic['score']
             add_flow_dic = res['flow']
             monitor_type = res['monitor_type']
             #  根据前台来的单元类型进行分类
