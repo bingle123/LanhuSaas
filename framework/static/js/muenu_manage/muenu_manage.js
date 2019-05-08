@@ -26,7 +26,25 @@ $(function(){
             addmuenus: {
                 mname: '',
                 url: '',
+                pcode:0,
             },
+            pcodes:[
+                {
+                    label:"场景展示",
+                    value:1
+                },
+                {
+                    label:"看板系统配置",
+                    value:2
+                },
+                {
+                    label:"历史和报表",
+                    value:3
+                },{
+                    label:"无",
+                    value:0
+                },
+            ],
             rules: {
                 mname: [
                     {required: true, message: '请输入连接名称', trigger: 'blur'},
@@ -36,6 +54,9 @@ $(function(){
                 url: [
                     {required: true, message: '请输入url地址', trigger: 'blur'},
                     {message: '请输入正确的IP地址', trigger: 'blur'},
+                ],
+                pcode: [
+                    {required: true, message: '请选择父级菜单', trigger: 'blur'},
                 ],
             },
 

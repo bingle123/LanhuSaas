@@ -8,7 +8,7 @@ import pymysql as MySQLdb
 # import cx_Oracle
 import pymssql
 import base64
-# import pyDes
+import pyDes
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage
 from monitor_item.models import *
@@ -46,8 +46,7 @@ def decrypt_str(data):
     :return:
     """
     password = data.encode(encoding='utf-8')
-    # method = pyDes.des(Key, pyDes.CBC, Iv, pad=None, padmode=pyDes.PAD_PKCS5)
-    method = None
+    method = pyDes.des(Key, pyDes.CBC, Iv, pad=None, padmode=pyDes.PAD_PKCS5)
     # 对base64编码解码
     k = base64.b64decode(password)
     # 再执行Des解密并返回
