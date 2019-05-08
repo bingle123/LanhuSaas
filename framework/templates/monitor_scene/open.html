@@ -19,10 +19,15 @@
 	    if (window.parent.openNew)
         {
             //打开一个新的流程设计器窗口
-            window.parent.open(window.parent.location.href);
+            window.parent.open("${SITE_URL}monitor_scene/edit_flow_graph");
         }
-	    //将场景数据注入新流程设计器
-	    window.parent.openFile.setData(vm.fileResult, vm.fileName);
+	    if(window.parent.openNew){
+	        //将场景数据注入新流程设计器
+	        window.parent.openFile.setData(vm.fileResult, vm.fileName);
+        } else{
+	        //替换编辑器中的场景
+	        window.parent.replaceUpdateXml(vm.fileResult, vm.fileName);
+        }
     };
 	
 	// Hides this dialog
