@@ -9,6 +9,7 @@ import MySQLdb
 import cx_Oracle
 import pymssql
 import datetime
+from db_connection.models import Conn
 from pyDes import *
 from binascii import b2a_hex,a2b_hex
 import base64
@@ -141,9 +142,11 @@ def saveconn_all(request):
     res = json.loads(request.body)
     cilent = tools.interface_param(request)
     user = cilent.bk_login.get_user({})
-    res['createname'] = user['data']['bk_username']
-    res['editname'] = user['data']['bk_username']
-
+    # 通过tools.interface_param获取不到用户名，暂时使用固定名称替代
+    res['editname'] = 'zork'
+    res['createname'] = 'zork'
+    # res['createname'] = user['data']['bk_username']
+    # res['editname'] = user['data']['bk_username']
     password = encryption_str(res['password'])
     res['password'] = password
     re = Conn(**res).save()
@@ -154,7 +157,9 @@ def eidtconnn(request):
     res = json.loads(request.body)
     cilent = tools.interface_param(request)
     user = cilent.bk_login.get_user({})
-    res['editname'] = user['data']['bk_username']
+    # res['editname'] = user['data']['bk_username']
+    # 通过tools.interface_param获取不到用户名，暂时使用固定名称替代
+    res['editname'] = 'zork'
     res['edittime'] = datetime.datetime.now()
 
     password = encryption_str(res['password'])
