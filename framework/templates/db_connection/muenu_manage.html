@@ -66,7 +66,8 @@
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-pagination :page-count="page_count" :current-page="currentPage" background layout="prev, pager, next" style="float:right"
+                <el-pagination :page-count="page_count" :current-page="currentPage" background
+                               layout="prev, pager, next" style="float:right"
                                @current-change="current_change"></el-pagination>
             </div>
 
@@ -78,12 +79,24 @@
                 <hr id="hr">
                 <el-form label-width="140px" :model="addmuenus" ref="addmuenus" :rules="rules" class="demo-ruleForm">
                     <el-row type="flex" class="row-bg" justify="space-around">
-                        <el-col :span="9">
+                        <el-col :span="6">
+                            <el-form-item label="父级菜单名称:" prop="pcode">
+                                <el-select v-model="addmuenus.pcode" placeholder="请选择">
+                                    <el-option
+                                            v-for="item in pcodes"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
                             <el-form-item label="菜单名称：" prop="mname">
                                 <el-input v-model="addmuenus.mname"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="9">
+                        <el-col :span="6">
                             <el-form-item label="url地址：" prop="url">
                                 <el-input v-model="addmuenus.url"></el-input>
                             </el-form-item>
@@ -122,13 +135,25 @@
                 </div>
                 <hr id="hr">
                 <el-form label-width="140px" :model="editMuenu" ref="editMuenu" :rules="rules" class="demo-ruleForm">
+                    <el-col :span="6">
+                            <el-form-item label="父级菜单名称:" prop="pcode">
+                                <el-select v-model="editMuenu.pcode" placeholder="请选择">
+                                    <el-option
+                                            v-for="item in pcodes"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
                     <el-row type="flex" class="row-bg" justify="space-around">
-                        <el-col :span="9">
+                        <el-col :span="6">
                             <el-form-item label="菜单名称：" prop="mname">
                                 <el-input v-model="editMuenu.mname"></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="9">
+                        <el-col :span="6">
                             <el-form-item label="url地址：" prop="url">
                                 <el-input v-model="editMuenu.url"></el-input>
                             </el-form-item>
