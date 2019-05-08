@@ -6,7 +6,7 @@ from db_connection.models import *
 from shell_app import tools
 import pymysql as MySQLdb
 # import cx_Oracle
-import pymssql
+#import pymssql
 import base64
 import pyDes
 from django.db.models import Q

@@ -73,6 +73,7 @@ DENGFEI_PASSWORD = 'test'
 # 蓝鲸智云开发者中心的域名，形如：http://paas.bking.com#
 # 长沙
 # BK_PAAS_HOST = 'http://paas.bk.com:80'
+
 # 上海
 BK_PAAS_HOST = 'https://paas.blueking.com'
 # 上海退出登录地址
@@ -134,6 +135,7 @@ SECRET_KEY = 'MQtd_0cw&AiY5jT&&#w7%9sCK=HW$O_e%ch4xDd*AaP(xU0s3X'
 CSRF_COOKIE_PATH = SITE_URL
 
 ALLOWED_HOSTS = ['*']
+
 # ==============================================================================
 # Middleware and apps
 # ==============================================================================
