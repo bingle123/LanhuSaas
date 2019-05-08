@@ -239,6 +239,7 @@ def edit_unit(request):
             monitor_type = res['monitor_type']
             # 把前台来的监控项数据一次性转为字典
             add_dic = res['data']
+            del add_dic['score']
             if res['monitor_type'] == 'first':
                 monitor_type = '1'
             if res['monitor_type'] == 'second':
