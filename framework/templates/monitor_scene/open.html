@@ -11,6 +11,19 @@
     <script src="${STATIC_URL}js/csrftoken.js"></script>
     <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
 </head>
+<style>
+    /*jlq-2019-05-08-add*/
+    .el-radio__inner {
+    border: 1px solid #fff;
+    border-radius: 100%;
+    width: 14px;
+    height: 14px;
+    background-color: #9E9E9E;
+    cursor: pointer;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+</style>
 <script type="text/javascript">
 	// Handles form-submit by preparing to process response
 	function handleSubmit()
@@ -138,13 +151,14 @@
 	id="openForm" onsubmit="return handleSubmit();" accept-charset="UTF-8">
 <div id="app" style="background: #ffffff;width: 100%;" >
     <!-- div1 start-->
-    <div class="div_one" style="padding: 20px 5px 0px 5px;">
+    <div class="div_one" style="padding: 20px 5px 20px 5px;background-color: #3333;">
         <div >
             <el-table :data='sites' style="width: 100%;" border header-align="center">
                 <el-table-column prop="id" min-width="30%" label="选择" sortable>
                     <template slot-scope="scope">
                         <!-- class="textRadio" -->
                         <el-radio @change.native="getCurrentRow(scope.$index,scope.row)" :label="scope.row.id" v-model="templateRadio">&nbsp;</el-radio>
+                        <label >{{ scope.row.id }}</label>
                     </template>
                 </el-table-column>
                 <el-table-column prop="scene_name" min-width="70%" label="场景名称" sortable></el-table-column>
