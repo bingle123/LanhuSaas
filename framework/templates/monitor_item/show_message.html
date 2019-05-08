@@ -81,6 +81,28 @@
         .dimension_div .el-form-item__content:first-child{
             margin-left: 0!important;
         }
+        /*jlq-2019-05-08-add*/
+        .el-dialog__body {
+            padding: 10px 20px;
+            color: #606266;
+            font-size: 14px;
+        }
+        .el-tabs--bottom .el-tabs--left .el-tabs__item:last-child, .el-tabs--bottom .el-tabs--right .el-tabs__item:last-child, .el-tabs--bottom.el-tabs--border-card .el-tabs__item:last-child, .el-tabs--bottom.el-tabs--card .el-tabs__item:last-child, .el-tabs--top .el-tabs--left .el-tabs__item:last-child, .el-tabs--top .el-tabs--right .el-tabs__item:last-child, .el-tabs--top.el-tabs--border-card .el-tabs__item:last-child, .el-tabs--top.el-tabs--card .el-tabs__item:last-child {
+            padding-right: 20px;
+            border-bottom: 1px;
+        }
+        .el-tabs--card>.el-tabs__header .el-tabs__nav {
+            border: 1px solid #e4e7ed;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
+            border-bottom-color: #fff;
+            border-bottom: 1px;
+        }
     </style>
 </head>
 <body >
@@ -121,15 +143,14 @@
     <!-- div1 end-->
 
     <!-- 对话框 start-->
-    <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%" @closed="monitor_cache_clean" :close-on-click-modal="false">
+    <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%" @closed="monitor_cache_clean" :close-on-click-modal="false"   >
         <HR align=center width=100% color=#979797 SIZE=0.5>
-        <div style="height: 30px"></div>
-        <div>
-            <span>监控监控项名称</span>
-            <el-input placeholder="请输入监控项名称" v-model="monitor_name" style="width: 30%"></el-input>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span>监控项执行日历</span>
-            <el-select v-model="area" placeholder="请选择日历的地区">
+        <div style="height: 30px;"></div>
+        <div style="margin-left: 20px;">
+            <span>监控项名称</span>
+            <el-input placeholder="请输入监控项名称" v-model="monitor_name" style="width: 30%;margin-left: 12px;"></el-input>
+            <span style="margin-left: 80px;">监控项执行日历</span>
+            <el-select v-model="area" placeholder="请选择日历的地区" style="width: 30%;margin-left: 12px;">
                 <el-option
                         v-for="item in areas"
                         :key="item.value"
@@ -141,14 +162,13 @@
         <div style="height: 30px"></div>
         <span>
             <el-tabs type="card" v-model="monitor_type">
-
                 <!--基本单元 start-->
                 <el-tab-pane :disabled="disabled2" label="基本监控项" name="first">
                     <el-row>
-                        <el-col :span="12"><div class="grid-content bg-purple">
+                        <el-col :span="12" style="margin-top: 30px"><div class="grid-content bg-purple">
                             <el-form :model="basic" ref="basic" :rules="rules1" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
-                                    <el-select v-model="basic.font_size" placeholder="请选择字号" @change="basic_size">
+                                    <el-select v-model="basic.font_size" placeholder="请选择字号" @change="basic_size" style="width: 310px;">
                                         <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -175,17 +195,19 @@
                                                   @change="sycontent"
                                                   type="textarea"></el-input>
                                 </el-form-item>
-                                <el-form-item label="数据来源">
-                                    <el-radio-group v-model="sql_file_interface" @change="change1"
-                                                    style="padding: 14px">
-                                        <el-radio :label="3">数据库</el-radio>
-                                        <el-radio :label="6">文件</el-radio>
-                                        <el-radio :label="9">接口</el-radio>
-                                     </el-radio-group>
-                                </el-form-item>
+                                <div style="margin-bottom: -18px; margin-top: -14px;">
+                                    <el-form-item label="数据来源">
+                                        <el-radio-group v-model="sql_file_interface" @change="change1"
+                                                        style="padding: 14px">
+                                            <el-radio :label="3">数据库</el-radio>
+                                            <el-radio :label="6">文件</el-radio>
+                                            <el-radio :label="9">接口</el-radio>
+                                         </el-radio-group>
+                                    </el-form-item>
+                                 </div>
                                 <div :style="{ display: sql1 }">
                                     <el-form-item label="数据库连接">
-                                        <el-select v-model="server_url" placeholder="请选择数据库">
+                                        <el-select v-model="server_url" placeholder="请选择数据库" style="width: 310px;">
                                             <el-option v-for="i in sites1" :label="i.label"
                                                        :value="i.value"></el-option>
                                         </el-select>
@@ -217,15 +239,15 @@
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="basic.start_time"
-                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
+                                            <el-time-picker style="width: 142px;" v-model="basic.start_time"
+                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm" >
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
-                                    <el-col class="line" :span="2">—</el-col>
+                                    <el-col class="line" :span="2" style="margin-right: -4px;margin-left: 4px;">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="basic.end_time"
+                                            <el-time-picker style="width: 142px;" v-model="basic.end_time"
                                                             placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
@@ -235,13 +257,8 @@
                                 <el-form-item label="采集周期" prop="period">
                                             <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="basic.period" style="width: 96%"
-                                                      placeholder="请输入采集周期(秒)"></el-input>
-                                </el-form-item>
-                                <el-form-item label="分值" prop="score">
-                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
-                                                      auto-complete="off" v-model="basic.score" style="width: 96%" @change="change4"
-                                                      placeholder="请输入分值"  max="100"></el-input>
-                                </el-form-item>
+                                                      placeholder="请输入采集周期(秒)" style="width: 310px;"></el-input>
+                                        </el-form-item>
                             </el-form>
                         </div></el-col>
                         <el-col :span="12"><div class="grid-content bg-purple-light">
@@ -898,11 +915,6 @@
                                               auto-complete="off" v-model="base.period" style="width: 96%"
                                               placeholder="请输入采集周期(秒)"></el-input>
                                 </el-form-item>
-                                 <el-form-item label="分值" prop="score">
-                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
-                                                      auto-complete="off" v-model="base.score" style="width: 96%" @change="change4"
-                                                      placeholder="请输入分值"  max="100"></el-input>
-                                </el-form-item>
                                 <el-col :span="24">
                                     <el-form-item v-for="(i,index) in base.dimension_data" class="dimension_div">
                                     <el-col :span="11">
@@ -1089,13 +1101,12 @@
                 start_time: '',                        //开始时间
                 end_time: '',                          //结束时间
                 period: '10',                            //采集周期
-                score:'1',                                //分值
                 params: '',                            //监控参数
                 status: '',                            //监控状态
                 contents: '',                          //显示内容
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
-                monitor_area: '',                             //日历地区
+                monitor_area: ''                             //日历地区
             },
             base: {
                 //基本单元
@@ -1117,8 +1128,7 @@
                 contents: '',                          //显示内容
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
-                monitor_area: '',                             //日历地区
-                score:''                                //分值
+                monitor_area: ''                             //日历地区
             },             //基本单元
             rules1: {
                 font_size: [
@@ -1135,9 +1145,6 @@
                 ],
                 period: [
                     {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
-                ],
-                score: [
-                    {required: true, message: '请输入分值', trigger: 'blur'}
                 ]
             },                              //校验规则
             chart: {                                //图表单元
@@ -1289,10 +1296,7 @@
                     dimension_value: [
                         {required: true, message: '请填写维度值', trigger: 'blur'}
                     ]
-                },
-                score:[
-                    {required: true, message: '请输入分值',trigger:'change'}
-                ]
+                }
             },
             //校验规则
             basic1: {                                //基本单元
@@ -1385,7 +1389,7 @@
                     data : JSON.stringify(vm.base),
                     dataType: "JSON",
                     async: false,
-                    url: "${SITE_URL}iqube_interface/gather_base_test/",
+                    url: "{SITE_URL}/iqube_interface/gather_base_test/",
                     success: function(data) {
                          if(0 != data.code){
                             vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
@@ -1487,7 +1491,6 @@
                         vm.base['contents'] = row.contents;
                         vm.base['gather_rule'] = row.gather_rule;
                         vm.base['gather_params'] = row.gather_params;
-                        vm.base['score'] = row.score;
                         vm.base['monitor_area'] = vm.area;
                     }else{
                         alert('暂未实现！');
@@ -1605,7 +1608,6 @@
                 this.base_monitor_upload_data['start_time'] = this.base['start_time'];
                 this.base_monitor_upload_data['end_time'] = this.base['end_time'];
                 this.base_monitor_upload_data['contents'] = this.base['contents'];
-                this.base_monitor_upload_data['score'] = this.base['score'];
                 this.result_data = this.base_monitor_upload_data;
                 //由于调用采集测试接口需要以下参数,因此在此统一删除数据库表不存在的字段,避免监控项添加时报错
                 /*delete this.base['dimension_data'];
@@ -2132,7 +2134,6 @@
                     vm.basic.gather_rule = row.gather_rule;
                     vm.basic.contents = row.contents;
                     vm.basic.status = row.status;
-                    vm.basic.score = row.score;
                     vm.area=row.monitor_area;
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface =3;
@@ -2268,7 +2269,6 @@
                 }
                 //基本监控项（一体化）
                 if(row.monitor_type === 5){
-                    console.log(row)
                     vm.disabled6 = false;
                     //监控项类型设置
                     this.monitor_type = 'five';
@@ -2697,13 +2697,6 @@
                 } else {
                     vm.liucheng = 'none';
                 }
-            },
-            change4(){
-               if(vm.basic.score>100){
-                    vm.basic.score = 100
-               }else if(vm.base.score>100){
-                   vm.base.score = 100
-               }
             },
             change_job_fontSize() {       //修改作业单元中预览字体
                 $('#job_text').find("*").css('font-size', this.job.font_size);

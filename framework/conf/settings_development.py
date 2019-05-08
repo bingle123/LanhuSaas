@@ -21,9 +21,13 @@ DATABASES = {
         'NAME': 'mydjango1',                        # 数据库名 (默认与APP_ID相同)
         'USER': 'root',                        # 你的数据库user
         # 'PASSWORD': '12345678',              # 长沙服务器,你的数据库password
-        # 'HOST': '192.168.1.25',              # 长沙服务器,开发的时候，使用localhost
-        'PASSWORD': 'zorkdata.8888',           # 上海服务器,你的数据库password
-        'HOST': '192.168.1.157',               # 上海服务器,开发的时候，使用localhost
+         #'HOST': '192.168.1.25',              # 长沙服务器,开发的时候，使用localhost
+       # 'PASSWORD': 'zorkdata.8888',           # 上海服务器,你的数据库password
+        #'PASSWORD': 'zorkdata.8888',           # 上海服务器,你的数据库password
+        #'HOST': '192.168.1.157',               # 上海服务器,开发的时候，使用localhost
+        #'HOST': '10.187.113.112',               # 上海服务器,开发的时候，使用localhost
+        'HOST': '127.0.0.1',              # 长沙服务器,开发的时候，使用localhost
+        'PASSWORD': '123',  # 你的数据库password
         'PORT': '3306',                        # 默认3306
     },
 }
