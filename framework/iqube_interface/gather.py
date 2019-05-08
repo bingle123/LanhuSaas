@@ -49,7 +49,8 @@ class Gather():
         else:
             api_address = MEASURES_QUERY_API
         # 获取当前系统时间前一天的时间戳
-        curr_ts = get_previous_day_ts()
+        result = get_previous_day_ts()
+        curr_ts = str(list(result[0])[0])
         # 此处参数传递应给予改善, 时间需要改为当前时间的前一天
         query_form = api_address + '?' + 'start='+curr_ts+'&m=sum:sum:' + measures + '_' + measures_name + interface_param
         request_result = requests.get(url=query_form)

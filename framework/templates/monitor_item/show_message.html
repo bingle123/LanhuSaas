@@ -1385,7 +1385,7 @@
                     data : JSON.stringify(vm.base),
                     dataType: "JSON",
                     async: false,
-                    url: "{SITE_URL}/iqube_interface/gather_base_test/",
+                    url: "${SITE_URL}iqube_interface/gather_base_test/",
                     success: function(data) {
                          if(0 != data.code){
                             vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
