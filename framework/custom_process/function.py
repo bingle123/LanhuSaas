@@ -297,10 +297,12 @@ def send_notification(notification):
     """
     # 返回到前端的通知发送状态信息
     status = dict()
+    wechat_infos = None
+    sms_infos = None
     # 短信发送接收人列表
-    sms_send_list = list()
+    sms_send_list = None
     # 微信发送接收人列表
-    wechat_send_list = list()
+    wechat_send_list = None
     # 以下为发送的通知信息字典，详细参考中畅的短信和微信接口示例代码
     send_info = dict()
     notification_data = dict()
@@ -343,7 +345,12 @@ def send_notification(notification):
         status['info'] = u'所有通知发送成功!'
     else:
         status['message'] = 'error'
-        status['info'] = wechat_infos['error_info'] + sms_infos['error_info']
+        if None is not sms_infos and None is not wechat_infos:
+            status['info'] = wechat_infos['error_info'] + sms_infos['error_info']
+        elif None is not sms_infos and None is wechat_infos:
+            status['info'] = sms_infos['error_info']
+        else:
+            status['info'] = wechat_infos['error_info']
     # 返回发送的状态信息给前端
     return status
 
@@ -378,11 +385,12 @@ def send_msg(receivers, send_info, send_type):
             # 字符串以UTF-8编码
             utf8_str = json_str.encode('utf-8')
             # 字符串URL编码
-            url_encoded_str = urllib.urlencode(utf8_str)
+            # url_encoded_str = urllib.urlencode(utf8_str)
             # 发送POST请求到接口
-            req = urllib2.Request(url=req_url, data=url_encoded_str)
+            req = urllib2.Request(url=req_url, data=utf8_str)
             # 获取接口返回值
             res_data = urllib2.urlopen(req).read()
+            print res_data
             # 接口返回数据包含success字符串说明本次通知发送成功
             if -1 == res_data.indexOf("success"):
                 error_info.append(res_data)
