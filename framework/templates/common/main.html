@@ -20,32 +20,87 @@
     <link href="${STATIC_URL}css/common/main.css" rel="stylesheet">
     <!--阿里巴巴矢量图标库--项目完成后请下载css并下载css引用的字体文件-->
     <link href="${STATIC_URL}css/net/font_997278_ptr5bdmor4j.css" rel="stylesheet">
+
+    <script src="${STATIC_URL}js/jquery-3.1.1.min.js"></script>
     <!--以下为后台参数-->
     <!--
     "${SITE_URL}";	        // app的url前缀,在ajax调用的时候，应该加上该前缀
     "${STATIC_URL}";       // 静态资源前缀
     **/--->
 </head>
+
+ <style type="text/css">
+   .show1{
+       background-color:  #2860FD !important;
+   }
+
+
+.el-menu-item:hover{
+    outline: 0 !important;
+    background-color: #2860FD !important;
+}
+
+     .el-submenu__title:hover{
+          outline: 0 !important;
+    background-color: #2860FD !important;
+     }
+
+     /*菜单关闭*/
+.el-submenu>.el-submenu__title .el-submenu__icon-arrow{
+	-webkit-transform: rotateZ(-90deg);
+	-ms-transform: rotate(-90deg);
+	transform: rotateZ(-90deg);
+    font-size: 15px;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+/*菜单展开*/
+.el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow{
+	-webkit-transform: rotateZ(0deg);
+	-ms-transform: rotate(0deg);
+	transform: rotateZ(0deg);
+    font-size: 15px;
+    font-weight: bold;
+    color: #FFFFFF;
+}
+  </style>
+
 <body style="overflow: visible">
 <!--start html-->
 <div id="index">
     <!--start container-->
-    <el-container style="height: 100%">
+    <el-container >
 
-        <!--start left-->
-        <el-row class="tac" :style="height">
+        <!--start left  -->
+        <el-row  :style="height">
             <el-menu :style="height" class="el-menu-vertical-demo" @open="handleOpen"
-                     @close="handleClose" :collapse="isCollapse">
+                     @close="handleClose" :collapse="isCollapse" text-color="#FFFFFF" active-text-color="#000000">
                 <el-menu-item index="1000" class="title_item">
                     <i class=""></i>
-                    <li slot="title" style="font-size: 18px;">看板项目</li>
+                    <li slot="title" style="font-size: 24px;">看板项目</li>
                 </el-menu-item>
 
-                <el-menu-item v-for="(i,index) in muenus" :index="index+''" style="line-height: 56px;font-size: 18px;"
+             <!--   <el-menu-item v-for="(i,index) in muenus" :index="index+''" style="line-height: 56px;font-size: 18px;"
                               v-on:click="testClick(i.url)">
                     <i class="iconfont icon-zhuye"></i>
-                    <span slot="title">{{ i.mname }}</span>
+                    <span slot="title">{{ i.mname }}{{ i.id }}</span>
                 </el-menu-item>
+                -->
+                <el-menu-item id="submenu" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" style="line-height: 56px;font-size: 18px;padding-left:50px;" v-if=" i.pcode == 0">
+                    <span slot="title" >{{ i.mname }}</span>
+                </el-menu-item>
+
+
+                 <el-submenu style="font-color:#FFFFFF;" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" style="line-height: 56px; "  v-if=" i.id == 25">
+                     <template slot="title" >
+                      <span  v-if="  i.id == 25" style="padding-left:30px;"><font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                    </template>
+                    <el-menu-item-group>
+                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 2">{{ i.mname }}</el-menu-item>
+                    </el-menu-item-group>
+
+                  </el-submenu>
+
 
                 <div index="10000" style="line-height: 56px; margin-top: 1000px;margin-left: 20px;">
                     <i class="el-icon-question"></i>
@@ -105,6 +160,8 @@
 <!--end html-->
 
 <script type="text/javascript">
+
+
      axios.interceptors.request.use((config) => {
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
         let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
@@ -115,6 +172,7 @@
         el: '#index',
         data: {
             muenus: [],
+            showFlag:false,
             isCollapse: false,  //是否折叠
             height: {           //css
                 height: '',
@@ -153,6 +211,7 @@
             handleClose(key, keyPath) { //手风琴关闭
                 console.log(key, keyPath);
             },
+
             //退出登录
             logout(){
                 axios.get('${SITE_URL}position/get_logout_address').then((res)=>{
@@ -180,6 +239,7 @@
             },
             testClick(res) {            //更新iframe显示页面
                 vm.clickhtml = res
+                console.log(this.clickhtml)
              },
 
             //获取角色对应的所有菜单名称
@@ -188,6 +248,7 @@
                     .then((res) => {
                         console.log(res)
                         vm.muenus = res.data.results;
+
                     })
             }
         }
