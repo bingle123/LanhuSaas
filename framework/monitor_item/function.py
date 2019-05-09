@@ -160,7 +160,6 @@ def add_unit(request):
             username = request.user.username
             res = json.loads(request.body)
             add_dic = res['data']
-            del add_dic['score']
             add_flow_dic = res['flow']
             monitor_type = res['monitor_type']
             #  根据前台来的单元类型进行分类
@@ -239,7 +238,6 @@ def edit_unit(request):
             monitor_type = res['monitor_type']
             # 把前台来的监控项数据一次性转为字典
             add_dic = res['data']
-            del add_dic['score']
             if res['monitor_type'] == 'first':
                 monitor_type = '1'
             if res['monitor_type'] == 'second':
