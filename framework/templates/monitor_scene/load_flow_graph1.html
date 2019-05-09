@@ -53,7 +53,7 @@
                     monitorFlow(model,graph,'20','21');monitorFlow(model,graph,'22','23');
                     monitorFlow(model,graph,'24','25');monitorFlow(model,graph,'41','42');
                     monitorFlow(model,graph,'29','40');monitorFlow(model,graph,'37','38');
-                    model.endUpdate();
+                   model.endUpdate();
                 } ,3000);
 
                    lineFlow(model,graph,'10');lineFlow(model,graph,'11');
@@ -62,7 +62,26 @@
 				   lineFlow(model,graph,'31');lineFlow(model,graph,'32');
 				   lineFlow(model,graph,'33');lineFlow(model,graph,'34');
 				   lineFlow(model,graph,'35');lineFlow(model,graph,'36');
-				   lineFlow(model,graph,'47');lineFlow(model,graph,'48');lineFlow(model,graph,'44');
+				   lineFlow(model,graph,'47');lineFlow(model,graph,'48');
+				   lineFlow(model,graph,'44');
+				   for(key_index in model.cells){
+				       var cell = model.cells[key_index];
+				       if(cell.attribute!=""
+                          &&cell.attribute!=undefined){
+                           var x = cell.geometry.x;
+                           var y = cell.geometry.y;
+                           var ifr= document.getElementById("ifr_t");
+                           ifr.src = cell.attribute;
+                           ifr.style.position="absolute";
+                           ifr.style.left=x+"px";
+                           ifr.style.top= y+"px";
+                           ifr.style.display="block";
+                           break;
+                       }
+                   }
+				  // cell = model.getCell('49')
+
+                  // cell.attribute
 			}, function()
 			{
 				document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
@@ -130,9 +149,10 @@
 	</script>
 <!-- Page passes the container and control to the main function -->
 <body onload="main(document.getElementById('graphContainer'));">
-	<!-- Acts as a container for the graph -->
-	<div id="graphContainer" style="overflow:hidden;position:relative;width:861px;height:886px;cursor:default;">
+ <!-- Acts as a container for the graph -->
+	<div id="graphContainer" style="overflow:hidden;position:relative;width:1100px;height:886px;cursor:default;">
 	</div>
+     <iframe id="ifr_t" style="display:none" src="" width="450" height="300" frameborder="0"></iframe>
 	<br>
 </body>
 </html>

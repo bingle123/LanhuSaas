@@ -3562,7 +3562,7 @@ EditorUi.prototype.saveFile = function(forceDialog)
 EditorUi.prototype.save = function(name)
 {
 	if (name != null)
-	{debugger;
+	{
 		if (this.editor.graph.isEditing())
 		{
 			this.editor.graph.stopEditing();
@@ -3579,7 +3579,6 @@ EditorUi.prototype.save = function(name)
 				{
 					return;
 				}
-
 				localStorage.setItem(name, xml);
 				this.editor.setStatus(mxUtils.htmlEntities(mxResources.get('saved')) + ' ' + new Date());
 			}
@@ -3592,24 +3591,12 @@ EditorUi.prototype.save = function(name)
 						'&xml=' + encodeURIComponent(xml)).simulate(document, '_blank');
 					*/
 					//lxchun在python环境，这里需要调用python的服务来保存编辑的场景
-					axios({
-						method: 'post',
-						url: SAVE_URL,
-						data: {
-							filename: name,
-							xml: xml
-						},
-					}).then(function (res) {
-						if(res.status == 200){
-							mxUtils.alert("场景保存成功！");
-						}
-					})
+					save_scene_design(name,xml);
 				}
 				else
 				{
 					mxUtils.alert(mxResources.get('drawingTooLarge'));
 					mxUtils.popup(xml);
-					
 					return;
 				}
 			}

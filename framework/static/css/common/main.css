@@ -23,7 +23,7 @@
         box-shadow: 2px 2px 8px 0 rgba(3, 21, 41, 0.15);
         font-family: PingFangSC-Regular;
         color: #FFFFFF;
-        font-size: 26px;
+        font-size: 80px;
         margin-bottom: 20px;
     }
     .header_item {
@@ -41,7 +41,7 @@
     }
 
     .el-submenu {
-        font-size: 14px;
+        font-size: 18px;
         font-family: PingFangSC-Regular;
         color: #ffffff;
     }
@@ -54,6 +54,12 @@
     .el-menu-item.is-active {
         background-color: #2962FE !important;
     }
+    .el-submenu is-active{
+        font-size: 18px;
+        font-family: PingFangSC-Regular;
+        color: #ffffff;
+    }
     /*body > .el-container {
         margin-bottom: 40px;
+        #283593
     }*/

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>爬虫内容查看</title>
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- vue的ajax依赖-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <!-- element UI引入样式 -->
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script src='${STATIC_URL}js/jquery.min.js'></script>
+    <script src='${STATIC_URL}js/jquery-ui.js'></script>
+    <!--jQuery库使用时请使用标准jQuery语法-->
+    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
+    <!--页面初始化css(Tencent)-->
+    <link href="${STATIC_URL}css/init.css" rel="stylesheet">
+    <!-- 引入额外的包-->
+    <link href="${STATIC_URL}css/trace.css" rel="stylesheet">
+
+</head>
+<body>
+<div id="main">
+    <!--start 面包屑-->
+    <el-breadcrumb separator-class="el-icon-arrow-right" separator="/" style="padding: 20px;">
+        <el-breadcrumb-item><a href="/">系统配置</a></el-breadcrumb-item>
+        <el-breadcrumb-item>登录业务全链</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!--end 面包屑-->
+    <div>
+        <div style="position:relative" class="panorama1">
+            <span
+      style="color:#00e4f4;font-size:18px;display:block;position:absolute;top:30px;right:20px;height:25px;line-height:25px"
+    >{{date}}&nbsp;&nbsp;{{time}}</span>
+            <ul class="u_01">
+              <li>君弘手机证券</li>
+              <li>功能号:查询关联资金号</li>
+              <li>{{randomnum2[0]}}</li>
+              <li>调用量</li>
+              <li>{{randomnum[0]}}</li>
+              <li>平均耗时(ms)</li>
+              <li>{{randomnum3[0]}}%</li>
+              <li>调用成功率</li>
+            </ul>
+            <ul class="u_02">
+              <li>君弘理财中间件</li>
+              <li>功能号:获取保密件</li>
+              <li>{{randomnum2[1]}}</li>
+              <li>调用量</li>
+              <li>{{randomnum[1]}}</li>
+              <li>平均耗时(ms)</li>
+              <li>{{randomnum3[1]}}%</li>
+              <li>调用成功率</li>
+            </ul>
+            <ul class="u_03">
+              <li>君弘理财中间件</li>
+              <li>功能号:统一登入</li>
+              <li>{{randomnum2[2]}}</li>
+              <li>调用量</li>
+              <li>{{randomnum[2]}}</li>
+              <li>平均耗时(ms)</li>
+              <li>{{randomnum3[2]}}%</li>
+              <li>调用成功率</li>
+            </ul>
+            <ul class="u_04">
+              <li>君弘理财中间件</li>
+              <li>功能号:登入资金账号查询</li>
+              <li>{{randomnum2[3]}}</li>
+              <li>调用量</li>
+              <li>{{randomnum[3]}}</li>
+              <li>平均耗时(ms)</li>
+              <li>{{randomnum3[3]}}%</li>
+              <li>调用成功率</li>
+            </ul>
+            <ul class="u_05">
+              <li>用户中心(通过总线路调用)</li>
+              <li>功能号:获取保密件</li>
+              <li>{{randomnum2[4]}}</li>
+              <li>调用量</li>
+              <li>{{randomnum[4]}}</li>
+              <li>平均耗时(ms)</li>
+              <li>{{randomnum3[4]}}%</li>
+              <li>调用成功率</li>
+            </ul>
+            <ul class="u_06">
+              <li>用户中心(通过总线路调用)</li>
+              <li>功能号:统一登入</li>
+              <li>{{randomnum2[5]}}</li>
+              <li>调用量</li>
+              <li>{{randomnum[5]}}</li>
+              <li>平均耗时(ms)</li>
+              <li>{{randomnum3[5]}}%</li>
+              <li>调用成功率</li>
+            </ul>
+            <ul class="u_07">
+              <li>用户中心(通过总线路调用)</li>
+              <li>功能号:登入资金账号查询</li>
+              <li>{{randomnum2[6]}}</li>
+              <li>调用量</li>
+              <li>{{randomnum[6]}}</li>
+              <li>平均耗时(ms)</li>
+              <li>{{randomnum3[6]}}%</li>
+              <li>调用成功率</li>
+            </ul>
+            <ul class="u_08">
+              <li>君弘理财中间件</li>
+              <li>功能号:查询关联资金号</li>
+              <li>{{randomnum2[7]}}</li>
+              <li>调用量</li>
+              <li>{{randomnum[7]}}</li>
+              <li>平均耗时(ms)</li>
+              <li>{{randomnum3[7]}}%</li>
+              <li>调用成功率</li>
+            </ul>
+            <ul class="u_09">
+              <li>君弘手机证券</li>
+              <li>功能号:客户端登入请求</li>
+              <li>{{randomnum2[8]}}</li>
+              <li>调用量</li>
+              <li>{{randomnum[8]}}</li>
+              <li>平均耗时(ms)</li>
+              <li>{{randomnum3[8]}}%</li>
+              <li>调用成功率</li>
+            </ul>
+            <ul class="u_10">
+              <li>君弘委托中间件</li>
+              <li>功能号:富贵登入</li>
+              <li>
+                <span>调用量</span>
+                <span>{{randomnum2[9]}}</span>
+              </li>
+              <li>
+                <span>平均耗时</span>
+                <span>{{randomnum[9]}}</span>
+              </li>
+              <li>
+                <span>调用成功率</span>
+                <span>{{randomnum3[9]}}%</span>
+              </li>
+            </ul>
+            <ul class="u_11">
+              <li>君弘委托中间件</li>
+              <li>功能号:获取服务器序号</li>
+              <li>
+                <span>调用量</span>
+                <span>{{randomnum2[10]}}</span>
+              </li>
+              <li>
+                <span>平均耗时</span>
+                <span>{{randomnum[10]}}</span>
+              </li>
+              <li>
+                <span>调用成功率</span>
+                <span>{{randomnum3[10]}}%</span>
+              </li>
+            </ul>
+            <ul class="u_12">
+              <li>君弘委托中间件</li>
+              <li>功能号:增设手机委托方式</li>
+              <li>
+                <span>调用量</span>
+                <span>{{randomnum2[11]}}</span>
+              </li>
+              <li>
+                <span>平均耗时</span>
+                <span>{{randomnum[11]}}</span>
+              </li>
+              <li>
+                <span>调用成功率</span>
+                <span>{{randomnum3[11]}}%</span>
+              </li>
+            </ul>
+            <ul class="u_13">
+              <li>君弘委托中间件</li>
+              <li>功能号:风险等级分数查询</li>
+              <li>
+                <span>调用量</span>
+                <span>{{randomnum2[12]}}</span>
+              </li>
+              <li>
+                <span>平均耗时</span>
+                <span>{{randomnum[12]}}</span>
+              </li>
+              <li>
+                <span>调用成功率</span>
+                <span>{{randomnum3[12]}}%</span>
+              </li>
+            </ul>
+            <ul class="u_14">
+              <li>君弘委托中间件</li>
+              <li>功能号:基金外围风险揭示查询</li>
+              <li>
+                <span>调用量</span>
+                <span>{{randomnum2[13]}}</span>
+              </li>
+              <li>
+                <span>平均耗时</span>
+                <span>{{randomnum[13]}}</span>
+              </li>
+              <li>
+                <span>调用成功率</span>
+                <span>{{randomnum3[13]}}%</span>
+              </li>
+            </ul>
+            <ul class="u_15">
+              <li>集中交易</li>
+              <li>功能号:登入信息记录</li>
+              <li>
+                <span>调用量</span>
+                <span>{{randomnum2[14]}}</span>
+              </li>
+              <li>
+                <span>平均耗时</span>
+                <span>{{randomnum[14]}}</span>
+              </li>
+              <li>
+                <span>调用成功率</span>
+                <span>{{randomnum3[14]}}%</span>
+              </li>
+            </ul>
+            <ul class="u_16">
+              <li>集中交易</li>
+              <li>功能号:富易登录</li>
+              <li>
+                <span>调用量</span>
+                <span>{{randomnum2[15]}}</span>
+              </li>
+              <li>
+                <span>平均耗时</span>
+                <span>{{randomnum[15]}}</span>
+              </li>
+              <li>
+                <span>调用成功率</span>
+                <span>{{randomnum3[15]}}%</span>
+              </li>
+            </ul>
+             <ul class="u_17">
+              <li>集中交易</li>
+              <li>功能号:获取服务器序号</li>
+              <li>
+                <span>调用量</span>
+                <span>{{randomnum2[16]}}</span>
+              </li>
+              <li>
+                <span>平均耗时</span>
+                <span>{{randomnum[16]}}</span>
+              </li>
+              <li>
+                <span>调用成功率</span>
+                <span>{{randomnum3[16]}}%</span>
+              </li>
+            </ul>
+             <ul class="u_18">
+              <li>集中交易</li>
+              <li>功能号:增设手机委托方式</li>
+              <li>
+                <span>调用量</span>
+                <span>{{randomnum2[17]}}</span>
+              </li>
+              <li>
+                <span>平均耗时</span>
+                <span>{{randomnum[17]}}</span>
+              </li>
+              <li>
+                <span>调用成功率</span>
+                <span>{{randomnum3[17]}}%</span>
+              </li>
+            </ul>
+             <ul class="u_19">
+              <li>集中交易</li>
+              <li>功能号:风险等级分数查询</li>
+              <li>
+                <span>调用量</span>
+                <span>{{randomnum2[18]}}</span>
+              </li>
+              <li>
+                <span>平均耗时</span>
+                <span>{{randomnum[18]}}</span>
+              </li>
+              <li>
+                <span>调用成功率</span>
+                <span>{{randomnum3[18]}}%</span>
+              </li>
+            </ul>
+             <ul class="u_20">
+              <li>集中交易</li>
+              <li>功能号:基金外围风险揭示查询</li>
+              <li>
+                <span>调用量</span>
+                <span>{{randomnum2[19]}}</span>
+              </li>
+              <li>
+                <span>平均耗时</span>
+                <span>{{randomnum[19]}}</span>
+              </li>
+              <li>
+                <span>调用成功率</span>
+                <span>{{randomnum3[19]}}%</span>
+              </li>
+            </ul>
+             <ul class="u_21">
+              <li>集中交易</li>
+              <li>功能号:登入信息记录</li>
+              <li>
+                <span>调用量</span>
+                <span>{{randomnum2[20]}}</span>
+              </li>
+              <li>
+                <span>平均耗时</span>
+                <span>{{randomnum[20]}}</span>
+              </li>
+              <li>
+                <span>调用成功率</span>
+                <span>{{randomnum3[20]}}%</span>
+              </li>
+            </ul>
+            <ul class="u_22">
+              <li>集中交易</li>
+              <li>功能号:客户端登入请求</li>
+              <li>
+                <span>调用量</span>
+                <span>{{randomnum2[21]}}</span>
+              </li>
+              <li>
+                <span>平均耗时</span>
+                <span>{{randomnum[21]}}</span>
+              </li>
+              <li>
+                <span>调用成功率</span>
+                <span>{{randomnum3[21]}}%</span>
+              </li>
+            </ul>
+            <div class="gb_1">
+              <img src="../../static/img/guangbiao.png" alt="">
+            </div>
+            <div class="gb_2"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_3"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_4"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_5"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_6"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_7"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_8"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_9"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_10"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_11"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_12"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_13"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_14"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_15"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_16"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_17"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_18"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_19"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_20"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_21"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_22"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_23"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_24"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_25"><img src="../../static/img/guangbiao.png" alt=""></div>
+            <div class="gb_26"><img src="../../static/img/guangbiao.png" alt=""></div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    let vm = new Vue({
+        el: '#main',
+        data: {
+            msg:'hhh',
+            date:"",
+          time:"",
+          timer1:'',
+          timer2:'',
+          randomnum:[],
+          randomnum2:[],
+          randomnum3:[]
+
+        },
+        methods: {
+            RandomNumBoth(Min,Max){
+                var Range = Max - Min;
+                var Rand = Math.random();
+                var num = Min + Math.round(Rand * Range); //四舍五入
+                return num;
+                },
+                getarr1(){
+                  this.randomnum=[]
+                  this.randomnum2=[]
+                  this.randomnum3=[]
+                  for (let index = 0; index < 22; index++) {
+                    this.randomnum.push(this.RandomNumBoth(100,999))
+                    this.randomnum2.push(this.RandomNumBoth(10000000,99999999))
+                    this.randomnum3.push(this.RandomNumBoth(75,100))
+                  }
+                },
+                formatTime() {
+                  let dd = "";
+                  let currentDate = new Date();
+                  let Dd = [
+                    "星期日",
+                    "星期一",
+                    "星期二",
+                    "星期三",
+                    "星期四",
+                    "星期五",
+                    "星期六"
+                  ];
+                  let Y = currentDate.getFullYear();
+                  let M = currentDate.getMonth() + 1;
+                  let D = currentDate.getDate();
+                  let d = currentDate.getDay();
+                  let h = currentDate.getHours();
+                  let m = currentDate.getMinutes();
+                  let s = currentDate.getSeconds();
+                  if (M < 10) {
+                    M = "0" + String(M);
+                  }
+                  if (D < 10) {
+                    D = "0" + String(D);
+                  }
+                  if (h < 10) {
+                    h = "0" + String(h);
+                  }
+                  if (m < 10) {
+                    m = "0" + String(m);
+                  }
+                  if (s < 10) {
+                    s = "0" + String(s);
+                  }
+                  if (d == 0) {
+                    dd = Dd[0];
+                  } else if (d == 1) {
+                    dd = Dd[1];
+                  } else if (d == 2) {
+                    dd = Dd[2];
+                  } else if (d == 3) {
+                    dd = Dd[3];
+                  } else if (d == 4) {
+                    dd = Dd[4];
+                  } else if (d == 5) {
+                    dd = Dd[5];
+                  } else if (d == 6) {
+                    dd = Dd[6];
+                  }
+                 this.date = Y+'-'+M+'-'+D;
+                this.time = h + ':' + m +':'+ s;
+                }
+        },
+        created (){
+            this.formatTime();
+            this.timer1 = setInterval(() => {
+              this.formatTime();
+            }, 1000);
+            this.timer2 = setInterval(() => {
+              // console.log(this.RandomNumBoth(100,999))
+              this.getarr1()
+            }, 1000);
+          },
+        destroyed() {
+            clearInterval(this.timer1)
+            clearInterval(this.timer2)
+          }
+
+    });
+</script>
+</body>
+</html>

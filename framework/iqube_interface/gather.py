@@ -8,6 +8,7 @@ import json
 import time
 import sys
 from conf.default import MEASURES_API_ADDRESS
+from common.utils import get_previous_day_ts
 
 # 解决ascii编码的问题
 import sys
@@ -47,9 +48,11 @@ class Gather():
             return success_result(temp_list)
         else:
             api_address = MEASURES_QUERY_API
-
+        # 获取当前系统时间前一天的时间戳
+        result = get_previous_day_ts()
+        curr_ts = str(list(result[0])[0])
         # 此处参数传递应给予改善, 时间需要改为当前时间的前一天
-        query_form = api_address + '?' + 'start=1551210759&m=sum:sum:' + measures + '_' + measures_name + interface_param
+        query_form = api_address + '?' + 'start='+curr_ts+'&m=sum:sum:' + measures + '_' + measures_name + interface_param
         request_result = requests.get(url=query_form)
         request_code = request_result.status_code
         print request_result

@@ -136,11 +136,12 @@ def delete_unit(request):
         # 修改获取用户的方式，直接从request中获取
         info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              request.user.username, '成功', '无')
+        add_log(info)
     except Exception as e:
         info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              request.user.username, '失败', repr(e))
         result = tools.error_result(e)
-    add_log(info)
+        add_log(info)
     return result
 
 
@@ -159,6 +160,7 @@ def add_unit(request):
             username = request.user.username
             res = json.loads(request.body)
             add_dic = res['data']
+            del add_dic['score']
             add_flow_dic = res['flow']
             monitor_type = res['monitor_type']
             #  根据前台来的单元类型进行分类
@@ -210,11 +212,12 @@ def add_unit(request):
             # 修改获取用户的方式，直接从request中获取
             info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                                  request.user.username, '成功', '无')
+            add_log(info)
     except Exception as e:
         info = make_log_info(u'增加监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              request.user.username, '失败', repr(e))
         result = tools.error_result(e)
-    # add_log(info)
+        add_log(info)
     return result
 
 
@@ -236,6 +239,7 @@ def edit_unit(request):
             monitor_type = res['monitor_type']
             # 把前台来的监控项数据一次性转为字典
             add_dic = res['data']
+            del add_dic['score']
             if res['monitor_type'] == 'first':
                 monitor_type = '1'
             if res['monitor_type'] == 'second':
@@ -274,17 +278,18 @@ def edit_unit(request):
                 add_dic['monitor_type']='fourth'
             # 添加定时任务监控要求本地安装任务调度软件rabitmq
             # 正式环境服务器一般带有这个调度软件，如果没有就要安装
-            function.add_unit_task(add_dicx=add_dic)
+            # function.add_unit_task(add_dicx=add_dic)
             result = tools.success_result(None)
             # 修改获取用户的方式，直接从request中获取
             info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              request.user.username, '成功', '无')
+            add_log(info)
     except Exception as e:
         print e
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                              request.user.username, '失败', repr(e))
         result = tools.error_result(e)
-        # add_log(info)
+        add_log(info)
     return result
 
 

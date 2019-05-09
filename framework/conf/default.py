@@ -45,8 +45,8 @@ APP_TOKEN = '317908f5-8dc1-44cc-89c8-8bf5c572ba19'
 MEASURES_API_ADDRESS = 'http://10.240.1.72:8099/webserver/metric/getMetricSetColumns.do'  # type: str
 
 # 指标查询API
-MEASURES_QUERY_API = 'http://192.168.1.150:4242/api/query'
-# MEASURES_QUERY_API = 'http://10.240.1.187:4242/api/query'
+# MEASURES_QUERY_API = 'http://192.168.1.150:4242/api/query'
+MEASURES_QUERY_API = 'http://10.240.1.187:4242/api/query'
 
 # 日志集API地址
 # LOG_API_ADDRESS = 'http://192.168.1.153:8088/webserver/log/getLogColumns.do'
@@ -73,8 +73,9 @@ DENGFEI_PASSWORD = 'test'
 # 蓝鲸智云开发者中心的域名，形如：http://paas.bking.com#
 # 长沙
 # BK_PAAS_HOST = 'http://paas.bk.com:80'
+
 # 上海
-BK_PAAS_HOST =  'https://paas.blueking.com'
+BK_PAAS_HOST = 'https://paas.blueking.com'
 # 上海退出登录地址
 LOG_OUT_ADDRESS = 'https://paas.blueking.com/accounts/logout/'
 
@@ -134,6 +135,7 @@ SECRET_KEY = 'MQtd_0cw&AiY5jT&&#w7%9sCK=HW$O_e%ch4xDd*AaP(xU0s3X'
 CSRF_COOKIE_PATH = SITE_URL
 
 ALLOWED_HOSTS = ['*']
+
 # ==============================================================================
 # Middleware and apps
 # ==============================================================================
@@ -177,7 +179,8 @@ INSTALLED_APPS = (
     'history_chart',
     'home_page',
     'iqube_interface',
-	'custom_query'
+    'custom_query',
+    'DataBaseManage'
 )
 
 # ==============================================================================

@@ -88,3 +88,22 @@ def get_current_time():
         return tools.error_result(e)
     # scene_list = list(res1)
     return res
+
+
+def get_previous_day_ts():
+    """
+        获取当前系统时间前一天的时间戳
+        :return:
+        """
+    res = ""
+    try:
+        sql = "SELECT unix_timestamp(date_sub(now(), INTERVAL 1 DAY)) as timestamp;"
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(sql)
+        res = cursor.fetchall()
+        db.close()
+    except Exception as e:
+        return tools.error_result(e)
+    # scene_list = list(res1)
+    return res

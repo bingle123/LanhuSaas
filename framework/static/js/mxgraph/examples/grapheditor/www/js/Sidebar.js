@@ -941,6 +941,16 @@ Sidebar.prototype.addBasePalette = function(expand)
 	 		 		 		cell.insert(cloneObj);
 	 		 		 		return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, '监控项1');
 	 		 		 	}),
+		this.addEntry('基本监控项（终）', function()
+	 		 		 	{
+	 		 		 			var cell = new mxCell('图型展示', new mxGeometry(0, 0, 430, 270),
+	 		 		 			   'swimlane;fontStyle=1;childLayout=stackLayout;horizontal=1;startSize=36;rounded=1;'+
+	 		 		 				'fillColor=#6A90CB;horizontalStack=0;gradientColor=white;gradientDirection=east;shadow=1;' +
+	 		 		 			   'resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;');
+	 		 		 		cell.vertex = true;
+							cell.attribute = "https://snapshot.raintank.io/dashboard/snapshot/WuUC5ETPUNWLJ46grm3RqyXnhdiDWbnx?orgId=2"
+							return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, '监控项1');
+	 		 		 	}),
 	 		 	this.addEntry('合并', function()
 	 		 	{
 	 		 		plus.vertex = true;

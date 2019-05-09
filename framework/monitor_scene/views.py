@@ -305,3 +305,14 @@ def query_scene_design(request):
     # 分页查询所有设计好的场景
     res = function.query_scene_design(request)
     return render_json(res)
+
+
+def page_query_scene(request):
+    """
+    分页查询场景
+    :param request:
+    :return:
+    """
+    res = function.page_query_scene(request)
+    return render_json(res)
+

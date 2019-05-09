@@ -32,5 +32,6 @@ urlpatterns = patterns(
     (r'^json_test', 'json_test'),  # 测试专用
     (r'^crawl/$', 'crawl'),  # 爬虫测试用例
     (r'^test', 'test'),  # 测试专用
+   # (r'^ywzl_panorama', 'ywzlPanorama_html'),  # 测试专用
 
 )

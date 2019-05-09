@@ -19,10 +19,15 @@
 	    if (window.parent.openNew)
         {
             //打开一个新的流程设计器窗口
-            window.parent.open(window.parent.location.href);
+            window.parent.open("${SITE_URL}monitor_scene/edit_flow_graph");
         }
-	    //将场景数据注入新流程设计器
-	    window.parent.openFile.setData(vm.fileResult, vm.fileName);
+	    if(window.parent.openNew){
+	        //将场景数据注入新流程设计器
+	        window.parent.openFile.setData(vm.fileResult, vm.fileName);
+        } else{
+	        //替换编辑器中的场景
+	        window.parent.replaceUpdateXml(vm.fileResult, vm.fileName);
+        }
     };
 	
 	// Hides this dialog
@@ -195,14 +200,20 @@
             show() {
                 axios({
                     method: 'post',
-                    url: window.parent.OPEN_URL,
+                    url: '${SITE_URL}monitor_scene/page_query_scene/',
                     data: {
                         page: vm.page,
                         limit: 5
                     },
                 }).then(function (res) {
-                    vm.sites = res.data.results.scene_list;
-                    vm.page_count = res.data.results.scene_list[0].page_count;
+                    //这里要注意，初始化是没有数据的
+                    if(res.data.results && res.data.results.scene_list.length > 0){
+                        vm.sites = res.data.results.scene_list;
+                        vm.page_count = res.data.results.scene_list[0].page_count;
+                    }else{
+                        vm.sites = res.data.results;
+                        vm.page_count = 0;
+                    }
                 })
             },
             getCurrentRow(index,row){
