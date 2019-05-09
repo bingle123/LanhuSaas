@@ -607,6 +607,7 @@ def get_scenes(pos_id, start, end):
                 item_id = Scene_monitor.objects.get(id=scene_mon_id).item_id
                 # 获取基本数据
                 item = Monitor.objects.get(id=item_id)
+                print item
                 # 转成字典
                 item_dict = model_to_dict(item)
                 gather_data = TDGatherData.objects.filter(item_id=item_id)
