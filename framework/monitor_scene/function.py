@@ -60,53 +60,53 @@ def addSence(request):
     :return:
     """
     id = None
-    try:
-        res = request.body
-        senceModel = json.loads(res)
-        print senceModel
-        starttime = senceModel['data']["scene_startTime"]
-        endtime = senceModel['data']["scene_endTime"]
-        temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
-        timezone = Area.objects.get(id=senceModel['data']['area']).timezone
-        starthour, startmin = tran_time_china(temp_date, timezone=timezone)
-        starttime = starthour + ":" + startmin
-        temp_date = datetime(2019, 1, 1, int(endtime.split(':')[0]), int(endtime.split(':')[-1]), 0)
-        endhour, endmin = tran_time_china(temp_date, timezone=timezone)
-        endtime = endhour + ":" + endmin
-        senceModel2 = {
-            "scene_name": senceModel['data']['scene_name'],
-            "scene_startTime": starttime,
-            "scene_endTime": endtime,
-            "scene_creator": "admin",
-            "scene_area": senceModel['data']['area']
+    # try:
+    res = request.body
+    senceModel = json.loads(res)
+    print senceModel
+    starttime = senceModel['data']["scene_startTime"]
+    endtime = senceModel['data']["scene_endTime"]
+    temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
+    timezone = Area.objects.get(id=senceModel['data']['area']).timezone
+    starthour, startmin = tran_time_china(temp_date, timezone=timezone)
+    starttime = starthour + ":" + startmin
+    temp_date = datetime(2019, 1, 1, int(endtime.split(':')[0]), int(endtime.split(':')[-1]), 0)
+    endhour, endmin = tran_time_china(temp_date, timezone=timezone)
+    endtime = endhour + ":" + endmin
+    senceModel2 = {
+        "scene_name": senceModel['data']['scene_name'],
+        "scene_startTime": starttime,
+        "scene_endTime": endtime,
+        "scene_creator": "admin",
+        "scene_area": senceModel['data']['area']
+    }
+    id = Scene.objects.create(**senceModel2)
+    senceModel3 = {
+        "scene": id,
+        "position_id": senceModel['data']["pos_name"]
+    }
+    position_scene.objects.create(**senceModel3)
+    # 新增场景再添加场景与监控项的对应关系，编辑时再添加这个关系
+    """
+    for i in senceModel['monitor_data']:
+        monitor_data = {
+            'scene_id': id.id,
+            'item_id': int(i['item_id']),
+            'x': int(i['x']),
+            'y': int(i['y']),
+            'scale': i['scale'],
+            'score': int(i['score']),
+            'order': int(i['order']),
+            'next_item':int(i['next_item'])
         }
-        id = Scene.objects.create(**senceModel2)
-        senceModel3 = {
-            "scene": id,
-            "position_id": senceModel['data']["pos_name"]
-        }
-        position_scene.objects.create(**senceModel3)
-        # 新增场景再添加场景与监控项的对应关系，编辑时再添加这个关系
-        """
-        for i in senceModel['monitor_data']:
-            monitor_data = {
-                'scene_id': id.id,
-                'item_id': int(i['item_id']),
-                'x': int(i['x']),
-                'y': int(i['y']),
-                'scale': i['scale'],
-                'score': int(i['score']),
-                'order': int(i['order']),
-                'next_item':int(i['next_item'])
-            }
-            Scene_monitor.objects.create(**monitor_data)
-        """
-        info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
-    except Exception as e:
-        info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    add_log(info)
+        Scene_monitor.objects.create(**monitor_data)
+    """
+    #     info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+    #                          get_active_user(request)['data']['bk_username'], '成功', '无')
+    # except Exception as e:
+    #     info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    # add_log(info)
     return {'scene_id': id.id}
 
 
@@ -149,23 +149,23 @@ def delete_scene(request):
     :param request:
     :return:
     """
-    try:
-        Scene.objects.filter(id=request.body).delete()
-        Scene_monitor.objects.filter(scene_id=request.body).delete()
-        info = make_log_info(u'删除场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
-        add_log(info)
-        position_scene.objects.filter(scene=request.body).delete()
-        info = make_log_info(u'删除场景编排数据', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
-        add_log(info)
-    except Exception as e:
-        info = make_log_info(u'删除场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        add_log(info)
-        info = make_log_info(u'删除场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        add_log(info)
+    # try:
+    Scene.objects.filter(id=request.body).delete()
+    Scene_monitor.objects.filter(scene_id=request.body).delete()
+    #     info = make_log_info(u'删除场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+    #                          get_active_user(request)['data']['bk_username'], '成功', '无')
+    #     add_log(info)
+    #     position_scene.objects.filter(scene=request.body).delete()
+    #     info = make_log_info(u'删除场景编排数据', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+    #                          get_active_user(request)['data']['bk_username'], '成功', '无')
+    #     add_log(info)
+    # except Exception as e:
+    #     info = make_log_info(u'删除场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    #     add_log(info)
+    #     info = make_log_info(u'删除场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    #     add_log(info)
     return ""
 
 
@@ -175,63 +175,63 @@ def editSence(request):
     :param request:
     :return:
     """
-    try:
-        model = json.loads(request.body)
-        starttime = model['data']["scene_startTime"]
-        endtime = model['data']["scene_endTime"]
-        temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
-        timezone = Area.objects.get(id=model['data']['area']).timezone
-        starthour, startmin = tran_time_china(temp_date, timezone=timezone)
-        starttime = starthour + ":" + startmin
-        temp_date = datetime(2019, 1, 1, int(endtime.split(':')[0]), int(endtime.split(':')[-1]), 0)
-        endhour, endmin = tran_time_china(temp_date, timezone=timezone)
-        endtime = endhour + ":" + endmin
-        senceModel2 = {
-            "scene_name": model['data']['scene_name'],
-            "scene_startTime": starttime,
-            "scene_endTime": endtime,
-            "scene_editor": "admin",
-            "scene_area": model['data']['area']
+    # try:
+    model = json.loads(request.body)
+    starttime = model['data']["scene_startTime"]
+    endtime = model['data']["scene_endTime"]
+    temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
+    timezone = Area.objects.get(id=model['data']['area']).timezone
+    starthour, startmin = tran_time_china(temp_date, timezone=timezone)
+    starttime = starthour + ":" + startmin
+    temp_date = datetime(2019, 1, 1, int(endtime.split(':')[0]), int(endtime.split(':')[-1]), 0)
+    endhour, endmin = tran_time_china(temp_date, timezone=timezone)
+    endtime = endhour + ":" + endmin
+    senceModel2 = {
+        "scene_name": model['data']['scene_name'],
+        "scene_startTime": starttime,
+        "scene_endTime": endtime,
+        "scene_editor": "admin",
+        "scene_area": model['data']['area']
+    }
+    Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
+        # info = make_log_info(u'编辑场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
+        #                      get_active_user(request)['data']['bk_username'], '成功', '无')
+        # add_log(info)
+    Scene_monitor.objects.filter(scene_id=model['data']['id']).delete()
+    for i in model['monitor_data']:
+        monitor_data = {
+            'scene_id': model['data']['id'],
+            'item_id': int(i['item_id']),
+            'x': int(i['x']),
+            'y': int(i['y']),
+            'scale': i['scale'],
+            'score': int(i['score']),
+            'order': int(i['order']),
+            'next_item': int(i['next_item'])
         }
-        Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
-        info = make_log_info(u'编辑场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
-        add_log(info)
-        Scene_monitor.objects.filter(scene_id=model['data']['id']).delete()
-        for i in model['monitor_data']:
-            monitor_data = {
-                'scene_id': model['data']['id'],
-                'item_id': int(i['item_id']),
-                'x': int(i['x']),
-                'y': int(i['y']),
-                'scale': i['scale'],
-                'score': int(i['score']),
-                'order': int(i['order']),
-                'next_item': int(i['next_item'])
-            }
-            Scene_monitor.objects.create(**monitor_data)
-        info = make_log_info(u'场景编排', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
-        add_log(info)
-        scene = Scene.objects.get(id=model['data']['id'])
-        scene.save()
-        job = pos_info.objects.filter(pos_name=model['data']["pos_name"])
-        for j in job:
-            senceModel3 = {
-                "scene_id": model['data']['id'],
-                "position_id": j.id
-            }
-        position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
-        info2 = make_log_info(u'编辑场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                              get_active_user(request)['data']['bk_username'], '成功', '无')
-        add_log(info2)
-    except Exception as e:
-        info = make_log_info(u'编辑场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        add_log(info)
-        info2 = make_log_info(u'场景编排', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
-        add_log(info2)
+        Scene_monitor.objects.create(**monitor_data)
+        # info = make_log_info(u'场景编排', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
+        #                      get_active_user(request)['data']['bk_username'], '成功', '无')
+        # add_log(info)
+    scene = Scene.objects.get(id=model['data']['id'])
+    scene.save()
+    job = pos_info.objects.filter(pos_name=model['data']["pos_name"])
+    for j in job:
+        senceModel3 = {
+            "scene_id": model['data']['id'],
+            "position_id": j.id
+        }
+    position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
+    #     info2 = make_log_info(u'编辑场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+    #                           get_active_user(request)['data']['bk_username'], '成功', '无')
+    #     add_log(info2)
+    # except Exception as e:
+    #     info = make_log_info(u'编辑场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
+    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    #     add_log(info)
+    #     info2 = make_log_info(u'场景编排', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+    #                           get_active_user(request)['data']['bk_username'], '失败', repr(e))
+    #     add_log(info2)
     return None
 
 
