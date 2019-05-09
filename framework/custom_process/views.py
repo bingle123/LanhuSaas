@@ -4,7 +4,7 @@ from common.mymako import render_mako_context
 from . import function
 import json
 import sys
-from logmanagement.function import add_log, make_log_info, get_active_user
+from logmanagement.function import add_log, make_log_info
 
 
 def show_index(request):
@@ -33,16 +33,16 @@ def add_node(request):
     :param request:
     :return:
     """
-    # try:
-    node = json.loads(request.body)
-    status = function.add_node(node)
-    # info = make_log_info(u'增加或更新自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
-    #                      get_active_user(request)['data']['bk_username'], '成功', '无')
-    # except Exception as e:
-    #     print e
-    #     info = make_log_info(u'增加或更新自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
-    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    #add_log(info)
+    try:
+        node = json.loads(request.body)
+        status = function.add_node(node)
+        info = make_log_info(u'增加或更新自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
+                             request.user.username, '成功', '无')
+    except Exception as e:
+        print e
+        info = make_log_info(u'增加或更新自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
+                             request.user.username, '失败', repr(e))
+    add_log(info)
     return render_json(status)
 
 
@@ -74,15 +74,15 @@ def del_node(request):
     :param request:
     :return:
     """
-    #try:
-    node_id = json.loads(request.body)
-    status = function.del_node(node_id)
-    # info = make_log_info(u'删除自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
-    #                      get_active_user(request)['data']['bk_username'], '成功', '无')
-    # except Exception as e:
-    #     info = make_log_info(u'删除自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
-    #                          get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    # add_log(info)
+    try:
+        node_id = json.loads(request.body)
+        status = function.del_node(node_id)
+        info = make_log_info(u'删除自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
+                             request.user.username, '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'删除自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
+                             request.user.username, '失败', repr(e))
+    add_log(info)
     return render_json(status)
 
 
@@ -103,14 +103,14 @@ def truncate_node(request):
     :param request:
     :return:
     """
-    # try:
-    status = function.truncate_node()
-    #     info = make_log_info(u'删除所有自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
-    #                      get_active_user(request)['data']['bk_username'], '成功', '无')
-    # except Exception as e:
-    #     info = make_log_info(u'删除所有自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
-    #                      get_active_user(request)['data']['bk_username'], '失败', repr(e))
-    # add_log(info)
+    try:
+        status = function.truncate_node()
+        info = make_log_info(u'删除所有自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
+                             request.user.username, '成功', '无')
+    except Exception as e:
+        info = make_log_info(u'删除所有自定义流程', u'业务日志', u'TbCustProcess', sys._getframe().f_code.co_name,
+                             request.user.username, '失败', repr(e))
+    add_log(info)
     return render_json(status)
 
 
