@@ -19,6 +19,7 @@ from market_day.models import Area
 from market_day.function import tran_time_china, tran_china_time_other, check_jobday
 from django.db.models import Q
 from xml.etree import ElementTree  #引入ElementTree的包
+from monitor_item.models import *
 
 def monitor_show(request):
     """
@@ -792,7 +793,7 @@ def get_scene_find_xml(scene_id):
     :param scene_id:
     :return:
     '''
-    dto = Scene.objects.filter(id=scene_id).get()
+    dto = SceneDesign.objects.filter(id=scene_id).get()
     roota=ElementTree.XML(dto.scene_content)
     parent = roota.find("root", "mxGraphModel")
     list = parent._children
@@ -857,3 +858,38 @@ def page_query_scene(request):
         'scene_list': res_list,
     }
     return tools.success_result(res_dic)
+
+def page_query_xml_show(id):
+    dto = SceneDesign.objects.filter(id=id)
+    if dto.count() > 0:
+        return dto.get().scene_content
+    else:
+        return None
+
+def query_scene_item_data_handle(list_id):
+    arr = []
+    for dto_item_id in list_id:
+        item_id = int(dto_item_id)
+        item_dto = Monitor.objects.filter(id=item_id)
+        if item_dto.count()>0:
+            item_vo = item_dto.get()
+            gather_data = TDGatherData.objects.filter(item_id=item_id)
+            if gather_data.count()>0:
+                gather_dto = gather_data.get()
+                dt = {}
+                dt["id"] = dto_item_id
+                str = gather_dto.data_value
+                if str !=None:
+                    json_dto = json.loads(str)
+                    key = item_vo.target_name + "_" + item_vo.measure_name
+                    txt = json_dto[0].get(key)
+                    if txt == None:
+                        txt = ""
+                    dt["key_val"] = txt
+                dt["key"] = key
+                dt["key_name"] = item_vo.display_rule#.decode("utf-8")
+
+                dt["item_type"] = item_vo.monitor_type
+                arr.append(dt)
+        #TDGatherData
+    return  arr

@@ -948,7 +948,12 @@ Sidebar.prototype.addBasePalette = function(expand)
 	 		 		 				'fillColor=#6A90CB;horizontalStack=0;gradientColor=white;gradientDirection=east;shadow=1;' +
 	 		 		 			   'resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;');
 	 		 		 		cell.vertex = true;
-							cell.attribute = "https://snapshot.raintank.io/dashboard/snapshot/WuUC5ETPUNWLJ46grm3RqyXnhdiDWbnx?orgId=2"
+	 		 		 		var field1 = new mxCell('基本监控项', new mxGeometry(0, 0, 420, 260), 'text;strokeColor=none;align=center;verticalAlign=top;spacingLeft=4;spacingRight=4;fillColor=none;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;');
+	 		 		 		field1.vertex = true;
+	 		 		 		var cloneObj = sb.cloneCell(field1);
+	 		 		 		cloneObj.value='图型指标';
+	 		 		 		cell.insert(cloneObj);
+							//cell.attribute = "https://snapshot.raintank.io/dashboard/snapshot/WuUC5ETPUNWLJ46grm3RqyXnhdiDWbnx?orgId=2"
 							return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, '监控项1');
 	 		 		 	}),
 	 		 	this.addEntry('合并', function()
