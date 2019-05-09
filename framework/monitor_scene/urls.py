@@ -42,5 +42,6 @@ urlpatterns = patterns(
     (r'^open/$', 'open_win'),
     (r'^open_scene_design/$', 'query_scene_design'),
     (r'^page_query_scene/$', 'page_query_scene'),
-
+    (r'page_query_xml_show', 'page_query_xml_show'),  # 展示页面流程图
+    (r'query_scene_item_data', 'query_scene_item_data'),  # 监控项的id查询监控值与颜色用于流程展示
 )
