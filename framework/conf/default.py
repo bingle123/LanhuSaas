@@ -45,8 +45,8 @@ APP_TOKEN = '317908f5-8dc1-44cc-89c8-8bf5c572ba19'
 MEASURES_API_ADDRESS = 'http://10.240.1.72:8099/webserver/metric/getMetricSetColumns.do'  # type: str
 
 # 指标查询API
-# MEASURES_QUERY_API = 'http://192.168.1.150:4242/api/query'
-MEASURES_QUERY_API = 'http://10.240.1.187:4242/api/query'
+MEASURES_QUERY_API = 'http://192.168.1.150:4242/api/query'
+# MEASURES_QUERY_API = 'http://10.240.1.187:4242/api/query'
 
 # 日志集API地址
 # LOG_API_ADDRESS = 'http://192.168.1.153:8088/webserver/log/getLogColumns.do'
@@ -74,9 +74,9 @@ DENGFEI_PASSWORD = 'test'
 # 长沙
 # BK_PAAS_HOST = 'http://paas.bk.com:80'
 # 上海
-BK_PAAS_HOST = 'https://paas.gtjatest.com'
+BK_PAAS_HOST =  'https://paas.blueking.com'
 # 上海退出登录地址
-LOG_OUT_ADDRESS = 'https://paas.gtjatest.com/accounts/logout/'
+LOG_OUT_ADDRESS = 'https://paas.blueking.com/accounts/logout/'
 
 # 请求官方 API 默认版本号，可选值为："v2" 或 ""；其中，"v2"表示规范化API，""表示未规范化API
 DEFAULT_BK_API_VER = 'v2'

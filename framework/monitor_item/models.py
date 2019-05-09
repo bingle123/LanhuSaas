@@ -33,7 +33,7 @@ class Monitor(models.Model):
     dimension = models.CharField(verbose_name=u'维度', max_length=1000, null=True)
     display_type = models.PositiveIntegerField(verbose_name=u'展示类型', null=True)
     display_rule = models.CharField(verbose_name=u'展示规则', max_length=1000, null=True)
-
+    score = models.PositiveIntegerField(verbose_name=u'分值', max_length=3, null=True)
     class Meta:
         verbose_name = u'监控项信息表'
         verbose_name_plural = u'监控项信息'
