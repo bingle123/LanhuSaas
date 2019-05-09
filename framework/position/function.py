@@ -6,7 +6,7 @@ from models import pos_info, user_info
 from shell_app import tools
 from django.db.models import Q
 from django.core.paginator import Paginator
-from logmanagement.function import add_log, make_log_info, get_active_user
+from logmanagement.function import add_log, make_log_info
 import datetime
 
 
@@ -130,11 +130,11 @@ def delete_pos(request):
         id = res['id']
         res1 = pos_info.objects.get(id=id).delete()
         info = make_log_info(u'删除岗位', u'业务日志', u'pos_info', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
     except Exception as e:
         res1 = tools.error_result(e)
         info = make_log_info(u'删除岗位', u'业务日志', u'pos_info', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
     add_log(info)
     return res1
 
@@ -149,15 +149,15 @@ def add_pos(request):
         re = ''
         res = json.loads(request.body)
         # 获取当前用户
-        nowPerson = get_active_user(request)['data']['bk_username']
+        nowPerson = request.user.username
         res['creator'] = nowPerson
         pos_info.objects.create(**res)
         info = make_log_info(u'增加岗位', u'业务日志', u'pos_info', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
     except Exception, e:
         re = tools.error_result(e)
         info = make_log_info(u'增加岗位', u'业务日志', u'pos_info', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
     add_log(info)
     return re
 
@@ -191,11 +191,11 @@ def add_person(request):
         for no_pos_username2 in person_no_positions2:
             user_info.objects.filter(user_name=no_pos_username2).update(user_pos=noposition_id)
         info = make_log_info(u'岗位人员增加或移除', u'业务日志', u'pos_info', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
     except Exception, e:
         res = tools.error_result(e)
         info = make_log_info(u'岗位人员增加或移除', u'业务日志', u'pos_info', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
     add_log(info)
     return res
 
@@ -213,14 +213,14 @@ def edit_pos(request):
         # 获取系统时间
         nowTime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         # 获取当前用户
-        nowPerson = get_active_user(request)['data']['bk_username']
+        nowPerson = request.user.username
         r1 = pos_info.objects.filter(id=id).update(pos_name=posname, edit_time=nowTime, editor=nowPerson)
         info = make_log_info(u'编辑岗位', u'业务日志', u'pos_info', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
     except Exception, e:
         r1 = tools.error_result(e)
         info = make_log_info(u'编辑岗位', u'业务日志', u'pos_info', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
     add_log(info)
     return r1
 
@@ -347,10 +347,10 @@ def synchronize(request):
             if flag2 == 0:
                 user_info.objects.filter(user_name=data.user_name).delete()
         info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'user_info', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
     except Exception, e:
         r1 = tools.error_result(e)
         info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'user_info', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
     add_log(info)
     return 0

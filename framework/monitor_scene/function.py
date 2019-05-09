@@ -1,27 +1,25 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
-
 import json
 import math
-import pytz
-import sys
-from datetime import datetime
-from django.db.models import Q
 from django.forms import model_to_dict
-from xml.etree import ElementTree  # 引入ElementTree的包
-
-from gather_data.models import TDGatherData
-from logmanagement.function import add_log, make_log_info, get_active_user
-from market_day.function import tran_time_china, tran_china_time_other, check_jobday
-from market_day.models import Area
 from models import Scene
-from models import SceneColor
 from models import SceneDesign
+from models import SceneColor
 from models import position_scene
-from monitor_item import tools
 from monitor_item.models import Monitor, Job, Scene_monitor
+from monitor_item import tools
+from gather_data.models import TDGatherData
+import sys
+from logmanagement.function import add_log, make_log_info, get_active_user
+from datetime import datetime
+import pytz
 from position.models import *
-
+from market_day.models import Area
+from market_day.function import tran_time_china, tran_china_time_other, check_jobday
+from django.db.models import Q
+from xml.etree import ElementTree  #引入ElementTree的包
+from monitor_item.models import *
 
 def monitor_show(request):
     """
@@ -795,7 +793,7 @@ def get_scene_find_xml(scene_id):
     :param scene_id:
     :return:
     '''
-    dto = Scene.objects.filter(id=scene_id).get()
+    dto = SceneDesign.objects.filter(id=scene_id).get()
     roota=ElementTree.XML(dto.scene_content)
     parent = roota.find("root", "mxGraphModel")
     list = parent._children
@@ -829,22 +827,19 @@ def page_query_scene(request):
     :return:
     """
     res = json.loads(request.body)
-    res_content = res['data']
     #  个数
     limit = res['limit']
     #  当前页面号
     page = res['page']
     # 按id倒排序
-    if res_content != "":
-        unit = Scene.objects.filter(Q(scene_name__icontains=res_content)).order_by('-id')
-    else:
-        unit = Scene.objects.all().order_by('-id')
+    unit = Scene.objects.all().order_by('-id')
     # 进入分页函数进行分页，返回总页数和当前页数据
     page_data, base_page_count = tools.page_paging(unit, limit, page)
     res_list = [];
     for scene_obj in page_data:
         starttime = tran_china_time_other(scene_obj.scene_startTime, scene_obj.scene_area)
         endtime = tran_china_time_other(scene_obj.scene_endTime, scene_obj.scene_area)
+
         dic = {
             'id': scene_obj.id,
             'scene_name': scene_obj.scene_name,
@@ -855,7 +850,7 @@ def page_query_scene(request):
             'scene_editor': scene_obj.scene_editor,
             'scene_editor_time': str(scene_obj.scene_editor_time),
             'scene_area': scene_obj.scene_area,
-            'scene_content': scene_obj.scene_content,
+            'scene_content':scene_obj.scene_content,
             'page_count': base_page_count,
         }
         res_list.append(dic)
@@ -863,3 +858,38 @@ def page_query_scene(request):
         'scene_list': res_list,
     }
     return tools.success_result(res_dic)
+
+def page_query_xml_show(id):
+    dto = SceneDesign.objects.filter(id=id)
+    if dto.count() > 0:
+        return dto.get().scene_content
+    else:
+        return None
+
+def query_scene_item_data_handle(list_id):
+    arr = []
+    for dto_item_id in list_id:
+        item_id = int(dto_item_id)
+        item_dto = Monitor.objects.filter(id=item_id)
+        if item_dto.count()>0:
+            item_vo = item_dto.get()
+            gather_data = TDGatherData.objects.filter(item_id=item_id)
+            if gather_data.count()>0:
+                gather_dto = gather_data.get()
+                dt = {}
+                dt["id"] = dto_item_id
+                str = gather_dto.data_value
+                if str !=None:
+                    json_dto = json.loads(str)
+                    key = item_vo.target_name + "_" + item_vo.measure_name
+                    txt = json_dto[0].get(key)
+                    if txt == None:
+                        txt = ""
+                    dt["key_val"] = txt
+                dt["key"] = key
+                dt["key_name"] = item_vo.display_rule#.decode("utf-8")
+
+                dt["item_type"] = item_vo.monitor_type
+                arr.append(dt)
+        #TDGatherData
+    return  arr

@@ -62,8 +62,6 @@ $(function(){
             customProcessTableListData: [],
             //蓝鲸平台用户列表信息
             bkUsers: {},
-            //步骤条默认高度
-            customProcessHeight: '1000',
             //发送通知按钮属性控制
             customProcessNotifyButtonType: 'primary',
             customProcessNotifyButtonText: '发送通知',
@@ -240,7 +238,7 @@ $(function(){
                   type: 'success'
                 });
             },
-            //发送通知
+            //确认流程节点已经执行方法
             customProcessConfirmNode: function(index, id, curr) {
                 const loading = this.customProcessPopupLoading();
                 //上传当前节点已执行状态
@@ -330,46 +328,6 @@ $(function(){
             },
             //增加/修改流程节点
             defineOrChangeProcess: function() {
-                //流程正在使用的情况
-                /*if(this.customProcessStatus){
-                    this.$confirm('当前流程正在使用中, 强制修改将会导致执行状态信息丢失，是否继续?', '提示', {
-                      confirmButtonText: '确定',
-                      cancelButtonText: '取消',
-                      type: 'warning',
-                      center: true
-                    }).then(() => {
-                        //点击确定时，清除所有节点的状态信息
-                        var url = site_url + 'custom_process/clear_execute_status';
-                        const loading = this.customProcessPopupLoading();
-                        axios({
-                            method: 'post',
-                            url: url
-                        }).then((res) =>{
-                            if('ok' == res.data.message){
-                                this.customProcessPageChange(1);
-                                this.addDialogVisible = true;
-                                this.customProcessSelectAllNodes()
-                            }else{
-                                var msg = '修改过程通知失败！';
-                                this.customProcessPopupErrorMessage(msg);
-                            }
-                            loading.close();
-                        }).catch((res) => {
-                            loading.close();
-                            var msg = '修改过程通知失败！';
-                            this.customProcessPopupErrorMessage(msg);
-                        });
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '取消修改过程通知'
-                        });
-                    });
-                //流程未在使用的情况下，可以直接进行节点信息的修改
-                }else{
-                    this.customProcessPageChange(1);
-                    this.addDialogVisible = true;
-                }*/
                 this.customProcessPageChange(1);
                 this.addDialogVisible = true;
             },
@@ -507,8 +465,6 @@ $(function(){
                             loading.close();
                             //步骤条总节点的值置0
                             this.customProcessStepSum = 0;
-                            //是否包含节点信息置false
-                            this.customProcessHasNode = false;
                             //节点执行状态：未开始执行
                             this.customProcessStatus = false;
                             //列表信息置空
