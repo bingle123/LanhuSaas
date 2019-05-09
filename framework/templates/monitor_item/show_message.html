@@ -259,6 +259,11 @@
                                                       auto-complete="off" v-model="basic.period" style="width: 96%"
                                                       placeholder="请输入采集周期(秒)" style="width: 310px;"></el-input>
                                         </el-form-item>
+                                <el-form-item label="分值" prop="score">
+                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="basic.score" style="width: 96%" @change="change4"
+                                                      placeholder="请输入分值"  max="100"></el-input>
+                                </el-form-item>
                             </el-form>
                         </div></el-col>
                         <el-col :span="12"><div class="grid-content bg-purple-light">
@@ -915,6 +920,11 @@
                                               auto-complete="off" v-model="base.period" style="width: 96%"
                                               placeholder="请输入采集周期(秒)"></el-input>
                                 </el-form-item>
+                                  <el-form-item label="分值" prop="score">
+                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="base.score" style="width: 96%" @change="change4"
+                                                      placeholder="请输入分值"  max="100"></el-input>
+                                </el-form-item>
                                 <el-col :span="24">
                                     <el-form-item v-for="(i,index) in base.dimension_data" class="dimension_div">
                                     <el-col :span="11">
@@ -1106,7 +1116,8 @@
                 contents: '',                          //显示内容
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
-                monitor_area: ''                             //日历地区
+                monitor_area: '',                             //日历地区
+                score:'1',                                //分值
             },
             base: {
                 //基本单元
@@ -1128,7 +1139,8 @@
                 contents: '',                          //显示内容
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
-                monitor_area: ''                             //日历地区
+                monitor_area: '',                             //日历地区
+                score:''                                //分值
             },             //基本单元
             rules1: {
                 font_size: [
@@ -1145,6 +1157,9 @@
                 ],
                 period: [
                     {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
+                ],
+                score: [
+                    {required: true, message: '请输入分值', trigger: 'blur'}
                 ]
             },                              //校验规则
             chart: {                                //图表单元
@@ -1296,7 +1311,10 @@
                     dimension_value: [
                         {required: true, message: '请填写维度值', trigger: 'blur'}
                     ]
-                }
+                },
+                score:[
+                    {required: true, message: '请输入分值',trigger:'change'}
+                ]
             },
             //校验规则
             basic1: {                                //基本单元
@@ -1492,6 +1510,7 @@
                         vm.base['gather_rule'] = row.gather_rule;
                         vm.base['gather_params'] = row.gather_params;
                         vm.base['monitor_area'] = vm.area;
+                        vm.base['score'] = row.score;
                     }else{
                         alert('暂未实现！');
                     }
@@ -1608,6 +1627,7 @@
                 this.base_monitor_upload_data['start_time'] = this.base['start_time'];
                 this.base_monitor_upload_data['end_time'] = this.base['end_time'];
                 this.base_monitor_upload_data['contents'] = this.base['contents'];
+                this.base_monitor_upload_data['score'] = this.base['score'];
                 this.result_data = this.base_monitor_upload_data;
                 //由于调用采集测试接口需要以下参数,因此在此统一删除数据库表不存在的字段,避免监控项添加时报错
                 /*delete this.base['dimension_data'];
@@ -2103,6 +2123,7 @@
             },
             //编辑单元
             edit_unit(row) {
+                console.log(row)
                 this.get_db_connections();
                 vm.add_pamas = 1;
                 vm.centerDialogVisible = true;
@@ -2134,6 +2155,7 @@
                     vm.basic.gather_rule = row.gather_rule;
                     vm.basic.contents = row.contents;
                     vm.basic.status = row.status;
+                    vm.basic.score = row.score;
                     vm.area=row.monitor_area;
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface =3;
@@ -2697,6 +2719,13 @@
                 } else {
                     vm.liucheng = 'none';
                 }
+            },
+            change4(){
+               if(vm.basic.score>100){
+                    vm.basic.score = 100
+               }else if(vm.base.score>100){
+                   vm.base.score = 100
+               }
             },
             change_job_fontSize() {       //修改作业单元中预览字体
                 $('#job_text').find("*").css('font-size', this.job.font_size);
