@@ -792,7 +792,7 @@ def get_scene_find_xml(scene_id):
     :param scene_id:
     :return:
     '''
-    dto = SceneDesign.objects.filter(id=scene_id).get()
+    dto = Scene.objects.filter(id=scene_id).get()
     roota=ElementTree.XML(dto.scene_content)
     parent = roota.find("root", "mxGraphModel")
     list = parent._children
