@@ -224,6 +224,9 @@
         window.onload = function(){
             let xml = decodeURIComponent(urlParams['scene_content']);
             let fileName =  decodeURIComponent(urlParams['scene_name'])
+            if(fileName){
+               myEditor.setFilename(fileName);
+            }
             if(xml){
                 replaceUpdateXml(xml,fileName);
             }
