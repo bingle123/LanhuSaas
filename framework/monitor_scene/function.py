@@ -1,24 +1,27 @@
 # -*- coding: utf-8 -*-
 from __future__ import division
+
 import json
 import math
-from django.forms import model_to_dict
-from models import Scene
-from models import SceneDesign
-from models import SceneColor
-from models import position_scene
-from monitor_item.models import Monitor, Job, Scene_monitor
-from monitor_item import tools
-from gather_data.models import TDGatherData
-import sys
-from logmanagement.function import add_log, make_log_info, get_active_user
-from datetime import datetime
 import pytz
-from position.models import *
-from market_day.models import Area
-from market_day.function import tran_time_china, tran_china_time_other, check_jobday
+import sys
+from datetime import datetime
 from django.db.models import Q
-from xml.etree import ElementTree  #引入ElementTree的包
+from django.forms import model_to_dict
+from xml.etree import ElementTree  # 引入ElementTree的包
+
+from gather_data.models import TDGatherData
+from logmanagement.function import add_log, make_log_info, get_active_user
+from market_day.function import tran_time_china, tran_china_time_other, check_jobday
+from market_day.models import Area
+from models import Scene
+from models import SceneColor
+from models import SceneDesign
+from models import position_scene
+from monitor_item import tools
+from monitor_item.models import Monitor, Job, Scene_monitor
+from position.models import *
+
 
 def monitor_show(request):
     """
@@ -826,19 +829,22 @@ def page_query_scene(request):
     :return:
     """
     res = json.loads(request.body)
+    res_content = res['data']
     #  个数
     limit = res['limit']
     #  当前页面号
     page = res['page']
     # 按id倒排序
-    unit = Scene.objects.all().order_by('-id')
+    if res_content != "":
+        unit = Scene.objects.filter(Q(scene_name__icontains=res_content)).order_by('-id')
+    else:
+        unit = Scene.objects.all().order_by('-id')
     # 进入分页函数进行分页，返回总页数和当前页数据
     page_data, base_page_count = tools.page_paging(unit, limit, page)
     res_list = [];
     for scene_obj in page_data:
         starttime = tran_china_time_other(scene_obj.scene_startTime, scene_obj.scene_area)
         endtime = tran_china_time_other(scene_obj.scene_endTime, scene_obj.scene_area)
-
         dic = {
             'id': scene_obj.id,
             'scene_name': scene_obj.scene_name,
@@ -849,7 +855,7 @@ def page_query_scene(request):
             'scene_editor': scene_obj.scene_editor,
             'scene_editor_time': str(scene_obj.scene_editor_time),
             'scene_area': scene_obj.scene_area,
-            'scene_content':scene_obj.scene_content,
+            'scene_content': scene_obj.scene_content,
             'page_count': base_page_count,
         }
         res_list.append(dic)
