@@ -541,6 +541,32 @@ def alternate_play_test(request):
     res_list = get_scenes(pos_id, start, end)
     return res_list
 
+def query_pos_scene(request):
+    '''
+    场景
+    :param request:
+    :return:
+    '''
+    res = json.loads(request.body)
+    # 接收参数
+    pos_id = res['pos_id']
+    start = res['start']
+    end = res['end']
+    scenes = []
+    # 获取岗位对应的场景
+    position_scenes = position_scene.objects.filter(position_id=pos_id)
+
+    for pos_scene in position_scenes:
+        scenes.append(pos_scene.scene_id)
+
+    scene_id_list=[]
+    for scene in scenes:
+        # 场景
+        temp_scene = Scene.objects.get(id=scene)
+        if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
+            scene_id_list.append(scene)
+    return scene_id_list
+
 
 def alternate_play(request):
     """
