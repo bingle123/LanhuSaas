@@ -28,7 +28,8 @@ urlpatterns = patterns(
     (r'get_basic_data/(.+)$', 'get_basic_data'),
     (r'^alternate_play/$', 'alternate_play'),
     (r'^alternate_play_test', 'alternate_play_test'),
-    (r'^query_pos_scene', 'query_pos_scene'),  # 根据岗位id查询场景
+    (r'query_pos_scene', 'query_pos_scene'),  # 根据岗位id查询场景
+    (r'query_curr_user_scene', 'query_curr_user_scene'),  # 查询当前用户场景
     (r'^scene_data/$', 'scene_data'),
     (r'^monitor_scene_show/$', 'monitor_scene_show'),
     (r'^get_all_pos/$', 'get_all_pos'),
