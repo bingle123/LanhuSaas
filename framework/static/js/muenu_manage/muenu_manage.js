@@ -27,6 +27,7 @@ $(function(){
                 mname: '',
                 url: '',
                 pcode:0,
+                mImg:'',
             },
             pcodes:[
                 {

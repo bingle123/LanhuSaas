@@ -6,7 +6,7 @@ from db_connection.models import *
 from shell_app import tools
 import pymysql as MySQLdb
 import cx_Oracle
-import pymssql
+# import pymssql
 import base64
 import pyDes
 from django.db.models import Q
@@ -15,7 +15,7 @@ from monitor_item.models import *
 from celery.task import periodic_task
 import datetime
 import sys
-from logmanagement.function import add_log, make_log_info, get_active_user
+from logmanagement.function import add_log, make_log_info
 from conf import settings_development, default, settings_production, settings_testing
 
 Key = "YjCFCmtd"
@@ -186,7 +186,7 @@ def delete_conn(request, id):
 
 def get_conname(request):
     """
-    获取名称
+    根据id获取数据库连接配置并返回
     :param request:
     :return:
     """
@@ -219,7 +219,9 @@ def testConn(request):
             sql = r'%s/%s@%s/%s' % (username, password, ip, databasename)
             db = cx_Oracle.connect(sql)
         else:
-            db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename)
+            # SqlServer数据库链接包暂时有部署问题，暂时取消该功能
+            # db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename)
+            return tools.error_result("暂不支持SqlServer类型数据库！")
         cursor = db.cursor()
         if cursor != '':
             cursor.close()
@@ -379,13 +381,15 @@ def get_user_muenu(request):
     # user = cilent.bk_login.get_user({})
     # bk_roleid = user['data']['bk_role']
     # 根据菜单和角色表查出该角色对应的菜单
-    role_muenus = rm.objects.filter(roleid=1)
+    role_menus = rm.objects.filter(roleid=1)
     temp_list = []
-    for r_m in role_muenus:
-        muenuid = model_to_dict(r_m)['muenuid']
-        muenu = Muenu.objects.get(id=muenuid)
+    for r_m in role_menus:
+        # 菜单id，菜单表和菜单角色表都要对应起来
+        menu_id = model_to_dict(r_m)['muenuid']
+        # 菜单名称
+        menu_name = Muenu.objects.get(id=menu_id)
         temp = {}
-        temp = model_to_dict(muenu)
+        temp = model_to_dict(menu_name)
         temp_list.append(temp)
     return tools.success_result(temp_list)
 
@@ -596,6 +600,8 @@ def getAny_db(id):
         sql = r'%s/%s@%s/%s' % (username, password, ip, databasename, 'charset=utf8')
         db = cx_Oracle.connect(sql)
     else:
-        db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename,
-                             charset='utf8')
+        # SqlServer数据库链接包暂时有部署问题，暂时取消该功能
+        # db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename,
+        #                      charset='utf8')
+        db = None
     return db

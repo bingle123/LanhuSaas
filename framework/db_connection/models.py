@@ -29,6 +29,7 @@ class Muenu(models.Model):
     mname = models.CharField(u'名称', max_length=255)
     url = models.CharField(u'地址', max_length=255)
     pcode = models.IntegerField(u'父级菜单编号')
+    mImg = models.CharField(u'图标', max_length=255)
     class Meta:
         db_table = 'db_connection_muenu'
 
