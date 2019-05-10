@@ -178,6 +178,9 @@ def alternate_play_test(request):
     res = function.alternate_play_test(request)
     return render_json(res)
 
+def query_pos_scene(request):
+    res = function.query_pos_scene(request)
+    return render_json(res)
 
 def get_all_pos(request):
     res = function.get_all_pos(request)
@@ -315,4 +318,26 @@ def page_query_scene(request):
     """
     res = function.page_query_scene(request)
     return render_json(res)
+
+def page_query_xml_show(request):
+    '''
+    流程图表展示
+    :param request:
+    :return:
+    '''
+    res = function.page_query_xml_show((int(request.GET["id"])))
+    res = res.replace("\n","").replace("\r","")
+    return render_mako_context(request, "/monitor_scene/page_query_xml_show.html"
+                               ,{"data":res})
+
+def query_scene_item_data(request):
+    '''
+    取流程监控项内容
+    :param request:
+    :return:
+    '''
+    list_id =  request.GET.getlist("id")
+    res_data = function.query_scene_item_data_handle(list_id)
+    res_str = json.dumps(res_data)
+    return render_json(res_str)
 

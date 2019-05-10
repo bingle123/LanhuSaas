@@ -27,7 +27,8 @@ urlpatterns = patterns(
     (r'^getSceneByid/(.+)/$', 'getBySceneId'),  # 根据Id获取场景详情
     (r'get_basic_data/(.+)$', 'get_basic_data'),
     (r'^alternate_play/$', 'alternate_play'),
-    (r'^alternate_play_test/$', 'alternate_play_test'),
+    (r'^alternate_play_test', 'alternate_play_test'),
+    (r'^query_pos_scene', 'query_pos_scene'),  # 根据岗位id查询场景
     (r'^scene_data/$', 'scene_data'),
     (r'^monitor_scene_show/$', 'monitor_scene_show'),
     (r'^get_all_pos/$', 'get_all_pos'),
@@ -42,5 +43,6 @@ urlpatterns = patterns(
     (r'^open/$', 'open_win'),
     (r'^open_scene_design/$', 'query_scene_design'),
     (r'^page_query_scene/$', 'page_query_scene'),
-
+    (r'page_query_xml_show', 'page_query_xml_show'),  # 展示页面流程图
+    (r'query_scene_item_data', 'query_scene_item_data'),  # 监控项的id查询监控值与颜色用于流程展示
 )
