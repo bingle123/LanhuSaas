@@ -67,12 +67,12 @@
 <body style="overflow: visible">
 <!--start html-->
 <div id="index">
-    <!--start container-->
+    <!--start container -->
     <el-container >
 
         <!--start left  -->
         <el-row  :style="height">
-            <el-menu :style="height" class="el-menu-vertical-demo" @open="handleOpen"
+            <el-menu :style="height" class="el-menu-vertical-demo" @open="handleOpen"  unique-opened=true
                      @close="handleClose" :collapse="isCollapse" text-color="#FFFFFF" active-text-color="#000000" >
                 <el-menu-item index="1000" class="title_item">
 
@@ -201,6 +201,7 @@
             showFlag:false,
             isCollapse: false,  //是否折叠
             left_submenu:'padding-left: 30px;',
+
             height: {           //css
                 height: '',
             },
