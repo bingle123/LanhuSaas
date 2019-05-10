@@ -384,7 +384,9 @@ def get_user_muenu(request):
     role_menus = rm.objects.filter(roleid=1)
     temp_list = []
     for r_m in role_menus:
+        # 菜单id，菜单表和菜单角色表都要对应起来
         menu_id = model_to_dict(r_m)['muenuid']
+        # 菜单名称
         menu_name = Muenu.objects.get(id=menu_id)
         temp = {}
         temp = model_to_dict(menu_name)
