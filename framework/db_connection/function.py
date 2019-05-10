@@ -15,7 +15,7 @@ from monitor_item.models import *
 from celery.task import periodic_task
 import datetime
 import sys
-from logmanagement.function import add_log, make_log_info, get_active_user
+from logmanagement.function import add_log, make_log_info
 from conf import settings_development, default, settings_production, settings_testing
 
 Key = "YjCFCmtd"
@@ -186,7 +186,7 @@ def delete_conn(request, id):
 
 def get_conname(request):
     """
-    获取名称
+    根据id获取数据库连接配置并返回
     :param request:
     :return:
     """
