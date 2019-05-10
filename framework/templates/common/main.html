@@ -67,12 +67,12 @@
 <body style="overflow: visible">
 <!--start html-->
 <div id="index">
-    <!--start container-->
+    <!--start container -->
     <el-container >
 
         <!--start left  -->
         <el-row  :style="height">
-            <el-menu :style="height" class="el-menu-vertical-demo" @open="handleOpen"
+            <el-menu :style="height" class="el-menu-vertical-demo" @open="handleOpen"  unique-opened=true
                      @close="handleClose" :collapse="isCollapse" text-color="#FFFFFF" active-text-color="#000000" >
                 <el-menu-item index="1000" class="title_item">
 
@@ -85,7 +85,7 @@
                     <span slot="title">{{ i.mname }}{{ i.id }}</span>
                 </el-menu-item>
                 -->
-                <el-menu-item id="submenu" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px;font-size: 18px;padding-left:50px;" v-if=" i.pcode == 0" >
+                <el-menu-item id="submenu" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px;font-size: 18px;padding-left:50px;" v-if=" i.pcode == 0" v-on:click="testClick(i.url)" >
                     <i :class="i.mImg "></i>
                     <span slot="title" >{{ i.mname }}</span>
                 </el-menu-item>
@@ -201,6 +201,7 @@
             showFlag:false,
             isCollapse: false,  //是否折叠
             left_submenu:'padding-left: 30px;',
+
             height: {           //css
                 height: '',
             },
