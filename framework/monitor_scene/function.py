@@ -547,11 +547,11 @@ def query_pos_scene(request):
     :param request:
     :return:
     '''
-    res = json.loads(request.body)
+    #res = json.loads(request.body)
     # 接收参数
-    pos_id = res['pos_id']
-    start = res['start']
-    end = res['end']
+    pos_id = request.POST['pos_id']
+    start = request.POST['start']
+    end = request.POST['end']
     scenes = []
     # 获取岗位对应的场景
     position_scenes = position_scene.objects.filter(position_id=pos_id)
@@ -562,7 +562,10 @@ def query_pos_scene(request):
     scene_id_list=[]
     for scene in scenes:
         # 场景
-        temp_scene = Scene.objects.get(id=scene)
+        temp_scene_dt = Scene.objects.filter(id=scene,scene_content__isnull=False)
+        if temp_scene_dt.count() == 0:
+            continue
+        temp_scene = temp_scene_dt.get()
         if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
             scene_id_list.append(scene)
     return scene_id_list
@@ -890,7 +893,7 @@ def page_query_scene(request):
     return tools.success_result(res_dic)
 
 def page_query_xml_show(id):
-    dto = SceneDesign.objects.filter(id=id)
+    dto = Scene.objects.filter(id=id)
     if dto.count() > 0:
         return dto.get().scene_content
     else:
