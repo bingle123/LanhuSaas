@@ -178,9 +178,16 @@ def alternate_play_test(request):
     res = function.alternate_play_test(request)
     return render_json(res)
 
+
 def query_pos_scene(request):
     res = function.query_pos_scene(request)
     return render_json(res)
+
+
+def query_curr_user_scene(request):
+    res = function.query_curr_user_scene(request)
+    return render_json(res)
+
 
 def get_all_pos(request):
     res = function.get_all_pos(request)

@@ -541,6 +541,7 @@ def alternate_play_test(request):
     res_list = get_scenes(pos_id, start, end)
     return res_list
 
+
 def query_pos_scene(request):
     '''
     场景
@@ -549,9 +550,9 @@ def query_pos_scene(request):
     '''
     #res = json.loads(request.body)
     # 接收参数
-    pos_id = request.POST['pos_id']
-    start = request.POST['start']
-    end = request.POST['end']
+    pos_id = request.POST.get('pos_id')
+    start = request.POST.get('start')
+    end = request.POST.get('end')
     scenes = []
     # 获取岗位对应的场景
     position_scenes = position_scene.objects.filter(position_id=pos_id)
@@ -559,16 +560,30 @@ def query_pos_scene(request):
     for pos_scene in position_scenes:
         scenes.append(pos_scene.scene_id)
 
-    scene_id_list=[]
+    scene_id_list = []
     for scene in scenes:
         # 场景
         temp_scene_dt = Scene.objects.filter(id=scene,scene_content__isnull=False)
         if temp_scene_dt.count() == 0:
             continue
         temp_scene = temp_scene_dt.get()
-        if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
+        if start != None:
+           if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
+              scene_id_list.append(scene)
+        else:
             scene_id_list.append(scene)
     return scene_id_list
+
+
+def query_curr_user_scene(request):
+    user_dto = user_info.objects.filter(user_name=request.user.username)
+    if user_dto.count() > 0:
+        user_data = user_dto.get()
+        pos_id = user_data.user_pos_id
+        request.POST["pos_id"] = pos_id
+        return query_pos_scene(request)
+    else:
+        return None
 
 
 def alternate_play(request):
