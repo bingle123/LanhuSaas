@@ -381,13 +381,15 @@ def get_user_muenu(request):
     # user = cilent.bk_login.get_user({})
     # bk_roleid = user['data']['bk_role']
     # 根据菜单和角色表查出该角色对应的菜单
-    role_muenus = rm.objects.filter(roleid=1)
+    role_menus = rm.objects.filter(roleid=1)
     temp_list = []
-    for r_m in role_muenus:
-        muenuid = model_to_dict(r_m)['muenuid']
-        muenu = Muenu.objects.get(id=muenuid)
+    for r_m in role_menus:
+        # 菜单id，菜单表和菜单角色表都要对应起来
+        menu_id = model_to_dict(r_m)['muenuid']
+        # 菜单名称
+        menu_name = Muenu.objects.get(id=menu_id)
         temp = {}
-        temp = model_to_dict(muenu)
+        temp = model_to_dict(menu_name)
         temp_list.append(temp)
     return tools.success_result(temp_list)
 
