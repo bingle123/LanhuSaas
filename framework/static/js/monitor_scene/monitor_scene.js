@@ -392,7 +392,6 @@ $(function () {
                 let scene_content = encodeURIComponent(vm.scene_edit.scene_content);
                 //打开场景编辑器并带上场景id
                 window.open(site_url+"monitor_scene/edit_flow_graph/?scene_name="+scene_name+"&scene_content="+scene_content);
-
                 /*
                 vm.canvas_flag = 1;
                 if ($('.monitor_content').html() == '') {//场景编排内容块无元素
