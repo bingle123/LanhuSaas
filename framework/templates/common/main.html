@@ -85,7 +85,7 @@
                     <span slot="title">{{ i.mname }}{{ i.id }}</span>
                 </el-menu-item>
                 -->
-                <el-menu-item id="submenu" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px;font-size: 18px;padding-left:50px;" v-if=" i.pcode == 0" >
+                <el-menu-item id="submenu" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px;font-size: 18px;padding-left:50px;" v-if=" i.pcode == 0" v-on:click="testClick(i.url)" >
                     <i :class="i.mImg "></i>
                     <span slot="title" >{{ i.mname }}</span>
                 </el-menu-item>
