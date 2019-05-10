@@ -5,8 +5,8 @@ from django.forms.models import model_to_dict
 from db_connection.models import *
 from shell_app import tools
 import pymysql as MySQLdb
-# import cx_Oracle
-#import pymssql
+import cx_Oracle
+import pymssql
 import base64
 import pyDes
 from django.db.models import Q
@@ -31,8 +31,7 @@ def encryption_str(str):
     :return:
     """
     password = str.encode(encoding='utf-8')
-    # method = pyDes.des(Key, pyDes.CBC, Iv, pad=None, padmode=pyDes.PAD_PKCS5)
-    method = None
+    method = pyDes.des(Key, pyDes.CBC, Iv, pad=None, padmode=pyDes.PAD_PKCS5)
     # 执行加密码
     k = method.encrypt(password)
     # 转base64编码并返回
@@ -101,8 +100,8 @@ def saveconn_all(request):
         cilent = tools.interface_param(request)
         user = cilent.bk_login.get_user({})
         # 获取用户名
-        res['createname'] = user['data']['bk_username']
-        res['editname'] = user['data']['bk_username']
+        res['createname'] = request.user.username
+        res['editname'] = request.user.username
 
         # 密码加密后保存
         password = encryption_str(res['password'])
@@ -118,12 +117,12 @@ def saveconn_all(request):
         status_dic['page_count'] = pages
 
         info = make_log_info(u'增加数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
         add_log(info)
         return tools.success_result(status_dic)
     except Exception as e:
         info = make_log_info(u'增加数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
         add_log(info)
         res1 = tools.error_result(e)
         return res1
@@ -138,22 +137,20 @@ def editconn(request):
     try:
         # 拿到当前用户，保存为修改人
         res = json.loads(request.body)
-        cilent = tools.interface_param(request)
-        user = cilent.bk_login.get_user({})
-        res['editname'] = user['data']['bk_username']
+        res['editname'] = request.user.username
         res['edittime'] = datetime.datetime.now()
         # 点修改密码进行解密
         password = encryption_str(res['password'])
         res['password'] = password
         re1 = Conn.objects.filter(id=res['id']).update(**res)
         info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
         add_log(info)
         return tools.success_result(re1)
     except Exception as e:
         res1 = tools.error_result(e)
         info = make_log_info(u'修改数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
         add_log(info)
         return res1
 
@@ -168,7 +165,7 @@ def delete_conn(request, id):
     try:
         res = Conn.objects.filter(id=id).delete()
         info = make_log_info(u'删除数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
         add_log(info)
         status_dic = {}
         # 删除完后重新计算页数
@@ -182,7 +179,7 @@ def delete_conn(request, id):
     except Exception as e:
         res1 = tools.error_result(e)
         info = make_log_info(u'删除数据库连接配置', u'业务日志', u'Conn', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
         add_log(info)
         return tools.error_result(res1)
 
@@ -220,8 +217,7 @@ def testConn(request):
             db = MySQLdb.connect(host=ip, user=username, passwd=password, db=databasename, port=int(port))
         elif res['type'] == 'Oracle':
             sql = r'%s/%s@%s/%s' % (username, password, ip, databasename)
-            # db = cx_Oracle.connect(sql)
-            db = None
+            db = cx_Oracle.connect(sql)
         else:
             db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename)
         cursor = db.cursor()
@@ -332,10 +328,10 @@ def get_flowStatus(request):
                 elif res['data']['state'] == 'FINISHED':
                     status = 6
         info = make_log_info(u'增加节点', u'业务日志', u'Flow', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
     except Exception as e:
         info = make_log_info(u'增加节点', u'业务日志', u'Flow', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
     add_log(info)
     r = Flow.objects.filter(instance_id=task_id).update(status=status)
     return r
@@ -413,13 +409,13 @@ def addmuenus(request):
         status_dic['page_count'] = pages
 
         info = make_log_info(u'增加菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
         add_log(info)
         return tools.success_result(status_dic)
     except Exception as e:
         res1 = tools.error_result(e)
         info = make_log_info(u'增加菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
         add_log(info)
         return res1
 
@@ -434,13 +430,13 @@ def edit_muenu(request):
         res = json.loads(request.body)
         re1 = Muenu.objects.filter(id=res['id']).update(**res)
         info = make_log_info(u'修改菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
         add_log(info)
         return tools.success_result(re1)
     except Exception as e:
         res1 = tools.error_result(e)
         info = make_log_info(u'修改菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
         add_log(info)
         return res1
 
@@ -457,18 +453,18 @@ def delete_muenu(request, id):
         Muenu.objects.get(id=id).delete()
         rm.objects.filter(muenuid=id).all().delete()
         info = make_log_info(u'删除菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
         add_log(info)
         info = make_log_info(u'删除菜单', u'业务日志', u'rm', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
         add_log(info)
         return tools.success_result(None)
     except Exception as e:
         info = make_log_info(u'删除菜单', u'业务日志', u'Muenu', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
         add_log(info)
         info = make_log_info(u'删除菜单', u'业务日志', u'rm', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
         add_log(info)
         res3 = tools.error_result(e)
         return tools.error_result(res3)
@@ -555,13 +551,13 @@ def savemnus(request):
                     else:
                         pass
                 info = make_log_info(u'逐条增加菜单与角色中间表', u'业务日志', u'rm', sys._getframe().f_code.co_name,
-                                     get_active_user(request)['data']['bk_username'], '成功', '无')
+                                     request.user.username, '成功', '无')
                 add_log(info)
             except Exception as e:
                 for i in r_all:
                     rm.objects.create(roleid=model_to_dict(i)['roleid'], muenuid=model_to_dict(i)['muenuid'])
                 info = make_log_info(u'逐条增加菜单与角色中间表', u'业务日志', u'rm', sys._getframe().f_code.co_name,
-                                     get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                                     request.user.username, '失败', repr(e))
                 add_log(info)
                 return tools.error_result(e)
 
@@ -598,8 +594,7 @@ def getAny_db(id):
         db = MySQLdb.connect(host=ip, user=username, passwd=password, db=databasename, port=int(port), charset='utf8')
     elif conn['type'] == 'Oracle':
         sql = r'%s/%s@%s/%s' % (username, password, ip, databasename, 'charset=utf8')
-        # db = cx_Oracle.connect(sql)
-        db = None
+        db = cx_Oracle.connect(sql)
     else:
         db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename,
                              charset='utf8')

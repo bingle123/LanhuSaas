@@ -819,7 +819,7 @@ def get_scene_find_xml(scene_id):
     :param scene_id:
     :return:
     '''
-    dto = SceneDesign.objects.filter(id=scene_id).get()
+    dto = Scene.objects.filter(id=scene_id).get()
     roota=ElementTree.XML(dto.scene_content)
     parent = roota.find("root", "mxGraphModel")
     list = parent._children
@@ -853,12 +853,16 @@ def page_query_scene(request):
     :return:
     """
     res = json.loads(request.body)
+    res_content = res['data']
     #  个数
     limit = res['limit']
     #  当前页面号
     page = res['page']
     # 按id倒排序
-    unit = Scene.objects.all().order_by('-id')
+    if res_content != "":
+        unit = Scene.objects.filter(Q(scene_name__icontains=res_content)).order_by("-id")
+    else:
+        unit = Scene.objects.all().order_by('-id')
     # 进入分页函数进行分页，返回总页数和当前页数据
     page_data, base_page_count = tools.page_paging(unit, limit, page)
     res_list = [];
