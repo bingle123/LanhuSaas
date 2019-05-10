@@ -6,7 +6,7 @@ from db_connection.models import *
 from shell_app import tools
 import pymysql as MySQLdb
 import cx_Oracle
-import pymssql
+# import pymssql
 import base64
 import pyDes
 from django.db.models import Q
@@ -219,7 +219,9 @@ def testConn(request):
             sql = r'%s/%s@%s/%s' % (username, password, ip, databasename)
             db = cx_Oracle.connect(sql)
         else:
-            db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename)
+            # SqlServer数据库链接包暂时有部署问题，暂时取消该功能
+            # db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename)
+            return tools.error_result("暂不支持SqlServer类型数据库！")
         cursor = db.cursor()
         if cursor != '':
             cursor.close()
@@ -596,6 +598,8 @@ def getAny_db(id):
         sql = r'%s/%s@%s/%s' % (username, password, ip, databasename, 'charset=utf8')
         db = cx_Oracle.connect(sql)
     else:
-        db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename,
-                             charset='utf8')
+        # SqlServer数据库链接包暂时有部署问题，暂时取消该功能
+        # db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename,
+        #                      charset='utf8')
+        db = None
     return db
