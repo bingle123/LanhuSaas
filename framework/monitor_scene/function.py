@@ -541,6 +541,32 @@ def alternate_play_test(request):
     res_list = get_scenes(pos_id, start, end)
     return res_list
 
+def query_pos_scene(request):
+    '''
+    场景
+    :param request:
+    :return:
+    '''
+    res = json.loads(request.body)
+    # 接收参数
+    pos_id = res['pos_id']
+    start = res['start']
+    end = res['end']
+    scenes = []
+    # 获取岗位对应的场景
+    position_scenes = position_scene.objects.filter(position_id=pos_id)
+
+    for pos_scene in position_scenes:
+        scenes.append(pos_scene.scene_id)
+
+    scene_id_list=[]
+    for scene in scenes:
+        # 场景
+        temp_scene = Scene.objects.get(id=scene)
+        if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
+            scene_id_list.append(scene)
+    return scene_id_list
+
 
 def alternate_play(request):
     """
@@ -793,7 +819,7 @@ def get_scene_find_xml(scene_id):
     :param scene_id:
     :return:
     '''
-    dto = SceneDesign.objects.filter(id=scene_id).get()
+    dto = Scene.objects.filter(id=scene_id).get()
     roota=ElementTree.XML(dto.scene_content)
     parent = roota.find("root", "mxGraphModel")
     list = parent._children
@@ -827,12 +853,16 @@ def page_query_scene(request):
     :return:
     """
     res = json.loads(request.body)
+    res_content = res['data']
     #  个数
     limit = res['limit']
     #  当前页面号
     page = res['page']
     # 按id倒排序
-    unit = Scene.objects.all().order_by('-id')
+    if res_content != "":
+        unit = Scene.objects.filter(Q(scene_name__icontains=res_content)).order_by("-id")
+    else:
+        unit = Scene.objects.all().order_by('-id')
     # 进入分页函数进行分页，返回总页数和当前页数据
     page_data, base_page_count = tools.page_paging(unit, limit, page)
     res_list = [];
