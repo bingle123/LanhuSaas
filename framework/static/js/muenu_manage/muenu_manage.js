@@ -17,8 +17,6 @@ $(function(){
             currentPage:1, //当前页
             isAdd: 1,
             tableData: [],
-            roles: [],
-            dataType: [],
             editMuenu: [],
             dataCk: [],
             checkedKeys: [],
