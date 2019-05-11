@@ -927,13 +927,16 @@ def query_scene_item_data_handle(list_id):
                 dt = {}
                 dt["id"] = dto_item_id
                 str = gather_dto.data_value
-                if str !=None:
+                if str !=None and item_vo.target_name != None\
+                        and item_vo.measure_name != None:
                     json_dto = json.loads(str)
                     key = item_vo.target_name + "_" + item_vo.measure_name
                     txt = json_dto[0].get(key)
                     if txt == None:
                         txt = ""
                     dt["key_val"] = txt
+                else:
+                    dt["key_val"] = "@" + item_vo.monitor_name
                 dt["key"] = key
                 dt["key_name"] = item_vo.display_rule#.decode("utf-8")
 

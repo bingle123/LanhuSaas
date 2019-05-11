@@ -12,6 +12,7 @@ from monitor_item.models import Scene_monitor
 from notification.models import TdAlertLog
 from position.models import user_info
 from datetime import datetime
+from models import *
 
 
 def get_time(request):
@@ -122,3 +123,23 @@ def scenes_alert(request):
     }
     return dic_data
 
+
+def query_alert_data():
+    """
+    告警数据
+    :return:
+    """
+    data = AlertInfo.objects.all()
+    if data.count() > 0:
+      #  res_data = data.values_list()
+        if len(data) > 0:
+            res = []
+            for dto in data:
+                temp = model_to_dict(dto)
+                if dto.alert_time !=None:
+                    temp["alert_time"] = dto.alert_time.strftime('%Y-%m-%d %H:%M:%S')
+                if dto.modify_time !=None:
+                    temp["modify_time"] = dto.modify_time.strftime('%Y-%m-%d %H:%M:%S')
+                res.append(temp)
+            return res;
+    return None

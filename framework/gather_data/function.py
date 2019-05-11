@@ -51,8 +51,7 @@ def gather_test_init():
     # sql测试用参数：'46'
     # 文件测试用参数：'192.168.1.52#./gather_data_test
     # 接口测试用参数：'http://t.weather.sojson.com/api/weather/city/101030100#{"url": "http://t.weather.sojson.com/api/weather/city/", "code": "101030100"}'
-    info[
-        'params'] = 'http://t.weather.sojson.com/api/weather/city/101030100#{"url": "http://t.weather.sojson.com/api/weather/city/", "code": "101030100"}'
+    info['params'] = 'http://t.weather.sojson.com/api/weather/city/101030100#{"url": "http://t.weather.sojson.com/api/weather/city/", "code": "101030100"}'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'cat ${file_path}'
     # 接口测试用采集规则：'dXJsPSQxCmNvZGU9JDIKYHdnZXQgLXFPIGdhdGhlcl9kYXRhX3RlbXAgJHVybCRjb2RlYApjYXQgZ2F0aGVyX2RhdGFfdGVtcAo='
@@ -101,7 +100,7 @@ def gather_param_parse(info):
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-2',
                          gather_error_log=str(e)).save()
             return None
-        # 根据参数获取数据库连接配置\
+        # 根据参数获取数据库连接配置
         print info['params']
         conn_info = Conn.objects.filter(id=info['params']).get()
         # 解密存储在数据库中的数据库密码

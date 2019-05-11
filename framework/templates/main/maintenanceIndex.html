@@ -191,23 +191,21 @@
 
         </el-row>
         <!--告警-->
-        <el-row class="row_margin row_shadow" style="margin-bottom: 10px;background: rgb(255,255,255);">
+        <el-row id="alert_temp" class="row_margin row_shadow" style="margin-bottom: 10px;background: rgb(255,255,255);">
             <el-col :span="24">
                 <el-collapse accordion>
                     <el-collapse-item>
-                        <template slot="title">
+                        <template slot="title" >
                             <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">告警</span>
                         </template>
                         <el-col :span="22" :offset="1">
                             <el-table :data="alert_table_data" style="width: 100%;margin-bottom: 50px;">
-                                <el-table-column prop="alert_content" label="警告内容" width="350"></el-table-column>
+                                <el-table-column prop="alert_txt" label="警告内容" width="350"></el-table-column>
                                 <el-table-column prop="alert_time" label="时间" width="350"></el-table-column>
-                                <el-table-column prop="alert_level" label="级别" width="350">
-                                    <template scope="scope">
-                                        <span :class="{red_class: (scope.row.alert_level === '危险')}">{{ scope.row.alert_level }}</span>
-                                    </template>
+                                <el-table-column prop="alert_level_name" label="级别" width="350">
+
                                 </el-table-column>
-                                <el-table-column prop="alert_status" label="状态" width="350"></el-table-column>
+                                <el-table-column prop="alert_status_name" label="状态" width="350"></el-table-column>
 
                             </el-table>
                         </el-col>
@@ -735,6 +733,9 @@
                         ve.percentage=res.data['last_score'];
                         ve.alert_number=res.data['alert_count'];
                         ve.alert_table_data=res.data['alert_data'];
+                        if(ve.alert_table_data.length>0){
+                            $("#alert_temp").find("div[role='button']")[0].click();
+                        }
                         ve.scene_chart_data=[
                             {value:res.data['danger_scene'], name:'危险'},
                             {value:res.data['will_scene'], name:'预警'},
