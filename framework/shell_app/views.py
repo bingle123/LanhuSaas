@@ -51,6 +51,65 @@ def night_first(request):
     """
     return render_mako_context(request, './main/nightFirst.html')
 
+# jlq-2019-05-09-add
+def night_second(request):
+    """
+    页面3
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/nightSecond.html')
+
+# jlq-2019-05-09-add
+def night_third(request):
+    """
+    页面4
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/nightThird.html')
+
+# jlq-2019-05-09-add
+def trace_panorama(request):
+    """
+    页面5
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/tracePanorama.html')
+
+
+# jlq-2019-05-11-add
+def content(request):
+    """
+   页面5
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/content.html')
+
+def ywzl_panorama(request):
+    """
+    获取国泰系统系统状态
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/ywzlPanorama.html')
+def trace_panorama(request):
+    """
+    获取国泰系统系统状态
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/tracePanorama.html')
+
+def kpi_panorama(request):
+    """
+    获取国泰系统系统状态
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/kpiPanorama.html')
 
 
 def scene_set(request):
