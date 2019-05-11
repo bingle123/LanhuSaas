@@ -154,7 +154,7 @@
     <!-- div1 start-->
     <div class="div_one" style="padding: 20px 5px 0px 5px;">
         <div>
-            <el-input placeholder="请输入内容" clearable v-model="contents" style="width:70%"></el-input>
+            <el-input placeholder="请输入场景名称" clearable v-model="contents" style="width:70%"></el-input>
             <el-button type="primary" icon="el-icon-search" v-on:click="show" style="width:20%;margin-left: 50px;">搜索</el-button>
         </div>
         <div >
@@ -226,8 +226,8 @@
                         vm.sites = res.data.results.scene_list;
                         vm.page_count = res.data.results.scene_list[0].page_count;
                     }else{
-                        vm.sites = res.data.results;
-                        vm.page_count = 0;
+                        vm.sites = [];
+                        vm.page_count = 1
                     }
                 })
             },
