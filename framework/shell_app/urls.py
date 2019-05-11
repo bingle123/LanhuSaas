@@ -36,6 +36,6 @@ urlpatterns = patterns(
     (r'^add_scene_form/$', 'add_scene_form'),  # 增加场景
     (r'^get_json_test', 'get_json_test'),  # json数据测试URL
     (r'^get_guotai_system_info', 'get_guotai_system_info'),  # 特殊场景页面
-    (r'^ywzl_panorama/$', 'ywzl_panorama'),  # 页面
-    (r'^trace_panorama/$', 'trace_panorama'),  # 页面
+    (r'^network_panorama', 'network_panorama'),  # 新加页面1
+    (r'^night_first', 'night_first'),  # 新加页面1
 )

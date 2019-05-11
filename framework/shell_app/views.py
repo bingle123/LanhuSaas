@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from common.mymako import render_json
 from common.mymako import render_mako_context
-from shell_app import function
+from django.shortcuts import render
+from . import function
 import json
 import tools
 
@@ -31,6 +32,25 @@ def index(request):
     :return:
     """
     return render_mako_context(request, './main/maintenanceIndex.html')
+
+# jlq-2019-05-07-add
+def network_panorama(request):
+    """
+    页面1
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/networkPanorama.html')
+
+# jlq-2019-05-08-add
+def night_first(request):
+    """
+    页面1
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/nightFirst.html')
+
 
 
 def scene_set(request):

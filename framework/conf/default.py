@@ -75,6 +75,11 @@ DENGFEI_PASSWORD = 'test'
 # BK_PAAS_HOST = 'http://paas.bk.com:80'
 
 # 上海
+#BK_PAAS_HOST = 'https://paas.gtjatest.com'
+# 上海退出登录地址
+#LOG_OUT_ADDRESS = 'https://paas.gtjatest.com/accounts/logout/'
+
+# 上海
 BK_PAAS_HOST = 'https://paas.blueking.com'
 # 上海退出登录地址
 LOG_OUT_ADDRESS = 'https://paas.blueking.com/accounts/logout/'
