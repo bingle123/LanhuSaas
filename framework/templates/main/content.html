@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>动态显示首页</title>
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- vue的ajax依赖-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <!-- element UI引入样式 -->
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script src='${STATIC_URL}js/jquery.min.js'></script>
+    <script src='${STATIC_URL}js/jquery-ui.js'></script>
+    <!--jQuery库使用时请使用标准jQuery语法-->
+    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
+    <!--页面初始化css(Tencent)-->
+    <link href="${STATIC_URL}css/init.css" rel="stylesheet">
+    <!-- 引入额外的包-->
+
+</head>
+<body style="overflow: visible">
+<div id="content">
+<template>
+  <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tab-pane label="值班管理" name="first"><iframe  v-show="true" class="ifa" scrolling=auto
+                            :src="'${SITE_URL}'+nightFirst"
+                            frameborder="0" style="width: 1166px;height: 1050px;"></iframe></el-tab-pane>
+    <el-tab-pane label="夜间值班流程图1" name="second"><iframe  v-show="true" class="ifa" scrolling=auto
+                            :src="'${SITE_URL}'+nightSecond"
+                            frameborder="0" style="width: 1166px;height: 1050px;"></iframe></el-tab-pane>
+    <el-tab-pane label="夜间值班流程图2" name="third"><iframe  v-show="true" class="ifa" scrolling=auto
+                            :src="'${SITE_URL}'+nightThird"
+                            frameborder="0" style="width: 1166px;height: 1050px;"></iframe></el-tab-pane>
+  </el-tabs>
+</template>
+</div>
+</body>
+
+
+
+<script type="text/javascript">
+
+    var ve = new Vue({
+        el: '#content',
+        data() {
+          return {
+            activeName: 'first',
+            nightFirst:'night_first',
+            nightSecond:'night_second',
+            nightThird:'night_third',
+
+          };
+        },
+        methods: {
+          handleClick(tab, event) {
+            console.log(tab, event);
+          }
+        }
+    });
+</script>
+
+</html>
