@@ -265,7 +265,6 @@ def edit_unit(request):
             if res['monitor_type'] == 'five':
                 monitor_type = '5'
             add_dic['monitor_name'] = res['monitor_name']
-            add_dic['monitor_type'] = monitor_type
             # 当前用户为编辑人
             add_dic['editor'] = username
             add_dic['monitor_area'] = res['monitor_area']
@@ -273,7 +272,7 @@ def edit_unit(request):
             if res['monitor_type'] == 'fourth':
                 add_dic['node_times'] = node_times
                 add_dic['constants'] = constants
-                add_dic['monitor_type']='fourth'
+            add_dic['monitor_type'] = monitor_type
             # 添加定时任务监控要求本地安装任务调度软件rabitmq
             # 正式环境服务器一般带有这个调度软件，如果没有就要安装
             # function.add_unit_task(add_dicx=add_dic)

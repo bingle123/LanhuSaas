@@ -1,0 +1,217 @@
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=5,IE=9" ><![endif]-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>数据库读取流程并展示</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style type="text/css">
+		.flow {
+		  stroke-dasharray: 8;
+		  animation: dash 0.5s linear;
+		  animation-iteration-count: infinite;
+		}
+		@keyframes dash {
+		  to {
+		    stroke-dashoffset: -16;
+		  }
+		}
+	</style>
+	<script type="text/javascript">
+		var static_url = ${STATIC_URL};
+        var site_url = "${SITE_URL}";
+	</script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Init.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/jscolor/jscolor.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/sanitizer/sanitizer.min.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/../../../src/js/mxClient.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Graph.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Format.js"></script>
+	<script type="text/javascript" src="${STATIC_URL}js/mxgraph/examples/grapheditor/www/js/Shapes.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/jquery-1.10.2.min.js"></script>
+</head>
+	<script type="text/javascript">
+		// Extends EditorUi to update I/O action states based on availability of backend
+		var graph =null;
+		var data_xml= '${data}'
+        function main(container){
+			graph = new mxGraph(container);
+			graph.setTooltips(true);
+			graph.setEnabled(false);
+			load_Data();
+		}
+		setInterval(load_Data,30000)
+		//便于采集数据
+        function load_Data(){
+		    if(data_xml!=""&&data_xml!="None"){
+			    var doc = mxUtils.parseXml(data_xml);
+                var codec = new mxCodec(doc)
+                try{//将xml中的节点转换成svg，在浏览器渲染
+                        codec.decode(doc.documentElement, graph.getModel());
+                }catch (e) {
+
+                }
+                var model = graph.getModel();
+                var param = ""
+                var param_map={} //根据监控项id查询组件id
+                for(key_index in model.cells){
+                    var cell = model.cells[key_index];
+                    if(cell.value!=undefined
+                            &&typeof(cell.value) == "object"){
+                        if(param!=""){
+                            param+="&";
+                        }
+                        param +="id="+ cell.value.getAttribute("item_id");
+                        param_map[cell.value.getAttribute("item_id")] = cell.id;
+                        //cell.value = cell.value.getAttribute("item_id")+"_"+cell.id
+                    }
+                }
+                $.ajax({
+                    url:"${SITE_URL}monitor_scene/query_scene_item_data?"+param
+                    ,async:false
+                    ,dataType:"json"
+                    ,success:function(data){
+                           if(data.message!=""){
+                               var data_json = eval('('+data.message+')');
+                               //darr[0]["key_name"].split(/[\r\n]/)
+                               for(var temp_num in data_json){
+                                   var temp_dto= data_json[temp_num];//获取对象
+
+                                  // var str_val = temp_dto["key_name"].split(/[\r\n]/);
+                                   var  calc_key = "";
+                                   if(temp_dto["key_val"].indexOf("@")>-1){
+                                       calc_key = "@";
+                                   }else if(temp_dto["key_val"].indexOf("#")>-1){
+                                       calc_key = "#";
+                                   }else if(temp_dto["key_val"].indexOf("%")>-1){
+                                       calc_key = "%";
+                                   }
+                                   if(calc_key == ""){
+                                       continue;
+                                   }
+                                   var  calc_data = temp_dto["key_val"].split(calc_key);
+                                    if(calc_key=="#"){//文本框内容设置颜色
+                                       var color_val = calc_data[1];
+                                       if(calc_data.length>2){
+                                           color_val = temp_dto["key_val"].split(calc_key)[1];
+                                       }
+                                       var color_cell =graph.getModel().cells[param_map[temp_dto["id"]]]
+                                        color_cell.value = "";
+                                        graph.setCellStyles(mxConstants.STYLE_FILLCOLOR,
+                                           '#'+color_val, [color_cell]);
+                                    }else if(calc_key == "@"){
+                                       var txt = calc_data[1]
+                                        graph.getModel().cells[param_map[temp_dto["id"]]].value
+                                                       = txt;//取出数据
+                                    }else if(calc_key == "%"){
+                                         graph.getModel().cells[param_map[temp_dto["id"]]].value
+                                                       = temp_dto["key_val"];//取出数据
+                                    }
+
+                                   if(temp_dto["item_type"] == 2){ //为图表监控
+                                       graph.getModel().cells[param_map[temp_dto["id"]]].attribute
+                                           = temp_dto["key_name"]
+                                       continue;
+                                   }
+
+                               }
+                           }
+                    }
+                })
+                graph.refresh(); //刷新容器
+                var model = graph.getModel();
+                for(key_index in model.cells){
+				   var cell = model.cells[key_index];
+				   if(cell.style != undefined&&
+				      cell.style.indexOf("edgeStyle=orthogonalEdgeStyle")>-1){
+				       lineFlow(model,graph,key_index);
+                   }
+
+				   if(cell.attribute!=""
+                       &&cell.attribute!=undefined){
+                       var x = cell.parent.geometry.x;
+                       var y = cell.parent.geometry.y;
+                       var ifr= document.getElementById("ifr_t");
+                       ifr.src = cell.attribute;
+                       ifr.style.position="absolute";
+                       ifr.style.left=x+"px";
+                       ifr.style.top= y+"px";
+                       ifr.style.display="block";
+                       break;
+                   }
+                       //graph.updateAlternateBounds(cell)
+                }
+
+            }else{
+			    document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
+            }
+        }
+		//监控项特效
+        function monitorFlow(model,graph,id,id1) {
+            var cell = model.getCell(id);//拿xml中对象id
+            var cell1 = model.getCell(id1);//拿xml中对象id
+            var color = '';var txtCpu = '';var txtNet='';//模拟指标与颜色
+            var rnd = Math.random() * 4;
+            if (rnd > 3)
+            {
+                color = '#f8cecc';
+                txtCpu = 'CPU:100%';
+                txtNet = '流量;10M/S';
+            }
+            else if (rnd > 2)
+            {
+                color = '#fff2cc';
+                txtCpu = 'CPU:50%';
+                txtNet = '流量;5M/S';
+            }
+            else if (rnd > 1)
+            {
+                color = '#d4e1f5';
+                txtCpu = 'CPU:10%';
+                txtNet = '流量;1M/S';
+            }
+            else {
+                color = '#e0f5d7';
+                txtCpu = 'CPU:1%';
+                txtNet = '流量;1M/S';
+            }
+
+            cell.value = txtNet;
+            //cell1.value = txtNet;
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, 'white', [cell]);
+            graph.removeCellOverlays(cell);
+
+            graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, color, [cell]);
+            graph.addCellOverlay(cell, createOverlay(graph.warningImage, 'State: '+color));
+
+        }
+		//线条流动特效
+		function lineFlow(model,graph,id) {
+            var e2 =  model.getCell(id);//拿xml中对象id
+            var state = graph.view.getState(e2);
+            state.shape.node.getElementsByTagName('path')[0].removeAttribute('visibility');
+            state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke-width', '6');
+            state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke', 'lightGray');
+            state.shape.node.getElementsByTagName('path')[1].setAttribute('class', 'flow');
+        }
+
+		//警告图标闪烁特效
+        function createOverlay(image, tooltip)
+		{
+			var overlay = new mxCellOverlay(image, tooltip);
+			overlay.addListener(mxEvent.CLICK, function(sender, evt)
+			{
+				mxUtils.alert(tooltip + '\nLast update: ' + new Date());
+			});
+			return overlay;
+		};
+	</script>
+<!-- Page passes the container and control to the main function -->
+<body onload="main(document.getElementById('graphContainer'));">
+	<!-- Acts as a container for the graph -->
+	<div id="graphContainer" style="overflow:hidden;position:relative;width:861px;height:806px;cursor:default;">
+	</div>
+    <iframe id="ifr_t" style="display:none" src="" width="450" height="320" frameborder="0"></iframe>
+   <br>
+</body>
+</html>

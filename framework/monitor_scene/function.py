@@ -19,6 +19,7 @@ from market_day.models import Area
 from market_day.function import tran_time_china, tran_china_time_other, check_jobday
 from django.db.models import Q
 from xml.etree import ElementTree  #引入ElementTree的包
+from monitor_item.models import *
 
 def monitor_show(request):
     """
@@ -102,10 +103,10 @@ def addSence(request):
             Scene_monitor.objects.create(**monitor_data)
         """
         info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
     except Exception as e:
         info = make_log_info(u'增加场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
     add_log(info)
     return {'scene_id': id.id}
 
@@ -153,18 +154,18 @@ def delete_scene(request):
         Scene.objects.filter(id=request.body).delete()
         Scene_monitor.objects.filter(scene_id=request.body).delete()
         info = make_log_info(u'删除场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
         add_log(info)
         position_scene.objects.filter(scene=request.body).delete()
         info = make_log_info(u'删除场景编排数据', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
         add_log(info)
     except Exception as e:
         info = make_log_info(u'删除场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
         add_log(info)
         info = make_log_info(u'删除场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
         add_log(info)
     return ""
 
@@ -195,7 +196,7 @@ def editSence(request):
         }
         Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
         info = make_log_info(u'编辑场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
         add_log(info)
         Scene_monitor.objects.filter(scene_id=model['data']['id']).delete()
         for i in model['monitor_data']:
@@ -210,12 +211,12 @@ def editSence(request):
                 'next_item': int(i['next_item'])
             }
             Scene_monitor.objects.create(**monitor_data)
-        info = make_log_info(u'场景编排', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '成功', '无')
-        add_log(info)
-        scene = Scene.objects.get(id=model['data']['id'])
-        scene.save()
-        job = pos_info.objects.filter(pos_name=model['data']["pos_name"])
+            info = make_log_info(u'场景编排', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
+                                 request.user.username, '成功', '无')
+            add_log(info)
+            scene = Scene.objects.get(id=model['data']['id'])
+            scene.save()
+            job = pos_info.objects.filter(pos_name=model['data']["pos_name"])
         for j in job:
             senceModel3 = {
                 "scene_id": model['data']['id'],
@@ -223,14 +224,14 @@ def editSence(request):
             }
         position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
         info2 = make_log_info(u'编辑场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                              get_active_user(request)['data']['bk_username'], '成功', '无')
+                              request.user.username, '成功', '无')
         add_log(info2)
     except Exception as e:
         info = make_log_info(u'编辑场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
-                             get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
         add_log(info)
         info2 = make_log_info(u'场景编排', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                              get_active_user(request)['data']['bk_username'], '失败', repr(e))
+                              request.user.username, '失败', repr(e))
         add_log(info2)
     return None
 
@@ -541,6 +542,50 @@ def alternate_play_test(request):
     return res_list
 
 
+def query_pos_scene(request):
+    '''
+    场景
+    :param request:
+    :return:
+    '''
+    #res = json.loads(request.body)
+    # 接收参数
+    pos_id = request.POST.get('pos_id')
+    start = request.POST.get('start')
+    end = request.POST.get('end')
+    scenes = []
+    # 获取岗位对应的场景
+    position_scenes = position_scene.objects.filter(position_id=pos_id)
+
+    for pos_scene in position_scenes:
+        scenes.append(pos_scene.scene_id)
+
+    scene_id_list = []
+    for scene in scenes:
+        # 场景
+        temp_scene_dt = Scene.objects.filter(id=scene,scene_content__isnull=False)
+        if temp_scene_dt.count() == 0:
+            continue
+        temp_scene = temp_scene_dt.get()
+        if start != None:
+           if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
+              scene_id_list.append(scene)
+        else:
+            scene_id_list.append(scene)
+    return scene_id_list
+
+
+def query_curr_user_scene(request):
+    user_dto = user_info.objects.filter(user_name=request.user.username)
+    if user_dto.count() > 0:
+        user_data = user_dto.get()
+        pos_id = user_data.user_pos_id
+        request.POST["pos_id"] = pos_id
+        return query_pos_scene(request)
+    else:
+        return None
+
+
 def alternate_play(request):
     """
     大屏轮播
@@ -607,6 +652,7 @@ def get_scenes(pos_id, start, end):
                 item_id = Scene_monitor.objects.get(id=scene_mon_id).item_id
                 # 获取基本数据
                 item = Monitor.objects.get(id=item_id)
+                print item
                 # 转成字典
                 item_dict = model_to_dict(item)
                 gather_data = TDGatherData.objects.filter(item_id=item_id)
@@ -791,7 +837,7 @@ def get_scene_find_xml(scene_id):
     :param scene_id:
     :return:
     '''
-    dto = SceneDesign.objects.filter(id=scene_id).get()
+    dto = Scene.objects.filter(id=scene_id).get()
     roota=ElementTree.XML(dto.scene_content)
     parent = roota.find("root", "mxGraphModel")
     list = parent._children
@@ -825,12 +871,16 @@ def page_query_scene(request):
     :return:
     """
     res = json.loads(request.body)
+    res_content = res['data']
     #  个数
     limit = res['limit']
     #  当前页面号
     page = res['page']
     # 按id倒排序
-    unit = Scene.objects.all().order_by('-id')
+    if res_content != "":
+        unit = Scene.objects.filter(Q(scene_name__icontains=res_content)).order_by("-id")
+    else:
+        unit = Scene.objects.all().order_by('-id')
     # 进入分页函数进行分页，返回总页数和当前页数据
     page_data, base_page_count = tools.page_paging(unit, limit, page)
     res_list = [];
@@ -856,3 +906,41 @@ def page_query_scene(request):
         'scene_list': res_list,
     }
     return tools.success_result(res_dic)
+
+def page_query_xml_show(id):
+    dto = Scene.objects.filter(id=id)
+    if dto.count() > 0:
+        return dto.get().scene_content
+    else:
+        return None
+
+def query_scene_item_data_handle(list_id):
+    arr = []
+    for dto_item_id in list_id:
+        item_id = int(dto_item_id)
+        item_dto = Monitor.objects.filter(id=item_id)
+        if item_dto.count()>0:
+            item_vo = item_dto.get()
+            gather_data = TDGatherData.objects.filter(item_id=item_id)
+            if gather_data.count()>0:
+                gather_dto = gather_data.get()
+                dt = {}
+                dt["id"] = dto_item_id
+                str = gather_dto.data_value
+                if str !=None and item_vo.target_name != None\
+                        and item_vo.measure_name != None:
+                    json_dto = json.loads(str)
+                    key = item_vo.target_name + "_" + item_vo.measure_name
+                    txt = json_dto[0].get(key)
+                    if txt == None:
+                        txt = ""
+                    dt["key_val"] = txt
+                else:
+                    dt["key_val"] = "@" + item_vo.monitor_name
+                dt["key"] = key
+                dt["key_name"] = item_vo.display_rule#.decode("utf-8")
+
+                dt["item_type"] = item_vo.monitor_type
+                arr.append(dt)
+        #TDGatherData
+    return  arr

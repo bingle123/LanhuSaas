@@ -18,7 +18,7 @@ $(function () {
             //场景编排基本监控项的检索条件
             basic_search: '',
             scene_font_color: '#AAAAAA',
-            page_count: 100,//分页总页数
+            page_count: 1,//分页总页数
             page: 1,                                   //分页页码数
             start_time: '8:00',
             end_time: '16:00',
@@ -391,8 +391,7 @@ $(function () {
                 //场景XML
                 let scene_content = encodeURIComponent(vm.scene_edit.scene_content);
                 //打开场景编辑器并带上场景id
-                window.open(site_url+"monitor_scene/edit_flow_graph/?scene_name="+scene_name+"&scene_content="+scene_content);
-
+                window.open(site_url+"monitor_scene/edit_flow_graph/");
                 /*
                 vm.canvas_flag = 1;
                 if ($('.monitor_content').html() == '') {//场景编排内容块无元素

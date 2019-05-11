@@ -243,7 +243,6 @@
             page:1, //当前页
             isAdd: 1,
             tableData: [],
-            dataType:[],
             editDataBase:[],
             addconn: {
                 connname:'',
@@ -353,9 +352,10 @@
                         return false;
                     }else {
                         axios.post(
-                            '${SITE_URL}DataBaseManage/saveconn/',this.addconn
+                            '${SITE_URL}db_connection/saveconn/',this.addconn
                         ).then(function (res) {
-                            if(res.data.message == 0){
+                            console.log(res);
+                            if(res.data.code == 0){
                                 ve.hide()
                             }
                         });
@@ -377,7 +377,7 @@
                         alert('验证不通过');
                         return false;
                     }else {
-                        axios.post('${SITE_URL}DataBaseManage/editconn/',this.editDataBase)
+                        axios.post('${SITE_URL}db_connection/editconn/',this.editDataBase)
                     .then((res)=>{
                         if(res.data.message != null){
                             this.isAdd = 1
@@ -391,7 +391,7 @@
 
             //删除
             deleteDataBase(id,index,data){
-            this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
+            this.$confirm('此操作将永久删除该数据库链接配置, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning',
@@ -402,7 +402,7 @@
                         message: '删除成功!',
                     },
                     axios.post(
-                   '${SITE_URL}DataBaseManage/deleteconn/'+id+'/'
+                   '${SITE_URL}db_connection/deleteconn/'+id+'/'
                ).then((res) => {
                    if(res.data.message==0){
                        this.$message('删除成功')
@@ -427,9 +427,9 @@
                         alert('验证不通过');
                         return false;
                     }else {
-                        axios.post('${SITE_URL}DataBaseManage/testConn/',this.addconn)
+                        axios.post('${SITE_URL}db_connection/testConn/',this.addconn)
                             .then((res)=>{
-                        if(res.data.message == 1){
+                        if(res.data.code == 0){
                              alert("数据库连接成功")
                         }else{
                             alert("数据库连接失败")
@@ -447,9 +447,9 @@
                         alert('验证不通过');
                         return false;
                     }else {
-                        axios.post('${SITE_URL}DataBaseManage/testConn/',this.editDataBase)
+                        axios.post('${SITE_URL}db_connection/testConn/',this.editDataBase)
                             .then((res)=>{
-                        if(res.data.message == 1){
+                        if(res.data.code == 0){
                              alert("数据库连接成功")
                         }else{
                             alert("数据库连接失败")

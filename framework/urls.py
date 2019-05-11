@@ -53,8 +53,7 @@ urlpatterns = patterns(
     url(r'^custom_query/', include('custom_query.urls')),
     url(r'^home_page/', include('home_page.urls')),
     # iqube接口
-    url(r'^iqube_interface/', include('iqube_interface.urls')),
-    url(r'^DataBaseManage/', include('DataBaseManage.urls')),
+    url(r'^iqube_interface/', include('iqube_interface.urls'))
 
 )
 

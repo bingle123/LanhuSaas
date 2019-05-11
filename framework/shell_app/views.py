@@ -238,3 +238,17 @@ def get_guotai_system_info(request):
     """
     res = function.get_guotai_system_info(request)
     return render_json(res)
+def ywzl_panorama(request):
+    """
+    获取国泰系统系统状态
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/ywzlPanorama.html')
+def trace_panorama(request):
+    """
+    获取国泰系统系统状态
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/tracePanorama.html')

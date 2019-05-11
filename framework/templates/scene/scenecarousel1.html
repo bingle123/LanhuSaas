@@ -34,7 +34,6 @@
     <link href="${STATIC_URL}css/net/jquery.range.css" rel="stylesheet">
     <script src="${STATIC_URL}js/net/jquery-1.10.2.min.js"></script>
     <script src="${STATIC_URL}js/jquery.range-min.js"></script>
-    <script src="${STATIC_URL}js/scene/scene_carousel_test.js"></script>
     <script src="${STATIC_URL}js/csrftoken.js"></script>
 
     <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
@@ -75,7 +74,7 @@
                 <el-time-picker v-model="end" placeholder="结束时间点" format="HH:mm" value-format="HH:mm" >
                 </el-time-picker>
             </el-form-item>
-            <el-button type="info" v-on:click="alternate_play_test">测试</el-button>
+            <el-button type="info" v-on:click="query_scene_info">测试</el-button>
         </el-form>
     </el-menu>
     <template>
@@ -87,72 +86,99 @@
             <!-- 选择员工信息 end -->
             <!--<span class="demonstration">Click 指示器触发</span>-->
             <!-- 每隔10秒切换一次走马灯 -->
-            <el-carousel :interval="10000" trigger="click" @change="scene_change" :height="imgHeight">
-                <el-carousel-item v-for="(item,index) in imgList" :key="index">
-                    <el-row>
-                        <el-col :span="24">
-                            <div ref="imgHeight" :src="item.idView" :id="item.scene_id" :class="'scene_content'+index" style="position: relative;">
-                            </div>
-                        </el-col>
-                    </el-row>
-                </el-carousel-item>
-            </el-carousel>
+            <div id="div_sence"></div>
         </div>
     </template>
 </div>
-<!--暂时的css样式-->
-<style>
-    .el-carousel__item h3 {
-        color: #475669;
-        font-size: 14px;
-        opacity: 0.75;
-        line-height: 150px;
-        margin: 0;
-    }
+<script>
+      vm = new Vue({
+          el: "#main",
+          data: {
+              imgList: [],
+              imgHeight: '' + document.documentElement.clientHeight + 'px',
+              start: '09:00',                                                                   //开始时间
+              end: '18:00',                                                                   //结束时间
+              region1: '1',                                                                 //岗位选择
+              position: '1',                                                                  //岗位
+              options: [],
+              show_stop:null,//暂停
+              show_index:0
+          },
+          methods: {
+              get_pos() {
+                axios({
+                    method: 'post',
+                    url:  '${SITE_URL}monitor_scene/get_all_pos/',
+                }).then((res) => {
+                    let json = [];
+                    if (res.data.message.length > 0) {
+                        for (var i = 0; i < res.data.message.length; i++) {
+                            let j = {};
+                            j.value = res.data.message[i].id;
+                            j.label = res.data.message[i].pos_name;
+                            json.push(j);
+                        }
+                        this.options = json;
+                        if(json.length>0){
+                            vm.position = json[0].value;
+                        }
+                    }
+                }).catch((res) => {
+                    vm.$message.error('获取用户错误')
+                })
+            },
+              query_scene_info:function(){
+                 $.ajax({
+                     url:"${SITE_URL}monitor_scene/query_pos_scene"
+                     ,async:false
+                     ,data: {
+                        'pos_id': vm.position,
+                        'start': vm.start,
+                        'end': vm.end
+                      }
+                      ,type:"post"
+                     ,dataType:"json"
+                     ,success:function(data){
+                         if(vm.show_stop!=null){
+                             clearInterval(vm.show_stop);//设置停止
+                             vm.show_stop = null;
+                         }
+                         if(data.message!=""){
+                             var djson = data.message ;//eval('('+data.message+')');
+                             $("#div_sence").html("");
 
-    .el-carousel__item {
-        background-image: url("${STATIC_URL}img/scene_content_bg.png");
-        background-size: 100% 100%;
-    }
-    .score_input{
-            font-size: 16px;
-            position: absolute;
-            background: rgba(255,255,255,0.1);
-            top: -36px;
-            left: 0;
-            width: 50px;
-            height: 36px;
-            display: none;
-        }
-    .right_click{
-        position: absolute;
-        width: 100px;
-        display: none;
-    }
-    .right_click span{
-        width: 100px;
-        display: inline-block;
-        font-size: 16px;
-        line-height: 36px;
-    }
-    .keepOn{
-        position: absolute;
-        top: 32px;
-        right: 0;
-        width: 115px;
-        height: 60px;
-    }
-    .keepOn p{
-        margin-top: 5px;
-        line-height: 20px;
-        color: black;
-    }
-    .keepOn span{
-        width: 20%;
-        margin: 0 20px;
-        color: black;
-        background: #00baff;
-    }
-</style>
+
+                             for(var i=0;i<djson.length;i++){
+                                // var html=$("<div>");
+                                //   html.attr("id","div"+djson[i]);
+                                // $("#div_sence").append(html);
+                                 var html="<iframe id='i"+djson[i]+"'  src='${SITE_URL}monitor_scene/page_query_xml_show?id=";
+                                 html+=djson[i]+"' style='width:1200px;height:850px;border:none;'></iframe>";
+                                  $("#div_sence").append(html);
+                                 //$("#div"+djson[i]).load("${SITE_URL}monitor_scene/page_query_xml_show?id="+djson[i]);
+                                 //html.hide()
+
+                             }
+                             vm.show_stop= setInterval(function(){
+                                  var iframe_dto = $("#div_sence iframe");
+                                  if(iframe_dto.length>0){
+                                      if(vm.show_index==(iframe_dto.length-1)){
+                                          vm.show_index = -1;
+                                      }
+                                      vm.show_index=vm.show_index+1
+                                      iframe_dto.hide();
+                                      $(iframe_dto[vm.show_index]).show();
+                                  }
+
+                               },5000);
+                         }
+                     }
+                 })
+              }
+
+          }
+      })
+    vm.get_pos();
+</script>
 </body>
 </html>

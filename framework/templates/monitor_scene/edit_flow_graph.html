@@ -83,6 +83,7 @@
             return config
         });
         function save_scene_design(name,xml){
+            this.myXml = xml;
             axios({
                 method: 'post',
                 url: SAVE_URL,
@@ -93,6 +94,8 @@
             }).then(function (res) {
                 if(res.status == 200){
                     if(res.data.id == '1'){
+                        // 保存成功给父页面的缓存重新赋值
+                        window.opener.vm.scene_edit.scene_content =this.myXml;
                         mxUtils.alert("场景保存成功！");
                     }else{
                         mxUtils.alert("场景名称不匹配，场景没有保存！");
@@ -102,6 +105,7 @@
         }
         // 根据场景id 获取可编辑场景的XML文档，生成编辑流程
         this.item_id = null;
+        this.myXml = null;
         let myNameInput = null;
         let myNames = null;
         let myTexts = null;
@@ -222,14 +226,26 @@
 		})();
 
         window.onload = function(){
+            let xml = null;
+            let fileName = null;
+            if(window.opener.vm){
+                xml = window.opener.vm.scene_edit.scene_content;
+                fileName = window.opener.vm.scene_edit.scene_name;
+                myEditor.setFilename(fileName);
+            }
+            if(xml){
+                replaceUpdateXml(xml,fileName);
+            }
+        }
+        //在编辑器加载场景
+        function replaceUpdateXml(xml,fileName){
             // 这段代码很重要，初始加载场景
 			myEditorUi.editor.graph.model.beginUpdate();
 			try
 			{
 			    //设置场景的名称
-			    myEditor.setFilename(decodeURIComponent(urlParams['scene_name']));
-			    //myEditorUi.editor.setFilename(decodeURIComponent(urlParams['scene_name'])
-				myEditorUi.editor.setGraphXml(mxUtils.parseXml(decodeURIComponent(urlParams['scene_content'])).documentElement);
+			    myEditor.setFilename(fileName);
+				myEditorUi.editor.setGraphXml(mxUtils.parseXml(xml).documentElement);
 				// LATER: Why is hideDialog between begin-/endUpdate faster?
 				myEditorUi.hideDialog();
 			}
