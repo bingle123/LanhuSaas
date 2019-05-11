@@ -2,34 +2,31 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>维护人员首页</title>
-    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
-    <link rel="stylesheet" href="${STATIC_URL}css/maintenanceIndex/maintenanceIndex.css">
-    <script type="text/javascript" src="${STATIC_URL}js/jquery-3.1.1.min.js"></script>
-    <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>
-    <script type="text/javascript" src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <title>国泰君安数据中心网络全景图</title>
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- vue的ajax依赖-->
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
-    <script type="text/javascript" src="${STATIC_URL}assets/echarts/echarts.js"></script>
-    <script type="text/javascript" src="${STATIC_URL}assets/echarts/macarons.js"></script>
-    <script type="text/javascript" src="${STATIC_URL}js/maintenanceIndex/maintenanceIndex.js"></script>
+    <!-- element UI引入样式 -->
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script src='${STATIC_URL}js/jquery.min.js'></script>
+    <script src='${STATIC_URL}js/jquery-ui.js'></script>
+    <!--jQuery库使用时请使用标准jQuery语法-->
+    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
+    <!--页面初始化css(Tencent)-->
+    <link href="${STATIC_URL}css/init.css" rel="stylesheet">
+    <!-- 引入额外的包-->
+    <link href="${STATIC_URL}css/networkPanorama.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
-    <script type="text/javascript"
-            src="${STATIC_URL}js/net/jsplumb.min.js"></script>
-    <link rel="stylesheet"
-          href="${STATIC_URL}css/main.less"/>
-    <script type="text/javascript"
-            src="${STATIC_URL}js/service.js"></script>
-    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow.js"></script>
-    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
-    <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
-    <link href="${STATIC_URL}assets/font-awesome-4.7.0/css/font-awesome.css" rel="stylesheet">
 </head>
 <style>
-img{
-  position:absolute;
+img {
+  position: absolute;
 }
-.none{
+.none {
   display: none;
 }
 .aniamtionView {
@@ -41,2192 +38,1313 @@ img{
     opacity: 1;
   }
   100% {
-    transform: scale(7.1,7.1);
+    transform: scale(7.1, 7.1);
     opacity: 0;
   }
 }
 /* 光点移动 */
-/*互联网业务A区---移动防火墙*/
-.one1{
-    animation: onemove1 5s  linear infinite  normal;
-}
-@keyframes onemove1{
-    0% {
-        left:480px;
-        top:180px;
-    }
-    50% {
-        left:222px;
-        top:180px;
-    }
-    70% {
-        left:222px;
-        top:243px;
-    }
-    100% {
-        left:145px;
-        top:243px;
-    }
-}
-.one1_over{
-    animation: onemoveover1 5s  linear infinite  normal;
-}
-@keyframes onemoveover1{
-    100% {
-        left:480px;
-        top:180px;
-    }
-    50% {
-        left:222px;
-        top:180px;
-    }
-    30% {
-        left:222px;
-        top:243px;
-    }
-    0% {
-        left:145px;
-        top:243px;
-    }
-}
-/*互联网业务A区---边界防火墙*/
-.one2{
-    animation: onemove2 2.5s  linear infinite  normal;
-}
-@keyframes onemove2{
-    0% {
-        left:480px;
-        top:180px;
-    }
-    100% {
-        left:570px;
-        top:180px;
-    }
-}
-.one2_over{
-    animation: onemoveover2 2.5s  linear infinite  normal;
-}
-@keyframes onemoveover2{
-    100% {
-        left:480px;
-        top:180px;
-    }
-    0% {
-        left:570px;
-        top:180px;
-    }
-}
-{#//互联网业务A区---联通1防火墙#}
-.one3{
-    animation: onemove3 5s  linear infinite  normal;
-}
-@keyframes onemove3{
-    0% {
-        left:480px;
-        top:180px;
-    }
-    50% {
-        left:222px;
-        top:180px;
-    }
-    70% {
-        left:222px;
-        top:243px;
-    }
-    100% {
-        left:255px;
-        top:243px;
-    }
-}
-.one3_over{
-    animation: onemoveover3 5s  linear infinite  normal;
-}
-@keyframes onemoveover3{
-    100% {
-        left:480px;
-        top:180px;
-    }
-    50% {
-        left:222px;
-        top:180px;
-    }
-    30% {
-        left:222px;
-        top:243px;
-    }
-    0% {
-        left:255px;
-        top:243px;
-    }
-}
-{#//互联网业务A区---电信1防火墙#}
-.one4{
-    animation: onemove4 5s  linear infinite  normal;
-}
-@keyframes onemove4{
-    0% {
-        left:480px;
-        top:180px;
-    }
-    50% {
-        left:222px;
-        top:180px;
-    }
-    70% {
-        left:222px;
-        top:118px;
-    }
-    100% {
-        left:145px;
-        top:118px;
-    }
-}
-.one4_over{
-    animation: onemoveover4 5s  linear infinite  normal;
-}
-@keyframes onemoveover4{
-    100% {
-        left:480px;
-        top:180px;
-    }
-    50% {
-        left:222px;
-        top:180px;
-    }
-    30% {
-        left:222px;
-        top:118px;
-    }
-    0% {
-        left:145px;
-        top:118px;
-    }
-}
-{#//互联网业务A区---电信3防火墙#}
-.one5{
-    animation: onemove5 5s  linear infinite  normal;
-}
-@keyframes onemove5{
-    0% {
-        left:480px;
-        top:180px;
-    }
-    50% {
-        left:222px;
-        top:180px;
-    }
-    70% {
-        left:222px;
-        top:118px;
-    }
-    100% {
-        left:265px;
-        top:118px;
-    }
-}
-.one5_over{
-    animation: onemoveover5 5s  linear infinite  normal;
-}
-@keyframes onemoveover5{
-    100% {
-        left:480px;
-        top:180px;
-    }
-    50% {
-        left:222px;
-        top:180px;
-    }
-    30% {
-        left:222px;
-        top:118px;
-    }
-    0% {
-        left:265px;
-        top:118px;
-    }
-}
-{#//总部办公---互联网防火墙#}
-.two1{
-    animation: twomove1 3s  linear infinite  normal;
-}
-@keyframes twomove1{
-    0% {
-        left:215px;
-        top:353px;
-    }
-    100% {
-        left:55px;
-        top:353px;
-    }
-}
-.two1_over{
-    animation: twomoveover1 3s  linear infinite  normal;
-}
-@keyframes twomoveover1{
-    100% {
-        left:215px;
-        top:353px;
-    }
-    0% {
-        left:55px;
-        top:353px;
-    }
-}
-{#//总部办公---办公网防火墙#}
-.two2{
-    animation: twomove2 3s  linear infinite  normal;
-}
-@keyframes twomove2{
-    0% {
-        left:215px;
-        top:353px;
-    }
-    100% {
-        left:315px;
-        top:353px;
-    }
-}
-.two2_over{
-    animation: twomoveover2 3s  linear infinite  normal;
-}
-@keyframes twomoveover2{
-    100% {
-        left:215px;
-        top:353px;
-    }
-    0% {
-        left:315px;
-        top:353px;
-    }
-}
-{#//总部业务---业务网防火墙#}
-.three{
-    animation: zbyw 3s  linear infinite  normal;
-}
-@keyframes zbyw{
-    0% {
-        left:215px;
-        top:453px;
-    }
-    100% {
-        left:315px;
-        top:453px;
-    }
-}
-.three_over{
-    animation: zbywover 3s  linear infinite  normal;
-}
-@keyframes zbywover{
-    100% {
-        left:215px;
-        top:453px;
-    }
-    0% {
-        left:315px;
-        top:453px;
-    }
-}
-{#//骨干区---办公网防火墙#}
-.four1{
-    animation: ggq1 3s  linear infinite  normal;
-}
-@keyframes ggq1{
-    0% {
-        left:465px;
-        top:353px;
-    }
-    30% {
-      left:405px;
-      top:353px;
-    }
-    100% {
-        left:315px;
-        top:353px;
-    }
-}
-.four1_over{
-    animation: ggqover1 3s  linear infinite  normal;
-}
-@keyframes ggqover1{
-    100% {
-        left:465px;
-        top:353px;
-    }
-    70% {
-      left:405px;
-      top:353px;
-    }
-    0% {
-        left:315px;
-        top:353px;
-    }
-}
-{#//骨干区---业务防火墙#}
-.four2{
-    animation: ggq2 3s  linear infinite  normal;
-}
-@keyframes ggq2{
-    0% {
-        left:465px;
-        top:353px;
-    }
-    30% {
-      left:405px;
-      top:353px;
-    }
-    60% {
-      left:405px;
-      top:453px;
-    }
-    100% {
-        left:315px;
-        top:453px;
-    }
-}
-.four2_over{
-    animation: ggqover2 3s  linear infinite  normal;
-}
-@keyframes ggqover2{
-    100% {
-        left:465px;
-        top:353px;
-    }
-    60% {
-      left:405px;
-      top:353px;
-    }
-    30% {
-      left:405px;
-      top:453px;
-    }
-    0% {
-        left:315px;
-        top:453px;
-    }
-}
-{#//骨干区---骨干边界防火墙防火墙#}
-.four3{
-    animation: ggq3 3s  linear infinite  normal;
-}
-@keyframes ggq3{
-    0% {
-        left:465px;
-        top:353px;
-    }
-    100% {
-        left:585px;
-        top:353px;
-    }
-}
-{#//骨干区---骨干边界防火墙防火墙#}
-.four3_over{
-    animation: ggqover3 3s  linear infinite  normal;
-}
-@keyframes ggqover3{
-    100% {
-        left:465px;
-        top:353px;
-    }
-    0% {
-        left:585px;
-        top:353px;
-    }
-}
-{#//综合业务区---边界防火墙防火墙#}
-.five{
-    animation: zhywq 3s  linear infinite  normal;
-}
-@keyframes zhywq{
-    0% {
-        left:465px;
-        top:501px;
-    }
-    100% {
-        left:575px;
-        top:501px;
-    }
-}
-.five_over{
-    animation: zhywqover 3s  linear infinite  normal;
-}
-@keyframes zhywqover{
-    100% {
-        left:465px;
-        top:501px;
-    }
-    0% {
-        left:575px;
-        top:501px;
-    }
-}
-{#//互联网业务B区---边界防火墙防火墙#}
-.six1{
-    animation: hlwywbq1 3s  linear infinite  normal;
-}
-@keyframes hlwywbq1{
-    0% {
-        left:935px;
-        top:180px;
-    }
-    100% {
-        left:765px;
-        top:180px;
-    }
-}
-.six1_over{
-    animation: hlwywbqover1 3s  linear infinite  normal;
-}
-@keyframes hlwywbqover1{
-    100% {
-        left:945px;
-        top:180px;
-    }
-    0% {
-        left:765px;
-        top:180px;
-    }
-}
-{#//互联网业务B区---电信1防火墙#}
-.six2{
-    animation: hlwywbqdx11 3s  linear infinite  normal;
-}
-@keyframes hlwywbqdx11{
-    0% {
-        left:935px;
-        top:180px;
-    }
-    30% {
-        left:1036px;
-        top:180px;
-    }
-    70%{
-        left:1036px;
-        top:95px;
-    }
-    100% {
-        left:1100px;
-        top:95px;
-    }
-}
-.six2_over{
-    animation: hlwywbqdx1over1 3s  linear infinite  normal;
-}
-@keyframes hlwywbqdx1over1{
-    100% {
-        left:955px;
-        top:180px;
-    }
-    70% {
-        left:1036px;
-        top:180px;
-    }
-    30%{
-        left:1036px;
-        top:95px;
-    }
-    0% {
-        left:1100px;
-        top:95px;
-    }
-}
-{#//互联网业务B区---电信2防火墙#}
-.six3{
-    animation: hlwywbqdx21 3s  linear infinite  normal;
-}
-@keyframes hlwywbqdx21{
-    0% {
-        left:935px;
-        top:180px;
-    }
-    30% {
-        left:1036px;
-        top:180px;
-    }
-    100% {
-        left:1100px;
-        top:180px;
-    }
-}
-.six3_over{
-    animation: hlwywbqdx2over1 3s  linear infinite  normal;
-}
-@keyframes hlwywbqdx2over1{
-    100% {
-        left:935px;
-        top:180px;
-    }
-    70% {
-        left:1036px;
-        top:180px;
-    }
-    0% {
-        left:1100px;
-        top:180px;
-    }
-}
-{#//互联网业务B区---联通防火墙#}
-.six4{
-    animation: hlwywbqlt1 3s  linear infinite  normal;
-}
-@keyframes hlwywbqlt1{
-    0% {
-        left:935px;
-        top:180px;
-    }
-    30% {
-        left:1036px;
-        top:180px;
-    }
-    70%{
-        left:1036px;
-        top:250px;
-    }
-    100% {
-        left:1100px;
-        top:250px;
-    }
-}
-.six4_over{
-    animation: hlwywbqltover1 3s  linear infinite  normal;
-}
-@keyframes hlwywbqltover1{
-    100% {
-        left:935px;
-        top:180px;
-    }
-    70% {
-        left:1036px;
-        top:180px;
-    }
-    30%{
-        left:1036px;
-        top:250px;
-    }
-    0% {
-        left:1100px;
-        top:250px;
-    }
-}
-{#//业务支撑区---边界防火墙#}
-.seven1{
-    animation: ywzcq1 3s  linear infinite  normal;
-}
-@keyframes ywzcq1{
-    0% {
-        left:945px;
-        top:352px;
-    }
-    100% {
-        left:765px;
-        top:352px;
-    }
-}
-.seven1_over{
-    animation: ywzcqover1 3s  linear infinite  normal;
-}
-@keyframes ywzcqover1{
-    100% {
-        left:945px;
-        top:352px;
-    }
-    0% {
-        left:765px;
-        top:352px;
-    }
-}
-{#//业务支撑区---互联网防火墙#}
-.seven2{
-    animation: ywzcq2 3s  linear infinite  normal;
-}
-@keyframes ywzcq2{
-    0% {
-        left:965px;
-        top:352px;
-    }
-    100% {
-        left:1100px;
-        top:352px;
-    }
-}
-.seven2_over{
-    animation: ywzcqover2 3s  linear infinite  normal;
-}
-@keyframes ywzcqover2{
-    100% {
-        left:965px;
-        top:352px;
-    }
-    0% {
-        left:1100px;
-        top:352px;
-    }
-}
-{#//核心业务区---边界防火墙防火墙#}
-.eight1{
-    animation: hxywq1 3s  linear infinite  normal;
-}
-@keyframes hxywq1{
-    0% {
-        left:945px;
-        top:498px;
-    }
-    100% {
-        left:765px;
-        top:498px;
-    }
-}
-.eight1_over{
-    animation: hxywqover1 3s  linear infinite  normal;
-}
-@keyframes hxywqover1{
-    100% {
-        left:945px;
-        top:498px;
-    }
-    0% {
-        left:765px;
-        top:498px;
-    }
-}
-
-{#//互联网业务区---电信防火墙#}
-.nine1{
-    animation: hlwywq1 2.8s  linear infinite  normal;
-}
-@keyframes hlwywq1{
-    0% {
-        left:535px;
-        top:765px;
-    }
-    20%{
-        left:485px;
-        top:765px;
-    }
-    100% {
-        left:400px;
-        top:765px;
-    }
-}
-.nine1_over{
-    animation: hlwywqover1 2.8s  linear infinite  normal;
-}
-@keyframes hlwywqover1{
-    100% {
-        left:535px;
-        top:765px;
-    }
-    70% {
-        left:485px;
-        top:765px;
-    }
-    0% {
-        left:400px;
-        top:765px;
-    }
-}
-{#//互联网业务区---边界防火墙防火墙#}
-.nine2{
-    animation: hlwywq2 2s  linear infinite  normal;
-}
-@keyframes hlwywq2{
-    0% {
-        left:575px;
-        top:765px;
-    }
-    100% {
-        left:660px;
-        top:765px;
-    }
-}
-.nine2_over{
-    animation: hlwywqover2 2s  linear infinite  normal;
-}
-@keyframes hlwywqover2{
-    100% {
-        left:575px;
-        top:765px;
-    }
-    0% {
-        left:660px;
-        top:765px;
-    }
-}
-{#//互联网业务区---联通防火墙1#}
-.nine3{
-    animation: hlwywq3 2.8s  linear infinite  normal;
-}
-@keyframes hlwywq3{
-    0% {
-        left:535px;
-        top:765px;
-    }
-    20%{
-        left:485px;
-        top:765px;
-    }
-    70% {
-        left:485px;
-        top:900px;
-    }
-    100% {
-        left:400px;
-        top:900px;
-    }
-}
-.nine3_over{
-    animation: hlwywqover3 2.8s  linear infinite  normal;
-}
-@keyframes hlwywqover3{
-    100% {
-        left:535px;
-        top:765px;
-    }
-    70%{
-        left:485px;
-        top:765px;
-    }
-    20% {
-        left:485px;
-        top:900px;
-    }
-    0% {
-        left:400px;
-        top:900px;
-    }
-}
-{#//核心业务区---边界防火墙#}
-.ten1{
-    animation: nfzxhxywq1 2s  linear infinite  normal;
-}
-@keyframes nfzxhxywq1{
-    0% {
-        left:565px;
-        top:900px;
-    }
-    100% {
-        left:660px;
-        top:900px;
-    }
-}
-.ten1_over{
-    animation: nfzxhxywqover1 2s  linear infinite  normal;
-}
-@keyframes nfzxhxywqover1{
-    100% {
-        left:565px;
-        top:900px;
-    }
-    0% {
-        left:660px;
-        top:900px;
-    }
-}
-{#//灾备核心业务区---边界防火墙#}
-.eleven1{
-    animation: zbhxywq 2s  linear infinite  normal;
-}
-@keyframes zbhxywq{
-    0% {
-        left:1065px;
-        top:900px;
-    }
-    100% {
-        left:940px;
-        top:900px;
-    }
-}
-.eleven1_over{
-    animation: zbhxywqover 2s  linear infinite  normal;
-}
-@keyframes zbhxywqover{
-    100% {
-        left:1065px;
-        top:900px;
-    }
-    0% {
-        left:940px;
-        top:900px;
-    }
-}
-{#//灾备互联网业务中心---边界防火墙#}
-.twelve1{
-    animation: zbhlwywzx1 2s  linear infinite  normal;
-}
-@keyframes zbhlwywzx1{
-    0% {
-        left:1045px;
-        top:760px;
-    }
-    100% {
-        left:940px;
-        top:760px;
-    }
-}
-.twelve1_over{
-    animation: zbhlwywzxover1 2s  linear infinite  normal;
-}
-@keyframes zbhlwywzxover1{
-    100% {
-        left:1045px;
-        top:760px;
-    }
-    0% {
-        left:940px;
-        top:760px;
-    }
-}
-{#//灾备互联网业务中心---电信1防火墙#}
-.twelve2{
-    animation: zbhlwywzx2 2s  linear infinite  normal;
-}
-@keyframes zbhlwywzx2{
-    0% {
-        left:1085px;
-        top:755px;
-    }
-    20% {
-        left:1145px;
-        top:755px;
-    }
-    100% {
-        left:1180px;
-        top:755px;
-    }
-}
-.twelve2_over{
-    animation: zbhlwywzxover2 2s  linear infinite  normal;
-}
-@keyframes zbhlwywzxover2{
-    100% {
-        left:1085px;
-        top:755px;
-    }
-    80% {
-        left:1145px;
-        top:755px;
-    }
-    0% {
-        left:1180px;
-        top:755px;
-    }
-}
-{#//灾备互联网业务中心---联通防火墙1#}
-.twelve3{
-    animation: zbhlwywzx3 2s  linear infinite  normal;
-}
-@keyframes zbhlwywzx3{
-    0% {
-        left:1085px;
-        top:755px;
-    }
-    20% {
-        left:1145px;
-        top:755px;
-    }
-    70%{
-        left:1145px;
-        top:853px;
-    }
-    100% {
-        left:1180px;
-        top:853px;
-    }
-}
-.twelve3_over{
-    animation: zbhlwywzxover3 2s  linear infinite  normal;
-}
-@keyframes zbhlwywzxover3{
-    100% {
-        left:1085px;
-        top:755px;
-    }
-    70% {
-        left:1145px;
-        top:755px;
-    }
-    20%{
-        left:1145px;
-        top:853px;
-    }
-    0% {
-        left:1180px;
-        top:853px;
-    }
-}
-{#//灾备互联网业务中心---移动防火墙1#}
-.twelve4{
-    animation: zbhlwywzx4 2s  linear infinite  normal;
-}
-@keyframes zbhlwywzx4{
-    0% {
-        left:1085px;
-        top:755px;
-    }
-    20% {
-        left:1145px;
-        top:755px;
-    }
-    80%{
-       left:1145px;
-       top:950px;
-    }
-    100% {
-        left:1180px;
-        top:950px;
-    }
-}
-.twelve4_over{
-    animation: zbhlwywzxover4 2s  linear infinite  normal;
-}
-@keyframes zbhlwywzxover4{
-    100% {
-        left:1085px;
-        top:755px;
-    }
-    80% {
-        left:1145px;
-        top:755px;
-    }
-    20%{
-       left:1145px;
-       top:950px;
-    }
-    0% {
-        left:1180px;
-        top:950px;
-    }
-}
-
-{#    jlq-2019-05-06-add#}
-{#    @charset "utf-8";#}
-
-.panorama {
-  width: 1400px;
-  height: 1050px;
-  background-image: url('${STATIC_URL}img/bg.png');
-  background-size: 100%;
-  background-repeat: no-repeat;
-  padding: 0;
-  margin: 0;
-}
-.side {
-  padding: 0;
-  margin: 0;
-}
-.l {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 0px;
-  top: 0px;
-}
-.l li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_01 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 20px;
-  top: 155px;
-}
-.l_01 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_02 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 590px;
-  top: 155px;
-}
-.l_02 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_03 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 20px;
-  top: 285px;
-}
-.l_03 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_04 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 590px;
-  top: 295px;
-}
-.l_04 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_05 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 720px;
-  top: 255px;
-}
-.l_05 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_06 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 60px;
-  top: 575px;
-}
-.l_06 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_07 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 300px;
-  top: 575px;
-}
-.l_07 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_08 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 520px;
-  top: 575px;
-}
-.l_08 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_09 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1800px;
-  top: 95px;
-}
-.l_09 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_10 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1800px;
-  top: 185px;
-}
-.l_10 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_11 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1760px;
-  top: 310px;
-}
-.l_11 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_12 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1760px;
-  top: 420px;
-}
-.l_12 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_13 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 720px;
-  top: 475px;
-}
-.l_13 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_14 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1600px;
-  top: 535px;
-}
-.l_14 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_15 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1600px;
-  top: 645px;
-}
-.l_15 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_16 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 60px;
-  top: 735px;
-}
-.l_16 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_17 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 300px;
-  top: 735px;
-}
-.l_17 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_18 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 720px;
-  top: 750px;
-}
-.l_18 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_19 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 60px;
-  top: 860px;
-}
-.l_19 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_20 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 60px;
-  top: 967px;
-}
-.l_20 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_21 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 480px;
-  top: 887px;
-}
-.l_21 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_22 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 600px;
-  top: 990px;
-}
-.l_22 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_23 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1450px;
-  top: 820px;
-}
-.l_23 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_24 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1790px;
-  top: 760px;
-}
-.l_24 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_25 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1790px;
-  top: 870px;
-}
-.l_25 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.l_26 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1765px;
-  top: 995px;
-}
-.l_26 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-}
-.legend_01 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 245px;
-  top: 100px;
-}
-.legend_01 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_01 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_01 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_01 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_01 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_02 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 450px;
-  top: 100px;
-}
-.legend_02 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_02 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_02 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_02 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_02 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_03 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 245px;
-  top: 240px;
-}
-.legend_03 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_03 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_03 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_03 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_03 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_04 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 445px;
-  top: 240px;
-}
-.legend_04 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_04 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_04 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_04 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_04 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_05 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 950px;
-  top: 180px;
-}
-.legend_05 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_05 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_05 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_05 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_05 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_06 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 115px;
-  top: 400px;
-}
-.legend_06 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_06 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_06 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_06 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_06 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_07 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 360px;
-  top: 400px;
-}
-.legend_07 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_07 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_07 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_07 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_07 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_08 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 560px;
-  top: 400px;
-}
-.legend_08 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_08 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_08 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_08 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_08 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_09 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 950px;
-  top: 390px;
-}
-.legend_09 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_09 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_09 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_09 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_09 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_10 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1490px;
-  top: 240px;
-}
-.legend_10 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_10 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_10 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_10 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_10 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_11 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1490px;
-  top: 350px;
-}
-.legend_11 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_11 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_11 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_11 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_11 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_12 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1185px;
-  top: 450px;
-}
-.legend_12 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_12 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_12 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_12 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_12 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_13 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1460px;
-  top: 470px;
-}
-.legend_13 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_13 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_13 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_13 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_13 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_14 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1460px;
-  top: 590px;
-}
-.legend_14 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_14 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_14 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_14 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_14 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_15 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1820px;
-  top: 485px;
-}
-.legend_15 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_15 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_15 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_15 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_15 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_16 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 560px;
-  top: 675px;
-}
-.legend_16 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_16 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_16 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_16 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_16 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_17 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 950px;
-  top: 675px;
-}
-.legend_17 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_17 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_17 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_17 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_17 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_18 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 830px;
-  top: 810px;
-}
-.legend_18 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_18 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_18 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_18 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_18 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_19 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 830px;
-  top: 940px;
-}
-.legend_19 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_19 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_19 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_19 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_19 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_20 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1320px;
-  top: 760px;
-}
-.legend_20 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_20 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_20 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_20 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_20 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_21 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1480px;
-  top: 930px;
-}
-.legend_21 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_21 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_21 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_21 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_21 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_22 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1675px;
-  top: 710px;
-}
-.legend_22 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_22 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_22 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_22 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_22 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_23 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 1675px;
-  top: 820px;
-}
-.legend_23 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_23 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_23 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_23 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_23 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_24 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 305px;
-  top: 810px;
-}
-.legend_24 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_24 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_24 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_24 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_24 li:nth-child(3) {
-  background: #bc65d5;
-}
-.legend_25 {
-  position: absolute;
-  color: #fff !important;
-  font-size: 10px;
-  margin: 0;
-  padding: 0;
-  left: 305px;
-  top: 940px;
-}
-.legend_25 li {
-  list-style: none;
-  height: 14px;
-  line-height: 14px;
-  margin-bottom: 4px;
-  padding: 5px 8px;
-  border-radius: 10px;
-  text-align: center;
-}
-.legend_25 li span {
-  border: 2px solid red;
-  border-radius: 100%;
-  float: right;
-}
-.legend_25 li:nth-child(1) {
-  background: #6588d5;
-}
-.legend_25 li:nth-child(2) {
-  background: #7665d5;
-}
-.legend_25 li:nth-child(3) {
-  background: #bc65d5;
+.one1 {
+  animation: onemove1 5s  linear infinite  normal;
+}
+@keyframes onemove1 {
+  0% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  70% {
+    left: 222px;
+    top: 243px;
+  }
+  100% {
+    left: 145px;
+    top: 243px;
+  }
+}
+.one1_over {
+  animation: onemoveover1 5s  linear infinite  normal;
+}
+@keyframes onemoveover1 {
+  100% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  30% {
+    left: 222px;
+    top: 243px;
+  }
+  0% {
+    left: 145px;
+    top: 243px;
+  }
+}
+.one2 {
+  animation: onemove2 2.5s  linear infinite  normal;
+}
+@keyframes onemove2 {
+  0% {
+    left: 480px;
+    top: 180px;
+  }
+  100% {
+    left: 570px;
+    top: 180px;
+  }
+}
+.one2_over {
+  animation: onemoveover2 2.5s  linear infinite  normal;
+}
+@keyframes onemoveover2 {
+  100% {
+    left: 480px;
+    top: 180px;
+  }
+  0% {
+    left: 570px;
+    top: 180px;
+  }
+}
+.one3 {
+  animation: onemove3 5s  linear infinite  normal;
+}
+@keyframes onemove3 {
+  0% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  70% {
+    left: 222px;
+    top: 243px;
+  }
+  100% {
+    left: 255px;
+    top: 243px;
+  }
+}
+.one3_over {
+  animation: onemoveover3 5s  linear infinite  normal;
+}
+@keyframes onemoveover3 {
+  100% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  30% {
+    left: 222px;
+    top: 243px;
+  }
+  0% {
+    left: 255px;
+    top: 243px;
+  }
+}
+.one4 {
+  animation: onemove4 5s  linear infinite  normal;
+}
+@keyframes onemove4 {
+  0% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  70% {
+    left: 222px;
+    top: 118px;
+  }
+  100% {
+    left: 145px;
+    top: 118px;
+  }
+}
+.one4_over {
+  animation: onemoveover4 5s  linear infinite  normal;
+}
+@keyframes onemoveover4 {
+  100% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  30% {
+    left: 222px;
+    top: 118px;
+  }
+  0% {
+    left: 145px;
+    top: 118px;
+  }
+}
+.one5 {
+  animation: onemove5 5s  linear infinite  normal;
+}
+@keyframes onemove5 {
+  0% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  70% {
+    left: 222px;
+    top: 118px;
+  }
+  100% {
+    left: 265px;
+    top: 118px;
+  }
+}
+.one5_over {
+  animation: onemoveover5 5s  linear infinite  normal;
+}
+@keyframes onemoveover5 {
+  100% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  30% {
+    left: 222px;
+    top: 118px;
+  }
+  0% {
+    left: 265px;
+    top: 118px;
+  }
+}
+.two1 {
+  animation: twomove1 3s  linear infinite  normal;
+}
+@keyframes twomove1 {
+  0% {
+    left: 215px;
+    top: 353px;
+  }
+  100% {
+    left: 55px;
+    top: 353px;
+  }
+}
+.two1_over {
+  animation: twomoveover1 3s  linear infinite  normal;
+}
+@keyframes twomoveover1 {
+  100% {
+    left: 215px;
+    top: 353px;
+  }
+  0% {
+    left: 55px;
+    top: 353px;
+  }
+}
+.two2 {
+  animation: twomove2 3s  linear infinite  normal;
+}
+@keyframes twomove2 {
+  0% {
+    left: 215px;
+    top: 353px;
+  }
+  100% {
+    left: 315px;
+    top: 353px;
+  }
+}
+.two2_over {
+  animation: twomoveover2 3s  linear infinite  normal;
+}
+@keyframes twomoveover2 {
+  100% {
+    left: 215px;
+    top: 353px;
+  }
+  0% {
+    left: 315px;
+    top: 353px;
+  }
+}
+.three {
+  animation: zbyw 3s  linear infinite  normal;
+}
+@keyframes zbyw {
+  0% {
+    left: 215px;
+    top: 453px;
+  }
+  100% {
+    left: 315px;
+    top: 453px;
+  }
+}
+.three_over {
+  animation: zbywover 3s  linear infinite  normal;
+}
+@keyframes zbywover {
+  100% {
+    left: 215px;
+    top: 453px;
+  }
+  0% {
+    left: 315px;
+    top: 453px;
+  }
+}
+.four1 {
+  animation: ggq1 3s  linear infinite  normal;
+}
+@keyframes ggq1 {
+  0% {
+    left: 465px;
+    top: 353px;
+  }
+  30% {
+    left: 405px;
+    top: 353px;
+  }
+  100% {
+    left: 315px;
+    top: 353px;
+  }
+}
+.four1_over {
+  animation: ggqover1 3s  linear infinite  normal;
+}
+@keyframes ggqover1 {
+  100% {
+    left: 465px;
+    top: 353px;
+  }
+  70% {
+    left: 405px;
+    top: 353px;
+  }
+  0% {
+    left: 315px;
+    top: 353px;
+  }
+}
+.four2 {
+  animation: ggq2 3s  linear infinite  normal;
+}
+@keyframes ggq2 {
+  0% {
+    left: 465px;
+    top: 353px;
+  }
+  30% {
+    left: 405px;
+    top: 353px;
+  }
+  60% {
+    left: 405px;
+    top: 453px;
+  }
+  100% {
+    left: 315px;
+    top: 453px;
+  }
+}
+.four2_over {
+  animation: ggqover2 3s  linear infinite  normal;
+}
+@keyframes ggqover2 {
+  100% {
+    left: 465px;
+    top: 353px;
+  }
+  60% {
+    left: 405px;
+    top: 353px;
+  }
+  30% {
+    left: 405px;
+    top: 453px;
+  }
+  0% {
+    left: 315px;
+    top: 453px;
+  }
+}
+.four3 {
+  animation: ggq3 3s  linear infinite  normal;
+}
+@keyframes ggq3 {
+  0% {
+    left: 465px;
+    top: 353px;
+  }
+  100% {
+    left: 585px;
+    top: 353px;
+  }
+}
+.four3_over {
+  animation: ggqover3 3s  linear infinite  normal;
+}
+@keyframes ggqover3 {
+  100% {
+    left: 465px;
+    top: 353px;
+  }
+  0% {
+    left: 585px;
+    top: 353px;
+  }
+}
+.five {
+  animation: zhywq 3s  linear infinite  normal;
+}
+@keyframes zhywq {
+  0% {
+    left: 465px;
+    top: 501px;
+  }
+  100% {
+    left: 575px;
+    top: 501px;
+  }
+}
+.five_over {
+  animation: zhywqover 3s  linear infinite  normal;
+}
+@keyframes zhywqover {
+  100% {
+    left: 465px;
+    top: 501px;
+  }
+  0% {
+    left: 575px;
+    top: 501px;
+  }
+}
+.six1 {
+  animation: hlwywbq1 3s  linear infinite  normal;
+}
+@keyframes hlwywbq1 {
+  0% {
+    left: 935px;
+    top: 180px;
+  }
+  100% {
+    left: 765px;
+    top: 180px;
+  }
+}
+.six1_over {
+  animation: hlwywbqover1 3s  linear infinite  normal;
+}
+@keyframes hlwywbqover1 {
+  100% {
+    left: 945px;
+    top: 180px;
+  }
+  0% {
+    left: 765px;
+    top: 180px;
+  }
+}
+.six2 {
+  animation: hlwywbqdx11 3s  linear infinite  normal;
+}
+@keyframes hlwywbqdx11 {
+  0% {
+    left: 935px;
+    top: 180px;
+  }
+  30% {
+    left: 1036px;
+    top: 180px;
+  }
+  70% {
+    left: 1036px;
+    top: 95px;
+  }
+  100% {
+    left: 1100px;
+    top: 95px;
+  }
+}
+.six2_over {
+  animation: hlwywbqdx1over1 3s  linear infinite  normal;
+}
+@keyframes hlwywbqdx1over1 {
+  100% {
+    left: 955px;
+    top: 180px;
+  }
+  70% {
+    left: 1036px;
+    top: 180px;
+  }
+  30% {
+    left: 1036px;
+    top: 95px;
+  }
+  0% {
+    left: 1100px;
+    top: 95px;
+  }
+}
+.six3 {
+  animation: hlwywbqdx21 3s  linear infinite  normal;
+}
+@keyframes hlwywbqdx21 {
+  0% {
+    left: 935px;
+    top: 180px;
+  }
+  30% {
+    left: 1036px;
+    top: 180px;
+  }
+  100% {
+    left: 1100px;
+    top: 180px;
+  }
+}
+.six3_over {
+  animation: hlwywbqdx2over1 3s  linear infinite  normal;
+}
+@keyframes hlwywbqdx2over1 {
+  100% {
+    left: 935px;
+    top: 180px;
+  }
+  70% {
+    left: 1036px;
+    top: 180px;
+  }
+  0% {
+    left: 1100px;
+    top: 180px;
+  }
+}
+.six4 {
+  animation: hlwywbqlt1 3s  linear infinite  normal;
+}
+@keyframes hlwywbqlt1 {
+  0% {
+    left: 935px;
+    top: 180px;
+  }
+  30% {
+    left: 1036px;
+    top: 180px;
+  }
+  70% {
+    left: 1036px;
+    top: 250px;
+  }
+  100% {
+    left: 1100px;
+    top: 250px;
+  }
+}
+.six4_over {
+  animation: hlwywbqltover1 3s  linear infinite  normal;
+}
+@keyframes hlwywbqltover1 {
+  100% {
+    left: 935px;
+    top: 180px;
+  }
+  70% {
+    left: 1036px;
+    top: 180px;
+  }
+  30% {
+    left: 1036px;
+    top: 250px;
+  }
+  0% {
+    left: 1100px;
+    top: 250px;
+  }
+}
+.seven1 {
+  animation: ywzcq1 3s  linear infinite  normal;
+}
+@keyframes ywzcq1 {
+  0% {
+    left: 945px;
+    top: 352px;
+  }
+  100% {
+    left: 765px;
+    top: 352px;
+  }
+}
+.seven1_over {
+  animation: ywzcqover1 3s  linear infinite  normal;
+}
+@keyframes ywzcqover1 {
+  100% {
+    left: 945px;
+    top: 352px;
+  }
+  0% {
+    left: 765px;
+    top: 352px;
+  }
+}
+.seven2 {
+  animation: ywzcq2 3s  linear infinite  normal;
+}
+@keyframes ywzcq2 {
+  0% {
+    left: 965px;
+    top: 352px;
+  }
+  100% {
+    left: 1100px;
+    top: 352px;
+  }
+}
+.seven2_over {
+  animation: ywzcqover2 3s  linear infinite  normal;
+}
+@keyframes ywzcqover2 {
+  100% {
+    left: 965px;
+    top: 352px;
+  }
+  0% {
+    left: 1100px;
+    top: 352px;
+  }
+}
+.eight1 {
+  animation: hxywq1 3s  linear infinite  normal;
+}
+@keyframes hxywq1 {
+  0% {
+    left: 945px;
+    top: 498px;
+  }
+  100% {
+    left: 765px;
+    top: 498px;
+  }
+}
+.eight1_over {
+  animation: hxywqover1 3s  linear infinite  normal;
+}
+@keyframes hxywqover1 {
+  100% {
+    left: 945px;
+    top: 498px;
+  }
+  0% {
+    left: 765px;
+    top: 498px;
+  }
+}
+.nine1 {
+  animation: hlwywq1 2.8s  linear infinite  normal;
+}
+@keyframes hlwywq1 {
+  0% {
+    left: 535px;
+    top: 765px;
+  }
+  20% {
+    left: 485px;
+    top: 765px;
+  }
+  100% {
+    left: 400px;
+    top: 765px;
+  }
+}
+.nine1_over {
+  animation: hlwywqover1 2.8s  linear infinite  normal;
+}
+@keyframes hlwywqover1 {
+  100% {
+    left: 535px;
+    top: 765px;
+  }
+  70% {
+    left: 485px;
+    top: 765px;
+  }
+  0% {
+    left: 400px;
+    top: 765px;
+  }
+}
+.nine2 {
+  animation: hlwywq2 2s  linear infinite  normal;
+}
+@keyframes hlwywq2 {
+  0% {
+    left: 575px;
+    top: 765px;
+  }
+  100% {
+    left: 660px;
+    top: 765px;
+  }
+}
+.nine2_over {
+  animation: hlwywqover2 2s  linear infinite  normal;
+}
+@keyframes hlwywqover2 {
+  100% {
+    left: 575px;
+    top: 765px;
+  }
+  0% {
+    left: 660px;
+    top: 765px;
+  }
+}
+.nine3 {
+  animation: hlwywq3 2.8s  linear infinite  normal;
+}
+@keyframes hlwywq3 {
+  0% {
+    left: 535px;
+    top: 765px;
+  }
+  20% {
+    left: 485px;
+    top: 765px;
+  }
+  70% {
+    left: 485px;
+    top: 900px;
+  }
+  100% {
+    left: 400px;
+    top: 900px;
+  }
+}
+.nine3_over {
+  animation: hlwywqover3 2.8s  linear infinite  normal;
+}
+@keyframes hlwywqover3 {
+  100% {
+    left: 535px;
+    top: 765px;
+  }
+  70% {
+    left: 485px;
+    top: 765px;
+  }
+  20% {
+    left: 485px;
+    top: 900px;
+  }
+  0% {
+    left: 400px;
+    top: 900px;
+  }
+}
+.ten1 {
+  animation: nfzxhxywq1 2s  linear infinite  normal;
+}
+@keyframes nfzxhxywq1 {
+  0% {
+    left: 565px;
+    top: 900px;
+  }
+  100% {
+    left: 660px;
+    top: 900px;
+  }
+}
+.ten1_over {
+  animation: nfzxhxywqover1 2s  linear infinite  normal;
+}
+@keyframes nfzxhxywqover1 {
+  100% {
+    left: 565px;
+    top: 900px;
+  }
+  0% {
+    left: 660px;
+    top: 900px;
+  }
+}
+.eleven1 {
+  animation: zbhxywq 2s  linear infinite  normal;
+}
+@keyframes zbhxywq {
+  0% {
+    left: 1065px;
+    top: 900px;
+  }
+  100% {
+    left: 940px;
+    top: 900px;
+  }
+}
+.eleven1_over {
+  animation: zbhxywqover 2s  linear infinite  normal;
+}
+@keyframes zbhxywqover {
+  100% {
+    left: 1065px;
+    top: 900px;
+  }
+  0% {
+    left: 940px;
+    top: 900px;
+  }
+}
+.twelve1 {
+  animation: zbhlwywzx1 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzx1 {
+  0% {
+    left: 1045px;
+    top: 760px;
+  }
+  100% {
+    left: 940px;
+    top: 760px;
+  }
+}
+.twelve1_over {
+  animation: zbhlwywzxover1 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzxover1 {
+  100% {
+    left: 1045px;
+    top: 760px;
+  }
+  0% {
+    left: 940px;
+    top: 760px;
+  }
+}
+.twelve2 {
+  animation: zbhlwywzx2 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzx2 {
+  0% {
+    left: 1085px;
+    top: 755px;
+  }
+  20% {
+    left: 1145px;
+    top: 755px;
+  }
+  100% {
+    left: 1180px;
+    top: 755px;
+  }
+}
+.twelve2_over {
+  animation: zbhlwywzxover2 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzxover2 {
+  100% {
+    left: 1085px;
+    top: 755px;
+  }
+  80% {
+    left: 1145px;
+    top: 755px;
+  }
+  0% {
+    left: 1180px;
+    top: 755px;
+  }
+}
+.twelve3 {
+  animation: zbhlwywzx3 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzx3 {
+  0% {
+    left: 1085px;
+    top: 755px;
+  }
+  20% {
+    left: 1145px;
+    top: 755px;
+  }
+  70% {
+    left: 1145px;
+    top: 853px;
+  }
+  100% {
+    left: 1180px;
+    top: 853px;
+  }
+}
+.twelve3_over {
+  animation: zbhlwywzxover3 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzxover3 {
+  100% {
+    left: 1085px;
+    top: 755px;
+  }
+  70% {
+    left: 1145px;
+    top: 755px;
+  }
+  20% {
+    left: 1145px;
+    top: 853px;
+  }
+  0% {
+    left: 1180px;
+    top: 853px;
+  }
+}
+.twelve4 {
+  animation: zbhlwywzx4 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzx4 {
+  0% {
+    left: 1085px;
+    top: 755px;
+  }
+  20% {
+    left: 1145px;
+    top: 755px;
+  }
+  80% {
+    left: 1145px;
+    top: 950px;
+  }
+  100% {
+    left: 1180px;
+    top: 950px;
+  }
+}
+.twelve4_over {
+  animation: zbhlwywzxover4 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzxover4 {
+  100% {
+    left: 1085px;
+    top: 755px;
+  }
+  80% {
+    left: 1145px;
+    top: 755px;
+  }
+  20% {
+    left: 1145px;
+    top: 950px;
+  }
+  0% {
+    left: 1180px;
+    top: 950px;
+  }
 }
 
 </style>
-
-
-<body style="background: rgb(246,246,246);overflow-y: hidden;">
+<body style="background: rgb(246,246,246);overflow-y: block;">
 <div style="position:relative" class="panorama" id="networkPanorama">
-    <span style="color:#00e4f4;font-size:18px;display:block;position:absolute;top:20px;right:35px;height:25px;line-height:25px" v-text="date">{{ date }}&nbsp;&nbsp;{{time}}</span>
-
-
+    <span style="color:#00e4f4;font-size:18px;display:block;position:absolute;top:20px;right:35px;height:25px;line-height:25px" >{{ date }}&nbsp;&nbsp;{{time}}</span>
+    <ul class="l_01">
+        <!-- 互联网业务A区-电信 -->
+         <li>网络流量:{{no_firewall6['互联网业务A区-电信']?no_firewall6['互联网业务A区-电信']['networkFlowValue']:'- -'}}%</li>
+         <li>带宽:{{bandwidth.hlwywaq_dx}}G</li>
+         <li>时延:{{no_firewall6['互联网业务A区-电信']?no_firewall6['互联网业务A区-电信']['lantenceAvg']:'- -'}}ms</li>
+     </ul>
+    <ul class="l_02">
+        <!--  互联网业务A区-电信3  -->
+         <li>网络流量:{{no_firewall6['互联网业务A区-电信3']?no_firewall6['互联网业务A区-电信3']['networkFlowValue']:'- -'}}%</li>
+         <li>带宽:{{bandwidth.hlwywaq_dx3}}G</li>
+         <li>时延:{{no_firewall6['互联网业务A区-电信3']?no_firewall6['互联网业务A区-电信3']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_03">
+        <!--  互联网业务A区-移动  -->
+         <li>网络流量:{{no_firewall6['互联网业务A区-移动']?no_firewall6['互联网业务A区-移动']['networkFlowValue']:'- -'}}%</li>
+         <li>带宽:{{bandwidth.hlwywaq_yd}}G</li>
+         <li>时延:{{no_firewall6['互联网业务A区-移动']?no_firewall6['互联网业务A区-移动']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_04">
+        <!--  互联网业务A区-联通  -->
+         <li>网络流量:{{no_firewall6['互联网业务A区-联通']?no_firewall6['互联网业务A区-联通']['networkFlowValue']:'- -'}}%</li>
+         <li>带宽:{{bandwidth.hlwywaq_lt}}G</li>
+         <li>时延:{{no_firewall6['互联网业务A区-联通']?no_firewall6['互联网业务A区-联通']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_05">
+        <!--  互联网业务A区 -->
+        <li>网络流量:{{no_firewall4['互联网业务A区']?no_firewall4['互联网业务A区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.hlwywaq}}G</li>
+        <li>时延:{{no_firewall4['互联网业务A区']?no_firewall4['互联网业务A区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+       <ul class="l_06">
+        <!--  互联网业务B区-联通 -->
+        <li>网络流量:{{no_firewall5['互联网业务B区-联通']?no_firewall5['互联网业务B区-联通']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.hlwywbq_lt}}G</li>
+        <li>时延:{{no_firewall5['互联网业务B区-联通']?no_firewall5['互联网业务B区-联通']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+        <ul class="l_07">
+        <!--  互联网业务B区-电信2 -->
+        <li>网络流量:{{no_firewall5['互联网业务B区-电信2']?no_firewall5['互联网业务B区-电信2']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.hlwywbq_dx2}}G</li>
+        <li>时延:{{no_firewall5['互联网业务B区-电信2']?no_firewall5['互联网业务B区-电信2']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_08">
+        <!--  互联网业务B区-电信1 -->
+        <li>网络流量:{{no_firewall5['互联网业务B区-电信1']?no_firewall5['互联网业务B区-电信1']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.hlwywbq_dx1}}G</li>
+        <li>时延:{{no_firewall5['互联网业务B区-电信1']?no_firewall5['互联网业务B区-电信1']['lantenceAvg']:'- -'}}ms</li>
+      </ul> <ul class="l_13">
+        <!--  互联网业务B区 -->
+         <li>网络流量:{{no_firewall4['互联网业务B区']?no_firewall4['互联网业务B区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.hlwywbq}}G</li>
+        <li>时延:{{no_firewall4['互联网业务B区']?no_firewall4['互联网业务B区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_09">
+         <!--  交易所-上交所 -->
+        <li>网络流量:{{no_firewall7['交易所-上交所']?no_firewall7['交易所-上交所']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.jys_shangjs}}M</li>
+        <li>时延:{{no_firewall7['交易所-上交所']?no_firewall7['交易所-上交所']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_10">
+       <!--  交易所-深交所 -->
+        <li>网络流量:{{no_firewall7['交易所-深交所']?no_firewall7['交易所-深交所']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.jys_shenjs}}M</li>
+        <li>时延:{{no_firewall7['交易所-深交所']?no_firewall7['交易所-深交所']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_11">
+       <!--  综合业务区 -->
+        <li>网络流量:{{no_firewall7['综合业务区']?no_firewall7['综合业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.zhywq}}G</li>
+        <li>时延:{{no_firewall7['综合业务区']?no_firewall7['综合业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_12">
+       <!--  核心业务区 -->
+        <li>网络流量:{{no_firewall8['核心业务区']?no_firewall8['核心业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.hxywq}}G</li>
+        <li>时延:{{no_firewall8['核心业务区']?no_firewall8['核心业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+        <ul class="l_14">
+       <!--  总部办公 -->
+        <li>网络流量:{{no_firewall8['总部办公']?no_firewall8['总部办公']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.zbbg}}G</li>
+        <li>时延:{{no_firewall8['总部办公']?no_firewall8['总部办公']['lantenceAvg']:'- -'}}ms</li>
+     </ul>
+      <ul class="l_15">
+       <!--  总部业务 -->
+        <li>网络流量:{{no_firewall8['总部业务']?no_firewall8['总部业务']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.zbyw}}G</li>
+        <li>时延:{{no_firewall8['总部业务']?no_firewall8['总部业务']['lantenceAvg']:'- -'}}ms</li>
+     </ul>
+     <ul class="l_16">
+       <!--  业务支撑区--联通 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+       <ul class="l_17">
+       <!--  业务支撑区--电信 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_18">
+       <!--  业务支撑区 -->
+         <li>网络流量:{{no_firewall4['业务支撑区']?no_firewall4['业务支撑区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.ywzcq}}G</li>
+        <li>时延:{{no_firewall4['业务支撑区']?no_firewall4['业务支撑区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_19">
+       <!--  互联网业务区--电信 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+       <ul class="l_20">
+       <!--  互联网业务区--联通 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_21">
+       <!--  南方中心-互联网业务区-->
+        <li>网络流量:{{no_firewall1['南方中心-互联网业务区']?no_firewall1['南方中心-互联网业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.nfzx_hlwywq}}G</li>
+        <li>时延:{{no_firewall1['南方中心-互联网业务区']?no_firewall1['南方中心-互联网业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_22">
+       <!-- 南方中心-核心业务区-->
+        <li>网络流量:{{no_firewall1['南方中心-核心业务区']?no_firewall1['南方中心-核心业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.nfzx_hxywq}}G</li>
+        <li>时延:{{no_firewall1['南方中心-核心业务区']?no_firewall1['南方中心-核心业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_23">
+       <!--  外高桥灾备中心-灾备互联网业务区-->
+        <li>网络流量:{{no_firewall2['外高桥灾备中心-灾备互联网业务区']?no_firewall2['外高桥灾备中心-灾备互联网业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.wgqzbzx_zbhlwywq}}G</li>
+        <li>时延:{{no_firewall2['外高桥灾备中心-灾备互联网业务区']?no_firewall2['外高桥灾备中心-灾备互联网业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_24">
+       <!--  灾备互联网业务区-电信-->
+        <li>网络流量:{{no_firewall3['灾备互联网业务区-电信']?no_firewall3['灾备互联网业务区-电信']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.zbhlwywq_dx}}G</li>
+        <li>时延:{{no_firewall3['灾备互联网业务区-电信']?no_firewall3['灾备互联网业务区-电信']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+       <ul class="l_25">
+       <!--  灾备互联网业务区-联通-->
+        <li>网络流量:{{no_firewall3['灾备互联网业务区-联通']?no_firewall3['灾备互联网业务区-联通']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.zbhlwywq_lt}}G</li>
+        <li>时延:{{no_firewall3['灾备互联网业务区-联通']?no_firewall3['灾备互联网业务区-联通']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_26">
+       <!--  外高桥灾备中心-灾备核心业务区-->
+        <li>网络流量:{{no_firewall2['外高桥灾备中心-灾备核心业务区']?no_firewall2['外高桥灾备中心-灾备核心业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.wgqzbzx_zbhxywq}}G</li>
+        <li>时延:{{no_firewall2['外高桥灾备中心-灾备核心业务区']?no_firewall2['外高桥灾备中心-灾备核心业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_27">
+       <!--  外高桥灾备中心-灾备核心业务区-联通 -->
+        <li>网络流量:{{no_firewall2['外高桥灾备中心-灾备核心业务区']?no_firewall2['外高桥灾备中心-灾备核心业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.wgqzbzx_zbhxywq}}G</li>
+        <li>时延:{{no_firewall2['外高桥灾备中心-灾备核心业务区']?no_firewall2['外高桥灾备中心-灾备核心业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_28">
+       <!--  中登公司 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_29">
+       <!--  证联网 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_30">
+       <!--  黄金交易所 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_31">
+       <!--  成都IDC -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_32">
+       <!--  北京IDC -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_33">
+       <!--  10G裸光缆 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_34">
+       <!--  25GMSTP线路 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_35">
+       <!--  10G裸光缆 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_36">
+       <!--  10G裸光缆 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_37">
+       <!--  10G裸光缆 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+       <ul class="legend_01">
+         <!--  互联网业务A区-电信1防火墙  -->
+         <li><span :class="firewall_two['互联网业务A区-电信1防火墙']?firewall_two['互联网业务A区-电信1防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-电信1防火墙']?firewall_two['互联网业务A区-电信1防火墙'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_two['互联网业务A区-电信1防火墙']?firewall_two['互联网业务A区-电信1防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-电信1防火墙']?firewall_two['互联网业务A区-电信1防火墙'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_two['互联网业务A区-电信1防火墙']?firewall_two['互联网业务A区-电信1防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-电信1防火墙']?firewall_two['互联网业务A区-电信1防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_02">
+         <!--  互联网业务A区-电信3防火墙  -->
+          <li><span :class="firewall_two['互联网业务A区-电信3防火墙']?firewall_two['互联网业务A区-电信3防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-电信3防火墙']?firewall_two['互联网业务A区-电信3防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区-电信3防火墙']?firewall_two['互联网业务A区-电信3防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-电信3防火墙']?firewall_two['互联网业务A区-电信3防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区-电信3防火墙']?firewall_two['互联网业务A区-电信3防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-电信3防火墙']?firewall_two['互联网业务A区-电信3防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_03">
+         <!--  互联网业务A区-移动防火墙 -->
+          <li><span :class="firewall_two['互联网业务A区-移动防火墙']?firewall_two['互联网业务A区-移动防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-移动防火墙']?firewall_two['互联网业务A区-移动防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区-移动防火墙']?firewall_two['互联网业务A区-移动防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-移动防火墙']?firewall_two['互联网业务A区-移动防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区-移动防火墙']?firewall_two['互联网业务A区-移动防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-移动防火墙']?firewall_two['互联网业务A区-移动防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+       <ul class="legend_04">
+         <!--  互联网业务A区-联通防火墙  -->
+          <li><span :class="firewall_two['互联网业务A区-联通防火墙']?firewall_two['互联网业务A区-联通防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-联通防火墙']?firewall_two['互联网业务A区-联通防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区-联通防火墙']?firewall_two['互联网业务A区-联通防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-联通防火墙']?firewall_two['互联网业务A区-联通防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区-联通防火墙']?firewall_two['互联网业务A区-联通防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-联通防火墙']?firewall_two['互联网业务A区-联通防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+       <ul class="legend_05">
+         <!--  互联网业务A区边界防火墙  -->
+          <li><span :class="firewall_two['互联网业务A区边界防火墙']?firewall_two['互联网业务A区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区边界防火墙']?firewall_two['互联网业务A区边界防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区边界防火墙']?firewall_two['互联网业务A区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区边界防火墙']?firewall_two['互联网业务A区边界防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区边界防火墙']?firewall_two['互联网业务A区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区边界防火墙']?firewall_two['互联网业务A区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_06">
+         <!--  互联网业务B区-联通防火墙  -->
+          <li><span :class="firewall_two['互联网业务B区-联通防火墙']?firewall_two['互联网业务B区-联通防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-联通防火墙']?firewall_two['互联网业务B区-联通防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区-联通防火墙']?firewall_two['互联网业务B区-联通防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-联通防火墙']?firewall_two['互联网业务B区-联通防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区-联通防火墙']?firewall_two['互联网业务B区-联通防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-联通防火墙']?firewall_two['互联网业务B区-联通防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_07">
+         <!--  互联网业务B区-电信2防火墙  -->
+          <li><span :class="firewall_two['互联网业务B区-电信2防火墙']?firewall_two['互联网业务B区-电信2防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-电信2防火墙']?firewall_two['互联网业务B区-电信2防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区-电信2防火墙']?firewall_two['互联网业务B区-电信2防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-电信2防火墙']?firewall_two['互联网业务B区-电信2防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区-电信2防火墙']?firewall_two['互联网业务B区-电信2防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-电信2防火墙']?firewall_two['互联网业务B区-电信2防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+       <ul class="legend_08">
+         <!--  互联网业务B区-电信1防火墙  -->
+          <li><span :class="firewall_two['互联网业务B区-电信1防火墙']?firewall_two['互联网业务B区-电信1防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-电信1防火墙']?firewall_two['互联网业务B区-电信1防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区-电信1防火墙']?firewall_two['互联网业务B区-电信1防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-电信1防火墙']?firewall_two['互联网业务B区-电信1防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区-电信1防火墙']?firewall_two['互联网业务B区-电信1防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-电信1防火墙']?firewall_two['互联网业务B区-电信1防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_09">
+         <!--  互联网业务B区边界防火墙  -->
+          <li><span :class="firewall_two['互联网业务B区边界防火墙']?firewall_two['互联网业务B区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区边界防火墙']?firewall_two['互联网业务B区边界防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区边界防火墙']?firewall_two['互联网业务B区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区边界防火墙']?firewall_two['互联网业务B区边界防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区边界防火墙']?firewall_two['互联网业务B区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区边界防火墙']?firewall_two['互联网业务B区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+       <ul class="legend_10">
+         <!--  上海数据中心：综合业务区边界防火墙  -->
+         <li><span :class="firewall_one['综合业务区边界防火墙']?firewall_one['综合业务区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['综合业务区边界防火墙']?firewall_one['综合业务区边界防火墙'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['综合业务区边界防火墙']?firewall_one['综合业务区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['综合业务区边界防火墙']?firewall_one['综合业务区边界防火墙'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['综合业务区边界防火墙']?firewall_one['综合业务区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['综合业务区边界防火墙']?firewall_one['综合业务区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_11">
+         <!--  上海数据中心：核心业务区边界防火墙  -->
+         <li><span :class="firewall_one['核心业务区边界防火墙']?firewall_one['核心业务区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['核心业务区边界防火墙']?firewall_one['核心业务区边界防火墙'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['核心业务区边界防火墙']?firewall_one['核心业务区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['核心业务区边界防火墙']?firewall_one['核心业务区边界防火墙'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['核心业务区边界防火墙']?firewall_one['核心业务区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['核心业务区边界防火墙']?firewall_one['核心业务区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_12">
+         <!--  骨干边界防火墙  -->
+        <li><span :class="randomData['cpu']>threshold.threshold_cpu?'aniamtionView':'none'"></span>{{randomData['cpu']}}%</li>
+        <li><span :class="randomData['memory']>threshold.threshold_memory?'aniamtionView':'none'"></span>{{randomData['memory']}}%</li>
+        <li><span :class="randomData['session']>threshold.threshold_session?'aniamtionView':'none'"></span>{{randomData['session']}}</li>
+      </ul>
+      <ul class="legend_13">
+         <!-- 总部办公-办公防火墙 总部办公边界防火墙  -->
+         <li><span :class="firewall_one['总部办公边界防火墙']?firewall_one['总部办公边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['总部办公边界防火墙']?firewall_one['总部办公边界防火墙'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['总部办公边界防火墙']?firewall_one['总部办公边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['总部办公边界防火墙']?firewall_one['总部办公边界防火墙'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['总部办公边界防火墙']?firewall_one['总部办公边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['总部办公边界防火墙']?firewall_one['总部办公边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_14">
+         <!--  骨干区--业务防火墙 总部业务边界防火墙 -->
+         <li><span :class="firewall_one['总部业务边界防火墙']?firewall_one['总部业务边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['总部业务边界防火墙']?firewall_one['总部业务边界防火墙'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['总部业务边界防火墙']?firewall_one['总部业务边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['总部业务边界防火墙']?firewall_one['总部业务边界防火墙'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['总部业务边界防火墙']?firewall_one['总部业务边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['总部业务边界防火墙']?firewall_one['总部业务边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_15">
+         <!--  总部办公-互联网防火墙  -->
+         <li><span :class="firewall_one['总部办公-互联网防火墙']?firewall_one['总部办公-互联网防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['总部办公-互联网防火墙']?firewall_one['总部办公-互联网防火墙'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['总部办公-互联网防火墙']?firewall_one['总部办公-互联网防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['总部办公-互联网防火墙']?firewall_one['总部办公-互联网防火墙'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['总部办公-互联网防火墙']?firewall_one['总部办公-互联网防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['总部办公-互联网防火墙']?firewall_one['总部办公-互联网防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_16">
+         <!--  业务支撑区--互联网防火墙  -->
+        <li><span :class="randomData['cpu']>threshold.threshold_cpu?'aniamtionView':'none'"></span>{{randomData['cpu']}}%</li>
+        <li><span :class="randomData['memory']>threshold.threshold_memory?'aniamtionView':'none'"></span>{{randomData['memory']}}%</li>
+        <li><span :class="randomData['session']>threshold.threshold_session?'aniamtionView':'none'"></span>{{randomData['session']}}</li>
+      </ul>
+      <ul class="legend_17">
+         <!--  业务支撑区边界防火墙  -->
+        <li><span :class="firewall_two['业务支撑区边界防火墙']?firewall_two['业务支撑区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['业务支撑区边界防火墙']?firewall_two['业务支撑区边界防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_two['业务支撑区边界防火墙']?firewall_two['业务支撑区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['业务支撑区边界防火墙']?firewall_two['业务支撑区边界防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_two['业务支撑区边界防火墙']?firewall_two['业务支撑区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['业务支撑区边界防火墙']?firewall_two['业务支撑区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_18">
+         <!--  南方中心-互联网业务区边界防火墙  -->
+        <li><span :class="firewall_one['南方中心-互联网业务区边界防火墙']?firewall_one['南方中心-互联网业务区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区边界防火墙']?firewall_one['南方中心-互联网业务区边界防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-互联网业务区边界防火墙']?firewall_one['南方中心-互联网业务区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区边界防火墙']?firewall_one['南方中心-互联网业务区边界防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-互联网业务区边界防火墙']?firewall_one['南方中心-互联网业务区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区边界防火墙']?firewall_one['南方中心-互联网业务区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+       <ul class="legend_24">
+         <!--  南方中心-互联网业务区-电信防火墙  -->
+        <li><span :class="firewall_one['南方中心-互联网业务区-电信防火墙']?firewall_one['南方中心-互联网业务区-电信防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区-电信防火墙']?firewall_one['南方中心-互联网业务区-电信防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-互联网业务区-电信防火墙']?firewall_one['南方中心-互联网业务区-电信防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区-电信防火墙']?firewall_one['南方中心-互联网业务区-电信防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-互联网业务区-电信防火墙']?firewall_one['南方中心-互联网业务区-电信防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区-电信防火墙']?firewall_one['南方中心-互联网业务区-电信防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_25">
+         <!--  南方中心-互联网业务区-联通防火墙  -->
+        <li><span :class="firewall_one['南方中心-互联网业务区-联通防火墙']?firewall_one['南方中心-互联网业务区-联通防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区-联通防火墙']?firewall_one['南方中心-互联网业务区-联通防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-互联网业务区-联通防火墙']?firewall_one['南方中心-互联网业务区-联通防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区-联通防火墙']?firewall_one['南方中心-互联网业务区-联通防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-互联网业务区-联通防火墙']?firewall_one['南方中心-互联网业务区-联通防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区-联通防火墙']?firewall_one['南方中心-互联网业务区-联通防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_19">
+         <!--  南方中心-核心业务区边界防火墙  -->
+         <li><span :class="firewall_one['南方中心-核心业务区边界防火墙']?firewall_one['南方中心-核心业务区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-核心业务区边界防火墙']?firewall_one['南方中心-核心业务区边界防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-核心业务区边界防火墙']?firewall_one['南方中心-核心业务区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-核心业务区边界防火墙']?firewall_one['南方中心-核心业务区边界防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-核心业务区边界防火墙']?firewall_one['南方中心-核心业务区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-核心业务区边界防火墙']?firewall_one['南方中心-核心业务区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+       <ul class="legend_20">
+         <!--  外高桥灾备中心-灾备互联网业务区边界防火墙  -->
+        <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_21">
+         <!--  外高桥灾备中心-灾备核心业务区边界防火墙  -->
+        <li><span :class="firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_22">
+         <!--  外高桥灾备中心-灾备互联网业务区-电信防火墙1 -->
+        <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1'][0]['SESSION']:'- -'}}</li>
+     </ul>
+      <ul class="legend_23">
+         <!--  外高桥灾备中心-灾备互联网业务区-联通防火墙1  -->
+         <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_26">
+         <!--  外高桥灾备中心-灾备互联网业务区-移动防火墙1  -->
+         <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['SESSION']:'- -'}}</li>
+      </ul>
     <img class="one1" src="${STATIC_URL}img/guangbiao.png">
     <img class="one1_over" src="${STATIC_URL}img/guangbiao.png">
     <img class="one2" src="${STATIC_URL}img/guangbiao.png">
@@ -2285,6 +1403,8 @@ img{
     <img class="twelve4_over" src="${STATIC_URL}img/guangbiao.png">  -->
 </div>
 </body>
+
+
 
 <script type="text/javascript">
     //import css from '${STATIC_URL}css/main.less';
@@ -2626,9 +1746,9 @@ img{
 
       console.log('y='+Y);
 
-      this.date = `${Y}-${M}-${D}`;
-      this.week = `${dd}`;
-      this.time = `${h}:${m}:${s}`;
+      this.date = Y+'-'+M+'-'+D;
+      this.week = dd;
+      this.time = h+':'+m+':'+s;
       console.log('123');
     },
     RandomNumBoth(Min,Max){
