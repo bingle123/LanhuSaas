@@ -21,11 +21,23 @@ def scenes_alert(request):
     :param request:
     :return:
     """
-   #隐藏旧方法 彭英杰2019-5-11 start
-   # res = function.scenes_alert(request)
+    #隐藏旧方法 彭英杰2019-5-11 start
+    # res = function.scenes_alert(request)
     res={
         "alert_data":[], # 告警列表
+        "sences_list":[],  # 当前用户所有场景信息
     }
     res["alert_data"] = function.query_alert_data();
+    res["sences_list"] = function.query_curr_sences(request);
+    #彭英杰 2019-5-11 end
     return render_json(res)
 
+
+def scenes_item_list(request):
+    """
+    场景类型查询监控项列表数据
+    :param request:
+    :return:
+    """
+    #scenes_id = request.POST.get("scenes_id")
+    return render_json(function.scenes_item_list(request))
