@@ -24,5 +24,6 @@ urlpatterns = patterns(
     (r'^get_user/$', 'filter_user'),  # 调接口查询所有用户,并筛选
     (r'^synchronize/$', 'synchronize'),  # 调接口查询所有用户,并筛选
     (r'get_active_user', 'get_active_user'),  # 获取当前登陆用户的蓝鲸名
-    (r'^get_logout_address/$', 'get_logout_address')  # 获取蓝鲸登录地址
+    (r'^get_logout_address/$', 'get_logout_address'),  # 获取蓝鲸登录地址
+  
 )

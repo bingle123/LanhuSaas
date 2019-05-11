@@ -199,7 +199,7 @@
                             <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">告警</span>
                         </template>
                         <el-col :span="22" :offset="1">
-                            <el-table :data="alert_table_data" style="width: 100%;margin-bottom: 50px;">
+                            <el-table  max-height="200" :data="alert_table_data" style="width: 100%;margin-bottom: 50px;">
                                 <el-table-column prop="alert_txt" label="警告内容" width="350"></el-table-column>
                                 <el-table-column prop="alert_time" label="时间" width="350"></el-table-column>
                                 <el-table-column prop="alert_level_name" label="级别" width="350">
@@ -226,7 +226,7 @@
         <el-row class="row_shadow" style="margin-bottom: 10px;background: rgb(255,255,255);">
             <el-col :span="24"class="title" style="border-bottom: 2px solid #f6f6f6">
                 <el-col :span="7" :offset="1">
-                    <label for="" style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;">场景时间段：</label>
+                    <label for="" style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;">场景：</label>
                     <el-select v-model="value1" placeholder="请选择">
                         <el-option
                           v-for="item in options1"
@@ -248,17 +248,17 @@
                     </el-select>
                 </el-col>
                 <el-col :span="8">
-                    <el-button type="primary" style="float:right;margin:20px 20px 0 0;font-size: 16px;font-family: PingFangSC-Medium;color: rgb(255, 255, 255);;font-weight: bold;">已完成场景</el-button>
+                    <el-button type="primary" onclick="ve.query_scene_data()" style="float:right;margin:20px 20px 0 0;font-size: 16px;font-family: PingFangSC-Medium;color: rgb(255, 255, 255);;font-weight: bold;">查询</el-button>
                 </el-col>
             </el-col>
             <el-col :span="22" :offset="1">
-                <el-table :data="scene_table_data" style="width: 100%;margin-bottom: 50px;">
-                  <el-table-column prop="scene_id" label="场景id" width="100"></el-table-column>
-                  <el-table-column prop="scene_name" label="场景名称" width="150"></el-table-column>
-                  <el-table-column prop="scene_node" label="节点" width="150"></el-table-column>
-                  <el-table-column prop="start_time" label="开始时间" width="450"></el-table-column>
-                  <el-table-column prop="end_time" label="截至时间" width="450"></el-table-column>
-                  <el-table-column prop="scene_status" label="状态" width="150">
+                <el-table max-height="200" :data="scene_table_data" style="heigth:300px;width: 100%;margin-bottom: 50px;">
+                  <el-table-column prop="scene_id" label="场景id"  ></el-table-column>
+                  <el-table-column prop="scene_name" :show-overflow-tooltip="true" label="场景名称" width="100" ></el-table-column>
+                  <el-table-column prop="scene_node" :show-overflow-tooltip="true" label="节点" width="100"></el-table-column>
+                  <el-table-column prop="start_time" label="开始时间"  ></el-table-column>
+                  <el-table-column prop="end_time" label="截至时间"  ></el-table-column>
+                  <el-table-column prop="scene_status" label="状态">
                       <template scope="scope">
                           <span :class="{red_class: scope.row.scene_status === '异常', orange_class: (scope.row.scene_status === '提醒'),grey_class: (scope.row.scene_status === '未执行')}">{{ scope.row.scene_status }}</span>
                       </template>
@@ -389,54 +389,14 @@
             }],
             value1:'',
             options2: [
-                {
-              value: '选项1',
-              label: '黄金糕'
-            }, {
-              value: '选项2',
-              label: '双皮奶'
-            }, {
-              value: '选项3',
-              label: '蚵仔煎'
-            }, {
-              value: '选项4',
-              label: '龙须面'
-            }, {
-              value: '选项5',
-              label: '北京烤鸭'
-            }],
-            value2: '',
+                {value:'-1',label:'全部'},
+                {value: '0',label: '正在执行'},
+                {value: '1', label: '异常'},
+                {value: '2', label: '提醒'},
+                {value: '3', label: '未执行'}
+                ],
+            value2: '-1',
             scene_table_data: [
-                {
-                scene_id:1,
-                scene_name: '王小虎',
-                scene_node: '1',
-                start_time: '2016-05-02',
-                end_time: '2016-05-02',
-                scene_status:'异常'
-              },{
-                scene_id:1,
-                scene_name: '王小虎',
-                scene_node: '1',
-                start_time: '2016-05-02',
-                end_time: '2016-05-02',
-                scene_status:'提醒'
-              },{
-                scene_id:1,
-                scene_name: '王小虎',
-                scene_node: '1',
-                start_time: '2016-05-02',
-                end_time: '2016-05-02',
-                scene_status:'正在执行'
-              },
-                {
-                scene_id:1,
-                scene_name: '王小虎',
-                scene_node: '1',
-                start_time: '2016-05-02',
-                end_time: '2016-05-02',
-                scene_status:'未执行'
-              },
               ],
             ring_chart:'',
             line_chart1:'',
@@ -732,10 +692,25 @@
                     }else{
                         ve.percentage=res.data['last_score'];
                         ve.alert_number=res.data['alert_count'];
+                        //彭英杰 start 20190511
                         ve.alert_table_data=res.data['alert_data'];
                         if(ve.alert_table_data.length>0){
                             $("#alert_temp").find("div[role='button']")[0].click();
                         }
+                        ve.options1=[]
+                        if(res.data["sences_list"].length>0){
+                            for(var i=0;i<res.data["sences_list"].length;i++){
+                                 var dto = res.data["sences_list"][i];
+                                 var dt={};
+                                 dt["label"] =dto.scene_type_name;
+                                 dt["value"] = dto.scene_type_id;
+                                 dt["startTime"] = dto.start_time;
+                                 dt["stopTime"] = dto.stop_time;
+                                 ve.options1.push(dt);
+                            }
+                            ve.value1 = ve.options1[0].value;
+                        }
+                        //彭英杰 end 20190511
                         ve.scene_chart_data=[
                             {value:res.data['danger_scene'], name:'危险'},
                             {value:res.data['will_scene'], name:'预警'},
@@ -775,12 +750,39 @@
                     }
                 })
             },
+            query_scene_data:function(){
+                var para_data={};
+                para_data["item_type"] = ve.value2;
+                para_data["scene_type"] = ve.value1;
+                for(var i=0;i<ve.options1.length;i++){
+                    if(ve.options1[i].value == ve.value1){
+                        para_data["startTime"] = ve.options1[i]["startTime"];
+                        para_data["stopTime"] = ve.options1[i]["stopTime"];
+                        break;
+                    }
+                }
+                $.ajax({
+                    url:"${SITE_URL}home_page/scenes_item_list",
+                    data: para_data,
+                    type:"post",
+                    dataType:"json",
+                    success:function(data){
+                        if(data.message.length>0){
+                             ve.scene_table_data = data.message
+                        }else{
+                            ve.scene_table_data =[]
+                        }
+
+                    }
+                })
+            }
         }
     });
     ve.get_date();
     setInterval(function () {
         ve.get_date();
     },10000)
+    ve.query_scene_data();
     ve.get_alert_data();
     ve.show_line_chart();
 </script>

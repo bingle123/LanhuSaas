@@ -66,7 +66,7 @@
 
 <body style="overflow: visible">
 <!--start html-->
-<div id="index">
+<div id="main">
     <!--start container -->
     <el-container >
 
@@ -85,10 +85,22 @@
                     <span slot="title">{{ i.mname }}{{ i.id }}</span>
                 </el-menu-item>
                 -->
+                <el-submenu  v-for="(i,index) in muenus"  :index="index+''"  style="font-color:#FFFFFF;line-height: 56px; "  v-if=" i.id == 1" >
+                     <template slot="title" >
+                         <i :class="i.mImg " :style= "left_submenu"></i>
+                      <span  v-if=" i.id == 1" > &nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                    </template>
+                    <el-menu-item-group>
+                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 4"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
+                    </el-menu-item-group>
+
+                  </el-submenu>
+
                 <el-menu-item id="submenu" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px;font-size: 18px;padding-left:50px;" v-if=" i.pcode == 0" v-on:click="testClick(i.url)" >
                     <i :class="i.mImg "></i>
                     <span slot="title" >{{ i.mname }}</span>
                 </el-menu-item>
+
 
 
                  <el-submenu  v-for="(i,index) in muenus"  :index="index+''"  style="font-color:#FFFFFF;line-height: 56px; "  v-if=" i.id == 25" >
@@ -195,7 +207,7 @@
         return config
     });
     let vm = new Vue({
-        el: '#index',
+        el: '#main',
         data: {
             muenus: [],
             showFlag:false,
@@ -269,7 +281,7 @@
                 });
             },
             testClick(res) {            //更新iframe显示页面
-                vm.clickhtml = res
+                    vm.clickhtml = res
                 console.log(this.clickhtml)
              },
 
@@ -279,13 +291,13 @@
                     .then((res) => {
                         console.log(res)
                         vm.muenus = res.data.results;
-
                     })
-            }
+            },
+
         }
     });
     vm.get_Muenu();
-    vm.get_user_name()
+    vm.get_user_name();
 </script>
 </body>
 </html>

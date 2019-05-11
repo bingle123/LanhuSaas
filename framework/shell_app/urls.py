@@ -38,4 +38,10 @@ urlpatterns = patterns(
     (r'^get_guotai_system_info', 'get_guotai_system_info'),  # 特殊场景页面
     (r'^network_panorama', 'network_panorama'),  # 新加页面1
     (r'^night_first', 'night_first'),  # 新加页面1
+    (r'^night_second', 'night_second'),  # 新加页面3
+    (r'^night_third', 'night_third'),  # 新加页面4
+    (r'^trace_panorama', 'trace_panorama'),  # 新加页面5
+    (r'^content', 'content'),  # 新加页面content
+    (r'^ywzl_panorama/$', 'ywzl_panorama'),  # 页面
+    (r'^kpi_panorama/$', 'kpi_panorama'),  # 页面
 )
