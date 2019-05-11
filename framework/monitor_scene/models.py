@@ -16,6 +16,7 @@ class Scene(models.Model):
     scene_editor_time = models.DateTimeField(verbose_name=u'编辑时间', auto_now=True)
     scene_area = models.IntegerField(verbose_name=u'场景日历地区')
     scene_content = models.TextField(u'场景编排XML', max_length=10485760)
+    scene_type_id = models.CharField(verbose_name=u'场景分组编号', max_length=128)
 
     def __str__(self):
         return self.id
