@@ -690,8 +690,8 @@
                     if (res.data.results == 'n'){
                         this.$message.error("此岗位没有场景!")
                     }else{
-                        ve.percentage=res.data['last_score'];
-                        ve.alert_number=res.data['alert_count'];
+                        ve.percentage=res.data['bing_res'].last_score;
+                        ve.alert_number=res.data['bing_res'].alert_count;
                         //彭英杰 start 20190511
                         ve.alert_table_data=res.data['alert_data'];
                         if(ve.alert_table_data.length>0){
@@ -712,9 +712,9 @@
                         }
                         //彭英杰 end 20190511
                         ve.scene_chart_data=[
-                            {value:res.data['danger_scene'], name:'危险'},
-                            {value:res.data['will_scene'], name:'预警'},
-                            {value:res.data['safe_scene'], name:'正常'},
+                            {value:res.data['bing_res'].danger_scene, name:'危险'},
+                            {value:res.data['bing_res'].will_scene, name:'预警'},
+                            {value:res.data['bing_res'].safe_scene, name:'正常'},
                         ];
                         ve.show_ring_chart();
                     }

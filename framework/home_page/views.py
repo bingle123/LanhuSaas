@@ -22,11 +22,13 @@ def scenes_alert(request):
     :return:
     """
     #隐藏旧方法 彭英杰2019-5-11 start
-    # res = function.scenes_alert(request)
+    bing_res = function.scenes_alert(request)
     res={
         "alert_data":[], # 告警列表
         "sences_list":[],  # 当前用户所有场景信息
+        "bing_res":[],
     }
+    res["bing_res"] = bing_res;
     res["alert_data"] = function.query_alert_data();
     res["sences_list"] = function.query_curr_sences(request);
     #彭英杰 2019-5-11 end

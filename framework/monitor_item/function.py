@@ -188,7 +188,6 @@ def add_unit(request):
                 add_dic['end_time'] = max(start_list)
                 add_flow_dic['start_time']=add_dic['start_time']
                 add_flow_dic['end_time'] =add_dic['end_time']
-                print add_flow_dic
             # 修改后的基本监控项处理
             if res['monitor_type'] == 'five':
                 monitor_type = 5

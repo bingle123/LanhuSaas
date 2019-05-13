@@ -258,7 +258,12 @@
                                             <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="basic.period" style="width: 96%"
                                                       placeholder="请输入采集周期(秒)" style="width: 310px;"></el-input>
-                                        </el-form-item>
+                                </el-form-item>
+                                <el-form-item label="分值" prop="score">
+                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="basic.score" style="width: 96%" @change="change4"
+                                                      placeholder="请输入分值"  max="100"></el-input>
+                                </el-form-item>
                             </el-form>
                         </div></el-col>
                         <el-col :span="12"><div class="grid-content bg-purple-light">
@@ -468,7 +473,7 @@
                                 <el-button type="primary" :disabled="disabled1" v-on:click="job_test">采集测试</el-button>
                                 <el-checkbox v-model="checked1" @change="change2">启动脚本</el-checkbox>
                                 <div :style="{ display: zuoye }">
-                                    <el-alert title="启动作业可能会对系统造成不可逆的变更，请谨慎勾选此项！" type="warning" show-icon show-icon
+                                    <el-（ title="启动作业可能会对系统造成不可逆的变更，请谨慎勾选此项！" type="warning" show-icon show-icon
                                               true-label="1" false-label="0"></el-alert>
                                 </div>
                             </div>
@@ -915,6 +920,11 @@
                                               auto-complete="off" v-model="base.period" style="width: 96%"
                                               placeholder="请输入采集周期(秒)"></el-input>
                                 </el-form-item>
+                                  <el-form-item label="分值" prop="score">
+                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
+                                                      auto-complete="off" v-model="base.score" style="width: 96%" @change="change4"
+                                                      placeholder="请输入分值"  max="100"></el-input>
+                                </el-form-item>
                                 <el-col :span="24">
                                     <el-form-item v-for="(i,index) in base.dimension_data" class="dimension_div">
                                     <el-col :span="11">
@@ -1106,7 +1116,8 @@
                 contents: '',                          //显示内容
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
-                monitor_area: ''                             //日历地区
+                monitor_area: '',                             //日历地区
+                score:'1',                                //分值
             },
             base: {
                 //基本单元
@@ -1128,7 +1139,8 @@
                 contents: '',                          //显示内容
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
-                monitor_area: ''                             //日历地区
+                monitor_area: '',                             //日历地区
+                score:''                                //分值
             },             //基本单元
             rules1: {
                 font_size: [
@@ -1145,6 +1157,9 @@
                 ],
                 period: [
                     {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
+                ],
+                score: [
+                    {required: true, message: '请输入分值', trigger: 'blur'}
                 ]
             },                              //校验规则
             chart: {                                //图表单元
@@ -1296,7 +1311,10 @@
                     dimension_value: [
                         {required: true, message: '请填写维度值', trigger: 'blur'}
                     ]
-                }
+                },
+                score:[
+                    {required: true, message: '请输入分值',trigger:'change'}
+                ]
             },
             //校验规则
             basic1: {                                //基本单元
@@ -1389,7 +1407,7 @@
                     data : JSON.stringify(vm.base),
                     dataType: "JSON",
                     async: false,
-                    url: "{SITE_URL}/iqube_interface/gather_base_test/",
+                    url: "${SITE_URL}iqube_interface/gather_base_test/",
                     success: function(data) {
                          if(0 != data.code){
                             vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
@@ -1492,6 +1510,7 @@
                         vm.base['gather_rule'] = row.gather_rule;
                         vm.base['gather_params'] = row.gather_params;
                         vm.base['monitor_area'] = vm.area;
+                        vm.base['score'] = row.score;
                     }else{
                         alert('暂未实现！');
                     }
@@ -1608,6 +1627,7 @@
                 this.base_monitor_upload_data['start_time'] = this.base['start_time'];
                 this.base_monitor_upload_data['end_time'] = this.base['end_time'];
                 this.base_monitor_upload_data['contents'] = this.base['contents'];
+                this.base_monitor_upload_data['score'] = this.base['score'];
                 this.result_data = this.base_monitor_upload_data;
                 //由于调用采集测试接口需要以下参数,因此在此统一删除数据库表不存在的字段,避免监控项添加时报错
                 /*delete this.base['dimension_data'];
@@ -2134,6 +2154,7 @@
                     vm.basic.gather_rule = row.gather_rule;
                     vm.basic.contents = row.contents;
                     vm.basic.status = row.status;
+                    vm.basic.score = row.score;
                     vm.area=row.monitor_area;
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface =3;
@@ -2698,6 +2719,13 @@
                     vm.liucheng = 'none';
                 }
             },
+            change4(){
+               if(vm.basic.score>100){
+                    vm.basic.score = 100
+               }else if(vm.base.score>100){
+                   vm.base.score = 100
+               }
+            },
             change_job_fontSize() {       //修改作业单元中预览字体
                 $('#job_text').find("*").css('font-size', this.job.font_size);
             },
@@ -2980,6 +3008,26 @@
                 vm.echart_width();
             },
             chart_get_test(){
+                 //20190508 彭英杰 处理图表显示 start
+                 var tab = $("div[role='tablist']");
+                 if(tab.length>0){ //判断是否存在
+                    var ar_tab = tab.find("div[aria-selected='true']");
+                     if(ar_tab.length>0){//判断是否选择
+                         var id = ar_tab[0].id;
+                         if(id == "tab-second"){//为图表监控项
+                             //pane-second
+                             // maintenancePie 展示页面
+                             //required
+                             //vm.chart.gather_rule
+                             if(vm.chart.gather_rule!=""){
+                                $("#pane-second maintenancePie").load(vm.chart.gather_rule)
+                             }
+                             return;
+                         }
+                     }
+                 }
+
+                 //20190508 彭英杰 处理图表显示 end
                 axios({
                     url: '${SITE_URL}monitor_item/chart_get_test/',
                     method: 'post',
