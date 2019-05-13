@@ -85,7 +85,7 @@ def gather_param_parse(info):
             # sql采集规则中，无论大小写都找不到所需的from字段，从而无法定位采集字段的位置，保存采集规则错误日志并立即返回
             if -1 == field_end:
                 TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-2',
-                             gather_error_log='gather rule missing \'from\' field').save()
+                             gather_error_log='gather rule missing \'from\' field', score=0).save()
                 return None
         # 获取采集规则的字段有哪些，除去空格处理
         gather_params['rule_fields_str'] = info['gather_rule'][field_start:field_end].strip(' ')
@@ -252,8 +252,6 @@ def gather_data(**info):
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-1',
                          gather_error_log=str(e), score=0).save()
             return "error"
-        # 保存连接状态为正常
-        TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='1', score=0).save()
         cursor = conn.cursor()
         cursor.execute('SET NAMES UTF8')
         # 采集规则是否异常判断
@@ -268,6 +266,9 @@ def gather_data(**info):
             return "error"
         # 正确采集到数据
         if 0 != len(result):
+            # 保存连接状态为正常
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='1',
+                         score=info['score']).save()
             # 定义key-value
             data_set = sql_kv_process(gather_params['gather_field'], result)
             # 将采集的数据保存到td_gather_data中
