@@ -4,7 +4,7 @@ from django.db.models import Q
 from common.log import logger
 import json
 import requests
-from models import Monitor,Job
+from models import Monitor,Job,Scene_monitor
 from monitor_scene.models import Scene
 from db_connection.models import Conn
 from monitor_item import tools
@@ -21,6 +21,141 @@ import datetime
 from market_day.models import HeaderData as hd
 from settings import BK_PAAS_HOST
 from django.db import transaction
+
+# 查询所有
+#张美庆 2019-5-19
+def select_all():
+    # 数据库的连接配置
+
+    db = get_db()
+    cursor = db.cursor()
+    #  id, scene_name, scene_startTime, scene_endTime, scene_creator, scene_creator_time, scene_editor, scene_editor_time, scene_area, scene_content, scene_type_id
+    sql = "select *  from tb_monitor_scene ";
+    cursor.execute(sql);
+    scene = cursor.fetchall();
+    scene_list = list(scene)
+
+    sql = "select *  from tb_monitor_item ";
+    cursor.execute(sql);
+    item = cursor.fetchall();
+    item_list = list(item)
+
+    sql = "select *  from tl_scene_monitor ";
+    cursor.execute(sql);
+    scene_item = cursor.fetchall();
+    scene_item_list = list(scene_item)
+
+    sql = "select *  from td_gather_data ";
+    cursor.execute(sql);
+    gather_data = cursor.fetchall();
+    gather_data_list = list(gather_data)
+
+    dict_1= {};   #存放场景ID，场景名称
+    dict_2 = {};  #存放场景ID，监控项ID
+    dict_3 = {};  #存放场景ID,监控项总和
+    dict_4 = {};  #存放场景ID,分值    采集中的监控项ID和
+    dict_5 = {};  #放场景名称,场景结果
+    dict_6 = {};  #存放场景名称,开始时间
+
+    for i in scene_list:
+        dict_1[i.__getitem__(0)]  = i.__getitem__(1);
+
+    for i in scene_list:
+        print i.__getitem__(2)
+        print i.__getitem__(2).seconds
+        scene_startTime_total = i.__getitem__(2).seconds
+        #print scene_startTime_total
+        dict_6[i.__getitem__(1)] = scene_startTime_total;
+
+    for key in dict_1:
+        #print key;
+        temp = []    #存放单个场景ID中的所有监控项ID
+        for i in scene_item_list:
+            if(i.__getitem__(1) == key):
+                id = i.__getitem__(2)
+                temp.append(i.__getitem__(2))
+        dict_2[key] = temp
+
+    for key in dict_2:
+        temp = dict_2[key]
+        sum = 0
+        #print temp
+        for i in temp:
+            for j in item_list:
+                if(j.__getitem__(0) == i):
+                    print type(j.__getitem__(26))
+                    sum += j.__getitem__(26)
+
+    for key in dict_2:
+        sum = 0;
+        temp = dict_2[key];
+        for i in gather_data_list:
+            if(temp.count(i.__getitem__(1) != 0)):
+                #temp1.append(i.__getitem__('item_id'))
+                sum += i.__getitem__(7)
+
+        dict_4[key] = sum;
+
+    for key in dict_1:
+        value = dict_1[key] #
+        num1 = dict_4[key] #采集总和
+        if(dict_3.has_key(key)):
+            num2 = dict_3[key]  # 监控项总和
+        else:
+            num2 = 0
+
+        if(num2 == 0):
+            num = 1
+        else:
+            num = num1 / num2
+        if(num == 1):
+            result = 'green'
+        elif(num >= 0.9):
+            result = 'yellow'
+        else:
+            result = 'red'
+        dict_5[value] = result
+
+    hour = datetime.datetime.now().hour
+    minute = datetime.datetime.now().minute;
+    second = datetime.datetime.now().second;
+    total = hour * 3600 + minute * 60+ second;
+    for key in dict_5:
+        if(dict_6[key]> total):
+            dict_5[key] = 'gray'
+
+    temp_list=[]; #存储最后结果，name:场景名,color:颜色
+    for key in dict_5:
+        if(dict_5[key] == 'red'):
+            dict_7 = {}
+            dict_7['name'] = key;
+            dict_7['color'] = dict_5[key]
+            temp_list.append(dict_7)
+    for key in dict_5:
+        if(dict_5[key] == 'yellow'):
+            dict_7 = {}
+            dict_7['name'] = key;
+            dict_7['color'] = dict_5[key]
+            temp_list.append(dict_7)
+    for key in dict_5:
+        if(dict_5[key] == 'green'):
+            dict_7 = {}
+            dict_7['name'] = key;
+            dict_7['color'] = dict_5[key]
+            temp_list.append(dict_7)
+    for key in dict_5:
+        if(dict_5[key] == 'gray'):
+            dict_7 = {}
+            dict_7['name'] = key;
+            dict_7['color'] = dict_5[key]
+            temp_list.append(dict_7)
+    result = tools.success_result(temp_list)
+
+    return result
+
+
+
+
 
 
 # 显示函数
