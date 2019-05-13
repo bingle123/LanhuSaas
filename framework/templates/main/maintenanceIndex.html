@@ -105,6 +105,21 @@
     .error{background:red}
     .success{background:#409EFF}
     .progress{background:orange}
+    .green{
+        background:#67C23A
+    }
+    .green{
+        background:#67C23A
+    }
+    .red{
+        background:#F56C6C
+    }
+    .gray{
+        background:#C1C1C1
+    }
+    .yellow{
+        background:#E6A23C
+    }
     .red_class{
         color:red
     }
@@ -186,7 +201,7 @@
         <!--情况展示-->
         <el-row :gutter="10" style="margin: 0 0 20px 0;background: rgb(255,255,255);">
             <el-col v-for="(i,index) in system_run_data" :key="index" :span="3" style="margin: 20px auto">
-                <span class="span_style" :class=i.status>{{ i.name }}</span>
+                <span class="span_style" :class="i.color">{{ i.name }}</span>
             </el-col>
 
         </el-row>
@@ -446,45 +461,7 @@
             line_chart3:'',
             line_chart4:'',
             alert_number:0,
-            system_run_data:[
-                {
-                    name:'集中交易系统',
-                    status:'success'
-                },
-                {
-                    name:'公募基金系统',
-                    status:'success'
-                },
-                {
-                    name:'集中运营系统',
-                    status:'success'
-                },
-                {
-                    name:'集中交易系统',
-                    status:'progress'
-                },
-                {
-                    name:'公募基金系统',
-                    status:'progress'
-                },
-                {
-                    name:'集中运营系统',
-                    status:'progress'
-                },
-                {
-                    name:'集中交易系统',
-                    status:'error'
-                },
-                {
-                    name:'公募基金系统',
-                    status:'error'
-                },
-                {
-                    name:'集中运营系统',
-                    status:'error'
-                },
-
-            ],
+            system_run_data:[],
             alert_table_data:[],          //告警表格数据
             now_date_time:'',
             now_date_name:'',
@@ -727,6 +704,15 @@
                     console.log(res.data)
                 })
             },
+            get_monitor_scene_item(){
+                axios.post('${SITE_URL}home_page/select_all/').then((res)=>{
+                    //console.log(res)
+                    this.system_run_data = res.data.results;
+                     //console.log("111111111111111111")
+                    //console.log(this.system_run_data[0].name)
+
+                })
+            },
             get_alert_data(){
                 axios.post('${SITE_URL}home_page/scenes_alert/').then((res)=>{
                     if (res.data.results == 'n'){
@@ -777,8 +763,10 @@
         }
     });
     ve.get_date();
+    ve.get_monitor_scene_item();
     setInterval(function () {
         ve.get_date();
+        ve.get_monitor_scene_item();
     },10000)
     ve.get_alert_data();
     ve.show_line_chart();
