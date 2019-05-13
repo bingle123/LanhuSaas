@@ -11,6 +11,6 @@ class TDGatherHistory(models.Model):
     data_key = models.CharField(max_length=50, verbose_name=u"数据KEY", null=True)
     data_value = models.CharField(max_length=5000, verbose_name=u"数据VALUE", null=True)
     gather_error_log = models.CharField(max_length=5000, verbose_name=u"采集错误日志", null=True)
-
+    score = models.PositiveIntegerField(verbose_name=u'分值', null=True)
     class Meta:
         db_table = 'td_gather_history'

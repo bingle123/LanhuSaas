@@ -4,7 +4,7 @@ from models import *
 from django.forms.models import model_to_dict
 from db_connection.models import *
 from db_connection.function import *
-import MySQLdb
+from monitor_item.models import Monitor
 import datetime
 import json
 import urllib
@@ -51,8 +51,7 @@ def gather_test_init():
     # sql测试用参数：'46'
     # 文件测试用参数：'192.168.1.52#./gather_data_test
     # 接口测试用参数：'http://t.weather.sojson.com/api/weather/city/101030100#{"url": "http://t.weather.sojson.com/api/weather/city/", "code": "101030100"}'
-    info[
-        'params'] = 'http://t.weather.sojson.com/api/weather/city/101030100#{"url": "http://t.weather.sojson.com/api/weather/city/", "code": "101030100"}'
+    info['params'] = 'http://t.weather.sojson.com/api/weather/city/101030100#{"url": "http://t.weather.sojson.com/api/weather/city/", "code": "101030100"}'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'cat ${file_path}'
     # 接口测试用采集规则：'dXJsPSQxCmNvZGU9JDIKYHdnZXQgLXFPIGdhdGhlcl9kYXRhX3RlbXAgJHVybCRjb2RlYApjYXQgZ2F0aGVyX2RhdGFfdGVtcAo='
@@ -86,7 +85,7 @@ def gather_param_parse(info):
             # sql采集规则中，无论大小写都找不到所需的from字段，从而无法定位采集字段的位置，保存采集规则错误日志并立即返回
             if -1 == field_end:
                 TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-2',
-                             gather_error_log='gather rule missing \'from\' field').save()
+                             gather_error_log='gather rule missing \'from\' field', score=0).save()
                 return None
         # 获取采集规则的字段有哪些，除去空格处理
         gather_params['rule_fields_str'] = info['gather_rule'][field_start:field_end].strip(' ')
@@ -101,7 +100,7 @@ def gather_param_parse(info):
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-2',
                          gather_error_log=str(e)).save()
             return None
-        # 根据参数获取数据库连接配置\
+        # 根据参数获取数据库连接配置
         print info['params']
         conn_info = Conn.objects.filter(id=info['params']).get()
         # 解密存储在数据库中的数据库密码
@@ -251,10 +250,8 @@ def gather_data(**info):
             # conn = MySQ Ldb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
         except Exception as e:
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-1',
-                         gather_error_log=str(e)).save()
+                         gather_error_log=str(e), score=0).save()
             return "error"
-        # 保存连接状态为正常
-        TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='1').save()
         cursor = conn.cursor()
         cursor.execute('SET NAMES UTF8')
         # 采集规则是否异常判断
@@ -265,19 +262,22 @@ def gather_data(**info):
         except Exception as e:
             # 保存采集规则错误信息到采集表中
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-2',
-                         gather_error_log=str(e)).save()
+                         gather_error_log=str(e), score=0).save()
             return "error"
         # 正确采集到数据
         if 0 != len(result):
+            # 保存连接状态为正常
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='1',
+                         score=info['score']).save()
             # 定义key-value
             data_set = sql_kv_process(gather_params['gather_field'], result)
             # 将采集的数据保存到td_gather_data中
             for item in data_set:
                 TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'],
-                             data_value=item['value_str']).save()
+                             data_value=item['value_str'], score=info['score']).save()
         else:
             # 采集是空结果集的情况
-            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='0').save()
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='0', score=0).save()
             return "empty"
     elif "interface" == gather_type:
         # 接口方式采集数据

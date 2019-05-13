@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from common.mymako import render_json
 from common.mymako import render_mako_context
-from shell_app import function
+from django.shortcuts import render
+from . import function
 import json
 import tools
 
@@ -31,6 +32,84 @@ def index(request):
     :return:
     """
     return render_mako_context(request, './main/maintenanceIndex.html')
+
+# jlq-2019-05-07-add
+def network_panorama(request):
+    """
+    页面1
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/networkPanorama.html')
+
+# jlq-2019-05-08-add
+def night_first(request):
+    """
+    页面1
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/nightFirst.html')
+
+# jlq-2019-05-09-add
+def night_second(request):
+    """
+    页面3
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/nightSecond.html')
+
+# jlq-2019-05-09-add
+def night_third(request):
+    """
+    页面4
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/nightThird.html')
+
+# jlq-2019-05-09-add
+def trace_panorama(request):
+    """
+    页面5
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/tracePanorama.html')
+
+
+# jlq-2019-05-11-add
+def content(request):
+    """
+   页面5
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/content.html')
+
+def ywzl_panorama(request):
+    """
+    获取国泰系统系统状态
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/ywzlPanorama.html')
+def trace_panorama(request):
+    """
+    获取国泰系统系统状态
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/tracePanorama.html')
+
+def kpi_panorama(request):
+    """
+    获取国泰系统系统状态
+    :param request:
+    :return:
+    """
+    return render_mako_context(request, './main/kpiPanorama.html')
 
 
 def scene_set(request):

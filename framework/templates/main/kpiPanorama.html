@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>国泰君安证券核心业务运行全景图</title>
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- vue的ajax依赖-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <!-- element UI引入样式 -->
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script src='${STATIC_URL}js/jquery.min.js'></script>
+    <script src='${STATIC_URL}js/jquery-ui.js'></script>
+    <!--jQuery库使用时请使用标准jQuery语法-->
+    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
+    <!--页面初始化css(Tencent)-->
+    <link href="${STATIC_URL}css/init.css" rel="stylesheet">
+    <!-- 引入额外的包-->
+    <link href="${STATIC_URL}css/kpi.css" rel="stylesheet">
+</head>
+<body>
+<div id="main">
+    <div>
+        <div class="kpi-bg">
+            <div class="kpi-echarts kpi-echarts-one">
+              <Echarts :echartData="kpiEchartsOne" :guid="kpiEchartsOneGuid" :height="'150px'"></Echarts>
+            </div>
+            <div class="kpi-echarts kpi-echarts-two">
+              <Echarts :echartData="kpiEchartsTwo" :guid="kpiEchartsTwoGuid" :height="'150px'"></Echarts>
+            </div>
+            <div class="kpi-echarts kpi-echarts-three">
+              <Echarts :echartData="kpiEchartsThree" :guid="kpiEchartsThreeGuid" :height="'150px'"></Echarts>
+            </div>
+            <div class="kpi-echarts kpi-echarts-four">
+              <Echarts :echartData="kpiEchartsFour" :guid="kpiEchartsFourGuid" :height="'150px'"></Echarts>
+            </div>
+
+         <!--   <div class="sys-jh">
+              <div class="sys-title">君弘系统</div>
+              <el-row>
+                <el-col :span="12">
+                  <div class="sys-num">{{jhSystem[0].metricValue}}</div>
+                  <div class="sys-font">{{jhSystem[0].metricName}}</div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="sys-num">{{jhSystem[1].metricValue}}</div>
+                  <div class="sys-font">{{jhSystem[1].metricName}}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <div class="sys-num">{{jhSystem[2].metricValue}}</div>
+                  <div class="sys-font">{{jhSystem[2].metricName}}</div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="sys-num">{{jhSystem[3].metricValue}}</div>
+                  <div class="sys-font">{{jhSystem[3].metricName}}</div>
+                </el-col>
+              </el-row>
+            </div>-->
+
+             <div class="sys-ww">
+              <div class="sys-title">外围接入</div>
+              <el-row class="bottom">
+                <el-col :span="12">
+                  <div class="sys-num">{{wwjrSystem[0]?wwjrSystem[0].metricValue:'-'}}</div>
+                  <div class="sys-font">{{wwjrSystem[0]?wwjrSystem[0].metricName:'-'}}</div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="sys-num">{{wwjrSystem[1]?wwjrSystem[1].metricValue:'-'}}</div>
+                  <div class="sys-font">{{wwjrSystem[1]?wwjrSystem[1].metricName:'-'}}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <div class="sys-num">{{wwjrSystem[2]?wwjrSystem[2].metricValue:'-'}}</div>
+                  <div class="sys-font">{{wwjrSystem[2]?wwjrSystem[2].metricName:'-'}}</div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="sys-num">{{wwjrSystem[3]?wwjrSystem[3].metricValue:'-'}}</div>
+                  <div class="sys-font">{{wwjrSystem[3]?wwjrSystem[3].metricName:'-'}}</div>
+                </el-col>
+              </el-row>
+            </div>
+
+             <div class="sys-yh">
+              <div class="sys-title">用户中心</div>
+              <el-row>
+                <el-col :span="12">
+                  <div class="sys-num">{{yhSystem[0]?yhSystem[0].metricValue:"-"}}</div>
+                  <div class="sys-font">{{yhSystem[0]?yhSystem[0].metricName:"-"}}</div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="sys-num">{{yhSystem[1]?yhSystem[1].metricValue:"-"}}</div>
+                  <div class="sys-font">{{yhSystem[1]?yhSystem[1].metricName:"-"}}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <div class="sys-num">{{yhSystem[2]?yhSystem[2].metricValue:"-"}}</div>
+                  <div class="sys-font">{{yhSystem[2]?yhSystem[2].metricName:"-"}}</div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="sys-num">{{yhSystem[3]?yhSystem[3].metricValue:"-"}}</div>
+                  <div class="sys-font">{{yhSystem[3]?yhSystem[3].metricName:"-"}}</div>
+                </el-col>
+              </el-row>
+            </div>
+
+             <div class="sys-jzjy">
+              <div class="sys-title">集中交易系统</div>
+              <el-row class="bottom">
+                <el-col :span="12">
+                  <div class="sys-num">{{jzjySystem[0]?jzjySystem[0].metricValue:'-'}}</div>
+                  <div class="sys-font">{{jzjySystem[0]?jzjySystem[0].metricName:'-'}}</div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="sys-num">{{jzjySystem[1]?jzjySystem[1].metricValue:'-'}}</div>
+                  <div class="sys-font">{{jzjySystem[1]?jzjySystem[1].metricName:'-'}}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <div class="sys-num">-</div>
+                  <div class="sys-font">成功率</div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="sys-num">-</div>
+                  <div class="sys-font">TOP99</div>
+                </el-col>
+              </el-row>
+            </div>
+
+            <div class="sys-zhlc">
+              <div class="sys-title">综合理财系统</div>
+              <el-row class="bottom">
+                <el-col :span="12">
+                  <div class="sys-num">{{zhlcSystem[0]?zhlcSystem[0].metricValue:'-'}}</div>
+                  <div class="sys-font">{{zhlcSystem[0]?zhlcSystem[0].metricName:'-'}}</div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="sys-num">{{zhlcSystem[1]?zhlcSystem[1].metricValue:'-'}}</div>
+                  <div class="sys-font">{{zhlcSystem[1]?zhlcSystem[1].metricName:'-'}}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <div class="sys-num">-</div>
+                  <div class="sys-font">成功率</div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="sys-num"></div>
+                  <div class="sys-font"></div>
+                </el-col>
+              </el-row>
+            </div>
+
+            <div class="sys-bp">
+              <div class="sys-title">报盘系统</div>
+              <el-row class="bottom">
+                <el-col :span="12">
+                  <div class="sys-num">{{bpSystem[0]?bpSystem[0].metricValue:'-'}}</div>
+                  <div class="sys-font">{{bpSystem[0]?bpSystem[0].metricName:'-'}}</div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="sys-num">{{bpSystem[1]?bpSystem[1].metricValue:'-'}}</div>
+                  <div class="sys-font">{{bpSystem[1]?bpSystem[1].metricName:'-'}}</div>
+                </el-col>
+              </el-row>
+              <el-row>
+                <el-col :span="12">
+                  <div class="sys-num"></div>
+                  <div class="sys-font"></div>
+                </el-col>
+                <el-col :span="12">
+                  <div class="sys-num"></div>
+                  <div class="sys-font"></div>
+                </el-col>
+              </el-row>
+            </div>
+
+            <div class="hs">交易所</div>
+            <div class="zd">中国登记</div>
+            <div class="zhlc-kh">
+              <div>123123</div>
+              <div>综合理财开户数</div>
+            </div>
+
+            <div class="yhzx-top">
+              <div class="title">功能平均耗时TOP10 —— 用户中心</div>
+              <el-carousel @change="changeCarousel" arrow="never" indicator-position="none" :interval="5000">
+                <el-carousel-item v-for="num in 4" :key="num">
+                  <el-table :data="funList" :show-header="false" :cell-style="{'border':0,'padding':'3px 0 3px 40px','color':'#36C6FF'}" :row-style="{'background':'transparent','text-align':'center','border':0}">
+                    <el-table-column prop="latency">
+                    </el-table-column>
+                    <el-table-column prop="funNum">
+                    </el-table-column>
+                  </el-table>
+                </el-carousel-item>
+              </el-carousel>
+            </div>
+
+             <div class="kpi-echarts-five">
+                  <Echarts :echartData="kpiEchartsFive" :guid="kpiEchartsFiveGuid" :height="'300px'"></Echarts>
+                </div>
+
+            <img src="../../static/img/cursor-kpi.png" class="jh-ww">
+            <img src="../../static/img/cursor-kpi.png" class="ww-jh">
+
+            <img src="../../static/img/cursor-kpi.png" class="ww-jzjy">
+            <img src="../../static/img/cursor-kpi.png" class="jzjy-ww">
+
+            <img src="../../static/img/cursor-kpi.png" class="jzjy-bp">
+            <img src="../../static/img/cursor-kpi.png" class="bp-jzjy">
+
+            <img src="../../static/img/cursor-kpi.png" class="bp-hs">
+            <img src="../../static/img/cursor-kpi.png" class="hs-bp">
+
+            <img src="../../static/img/cursor-kpi.png" class="jh-zhlc">
+            <img src="../../static/img/cursor-kpi.png" class="zhlc-jh">
+
+            <img src="../../static/img/cursor-kpi.png" class="jzjy-zhlc">
+            <img src="../../static/img/cursor-kpi.png" class="zhlc-jzjy">
+
+            <img src="../../static/img/cursor-kpi.png" class="jh-yh">
+            <img src="../../static/img/cursor-kpi.png" class="yh-jh">
+
+            <img src="../../static/img/cursor-kpi.png" class="yh-zhlc">
+            <img src="../../static/img/cursor-kpi.png" class="zhlc-yh">
+
+            <img src="../../static/img/cursor-kpi.png" class="zd-zhlc">
+            <img src="../../static/img/cursor-kpi.png" class="zhlc-zd">
+
+        </div>
+
+
+
+
+
+    </div>
+</div>
+
+
+
+<script>
+    Vue.component('Echarts',{
+             props: ["echartData", "guid", "height"],
+              created: function() {
+                this.id = this.getGuid();
+              },
+              mounted: function() {
+                this.echarts = echarts.init(document.getElementById(this.id + ""));
+                this.initEchart();
+              },
+            template:'<div :id="id" :style="{\'width\':\'100%\',\'height\':height}"></div>',
+            methods: {
+                initEchart: function() {
+                  if (!this.echartData) {
+                    return;
+                  }
+                  let option = {
+                    title: this.echartData.title,
+                    xAxis: this.echartData.xAxis,
+                    tooltip: this.echartData.tooltip,
+                    legend: this.echartData.legend,
+                    grid: this.echartData.grid,
+                    yAxis: this.echartData.yAxis,
+                    series: this.echartData.series,
+                    animationEasing: "elasticOut"
+                  };
+                  this.echarts.setOption(option);
+                  this.echarts.on("click", params => {
+                    this.$emit("params", params);
+                  });
+                  window.addEventListener("resize", () => {
+                    this.echarts.resize();
+                  });
+                }
+              },
+              watch: {
+                guid: function() {
+                  this.initEchart();
+                }
+              }
+  })
+    let vm = new Vue({
+        el: '#main',
+        data: {
+            id: "",
+            echarts: null,
+            msg:'hhh',
+            kpiEchartsOneGuid: "",
+              kpiEchartsOne: {
+                title: {
+                  text: "君弘系统交易在线用户数",
+                  left: "left",
+                  textStyle: {
+                    color: "#36C6FF",
+                    fontWeight: "normal"
+                  }
+                },
+                legend: {
+                  right: 0,
+                  top: "20%",
+                  data: [
+                    {
+                      name: "当前",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#36C6FF"
+                      }
+                    },
+                    {
+                      name: "前5日平均",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#3CEFA3"
+                      }
+                    },
+                    {
+                      name: "历史峰值",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#FFCF39"
+                      }
+                    }
+                  ]
+                },
+                tooltip: {
+                  trigger: "axis"
+                },
+                grid: {
+                  left: "0",
+                  right: "0",
+                  bottom: "0",
+                  top: "42%",
+                  containLabel: true
+                },
+                xAxis: {
+                  type: "category",
+                  data: [
+                    "9:00",
+                    "10:00",
+                    "11:00",
+                    "12:00",
+                    "13:00",
+                    "14:00",
+                    "15:00",
+                    "16:00",
+                    "17:00"
+                  ],
+                  boundaryGap: false,
+                  axisTick: {
+                    show: false,
+                    alignWithLabel: false
+                  },
+                  axisLabel: {
+                    color: "#36C6FF",
+                    fontSize: "12",
+                    align: "left",
+                    showMaxLabel: true
+                  },
+                  axisLine: {
+                    lineStyle: {
+                      color: "#353F60",
+                      type: "dashed",
+                      width: 1
+                    }
+                  }
+                },
+                yAxis: {
+                  type: "value",
+                  splitNumber: 3,
+                  axisTick: {
+                    show: false
+                  },
+                  axisLabel: {
+                    color: "#36C6FF",
+                    fontSize: "12"
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      color: "#353F60",
+                      type: "dashed"
+                    }
+                  },
+                  axisLine: {
+                    show: false
+                  }
+                },
+                series: [
+                  {
+                    name: "当前",
+                    type: "line",
+                    data: [100, 20, 300, 40, 50, 600, 70, 80, 100],
+                    symbol: "circle",
+                    itemStyle: {
+                      color: "#36C6FF"
+                    },
+                    lineStyle: {
+                      width: 2
+                    }
+                  },
+                  {
+                    name: "前5日平均",
+                    type: "line",
+                    data: [100, 200, 200, 400, 500, 600, 700, 800, 100],
+                    symbol: "circle",
+                    itemStyle: {
+                      normal: {
+                        color: "#3CEFA3"
+                      }
+                    },
+                    lineStyle: {
+                      width: 2
+                    }
+                  },
+                  {
+                    name: "历史峰值",
+                    type: "line",
+                    data: [900, 900, 900, 900, 900, 900, 900, 900, 900],
+                    symbol: "circle",
+                    itemStyle: {
+                      normal: {
+                        color: "#FFCF39"
+                      }
+                    },
+                    lineStyle: {
+                      width: 2
+                    }
+                  }
+                ]
+              },
+              kpiEchartsTwoGuid: "",
+              kpiEchartsTwo: {
+                title: {
+                  text: "综合理财接入AR请求数",
+                  left: "left",
+                  textStyle: {
+                    color: "#36C6FF",
+                    fontWeight: "normal"
+                  }
+                },
+                legend: {
+                  right: 0,
+                  top: "20%",
+                  data: [
+                    {
+                      name: "当前",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#36C6FF"
+                      }
+                    },
+                    {
+                      name: "前5日平均",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#3CEFA3"
+                      }
+                    },
+                    {
+                      name: "历史峰值",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#FFCF39"
+                      }
+                    }
+                  ]
+                },
+                tooltip: {
+                  trigger: "axis"
+                },
+                grid: {
+                  left: "0",
+                  right: "0",
+                  bottom: "0",
+                  top: "42%",
+                  containLabel: true
+                },
+                xAxis: {
+                  type: "category",
+                  data: [
+                    "9:00",
+                    "10:00",
+                    "11:00",
+                    "12:00",
+                    "13:00",
+                    "14:00",
+                    "15:00",
+                    "16:00",
+                    "17:00"
+                  ],
+                  boundaryGap: false,
+                  axisTick: {
+                    show: false,
+                    alignWithLabel: false
+                  },
+                  axisLabel: {
+                    color: "#36C6FF",
+                    fontSize: "12",
+                    align: "left",
+                    showMaxLabel: true
+                  },
+                  axisLine: {
+                    lineStyle: {
+                      color: "#353F60",
+                      type: "dashed",
+                      width: 1
+                    }
+                  }
+                },
+                yAxis: {
+                  type: "value",
+                  splitNumber: 3,
+                  axisTick: {
+                    show: false
+                  },
+                  axisLabel: {
+                    color: "#36C6FF",
+                    fontSize: "12"
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      color: "#353F60",
+                      type: "dashed"
+                    }
+                  },
+                  axisLine: {
+                    show: false
+                  }
+                },
+                series: [
+                  {
+                    name: "当前",
+                    type: "line",
+                    data: [100, 20, 300, 40, 50, 600, 70, 80, 100],
+                    symbol: "circle",
+                    itemStyle: {
+                      normal: {
+                        color: "#36C6FF"
+                      }
+                    },
+                    lineStyle: {
+                      width: 2
+                    }
+                  },
+                  {
+                    name: "前5日平均",
+                    type: "line",
+                    data: [100, 200, 200, 400, 500, 600, 700, 800, 100],
+                    symbol: "circle",
+                    itemStyle: {
+                      normal: {
+                        color: "#3CEFA3"
+                      }
+                    },
+                    lineStyle: {
+                      width: 2
+                    }
+                  },
+                  {
+                    name: "历史峰值",
+                    type: "line",
+                    data: [900, 900, 900, 900, 900, 900, 900, 900, 900],
+                    symbol: "circle",
+                    itemStyle: {
+                      normal: {
+                        color: "#FFCF39"
+                      }
+                    },
+                    lineStyle: {
+                      width: 2
+                    }
+                  }
+                ]
+              },
+              kpiEchartsThreeGuid: "",
+              kpiEchartsThree: {
+                title: {
+                  text: "集中交易综合耗时",
+                  left: "left",
+                  textStyle: {
+                    color: "#36C6FF",
+                    fontWeight: "normal"
+                  }
+                },
+                legend: {
+                  right: 0,
+                  top: "20%",
+                  data: [
+                    {
+                      name: "当前",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#36C6FF"
+                      }
+                    },
+                    {
+                      name: "前5日平均",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#3CEFA3"
+                      }
+                    },
+                    {
+                      name: "历史峰值",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#FFCF39"
+                      }
+                    }
+                  ]
+                },
+                tooltip: {
+                  trigger: "axis"
+                },
+                grid: {
+                  left: "0",
+                  right: "0",
+                  bottom: "0",
+                  top: "42%",
+                  containLabel: true
+                },
+                xAxis: {
+                  type: "category",
+                  data: [
+                    "9:00",
+                    "10:00",
+                    "11:00",
+                    "12:00",
+                    "13:00",
+                    "14:00",
+                    "15:00",
+                    "16:00",
+                    "17:00"
+                  ],
+                  boundaryGap: false,
+                  axisTick: {
+                    show: false,
+                    alignWithLabel: false
+                  },
+                  axisLabel: {
+                    color: "#36C6FF",
+                    fontSize: "12",
+                    align: "left",
+                    showMaxLabel: true
+                  },
+                  axisLine: {
+                    lineStyle: {
+                      color: "#353F60",
+                      type: "dashed",
+                      width: 1
+                    }
+                  }
+                },
+                yAxis: {
+                  type: "value",
+                  splitNumber: 3,
+                  axisTick: {
+                    show: false
+                  },
+                  axisLabel: {
+                    color: "#36C6FF",
+                    fontSize: "12"
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      color: "#353F60",
+                      type: "dashed"
+                    }
+                  },
+                  axisLine: {
+                    show: false
+                  }
+                },
+                series: [
+                  {
+                    name: "当前",
+                    type: "line",
+                    data: [100, 20, 300, 40, 50, 600, 70, 80, 100],
+                    symbol: "circle",
+                    itemStyle: {
+                      normal: {
+                        color: "#36C6FF"
+                      }
+                    },
+                    lineStyle: {
+                      width: 2
+                    }
+                  },
+                  {
+                    name: "前5日平均",
+                    type: "line",
+                    data: [100, 200, 200, 400, 500, 600, 700, 800, 100],
+                    symbol: "circle",
+                    itemStyle: {
+                      normal: {
+                        color: "#3CEFA3"
+                      }
+                    },
+                    lineStyle: {
+                      width: 2
+                    }
+                  },
+                  {
+                    name: "历史峰值",
+                    type: "line",
+                    data: [900, 900, 900, 900, 900, 900, 900, 900, 900],
+                    symbol: "circle",
+                    itemStyle: {
+                      normal: {
+                        color: "#FFCF39"
+                      }
+                    },
+                    lineStyle: {
+                      width: 2
+                    }
+                  }
+                ]
+              },
+              kpiEchartsFourGuid: "",
+              kpiEchartsFour: {
+                title: {
+                  text: "集中交易CPU利用率top1核心",
+                  left: "left",
+                  textStyle: {
+                    color: "#36C6FF",
+                    fontWeight: "normal"
+                  }
+                },
+                legend: {
+                  right: 0,
+                  top: "20%",
+                  data: [
+                    {
+                      name: "当前",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#36C6FF"
+                      }
+                    },
+                    {
+                      name: "前5日平均",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#3CEFA3"
+                      }
+                    },
+                    {
+                      name: "历史峰值",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#FFCF39"
+                      }
+                    }
+                  ]
+                },
+                tooltip: {
+                  trigger: "axis"
+                },
+                grid: {
+                  left: "0",
+                  right: "0",
+                  bottom: "0",
+                  top: "42%",
+                  containLabel: true
+                },
+                xAxis: {
+                  type: "category",
+                  data: [
+                    "9:00",
+                    "10:00",
+                    "11:00",
+                    "12:00",
+                    "13:00",
+                    "14:00",
+                    "15:00",
+                    "16:00",
+                    "17:00"
+                  ],
+                  boundaryGap: false,
+                  axisTick: {
+                    show: false,
+                    alignWithLabel: false
+                  },
+                  axisLabel: {
+                    color: "#36C6FF",
+                    fontSize: "12",
+                    align: "left",
+                    showMaxLabel: true
+                  },
+                  axisLine: {
+                    lineStyle: {
+                      color: "#353F60",
+                      type: "dashed",
+                      width: 1
+                    }
+                  }
+                },
+                yAxis: {
+                  type: "value",
+                  splitNumber: 3,
+                  axisTick: {
+                    show: false
+                  },
+                  axisLabel: {
+                    color: "#36C6FF",
+                    fontSize: "12"
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      color: "#353F60",
+                      type: "dashed"
+                    }
+                  },
+                  axisLine: {
+                    show: false
+                  }
+                },
+                series: [
+                  {
+                    name: "当前",
+                    type: "line",
+                    data: [100, 20, 300, 40, 50, 600, 70, 80, 100],
+                    symbol: "circle",
+                    itemStyle: {
+                      normal: {
+                        color: "#36C6FF"
+                      }
+                    },
+                    lineStyle: {
+                      width: 2
+                    }
+                  },
+                  {
+                    name: "前5日平均",
+                    type: "line",
+                    data: [100, 200, 200, 400, 500, 600, 700, 800, 100],
+                    symbol: "circle",
+                    itemStyle: {
+                      normal: {
+                        color: "#3CEFA3"
+                      }
+                    },
+                    lineStyle: {
+                      width: 2
+                    }
+                  },
+                  {
+                    name: "历史峰值",
+                    type: "line",
+                    data: [900, 900, 900, 900, 900, 900, 900, 900, 900],
+                    symbol: "circle",
+                    itemStyle: {
+                      normal: {
+                        color: "#FFCF39"
+                      }
+                    },
+                    lineStyle: {
+                      width: 2
+                    }
+                  }
+                ]
+              },
+              jhSystem: {},
+              wwjrSystem: {},
+              jzjySystem: {},
+              bpSystem: {},
+              yhSystem: {},
+              zhlcSystem: {},
+              ZHLCOpenAccount: 0,
+              funList: [
+                {
+                  latency: 200,
+                  funNum: 120003
+                },
+                {
+                  latency: 200,
+                  funNum: 120003
+                },
+                {
+                  latency: 200,
+                  funNum: 120003
+                },
+                {
+                  latency: 200,
+                  funNum: 120003
+                },
+                {
+                  latency: 200,
+                  funNum: 120003
+                },
+                {
+                  latency: 200,
+                  funNum: 120003
+                },
+                {
+                  latency: 200,
+                  funNum: 120003
+                },
+                {
+                  latency: 200,
+                  funNum: 120003
+                },
+                {
+                  latency: 200,
+                  funNum: 120003
+                },
+                {
+                  latency: 200,
+                  funNum: 120003
+                }
+              ],
+              kpiEchartsFiveGuid: "",
+              kpiEchartsFive: {
+                title: {
+                  text: "君弘在线用户数分布",
+                  left: "left",
+                  textStyle: {
+                    color: "#36C6FF",
+                    fontWeight: "normal"
+                  }
+                },
+                legend: {
+                  right: 0,
+                  top: "8%",
+                  data: [
+                    {
+                      name: "今日",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#9E6FFF"
+                      }
+                    },
+                    {
+                      name: "昨日",
+                      textStyle: {
+                        fontSize: "10px",
+                        color: "#6D93FF"
+                      }
+                    }
+                  ]
+                },
+                tooltip: {
+                  trigger: "axis"
+                },
+                grid: {
+                  left: "0",
+                  right: "0",
+                  bottom: "0",
+                  top: "20%",
+                  containLabel: true
+                },
+                xAxis: {
+                  type: "value",
+                  boundaryGap: false,
+                  axisTick: {
+                    show: false
+                  },
+                  axisLabel: {
+                    color: "#36C6FF",
+                    fontSize: "12",
+                    align: "left"
+                  },
+                  splitLine: {
+                    show: true,
+                    lineStyle: {
+                      color: "#353F60",
+                      type: "dashed"
+                    }
+                  },
+                  axisLine: {
+                    show: false
+                  }
+                },
+                yAxis: {
+                  type: "category",
+                  data: ["北京", "上海", "东莞", "成都"],
+                  axisTick: {
+                    show: false
+                  },
+                  axisLabel: {
+                    color: "#36C6FF",
+                    fontSize: "12"
+                  },
+                  axisLine: {
+                    show: true
+                  }
+                },
+                series: [
+                  {
+                    name: "今日",
+                    type: "bar",
+                    data: [100, 20, 300, 40],
+                    itemStyle: {
+                      normal: {
+                        color: "#9E6FFF"
+                      }
+                    }
+                  },
+                  {
+                    name: "昨日",
+                    type: "bar",
+                    data: [100, 200, 200, 400],
+                    itemStyle: {
+                      normal: {
+                        color: "#6D93FF"
+                      }
+                    }
+                  }
+                ]
+              },
+              destroy: "",
+
+
+        },
+        methods: {
+
+             getGuid: function() {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+        c
+      ) {
+        var r = (Math.random() * 16) | 0,
+          v = c == "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      });
+    },
+
+             changeCarousel(val) {
+                  console.log(val);
+                },
+                //左边四个echarts图
+                getLeftData() {
+                  Service.get(`lso/getMetricHistory.do`).then(data => {
+                    if (data.data.code == "000000") {
+                      //first
+                      this.kpiEchartsOne.xAxis.data = data.data.data[0].datas.xAxis;
+                      this.kpiEchartsOne.series[0].data = data.data.data[0].datas.data;
+                      this.kpiEchartsOne.series[1].data = data.data.data[0].datas.avgVal;
+                      let arr1 = [];
+                      let l1 = data.data.data[0].datas.avgVal.length;
+                      for (let i = 0; i < l1; i++) {
+                        arr1.push(data.data.data[0].datas.maxValue);
+                      }
+                      this.kpiEchartsOne.series[2].data = arr1;
+                      //second
+                      this.kpiEchartsTwo.xAxis.data = data.data.data[1].datas.xAxis;
+                      this.kpiEchartsTwo.series[0].data = data.data.data[1].datas.data;
+                      this.kpiEchartsTwo.series[1].data = data.data.data[1].datas.avgVal;
+                      let arr2 = [];
+                      let l2 = data.data.data[1].datas.avgVal.length;
+                      for (let i = 0; i < l2; i++) {
+                        arr2.push(data.data.data[1].datas.maxValue);
+                      }
+                      this.kpiEchartsTwo.series[2].data = arr2;
+                      //third
+                      this.kpiEchartsThree.xAxis.data = data.data.data[2].datas.xAxis;
+                      this.kpiEchartsThree.series[0].data = data.data.data[2].datas.data;
+                      this.kpiEchartsThree.series[1].data = data.data.data[2].datas.avgVal;
+                      let arr3 = [];
+                      let l3 = data.data.data[2].datas.avgVal.length;
+                      for (let i = 0; i < l3; i++) {
+                        arr3.push(data.data.data[2].datas.maxValue);
+                      }
+                      this.kpiEchartsThree.series[2].data = arr3;
+                      //fourth
+                      this.kpiEchartsFour.xAxis.data = data.data.data[3].datas.xAxis;
+                      this.kpiEchartsFour.series[0].data = data.data.data[3].datas.data;
+                      this.kpiEchartsFour.series[1].data = data.data.data[3].datas.avgVal;
+                      let arr4 = [];
+                      let l4 = data.data.data[3].datas.avgVal.length;
+                      for (let i = 0; i < l4; i++) {
+                        arr4.push(data.data.data[3].datas.maxValue);
+                      }
+                      this.kpiEchartsFour.series[2].data = arr4;
+                      setTimeout(() => {
+                        this.kpiEchartsOneGuid = this.getGuid();
+                        this.kpiEchartsTwoGuid = this.getGuid();
+                        this.kpiEchartsThreeGuid = this.getGuid();
+                        this.kpiEchartsFourGuid = this.getGuid();
+                      }, 500);
+                    }
+                  });
+                },
+                //中间核心指标
+                getMiddle() {
+                  Service.get(`lso/getMetricValue.do`).then(data => {
+                      //
+                    if (data.data.code == "000000") {
+                      data.data.data.forEach(element => {
+                        if (element.appsystem == "集中交易系统") {
+                          this.jzjySystem = element.data;
+                        }
+                        if (element.appsystem == "君弘系统") {
+                          this.jhSystem = element.data;
+                        }
+                        if (element.appsystem == "外围接入") {
+                          this.wwjrSystem = element.data;
+                        }
+                        if (element.appsystem == "报盘系统") {
+                          this.bpSystem = element.data;
+                        }
+                        if (element.appsystem == "综合理财系统") {
+                          this.zhlcSystem = element.data;
+                        }
+                        if (element.appsystem == "用户中心") {
+                          this.yhSystem = element.data;
+                        }
+                      });
+                    }
+                  });
+                },
+                //综合理财开户数
+                getZHLCData() {
+                  Service.get(``).then(data => {
+                    if (data.data.code == "000000") {
+                      this.ZHLCOpenAccount = data.data.data;
+                    }
+                  });
+                },
+                //各系统功能号top10
+                getFunTop() {
+                  Service.get(``).then(data => {
+                    if (data.data.code) {
+                      this.funList = data.data.data;
+                    }
+                  });
+                },
+                //君弘在线分布
+                getJHOnline() {
+                  Service.get(``).then(data => {
+                    if (data.data.code == "000000") {
+                      this.kpiEchartsFive.yAxis.data = [];
+                      this.kpiEchartsFive.series[0].data = [];
+                      this.kpiEchartsFive.series[1].data = [];
+                      setTimeout(() => {
+                        this.kpiEchartsFiveGuid = this.getGuid();
+                      }, 500);
+                    }
+                  });
+                }
+
+
+        },
+
+  created() {
+    this.getLeftData();
+    this.getMiddle();
+    this.destroy = setInterval(() => {
+      this.getLeftData();
+      this.getMiddle();
+    }, 60 * 1000);
+  },
+  destroyed() {
+    clearInterval(this.destroy);
+  }
+    });
+</script>
+</body>
+</html>

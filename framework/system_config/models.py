@@ -58,3 +58,11 @@ class SceneType(models.Model):
     update_time = models.DateTimeField(verbose_name=u'最后修改时间', auto_now=True)  # 跟新数据库，字段自动更新
     start_time = models.TimeField(verbose_name=u'开始时间')
     stop_time = models.TimeField(verbose_name=u'结束时间')
+
+    def __str__(self):
+        return self.id
+
+    class Meta:
+        verbose_name = u'场景分组'
+        verbose_name_plural = u'场景分组'
+        db_table = "system_config_scenetype"

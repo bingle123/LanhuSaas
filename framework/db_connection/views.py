@@ -176,3 +176,11 @@ def save_menu(request):
     """
     res = function.savemnus(request)
     return render_json(res)
+
+def get_all_mImgs(request):
+    '''
+    获取所有的图标代码
+    :return:
+    '''
+    res=function.get_all_mImgs()
+    return render_json(res)
