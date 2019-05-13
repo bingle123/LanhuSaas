@@ -1,0 +1,455 @@
+.kpi-bg {
+  width: 1400px;
+  height: 1050px;
+  position: relative;
+  background: url(../../static/img/kpi-panorama-bg.png) no-repeat;
+  background-size: 100%;
+}
+.kpi-bg .kpi-echarts {
+  width: 300px;
+  height: 150px;
+}
+.kpi-bg .kpi-echarts-one {
+  position: absolute;
+  left: 50px;
+  top: 115px;
+}
+.kpi-bg .kpi-echarts-two {
+  position: absolute;
+  left: 50px;
+  top: 355px;
+}
+.kpi-bg .kpi-echarts-three {
+  position: absolute;
+  left: 50px;
+  top: 600px;
+}
+.kpi-bg .kpi-echarts-four {
+  position: absolute;
+  left: 50px;
+  top: 845px;
+}
+.kpi-bg .kpi-echarts-five {
+  width: 315px;
+  position: absolute;
+  top: 685px;
+  right: 22px;
+}
+.kpi-bg .el-col-12 {
+  width: 115px;
+}
+.kpi-bg .sys-jh {
+  color: #c5ebff;
+  text-align: center;
+  position: absolute;
+  left: 605px;
+  top: 92px;
+}
+.kpi-bg .sys-ww {
+  color: #c5ebff;
+  text-align: center;
+  position: absolute;
+  left: 400px;
+  top: 280px;
+}
+.kpi-bg .sys-yh {
+  color: #c5ebff;
+  text-align: center;
+  position: absolute;
+  left: 790px;
+  top: 285px;
+}
+.kpi-bg .sys-jzjy {
+  color: #c5ebff;
+  text-align: center;
+  position: absolute;
+  left: 400px;
+  top: 535px;
+}
+.kpi-bg .sys-zhlc {
+  color: #c5ebff;
+  text-align: center;
+  position: absolute;
+  left: 790px;
+  top: 543px;
+}
+.kpi-bg .sys-bp {
+  color: #c5ebff;
+  text-align: center;
+  position: absolute;
+  left: 400px;
+  top: 795px;
+}
+.kpi-bg .hs {
+  color: #00e4f4;
+  font-size: 20px;
+  position: absolute;
+  left: 765px;
+  top: 931px;
+}
+.kpi-bg .zd {
+  color: #00e4f4;
+  font-size: 20px;
+  position: absolute;
+  left: 921px;
+  top: 931px;
+}
+.kpi-bg .sys-title {
+  margin-bottom: 10px;
+}
+.kpi-bg .sys-num {
+  font-weight: bold;
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+.kpi-bg .sys-font {
+  font-size: 12px;
+}
+.kpi-bg .bottom {
+  margin-bottom: 10px;
+}
+.kpi-bg .zhlc-kh {
+  width: 300px;
+  line-height: 200px;
+  text-align: center;
+  font-weight: bold;
+  position: absolute;
+  top: 95px;
+  right: 30px;
+}
+.kpi-bg .zhlc-kh > div:first-child {
+  font-size: 40px;
+  color: #00e4f4;
+  line-height: 74px;
+}
+.kpi-bg .zhlc-kh > div:last-child {
+  font-size: 24px;
+  color: #befbff;
+  line-height: 33px;
+}
+.kpi-bg .yhzx-top {
+  color: #00e4f4;
+  position: absolute;
+  top: 255px;
+  right: 21px;
+  width: 310px;
+}
+.kpi-bg .yhzx-top .el-carousel {
+  height: 305px;
+}
+.kpi-bg .yhzx-top .title {
+  margin-bottom: 53px;
+  font-size: 14px;
+}
+.kpi-bg .yhzx-top .el-table {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: 0;
+}
+.kpi-bg .yhzx-top .el-table::before {
+  height: 0;
+}
+.kpi-bg .reset {
+  width: 16px;
+}
+.kpi-bg .jh-ww {
+  animation: jhww 3s linear infinite normal;
+}
+@keyframes jhww {
+  0% {
+    position: absolute;
+    left: 592px;
+    top: 160px;
+  }
+  50% {
+    position: absolute;
+    left: 499px;
+    top: 160px;
+  }
+  100% {
+    position: absolute;
+    left: 499px;
+    top: 248px;
+  }
+}
+.kpi-bg .ww-jh {
+  animation: wwjh 3s linear infinite normal;
+}
+@keyframes wwjh {
+  0% {
+    position: absolute;
+    left: 499px;
+    top: 248px;
+  }
+  50% {
+    position: absolute;
+    left: 499px;
+    top: 160px;
+  }
+  100% {
+    position: absolute;
+    left: 592px;
+    top: 160px;
+  }
+}
+.kpi-bg .ww-jzjy {
+  animation: wwjzjy 1.5s linear infinite normal;
+}
+@keyframes wwjzjy {
+  0% {
+    position: absolute;
+    left: 499px;
+    top: 440px;
+  }
+  100% {
+    position: absolute;
+    left: 499px;
+    top: 505px;
+  }
+}
+.kpi-bg .jzjy-ww {
+  animation: jzjyww 1.5s linear infinite normal;
+}
+@keyframes jzjyww {
+  0% {
+    position: absolute;
+    left: 499px;
+    top: 505px;
+  }
+  100% {
+    position: absolute;
+    left: 499px;
+    top: 440px;
+  }
+}
+.kpi-bg .jzjy-bp {
+  animation: jzjybp 1.5s linear infinite normal;
+}
+@keyframes jzjybp {
+  0% {
+    position: absolute;
+    left: 499px;
+    top: 695px;
+  }
+  100% {
+    position: absolute;
+    left: 499px;
+    top: 765px;
+  }
+}
+.kpi-bg .bp-jzjy {
+  animation: bpjzjy 1.5s linear infinite normal;
+}
+@keyframes bpjzjy {
+  0% {
+    position: absolute;
+    left: 499px;
+    top: 765px;
+  }
+  100% {
+    position: absolute;
+    left: 499px;
+    top: 695px;
+  }
+}
+.kpi-bg .bp-hs {
+  animation: bphs 2s linear infinite normal;
+}
+@keyframes bphs {
+  0% {
+    position: absolute;
+    left: 622px;
+    top: 872px;
+  }
+  100% {
+    position: absolute;
+    left: 737px;
+    top: 872px;
+  }
+}
+.kpi-bg .hs-bp {
+  animation: hsbp 2s linear infinite normal;
+}
+@keyframes hsbp {
+  0% {
+    position: absolute;
+    left: 737px;
+    top: 872px;
+  }
+  100% {
+    position: absolute;
+    left: 622px;
+    top: 872px;
+  }
+}
+.kpi-bg .jh-zhlc {
+  animation: jhzhlc 5s linear infinite normal;
+}
+@keyframes jhzhlc {
+  0% {
+    position: absolute;
+    left: 705px;
+    top: 252px;
+  }
+  80% {
+    position: absolute;
+    left: 705px;
+    top: 580px;
+  }
+  100% {
+    position: absolute;
+    left: 770px;
+    top: 580px;
+  }
+}
+.kpi-bg .zhlc-jh {
+  animation: zhlcjh 5s linear infinite normal;
+}
+@keyframes zhlcjh {
+  0% {
+    position: absolute;
+    left: 770px;
+    top: 580px;
+  }
+  20% {
+    position: absolute;
+    left: 705px;
+    top: 580px;
+  }
+  100% {
+    position: absolute;
+    left: 705px;
+    top: 252px;
+  }
+}
+.kpi-bg .jzjy-zhlc {
+  animation: jzjyzhlc 3s linear infinite alternate;
+}
+@keyframes jzjyzhlc {
+  0% {
+    position: absolute;
+    left: 622px;
+    top: 607px;
+  }
+  100% {
+    position: absolute;
+    left: 765px;
+    top: 607px;
+  }
+}
+.kpi-bg .zhlc-jzjy {
+  animation: zhlcjzjy 3s linear infinite alternate;
+}
+@keyframes zhlcjzjy {
+  0% {
+    position: absolute;
+    left: 765px;
+    top: 607px;
+  }
+  100% {
+    position: absolute;
+    left: 622px;
+    top: 607px;
+  }
+}
+.kpi-bg .jh-yh {
+  animation: jhyh 3s linear infinite alternate;
+}
+@keyframes jhyh {
+  0% {
+    position: absolute;
+    left: 827px;
+    top: 159px;
+  }
+  50% {
+    position: absolute;
+    left: 904px;
+    top: 159px;
+  }
+  100% {
+    position: absolute;
+    left: 904px;
+    top: 248px;
+  }
+}
+.kpi-bg .yh-jh {
+  animation: yhjh 3s linear infinite alternate;
+}
+@keyframes yhjh {
+  0% {
+    position: absolute;
+    left: 904px;
+    top: 248px;
+  }
+  50% {
+    position: absolute;
+    left: 904px;
+    top: 159px;
+  }
+  100% {
+    position: absolute;
+    left: 827px;
+    top: 159px;
+  }
+}
+.kpi-bg .yh-zhlc {
+  animation: yhzhlc 2s linear infinite alternate;
+}
+@keyframes yhzhlc {
+  0% {
+    position: absolute;
+    left: 891px;
+    top: 446px;
+  }
+  100% {
+    position: absolute;
+    left: 891px;
+    top: 506px;
+  }
+}
+.kpi-bg .zhlc-yh {
+  animation: zhlcyh 2s linear infinite alternate;
+}
+@keyframes zhlcyh {
+  0% {
+    position: absolute;
+    left: 891px;
+    top: 506px;
+  }
+  100% {
+    position: absolute;
+    left: 891px;
+    top: 446px;
+  }
+}
+.kpi-bg .zd-zhlc {
+  animation: zdzhlc 2s linear infinite alternate;
+}
+@keyframes zdzhlc {
+  0% {
+    position: absolute;
+    left: 945px;
+    top: 701px;
+  }
+  100% {
+    position: absolute;
+    left: 945px;
+    top: 809px;
+  }
+}
+.kpi-bg .zhlc-zd {
+  animation: zhlczd 2s linear infinite alternate;
+}
+@keyframes zhlczd {
+  0% {
+    position: absolute;
+    left: 945px;
+    top: 809px;
+  }
+  100% {
+    position: absolute;
+    left: 945px;
+    top: 701px;
+  }
+}

@@ -33,12 +33,17 @@
 	<script type="text/javascript">
 		// Extends EditorUi to update I/O action states based on availability of backend
 		var graph =null;
+		var data_xml= '${data}'
         function main(container){
 			graph = new mxGraph(container);
 			graph.setTooltips(true);
 			graph.setEnabled(false);
-			var data_xml= '${data}'
-            if(data_xml!=""&&data_xml!="None"){
+			load_Data();
+		}
+		setInterval(load_Data,30000)
+		//便于采集数据
+        function load_Data(){
+		    if(data_xml!=""&&data_xml!="None"){
 			    var doc = mxUtils.parseXml(data_xml);
                 var codec = new mxCodec(doc)
                 try{//将xml中的节点转换成svg，在浏览器渲染
@@ -140,7 +145,7 @@
             }else{
 			    document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
             }
-		}
+        }
 		//监控项特效
         function monitorFlow(model,graph,id,id1) {
             var cell = model.getCell(id);//拿xml中对象id

@@ -1,0 +1,3046 @@
+.dutyback {
+  width: 1400px;
+  height: 1050px;
+  background-image: url('../img/night_duty_second.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.side {
+  padding: 0;
+  margin: 0;
+}
+li {
+  list-style: none;
+}
+ul {
+  padding: 0;
+  margin: 0;
+}
+.i_0 {
+  position: absolute;
+  left: 39px;
+  top: 88px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_0 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_0 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_0 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_1 {
+  position: absolute;
+  left: 211px;
+  top: 88px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_1 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_1 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_1 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_2 {
+  position: absolute;
+  left: 383px;
+  top: 88px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_2 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_2 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_2 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_3 {
+  position: absolute;
+  left: 555px;
+  top: 88px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_3 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_3 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_3 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_4 {
+  position: absolute;
+  left: 726px;
+  top: 88px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_4 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_4 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_4 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_5 {
+  position: absolute;
+  left: 39px;
+  top: 206px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_5 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_5 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_5 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_6 {
+  position: absolute;
+  left: 211px;
+  top: 206px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_6 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_6 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_6 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_7 {
+  position: absolute;
+  left: 383px;
+  top: 206px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_7 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_7 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_7 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_8 {
+  position: absolute;
+  left: 39px;
+  top: 326px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_8 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_8 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_8 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_9 {
+  position: absolute;
+  left: 211px;
+  top: 326px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_9 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_9 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_9 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_10 {
+  position: absolute;
+  left: 383px;
+  top: 326px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_10 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_10 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_10 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_11 {
+  position: absolute;
+  left: 39px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_11 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_11 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_11 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_12 {
+  position: absolute;
+  left: 211px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_12 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_12 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_12 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_13 {
+  position: absolute;
+  left: 383px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_13 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_13 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_13 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_14 {
+  position: absolute;
+  left: 555px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_14 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_14 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_14 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_15 {
+  position: absolute;
+  left: 726px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_15 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_15 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_15 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_16 {
+  position: absolute;
+  left: 898px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_16 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_16 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_16 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_17 {
+  position: absolute;
+  left: 1070px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_17 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_17 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_17 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_18 {
+  position: absolute;
+  left: 1241px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_18 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_18 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_18 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_19 {
+  position: absolute;
+  left: 39px;
+  top: 565px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_19 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_19 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_19 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_20 {
+  position: absolute;
+  left: 211px;
+  top: 565px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_20 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_20 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_20 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_21 {
+  position: absolute;
+  left: 39px;
+  top: 685px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_21 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_21 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_21 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_22 {
+  position: absolute;
+  left: 211px;
+  top: 685px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_22 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_22 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_22 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_23 {
+  position: absolute;
+  left: 39px;
+  top: 805px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_23 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_23 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_23 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_24 {
+  position: absolute;
+  left: 211px;
+  top: 805px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_24 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_24 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_24 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_25 {
+  position: absolute;
+  left: 383px;
+  top: 805px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_25 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_25 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_25 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_26 {
+  position: absolute;
+  left: 555px;
+  top: 805px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_26 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_26 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_26 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_27 {
+  position: absolute;
+  left: 39px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_27 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_27 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_27 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_28 {
+  position: absolute;
+  left: 211px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_28 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_28 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_28 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_29 {
+  position: absolute;
+  left: 383px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_29 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_29 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_29 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_30 {
+  position: absolute;
+  left: 555px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_30 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_30 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_30 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_31 {
+  position: absolute;
+  left: 726px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_31 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_31 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_31 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_32 {
+  position: absolute;
+  left: 898px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_32 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_32 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_32 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.i_33 {
+  position: absolute;
+  left: 1070px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_unrun.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.i_33 li:nth-child(1) {
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.i_33 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.i_33 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: white;
+}
+.f_0 {
+  position: absolute;
+  left: 39px;
+  top: 88px;
+}
+.f_0 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_0 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_0 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_1 {
+  position: absolute;
+  left: 211px;
+  top: 88px;
+}
+.f_1 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_1 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_1 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_2 {
+  position: absolute;
+  left: 383px;
+  top: 88px;
+}
+.f_2 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_2 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_2 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_3 {
+  position: absolute;
+  left: 555px;
+  top: 88px;
+}
+.f_3 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_3 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_3 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_4 {
+  position: absolute;
+  left: 728px;
+  top: 88px;
+}
+.f_4 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_4 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_4 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_5 {
+  position: absolute;
+  left: 39px;
+  top: 206px;
+}
+.f_5 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_5 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_5 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_6 {
+  position: absolute;
+  left: 211px;
+  top: 206px;
+}
+.f_6 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_6 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_6 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_7 {
+  position: absolute;
+  left: 383px;
+  top: 206px;
+}
+.f_7 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_7 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_7 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_8 {
+  position: absolute;
+  left: 39px;
+  top: 326px;
+}
+.f_8 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_8 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_8 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_9 {
+  position: absolute;
+  left: 211px;
+  top: 326px;
+}
+.f_9 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_9 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_9 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_10 {
+  position: absolute;
+  left: 383px;
+  top: 326px;
+}
+.f_10 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_10 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_10 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_11 {
+  position: absolute;
+  left: 39px;
+  top: 446px;
+}
+.f_11 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_11 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_11 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_12 {
+  position: absolute;
+  left: 211px;
+  top: 446px;
+}
+.f_12 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_12 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_12 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_13 {
+  position: absolute;
+  left: 383px;
+  top: 446px;
+}
+.f_13 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_13 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_13 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_14 {
+  position: absolute;
+  left: 555px;
+  top: 446px;
+}
+.f_14 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_14 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_14 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_15 {
+  position: absolute;
+  left: 726px;
+  top: 446px;
+}
+.f_15 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_15 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_15 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_16 {
+  position: absolute;
+  left: 898px;
+  top: 446px;
+}
+.f_16 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_16 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_16 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_17 {
+  position: absolute;
+  left: 1070px;
+  top: 446px;
+}
+.f_17 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_17 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_17 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_18 {
+  position: absolute;
+  left: 1241px;
+  top: 446px;
+}
+.f_18 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_18 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_18 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_19 {
+  position: absolute;
+  left: 39px;
+  top: 565px;
+}
+.f_19 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_19 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_19 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_20 {
+  position: absolute;
+  left: 211px;
+  top: 565px;
+}
+.f_20 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_20 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_20 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_21 {
+  position: absolute;
+  left: 39px;
+  top: 685px;
+}
+.f_21 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_21 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_21 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_22 {
+  position: absolute;
+  left: 211px;
+  top: 685px;
+}
+.f_22 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_22 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_22 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_23 {
+  position: absolute;
+  left: 39px;
+  top: 805px;
+}
+.f_23 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_23 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_23 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_24 {
+  position: absolute;
+  left: 211px;
+  top: 805px;
+}
+.f_24 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_24 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_24 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_25 {
+  position: absolute;
+  left: 383px;
+  top: 805px;
+}
+.f_25 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_25 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_25 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_26 {
+  position: absolute;
+  left: 555px;
+  top: 805px;
+}
+.f_26 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_26 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_26 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_27 {
+  position: absolute;
+  left: 39px;
+  top: 925px;
+}
+.f_27 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_27 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_27 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_28 {
+  position: absolute;
+  left: 211px;
+  top: 925px;
+}
+.f_28 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_28 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_28 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_29 {
+  position: absolute;
+  left: 383px;
+  top: 925px;
+}
+.f_29 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_29 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_29 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_30 {
+  position: absolute;
+  left: 555px;
+  top: 925px;
+}
+.f_30 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_30 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_30 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_31 {
+  position: absolute;
+  left: 726px;
+  top: 925px;
+}
+.f_31 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_31 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_31 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_32 {
+  position: absolute;
+  left: 898px;
+  top: 925px;
+}
+.f_32 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_32 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_32 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.f_33 {
+  position: absolute;
+  left: 1070px;
+  top: 925px;
+}
+.f_33 li:nth-child(1) {
+  color: white;
+  font-size: 12px;
+  margin-left: 68px;
+  text-align: center;
+  background-color: green;
+  width: 53px;
+}
+.f_33 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.f_33 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: #00E4F4;
+}
+.w_0 {
+  position: absolute;
+  left: 39px;
+  top: 88px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_0 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_0 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_0 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_1 {
+  position: absolute;
+  left: 211px;
+  top: 88px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_1 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_1 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_1 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_2 {
+  position: absolute;
+  left: 383px;
+  top: 88px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_2 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_2 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_2 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_3 {
+  position: absolute;
+  left: 555px;
+  top: 88px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_3 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_3 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_3 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_4 {
+  position: absolute;
+  left: 728px;
+  top: 88px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_4 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_4 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_4 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_5 {
+  position: absolute;
+  left: 39px;
+  top: 206px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_5 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_5 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_5 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_6 {
+  position: absolute;
+  left: 211px;
+  top: 206px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_6 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_6 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_6 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_7 {
+  position: absolute;
+  left: 383px;
+  top: 206px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_7 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_7 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_7 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_8 {
+  position: absolute;
+  left: 39px;
+  top: 326px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_8 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_8 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_8 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_9 {
+  position: absolute;
+  left: 211px;
+  top: 326px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_9 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_9 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_9 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_10 {
+  position: absolute;
+  left: 383px;
+  top: 326px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_10 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_10 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_10 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_11 {
+  position: absolute;
+  left: 39px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_11 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_11 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_11 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_12 {
+  position: absolute;
+  left: 211px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_12 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_12 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_12 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_13 {
+  position: absolute;
+  left: 383px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_13 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_13 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_13 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_14 {
+  position: absolute;
+  left: 555px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_14 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_14 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_14 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_15 {
+  position: absolute;
+  left: 726px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_15 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_15 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_15 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_16 {
+  position: absolute;
+  left: 898px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_16 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_16 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_16 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_17 {
+  position: absolute;
+  left: 1070px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_17 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_17 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_17 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_18 {
+  position: absolute;
+  left: 1241px;
+  top: 446px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_18 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_18 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_18 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_19 {
+  position: absolute;
+  left: 39px;
+  top: 565px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_19 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_19 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_19 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_20 {
+  position: absolute;
+  left: 211px;
+  top: 565px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_20 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_20 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_20 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_21 {
+  position: absolute;
+  left: 39px;
+  top: 685px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_21 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_21 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_21 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_22 {
+  position: absolute;
+  left: 211px;
+  top: 685px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_22 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_22 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_22 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_23 {
+  position: absolute;
+  left: 39px;
+  top: 805px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_23 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_23 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_23 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_24 {
+  position: absolute;
+  left: 211px;
+  top: 805px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_24 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_24 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_24 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_25 {
+  position: absolute;
+  left: 383px;
+  top: 805px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_25 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_25 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_25 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_26 {
+  position: absolute;
+  left: 555px;
+  top: 805px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_26 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_26 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_26 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_27 {
+  position: absolute;
+  left: 39px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_27 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_27 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_27 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_28 {
+  position: absolute;
+  left: 211px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_28 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_28 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_28 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_29 {
+  position: absolute;
+  left: 383px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_29 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_29 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_29 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_30 {
+  position: absolute;
+  left: 555px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_30 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_30 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_30 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_31 {
+  position: absolute;
+  left: 726px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_31 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_31 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_31 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_32 {
+  position: absolute;
+  left: 898px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_32 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_32 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_32 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}
+.w_33 {
+  position: absolute;
+  left: 1070px;
+  top: 925px;
+  height: 200px;
+  background-image: url('../img/night_second_warning.png');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  padding: 0;
+  margin: 0;
+}
+.w_33 li:nth-child(1) {
+  margin-top: 2px;
+  color: gray;
+  font-size: 12px;
+  margin-left: 65px;
+  text-align: center;
+  width: 60px;
+}
+.w_33 li:nth-child(2) {
+  text-align: left;
+  margin-top: 0px;
+  font-size: 14px;
+  color: white;
+}
+.w_33 li:nth-child(3) {
+  font-size: 16px;
+  font-weight: 700;
+  margin-left: 5px;
+  text-align: center;
+  color: red;
+}

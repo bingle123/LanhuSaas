@@ -20,7 +20,7 @@
     <link href="${STATIC_URL}css/common/main.css" rel="stylesheet">
     <!--阿里巴巴矢量图标库--项目完成后请下载css并下载css引用的字体文件-->
     <link href="${STATIC_URL}css/net/font_997278_ptr5bdmor4j.css" rel="stylesheet">
-
+    <link href="${STATIC_URL}assets/iconfont/iconfont.css" rel="stylesheet">
     <script src="${STATIC_URL}js/jquery-3.1.1.min.js"></script>
     <!--以下为后台参数-->
     <!--
@@ -30,21 +30,17 @@
 </head>
 
  <style type="text/css">
-   .show1{
-       background-color:  #2860FD !important;
-   }
-
 
 .el-menu-item:hover{
     outline: 0 !important;
     background-color: #2860FD !important;
 }
 
-     .el-submenu__title:hover{
-          outline: 0 !important;
-    background-color: #2860FD !important;
-     }
+ .el-submenu__title:hover{
+      outline: 0 !important;
+        background-color: #2860FD !important;
 
+ }
      /*菜单关闭*/
 .el-submenu>.el-submenu__title .el-submenu__icon-arrow{
 	-webkit-transform: rotateZ(-90deg);
@@ -63,20 +59,23 @@
     font-weight: bold;
     color: #FFFFFF;
 }
+     .left_submenu{
+         padding-left: 30px;
+     }
   </style>
 
 <body style="overflow: visible">
 <!--start html-->
-<div id="index">
-    <!--start container-->
+<div id="main">
+    <!--start container -->
     <el-container >
 
         <!--start left  -->
         <el-row  :style="height">
-            <el-menu :style="height" class="el-menu-vertical-demo" @open="handleOpen"
-                     @close="handleClose" :collapse="isCollapse" text-color="#FFFFFF" active-text-color="#000000">
+            <el-menu :style="height" class="el-menu-vertical-demo" @open="handleOpen"  unique-opened=true
+                     @close="handleClose" :collapse="isCollapse" text-color="#FFFFFF" active-text-color="#000000" >
                 <el-menu-item index="1000" class="title_item">
-                    <i class=""></i>
+
                     <li slot="title" style="font-size: 24px;">看板项目</li>
                 </el-menu-item>
 
@@ -86,36 +85,52 @@
                     <span slot="title">{{ i.mname }}{{ i.id }}</span>
                 </el-menu-item>
                 -->
-                <el-menu-item id="submenu" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" style="line-height: 56px;font-size: 18px;padding-left:50px;" v-if=" i.pcode == 0">
+                <el-submenu  v-for="(i,index) in muenus"  :index="index+''"  style="font-color:#FFFFFF;line-height: 56px; "  v-if=" i.id == 1" >
+                     <template slot="title" >
+                         <i :class="i.mImg " :style= "left_submenu"></i>
+                      <span  v-if=" i.id == 1" > &nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                    </template>
+                    <el-menu-item-group>
+                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 4"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
+                    </el-menu-item-group>
+
+                  </el-submenu>
+
+                <el-menu-item id="submenu" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px;font-size: 18px;padding-left:50px;" v-if=" i.pcode == 0" v-on:click="testClick(i.url)" >
+                    <i :class="i.mImg "></i>
                     <span slot="title" >{{ i.mname }}</span>
                 </el-menu-item>
 
 
-                 <el-submenu style="font-color:#FFFFFF;" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" style="line-height: 56px; "  v-if=" i.id == 25">
+
+                 <el-submenu  v-for="(i,index) in muenus"  :index="index+''"  style="font-color:#FFFFFF;line-height: 56px; "  v-if=" i.id == 25" >
                      <template slot="title" >
-                      <span  v-if="  i.id == 25" style="padding-left:30px;"><font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                         <i :class="i.mImg " :style= "left_submenu"></i>
+                      <span  v-if=" i.id == 25" > &nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
                     </template>
                     <el-menu-item-group>
-                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 1">{{ i.mname }}</el-menu-item>
+                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 1"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
                     </el-menu-item-group>
 
                   </el-submenu>
-                <el-submenu style="font-color:#FFFFFF;" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" style="line-height: 56px; "  v-if=" i.id == 26">
+                <el-submenu style="font-color:#FFFFFF;" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px; "  v-if=" i.id == 26">
                      <template slot="title" >
-                      <span  v-if="  i.id == 26" style="padding-left:30px;"><font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                            <i :class="i.mImg " :style= "left_submenu"></i>
+                      <span  v-if="  i.id == 26" > &nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
                     </template>
                     <el-menu-item-group>
-                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 2">{{ i.mname }}</el-menu-item>
+                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 2"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
                     </el-menu-item-group>
 
                   </el-submenu>
 
                 <el-submenu style="font-color:#FFFFFF;" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" style="line-height: 56px; "  v-if=" i.id == 27">
                      <template slot="title" >
-                      <span  v-if="  i.id == 27" style="padding-left:30px;"><font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                         <i :class="i.mImg " :style= "left_submenu"></i>
+                      <span  v-if="  i.id == 27">&nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
                     </template>
                     <el-menu-item-group>
-                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 3">{{ i.mname }}</el-menu-item>
+                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 3"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
                     </el-menu-item-group>
 
                   </el-submenu>
@@ -180,6 +195,10 @@
 
 <script type="text/javascript">
 
+    function test(){
+        alert("hhhhhh")
+    }
+
 
      axios.interceptors.request.use((config) => {
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
@@ -188,11 +207,13 @@
         return config
     });
     let vm = new Vue({
-        el: '#index',
+        el: '#main',
         data: {
             muenus: [],
             showFlag:false,
             isCollapse: false,  //是否折叠
+            left_submenu:'padding-left: 30px;',
+
             height: {           //css
                 height: '',
             },
@@ -224,7 +245,7 @@
             //this.get_height()
         },
         methods: {
-            handleOpen(key, keyPath) {  //手风琴打开
+             handleOpen(key, keyPath) {  //手风琴打开
                 console.log(key, keyPath);
             },
             handleClose(key, keyPath) { //手风琴关闭
@@ -244,9 +265,12 @@
                 if (res) {
                     this.display1.display = 'inline-block';
                     this.display2.display = 'none';
+
+                    this.left_submenu = 'padding-left: 30px;';
                 } else {
                     this.display1.display = 'none';
                     this.display2.display = 'inline-block';
+                    this.left_submenu = '';
                 }
                 this.isCollapse = res ? false : true;
             },
@@ -257,7 +281,7 @@
                 });
             },
             testClick(res) {            //更新iframe显示页面
-                vm.clickhtml = res
+                    vm.clickhtml = res
                 console.log(this.clickhtml)
              },
 
@@ -267,13 +291,13 @@
                     .then((res) => {
                         console.log(res)
                         vm.muenus = res.data.results;
-
                     })
-            }
+            },
+
         }
     });
     vm.get_Muenu();
-    vm.get_user_name()
+    vm.get_user_name();
 </script>
 </body>
 </html>

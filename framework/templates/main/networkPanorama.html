@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>国泰君安数据中心网络全景图</title>
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- vue的ajax依赖-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <!-- element UI引入样式 -->
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script src='${STATIC_URL}js/jquery.min.js'></script>
+    <script src='${STATIC_URL}js/jquery-ui.js'></script>
+    <!--jQuery库使用时请使用标准jQuery语法-->
+    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
+    <!--页面初始化css(Tencent)-->
+    <link href="${STATIC_URL}css/init.css" rel="stylesheet">
+    <!-- 引入额外的包-->
+    <link href="${STATIC_URL}css/networkPanorama.css" rel="stylesheet">
+
+</head>
+<style>
+img {
+  position: absolute;
+}
+.none {
+  display: none;
+}
+.aniamtionView {
+  animation: alarmAnimation 1s infinite normal;
+}
+@keyframes alarmAnimation {
+  0% {
+    transform: scale(0.9, 0.9);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(7.1, 7.1);
+    opacity: 0;
+  }
+}
+/* 光点移动 */
+.one1 {
+  animation: onemove1 5s  linear infinite  normal;
+}
+@keyframes onemove1 {
+  0% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  70% {
+    left: 222px;
+    top: 243px;
+  }
+  100% {
+    left: 145px;
+    top: 243px;
+  }
+}
+.one1_over {
+  animation: onemoveover1 5s  linear infinite  normal;
+}
+@keyframes onemoveover1 {
+  100% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  30% {
+    left: 222px;
+    top: 243px;
+  }
+  0% {
+    left: 145px;
+    top: 243px;
+  }
+}
+.one2 {
+  animation: onemove2 2.5s  linear infinite  normal;
+}
+@keyframes onemove2 {
+  0% {
+    left: 480px;
+    top: 180px;
+  }
+  100% {
+    left: 570px;
+    top: 180px;
+  }
+}
+.one2_over {
+  animation: onemoveover2 2.5s  linear infinite  normal;
+}
+@keyframes onemoveover2 {
+  100% {
+    left: 480px;
+    top: 180px;
+  }
+  0% {
+    left: 570px;
+    top: 180px;
+  }
+}
+.one3 {
+  animation: onemove3 5s  linear infinite  normal;
+}
+@keyframes onemove3 {
+  0% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  70% {
+    left: 222px;
+    top: 243px;
+  }
+  100% {
+    left: 255px;
+    top: 243px;
+  }
+}
+.one3_over {
+  animation: onemoveover3 5s  linear infinite  normal;
+}
+@keyframes onemoveover3 {
+  100% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  30% {
+    left: 222px;
+    top: 243px;
+  }
+  0% {
+    left: 255px;
+    top: 243px;
+  }
+}
+.one4 {
+  animation: onemove4 5s  linear infinite  normal;
+}
+@keyframes onemove4 {
+  0% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  70% {
+    left: 222px;
+    top: 118px;
+  }
+  100% {
+    left: 145px;
+    top: 118px;
+  }
+}
+.one4_over {
+  animation: onemoveover4 5s  linear infinite  normal;
+}
+@keyframes onemoveover4 {
+  100% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  30% {
+    left: 222px;
+    top: 118px;
+  }
+  0% {
+    left: 145px;
+    top: 118px;
+  }
+}
+.one5 {
+  animation: onemove5 5s  linear infinite  normal;
+}
+@keyframes onemove5 {
+  0% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  70% {
+    left: 222px;
+    top: 118px;
+  }
+  100% {
+    left: 265px;
+    top: 118px;
+  }
+}
+.one5_over {
+  animation: onemoveover5 5s  linear infinite  normal;
+}
+@keyframes onemoveover5 {
+  100% {
+    left: 480px;
+    top: 180px;
+  }
+  50% {
+    left: 222px;
+    top: 180px;
+  }
+  30% {
+    left: 222px;
+    top: 118px;
+  }
+  0% {
+    left: 265px;
+    top: 118px;
+  }
+}
+.two1 {
+  animation: twomove1 3s  linear infinite  normal;
+}
+@keyframes twomove1 {
+  0% {
+    left: 215px;
+    top: 353px;
+  }
+  100% {
+    left: 55px;
+    top: 353px;
+  }
+}
+.two1_over {
+  animation: twomoveover1 3s  linear infinite  normal;
+}
+@keyframes twomoveover1 {
+  100% {
+    left: 215px;
+    top: 353px;
+  }
+  0% {
+    left: 55px;
+    top: 353px;
+  }
+}
+.two2 {
+  animation: twomove2 3s  linear infinite  normal;
+}
+@keyframes twomove2 {
+  0% {
+    left: 215px;
+    top: 353px;
+  }
+  100% {
+    left: 315px;
+    top: 353px;
+  }
+}
+.two2_over {
+  animation: twomoveover2 3s  linear infinite  normal;
+}
+@keyframes twomoveover2 {
+  100% {
+    left: 215px;
+    top: 353px;
+  }
+  0% {
+    left: 315px;
+    top: 353px;
+  }
+}
+.three {
+  animation: zbyw 3s  linear infinite  normal;
+}
+@keyframes zbyw {
+  0% {
+    left: 215px;
+    top: 453px;
+  }
+  100% {
+    left: 315px;
+    top: 453px;
+  }
+}
+.three_over {
+  animation: zbywover 3s  linear infinite  normal;
+}
+@keyframes zbywover {
+  100% {
+    left: 215px;
+    top: 453px;
+  }
+  0% {
+    left: 315px;
+    top: 453px;
+  }
+}
+.four1 {
+  animation: ggq1 3s  linear infinite  normal;
+}
+@keyframes ggq1 {
+  0% {
+    left: 465px;
+    top: 353px;
+  }
+  30% {
+    left: 405px;
+    top: 353px;
+  }
+  100% {
+    left: 315px;
+    top: 353px;
+  }
+}
+.four1_over {
+  animation: ggqover1 3s  linear infinite  normal;
+}
+@keyframes ggqover1 {
+  100% {
+    left: 465px;
+    top: 353px;
+  }
+  70% {
+    left: 405px;
+    top: 353px;
+  }
+  0% {
+    left: 315px;
+    top: 353px;
+  }
+}
+.four2 {
+  animation: ggq2 3s  linear infinite  normal;
+}
+@keyframes ggq2 {
+  0% {
+    left: 465px;
+    top: 353px;
+  }
+  30% {
+    left: 405px;
+    top: 353px;
+  }
+  60% {
+    left: 405px;
+    top: 453px;
+  }
+  100% {
+    left: 315px;
+    top: 453px;
+  }
+}
+.four2_over {
+  animation: ggqover2 3s  linear infinite  normal;
+}
+@keyframes ggqover2 {
+  100% {
+    left: 465px;
+    top: 353px;
+  }
+  60% {
+    left: 405px;
+    top: 353px;
+  }
+  30% {
+    left: 405px;
+    top: 453px;
+  }
+  0% {
+    left: 315px;
+    top: 453px;
+  }
+}
+.four3 {
+  animation: ggq3 3s  linear infinite  normal;
+}
+@keyframes ggq3 {
+  0% {
+    left: 465px;
+    top: 353px;
+  }
+  100% {
+    left: 585px;
+    top: 353px;
+  }
+}
+.four3_over {
+  animation: ggqover3 3s  linear infinite  normal;
+}
+@keyframes ggqover3 {
+  100% {
+    left: 465px;
+    top: 353px;
+  }
+  0% {
+    left: 585px;
+    top: 353px;
+  }
+}
+.five {
+  animation: zhywq 3s  linear infinite  normal;
+}
+@keyframes zhywq {
+  0% {
+    left: 465px;
+    top: 501px;
+  }
+  100% {
+    left: 575px;
+    top: 501px;
+  }
+}
+.five_over {
+  animation: zhywqover 3s  linear infinite  normal;
+}
+@keyframes zhywqover {
+  100% {
+    left: 465px;
+    top: 501px;
+  }
+  0% {
+    left: 575px;
+    top: 501px;
+  }
+}
+.six1 {
+  animation: hlwywbq1 3s  linear infinite  normal;
+}
+@keyframes hlwywbq1 {
+  0% {
+    left: 935px;
+    top: 180px;
+  }
+  100% {
+    left: 765px;
+    top: 180px;
+  }
+}
+.six1_over {
+  animation: hlwywbqover1 3s  linear infinite  normal;
+}
+@keyframes hlwywbqover1 {
+  100% {
+    left: 945px;
+    top: 180px;
+  }
+  0% {
+    left: 765px;
+    top: 180px;
+  }
+}
+.six2 {
+  animation: hlwywbqdx11 3s  linear infinite  normal;
+}
+@keyframes hlwywbqdx11 {
+  0% {
+    left: 935px;
+    top: 180px;
+  }
+  30% {
+    left: 1036px;
+    top: 180px;
+  }
+  70% {
+    left: 1036px;
+    top: 95px;
+  }
+  100% {
+    left: 1100px;
+    top: 95px;
+  }
+}
+.six2_over {
+  animation: hlwywbqdx1over1 3s  linear infinite  normal;
+}
+@keyframes hlwywbqdx1over1 {
+  100% {
+    left: 955px;
+    top: 180px;
+  }
+  70% {
+    left: 1036px;
+    top: 180px;
+  }
+  30% {
+    left: 1036px;
+    top: 95px;
+  }
+  0% {
+    left: 1100px;
+    top: 95px;
+  }
+}
+.six3 {
+  animation: hlwywbqdx21 3s  linear infinite  normal;
+}
+@keyframes hlwywbqdx21 {
+  0% {
+    left: 935px;
+    top: 180px;
+  }
+  30% {
+    left: 1036px;
+    top: 180px;
+  }
+  100% {
+    left: 1100px;
+    top: 180px;
+  }
+}
+.six3_over {
+  animation: hlwywbqdx2over1 3s  linear infinite  normal;
+}
+@keyframes hlwywbqdx2over1 {
+  100% {
+    left: 935px;
+    top: 180px;
+  }
+  70% {
+    left: 1036px;
+    top: 180px;
+  }
+  0% {
+    left: 1100px;
+    top: 180px;
+  }
+}
+.six4 {
+  animation: hlwywbqlt1 3s  linear infinite  normal;
+}
+@keyframes hlwywbqlt1 {
+  0% {
+    left: 935px;
+    top: 180px;
+  }
+  30% {
+    left: 1036px;
+    top: 180px;
+  }
+  70% {
+    left: 1036px;
+    top: 250px;
+  }
+  100% {
+    left: 1100px;
+    top: 250px;
+  }
+}
+.six4_over {
+  animation: hlwywbqltover1 3s  linear infinite  normal;
+}
+@keyframes hlwywbqltover1 {
+  100% {
+    left: 935px;
+    top: 180px;
+  }
+  70% {
+    left: 1036px;
+    top: 180px;
+  }
+  30% {
+    left: 1036px;
+    top: 250px;
+  }
+  0% {
+    left: 1100px;
+    top: 250px;
+  }
+}
+.seven1 {
+  animation: ywzcq1 3s  linear infinite  normal;
+}
+@keyframes ywzcq1 {
+  0% {
+    left: 945px;
+    top: 352px;
+  }
+  100% {
+    left: 765px;
+    top: 352px;
+  }
+}
+.seven1_over {
+  animation: ywzcqover1 3s  linear infinite  normal;
+}
+@keyframes ywzcqover1 {
+  100% {
+    left: 945px;
+    top: 352px;
+  }
+  0% {
+    left: 765px;
+    top: 352px;
+  }
+}
+.seven2 {
+  animation: ywzcq2 3s  linear infinite  normal;
+}
+@keyframes ywzcq2 {
+  0% {
+    left: 965px;
+    top: 352px;
+  }
+  100% {
+    left: 1100px;
+    top: 352px;
+  }
+}
+.seven2_over {
+  animation: ywzcqover2 3s  linear infinite  normal;
+}
+@keyframes ywzcqover2 {
+  100% {
+    left: 965px;
+    top: 352px;
+  }
+  0% {
+    left: 1100px;
+    top: 352px;
+  }
+}
+.eight1 {
+  animation: hxywq1 3s  linear infinite  normal;
+}
+@keyframes hxywq1 {
+  0% {
+    left: 945px;
+    top: 498px;
+  }
+  100% {
+    left: 765px;
+    top: 498px;
+  }
+}
+.eight1_over {
+  animation: hxywqover1 3s  linear infinite  normal;
+}
+@keyframes hxywqover1 {
+  100% {
+    left: 945px;
+    top: 498px;
+  }
+  0% {
+    left: 765px;
+    top: 498px;
+  }
+}
+.nine1 {
+  animation: hlwywq1 2.8s  linear infinite  normal;
+}
+@keyframes hlwywq1 {
+  0% {
+    left: 535px;
+    top: 765px;
+  }
+  20% {
+    left: 485px;
+    top: 765px;
+  }
+  100% {
+    left: 400px;
+    top: 765px;
+  }
+}
+.nine1_over {
+  animation: hlwywqover1 2.8s  linear infinite  normal;
+}
+@keyframes hlwywqover1 {
+  100% {
+    left: 535px;
+    top: 765px;
+  }
+  70% {
+    left: 485px;
+    top: 765px;
+  }
+  0% {
+    left: 400px;
+    top: 765px;
+  }
+}
+.nine2 {
+  animation: hlwywq2 2s  linear infinite  normal;
+}
+@keyframes hlwywq2 {
+  0% {
+    left: 575px;
+    top: 765px;
+  }
+  100% {
+    left: 660px;
+    top: 765px;
+  }
+}
+.nine2_over {
+  animation: hlwywqover2 2s  linear infinite  normal;
+}
+@keyframes hlwywqover2 {
+  100% {
+    left: 575px;
+    top: 765px;
+  }
+  0% {
+    left: 660px;
+    top: 765px;
+  }
+}
+.nine3 {
+  animation: hlwywq3 2.8s  linear infinite  normal;
+}
+@keyframes hlwywq3 {
+  0% {
+    left: 535px;
+    top: 765px;
+  }
+  20% {
+    left: 485px;
+    top: 765px;
+  }
+  70% {
+    left: 485px;
+    top: 900px;
+  }
+  100% {
+    left: 400px;
+    top: 900px;
+  }
+}
+.nine3_over {
+  animation: hlwywqover3 2.8s  linear infinite  normal;
+}
+@keyframes hlwywqover3 {
+  100% {
+    left: 535px;
+    top: 765px;
+  }
+  70% {
+    left: 485px;
+    top: 765px;
+  }
+  20% {
+    left: 485px;
+    top: 900px;
+  }
+  0% {
+    left: 400px;
+    top: 900px;
+  }
+}
+.ten1 {
+  animation: nfzxhxywq1 2s  linear infinite  normal;
+}
+@keyframes nfzxhxywq1 {
+  0% {
+    left: 565px;
+    top: 900px;
+  }
+  100% {
+    left: 660px;
+    top: 900px;
+  }
+}
+.ten1_over {
+  animation: nfzxhxywqover1 2s  linear infinite  normal;
+}
+@keyframes nfzxhxywqover1 {
+  100% {
+    left: 565px;
+    top: 900px;
+  }
+  0% {
+    left: 660px;
+    top: 900px;
+  }
+}
+.eleven1 {
+  animation: zbhxywq 2s  linear infinite  normal;
+}
+@keyframes zbhxywq {
+  0% {
+    left: 1065px;
+    top: 900px;
+  }
+  100% {
+    left: 940px;
+    top: 900px;
+  }
+}
+.eleven1_over {
+  animation: zbhxywqover 2s  linear infinite  normal;
+}
+@keyframes zbhxywqover {
+  100% {
+    left: 1065px;
+    top: 900px;
+  }
+  0% {
+    left: 940px;
+    top: 900px;
+  }
+}
+.twelve1 {
+  animation: zbhlwywzx1 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzx1 {
+  0% {
+    left: 1045px;
+    top: 760px;
+  }
+  100% {
+    left: 940px;
+    top: 760px;
+  }
+}
+.twelve1_over {
+  animation: zbhlwywzxover1 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzxover1 {
+  100% {
+    left: 1045px;
+    top: 760px;
+  }
+  0% {
+    left: 940px;
+    top: 760px;
+  }
+}
+.twelve2 {
+  animation: zbhlwywzx2 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzx2 {
+  0% {
+    left: 1085px;
+    top: 755px;
+  }
+  20% {
+    left: 1145px;
+    top: 755px;
+  }
+  100% {
+    left: 1180px;
+    top: 755px;
+  }
+}
+.twelve2_over {
+  animation: zbhlwywzxover2 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzxover2 {
+  100% {
+    left: 1085px;
+    top: 755px;
+  }
+  80% {
+    left: 1145px;
+    top: 755px;
+  }
+  0% {
+    left: 1180px;
+    top: 755px;
+  }
+}
+.twelve3 {
+  animation: zbhlwywzx3 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzx3 {
+  0% {
+    left: 1085px;
+    top: 755px;
+  }
+  20% {
+    left: 1145px;
+    top: 755px;
+  }
+  70% {
+    left: 1145px;
+    top: 853px;
+  }
+  100% {
+    left: 1180px;
+    top: 853px;
+  }
+}
+.twelve3_over {
+  animation: zbhlwywzxover3 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzxover3 {
+  100% {
+    left: 1085px;
+    top: 755px;
+  }
+  70% {
+    left: 1145px;
+    top: 755px;
+  }
+  20% {
+    left: 1145px;
+    top: 853px;
+  }
+  0% {
+    left: 1180px;
+    top: 853px;
+  }
+}
+.twelve4 {
+  animation: zbhlwywzx4 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzx4 {
+  0% {
+    left: 1085px;
+    top: 755px;
+  }
+  20% {
+    left: 1145px;
+    top: 755px;
+  }
+  80% {
+    left: 1145px;
+    top: 950px;
+  }
+  100% {
+    left: 1180px;
+    top: 950px;
+  }
+}
+.twelve4_over {
+  animation: zbhlwywzxover4 2s  linear infinite  normal;
+}
+@keyframes zbhlwywzxover4 {
+  100% {
+    left: 1085px;
+    top: 755px;
+  }
+  80% {
+    left: 1145px;
+    top: 755px;
+  }
+  20% {
+    left: 1145px;
+    top: 950px;
+  }
+  0% {
+    left: 1180px;
+    top: 950px;
+  }
+}
+
+</style>
+<body style="background: rgb(246,246,246);overflow-y: block;">
+<div style="position:relative" class="panorama" id="networkPanorama">
+    <span style="color:#00e4f4;font-size:18px;display:block;position:absolute;top:20px;right:35px;height:25px;line-height:25px" >{{ date }}&nbsp;&nbsp;{{time}}</span>
+    <ul class="l_01">
+        <!-- 互联网业务A区-电信 -->
+         <li>网络流量:{{no_firewall6['互联网业务A区-电信']?no_firewall6['互联网业务A区-电信']['networkFlowValue']:'- -'}}%</li>
+         <li>带宽:{{bandwidth.hlwywaq_dx}}G</li>
+         <li>时延:{{no_firewall6['互联网业务A区-电信']?no_firewall6['互联网业务A区-电信']['lantenceAvg']:'- -'}}ms</li>
+     </ul>
+    <ul class="l_02">
+        <!--  互联网业务A区-电信3  -->
+         <li>网络流量:{{no_firewall6['互联网业务A区-电信3']?no_firewall6['互联网业务A区-电信3']['networkFlowValue']:'- -'}}%</li>
+         <li>带宽:{{bandwidth.hlwywaq_dx3}}G</li>
+         <li>时延:{{no_firewall6['互联网业务A区-电信3']?no_firewall6['互联网业务A区-电信3']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_03">
+        <!--  互联网业务A区-移动  -->
+         <li>网络流量:{{no_firewall6['互联网业务A区-移动']?no_firewall6['互联网业务A区-移动']['networkFlowValue']:'- -'}}%</li>
+         <li>带宽:{{bandwidth.hlwywaq_yd}}G</li>
+         <li>时延:{{no_firewall6['互联网业务A区-移动']?no_firewall6['互联网业务A区-移动']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_04">
+        <!--  互联网业务A区-联通  -->
+         <li>网络流量:{{no_firewall6['互联网业务A区-联通']?no_firewall6['互联网业务A区-联通']['networkFlowValue']:'- -'}}%</li>
+         <li>带宽:{{bandwidth.hlwywaq_lt}}G</li>
+         <li>时延:{{no_firewall6['互联网业务A区-联通']?no_firewall6['互联网业务A区-联通']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_05">
+        <!--  互联网业务A区 -->
+        <li>网络流量:{{no_firewall4['互联网业务A区']?no_firewall4['互联网业务A区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.hlwywaq}}G</li>
+        <li>时延:{{no_firewall4['互联网业务A区']?no_firewall4['互联网业务A区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+       <ul class="l_06">
+        <!--  互联网业务B区-联通 -->
+        <li>网络流量:{{no_firewall5['互联网业务B区-联通']?no_firewall5['互联网业务B区-联通']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.hlwywbq_lt}}G</li>
+        <li>时延:{{no_firewall5['互联网业务B区-联通']?no_firewall5['互联网业务B区-联通']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+        <ul class="l_07">
+        <!--  互联网业务B区-电信2 -->
+        <li>网络流量:{{no_firewall5['互联网业务B区-电信2']?no_firewall5['互联网业务B区-电信2']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.hlwywbq_dx2}}G</li>
+        <li>时延:{{no_firewall5['互联网业务B区-电信2']?no_firewall5['互联网业务B区-电信2']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_08">
+        <!--  互联网业务B区-电信1 -->
+        <li>网络流量:{{no_firewall5['互联网业务B区-电信1']?no_firewall5['互联网业务B区-电信1']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.hlwywbq_dx1}}G</li>
+        <li>时延:{{no_firewall5['互联网业务B区-电信1']?no_firewall5['互联网业务B区-电信1']['lantenceAvg']:'- -'}}ms</li>
+      </ul> <ul class="l_13">
+        <!--  互联网业务B区 -->
+         <li>网络流量:{{no_firewall4['互联网业务B区']?no_firewall4['互联网业务B区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.hlwywbq}}G</li>
+        <li>时延:{{no_firewall4['互联网业务B区']?no_firewall4['互联网业务B区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_09">
+         <!--  交易所-上交所 -->
+        <li>网络流量:{{no_firewall7['交易所-上交所']?no_firewall7['交易所-上交所']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.jys_shangjs}}M</li>
+        <li>时延:{{no_firewall7['交易所-上交所']?no_firewall7['交易所-上交所']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_10">
+       <!--  交易所-深交所 -->
+        <li>网络流量:{{no_firewall7['交易所-深交所']?no_firewall7['交易所-深交所']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.jys_shenjs}}M</li>
+        <li>时延:{{no_firewall7['交易所-深交所']?no_firewall7['交易所-深交所']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_11">
+       <!--  综合业务区 -->
+        <li>网络流量:{{no_firewall7['综合业务区']?no_firewall7['综合业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.zhywq}}G</li>
+        <li>时延:{{no_firewall7['综合业务区']?no_firewall7['综合业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_12">
+       <!--  核心业务区 -->
+        <li>网络流量:{{no_firewall8['核心业务区']?no_firewall8['核心业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.hxywq}}G</li>
+        <li>时延:{{no_firewall8['核心业务区']?no_firewall8['核心业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+        <ul class="l_14">
+       <!--  总部办公 -->
+        <li>网络流量:{{no_firewall8['总部办公']?no_firewall8['总部办公']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.zbbg}}G</li>
+        <li>时延:{{no_firewall8['总部办公']?no_firewall8['总部办公']['lantenceAvg']:'- -'}}ms</li>
+     </ul>
+      <ul class="l_15">
+       <!--  总部业务 -->
+        <li>网络流量:{{no_firewall8['总部业务']?no_firewall8['总部业务']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.zbyw}}G</li>
+        <li>时延:{{no_firewall8['总部业务']?no_firewall8['总部业务']['lantenceAvg']:'- -'}}ms</li>
+     </ul>
+     <ul class="l_16">
+       <!--  业务支撑区--联通 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+       <ul class="l_17">
+       <!--  业务支撑区--电信 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_18">
+       <!--  业务支撑区 -->
+         <li>网络流量:{{no_firewall4['业务支撑区']?no_firewall4['业务支撑区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.ywzcq}}G</li>
+        <li>时延:{{no_firewall4['业务支撑区']?no_firewall4['业务支撑区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_19">
+       <!--  互联网业务区--电信 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+       <ul class="l_20">
+       <!--  互联网业务区--联通 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_21">
+       <!--  南方中心-互联网业务区-->
+        <li>网络流量:{{no_firewall1['南方中心-互联网业务区']?no_firewall1['南方中心-互联网业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.nfzx_hlwywq}}G</li>
+        <li>时延:{{no_firewall1['南方中心-互联网业务区']?no_firewall1['南方中心-互联网业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_22">
+       <!-- 南方中心-核心业务区-->
+        <li>网络流量:{{no_firewall1['南方中心-核心业务区']?no_firewall1['南方中心-核心业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.nfzx_hxywq}}G</li>
+        <li>时延:{{no_firewall1['南方中心-核心业务区']?no_firewall1['南方中心-核心业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_23">
+       <!--  外高桥灾备中心-灾备互联网业务区-->
+        <li>网络流量:{{no_firewall2['外高桥灾备中心-灾备互联网业务区']?no_firewall2['外高桥灾备中心-灾备互联网业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.wgqzbzx_zbhlwywq}}G</li>
+        <li>时延:{{no_firewall2['外高桥灾备中心-灾备互联网业务区']?no_firewall2['外高桥灾备中心-灾备互联网业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_24">
+       <!--  灾备互联网业务区-电信-->
+        <li>网络流量:{{no_firewall3['灾备互联网业务区-电信']?no_firewall3['灾备互联网业务区-电信']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.zbhlwywq_dx}}G</li>
+        <li>时延:{{no_firewall3['灾备互联网业务区-电信']?no_firewall3['灾备互联网业务区-电信']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+       <ul class="l_25">
+       <!--  灾备互联网业务区-联通-->
+        <li>网络流量:{{no_firewall3['灾备互联网业务区-联通']?no_firewall3['灾备互联网业务区-联通']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.zbhlwywq_lt}}G</li>
+        <li>时延:{{no_firewall3['灾备互联网业务区-联通']?no_firewall3['灾备互联网业务区-联通']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_26">
+       <!--  外高桥灾备中心-灾备核心业务区-->
+        <li>网络流量:{{no_firewall2['外高桥灾备中心-灾备核心业务区']?no_firewall2['外高桥灾备中心-灾备核心业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.wgqzbzx_zbhxywq}}G</li>
+        <li>时延:{{no_firewall2['外高桥灾备中心-灾备核心业务区']?no_firewall2['外高桥灾备中心-灾备核心业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_27">
+       <!--  外高桥灾备中心-灾备核心业务区-联通 -->
+        <li>网络流量:{{no_firewall2['外高桥灾备中心-灾备核心业务区']?no_firewall2['外高桥灾备中心-灾备核心业务区']['networkFlowValue']:'- -'}}%</li>
+        <li>带宽:{{bandwidth.wgqzbzx_zbhxywq}}G</li>
+        <li>时延:{{no_firewall2['外高桥灾备中心-灾备核心业务区']?no_firewall2['外高桥灾备中心-灾备核心业务区']['lantenceAvg']:'- -'}}ms</li>
+      </ul>
+      <ul class="l_28">
+       <!--  中登公司 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_29">
+       <!--  证联网 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_30">
+       <!--  黄金交易所 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_31">
+       <!--  成都IDC -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_32">
+       <!--  北京IDC -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_33">
+       <!--  10G裸光缆 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_34">
+       <!--  25GMSTP线路 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_35">
+       <!--  10G裸光缆 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_36">
+       <!--  10G裸光缆 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+      <ul class="l_37">
+       <!--  10G裸光缆 -->
+        <li>网络流量:{{randomData['networkFlowValue']}}%</li>
+        <li>带宽:10G</li>
+        <li>时延:{{randomData['lantenceAvg']}}ms</li>
+      </ul>
+       <ul class="legend_01">
+         <!--  互联网业务A区-电信1防火墙  -->
+         <li><span :class="firewall_two['互联网业务A区-电信1防火墙']?firewall_two['互联网业务A区-电信1防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-电信1防火墙']?firewall_two['互联网业务A区-电信1防火墙'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_two['互联网业务A区-电信1防火墙']?firewall_two['互联网业务A区-电信1防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-电信1防火墙']?firewall_two['互联网业务A区-电信1防火墙'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_two['互联网业务A区-电信1防火墙']?firewall_two['互联网业务A区-电信1防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-电信1防火墙']?firewall_two['互联网业务A区-电信1防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_02">
+         <!--  互联网业务A区-电信3防火墙  -->
+          <li><span :class="firewall_two['互联网业务A区-电信3防火墙']?firewall_two['互联网业务A区-电信3防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-电信3防火墙']?firewall_two['互联网业务A区-电信3防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区-电信3防火墙']?firewall_two['互联网业务A区-电信3防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-电信3防火墙']?firewall_two['互联网业务A区-电信3防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区-电信3防火墙']?firewall_two['互联网业务A区-电信3防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-电信3防火墙']?firewall_two['互联网业务A区-电信3防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_03">
+         <!--  互联网业务A区-移动防火墙 -->
+          <li><span :class="firewall_two['互联网业务A区-移动防火墙']?firewall_two['互联网业务A区-移动防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-移动防火墙']?firewall_two['互联网业务A区-移动防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区-移动防火墙']?firewall_two['互联网业务A区-移动防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-移动防火墙']?firewall_two['互联网业务A区-移动防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区-移动防火墙']?firewall_two['互联网业务A区-移动防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-移动防火墙']?firewall_two['互联网业务A区-移动防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+       <ul class="legend_04">
+         <!--  互联网业务A区-联通防火墙  -->
+          <li><span :class="firewall_two['互联网业务A区-联通防火墙']?firewall_two['互联网业务A区-联通防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-联通防火墙']?firewall_two['互联网业务A区-联通防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区-联通防火墙']?firewall_two['互联网业务A区-联通防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-联通防火墙']?firewall_two['互联网业务A区-联通防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区-联通防火墙']?firewall_two['互联网业务A区-联通防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区-联通防火墙']?firewall_two['互联网业务A区-联通防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+       <ul class="legend_05">
+         <!--  互联网业务A区边界防火墙  -->
+          <li><span :class="firewall_two['互联网业务A区边界防火墙']?firewall_two['互联网业务A区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区边界防火墙']?firewall_two['互联网业务A区边界防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区边界防火墙']?firewall_two['互联网业务A区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区边界防火墙']?firewall_two['互联网业务A区边界防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务A区边界防火墙']?firewall_two['互联网业务A区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务A区边界防火墙']?firewall_two['互联网业务A区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_06">
+         <!--  互联网业务B区-联通防火墙  -->
+          <li><span :class="firewall_two['互联网业务B区-联通防火墙']?firewall_two['互联网业务B区-联通防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-联通防火墙']?firewall_two['互联网业务B区-联通防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区-联通防火墙']?firewall_two['互联网业务B区-联通防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-联通防火墙']?firewall_two['互联网业务B区-联通防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区-联通防火墙']?firewall_two['互联网业务B区-联通防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-联通防火墙']?firewall_two['互联网业务B区-联通防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_07">
+         <!--  互联网业务B区-电信2防火墙  -->
+          <li><span :class="firewall_two['互联网业务B区-电信2防火墙']?firewall_two['互联网业务B区-电信2防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-电信2防火墙']?firewall_two['互联网业务B区-电信2防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区-电信2防火墙']?firewall_two['互联网业务B区-电信2防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-电信2防火墙']?firewall_two['互联网业务B区-电信2防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区-电信2防火墙']?firewall_two['互联网业务B区-电信2防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-电信2防火墙']?firewall_two['互联网业务B区-电信2防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+       <ul class="legend_08">
+         <!--  互联网业务B区-电信1防火墙  -->
+          <li><span :class="firewall_two['互联网业务B区-电信1防火墙']?firewall_two['互联网业务B区-电信1防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-电信1防火墙']?firewall_two['互联网业务B区-电信1防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区-电信1防火墙']?firewall_two['互联网业务B区-电信1防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-电信1防火墙']?firewall_two['互联网业务B区-电信1防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区-电信1防火墙']?firewall_two['互联网业务B区-电信1防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区-电信1防火墙']?firewall_two['互联网业务B区-电信1防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_09">
+         <!--  互联网业务B区边界防火墙  -->
+          <li><span :class="firewall_two['互联网业务B区边界防火墙']?firewall_two['互联网业务B区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区边界防火墙']?firewall_two['互联网业务B区边界防火墙'][0]['CPU']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区边界防火墙']?firewall_two['互联网业务B区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区边界防火墙']?firewall_two['互联网业务B区边界防火墙'][0]['MEM']:'- -'}}%</li>
+          <li><span :class="firewall_two['互联网业务B区边界防火墙']?firewall_two['互联网业务B区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['互联网业务B区边界防火墙']?firewall_two['互联网业务B区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+       <ul class="legend_10">
+         <!--  上海数据中心：综合业务区边界防火墙  -->
+         <li><span :class="firewall_one['综合业务区边界防火墙']?firewall_one['综合业务区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['综合业务区边界防火墙']?firewall_one['综合业务区边界防火墙'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['综合业务区边界防火墙']?firewall_one['综合业务区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['综合业务区边界防火墙']?firewall_one['综合业务区边界防火墙'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['综合业务区边界防火墙']?firewall_one['综合业务区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['综合业务区边界防火墙']?firewall_one['综合业务区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_11">
+         <!--  上海数据中心：核心业务区边界防火墙  -->
+         <li><span :class="firewall_one['核心业务区边界防火墙']?firewall_one['核心业务区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['核心业务区边界防火墙']?firewall_one['核心业务区边界防火墙'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['核心业务区边界防火墙']?firewall_one['核心业务区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['核心业务区边界防火墙']?firewall_one['核心业务区边界防火墙'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['核心业务区边界防火墙']?firewall_one['核心业务区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['核心业务区边界防火墙']?firewall_one['核心业务区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_12">
+         <!--  骨干边界防火墙  -->
+        <li><span :class="randomData['cpu']>threshold.threshold_cpu?'aniamtionView':'none'"></span>{{randomData['cpu']}}%</li>
+        <li><span :class="randomData['memory']>threshold.threshold_memory?'aniamtionView':'none'"></span>{{randomData['memory']}}%</li>
+        <li><span :class="randomData['session']>threshold.threshold_session?'aniamtionView':'none'"></span>{{randomData['session']}}</li>
+      </ul>
+      <ul class="legend_13">
+         <!-- 总部办公-办公防火墙 总部办公边界防火墙  -->
+         <li><span :class="firewall_one['总部办公边界防火墙']?firewall_one['总部办公边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['总部办公边界防火墙']?firewall_one['总部办公边界防火墙'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['总部办公边界防火墙']?firewall_one['总部办公边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['总部办公边界防火墙']?firewall_one['总部办公边界防火墙'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['总部办公边界防火墙']?firewall_one['总部办公边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['总部办公边界防火墙']?firewall_one['总部办公边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_14">
+         <!--  骨干区--业务防火墙 总部业务边界防火墙 -->
+         <li><span :class="firewall_one['总部业务边界防火墙']?firewall_one['总部业务边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['总部业务边界防火墙']?firewall_one['总部业务边界防火墙'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['总部业务边界防火墙']?firewall_one['总部业务边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['总部业务边界防火墙']?firewall_one['总部业务边界防火墙'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['总部业务边界防火墙']?firewall_one['总部业务边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['总部业务边界防火墙']?firewall_one['总部业务边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_15">
+         <!--  总部办公-互联网防火墙  -->
+         <li><span :class="firewall_one['总部办公-互联网防火墙']?firewall_one['总部办公-互联网防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['总部办公-互联网防火墙']?firewall_one['总部办公-互联网防火墙'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['总部办公-互联网防火墙']?firewall_one['总部办公-互联网防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['总部办公-互联网防火墙']?firewall_one['总部办公-互联网防火墙'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['总部办公-互联网防火墙']?firewall_one['总部办公-互联网防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['总部办公-互联网防火墙']?firewall_one['总部办公-互联网防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_16">
+         <!--  业务支撑区--互联网防火墙  -->
+        <li><span :class="randomData['cpu']>threshold.threshold_cpu?'aniamtionView':'none'"></span>{{randomData['cpu']}}%</li>
+        <li><span :class="randomData['memory']>threshold.threshold_memory?'aniamtionView':'none'"></span>{{randomData['memory']}}%</li>
+        <li><span :class="randomData['session']>threshold.threshold_session?'aniamtionView':'none'"></span>{{randomData['session']}}</li>
+      </ul>
+      <ul class="legend_17">
+         <!--  业务支撑区边界防火墙  -->
+        <li><span :class="firewall_two['业务支撑区边界防火墙']?firewall_two['业务支撑区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_two['业务支撑区边界防火墙']?firewall_two['业务支撑区边界防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_two['业务支撑区边界防火墙']?firewall_two['业务支撑区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_two['业务支撑区边界防火墙']?firewall_two['业务支撑区边界防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_two['业务支撑区边界防火墙']?firewall_two['业务支撑区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_two['业务支撑区边界防火墙']?firewall_two['业务支撑区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_18">
+         <!--  南方中心-互联网业务区边界防火墙  -->
+        <li><span :class="firewall_one['南方中心-互联网业务区边界防火墙']?firewall_one['南方中心-互联网业务区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区边界防火墙']?firewall_one['南方中心-互联网业务区边界防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-互联网业务区边界防火墙']?firewall_one['南方中心-互联网业务区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区边界防火墙']?firewall_one['南方中心-互联网业务区边界防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-互联网业务区边界防火墙']?firewall_one['南方中心-互联网业务区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区边界防火墙']?firewall_one['南方中心-互联网业务区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+       <ul class="legend_24">
+         <!--  南方中心-互联网业务区-电信防火墙  -->
+        <li><span :class="firewall_one['南方中心-互联网业务区-电信防火墙']?firewall_one['南方中心-互联网业务区-电信防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区-电信防火墙']?firewall_one['南方中心-互联网业务区-电信防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-互联网业务区-电信防火墙']?firewall_one['南方中心-互联网业务区-电信防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区-电信防火墙']?firewall_one['南方中心-互联网业务区-电信防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-互联网业务区-电信防火墙']?firewall_one['南方中心-互联网业务区-电信防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区-电信防火墙']?firewall_one['南方中心-互联网业务区-电信防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_25">
+         <!--  南方中心-互联网业务区-联通防火墙  -->
+        <li><span :class="firewall_one['南方中心-互联网业务区-联通防火墙']?firewall_one['南方中心-互联网业务区-联通防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区-联通防火墙']?firewall_one['南方中心-互联网业务区-联通防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-互联网业务区-联通防火墙']?firewall_one['南方中心-互联网业务区-联通防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区-联通防火墙']?firewall_one['南方中心-互联网业务区-联通防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-互联网业务区-联通防火墙']?firewall_one['南方中心-互联网业务区-联通防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-互联网业务区-联通防火墙']?firewall_one['南方中心-互联网业务区-联通防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_19">
+         <!--  南方中心-核心业务区边界防火墙  -->
+         <li><span :class="firewall_one['南方中心-核心业务区边界防火墙']?firewall_one['南方中心-核心业务区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-核心业务区边界防火墙']?firewall_one['南方中心-核心业务区边界防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-核心业务区边界防火墙']?firewall_one['南方中心-核心业务区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-核心业务区边界防火墙']?firewall_one['南方中心-核心业务区边界防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['南方中心-核心业务区边界防火墙']?firewall_one['南方中心-核心业务区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['南方中心-核心业务区边界防火墙']?firewall_one['南方中心-核心业务区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+       <ul class="legend_20">
+         <!--  外高桥灾备中心-灾备互联网业务区边界防火墙  -->
+        <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备互联网业务区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_21">
+         <!--  外高桥灾备中心-灾备核心业务区边界防火墙  -->
+        <li><span :class="firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙']?firewall_one['外高桥灾备中心-灾备核心业务区边界防火墙'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_22">
+         <!--  外高桥灾备中心-灾备互联网业务区-电信防火墙1 -->
+        <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1'][0]['CPU']:'- -'}}%</li>
+        <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1'][0]['MEM']:'- -'}}%</li>
+        <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-电信防火墙1'][0]['SESSION']:'- -'}}</li>
+     </ul>
+      <ul class="legend_23">
+         <!--  外高桥灾备中心-灾备互联网业务区-联通防火墙1  -->
+         <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['SESSION']:'- -'}}</li>
+      </ul>
+      <ul class="legend_26">
+         <!--  外高桥灾备中心-灾备互联网业务区-移动防火墙1  -->
+         <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['CPU']>threshold.threshold_cpu?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['CPU']:'- -'}}%</li>
+         <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['MEM']>threshold.threshold_memory?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['MEM']:'- -'}}%</li>
+         <li><span :class="firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['SESSION']>threshold.threshold_session?'aniamtionView':'none':'none'"></span>{{firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1']?firewall_one['外高桥灾备中心-灾备互联网业务区-联通防火墙1'][0]['SESSION']:'- -'}}</li>
+      </ul>
+    <img class="one1" src="${STATIC_URL}img/guangbiao.png">
+    <img class="one1_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="one2" src="${STATIC_URL}img/guangbiao.png">
+    <img class="one2_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="one3" src="${STATIC_URL}img/guangbiao.png">
+    <img class="one3_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="one4" src="${STATIC_URL}img/guangbiao.png">
+    <img class="one4_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="one5" src="${STATIC_URL}img/guangbiao.png">
+    <img class="one5_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="two1" src="${STATIC_URL}img/guangbiao.png">
+    <img class="two1_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="two2" src="${STATIC_URL}img/guangbiao.png">
+    <img class="two2_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="three" src="${STATIC_URL}img/guangbiao.png">
+    <img class="three_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="four1" src="${STATIC_URL}img/guangbiao.png">
+    <img class="four1_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="four2" src="${STATIC_URL}img/guangbiao.png">
+    <img class="four2_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="four3" src="${STATIC_URL}img/guangbiao.png">
+    <img class="four3_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="five" src="${STATIC_URL}img/guangbiao.png">
+    <img class="five_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="six1" src="${STATIC_URL}img/guangbiao.png">
+    <img class="six1_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="six2" src="${STATIC_URL}img/guangbiao.png">
+    <img class="six2_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="six3" src="${STATIC_URL}img/guangbiao.png">
+    <img class="six3_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="six4" src="${STATIC_URL}img/guangbiao.png">
+    <img class="six4_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="seven1" src="${STATIC_URL}img/guangbiao.png">
+    <img class="seven1_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="seven2" src="${STATIC_URL}img/guangbiao.png">
+    <img class="seven2_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="eight1" src="${STATIC_URL}img/guangbiao.png">
+    <img class="eight1_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="nine1" src="${STATIC_URL}img/guangbiao.png">
+    <img class="nine1_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="nine2" src="${STATIC_URL}img/guangbiao.png">
+    <img class="nine2_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="nine3" src="${STATIC_URL}img/guangbiao.png">
+    <img class="nine3_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="ten1" src="${STATIC_URL}img/guangbiao.png">
+    <img class="ten1_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="eleven1" src="${STATIC_URL}img/guangbiao.png">
+    <img class="eleven1_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="twelve1" src="${STATIC_URL}img/guangbiao.png">
+    <img class="twelve1_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="twelve2" src="${STATIC_URL}img/guangbiao.png">
+    <img class="twelve2_over" src="${STATIC_URL}img/guangbiao.png">
+    <img class="twelve3" src="${STATIC_URL}img/guangbiao.png">
+    <img class="twelve3_over" src="${STATIC_URL}img/guangbiao.png">  -->
+    <img class="twelve4" src="${STATIC_URL}img/guangbiao.png">
+    <img class="twelve4_over" src="${STATIC_URL}img/guangbiao.png">  -->
+</div>
+</body>
+
+
+
+<script type="text/javascript">
+    //import css from '${STATIC_URL}css/main.less';
+    //import { setInterval, clearInterval } from "${STATIC_URL}assets/vue-2.5.21/vue.js";
+    //import Service from '${STATIC_URL}js/service.js';
+
+    console.log('123');
+
+    var ve = new Vue({
+        el: '#networkPanorama',
+        data() {
+            return {
+              threshold:'',
+              bandwidth:'',
+              date: "",
+              week: "",
+              time: "",
+              timer1:'',
+              timer2:'',
+              no_firewall1:'',//非防火墙1
+              no_firewall2:'',//非防火墙2
+              no_firewall3:'',//非防火墙3
+              no_firewall4:'',//非防火墙4
+              no_firewall5:'',//非防火墙5
+              no_firewall6:'',//非防火墙6
+              no_firewall7:'',//非防火墙7
+              no_firewall8:'',//非防火墙8
+              no_firewall9:'',//非防火墙9
+              firewall_one:'',//防火墙
+              firewall_two:'',//防火墙
+              randomData : {
+                networkFlowValue:2,
+                lantenceAvg:2,
+                cpu:60,
+                memory:65,
+                session:1000
+              },
+              number:'-'
+            };
+        },
+   created() {
+    this.threshold = threshold;
+    this.bandwidth = bandwidth;
+    this.getData();
+    this.timer1 = setInterval(() => {
+      this.formatTime();
+    }, 1000);
+    this.timer2 = setInterval(() => {
+      this.getData();
+    }, 5*60*1000);
+  },
+  methods: {
+    getData(){
+      this.getNoFirewallFor1()
+      this.getNoFirewallFor2()
+      this.getNoFirewallFor3()
+      this.getNoFirewallFor4()
+      this.getNoFirewallFor5()
+      this.getNoFirewallFor6()
+      this.getNoFirewallFor7()
+      this.getNoFirewallFor8()
+      this.getFirewallFor1()
+      this.getFirewallFor2()
+      this.getRandomData()
+    },
+    //非防火墙随机数
+    getRandomData(){
+      this.randomData = {
+        networkFlowValue:this.RandomNumBoth(1,100),
+        lantenceAvg:this.RandomNumBoth(1,10),
+        cpu:this.RandomNumBoth(1,100),
+        memory:this.RandomNumBoth(1,100),
+        session:this.RandomNumBoth(1000,10000)
+      }
+    },
+    //非防火墙--3
+    getNoFirewallFor3(){
+      let url = `largescreen/getLargeScreenInfo.do?areaFlag=false&areaNames=灾备互联网业务区-电信,灾备互联网业务区-联通`
+        Service.get(url).then(data=>{
+          if(data.data.code=='000000'){
+            let dataAll = data.data.data
+            for(let dt in dataAll){
+              dataAll[dt]['lantenceAvg'] = dataAll[dt]['lantenceAvg']?dataAll[dt]['lantenceAvg']:this.RandomNumBoth(1,10)
+              if(dt=='灾备互联网业务区-电信'){
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['zbhlwywq_dx'],'G'):this.RandomNumBoth(1,100)
+              }else{ // if(dt=='灾备互联网业务区-联通')
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['zbhlwywq_lt'],'G'):this.RandomNumBoth(1,100)
+              }
+            }
+            this.no_firewall3 = dataAll
+          }
+        })
+    },
+    //非防火墙--1
+    getNoFirewallFor1(){
+      let url = `largescreen/getLargeScreenInfo.do?areaFlag=false&areaNames=南方中心-互联网业务区,南方中心-核心业务区`
+        Service.get(url).then(data=>{
+          if(data.data.code=='000000'){
+            let dataAll = data.data.data
+            for(let dt in dataAll){
+              dataAll[dt]['lantenceAvg'] = dataAll[dt]['lantenceAvg']?dataAll[dt]['lantenceAvg']:this.RandomNumBoth(1,10)
+              if(dt=='南方中心-互联网业务区'){
+                dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['nfzx_hlwywq'],'G'):this.RandomNumBoth(1,100)
+              }else{ // if(dt=='南方中心-核心业务区')
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['nfzx_hxywq'],'G'):this.RandomNumBoth(1,100)
+              }
+            }
+            this.no_firewall1 = dataAll
+          }
+        })
+    },
+    //非防火墙--2
+    getNoFirewallFor2(){
+      let url = `largescreen/getLargeScreenInfo.do?areaFlag=false&areaNames=外高桥灾备中心-灾备互联网业务区,外高桥灾备中心-灾备核心业务区`
+        Service.get(url).then(data=>{
+          if(data.data.code=='000000'){
+            let dataAll = data.data.data
+            for(let dt in dataAll){
+              dataAll[dt]['lantenceAvg'] = dataAll[dt]['lantenceAvg']?dataAll[dt]['lantenceAvg']:this.RandomNumBoth(1,100)
+              if(dt=='外高桥灾备中心-灾备互联网业务区'){
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['wgqzbzx_zbhlwywq'],'G'):this.RandomNumBoth(1,100)
+              }else{// if(dt=='外高桥灾备中心-灾备核心业务区')
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['wgqzbzx_zbhxywq'],'G'):this.RandomNumBoth(1,100)
+              }
+            }
+            this.no_firewall2 = dataAll
+          }
+        })
+    },
+    //非防火墙--4
+    getNoFirewallFor4(){
+      let url = `largescreen/getLargeScreenInfo.do?areaFlag=false&areaNames=互联网业务A区,互联网业务B区,业务支撑区`
+        Service.get(url).then(data=>{
+          if(data.data.code=='000000'){
+            let dataAll = data.data.data
+            for(let dt in dataAll){
+              dataAll[dt]['lantenceAvg'] = dataAll[dt]['lantenceAvg']?dataAll[dt]['lantenceAvg']:this.RandomNumBoth(1,100)
+              if(dt=='互联网业务A区'){
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['hlwywaq'],'G'):this.RandomNumBoth(1,100)
+              }else if(dt=='互联网业务B区'){
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['hlwywbq'],'G'):this.RandomNumBoth(1,100)
+              }else{//if(dt=='业务支撑区')
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['ywzcq'],'G'):this.RandomNumBoth(1,100)
+              }
+            }
+            this.no_firewall4 = dataAll
+          }
+        })
+    },
+    //非防火墙--5
+    getNoFirewallFor5(){
+      let url = `largescreen/getLargeScreenInfo.do?areaFlag=false&areaNames=互联网业务B区-电信1,互联网业务B区-联通,互联网业务B区-电信2`
+        Service.get(url).then(data=>{
+          if(data.data.code=='000000'){
+            let dataAll = data.data.data
+            for(let dt in dataAll){
+              dataAll[dt]['lantenceAvg'] = dataAll[dt]['lantenceAvg']?dataAll[dt]['lantenceAvg']:this.RandomNumBoth(1,10)
+              if(dt=='互联网业务B区-电信1'){
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['hlwywbq_dx1'],'G'):this.RandomNumBoth(1,100)
+              }else if(dt=='互联网业务B区-联通'){
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['hlwywbq_lt'],'G'):this.RandomNumBoth(1,100)
+              }else{ // if(dt=='互联网业务B区-电信2')
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['hlwywbq_dx2'],'G'):this.RandomNumBoth(1,100)
+              }
+            }
+            this.no_firewall5 = dataAll
+          }
+        })
+    },
+    //非防火墙--6
+    getNoFirewallFor6(){
+      let url = `largescreen/getLargeScreenInfo.do?areaFlag=false&areaNames=互联网业务A区-电信,互联网业务A区-联通,互联网业务A区-电信3,互联网业务A区-移动`
+        Service.get(url).then(data=>{
+          if(data.data.code=='000000'){
+            let dataAll = data.data.data
+            for(let dt in dataAll){
+              dataAll[dt]['lantenceAvg'] = dataAll[dt]['lantenceAvg']?dataAll[dt]['lantenceAvg']:this.RandomNumBoth(1,10)
+              if(dt=='互联网业务A区-电信'){
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['hlwywaq_dx'],'G'):this.RandomNumBoth(1,100)
+              }else if(dt=='互联网业务A区-联通'){
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['hlwywaq_lt'],'G'):this.RandomNumBoth(1,100)
+              }else if(dt=='互联网业务A区-电信3'){
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['hlwywaq_dx3'],'G'):this.RandomNumBoth(1,100)
+              }else{// if(dt=='互联网业务A区-移动')
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['hlwywaq_yd'],'G'):this.RandomNumBoth(1,100)
+              }
+            }
+            this.no_firewall6 = dataAll
+          }
+        })
+    },
+    //非防火墙--7
+    getNoFirewallFor7(){
+      let url = `largescreen/getLargeScreenInfo.do?areaFlag=false&areaNames=交易所-上交所,交易所-深交所,综合业务区`
+        Service.get(url).then(data=>{
+          if(data.data.code=='000000'){
+            let dataAll = data.data.data
+            for(let dt in dataAll){
+              dataAll[dt]['lantenceAvg'] = dataAll[dt]['lantenceAvg']?dataAll[dt]['lantenceAvg']:this.RandomNumBoth(1,10)
+              if(dt=='交易所-上交所'){
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['jys_shangjs'],'M'):this.RandomNumBoth(1,100)
+              }else if(dt=='交易所-深交所'){
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['jys_shenjs'],'M'):this.RandomNumBoth(1,100)
+              }else{// if(dt=='综合业务区')
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['zhywq'],'G'):this.RandomNumBoth(1,100)
+              }
+            }
+            this.no_firewall7 = dataAll
+          }
+        })
+    },
+    //非防火墙--8
+    getNoFirewallFor8(){
+      let url = `largescreen/getLargeScreenInfo.do?areaFlag=false&areaNames=核心业务区,总部业务,综合业务区`
+        Service.get(url).then(data=>{
+          if(data.data.code=='000000'){
+            let dataAll = data.data.data
+            for(let dt in dataAll){
+              dataAll[dt]['lantenceAvg'] = dataAll[dt]['lantenceAvg']?dataAll[dt]['lantenceAvg']:this.RandomNumBoth(1,10)
+              if(dt=='核心业务区'){
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['hxywq'],'G'):this.RandomNumBoth(1,100)
+              }else if(dt=='总部业务'){
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['zbyw'],'G'):this.RandomNumBoth(1,100)
+              }else{// if(dt=='总部办公')
+                 dataAll[dt]['networkFlowValue'] = dataAll[dt]['networkFlow']?this.getNetworkFlow(dataAll[dt]['networkFlow'],this.bandwidth['zbbg'],'G'):this.RandomNumBoth(1,100)
+              }
+            }
+            this.no_firewall8 = dataAll
+          }
+        })
+    },
+    //防火墙--1
+    getFirewallFor1(){
+       let url = `largescreen/getLargeScreenInfo.do?areaFlag=true&areaNames=南方中心-互联网业务区边界防火墙,南方中心-互联网业务区-电信防火墙,南方中心-互联网业务区-联通防火墙,南方中心-核心业务区边界防火墙,外高桥灾备中心-灾备核心业务区边界防火墙,外高桥灾备中心-灾备互联网业务区边界防火墙,外高桥灾备中心-灾备互联网业务区-电信防火墙1,外高桥灾备中心-灾备互联网业务区-联通防火墙1,总部办公边界防火墙,总部办公-互联网防火墙,总部业务边界防火墙,核心业务区边界防火墙,综合业务区边界防火墙`
+        Service.get(url).then(data=>{
+          if(data.data.code=='000000'){
+            let dataAll = data.data.data
+            for(let dt in dataAll){
+              if(dataAll[dt].length!=0){
+                  dataAll[dt][0]['CPU'] = dataAll[dt][0]['CPU']?this.getDecimalsForTwo(dataAll[dt][0]['CPU']):this.RandomNumBoth(1,100)
+                  dataAll[dt][0]['MEM'] = dataAll[dt][0]['MEM']?this.getDecimalsForTwo(dataAll[dt][0]['MEM']):this.RandomNumBoth(1,100)
+                  dataAll[dt][0]['SESSION'] = dataAll[dt][0]['SESSION']?this.getDecimalsForTwo(dataAll[dt][0]['SESSION']):this.RandomNumBoth(1000,10000)
+              }else{
+                dataAll[dt] = [{
+                     'CPU': this.RandomNumBoth(1,100),
+                     'MEM':this.RandomNumBoth(1,100),
+                     'SESSION':this.RandomNumBoth(1000,10000)
+                }]
+              }
+            }
+            this.firewall_one = dataAll
+          }
+        })
+    },
+    //防火墙--2
+    getFirewallFor2(){
+       let url = `largescreen/getLargeScreenInfo.do?areaFlag=true&areaNames=业务支撑区边界防火墙,互联网业务B区-联通防火墙,互联网业务B区-电信2防火墙,互联网业务B区-电信1防火墙,互联网业务B区边界防火墙,互联网业务A区-联通防火墙,互联网业务A区-移动防火墙,互联网业务A区-电信3防火墙,互联网业务A区-电信1防火墙,互联网业务A区边界防火墙`
+        Service.get(url).then(data=>{
+          if(data.data.code=='000000'){
+            let dataAll = data.data.data
+            for(let dt in dataAll){
+               if(dataAll[dt].length!=0){
+                  dataAll[dt][0]['CPU'] = dataAll[dt][0]['CPU']?this.getDecimalsForTwo(dataAll[dt][0]['CPU']):this.RandomNumBoth(1,100)
+                  dataAll[dt][0]['MEM'] = dataAll[dt][0]['MEM']?this.getDecimalsForTwo(dataAll[dt][0]['MEM']):this.RandomNumBoth(1,100)
+                  dataAll[dt][0]['SESSION'] = dataAll[dt][0]['SESSION']?this.getDecimalsForTwo(dataAll[dt][0]['SESSION']):this.RandomNumBoth(1000,10000)
+              }else{
+                dataAll[dt] = [{
+                     'CPU': this.RandomNumBoth(1,100),
+                     'MEM':this.RandomNumBoth(1,100),
+                     'SESSION':this.RandomNumBoth(1000,10000)
+                }]
+              }
+            }
+            this.firewall_two = dataAll
+          }
+        })
+    },
+    //求网络流量 --保留3位小数
+    getNetworkFlow(data, w,type) {
+      if(type=='G'){
+        w = w*1024
+      }
+      return Math.floor((data / w) * 1000) / 1000
+    },
+    //保留两位小数
+    getDecimalsForTwo(data){
+        return Math.floor((data) * 100) / 100
+    },
+
+    formatTime() {
+      let dd = "";
+      let currentDate = new Date();
+      let Dd = [
+        "星期日",
+        "星期一",
+        "星期二",
+        "星期三",
+        "星期四",
+        "星期五",
+        "星期六"
+      ];
+      let Y = currentDate.getFullYear();
+      let M = currentDate.getMonth() + 1;
+      let D = currentDate.getDate();
+      let d = currentDate.getDay();
+      let h = currentDate.getHours();
+      let m = currentDate.getMinutes();
+      let s = currentDate.getSeconds();
+      if (M < 10) {
+        M = "0" + String(M);
+      }
+      if (D < 10) {
+        D = "0" + String(D);
+      }
+      if (h < 10) {
+        h = "0" + String(h);
+      }
+      if (m < 10) {
+        m = "0" + String(m);
+      }
+      if (s < 10) {
+        s = "0" + String(s);
+      }
+      if (d == 0) {
+        dd = Dd[0];
+      } else if (d == 1) {
+        dd = Dd[1];
+      } else if (d == 2) {
+        dd = Dd[2];
+      } else if (d == 3) {
+        dd = Dd[3];
+      } else if (d == 4) {
+        dd = Dd[4];
+      } else if (d == 5) {
+        dd = Dd[5];
+      } else if (d == 6) {
+        dd = Dd[6];
+      }
+
+      console.log('y='+Y);
+
+      this.date = Y+'-'+M+'-'+D;
+      this.week = dd;
+      this.time = h+':'+m+':'+s;
+      console.log('123');
+    },
+    RandomNumBoth(Min,Max){
+    var Range = Max - Min;
+    var Rand = Math.random();
+    var num = Min + Math.round(Rand * Range); //四舍五入
+    return num;
+    }
+  },
+  destroyed() {
+    clearInterval(this.timer1)
+    clearInterval(this.timer2)
+  }
+});
+</script>
+
+</html>

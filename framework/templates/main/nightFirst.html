@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>值班管理</title>
+    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
+    <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
+    <!-- vue的ajax依赖-->
+    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <!-- element UI引入样式 -->
+    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <!-- element UI引入组件库 -->
+    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script src='${STATIC_URL}js/jquery.min.js'></script>
+    <script src='${STATIC_URL}js/jquery-ui.js'></script>
+    <!--jQuery库使用时请使用标准jQuery语法-->
+    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
+    <!--页面初始化css(Tencent)-->
+    <link href="${STATIC_URL}css/init.css" rel="stylesheet">
+    <!-- 引入额外的包-->
+    <link href="${STATIC_URL}css/nightFirst.css" rel="stylesheet">
+</head>
+
+
+
+<body style="background: rgb(246,246,246);overflow-y: block;">
+<div style="position:relative" class="dutyback" id="nightFirst">
+    <span
+      style="color:#00e4f4;font-size:18px;display:block;position:absolute;top:30px;right:20px;height:25px;line-height:25px"
+    >{{date}}&nbsp;&nbsp;{{time}}</span>
+    <ul :class="[myclass[0]]" title="值班电话设置">
+      <li>{{mytime[0]}}</li>
+      <li>值班电话设置</li>
+      <li>{{result[0]}}</li>
+    </ul>
+     <ul :class="[myclass[1]]" title="集中交易夜市委托">
+      <li>{{mytime[1]}}</li>
+      <li>集中交易夜市委托</li>
+      <li>{{result[1]}}</li>
+    </ul>
+   <ul :class="[myclass[2]]" title="集中交易变更和例行维护">
+      <li>{{mytime[2]}}</li>
+      <li>集中交易变更和例行维护</li>
+      <li>{{result[2]}}</li>
+    </ul>
+    <ul :class="[myclass[3]]" title="贵金属代理">
+      <li>{{mytime[3]}}</li>
+      <li>收到运营中心**确认：<br/>贵金属经纪业务系统清算</li>
+      <li>{{result[3]}}</li>
+    </ul>
+    <ul :class="[myclass[4]]" title="贵金属二代代理交易系统初始化">
+      <li>{{mytime[4]}}</li>
+      <li>贵金属二代代理交易系统<br/>初始化</li>
+      <li>{{result[4]}}</li>
+    </ul>
+    <ul :class="[myclass[5]]" title="贵金属自营系统结算">
+      <li>{{mytime[5]}}</li>
+      <li>贵金属自营系统结算</li>
+      <li>{{result[5]}}</li>
+    </ul>
+    <ul :class="[myclass[6]]" title="黄金自营系统初始化">
+      <li>{{mytime[6]}}</li>
+      <li>黄金自营系统初始化<br/></li>
+      <li>{{result[6]}}</li>
+    </ul>
+    <ul :class="[myclass[7]]" title="铜期权做市系统清算">
+      <li>{{mytime[7]}}</li>
+      <li>收到运营中心"铜期权做市<br/>系统清算完成"的短信</li>
+      <li>{{result[7]}}</li>
+    </ul>
+    <ul :class="[myclass[8]]" title="铜期权日初始化">
+      <li>{{mytime[8]}}</li>
+      <li>铜期权日初始化</li>
+      <li>{{result[8]}}</li>
+    </ul>
+    <ul :class="[myclass[9]]" title="铜期权结算数据接收">
+      <li>{{mytime[9]}}</li>
+      <li>铜期权结算数据接收</li>
+      <li>{{result[9]}}</li>
+    </ul>
+    <ul :class="[myclass[10]]" title="铜期权初始化UFT2.0功能">
+      <li>{{mytime[10]}}</li>
+      <li>铜期权初始化UFT2.0功能</li>
+      <li>{{result[10]}}</li>
+    </ul>
+    <ul :class="[myclass[11]]" title="开报盘机10.180.104.235">
+      <li>{{mytime[11]}}</li>
+      <li>开报盘机<br/>10.180.104.235</li>
+      <li>{{result[11]}}</li>
+    </ul>
+    <ul :class="[myclass[12]]" title="投资管理平台O32系统清算">
+      <li>{{mytime[12]}}</li>
+      <li>系统清算已完成</li>
+      <li>{{result[12]}}</li>
+    </ul>
+    <ul :class="[myclass[13]]" title="新投资管理平台日初始化">
+      <li>{{mytime[13]}}</li>
+      <li>新投资管理平台日初始化</li>
+      <li>{{result[13]}}</li>
+    </ul>
+    <ul :class="[myclass[14]]" title="投资管理平台结算数据接收">
+      <li>{{mytime[14]}}</li>
+      <li>投资管理平台结算数据<br/>接收</li>
+      <li>{{result[14]}}</li>
+    </ul>
+    <ul :class="[myclass[15]]" title="初始化UFT2.0功能">
+      <li>{{mytime[15]}}</li>
+      <li>初始化UFT2.0功能</li>
+      <li>{{result[15]}}</li>
+    </ul>
+    <ul :class="[myclass[16]]" title="开报盘机10.180.104.15\16\17">
+      <li>{{mytime[16]}}</li>
+      <li>开报盘机<br/>10.180.104.15\16\17</li>
+      <li>{{result[16]}}</li>
+    </ul>
+  </div>
+</body>
+
+<script type="text/javascript">
+
+
+    var ve = new Vue({
+        el: '#nightFirst',
+         data(){
+    return {
+      date:"",
+      time:"",
+      timer1:'',
+      timer2:'',
+      randomnum:[],
+      randomnum2:[],
+      randomnum3:[],
+      myclass:[],
+      result:[],
+      mytime:[]
+    }
+  },
+  created (){
+    this.initData();
+    this.formatTime();
+    this.timer1 = setInterval(() => {
+      this.formatTime();
+    }, 1000);
+    this.timer2 = setInterval(() => {
+      // console.log(this.RandomNumBoth(100,999))
+      this.getarr1()
+    }, 1000);
+    this.timer3 = setInterval(() => {
+      this.startRun();
+    }, 1000);
+  },
+  methods:{
+    RandomNumBoth(Min,Max){
+    var Range = Max - Min;
+    var Rand = Math.random();
+    var num = Min + Math.round(Rand * Range); //四舍五入
+    return num;
+    },
+    getarr1(){
+      this.randomnum=[]
+      this.randomnum2=[]
+      this.randomnum3=[]
+      for (let index = 0; index < 22; index++) {
+        this.randomnum.push(this.RandomNumBoth(100,999))
+        this.randomnum2.push(this.RandomNumBoth(10000000,99999999))
+        this.randomnum3.push(this.RandomNumBoth(75,100))
+      }
+    },
+    formatTime() {
+      let dd = "";
+      let currentDate = new Date();
+      let Dd = [
+        "星期日",
+        "星期一",
+        "星期二",
+        "星期三",
+        "星期四",
+        "星期五",
+        "星期六"
+      ];
+      let Y = currentDate.getFullYear();
+      let M = currentDate.getMonth() + 1;
+      let D = currentDate.getDate();
+      let d = currentDate.getDay();
+      let h = currentDate.getHours();
+      let m = currentDate.getMinutes();
+      let s = currentDate.getSeconds();
+      if (M < 10) {
+        M = "0" + String(M);
+      }
+      if (D < 10) {
+        D = "0" + String(D);
+      }
+      if (h < 10) {
+        h = "0" + String(h);
+      }
+      if (m < 10) {
+        m = "0" + String(m);
+      }
+      if (s < 10) {
+        s = "0" + String(s);
+      }
+      if (d == 0) {
+        dd = Dd[0];
+      } else if (d == 1) {
+        dd = Dd[1];
+      } else if (d == 2) {
+        dd = Dd[2];
+      } else if (d == 3) {
+        dd = Dd[3];
+      } else if (d == 4) {
+        dd = Dd[4];
+      } else if (d == 5) {
+        dd = Dd[5];
+      } else if (d == 6) {
+        dd = Dd[6];
+      }
+      this.date = Y+'-'+M+'-'+D;
+      this.week = dd;
+      this.time = h+':'+m+':'+s;
+    },
+    initData(){
+        this.startTime = ["16:58:00-17:00:00","17:01:00-17:15:00","19:15:00-19:20:00",
+                          "19:16:00-19:20:00","19:21:00-19:30:00",
+                          "18:05:00-19:30:00","19:30:00-20:00:00",
+                          "19:55:00-20:00:00","20:01:00-20:10:00","20:11:00-20:21:00","20:21:00-20:31:00","20:31:00-20:45:00",
+                          "19:55:00-20:00:00","20:00:00-20:10:00","20:11:00-20:21:00","20:21:00-20:31:00","20:31:00-20:45:00"
+                          ];
+        this.warning_num = this.RandomNumBoth(1,16);
+    },
+    startRun(){
+        this.startrun = "16:58:00";
+        for(let j = 0;j < 17; j++){
+            this.myclass[j] = "i_"+j;
+            this.result[j] =  "未执行";
+            this.mytime[j] = this.time;
+        }
+        if(this.time > this.startrun){
+            for(let i = 0; i < 17; i++){
+              if(this.time >= this.startTime[i].split("-")[0]){
+                this.switchClass(i);
+              }
+            }
+        }
+    },
+    switchClass(i){
+      if(i == this.warning_num){
+        this.myclass[i] = "w_"+i;
+        this.result[i] = "告警";
+        this.mytime[i] = this.startTime[i].split("-")[0];
+      }else{
+        this.myclass[i] = "f_"+i;
+        this.result[i] = "已完成";
+        this.mytime[i] = this.startTime[i].split("-")[0];
+      }
+    }
+  },
+  destroyed() {
+    clearInterval(this.timer1)
+    clearInterval(this.timer2)
+    clearInterval(this.timer3)
+  }
+});
+</script>
+
+</html>

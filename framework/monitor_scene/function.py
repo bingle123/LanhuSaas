@@ -541,17 +541,18 @@ def alternate_play_test(request):
     res_list = get_scenes(pos_id, start, end)
     return res_list
 
+
 def query_pos_scene(request):
     '''
     场景
     :param request:
     :return:
     '''
-    res = json.loads(request.body)
+    #res = json.loads(request.body)
     # 接收参数
-    pos_id = res['pos_id']
-    start = res['start']
-    end = res['end']
+    pos_id = request.POST.get('pos_id')
+    start = request.POST.get('start')
+    end = request.POST.get('end')
     scenes = []
     # 获取岗位对应的场景
     position_scenes = position_scene.objects.filter(position_id=pos_id)
@@ -559,13 +560,30 @@ def query_pos_scene(request):
     for pos_scene in position_scenes:
         scenes.append(pos_scene.scene_id)
 
-    scene_id_list=[]
+    scene_id_list = []
     for scene in scenes:
         # 场景
-        temp_scene = Scene.objects.get(id=scene)
-        if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
+        temp_scene_dt = Scene.objects.filter(id=scene,scene_content__isnull=False)
+        if temp_scene_dt.count() == 0:
+            continue
+        temp_scene = temp_scene_dt.get()
+        if start != None:
+           if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
+              scene_id_list.append(scene)
+        else:
             scene_id_list.append(scene)
     return scene_id_list
+
+
+def query_curr_user_scene(request):
+    user_dto = user_info.objects.filter(user_name=request.user.username)
+    if user_dto.count() > 0:
+        user_data = user_dto.get()
+        pos_id = user_data.user_pos_id
+        request.POST["pos_id"] = pos_id
+        return query_pos_scene(request)
+    else:
+        return None
 
 
 def alternate_play(request):
@@ -890,7 +908,7 @@ def page_query_scene(request):
     return tools.success_result(res_dic)
 
 def page_query_xml_show(id):
-    dto = SceneDesign.objects.filter(id=id)
+    dto = Scene.objects.filter(id=id)
     if dto.count() > 0:
         return dto.get().scene_content
     else:
@@ -909,13 +927,16 @@ def query_scene_item_data_handle(list_id):
                 dt = {}
                 dt["id"] = dto_item_id
                 str = gather_dto.data_value
-                if str !=None:
+                if str !=None and item_vo.target_name != None\
+                        and item_vo.measure_name != None:
                     json_dto = json.loads(str)
                     key = item_vo.target_name + "_" + item_vo.measure_name
                     txt = json_dto[0].get(key)
                     if txt == None:
                         txt = ""
                     dt["key_val"] = txt
+                else:
+                    dt["key_val"] = "@" + item_vo.monitor_name
                 dt["key"] = key
                 dt["key_name"] = item_vo.display_rule#.decode("utf-8")
 

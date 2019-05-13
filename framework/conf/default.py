@@ -32,25 +32,25 @@ from django.conf.global_settings import *  # noqa
 # 应用基本信息配置 (请按照说明修改)
 # ==============================================================================
 # 在蓝鲸智云开发者中心 -> 点击应用ID -> 基本信息 中获取 APP_ID 和 APP_TOKEN 的值
-APP_ID = 'bk_kanban'
+APP_ID = 'lanhusaas'
 # 指定数据库名称
 #DATABASE_NAME = 'mydjango1'
 # 长沙APP_TOKEN
 # APP_TOKEN = 'd441289d-14f9-435f-b195-499e2096868'
 # 上海APP_TOKEN
-APP_TOKEN = '317908f5-8dc1-44cc-89c8-8bf5c572ba19'
+APP_TOKEN = '334c1932-4763-47b9-8f06-7f8c7c8b33aa'
 
 # 指标集API地址
-# MEASURES_API_ADDRESS = 'http://192.168.1.153:8088/webserver/metric/getMetricSetColumns.do'  # type: str
-MEASURES_API_ADDRESS = 'http://10.240.1.72:8099/webserver/metric/getMetricSetColumns.do'  # type: str
+MEASURES_API_ADDRESS = 'http://192.168.1.153:8088/webserver/metric/getMetricSetColumns.do'  # type: str
+# MEASURES_API_ADDRESS = 'http://10.240.1.72:8099/webserver/metric/getMetricSetColumns.do'  # type: str
 
 # 指标查询API
-# MEASURES_QUERY_API = 'http://192.168.1.150:4242/api/query'
-MEASURES_QUERY_API = 'http://10.240.1.187:4242/api/query'
+MEASURES_QUERY_API = 'http://192.168.1.150:4242/api/query'
+# MEASURES_QUERY_API = 'http://10.240.1.187:4242/api/query'
 
 # 日志集API地址
-# LOG_API_ADDRESS = 'http://192.168.1.153:8088/webserver/log/getLogColumns.do'
-LOG_API_ADDRESS = 'http://10.240.1.72:8099/webserver/log/getLogColumns.do'
+LOG_API_ADDRESS = 'http://192.168.1.153:8088/webserver/log/getLogColumns.do'
+# LOG_API_ADDRESS = 'http://10.240.1.72:8099/webserver/log/getLogColumns.do'
 
 # 数据采集测试用主机地址
 GATHER_DATA_HOST = '192.168.1.52'
@@ -73,6 +73,11 @@ DENGFEI_PASSWORD = 'test'
 # 蓝鲸智云开发者中心的域名，形如：http://paas.bking.com#
 # 长沙
 # BK_PAAS_HOST = 'http://paas.bk.com:80'
+
+# 上海
+#BK_PAAS_HOST = 'https://paas.gtjatest.com'
+# 上海退出登录地址
+#LOG_OUT_ADDRESS = 'https://paas.gtjatest.com/accounts/logout/'
 
 # 上海
 BK_PAAS_HOST = 'https://paas.blueking.com'
@@ -179,8 +184,7 @@ INSTALLED_APPS = (
     'history_chart',
     'home_page',
     'iqube_interface',
-    'custom_query',
-    'DataBaseManage'
+	'custom_query'
 )
 
 # ==============================================================================
