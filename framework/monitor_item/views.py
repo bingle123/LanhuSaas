@@ -24,7 +24,6 @@ def unit_show(request):
     res = function.unit_show(request)
     return render_json(res)
 
-
 def select_unit(request):
     """
     查询函数
