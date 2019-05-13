@@ -604,3 +604,14 @@ def getAny_db(id):
         db = pymssql.connect(host=ip + r':' + port, user=username, password=password, database=databasename,
                              charset='utf8')
     return db
+
+def get_all_mImgs():
+    '''
+    获取所有的图标
+    :return:
+    '''
+    muenus = Muenu.objects.all()
+    mImgs=[]
+    for i in range(len(muenus)):
+        mImgs.append({'value':muenus[i].mImg})
+    return mImgs
