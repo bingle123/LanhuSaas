@@ -687,21 +687,36 @@
             },
             get_alert_data(){
                 axios.post('${SITE_URL}home_page/scenes_alert/').then((res)=>{
-                    if (res.data.results === 'n'){
+                    if (res.data.results == 'n'){
                         this.$message.error("此岗位没有场景!")
                     }else{
-                        ve.percentage=res.data['btData'].last_score;
-                        ve.alert_number=res.data['btData'].alert_count;
+                        ve.percentage=res.data['bing_res'].last_score;
+                        ve.alert_number=res.data['bing_res'].alert_count;
+                        //彭英杰 start 20190511
+                        ve.alert_table_data=res.data['alert_data'];
                         if(ve.alert_table_data.length>0){
                             $("#alert_temp").find("div[role='button']")[0].click();
                         }
+                        ve.options1=[]
+                        if(res.data["sences_list"].length>0){
+                            for(var i=0;i<res.data["sences_list"].length;i++){
+                                 var dto = res.data["sences_list"][i];
+                                 var dt={};
+                                 dt["label"] =dto.scene_type_name;
+                                 dt["value"] = dto.scene_type_id;
+                                 dt["startTime"] = dto.start_time;
+                                 dt["stopTime"] = dto.stop_time;
+                                 ve.options1.push(dt);
+                            }
+                            ve.value1 = ve.options1[0].value;
+                        }
+                        //彭英杰 end 20190511
                         ve.scene_chart_data=[
-                            {value:res.data['btData'].danger_scene, name:'危险'},
-                            {value:res.data['btData'].will_scene, name:'预警'},
-                            {value:res.data['btData'].safe_scene, name:'正常'},
+                            {value:res.data['bing_res'].danger_scene, name:'危险'},
+                            {value:res.data['bing_res'].will_scene, name:'预警'},
+                            {value:res.data['bing_res'].safe_scene, name:'正常'},
                         ];
                         ve.show_ring_chart();
-                        ve.alert_table_data=res.data['alert_data'];
                     }
                 })
             },
