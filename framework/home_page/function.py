@@ -23,8 +23,8 @@ def get_time(request):
     :param request:
     :return:
     """
-    today = datetime.now().strftime("%Y年%m月%d日 %H:%M")
-    flag = check_jobday(1, datetime.now())
+    today =  datetime.datetime.now().strftime("%Y年%m月%d日 %H:%M")
+    flag = check_jobday(1,  datetime.datetime.now())
     if flag == True:
         today_name = '交易日'
     elif flag == False:
