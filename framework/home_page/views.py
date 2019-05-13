@@ -23,4 +23,13 @@ def scenes_alert(request):
     """
     res = function.scenes_alert(request)
     return render_json(res)
+def select_all(request):
+    """
+
+    :param request:
+    :return:
+    """
+    res = function.select_All()
+    print type(res)
+    return render_json(res)
 
