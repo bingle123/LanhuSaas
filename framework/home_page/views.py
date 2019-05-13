@@ -22,13 +22,15 @@ def scenes_alert(request):
     :return:
     """
     #隐藏旧方法 彭英杰2019-5-11 start
-    # res = function.scenes_alert(request)
+    btData = function.scenes_alert(request)
     res={
         "alert_data":[], # 告警列表
         "sences_list":[],  # 当前用户所有场景信息
+        "btData":[],
     }
     res["alert_data"] = function.query_alert_data();
     res["sences_list"] = function.query_curr_sences(request);
+    res["btData"] = btData
     #彭英杰 2019-5-11 end
     return render_json(res)
 
