@@ -138,7 +138,8 @@ def add_unit_task(add_dicx):
             'period': period,
             'area_id': add_dicx['monitor_area'],
             'task_name': str(schename) + 'task',
-            'endtime': endtime
+            'endtime': endtime,
+            'score':add_dicx['score']
         }
         # 创建一个基本监控项采集的开始任务
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,
