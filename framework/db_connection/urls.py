@@ -20,4 +20,5 @@ urlpatterns = patterns(
     (r'^get_roleAmuenus/$', 'get_roleAmuenus'),  # 获取所有角色对应菜单
     (r'^checked_menu/$', 'checked_menu'),
     (r'^savemnus/$', 'save_menu'),
+    (r'^get_all_mImgs/$', 'get_all_mImgs'),
 )

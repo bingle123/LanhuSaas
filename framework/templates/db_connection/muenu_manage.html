@@ -13,6 +13,8 @@
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
     <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
+    <link href="${STATIC_URL}css/net/font_997278_ptr5bdmor4j.css" rel="stylesheet">
+    <link href="${STATIC_URL}assets/iconfont/iconfont.css" rel="stylesheet">
     <script src="${STATIC_URL}js/muenu_manage/muenu_manage.js"></script>
 </head>
 
@@ -54,7 +56,6 @@
                     </el-table-column>
                     <el-table-column prop="mname" label="菜单名称" style="width: 25%">
                     </el-table-column>
-                    m
                     <el-table-column prop="url" label="菜单地址" style="width: 25%">
                     </el-table-column>
                     <el-table-column prop="operation" label="操作">
@@ -90,6 +91,19 @@
                                     </el-option>
                                 </el-select>
                             </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="菜单图标:" prop="mImg">
+                                <el-select v-model="addmuenus.mImg" placeholder="请选择">
+                                    <el-option
+                                            v-for="item in mImgs"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="1">
+                            <i :class="addmuenus.mImg"></i>
                         </el-col>
                         <el-col :span="6">
                             <el-form-item label="菜单名称：" prop="mname">
@@ -135,19 +149,32 @@
                 </div>
                 <hr id="hr">
                 <el-form label-width="140px" :model="editMuenu" ref="editMuenu" :rules="rules" class="demo-ruleForm">
+                    <el-row type="flex" class="row-bg" justify="space-around">
+                        <el-col :span="6">
+                        <el-form-item label="父级菜单名称:" prop="pcode">
+                            <el-select v-model="editMuenu.pcode" placeholder="请选择">
+                                <el-option
+                                        v-for="item in pcodes"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
                     <el-col :span="6">
-                            <el-form-item label="父级菜单名称:" prop="pcode">
-                                <el-select v-model="editMuenu.pcode" placeholder="请选择">
+                            <el-form-item label="菜单图标:" prop="mImg">
+                                <el-select v-model="editMuenu.mImg" placeholder="请选择">
                                     <el-option
-                                            v-for="item in pcodes"
-                                            :key="item.value"
-                                            :label="item.label"
+                                            v-for="item in mImgs"
                                             :value="item.value">
                                     </el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
-                    <el-row type="flex" class="row-bg" justify="space-around">
+                        <el-col :span="1">
+                            <i :class="editMuenu.mImg"></i>
+                        </el-col>
                         <el-col :span="6">
                             <el-form-item label="菜单名称：" prop="mname">
                                 <el-input v-model="editMuenu.mname"></el-input>
