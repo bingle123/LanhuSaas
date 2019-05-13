@@ -111,7 +111,11 @@ def scenes_alert(request):
         # 出场景循环
         # 所有场景下得监控项得到的权值分总和/场景数 = 权值平均分 就是从健康度
         # 这是一个场景的健康度
-        last_score = int((all_score - error_score)*100 / all_score)
+
+        if all_score != 0:
+            last_score = int((all_score - error_score) * 100 / all_score)
+        else:
+            last_score = 0
         if flag > 1:
             s_score =int((s_score + last_score)/2)
         else:
