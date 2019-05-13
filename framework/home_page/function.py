@@ -12,7 +12,7 @@ from monitor_item.models import Scene_monitor
 from notification.models import TdAlertLog
 from position.models import user_info
 from datetime import datetime
-
+from monitor_item import function
 
 def get_time(request):
     """
@@ -122,3 +122,11 @@ def scenes_alert(request):
     }
     return dic_data
 
+#   张美庆 2019-5-11
+#   在界面展示各系统运行情况
+def select_All():
+    result = function.select_all();
+    print 'zheshifanhuizhi'
+    print result;
+    #dict = ['1']
+    return result
