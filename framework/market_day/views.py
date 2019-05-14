@@ -8,33 +8,33 @@ import sys
 from logmanagement.function import add_log, make_log_info, get_active_user
 
 
-def get_holiday(req, area):
+def get_holiday(request, area):
     """
 
-    :param req:
+    :param request:
     :param area:
     :return:
     """
-    days = function.get_holiday(req, area)
+    days = function.get_holiday(request, area)
     return render_json(days)
 
 
 @csrf_exempt
-def get_file(req, area):
+def get_file(request, area):
     """
 
-    :param req:
+    :param request:
     :param area:
     :return:
     """
-    path = function.get_file(req, area)
+    path = function.get_file(request, area)
     return HttpResponse('ok')
 
 
-def send_demo(req, email):
+def send_demo(request, email):
     """
 
-    :param req:
+    :param request:
     :param email:
     :return:
     """
@@ -43,102 +43,102 @@ def send_demo(req, email):
     return HttpResponse('success')
 
 
-def delall(req, area):
+def delall(request, area):
     """
 
-    :param req:
+    :param request:
     :param area:
     :return:
     """
     try:
         flag = function.delall(area)
         info = make_log_info(u'删除全部交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
-                             get_active_user(req)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
     except Exception as e:
         info = make_log_info(u'删除全部交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
-                             get_active_user(req)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
     add_log(info)
     return render_json(flag)
 
 
-def delone(req):
+def delone(request):
     """
 
-    :param req:
+    :param request:
     :return:
     """
     try:
-        function.delone(req)
+        function.delone(request)
         info = make_log_info(u'变更为交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
-                             get_active_user(req)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
     except Exception as e:
         info = make_log_info(u'变更为交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
-                             get_active_user(req)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
     add_log(info)
     return render_json('ok')
 
 
-def addone(req):
+def addone(request):
     """
 
-    :param req:
+    :param request:
     :return:
     """
     try:
-        function.addone(req)
+        function.addone(request)
         info = make_log_info(u'取消交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
-                             get_active_user(req)['data']['bk_username'], '成功', '无')
+                             request.user.username, '成功', '无')
     except Exception as e:
         info = make_log_info(u'取消交易日', u'业务日志', u'Holiday', sys._getframe().f_code.co_name,
-                             get_active_user(req)['data']['bk_username'], '失败', repr(e))
+                             request.user.username, '失败', repr(e))
     add_log(info)
     return render_json('ok')
 
 
-def get_all_timezone(req):
+def get_all_timezone(request):
     """
 
-    :param req:
+    :param request:
     :return:
     """
     res = function.get_all_timezone()
     return render_json(res)
 
 
-def get_data_header(req):
+def get_data_header(request):
     """
 
-    :param req:
+    :param request:
     :return:
     """
-    function.get_header_data(req)
+    function.get_header_data(request)
     return HttpResponse('ok')
 
 
-def add_area(req):
+def add_area(request):
     """
 
-    :param req:
+    :param request:
     :return:
     """
-    res = function.add_area(req)
+    res = function.add_area(request)
     return render_json(res)
 
 
-def get_all_area(req):
+def get_all_area(request):
     """
 
-    :param req:
+    :param request:
     :return:
     """
-    res = function.get_all_area(req)
+    res = function.get_all_area(request)
     return render_json(res)
 
 
-def del_area(req, name):
+def del_area(request, name):
     """
 
-    :param req:
+    :param request:
     :param name:
     :return:
     """
@@ -146,10 +146,10 @@ def del_area(req, name):
     return render_json(res)
 
 
-def test(req):
+def test(request):
     """
 
-    :param req:
+    :param request:
     :return:
     """
     # 测试专用view

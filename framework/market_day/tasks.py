@@ -40,7 +40,8 @@ def gather_data_task_one(**i):
         'params': i['params'],
         'gather_rule': i['gather_rule'],
         'task_name': i['task_name'],
-        'endtime': i['endtime']
+        'endtime': i['endtime'],
+        'score':i['score']
     }
     if check_jobday(area_id):
         co.create_task_interval(name=task_name, task='market_day.tasks.basic_monitor_task', interval_time=period,
