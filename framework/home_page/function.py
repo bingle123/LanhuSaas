@@ -111,7 +111,11 @@ def scenes_alert(request):
         # 出场景循环
         # 所有场景下得监控项得到的权值分总和/场景数 = 权值平均分 就是从健康度
         # 这是一个场景的健康度
-        last_score = int((all_score - error_score)*100 / all_score)
+
+        if all_score != 0:
+            last_score = int((all_score - error_score) * 100 / all_score)
+        else:
+            last_score = 0
         if flag > 1:
             s_score =int((s_score + last_score)/2)
         else:
@@ -289,9 +293,7 @@ def scenes_item_list(request):
 
 #   张美庆 2019-5-11
 #   在界面展示各系统运行情况
-def select_All():
-    result = function.select_all();
-    print 'zheshifanhuizhi'
-    print result;
-    #dict = ['1']
+def select_All(request):
+    user = user_info.objects.get(id=request.user.id)
+    result = function.select_all(user);
     return result

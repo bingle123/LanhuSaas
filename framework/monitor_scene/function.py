@@ -917,6 +917,8 @@ def page_query_xml_show(id):
 def query_scene_item_data_handle(list_id):
     arr = []
     for dto_item_id in list_id:
+        if not dto_item_id.isdigit(): # 验证是否为数字
+            continue
         item_id = int(dto_item_id)
         item_dto = Monitor.objects.filter(id=item_id)
         if item_dto.count()>0:
