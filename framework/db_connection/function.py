@@ -15,6 +15,7 @@ import datetime
 import sys
 from logmanagement.function import add_log, make_log_info
 from conf import settings_development, default, settings_production, settings_testing
+from position.models import *
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
@@ -380,7 +381,13 @@ def get_user_muenu(request):
     # user = cilent.bk_login.get_user({})
     # bk_roleid = user['data']['bk_role']
     # 根据菜单和角色表查出该角色对应的菜单
-    role_menus = rm.objects.filter(roleid=1)
+    user_dto_name = request.user.username
+    user_db = user_info.objects.filter(user_name=user_dto_name)
+    role_id = 1
+    if user_db.count() > 0:
+        user_db_data = user_db.get()
+        role_id = user_db_data.user_pos_id
+    role_menus = rm.objects.filter(roleid=role_id)
     temp_list = []
     for r_m in role_menus:
         # 菜单id，菜单表和菜单角色表都要对应起来
