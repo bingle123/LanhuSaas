@@ -12,7 +12,7 @@ let vm = new Vue({
                //显示
                 axios({
                     method: 'post',
-                    url: site_url + '/logmanagement/show_all/',
+                    url: site_url + 'logmanagement/show_all/',
                     data: {
                         page: vm.page,
                         limit: 10
@@ -26,7 +26,7 @@ let vm = new Vue({
                vm.page = value;
                 axios({
                     method: 'post',
-                    url: site_url + '/logmanagement/select_log/',
+                    url: site_url + 'logmanagement/select_log/',
                     data: {
                         search: this.search,
                         page: vm.page,
@@ -39,12 +39,12 @@ let vm = new Vue({
             },
            select_log(){
                vm.page = 1                                             //查询
-                if (this.search.trim() == '') {
+                if (this.search.trim() === '') {
                     vm.show()
                 }
                 axios({
                     method: 'post',
-                    url: site_url + '/logmanagement/select_log/',
+                    url: site_url + 'logmanagement/select_log/',
                     data: {
                         search: this.search,
                         page: this.page,
@@ -52,7 +52,7 @@ let vm = new Vue({
                     },
                 }).then((res) => {
 
-                    if(res.data.message.length == 0){
+                    if(res.data.message.length === 0){
                         vm.Operatelog = []
                         vm.page_count = 1
                     }else{
