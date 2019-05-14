@@ -16,6 +16,8 @@ from gather_data_history.models import *
 from notification.function import *
 from account.models import *
 from blueking.component.shortcuts import *
+from iqube_interface.gather import Gather
+
 
 # -------------------- 采集测试规则设定------------------------
 # 1. 针对于数据库的数据采集：
@@ -252,7 +254,7 @@ def gather_data(**info):
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-1',
                          gather_error_log=str(e), score=0).save()
             return "error"
-        cursor = conn.cursor()
+        cursor = conn.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SET NAMES UTF8')
         # 采集规则是否异常判断
         # noinspection PyBroadException
@@ -270,11 +272,22 @@ def gather_data(**info):
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='1',
                          score=info['score']).save()
             # 定义key-value
-            data_set = sql_kv_process(gather_params['gather_field'], result)
+            # data_set = sql_kv_process(gather_params['gather_field'], result)
             # 将采集的数据保存到td_gather_data中
-            for item in data_set:
-                TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'],
-                             data_value=item['value_str'], score=info['score']).save()
+            # for item in data_set:
+            #     TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'],
+            #                  data_value=item['value_str'], score=info['score']).save()
+            type=info['gather_type']
+            if type=='0' :
+                for i in result:
+                    i['flow_is_done'] = Gather.percent_manage(i['flow_is_done'],info['gather_rule'])
+            elif type=='1':
+                for i in result:
+                    i['flow_is_done'] = Gather.color_manage(i['flow_is_done'],info['gather_rule'])
+            elif type=='2':
+                for i in result:
+                    i['flow_is_done'] = Gather.other_manage(i['flow_is_done'],info['gather_rule'])
+
         else:
             # 采集是空结果集的情况
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='0', score=0).save()

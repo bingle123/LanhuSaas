@@ -1930,8 +1930,8 @@
             },
             sycontent() {
                 $("#text2").html("")
-                let show=vm.basic.contents.split(':')[1]
-                show=show.split("@")[0]+":"+vm.basic_show_content
+                let show = vm.basic.contents.split(':')[1]
+                show = show.split("@")[0] + ":" + vm.basic_show_content
                 $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + show + "</div>")
             },
             basic_test() {
@@ -1951,52 +1951,67 @@
                         gather_rule: vm.basic.gather_rule,
                         gather_params: vm.basic.gather_params,
                         score: vm.basic.score,
-                        key: vm.basic.measure_name
+                        key: vm.basic.measure_name,
+                        gather_rule: vm.basic.display_rule,
+                        gather_type: vm.basic.display_type
                     },
                 }).then(function (res) {
-                    let showtype = vm.basic.display_type
-                    let flag = res.data.message[0][vm.basic.measure_name]
-                    let ordinary_fields = vm.fields
-                    for (var i = 0; i < vm.fields.length; i++) {
-                        if (vm.fields[i] == vm.basic.measure_name) {
-                            vm.fields.splice(i, 1)
-                        }
+                    let gather_base_test_data = res.data.message
+                    let split_char=""
+                    if (vm_obj.base.show_rule_type == 0) {
+                        split_char="%"
                     }
-                    vm.basic.contents = '"' + vm.basic.measure_name + '":"' + res.data.message[0][vm.fields[0]] + '"@'
-                    $("#text2").html("")
-                    if (showtype == 1) {
-                        vm.basic_show_content = res.data.message[0][vm.basic.measure_name]
-                        for (var i = 0; i < ordinary_fields.length; i++) {
-                            $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + res.data.message[0][ordinary_fields[i]] + ":</div>")
+                    // 按颜色展示
+                    if (vm_obj.base.show_rule_type == 1) {
+                        split_char="#";
+                    }
+                    //其它展示方式
+                    if (vm_obj.base.show_rule_type == 2) {
+                        split_char="@";
+                    }
+                    if (null == gather_base_test_data) {
+                        vm_obj.$alert("采集测试数据为空！", "错误");
+                        return;
+                    }
+                    for (let i = 0; i < gather_base_test_data.length; i++) {
+                        let selector = '#text2';
+                        let data_key = [];
+                        let data_value = [];
+                        for (k in gather_base_test_data[i]) {
+                            data_key.push(k);
+                            data_value.push(gather_base_test_data[i][k]);
                         }
-                        let ranges = vm.basic.display_rule.split('\n')
-                        for (let i = 0; i < ranges.length; i++) {
-                            let start = ranges[i].split('-')[0]
-                            let end = ranges[i].split('-')[1]
-                            if (flag > start && flag <= end) {
-                                if (i == 0) {
-                                    $("#text2").css('background-color', "green")
-                                } else if (i == 1) {
-                                    $("#text2").css('background-color', "red")
-                                } else if (i == 2) {
-                                    $("#text2").css('background-color', "yellow")
+                        //border: 1px solid #000;
+                        for (let j = 0; j < data_key.length; j++) {
+                            if (data_key[j] == vm_obj.base.measures + '_' + vm_obj.base.measures_name) {
+                                var data_value_str = data_value[j].toString();
+                                if (data_value_str.indexOf(split_char) > -1) {
+                                    var str = data_value_str.split(split_char);
+                                    if ("#" == split_char) {
+                                        $(selector).css('background-color', split_char + str[1]);
+                                    }
+                                    if ("@" == split_char) {
+                                        str[0] = str[0] + str[1];
+                                        selected_measure = str[1];
+                                        $(selector).append('<p id="other_fixed_show" style="display: none">' + selected_measure + '</p>');
+                                    }
+                                    if ("%" == split_char) {
+                                        $(selector).append('<p class="display" type="' + data_key[j] + '">' + data_key[j] + ':' + data_value[j] + '</p>');
+                                    } else {
+                                        $(selector).append('<p class="display" type="' + data_key[j] + '">' + data_key[j] + ':' + str[0] + '</p>');
+                                    }
                                 } else {
-                                    $("#text2").css('background-color', "gray")
+                                    $(html_obj).html('');
+                                    vm_obj.$message.error('展示规则参数配置出错！');
+                                    return
                                 }
+                            } else {
+                                $(selector).append('<p class="display" type="' + data_key[j] + '">' + data_key[j] + ':' + data_value[j] + '</p>');
                             }
                         }
-                    } else if (showtype == 2) {
-                        let ranges = vm.basic.display_rule.split('\n')
-                        for (let i = 0; i < ranges.length; i++) {
-                            let temp = ranges[i].split('@')[1]
-                            let start = ranges[i].split('@')[0].split('-')[0]
-                            let end = ranges[i].split('@')[0].split('-')[1]
-                            if (flag > start && flag <= end) {
-                                vm.basic_show_content = temp
-                                temp=res.data.message[0][vm.fields[0]]+":"+temp
-                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp + "</div>")
-                                break;
-                            }
+                        //当显示内容为空的情况下
+                        if ("@" == split_char && '' == vm_obj.base['contents'].replace(/^\s+|\s+$/g, "")) {
+                            $('#other_fixed_show').show();
                         }
                     }
                 });

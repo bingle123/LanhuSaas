@@ -363,7 +363,7 @@ def edit_unit(request):
             add_dic['monitor_type'] = monitor_type
             # 添加定时任务监控要求本地安装任务调度软件rabitmq
             # 正式环境服务器一般带有这个调度软件，如果没有就要安装
-            # function.add_unit_task(add_dicx=add_dic)
+            function.add_unit_task(add_dicx=add_dic)
             result = tools.success_result(None)
             # 修改获取用户的方式，直接从request中获取
             info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
@@ -405,6 +405,12 @@ def basic_test(request):
         }
         dic = dict(dic, **dic1)
     result.append(dic)
+    key=info['key']
+    for i in range(len(result)):
+        if result[i][key]=='y':
+            result[i][key]=1
+        elif result[i][key]=='n':
+            result[i][key]=0
     db.close()
     return result
 
