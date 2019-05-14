@@ -152,8 +152,9 @@
                                 // var html=$("<div>");
                                 //   html.attr("id","div"+djson[i]);
                                 // $("#div_sence").append(html);
+                                  var t="display:none;"
                                  var html="<iframe id='i"+djson[i]+"'  src='${SITE_URL}monitor_scene/page_query_xml_show?id=";
-                                 html+=djson[i]+"' style='width:1200px;height:850px;border:none;'></iframe>";
+                                 html+=djson[i]+"' style='"+t+"width:1200px;height:850px;border:none;'></iframe>";
                                   $("#div_sence").append(html);
                                  //$("#div"+djson[i]).load("${SITE_URL}monitor_scene/page_query_xml_show?id="+djson[i]);
                                  //html.hide()

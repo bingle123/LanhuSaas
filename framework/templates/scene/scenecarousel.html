@@ -86,12 +86,12 @@
 
 
                              for(var i=0;i<djson.length;i++){
+                                 var t="display:none;"
                                  var html="<iframe id='i"+djson[i]+"'  src='${SITE_URL}monitor_scene/page_query_xml_show?id=";
-                                 html+=djson[i]+"' style='width:"+vm.imgWidth+";height:850px;border:none;'></iframe>";
+                                 html+=djson[i]+"' style='"+t+"width:"+vm.imgWidth+";height:850px;border:none;'></iframe>";
                                   $("#div_sence").append(html);
                                  //$("#div"+djson[i]).load("${SITE_URL}monitor_scene/page_query_xml_show?id="+djson[i]);
                                  //html.hide()
-
                              }
                              vm.show_stop= setInterval(function(){
                                   var iframe_dto = $("#div_sence iframe");
