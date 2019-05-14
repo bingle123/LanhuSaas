@@ -103,11 +103,7 @@
                 })
             },
             select() {
-                //vm.centerDialogVisible = false;
-                vm.page = 1;
-                if (vm.contents == "") {
-                    vm.show()
-                } else {
+                if(vm.page != 1 && vm.contents != ""){
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor_item/select/',
@@ -127,6 +123,8 @@
                     }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
                     });
+                }else{
+                    vm.show()
                 }
             },
             current_change1(value) {
