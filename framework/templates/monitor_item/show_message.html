@@ -1744,13 +1744,13 @@
                 $("#text2").css("width", this.basic.width)
             },
             get_header_data() {
-                axios.get('${SITE_URL}/market_day/get_header/').then(function (res) {
+                axios.get('${SITE_URL}market_day/get_header/').then(function (res) {
                 })
             },
             get_all_area() {
                 axios({
                     method: 'get',
-                    url: '${SITE_URL}/market_day/get_all_area',
+                    url: '${SITE_URL}market_day/get_all_area',
                 }).then(function (res) {
                     res = res.data.message
                     vm.areas = []
@@ -2643,12 +2643,12 @@
                     vm.add_pamas = 0;
                     vm.monitor_name = '';
                     //取消默认添加时展示基本监控项
-                    /*
+
                     vm.disabled2 = false;
                     vm.disabled3 = false;
                     vm.disabled4 = false;
                     vm.disabled5 = false;
-                    vm.monitor_type = 'first';*/
+                    vm.monitor_type = 'first';
                     //默认添加时展示基本监控项（修改后）
                     //监控项类型设置
                     this.monitor_type = 'five';
