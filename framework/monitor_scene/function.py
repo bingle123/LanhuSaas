@@ -925,7 +925,10 @@ def query_scene_item_data_handle(list_id):
             item_vo = item_dto.get()
             gather_data = TDGatherData.objects.filter(item_id=item_id)
             if gather_data.count()>0:
-                gather_dto = gather_data.get()
+                if gather_data.count() >1:
+                    gather_dto=gather_data.all()[0]
+                else:
+                    gather_dto = gather_data.get()
                 dt = {}
                 dt["id"] = dto_item_id
                 str = gather_dto.data_value
@@ -939,7 +942,10 @@ def query_scene_item_data_handle(list_id):
                     dt["key_val"] = txt
                 else:
                     dt["key_val"] = "@" + item_vo.monitor_name
-                dt["key"] = key
+                if 'key' in locals().keys():
+                    dt["key"] = key
+                else:
+                    dt["key"] =""
                 dt["key_name"] = item_vo.display_rule#.decode("utf-8")
 
                 dt["item_type"] = item_vo.monitor_type
