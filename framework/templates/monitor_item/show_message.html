@@ -30,20 +30,66 @@
             width: 250px;
             height: 30px;
         }
+
         .el-table--border th {
             padding: 5px
         }
-        .newline{
+
+        .newline {
             word-wrap: break-word;
             word-break: break-all;
             overflow: hidden;
         }
-        .circle1{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:lawngreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
-        .circle2{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:darkgreen;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
-        .circle3{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:grey;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
-        .circle4{display: inline-block;margin-left:5px;width:20px;height:20px;background-color:red;border-radius:50%;-moz-border-radius:50%;-webkit-border-radius:50%;}
-        .asd{display: inline-block;}
-        .score_input{
+
+        .circle1 {
+            display: inline-block;
+            margin-left: 5px;
+            width: 20px;
+            height: 20px;
+            background-color: lawngreen;
+            border-radius: 50%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+        }
+
+        .circle2 {
+            display: inline-block;
+            margin-left: 5px;
+            width: 20px;
+            height: 20px;
+            background-color: darkgreen;
+            border-radius: 50%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+        }
+
+        .circle3 {
+            display: inline-block;
+            margin-left: 5px;
+            width: 20px;
+            height: 20px;
+            background-color: grey;
+            border-radius: 50%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+        }
+
+        .circle4 {
+            display: inline-block;
+            margin-left: 5px;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+            -moz-border-radius: 50%;
+            -webkit-border-radius: 50%;
+        }
+
+        .asd {
+            display: inline-block;
+        }
+
+        .score_input {
             font-size: 16px;
             position: absolute;
             background: rgba(255, 255, 255, 0.1);
@@ -53,45 +99,95 @@
             height: 36px;
             display: none;
         }
+
         .right_click {
             position: absolute;
             width: 100px;
             display: none;
         }
+
         .right_click span {
             width: 100px;
             display: inline-block;
             font-size: 16px;
             line-height: 36px;
         }
-        .circle-bar { margin:20px auto;font-size:100px; width: 1em; height: 1em; position: relative;  background-color: #333; }
-        .circle-bar-left,.circle-bar-right { width: 1em; height: 1em; background-color: #eee; }
+
+        .circle-bar {
+            margin: 20px auto;
+            font-size: 100px;
+            width: 1em;
+            height: 1em;
+            position: relative;
+            background-color: #333;
+        }
+
+        .circle-bar-left, .circle-bar-right {
+            width: 1em;
+            height: 1em;
+            background-color: #eee;
+        }
+
         /*
             这里采用clip剪切了圆，实现左右两个半圆，右半圆在后面，因此在更上一层，
             clip的用法参考：http://www.w3school.com.cn/cssref/pr_pos_clip.asp
          */
-        .circle-bar-right { clip:rect(0,auto,auto,.5em); }
-        .circle-bar-left { clip:rect(0,.5em,auto,0); }
-        .mask { width: 0.8em; height: 0.8em;  background-color: #fff;text-align: center;line-height: 0.2em; color:rgba(0,0,0,0.5); }
-        .mask :first-child { font-size: 0.3em; height: 0.8em; line-height: 0.8em; display: block;  }
-        /*所有的后代都水平垂直居中，这样就是同心圆了*/
-        .circle-bar * {  position: absolute; top:0; right:0; bottom:0; left:0; margin:auto; }
-        /*自身以及子元素都是圆*/
-        .circle-bar, .circle-bar > * { border-radius: 50%; }
-        .dimension_div .el-form-item__content:first-child{
-            margin-left: 0!important;
+        .circle-bar-right {
+            clip: rect(0, auto, auto, .5em);
         }
+
+        .circle-bar-left {
+            clip: rect(0, .5em, auto, 0);
+        }
+
+        .mask {
+            width: 0.8em;
+            height: 0.8em;
+            background-color: #fff;
+            text-align: center;
+            line-height: 0.2em;
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .mask :first-child {
+            font-size: 0.3em;
+            height: 0.8em;
+            line-height: 0.8em;
+            display: block;
+        }
+
+        /*所有的后代都水平垂直居中，这样就是同心圆了*/
+        .circle-bar * {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto;
+        }
+
+        /*自身以及子元素都是圆*/
+        .circle-bar, .circle-bar > * {
+            border-radius: 50%;
+        }
+
+        .dimension_div .el-form-item__content:first-child {
+            margin-left: 0 !important;
+        }
+
         /*jlq-2019-05-08-add*/
         .el-dialog__body {
             padding: 10px 20px;
             color: #606266;
             font-size: 14px;
         }
+
         .el-tabs--bottom .el-tabs--left .el-tabs__item:last-child, .el-tabs--bottom .el-tabs--right .el-tabs__item:last-child, .el-tabs--bottom.el-tabs--border-card .el-tabs__item:last-child, .el-tabs--bottom.el-tabs--card .el-tabs__item:last-child, .el-tabs--top .el-tabs--left .el-tabs__item:last-child, .el-tabs--top .el-tabs--right .el-tabs__item:last-child, .el-tabs--top.el-tabs--border-card .el-tabs__item:last-child, .el-tabs--top.el-tabs--card .el-tabs__item:last-child {
             padding-right: 20px;
             border-bottom: 1px;
         }
-        .el-tabs--card>.el-tabs__header .el-tabs__nav {
+
+        .el-tabs--card > .el-tabs__header .el-tabs__nav {
             border: 1px solid #e4e7ed;
             border-bottom: none;
             border-radius: 4px 4px 0 0;
@@ -99,14 +195,15 @@
             box-sizing: border-box;
             width: 100%;
         }
-        .el-tabs--card>.el-tabs__header .el-tabs__item.is-active {
+
+        .el-tabs--card > .el-tabs__header .el-tabs__item.is-active {
             border-bottom-color: #fff;
             border-bottom: 1px;
         }
     </style>
 </head>
-<body >
-<div id="app" >
+<body>
+<div id="app">
     <!-- div1 start-->
     <div class="div_one" style="padding: 20px 40px 0px 40px;">
         <div>
@@ -121,7 +218,8 @@
             <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;" border header-align="center">
                 <el-table-column prop="id" label="序号" sortable></el-table-column>
                 <el-table-column prop="monitor_name" label="监控名称" sortable></el-table-column>
-                <el-table-column prop="monitor_type" label="监控类型" :formatter="format_monitor_type" sortable></el-table-column>
+                <el-table-column prop="monitor_type" label="监控类型" :formatter="format_monitor_type"
+                                 sortable></el-table-column>
                 <el-table-column prop="editor" label="编辑人" sortable></el-table-column>
                 <el-table-column prop="edit_time" label="修改时间" sortable></el-table-column>
                 <el-table-column label="操作">
@@ -143,7 +241,8 @@
     <!-- div1 end-->
 
     <!-- 对话框 start-->
-    <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%" @closed="monitor_cache_clean" :close-on-click-modal="false"   >
+    <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%" @closed="monitor_cache_clean"
+               :close-on-click-modal="false">
         <HR align=center width=100% color=#979797 SIZE=0.5>
         <div style="height: 30px;"></div>
         <div style="margin-left: 20px;">
@@ -168,7 +267,8 @@
                         <el-col :span="12" style="margin-top: 30px"><div class="grid-content bg-purple">
                             <el-form :model="basic" ref="basic" :rules="rules1" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
-                                    <el-select v-model="basic.font_size" placeholder="请选择字号" @change="basic_size" style="width: 310px;">
+                                    <el-select v-model="basic.font_size" placeholder="请选择字号" @change="basic_size"
+                                               style="width: 310px;">
                                         <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -212,6 +312,40 @@
                                                        :value="i.value"></el-option>
                                         </el-select>
                                     </el-form-item>
+                                    <el-form-item label="数据采集规则" style="width: 96%">
+                                    <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq"
+                                              type="textarea"></el-input>
+                                </el-form-item>
+                                    <el-form-item label="度量值">
+                                    <el-select v-model="basic.measure_name" filterable placeholder="请选择指标名称"
+                                               style="width: 310px;">
+                                        <el-option
+                                                v-for="item in fields"
+                                                :key="item"
+                                                :label="item"
+                                                :value="item">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                                    <el-form-item label="展示规则" prop="show_rule_type">
+                                    <el-select v-model="basic.display_type" placeholder="请选择展示规则"
+                                               @change="add_comments" style="width: 310px;">
+                                        <el-option label="百分比" value="0"></el-option>
+                                        <el-option label="颜色" value="1"></el-option>
+                                        <el-option label="其他" value="2"></el-option>
+                                    </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="采集规则" prop="gather_rule" style="width: 90%">
+                                        <el-input v-model="basic.display_rule"
+                                                  placeholder="百分比：如：100|颜色：如：#000000==2@#ffffff==0|其他：如：100@ms"
+                                                  type="textarea" style="width: 310px;"></el-input>
+                                    </el-form-item>
+                                    <div v-if="basic.display_type==1">
+                                     <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到此范围分别展示为绿、红、黄、灰</p>
+                                 </div>
+                                 <div v-if="basic.display_type==2">
+                                     <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到对应范围分别展示其“@”后的后缀</p>
+                                 </div>
                                 </div>
                                 <div :style="{display:file1}">
                                     <el-form-item label="服务器">
@@ -232,19 +366,16 @@
                                         <el-input type="textarea" v-model="file_param"></el-input>
                                     </el-form-item>
                                 </div>
-                                <el-form-item label="数据采集规则" style="width: 96%">
-                                    <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq"
-                                              type="textarea"></el-input>
-                                </el-form-item>
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 142px;" v-model="basic.start_time"
-                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm" >
+                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
                                             </el-time-picker>
                                         </el-form-item>
                                         </el-col>
-                                    <el-col class="line" :span="2" style="margin-right: -4px;margin-left: 4px;">—</el-col>
+                                    <el-col class="line" :span="2"
+                                            style="margin-right: -4px;margin-left: 4px;">—</el-col>
                                     <el-col :span="11">
                                         <el-form-item>
                                             <el-time-picker style="width: 142px;" v-model="basic.end_time"
@@ -261,8 +392,9 @@
                                 </el-form-item>
                                 <el-form-item label="分值" prop="score">
                                             <el-input type="number" min="0" v-model.number="numberValidateForm.age"
-                                                      auto-complete="off" v-model="basic.score" style="width: 96%" @change="change4"
-                                                      placeholder="请输入分值"  max="100"></el-input>
+                                                      auto-complete="off" v-model="basic.score" style="width: 96%"
+                                                      @change="change4"
+                                                      placeholder="请输入分值" max="100"></el-input>
                                 </el-form-item>
                             </el-form>
                         </div></el-col>
@@ -316,7 +448,8 @@
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="图标类型" prop="gather_params">
-                                    <el-select v-model="chart.gather_params" @change="show_chart" placeholder="请选择图表类型" style="width: 310px;">
+                                    <el-select v-model="chart.gather_params" @change="show_chart" placeholder="请选择图表类型"
+                                               style="width: 310px;">
                                         <el-option label="折线图" value="折线图"></el-option>
                                         <el-option label="柱状图" value="柱状图"></el-option>
                                         <el-option label="饼图" value="饼图"></el-option>
@@ -489,7 +622,8 @@
                             <el-form :model="flow" :rules="rules4" ref="flow" label-width="100px">
 
                                 <el-form-item label="流程模板" prop="gather_rule">
-                                    <el-select v-model="flow.gather_rule" placeholder="请选择模板" @change="flow_change" style="width: 310px;">
+                                    <el-select v-model="flow.gather_rule" placeholder="请选择模板" @change="flow_change"
+                                               style="width: 310px;">
                                         <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -528,7 +662,8 @@
 
 
                                 <el-form-item label="字号" prop="font_size">
-                                    <el-select v-model="flow.font_size" placeholder="请选择字号" @change="font_size" style="width: 310px;">
+                                    <el-select v-model="flow.font_size" placeholder="请选择字号" @change="font_size"
+                                               style="width: 310px;">
                                         <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -619,36 +754,45 @@
                                     <!-- template 模板-->
                                         <div class="jtk-delete jtk-none ">删除节点</div>
                                         <div id="template" class="jtk-none">
-                                            <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}" data-type="EmptyEndEvent">
+                                            <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
+                                                 data-type="EmptyEndEvent">
                                                <div class="node-wrapper">
-                                                    <img src="${STATIC_URL}img/canvas/endpoint.png" style="top: 5px;left: 20px;position: absolute;">
+                                                    <img src="${STATIC_URL}img/canvas/endpoint.png"
+                                                         style="top: 5px;left: 20px;position: absolute;">
                                                 </div>
                                             </div>
-                                             <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}" data-type="EmptyStartEvent">
+                                             <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
+                                                  data-type="EmptyStartEvent">
                                                 <div class="node-wrapper">
-                                                    <img src="${STATIC_URL}img/canvas/Start.png" style="top: 5px;left: 20px;position: absolute;">
+                                                    <img src="${STATIC_URL}img/canvas/Start.png"
+                                                         style="top: 5px;left: 20px;position: absolute;">
                                                 </div>
                                             </div>
-                                            <div class="jtk-window jtk-node workfolw-node database-node" id="{charts}" data-type="ServiceActivity">
+                                            <div class="jtk-window jtk-node workfolw-node database-node" id="{charts}"
+                                                 data-type="ServiceActivity">
                                                 <div class="node-wrapper">
                                                     <div class="node-content" style="position: relative">
                                                         <div class="start_time"
                                                              style="position: absolute;width: 70px;height: 20px;top: -26px;left: 0px;"></div>
                                                         <div class="end_time"
                                                              style="position: absolute;width: 70px;height: 20px;top: -26px;right: 0px;"></div>
-                                                        <p class="node-title" style=" overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"></p>
+                                                        <p class="node-title"
+                                                           style=" overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"></p>
                                                     </div>
                                                     <div class="node-icon" style="top: 26px;width: 100%;height: 100%;">
-                                                        <span class="title" style="top: -14px;height: 100%;position: relative;color: #F4FFF9; overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"></span>
+                                                        <span class="title"
+                                                              style="top: -14px;height: 100%;position: relative;color: #F4FFF9; overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"></span>
                                                     </div>
                                                 </div>
                                             </div>
-                                           <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}" data-type="ConvergeGateway">
+                                           <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
+                                                data-type="ConvergeGateway">
                                                  <div class="node-wrapper">
                                                     <img src="${STATIC_URL}img/canvas/convergegateway.png">
                                                 </div>
                                             </div>
-                                            <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}" data-type="ParallelGateway">
+                                            <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
+                                                 data-type="ParallelGateway">
                                                 <div class="node-wrapper">
                                                     <img src="${STATIC_URL}img/canvas/ParallelGateway.png">
                                                 </div>
@@ -696,14 +840,15 @@
 
                 <!-- 基本单元 start-->
                 <el-tab-pane :disabled="disabled6" label="基本监控项（一体化平台）" name="five" element-loading-text="拼命加载中"
-    element-loading-spinner="el-icon-loading"
-    element-loading-background="rgba(0, 0, 0, 0.8)" v-loading="loading">
+                             element-loading-spinner="el-icon-loading"
+                             element-loading-background="rgba(0, 0, 0, 0.8)" v-loading="loading">
                     <el-row>
                         <el-col :span="12">
                             <div class="grid-content bg-purple">
                                 <el-form :model="base" ref="base" :rules="basicMonitorRules" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
-                                    <el-select v-model="base.font_size" placeholder="请选择字号" @change="base_size" style="width: 310px;">
+                                    <el-select v-model="base.font_size" placeholder="请选择字号" @change="base_size"
+                                               style="width: 310px;">
                                         <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -732,7 +877,8 @@
                                                   type="textarea" style="width: 230px;"></el-input>
                                         </el-col>
                                     <el-col :span="4">
-                                    <el-button type="primary" size="mini" @click="base_monitor_show_reset">默认</el-button>
+                                    <el-button type="primary" size="mini"
+                                               @click="base_monitor_show_reset">默认</el-button>
                                     </el-col>
                                 </el-form-item>
                                 <el-form-item label="数据来源">
@@ -745,7 +891,7 @@
                                     <div v-if="file_show">
                                         <div :style="{ display: sql1 }">
                                     <el-form-item label="数据库连接">
-                                        <el-select v-model="server_url" placeholder="请选择数据库" >
+                                        <el-select v-model="server_url" placeholder="请选择数据库">
                                             <el-option v-for="i in sites1" :label="i.label"
                                                        :value="i.value"></el-option>
                                         </el-select>
@@ -791,8 +937,8 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                </el-form-item>
-                                <el-form-item label="采集周期" prop="period">
+                                        </el-form-item>
+                                        <el-form-item label="采集周期" prop="period">
                                             <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="basic.period" style="width: 96%"
                                                       placeholder="请输入采集周期(秒)"></el-input>
@@ -847,22 +993,24 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                </el-form-item>
-                                <el-form-item label="采集周期" prop="period">
+                                        </el-form-item>
+                                        <el-form-item label="采集周期" prop="period">
                                             <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="basic.period" style="width: 96%"
                                                       placeholder="请输入采集周期(秒)"></el-input>
                                         </el-form-item>
                                     </div>
                              <div v-if="interface_show">
-                                <el-form-item label="来源类型" prop="interface_type" >
-                                    <el-select v-model="base.interface_type" placeholder="请选择数据来源类型" @change="change_source_type" style="width: 310px;">
+                                <el-form-item label="来源类型" prop="interface_type">
+                                    <el-select v-model="base.interface_type" placeholder="请选择数据来源类型"
+                                               @change="change_source_type" style="width: 310px;">
                                         <el-option label="日志" value="log"></el-option>
                                         <el-option label="指标" value="measures"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="来源名称" prop="measures">
-                                    <el-select v-model="base.measures" filterable placeholder="请选择指标集" @change="change_measures" style="width: 310px;">
+                                    <el-select v-model="base.measures" filterable placeholder="请选择指标集"
+                                               @change="change_measures" style="width: 310px;">
                                         <el-option
                                                 v-for="item in iqube_name"
                                                 :key="item.value"
@@ -872,7 +1020,8 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="度量值" prop="measures_name">
-                                    <el-select v-model="base.measures_name" filterable placeholder="请选择指标名称" style="width: 310px;">
+                                    <el-select v-model="base.measures_name" filterable placeholder="请选择指标名称"
+                                               style="width: 310px;">
                                         <el-option
                                                 v-for="item in metric_list"
                                                 :key="item"
@@ -882,14 +1031,16 @@
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="展示规则" prop="show_rule_type">
-                                    <el-select v-model="base.show_rule_type" placeholder="请选择展示规则" @change="add_comments" style="width: 310px;">
+                                    <el-select v-model="base.show_rule_type" placeholder="请选择展示规则"
+                                               @change="add_comments" style="width: 310px;">
                                         <el-option label="百分比" value="0"></el-option>
                                         <el-option label="颜色" value="1"></el-option>
                                         <el-option label="其他" value="2"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="采集规则" prop="gather_rule" style="width: 90%">
-                                    <el-input v-model="base.gather_rule" placeholder="百分比：如：100|颜色：如：#000000==2@#ffffff==0|其他：如：100@ms"
+                                    <el-input v-model="base.gather_rule"
+                                              placeholder="百分比：如：100|颜色：如：#000000==2@#ffffff==0|其他：如：100@ms"
                                               type="textarea" style="width: 310px;"></el-input>
                                 </el-form-item>
                                  <div v-if="color_rules_comments">
@@ -922,31 +1073,40 @@
                                 </el-form-item>
                                   <el-form-item label="分值" prop="score">
                                             <el-input type="number" min="0" v-model.number="numberValidateForm.age"
-                                                      auto-complete="off" v-model="base.score" style="width: 96%" @change="change4"
-                                                      placeholder="请输入分值"  max="100"></el-input>
+                                                      auto-complete="off" v-model="base.score" style="width: 96%"
+                                                      @change="change4"
+                                                      placeholder="请输入分值" max="100"></el-input>
                                 </el-form-item>
                                 <el-col :span="24">
                                     <el-form-item v-for="(i,index) in base.dimension_data" class="dimension_div">
                                     <el-col :span="11">
-                                        <el-form-item label="维度名称" :prop="'dimension_data.'+ index +'.dimension_name'" :rules="basicMonitorRules.dimension_data.dimension_name">
+                                        <el-form-item label="维度名称" :prop="'dimension_data.'+ index +'.dimension_name'"
+                                                      :rules="basicMonitorRules.dimension_data.dimension_name">
                                             <el-select v-model="i.dimension_name">
-                                                <el-option :label="i" :value="i" v-for="(i,index) in dimension_list"></el-option>
+                                                <el-option :label="i" :value="i"
+                                                           v-for="(i,index) in dimension_list"></el-option>
                                             </el-select>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="11">
-                                        <el-form-item label="维度值" :prop="'dimension_data.'+ index +'.dimension_value'" :rules="basicMonitorRules.dimension_data.dimension_value">
+                                        <el-form-item label="维度值" :prop="'dimension_data.'+ index +'.dimension_value'"
+                                                      :rules="basicMonitorRules.dimension_data.dimension_value">
                                             <el-input v-model="i.dimension_value">
                                             </el-input>
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="2">
-                                        <el-button type="danger" @click="delete_dimension(index)" style="width: 68px;padding: 10px;margin: 2px 10px;"><i class="el-icon-remove-outline" style="font-size: 14px;"></i>&nbsp;删除</el-button>
+                                        <el-button type="danger" @click="delete_dimension(index)"
+                                                   style="width: 68px;padding: 10px;margin: 2px 10px;"><i
+                                                class="el-icon-remove-outline"
+                                                style="font-size: 14px;"></i>&nbsp;删除</el-button>
                                     </el-col>
                                 </el-form-item>
                                 </el-col>
                                 <el-col :span="6" :offset="18" style="height: 48px">
-                                    <el-button type="primary" @click="add_dimension"><i class="el-icon-circle-plus-outline" style="font-size: 14px"></i>&nbsp;添加维度</el-button>
+                                    <el-button type="primary" @click="add_dimension"><i
+                                            class="el-icon-circle-plus-outline"
+                                            style="font-size: 14px"></i>&nbsp;添加维度</el-button>
                                 </el-col>
                              </div>
 
@@ -998,11 +1158,11 @@
     //基本监控项高度大小范围校验
     const height_range_check = (rule, value, callback) => {
         var reg = /^[0-9]*$/;
-        if(!reg.test(value)){
+        if (!reg.test(value)) {
             return callback(new Error('高度值必须是一个数字'));
         }
         var height = parseInt(value);
-        if(0 > height || 480 < height){
+        if (0 > height || 480 < height) {
             return callback(new Error('高度值范围在0-480'));
         }
         return callback();
@@ -1010,11 +1170,11 @@
 
     const width_range_check = (rule, value, callback) => {
         var reg = /^[0-9]*$/;
-        if(!reg.test(value)){
+        if (!reg.test(value)) {
             return callback(new Error('宽度值必须是一个数字'));
         }
         var height = parseInt(value);
-        if(0 > height || 422 < height){
+        if (0 > height || 422 < height) {
             return callback(new Error('宽度值范围在0-422'));
         }
         return callback();
@@ -1045,10 +1205,10 @@
             gather_test_data: null,
             //采集测试数据标记位，默认为null，采集数据成功置true，采集失败置false
             gather_data_test_flag: null,
-            database_show:true,
-            file_show:false,
-            interface_show:false,
-            loading:false,
+            database_show: true,
+            file_show: false,
+            interface_show: false,
+            loading: false,
             message: '',                                           //弹框提示信息
             constants: '',
             unit_id1: 0,
@@ -1100,6 +1260,8 @@
             param2: '',
             zuoye: 'none',
             liucheng: 'none',
+            basic_show_content: "",
+            fields: [],                                  //字段选择数组
             result_data: {},                            //传递新增数据
             monitor_type: 'first',                     //单元类型
             basic: {                                   //基本单元
@@ -1117,15 +1279,15 @@
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
                 monitor_area: '',                             //日历地区
-                score:'1',                                //分值
+                score: '1',                                //分值
             },
             base: {
                 //基本单元
-                dimension_data:[],//维度名称
-                measures_name:'',//指标名称
-                measures:'',       //指标集
-                interface_type:'',//接口类型
-                show_rule_type:'',//展示规则
+                dimension_data: [],//维度名称
+                measures_name: '',//指标名称
+                measures: '',       //指标集
+                interface_type: '',//接口类型
+                show_rule_type: '',//展示规则
                 monitor_name: '',                      //单元名称
                 monitor_type: '',                      //单元类型
                 font_size: '20',                         //字号
@@ -1140,7 +1302,7 @@
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
                 monitor_area: '',                             //日历地区
-                score:''                                //分值
+                score: ''                                //分值
             },             //基本单元
             rules1: {
                 font_size: [
@@ -1312,8 +1474,8 @@
                         {required: true, message: '请填写维度值', trigger: 'blur'}
                     ]
                 },
-                score:[
-                    {required: true, message: '请输入分值',trigger:'change'}
+                score: [
+                    {required: true, message: '请输入分值', trigger: 'change'}
                 ]
             },
             //校验规则
@@ -1386,14 +1548,14 @@
             chartData: '',
             person_count: '',
             measures: '',
-            measures_name:'',
+            measures_name: '',
             iqube_name: [],
             //度量值列表
             metric_list: [],
             //维度名称列表
             dimension_list: [],
-            gather_list:[],
-            gather_base_test_data:[],
+            gather_list: [],
+            gather_base_test_data: [],
             /*dimension_data:[{
                 dimension_name:'ip',
                 dimension_value:'192.168.1.153'
@@ -1401,44 +1563,45 @@
         },
         methods: {
             //获取采集测试的结果，同步调用
-            get_gather_test(){
+            get_gather_test() {
                 $.ajax({
                     type: "POST",
-                    data : JSON.stringify(vm.base),
+                    data: JSON.stringify(vm.base),
                     dataType: "JSON",
                     async: false,
                     url: "${SITE_URL}iqube_interface/gather_base_test/",
-                    success: function(data) {
-                         if(0 != data.code){
-                            vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
+                    success: function (data) {
+                        if (0 != data.code) {
+                            vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
                             return;
-                         }
-                          //采集测试的数据缓存到gather_data_test_data变量中
-                         vm.gather_test_data = data.results;
+                        }
+                        //采集测试的数据缓存到gather_data_test_data变量中
+                        console.log(data.results)
+                        vm.gather_test_data = data.results;
                     },
-                    error: function(error){
-                        vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
+                    error: function (error) {
+                        vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
                         return;
                     }
                 });
             },
             //基本监控项（修改后）显示内容变更时调用的预览变更方法
-            content_modified_change(){
+            content_modified_change() {
                 this.base_monitor_other_fixed_status();
                 this.content_change();
             },
             //基本监控项显示方式为其他且显示内容为空时显示的单位
-            base_monitor_other_fixed_status(){
-                if(vm.base.show_rule_type==2){
-                    if('' == vm.base['contents'].replace(/^\s+|\s+$/g,"")){
+            base_monitor_other_fixed_status() {
+                if (vm.base.show_rule_type == 2) {
+                    if ('' == vm.base['contents'].replace(/^\s+|\s+$/g, "")) {
                         $('#other_fixed_show').show();
-                    }else{
+                    } else {
                         $('#other_fixed_show').hide();
                     }
                 }
             },
             //基本监控项修改后显示内容重置方法
-            base_monitor_show_reset(){
+            base_monitor_show_reset() {
                 //base['contents']使用缓存的所有指标值显示内容替换
                 this.base['contents'] = this.base_monitor_show_cache;
                 //如果显示方式为其他，且显示内容为空，移除为空时显示的当前单位
@@ -1447,41 +1610,41 @@
                 this.content_change();
             },
             //基本监控项修改后颜色和其他选项提示信息添加方法
-            add_comments(){
-                if('1' == this.base.show_rule_type){
+            add_comments() {
+                if ('1' == this.base.show_rule_type) {
                     this.color_rules_comments = true;
                     this.other_rules_comments = false;
-                }else if('2' == this.base.show_rule_type){
+                } else if ('2' == this.base.show_rule_type) {
                     this.color_rules_comments = false;
                     this.other_rules_comments = true;
-                }else{
+                } else {
                     this.color_rules_comments = false;
                     this.other_rules_comments = false;
                 }
 
             },
             //监控项数据处理，用于编辑状态下回显数据
-            monitor_edit_data_process(row){
+            monitor_edit_data_process(row) {
                 //如果监控项类型为基本基本监控单元（修改后）
-                if('five' == vm.monitor_type){
+                if ('five' == vm.monitor_type) {
                     //基本监控项采集类型初始化
                     this.sql_file_interface = row.gather_params;
                     //切换基本监控项的数据来源类型展示不同的内容
                     this.base_gather_source_change(vm.sql_file_interface);
                     if (vm.sql_file_interface == 'interface') {
                         vm.sql_file_interface = 9;
-                        if(row.dimension != null){
+                        if (row.dimension != null) {
                             vm.base['dimension_data'] = JSON.parse(row.dimension);
-                        }else{
+                        } else {
                             vm.base['dimension_data'] = [];
                         }
-                        if(0 == row.source_type){
+                        if (0 == row.source_type) {
                             this.change_source_type('log');
                             this.base['interface_type'] = 'log';
-                        }else if(1 == row.source_type){
+                        } else if (1 == row.source_type) {
                             this.change_source_type('measures');
                             this.base['interface_type'] = 'measures';
-                        }else{
+                        } else {
                             this.base['interface_type'] = null;
                         }
                         vm.base['measures_name'] = row.measure_name;
@@ -1489,10 +1652,10 @@
                         //下拉框不识别number类型的数据，需要转化为字符串供下拉框回显
                         vm.base['show_rule_type'] = row.display_type.toString();
                         //展示类型为颜色时显示提示信息
-                        if('1' == vm.base['show_rule_type']){
+                        if ('1' == vm.base['show_rule_type']) {
                             this.color_rules_comments = true;
                             this.other_rules_comments = false;
-                        }else if('2' == vm.base['show_rule_type']){
+                        } else if ('2' == vm.base['show_rule_type']) {
                             this.other_rules_comments = true;
                             this.color_rules_comments = false;
                         }
@@ -1511,15 +1674,15 @@
                         vm.base['gather_params'] = row.gather_params;
                         vm.base['monitor_area'] = vm.area;
                         vm.base['score'] = row.score;
-                    }else{
+                    } else {
                         alert('暂未实现！');
                     }
                 }
             },
             //数据添加后缓存数据清空操作
-            monitor_cache_clean(){
+            monitor_cache_clean() {
                 //基本监控项（修改后）的清空操作
-                if('five' == vm.monitor_type){
+                if ('five' == vm.monitor_type) {
                     this.base['dimension_data'] = [];
                     this.base['measures_name'] = '';
                     this.base['measures'] = '';
@@ -1551,10 +1714,10 @@
                 this.color_rules_comments = false;
                 this.other_rules_comments = false;
                 //如果是基本监控项（修改后）的修改窗口被关闭基本监控项编辑初始化状态重置为true
-                if(1 == vm.add_pamas){
+                if (1 == vm.add_pamas) {
                     this.base_monitor_edit_init = true;
                     this.base_monitor_edit_test_init = true;
-                }else if(0 == vm.add_pamas){
+                } else if (0 == vm.add_pamas) {
                     this.base_monitor_add_init = true;
                     this.base_monitor_add_test_init = true;
                 }
@@ -1562,57 +1725,57 @@
                 vm.base_monitor_show_cache = '';
             },
             //基本监控项（修改后）的数据来源切换
-            base_gather_source_change(source_type){
-                if('sql' == source_type || '3' == source_type){
+            base_gather_source_change(source_type) {
+                if ('sql' == source_type || '3' == source_type) {
                     //显示数据库表单
                     this.database_show = true;
                     this.file_show = false;
                     this.interface_show = false;
-                }else if('interface' == source_type || '9' == source_type){
+                } else if ('interface' == source_type || '9' == source_type) {
                     //显示关闭文件和数据库的显示，显示接口表单
                     this.database_show = false;
                     this.file_show = false;
                     this.interface_show = true;
-                }else if('file' == source_type || '6' == source_type){
+                } else if ('file' == source_type || '6' == source_type) {
                     //显示文件表单
                     this.database_show = false;
                     this.file_show = true;
                     this.interface_show = false;
-                }else{
+                } else {
                     console.log('基本监控项数据来源类型错误： ' + source_type);
                 }
             },
             //将监控项类型的编码转换成中文的名称，前台转换
-            format_monitor_type(row,column){
-                if(row.monitor_type === 1){
+            format_monitor_type(row, column) {
+                if (row.monitor_type === 1) {
                     return "基本监控项"
-                }else if(row.monitor_type === 2){
+                } else if (row.monitor_type === 2) {
                     return "图表监控项"
-                }else if(row.monitor_type === 3){
+                } else if (row.monitor_type === 3) {
                     return "作业监控项"
-                }else if(row.monitor_type === 4){
+                } else if (row.monitor_type === 4) {
                     return "流程监控项"
-                }else if(row.monitor_type === 5){
+                } else if (row.monitor_type === 5) {
                     return "基本监控项（一体化平台）"
                 }
             },
             //基本监控项的数据处理方法
-            base_monitor_data_process(){
+            base_monitor_data_process() {
                 //数据整合与处理
                 this.base_monitor_upload_data['jion_id'] = null;
-                if('log' == this.base['interface_type']){
+                if ('log' == this.base['interface_type']) {
                     this.base_monitor_upload_data['source_type'] = 0;
-                }else if('measures' == this.base['interface_type']){
+                } else if ('measures' == this.base['interface_type']) {
                     this.base_monitor_upload_data['source_type'] = 1;
-                }else{
+                } else {
                     this.base_monitor_upload_data['source_type'] = null;
                 }
                 //base对象被其他功能所使用，因此不能删除其属性用于上传数据，另外定义一个新的变量缓存并上传
                 this.base_monitor_upload_data['target_name'] = this.base['measures'];
                 this.base_monitor_upload_data['measure_name'] = this.base['measures_name'];
-                if(null == this.base['dimension_data'] || 0 === this.base['dimension_data'].length){
+                if (null == this.base['dimension_data'] || 0 === this.base['dimension_data'].length) {
                     this.base_monitor_upload_data['dimension'] = null;
-                }else{
+                } else {
                     this.base_monitor_upload_data['dimension'] = JSON.stringify(this.base['dimension_data']);
                 }
                 this.base_monitor_upload_data['display_type'] = this.base['show_rule_type'];
@@ -1637,14 +1800,14 @@
                 delete this.base['show_rule_type'];*/
             },
             //采集测试的数据保存方法
-            gather_data_test_save(item_id, type){
-              axios({
+            gather_data_test_save(item_id, type) {
+                axios({
                     method: 'post',
                     url: '${SITE_URL}gather_data/gather_data_save',
                     data: {
                         'measures': this.gather_test_data,
                         'item_id': item_id,
-                        'type' : type
+                        'type': type
                     }
                 }).then((res) => {
                     console.log('采集测试数据保存成功');
@@ -1653,7 +1816,7 @@
                 });
             },
             //监控项数据编辑后的保存方法
-            monitor_data_save(unit_id, flow){
+            monitor_data_save(unit_id, flow) {
                 if (vm.monitor_name == '') {
                     vm.message = '监控项名称不能为空!';
                     this.$alert(vm.message, "错误");
@@ -1661,11 +1824,11 @@
                     return false;
                 }
                 //unit_id大于0的情况为编辑后的数据上传
-                if(unit_id > 0){
+                if (unit_id > 0) {
                     axios({
-                    method: 'post',
-                    url: '${SITE_URL}monitor_item/edit/',
-                    data: {
+                        method: 'post',
+                        url: '${SITE_URL}monitor_item/edit/',
+                        data: {
                             'flow': flow,
                             data: vm.result_data,
                             monitor_type: vm.monitor_type,
@@ -1675,21 +1838,21 @@
                         }
                     }).then((res) => {
                         if (res['data']['code'] == 1) {
-                            this.$alert("保存失败!","错误");
+                            this.$alert("保存失败!", "错误");
                             vm.centerDialogVisible = true;
                         } else {
                             //保存采集测试的数据到服务器
                             vm.gather_data_test_save(vm.unit_id, 'edit');
-                            this.$alert(vm.message,"提示");
+                            this.$alert(vm.message, "提示");
                             vm.centerDialogVisible = false;
                         }
                         vm.show();
                     }).catch((error) => {
-                        this.$alert("修改保存出错！","错误")
+                        this.$alert("修改保存出错！", "错误")
                     });
                 }
                 //unit_id等于0的情况下为添加后的数据上传
-                else if(unit_id == 0){
+                else if (unit_id == 0) {
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor_item/add/',
@@ -1712,7 +1875,7 @@
                     }).catch((error) => {
                         this.$alert('新增保存失败!', "错误");
                     });
-                }else {
+                } else {
                     vm.centerDialogVisible = true;
                     if (vm.add_pamas == 0) {
                         vm.unit_id = 0
@@ -1721,21 +1884,21 @@
                     }
                 }
             },
-            add_dimension(){
+            add_dimension() {
                 vm.$set(vm.base.dimension_data, vm.base.dimension_data.length, {
-                dimension_name:'',
-                dimension_value:''
-            });
+                    dimension_name: '',
+                    dimension_value: ''
+                });
             },
-            delete_dimension(index){
-                vm.base.dimension_data.splice(index,1);
+            delete_dimension(index) {
+                vm.base.dimension_data.splice(index, 1);
             },
             basic_size() {
                 $("#text2").find("*").css("font-size", this.basic.font_size)
             },
             //基本监控项修改后的字体大小变更
-            base_size(){
-                collection_base_size(vm,'#base_test_text')
+            base_size() {
+                collection_base_size(vm, '#base_test_text')
             },
             basic_height() {
                 $('#text2').css('height', this.basic.height)
@@ -1744,15 +1907,16 @@
                 $("#text2").css("width", this.basic.width)
             },
             get_header_data() {
-                axios.get('${SITE_URL}/market_day/get_header/').then(function (res) {
+                axios.get('${SITE_URL}market_day/get_header/').then(function (res) {
                 })
             },
             get_all_area() {
                 axios({
                     method: 'get',
-                    url: '${SITE_URL}/market_day/get_all_area',
+                    url: '${SITE_URL}market_day/get_all_area',
                 }).then(function (res) {
                     res = res.data.message
+                    console.log(res)
                     vm.areas = []
                     for (var i = 0; i < res.length; i++) {
                         var label = res[i].country + "(" + res[i].timezone + ")"
@@ -1765,121 +1929,10 @@
                 })
             },
             sycontent() {
-                let tempcontents = vm.basic.contents
                 $("#text2").html("")
-                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + tempcontents + "</div>")
-                if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1) {
-                    var temp1 = tempcontents.split("#");
-                    var temp2 = [];
-                    var temp3 = [];
-                    var temp4 = [];
-                    var str = [];
-                    for (var i = 1; i < temp1.length; i = i + 2) {
-                        temp2.push(temp1[i]);
-                    }
-                    for (var i = 0; i < temp2.length; i++) {
-                        temp3.push(temp2[i].split("="))
-                    }
-                    for (var i = 0; i < temp3.length; i++) {
-                        temp4.push(temp3[i][1])
-                    }
-                    for (i = 0; i < temp2.length; i++) {
-                        str[i] = '#' + temp2[i] + '#'
-                    }
-                    $("#text2").html("")
-                    for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
-                        if (j < temp4.length) {
-                            $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + temp4[j] + "</div>");
-                        } else {
-                            $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + "</div>");
-                        }
-                    }
-                }
-                if (vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1) {
-                    var icon1 = tempcontents.split("@");
-                    var icon2 = [];
-                    var icon3 = [];
-                    var icon4 = [-2];
-                    var icon = [];
-                    for (var i = 1; i < icon1.length; i = i + 2) {
-                        icon2.push(icon1[i]);
-                    }
-                    for (var i = 0; i < icon2.length; i++) {
-                        icon3.push(icon2[i].split("="));
-                    }
-                    for (var i = 0; i < icon3.length; i++) {
-                        icon4.pop();
-                        icon4.push(icon3[i][1]);
-                    }
-                    $("#text2").html("")
-                    $("#text2").append("<div class = \"asd\">" + icon1[0] + "</div>");
-                    if (icon4) {
-                        icon4.push("-2")
-                    }
-                    if (icon4[0] == 1) {
-                        $("#text2").append("<div class=\"circle1\"></div>");
-                    }
-                    if (icon4[0] == 2) {
-                        $("#text2").append("<div class=\"circle2\"></div>");
-                    }
-                    if (icon4[0] == 0) {
-                        $("#text2").append("<div class=\"circle4\"></div>");
-                    }
-                    if (icon4[0] == -1 || icon4 == -2) {
-                        $("#text2").append("<div class=\"circle3\"></div>");
-                    }
-                }
-                if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
-                    var temp1 = tempcontents.split("#");
-                    var temp2 = [];
-                    var temp3 = [];
-                    var temp4 = [];
-                    for (var i = 1; i < temp1.length; i = i + 2) {
-                        temp2.push(temp1[i]);
-                    }
-                    for (var i = 0; i < temp2.length; i++) {
-                        temp3.push(temp2[i].split("="))
-                    }
-                    for (var i = 0; i < temp3.length; i++) {
-                        temp4.push(temp3[i][1])
-                    }
-                    var icon1 = [];
-                    var icon2 = [];
-                    var icon3 = [];
-                    var icon4 = '';
-                    var flag2 = 0;
-                    for (var i = 0; i < temp1.length; i = i + 2) {
-                        if (temp1[i].indexOf("@") > -1) {
-                            icon1 = temp1[i].split("@")
-                            flag2 = i
-                            for (var k = 0; k < icon1.length; k++) {
-                                icon2.push(icon1[k])
-                            }
-                        }
-                    }
-                    icon3 = icon2[1].split("=")
-                    icon4 = icon3[1]
-                    $("#text2").html("")
-                    for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
-                        if (i == flag2) {
-                            $("#text2").append("<div class=\"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
-                            if (icon4 == 1) {
-                                $("#text2").append("<div class=\"circle1\"></div>");
-                            }
-                            if (icon4 == 2) {
-                                $("#text2").append("<div class=\"circle2\"></div>");
-                            }
-                            if (icon4 == 0) {
-                                $("#text2").append("<div class=\"circle4\"></div>");
-                            }
-                            if (icon4 == -1 || icon4 == -2) {
-                                $("#text2").append("<div class=\"circle3\"></div>");
-                            }
-                        } else {
-                            $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + temp4[j] + "</div>");
-                        }
-                    }
-                }
+                let show=vm.basic.contents.split(':')[1]
+                show=show.split("@")[0]+":"+vm.basic_show_content
+                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + show + "</div>")
             },
             basic_test() {
                 let params = '';
@@ -1897,124 +1950,56 @@
                         params: params,
                         gather_rule: vm.basic.gather_rule,
                         gather_params: vm.basic.gather_params,
-                        score:vm.basic.score
+                        score: vm.basic.score,
+                        key: vm.basic.measure_name
                     },
                 }).then(function (res) {
-                    let tempcontents2 = vm.basic.contents
+                    let showtype = vm.basic.display_type
+                    let flag = res.data.message[0][vm.basic.measure_name]
+                    let ordinary_fields = vm.fields
+                    for (var i = 0; i < vm.fields.length; i++) {
+                        if (vm.fields[i] == vm.basic.measure_name) {
+                            vm.fields.splice(i, 1)
+                        }
+                    }
+                    vm.basic.contents = '"' + vm.basic.measure_name + '":"' + res.data.message[0][vm.fields[0]] + '"@'
                     $("#text2").html("")
-                    $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + tempcontents2 + "</div>")
-                    if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1) {
-                        var temp1 = tempcontents2.split("#");
-                        var temp2 = [];
-                        var temp3 = [];
-                        var temp4 = [];
-                        for (var i = 1; i < temp1.length; i = i + 2) {
-                            temp2.push(temp1[i]);
+                    if (showtype == 1) {
+                        vm.basic_show_content = res.data.message[0][vm.basic.measure_name]
+                        for (var i = 0; i < ordinary_fields.length; i++) {
+                            $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + res.data.message[0][ordinary_fields[i]] + ":</div>")
                         }
-                        for (var i = 0; i < temp2.length; i++) {
-                            temp3.push(temp2[i].split("="))
-                        }
-                        for (var i = 0; i < temp3.length; i++) {
-                            temp4.push(temp3[i][0])
-                        }
-                        $("#text2").html("")
-                        for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
-                            if (j < temp4.length) {
-                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
-                            } else {
-                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + "</div>");
-                            }
-                        }
-                    }
-                    if (vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1) {
-                        var icon1 = tempcontents2.split("@");
-                        var icon2 = [];
-                        var icon3 = [];
-                        var icon4 = '';
-                        if (res.data.message[0]['DB_CONNECTION']) {
-                            icon4 = res.data.message[0]['DB_CONNECTION'];
-                        }
-                        if (res.data.message[0]['URL_CONNECTION']) {
-                            icon4 = res.data.message[0]['URL_CONNECTION'];
-                        }
-                        if (res.data.message[0]['FILE_EXIST']) {
-                            icon4 = res.data.message[0]['FILE_EXIST'];
-                        }
-                        $("#text2").html("")
-                        $("#text2").append("<div class = \"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
-                        if (icon4 == 1) {
-                            $("#text2").append("<div class=\"circle1\"></div>");
-                        }
-                        if (icon4 == 2) {
-                            $("#text2").append("<div class=\"circle2\"></div>");
-                        }
-                        if (icon4 == 0) {
-                            $("#text2").append("<div class=\"circle3\"></div>");
-                        }
-                        if (icon4 == -1 || icon4 == -2) {
-                            $("#text2").append("<div class=\"circle4\"></div>");
-                        }
-                    }
-                    if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
-                        var temp1 = tempcontents2.split("#");
-                        var temp2 = [];
-                        var temp3 = [];
-                        var temp4 = [];
-                        for (var i = 1; i < temp1.length; i = i + 2) {
-                            temp2.push(temp1[i]);
-                        }
-                        for (var i = 0; i < temp2.length; i++) {
-                            temp3.push(temp2[i].split("="))
-                        }
-                        for (var i = 0; i < temp3.length; i++) {
-                            temp4.push(temp3[i][0])
-                        }
-                        var icon1 = [];
-                        var icon2 = [];
-                        var icon3 = [];
-                        var icon4 = '';
-                        var flag2 = 0;
-                        for (var i = 0; i < temp1.length; i = i + 2) {
-                            if (temp1[i].indexOf("@") > -1) {
-                                icon1 = temp1[i].split("@")
-                                flag2 = i
-                                for (var k = 0; k < icon1.length; k++) {
-                                    icon2.push(icon1[k])
+                        let ranges = vm.basic.display_rule.split('\n')
+                        for (let i = 0; i < ranges.length; i++) {
+                            let start = ranges[i].split('-')[0]
+                            let end = ranges[i].split('-')[1]
+                            if (flag > start && flag <= end) {
+                                if (i == 0) {
+                                    $("#text2").css('background-color', "green")
+                                } else if (i == 1) {
+                                    $("#text2").css('background-color', "red")
+                                } else if (i == 2) {
+                                    $("#text2").css('background-color', "yellow")
+                                } else {
+                                    $("#text2").css('background-color', "gray")
                                 }
                             }
                         }
-                        icon3 = icon2[1].split("=")
-                        if (res.data.message[0]['DB_CONNECTION']) {
-                            icon4 = res.data.message[0]['DB_CONNECTION'];
-                        }
-                        if (res.data.message[0]['URL_CONNECTION']) {
-                            icon4 = res.data.message[0]['URL_CONNECTION'];
-                        }
-                        if (res.data.message[0]['FILE_EXIST']) {
-                            icon4 = res.data.message[0]['FILE_EXIST'];
-                        }
-                        $("#text2").html("")
-                        for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
-                            if (i == flag2) {
-                                $("#text2").append("<div class = \"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
-                                if (icon4 == 1) {
-                                    $("#text2").append("<div class=\"circle1\"></div>");
-                                }
-                                if (icon4 == 2) {
-                                    $("#text2").append("<div class=\"circle2\"></div>");
-                                }
-                                if (icon4 == 0) {
-                                    $("#text2").append("<div class=\"circle3\"></div>");
-                                }
-                                if (icon4 == -1 || icon4 == -1) {
-                                    $("#text2").append("<div class=\"circle4\"></div>");
-                                }
-                            } else {
-                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                    } else if (showtype == 2) {
+                        let ranges = vm.basic.display_rule.split('\n')
+                        for (let i = 0; i < ranges.length; i++) {
+                            let temp = ranges[i].split('@')[1]
+                            let start = ranges[i].split('@')[0].split('-')[0]
+                            let end = ranges[i].split('@')[0].split('-')[1]
+                            if (flag > start && flag <= end) {
+                                vm.basic_show_content = temp
+                                temp=res.data.message[0][vm.fields[0]]+":"+temp
+                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp + "</div>")
+                                break;
                             }
                         }
                     }
-                })
+                });
             },
             // 保存
             pefFrom() {
@@ -2118,7 +2103,7 @@
                             vm.page_count = res.data.results[0].page_count;
                         }
                     }).catch(function (e) {
-                    vm.$message.error('获取数据失败！');
+                        vm.$message.error('获取数据失败！');
                     });
                 }
             },
@@ -2156,14 +2141,14 @@
                     vm.basic.contents = row.contents;
                     vm.basic.status = row.status;
                     vm.basic.score = row.score;
-                    vm.area=row.monitor_area;
+                    vm.area = row.monitor_area;
                     if (vm.sql_file_interface == 'sql') {
-                        vm.sql_file_interface =3;
+                        vm.sql_file_interface = 3;
                         axios({
                             method: 'post',
                             url: '${SITE_URL}db_connection/get_conname/',
-                            data:row.params,
-                        }).then((res)=> {
+                            data: row.params,
+                        }).then((res) => {
                             //vm.server_url = res['data']['results']['connname'];
                             vm.sql_id = res['data']['results']['id'];
                             vm.server_url = vm.sql_id;
@@ -2181,8 +2166,8 @@
                         vm.basic.gather_params = 'sql'
                     }
                     if (vm.sql_file_interface == 'file') {
-                        vm.sql_file_interface =6;
-                        arr=row.params.split("#");
+                        vm.sql_file_interface = 6;
+                        arr = row.params.split("#");
                         vm.server_url = arr[0];
                         vm.file_param = arr[1];
                         vm.typeid = '2';
@@ -2197,8 +2182,8 @@
                         vm.basic_test()
                     }
                     if (vm.sql_file_interface == 'interface') {
-                        vm.sql_file_interface =9;
-                        arr=row.params.split("#");
+                        vm.sql_file_interface = 9;
+                        arr = row.params.split("#");
                         vm.server_url = arr[0];
                         vm.file_param = arr[1];
                         vm.typeid = '3';
@@ -2230,23 +2215,22 @@
                     vm.chart.end_time = row.end_time;
                     vm.chart.gather_rule = row.gather_rule;
                     vm.chart.status = row.status;
-                    vm.area=row.monitor_area;
+                    vm.area = row.monitor_area;
                     axios({
-                            method: 'post',
-                            url: '${SITE_URL}db_connection/get_conname/',
-                            data:row.params,
-                        }).then((res)=> {
-                            vm.chart.params = res['data']['results']['connname'];
-                            vm.show_content();
-                        }).catch(function (e) {
-                            vm.$message.error('获取数据库失败！');
-                        });
+                        method: 'post',
+                        url: '${SITE_URL}db_connection/get_conname/',
+                        data: row.params,
+                    }).then((res) => {
+                        vm.chart.params = res['data']['results']['connname'];
+                        vm.show_content();
+                    }).catch(function (e) {
+                        vm.$message.error('获取数据库失败！');
+                    });
                 }
                 //作业监控项
                 if (row.monitor_type === 3) {
                     vm.disabled4 = false;
                     vm.monitor_type = 'third';
-                    console.log(row)
                     vm.job.font_size = row.font_size;
                     vm.job.height = row.height;
                     vm.job.width = row.width;
@@ -2261,7 +2245,7 @@
                     vm.job.gather_params = row.gather_params;
                     vm.job.params = row.params;
                     vm.job.status = row.status;
-                    vm.area=row.monitor_area;
+                    vm.area = row.monitor_area;
                 }
                 //流程监控项
                 if (row.monitor_type === 4) {
@@ -2279,18 +2263,18 @@
                     vm.flow.period = row.period;
                     vm.flow.node_name = row.gather_params;
                     vm.flow.gather_rule = {
-                        'name':row.gather_rule,
-                        'id':row.jion_id
+                        'name': row.gather_rule,
+                        'id': row.jion_id
                     };
-                    vm.area=row.monitor_area;
-                    var id1=row.jion_id
-                    var id=[{
-                        'id':id1
+                    vm.area = row.monitor_area;
+                    var id1 = row.jion_id
+                    var id = [{
+                        'id': id1
                     }]
                     vm.flow_change(id)
                 }
                 //基本监控项（一体化）
-                if(row.monitor_type === 5){
+                if (row.monitor_type === 5) {
                     vm.disabled6 = false;
                     //监控项类型设置
                     this.monitor_type = 'five';
@@ -2393,8 +2377,8 @@
                     var node_times = [];
                     for (var i = 4; i <= vm.location.length - 1; i++) {
                         node_time.node_id = vm.location[i].id ,
-                        node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
-                        node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
+                            node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
+                            node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
                         node_time.node_name = $('#' + vm.location[i].id + '').find('.node-title').text()
                         if (node_time.starttime == "") {
                             vm.unit_id = -1;
@@ -2417,20 +2401,20 @@
                     flow.constants = vm.constants;
                     //上传数据至服务器保存
                     vm.monitor_data_save(vm.unit_id, flow);
-                //修改后的基本监控项的数据上传处理
-                }else if (vm.monitor_type == 'five') {
+                    //修改后的基本监控项的数据上传处理
+                } else if (vm.monitor_type == 'five') {
                     //判断是否已经进行采集测试
-                    if(null != this.gather_data_test_flag && false == this.gather_data_test_flag){
-                        this.$alert("采集测试未通过，请校正接口调用参数或稍后重试！","错误");
+                    if (null != this.gather_data_test_flag && false == this.gather_data_test_flag) {
+                        this.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
                         vm.gather_data_test_flag = null;
-                    }else if(null == this.gather_data_test_flag){
+                    } else if (null == this.gather_data_test_flag) {
                         //获取采集测试数据，调用同步服务
                         vm.get_gather_test();
                         //基本监控项的数据处理
                         vm.base_monitor_data_process();
                         //上传监控项数据至服务器保存
                         vm.monitor_data_save(vm.unit_id, flow);
-                    }else{
+                    } else {
                         //基本监控项的数据处理
                         vm.base_monitor_data_process();
                         //上传监控项数据至服务器保存
@@ -2450,10 +2434,10 @@
                     }
                 }).then(function (res) {
                     {
-                        vm.template_list.id=res.data.template_id[0].id
-                        vm.template_list.name=res.data.template_id[0].name
+                        vm.template_list.id = res.data.template_id[0].id
+                        vm.template_list.name = res.data.template_id[0].name
                         vm.constants = res.data.constants
-                        var aa="  <div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width:1000px;position: relative;\">\n" +
+                        var aa = "  <div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width:1000px;position: relative;\">\n" +
                             "\n" +
                             "                                        <div class=\"workflow-canvas\" style=\"margin-left: 0px;padding-left: 0px\">\n" +
                             "                                            <!-- 画布模板 start -->\n" +
@@ -2544,8 +2528,8 @@
                                     "line": vm.line, "location": vm.location
                                 }
                         });
-                        let old_html  = $('#canvas').html()
-                        $('#canvas').html('<div style="transform: scale(0.65)">'+old_html+'</div>')
+                        let old_html = $('#canvas').html()
+                        $('#canvas').html('<div style="transform: scale(0.65)">' + old_html + '</div>')
                     }
                 }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
@@ -2615,14 +2599,14 @@
                                         $('p:contains(' + res.data.message[i].data_key + ')').parent().siblings('.node-icon').css('background', '#f56c6c')
                                     }
                                 }
-                        }).catch(function (e) {
-                            vm.$message.error('获取数据失败！');
-                        });
-                        },13000)
+                            }).catch(function (e) {
+                                vm.$message.error('获取数据失败！');
+                            });
+                        }, 13000)
                     }).catch(function (e) {
                         vm.$message.error('获取数据失败！');
                     });
-                }else if(vm.liucheng == 'none'){
+                } else if (vm.liucheng == 'none') {
                     var period = $('#period').val()
                     var template_list = vm.template_list
                     axios({
@@ -2720,12 +2704,12 @@
                     vm.liucheng = 'none';
                 }
             },
-            change4(){
-               if(vm.basic.score>100){
+            change4() {
+                if (vm.basic.score > 100) {
                     vm.basic.score = 100
-               }else if(vm.base.score>100){
-                   vm.base.score = 100
-               }
+                } else if (vm.base.score > 100) {
+                    vm.base.score = 100
+                }
             },
             change_job_fontSize() {       //修改作业单元中预览字体
                 $('#job_text').find("*").css('font-size', this.job.font_size);
@@ -3008,27 +2992,27 @@
                 vm.echart_height();
                 vm.echart_width();
             },
-            chart_get_test(){
-                 //20190508 彭英杰 处理图表显示 start
-                 var tab = $("div[role='tablist']");
-                 if(tab.length>0){ //判断是否存在
+            chart_get_test() {
+                //20190508 彭英杰 处理图表显示 start
+                var tab = $("div[role='tablist']");
+                if (tab.length > 0) { //判断是否存在
                     var ar_tab = tab.find("div[aria-selected='true']");
-                     if(ar_tab.length>0){//判断是否选择
-                         var id = ar_tab[0].id;
-                         if(id == "tab-second"){//为图表监控项
-                             //pane-second
-                             // maintenancePie 展示页面
-                             //required
-                             //vm.chart.gather_rule
-                             if(vm.chart.gather_rule!=""){
+                    if (ar_tab.length > 0) {//判断是否选择
+                        var id = ar_tab[0].id;
+                        if (id == "tab-second") {//为图表监控项
+                            //pane-second
+                            // maintenancePie 展示页面
+                            //required
+                            //vm.chart.gather_rule
+                            if (vm.chart.gather_rule != "") {
                                 $("#pane-second maintenancePie").load(vm.chart.gather_rule)
-                             }
-                             return;
-                         }
-                     }
-                 }
+                            }
+                            return;
+                        }
+                    }
+                }
 
-                 //20190508 彭英杰 处理图表显示 end
+                //20190508 彭英杰 处理图表显示 end
                 axios({
                     url: '${SITE_URL}monitor_item/chart_get_test/',
                     method: 'post',
@@ -3065,11 +3049,11 @@
             echart_width() {
                 $('#maintenanceIndex').find("canvas").css('width', vm.chart.width)
             },
-            base_height_change(){
-                collection_base_height_change(vm,'#base_test_text');
+            base_height_change() {
+                collection_base_height_change(vm, '#base_test_text');
             },
-            base_width_change(){
-                collection_base_width_change(vm,'#base_test_text');
+            base_width_change() {
+                collection_base_width_change(vm, '#base_test_text');
             },
             switch_change(value) {
                 axios({
@@ -3080,8 +3064,10 @@
                         id: value.id,
                         monitor_name: value.monitor_name
                     },
-                }).then((res) =>{
-                    if (res.data.code == 1) {alert(res.data.message)}
+                }).then((res) => {
+                    if (res.data.code == 1) {
+                        alert(res.data.message)
+                    }
                 }).catch(function (e) {
                     vm.$message.error('获取数据失败！');
                 });
@@ -3092,13 +3078,13 @@
                 this.base.measures_name = '';
                 vm.iqube_name = [];
                 //日志监控项模拟数据,目前一体化平台没有数据
-                if("get_log_type/" == value){
+                if ("get_log_type/" == value) {
                     var temp_json = {'label': 'zy-shangpin-initial', 'value': 'zy-shangpin-initial'};
                     vm.iqube_name.push(temp_json)
-                }else{
+                } else {
                     vm.loading = true;
                     axios({
-                        url: '${SITE_URL}iqube_interface/'+value,
+                        url: '${SITE_URL}iqube_interface/' + value,
                     }).then((res) => {
                         vm.gather_list = res.data.results;
                         for (let i = 0; i < res.data.results.length; i++) {
@@ -3109,12 +3095,12 @@
                             }
                         }
                         //在第一次编辑的情况下，根据当前来源名称加载对应的候选度量值
-                        if('1' == vm.add_pamas && vm.loading == true){
+                        if ('1' == vm.add_pamas && vm.loading == true) {
                             this.change_measures(vm.base['measures']);
                         }
                         vm.loading = false;
                     }).catch((res) => {
-                        console.error("获取指标集失败"+res);
+                        console.error("获取指标集失败" + res);
                         vm.loading = false;
                     });
                 }
@@ -3126,29 +3112,29 @@
                 // 而是通过手动点击来源名称下拉框的形式调用此函数，
                 // 将会清空其度量值，避免在改变来源名称之后还是原来的度量值名称，
                 // 导致度量值候选项中末尾出现暂无数据的BUG
-                if(null != vm.base['measures_name'] || vm.base['measures_name'] != ''){
-                    if(!this.base_monitor_edit_init || !this.base_monitor_add_init){
+                if (null != vm.base['measures_name'] || vm.base['measures_name'] != '') {
+                    if (!this.base_monitor_edit_init || !this.base_monitor_add_init) {
                         vm.base['measures_name'] = '';
                     }
                 }
                 //日志监控项模拟数据
-                if(this.base.interface_type == 'log'){
-                    vm.metric_list = {0:'system-init'};
+                if (this.base.interface_type == 'log') {
+                    vm.metric_list = {0: 'system-init'};
                 }
                 //如果是点击编辑后的数据初始化时触发的此函数，base_monitor_edit_init标记
                 //置为false，在下次触发change_measures函数时将清空度量值
-                if(this.base_monitor_edit_init){
-                    if('1' == vm.add_pamas){
+                if (this.base_monitor_edit_init) {
+                    if ('1' == vm.add_pamas) {
                         this.base_monitor_edit_init = false;
-                    }else if('0' == vm.add_pamas){
+                    } else if ('0' == vm.add_pamas) {
                         this.base_monitor_add_init = false;
-                    }else{
+                    } else {
                         console.log('触发类型不是添加/修改！')
                     }
                 }
-                for(let i in vm.gather_list){
-                    for (let key in vm.gather_list[i]){
-                        if (key === value){
+                for (let i in vm.gather_list) {
+                    for (let key in vm.gather_list[i]) {
+                        if (key === value) {
                             vm.metric_list = vm.gather_list[i][key]['metric_list']
                             vm.dimension_list = vm.gather_list[i][key]['dimension_list']
                         }
@@ -3157,34 +3143,34 @@
                 console.log(vm.dimension_list);
             },
             //切换来源类型
-            change_source_type(value){
-                if (value == 'log'){
+            change_source_type(value) {
+                if (value == 'log') {
                     vm.get_gather_info('get_log_type/')
-                }else{
+                } else {
                     vm.get_gather_info('get_measures_type/')
                 }
             },
             //采集测试方法
-            base_cell_test(){
+            base_cell_test() {
                 //同步获取采集数据
                 vm.get_gather_test();
                 //预览采集，调用预览组件
-                preview_monitor_item(vm ,'monitor_item',"#base_test_text");
+                preview_monitor_item(vm, 'monitor_item', "#base_test_text");
             },
-            change_data_sources(value){
-                if(value == 9){
+            change_data_sources(value) {
+                if (value == 9) {
                     //接口类型
                     vm.file_show = false;
                     vm.interface_show = true;
                     vm.database_show = false;
                     vm.change1(9);
-                }else if (value == 6){
+                } else if (value == 6) {
                     //文件
                     vm.file_show = true;
                     vm.interface_show = false;
                     vm.database_show = false;
                     vm.change1(6);
-                }else if (value == 3){
+                } else if (value == 3) {
                     //数据库
                     vm.change1(3);
                     vm.file_show = false;
@@ -3194,14 +3180,22 @@
             },
             // 预览类容编辑
             // 采集表中保存的是实际调用一体化平台的返回的结果，在场景编排中再根据展示规则还原预览效果
-            content_change(){
-                collection_content_change(vm ,"#base_test_text")
+            content_change() {
+                collection_content_change(vm, "#base_test_text")
             }
         },
         mounted() {
             this.get_header_data()
             this.get_all_area()
-        },
+        }, watch: {
+            'basic.gather_rule': function (oldval, newval) {
+                fs = oldval.split('@')
+                vm.fields = []
+                for (var i = 1; i < fs.length; i += 2) {
+                    vm.fields.push(fs[i].split("=")[0])
+                }
+            }
+        }
     });
     vm.show();
 </script>
@@ -3213,7 +3207,7 @@
             }
         });
     }, 1)
-    $(function(){
+    $(function () {
     })
 </script>
 </html>
