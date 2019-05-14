@@ -293,13 +293,11 @@
                             <span style="line-height:54px;font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">自定义报表</span>
                         </template>
                         <el-col :span="22" :offset="1">
-                            <el-table :data="scene_table_data" style="width: 100%;margin-bottom: 50px;">
-                                <el-table-column prop="scene_id" label="场景id" width="100"></el-table-column>
-                                <el-table-column prop="scene_name" label="场景名称" width="150"></el-table-column>
-                                <el-table-column prop="scene_node" label="节点" width="150"></el-table-column>
-                                <el-table-column prop="start_time" label="开始时间" width="450"></el-table-column>
-                                <el-table-column prop="end_time" label="截至时间" width="450"></el-table-column>
-                                <el-table-column prop="scene_status" label="状态" width="150"></el-table-column>
+                            <el-table :data="customQueryTableData" style="width: 100%;margin-bottom: 50px;">
+                                <el-table-column prop="id" label="序号" width="80"></el-table-column>
+                                <el-table-column prop="query_name" label="查询名称" width="120"></el-table-column>
+                                <el-table-column prop="show_type" label="显示类型" width="120"></el-table-column>
+                                <el-table-column prop="query_sql" label="查询SQL" width="950"></el-table-column>
                             </el-table>
                         </el-col>
 
@@ -388,6 +386,7 @@
         el: '#maintenanceIndex',
         data: {
             percentage:0,
+            customQueryTableData: null,
             options1: [
                 {
               value: '选项1',
@@ -739,12 +738,44 @@
                     }
                 })
             },
+            //自定义查询数据分页获取
+                customQueryPageChange: function (page) {
+                    var data = {
+                        search: "",
+                        page: page,
+                        limit: 5
+                    };
+                    axios({
+                        method: 'post',
+                        url: '${SITE_URL}custom_query/select_queries_pagination',
+                        data: data
+                    }).then((res) => {
+                        this.customQueryTableData = res.data.items;
+                      //  this.queryCount = res.data.pages;
+                       // this.currentPage = page;
+                       // if (page > res.data.pages) {
+                       //     this.currentPage = res.data.pages;
+                      //  }
+                    }).catch((res) => {
+                     //   loading.close();
+                        var msg = '自定义查询信息加载失败！';
+                        this.customQueryPopupErrorMessage(msg + res);
+                    });
+                },
+                //弹出错误信息
+                customQueryPopupErrorMessage: function (msg) {
+                    this.$notify.error({
+                        title: '错误',
+                        message: msg
+                    });
+                }
+                ,
             query_scene_data:function(){
                 var para_data={};
                 para_data["item_type"] = ve.value2;
                 para_data["scene_type"] = ve.value1;
                 for(var i=0;i<ve.options1.length;i++){
-                    if(ve.options1[i].value == ve.value1){
+                    if(ve.options1[i].value === ve.value1){
                         para_data["startTime"] = ve.options1[i]["startTime"];
                         para_data["stopTime"] = ve.options1[i]["stopTime"];
                         break;
@@ -773,9 +804,11 @@
         ve.get_date();
         ve.get_monitor_scene_item();
     },10000)
+    ve.customQueryPageChange(1);
     ve.query_scene_data();
     ve.get_alert_data();
     ve.show_line_chart();
+
 </script>
 
 </html>
