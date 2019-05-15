@@ -217,8 +217,8 @@
         <div>
             <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;" border header-align="center">
                 <el-table-column prop="id" label="序号" sortable></el-table-column>
-                <el-table-column prop="monitor_name" label="监控名称" sortable></el-table-column>
-                <el-table-column prop="monitor_type" label="监控类型" :formatter="format_monitor_type"
+                <el-table-column prop="monitor_name" show-overflow-tooltip="true" label="监控名称" sortable></el-table-column>
+                <el-table-column prop="monitor_type" show-overflow-tooltip="true" label="监控类型" :formatter="format_monitor_type"
                                  sortable></el-table-column>
                 <el-table-column prop="editor" label="编辑人" sortable></el-table-column>
                 <el-table-column prop="edit_time" label="修改时间" sortable></el-table-column>
@@ -1952,7 +1952,7 @@
                         gather_params: vm.basic.gather_params,
                         score: vm.basic.score,
                         key: vm.basic.measure_name,
-                        gather_rule: vm.basic.display_rule,
+                        display_rule: vm.basic.display_rule,
                         gather_type: vm.basic.display_type
                     },
                 }).then(function (res) {
