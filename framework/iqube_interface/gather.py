@@ -8,7 +8,7 @@ import json
 import time
 import sys
 from conf.default import MEASURES_API_ADDRESS
-from common.utils import get_previous_day_ts
+from common.utils import *
 
 # 解决ascii编码的问题
 import sys
