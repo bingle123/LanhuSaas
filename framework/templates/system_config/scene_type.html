@@ -75,6 +75,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="create_time"
+                        :show-overflow-tooltip="true"
                         label="创建时间">
                 </el-table-column>
                 <el-table-column
@@ -83,6 +84,7 @@
                 </el-table-column>
                 <el-table-column
                         prop="update_time"
+                        :show-overflow-tooltip="true"
                         label="最后修改时间">
                 </el-table-column>
                 <el-table-column label="操作">
@@ -115,10 +117,10 @@
              <el-form-item label="时间范围选择">
                 <br>
                 <el-time-picker style="width: 30%" v-model="form.start_time"
-                                placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
+                                placeholder="开始时间点" format="HH:mm:ss" value-format="HH:mm:ss">
                 </el-time-picker>-----
                 <el-time-picker style="width: 30%" v-model="form.stop_time"
-                                placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
+                                placeholder="结束时间点" format="HH:mm:ss" value-format="HH:mm:ss">
                 </el-time-picker>
             </el-form-item>
         </el-form>
@@ -136,10 +138,10 @@
             <el-form-item label="时间范围选择">
                 <br>
                 <el-time-picker style="width: 30%" v-model="form.start_time"
-                                placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
+                                placeholder="开始时间点" format="HH:mm:ss" value-format="HH:mm:ss">
                 </el-time-picker>-----
                 <el-time-picker style="width: 30%" v-model="form.stop_time"
-                                placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
+                                placeholder="结束时间点" format="HH:mm:ss" value-format="HH:mm:ss">
                 </el-time-picker>
             </el-form-item>
         </el-form>
