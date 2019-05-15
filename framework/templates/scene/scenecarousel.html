@@ -80,10 +80,9 @@
                              clearInterval(vm.show_stop);//设置停止
                              vm.show_stop = null;
                          }
+                         $("#div_sence").html("");
                          if(data.message!=""){
                              var djson = data.message ;//eval('('+data.message+')');
-                             $("#div_sence").html("");
-
 
                              for(var i=0;i<djson.length;i++){
                                  var t="display:none;"

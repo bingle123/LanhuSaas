@@ -934,11 +934,12 @@ def query_scene_item_data_handle(list_id):
                 str = gather_dto.data_value
                 if str !=None and item_vo.target_name != None\
                         and item_vo.measure_name != None:
-                    json_dto = json.loads(str)
-                    key = item_vo.target_name + "_" + item_vo.measure_name
-                    txt = json_dto[0].get(key)
-                    if txt == None:
-                        txt = ""
+                    if str.find("[{") == 0:
+                        json_dto = json.loads(str)
+                        key = item_vo.target_name + "_" + item_vo.measure_name
+                        txt = json_dto[0].get(key)
+                    if  'txt' not in locals().keys() or txt == None :
+                        txt = "@" + item_vo.monitor_name
                     dt["key_val"] = txt
                 else:
                     dt["key_val"] = "@" + item_vo.monitor_name

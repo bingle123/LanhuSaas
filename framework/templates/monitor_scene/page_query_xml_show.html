@@ -101,8 +101,12 @@
                                            '#'+color_val, [color_cell]);
                                     }else if(calc_key == "@"){
                                        var txt = calc_data[1]
-                                        graph.getModel().cells[param_map[temp_dto["id"]]].value
-                                                       = txt;//取出数据
+                                       var cell_dto =graph.getModel().cells[param_map[temp_dto["id"]]];
+                                       cell_dto.value= txt;//取出数据
+                                        if(temp_dto["key_val"].indexOf("@") == 0){
+                                             graph.setCellStyles(mxConstants.STYLE_FILLCOLOR,
+                                           '#cecece', [cell_dto]);
+                                        }
                                     }else if(calc_key == "%"){
                                          graph.getModel().cells[param_map[temp_dto["id"]]].value
                                                        = temp_dto["key_val"];//取出数据
