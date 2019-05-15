@@ -177,8 +177,8 @@ def add_scene_type(request):
     """
     try:
         request_body = json.loads(request.body)
-        start_time = datetime.datetime.strptime(request_body['start_time'], "%H:%M")
-        stop_time = datetime.datetime.strptime(request_body['stop_time'], "%H:%M")
+        start_time = datetime.datetime.strptime(request_body['start_time'], "%H:%M:%S")
+        stop_time = datetime.datetime.strptime(request_body['stop_time'], "%H:%M:%S")
         scene_type_name = request_body['name']
         client = tools.interface_param(request)
         user = client.bk_login.get_user({})
