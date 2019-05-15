@@ -16,7 +16,7 @@ from gather_data_history.models import *
 from notification.function import *
 from account.models import *
 from blueking.component.shortcuts import *
-from iqube_interface.gather import Gather
+# from iqube_interface.gather import Gather
 
 
 # -------------------- 采集测试规则设定------------------------
