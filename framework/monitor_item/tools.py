@@ -12,7 +12,7 @@ import time
 import json
 from django.core.paginator import Paginator
 from monitor_item.models import Job
-from gather_data.function import gather_data_migrate
+from gather_data.function import gather_data_migrate,gather_data, get_db
 from gather_data import models as mo
 from notification.function import rule_check
 from market_day import celery_opt as co
@@ -22,7 +22,6 @@ from models import *
 import requests
 from settings import BK_PAAS_HOST
 from gather_data.models import TDGatherData
-
 
 def error_result(e):
     """
@@ -90,6 +89,20 @@ def obt_dic(page_data, page_count):
     :return: 对应值list
     """
     obj_list = []
+    # 数据库的连接配置
+
+    db = get_db()
+    cursor = db.cursor()
+    #  id, scene_name, scene_startTime, scene_endTime,
+    sql = "SELECT item_id,data_value from td_gather_data";
+    cursor.execute(sql);
+    gather_data = cursor.fetchall();
+    gather_data_list = list(gather_data)
+    cursor.close();
+    #temp_list = [];#八字点存在
+    dict = {};#存储查询拿到的值，用字典形式
+    for item in gather_data_list:
+        dict[item.__getitem__(0)] = item.__getitem__(1)
     for i in page_data:
         """
         # 这里不需要转换为中文，直接在前台页面上处理
@@ -111,9 +124,13 @@ def obt_dic(page_data, page_count):
         obj_dic['status'] = str(i.status)
         # 以下两个参数很重要，新增场景中必须用到
         obj_dic['item_id'] = str(i.id)
-        gather_data = TDGatherData.objects.filter(item_id=i.id)
-        for gather_data_obj in gather_data:
-            obj_dic['data_value'] = gather_data_obj.data_value
+        #gather_data = TDGatherData.objects.filter(item_id=i.id)
+        if dict.get(str(i.id)) ==None:
+            obj_dic['data_value'] = None;
+        else:
+            obj_dic['data_value'] = dict[str(i.id)];
+        # for gather_data_obj in gather_data:
+        #     obj_dic['data_value'] = gather_data_obj.data_value
         obj_list.append(obj_dic)
     return obj_list
 
