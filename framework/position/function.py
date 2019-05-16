@@ -15,7 +15,7 @@ def get_noposition_id():
     获取无岗位在岗位表的id
     :return:
     """
-    noposition_id = pos_info.objects.get(pos_name=u'无岗位人员').id
+    noposition_id = pos_info.objects.get(pos_name=u'管理员').id
     return noposition_id
 
 
@@ -293,8 +293,10 @@ def get_tree(request):
     :param request:
     :return:
     """
+    # 获得所有的用户信息和岗位信息
     positions = pos_info.objects.all()
     users = user_info.objects.all()
+
     res_list = []
     for pos in positions:
         children = []
