@@ -20,7 +20,7 @@ from market_day.function import tran_time_china, tran_china_time_other, check_jo
 from django.db.models import Q
 from xml.etree import ElementTree  #引入ElementTree的包
 from monitor_item.models import *
-
+from db_connection.function import get_db
 def monitor_show(request):
     """
     渲染整个页面的数据
@@ -312,36 +312,73 @@ def paging(request):
     limit = res['limit']
     start_page = limit * page - 9
     # 根据id倒排序
-    monitor = Scene.objects.all().order_by("-id")[start_page - 1:start_page + 9]
-    monitor2 = Scene.objects.all().values('id')
-    page_count = math.ceil(len(monitor2) / 10)
-    res_list = []
-    for i in monitor:
-        starttime = tran_china_time_other(i.scene_startTime, i.scene_area)
-        endtime = tran_china_time_other(i.scene_endTime, i.scene_area)
-        dic = {
-            'id': i.id,
-            'scene_name': i.scene_name,
-            'scene_startTime': str(starttime),
-            'scene_endTime': str(endtime),
-            'scene_creator': i.scene_creator,
-            'scene_creator_time': str(i.scene_creator_time),
-            'scene_editor': i.scene_editor,
-            'scene_editor_time': str(i.scene_editor_time),
-            'scene_area': i.scene_area,
-            'scene_content':i.scene_content,
-            'pos_name': '',
-            'page_count': page_count,
-        }
-        position = position_scene.objects.filter(scene=i.id)
-        for c in position:
-            job = pos_info.objects.filter(id=c.position_id)
-            for j in job:
-                jobs = {
-                    "pos_name": j.pos_name
+    # monitor = Scene.objects.all().order_by("-id")[start_page - 1:start_page + 9]
+    # monitor2 = Scene.objects.all().values('id')
+    # page_count = math.ceil(len(monitor2) / 10)
+    # res_list = []
+    # for i in monitor:
+    #     starttime = tran_china_time_other(i.scene_startTime, i.scene_area)
+    #     endtime = tran_china_time_other(i.scene_endTime, i.scene_area)
+    #     dic = {
+    #         'id': i.id,
+    #         'scene_name': i.scene_name,
+    #         'scene_startTime': str(starttime),
+    #         'scene_endTime': str(endtime),
+    #         'scene_creator': i.scene_creator,
+    #         'scene_creator_time': str(i.scene_creator_time),
+    #         'scene_editor': i.scene_editor,
+    #         'scene_editor_time': str(i.scene_editor_time),
+    #         'scene_area': i.scene_area,
+    #         'scene_content':i.scene_content,
+    #         'pos_name': '',
+    #         'page_count': page_count,
+    #     }
+    #     position = position_scene.objects.filter(scene=i.id)
+    #     for c in position:
+    #         job = pos_info.objects.filter(id=c.position_id)
+    #         for j in job:
+    #             jobs = {
+    #                 "pos_name": j.pos_name
+    #             }
+    #             dic['pos_name'] = jobs["pos_name"]
+    #     res_list.append(dic)
+
+    #20190516 彭英杰 start
+    total = Scene.objects.all().count()
+    sql_str ="SELECT a.id,a.scene_name,a.scene_startTime,a.scene_endTime,a.scene_creator,"\
+             "a.scene_creator_time,a.scene_editor,a.scene_creator_time,a.scene_area "\
+             ",a.scene_content,c.pos_name FROM"\
+             " tb_monitor_scene a LEFT JOIN "\
+             " tl_position_scene b on a.id = b.scene_id"\
+            " LEFT JOIN tb_pos_info c ON b.position_id=c.id   "
+    page_start = (page-1)*limit
+    sql_str=sql_str+" LIMIT "+str(page_start)+","+str(limit)
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(sql_str)
+    res = cursor.fetchall()
+    cursor.close()
+    res_list=[]
+    if len(res)>0:
+        page_count = math.ceil(total / 10)
+        for obj in res:
+            dic = {
+                    'id': obj[0],
+                    'scene_name': obj[1],
+                    'scene_startTime': str(obj[2]),
+                    'scene_endTime': str(obj[3]),
+                    'scene_creator': obj[4],
+                    'scene_creator_time': str(obj[5]),
+                    'scene_editor': obj[6],
+                    'scene_editor_time': str(obj[7]),
+                    'scene_area': obj[8],
+                    'scene_content':obj[9],
+                    'pos_name': obj[10],
+                    'page_count': page_count,
                 }
-                dic['pos_name'] = jobs["pos_name"]
-        res_list.append(dic)
+            res_list.append(dic)
+
+    #20190516 彭英杰 end
     return res_list
 
 
