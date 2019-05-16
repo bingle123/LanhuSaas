@@ -975,9 +975,9 @@ def query_scene_item_data_handle(list_id):
                  json_dto = json.loads(str)
                  key = dto_item.target_name + "_" + dto_item.measure_name
                  txt = json_dto[0].get(key)
-                 if  'txt' not in locals().keys() or txt == None :
-                     txt = "@" + dto_item.monitor_name
-                     dt["key_val"] = txt
+             if  'txt' not in locals().keys() or txt == None :
+                 txt = "@" + dto_item.monitor_name
+             dt["key_val"] = txt
         else:
             dt["key_val"] = "@" + dto_item.monitor_name
         if 'key' in locals().keys():
