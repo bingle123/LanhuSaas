@@ -1593,7 +1593,7 @@
                         vm.gather_test_data = data.results;
                     },
                     error: function (error) {
-                        vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
+                        vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！11111", "错误");
                         return;
                     }
                 });
@@ -1860,6 +1860,7 @@
                             vm.centerDialogVisible = false;
                         }
                         vm.show();
+
                     }).catch((error) => {
                         this.$alert("修改保存出错！", "错误")
                     });
@@ -1885,6 +1886,7 @@
                             vm.gather_data_test_save(res.data['item_id'], 'add');
                         }
                         vm.show()
+
                     }).catch((error) => {
                         this.$alert('新增保存失败!', "错误");
                     });
@@ -2078,6 +2080,7 @@
             current_change1(value) {
                 vm.page = value;
                 vm.show()
+
             },
             //保存按钮
             submitForm(formName) {
@@ -2114,6 +2117,7 @@
                         }).then((res) => {
                             vm.page = 1;
                             vm.show()
+
                         }),);
                 }).catch(() => {
                     this.$message({
@@ -2133,15 +2137,32 @@
                 }).then(function (res) {
                     vm.sites = res.data.results.res_list;
                     vm.page_count = res.data.results.res_list[0].page_count;
-                    vm.job2 = res.data.results.job;
-                    vm.flow2 = res.data.results.flow;
+                    //vm.job2 = res.data.results.job;
+                    //vm.flow2 = res.data.results.flow;
                 })
+                    vm.showAPI();
+            },
+            showAPI() {
+                 setTimeout(function(){
+                       axios({
+                            method: 'post',
+                            url: '${SITE_URL}monitor_item/showAPI/',
+                            data: {
+                                page: vm.page,
+                                limit: 10
+                            },
+                        }).then(function (res) {
+                            vm.job2 = res.data.results.job;
+                            vm.flow2 = res.data.results.flow;
+                        })
+                        },1000);
             },
             select1() {
                 vm.centerDialogVisible = false;
                 vm.page = 1;
                 if (vm.contents == "") {
                     vm.show()
+
                 } else {
                     axios({
                         method: 'post',
@@ -3283,6 +3304,7 @@
         }
     });
     vm.show();
+
 </script>
 <script>
     setInterval(function () {
