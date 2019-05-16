@@ -639,3 +639,10 @@ def node_state_by_item_id(request):
         }
         data1.append(dic)
     return data1
+
+def verify_name_only(name):
+    res=Monitor.objects.filter(monitor_name=name)
+    if res.count()==0:
+        return True
+    else:
+        return False

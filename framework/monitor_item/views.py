@@ -185,3 +185,9 @@ def select_monitor_item(request):
     :return:
     """
     return render_mako_context(request, './monitor_item/open_monitor_item.html')
+
+def verify_name_only(request):
+    res=json.loads(request)
+    name=res['monitor_name']
+    flag=function.verify_name_only(name)
+    return render_json(flag)
