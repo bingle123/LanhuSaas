@@ -200,6 +200,15 @@
             border-bottom-color: #fff;
             border-bottom: 1px;
         }
+
+        .monitor-name {
+            color: #f56c6c;
+            font-size: 12px;
+            line-height: 1;
+            padding-top: 4px;
+            top: 100%;
+            left: 0;
+        }
     </style>
 </head>
 <body>
@@ -217,10 +226,8 @@
         <div>
             <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;" border header-align="center">
                 <el-table-column prop="id" label="序号" sortable></el-table-column>
-                <el-table-column prop="monitor_name" show-overflow-tooltip="true" label="监控名称"
-                                 sortable></el-table-column>
-                <el-table-column prop="monitor_type" show-overflow-tooltip="true" label="监控类型"
-                                 :formatter="format_monitor_type"
+                <el-table-column prop="monitor_name" show-overflow-tooltip="true" label="监控名称" sortable></el-table-column>
+                <el-table-column prop="monitor_type" show-overflow-tooltip="true" label="监控类型" :formatter="format_monitor_type"
                                  sortable></el-table-column>
                 <el-table-column prop="editor" label="编辑人" sortable></el-table-column>
                 <el-table-column prop="edit_time" label="修改时间" sortable></el-table-column>
@@ -249,7 +256,7 @@
         <div style="height: 30px;"></div>
         <div style="margin-left: 20px;">
             <span>监控项名称</span>
-            <el-input placeholder="请输入监控项名称" v-model="monitor_name" style="width: 30%;margin-left: 12px;"></el-input>
+            <el-input placeholder="请输入监控项名称" v-model="monitor_name" style="width: 30%;margin-left: 12px;" @blur="monitorName()"></el-input>
             <span style="margin-left: 80px;">监控项执行日历</span>
             <el-select v-model="area" placeholder="请选择日历的地区" style="width: 30%;margin-left: 12px;">
                 <el-option
@@ -259,6 +266,7 @@
                         :value="item.value">
                 </el-option>
             </el-select>
+            <div v-if="isShow" class="monitor-name">监控项名称不能重复</div>
         </div>
         <div style="height: 30px"></div>
         <span>
@@ -1245,6 +1253,7 @@
             disabled4: false,                            //作业单元
             disabled5: false,                            //流程单元
             disabled6: false,
+            isShow:false,
             areas: [],
             area: 1,
             caiji1: 'block',
@@ -1562,6 +1571,8 @@
                 dimension_name:'ip',
                 dimension_value:'192.168.1.153'
             }],*/
+
+
         },
         methods: {
             //获取采集测试的结果，同步调用
@@ -2070,14 +2081,16 @@
             },
             //保存按钮
             submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        vm.edit1()
-                    } else {
-                        console.log('error submit!!');
-                        return false;
-                    }
-                });
+                if(vm.isShow == false){
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            vm.edit1()
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                 }
             },
             delete_unit(row) {
                 this.$confirm('此操作将永久删除该监控项, 是否继续?', '提示', {
@@ -3226,7 +3239,35 @@
             // 采集表中保存的是实际调用一体化平台的返回的结果，在场景编排中再根据展示规则还原预览效果
             content_change() {
                 collection_content_change(vm, "#base_test_text")
+            },
+            //jlq-2019-05-16-add
+            //监控项名称不重复
+            monitorName(){
+                //alert('111');
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor_item/verify_name_only/',
+                    data:{
+                        name:vm.monitor_name
+                    }
+                }).then(function (res) {
+                    //flag=res.message
+                    //alert(res);
+                    console.log(res);
+                    if(res.data.message == false){
+                      //  alert('111');
+                       // new Error('监控项名称不能重复')
+                       //vm.message = '监控项名称不能重复';
+                      // this.$alert(vm.message, "错误");
+                        vm.isShow = true;
+                    }else{
+                        vm.isShow = false;
+                    }
+                }).catch(function (e) {
+                    vm.$message.error('获取数据失败！');
+                });
             }
+
         },
         mounted() {
             this.get_header_data()
