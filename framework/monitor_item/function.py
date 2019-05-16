@@ -315,66 +315,66 @@ def edit_unit(request):
     :param request: 页面请求对象
     :return: result
     """
-    try:
+    # try:
         # 添加事物控制防止异常时事物不回滚，这里事物必须放在try...catch里面
         # 否则事物被try...catch捕获了就不起作用了
-        with transaction.atomic():
-            res = json.loads(request.body)
-            id = res['unit_id']
-            # 修改获取用户的方式，直接从request中获取
-            username = request.user.username
-            monitor_type = res['monitor_type']
-            # 把前台来的监控项数据一次性转为字典
-            add_dic = res['data']
-            if res['monitor_type'] == 'first':
-                monitor_type = '1'
-            if res['monitor_type'] == 'second':
-                monitor_type = '2'
-            if res['monitor_type'] == 'third':
-                monitor_type = '3'
-                # id和name要拆分
-                add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
-                add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
-            if res['monitor_type'] == 'fourth':
-                monitor_type = '4'
-                # 前台来的id和name要拆分
-                add_dic['jion_id'] = res['flow']['jion_id']
-                add_dic['gather_params'] = add_dic['node_name']
-                add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
-                node_times = res['flow']['node_times']
-                constants = res['flow']['constants']
-                add_dic.pop('node_name')
-                start_list = []
-                for data in res['flow']['node_times']:
-                    start_list.append(data['endtime'])
-                    start_list.append(data['starttime'])
-                add_dic['start_time'] = min(start_list)
-                add_dic['end_time'] = max(start_list)
-            if res['monitor_type'] == 'five':
-                monitor_type = '5'
-            add_dic['monitor_name'] = res['monitor_name']
-            # 当前用户为编辑人
-            add_dic['editor'] = username
-            add_dic['monitor_area'] = res['monitor_area']
-            Monitor.objects.filter(id=id).update(**add_dic)
-            if res['monitor_type'] == 'fourth':
-                add_dic['node_times'] = node_times
-                add_dic['constants'] = constants
-            add_dic['monitor_type'] = monitor_type
-            # 添加定时任务监控要求本地安装任务调度软件rabitmq
-            # 正式环境服务器一般带有这个调度软件，如果没有就要安装
-            function.add_unit_task(add_dicx=add_dic)
-            result = tools.success_result(None)
-            # 修改获取用户的方式，直接从request中获取
-            info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                             request.user.username, '成功', '无')
-            add_log(info)
-    except Exception as e:
-        print e
+    with transaction.atomic():
+        res = json.loads(request.body)
+        id = res['unit_id']
+        # 修改获取用户的方式，直接从request中获取
+        username = request.user.username
+        # 把前台来的监控项数据一次性转为字典
+        add_dic = res['data']
+        if add_dic['monitor_type'] == 'first':
+            monitor_type = 1
+        if add_dic['monitor_type'] == 'second':
+            monitor_type = 2
+        if add_dic['monitor_type'] == 'third':
+            monitor_type = 3
+            # id和name要拆分
+            add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
+            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+        if add_dic['monitor_type'] == 'fourth':
+            monitor_type = 4
+            # 前台来的id和name要拆分
+            add_dic['jion_id'] = res['flow']['jion_id']
+            add_dic['gather_params'] = add_dic['node_name']
+            add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
+            node_times = res['flow']['node_times']
+            constants = res['flow']['constants']
+            add_dic.pop('node_name')
+            start_list = []
+            for data in res['flow']['node_times']:
+                start_list.append(data['endtime'])
+                start_list.append(data['starttime'])
+            add_dic['start_time'] = min(start_list)
+            add_dic['end_time'] = max(start_list)
+        if add_dic['monitor_type'] == 'five':
+            monitor_type = 5
+        add_dic['monitor_name'] = res['monitor_name']
+        # 当前用户为编辑人
+        add_dic['editor'] = username
+        add_dic['monitor_area'] = res['monitor_area']
+        add_dic['monitor_type']=monitor_type
+        Monitor.objects.filter(id=id).update(**add_dic)
+        if res['monitor_type'] == 'fourth':
+            add_dic['node_times'] = node_times
+            add_dic['constants'] = constants
+        add_dic['monitor_type'] = monitor_type
+        # 添加定时任务监控要求本地安装任务调度软件rabitmq
+        # 正式环境服务器一般带有这个调度软件，如果没有就要安装
+        function.add_unit_task(add_dicx=add_dic)
+        result = tools.success_result(None)
+        # 修改获取用户的方式，直接从request中获取
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
-                             request.user.username, '失败', repr(e))
-        result = tools.error_result(e)
+                         request.user.username, '成功', '无')
         add_log(info)
+    # except Exception as e:
+    #     print e
+    #     info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
+    #                          request.user.username, '失败', repr(e))
+    #     result = tools.error_result(e)
+    #     add_log(info)
     return result
 
 
@@ -640,8 +640,11 @@ def node_state_by_item_id(request):
         data1.append(dic)
     return data1
 
-def verify_name_only(name):
-    res=Monitor.objects.filter(monitor_name=name)
+def verify_name_only(name,id):
+    if(id!=0):
+        res=Monitor.objects.filter(monitor_name=name and ~Q(id=id))
+    else:
+        res=Monitor.objects.filter(monitor_name=name)
     if res.count()==0:
         return True
     else:

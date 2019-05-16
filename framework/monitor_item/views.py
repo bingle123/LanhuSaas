@@ -187,7 +187,13 @@ def select_monitor_item(request):
     return render_mako_context(request, './monitor_item/open_monitor_item.html')
 
 def verify_name_only(request):
+    '''
+    验证监控项名字的唯一性
+    :param request:
+    :return: 名字是否可用
+    '''
     res=json.loads(request.body)
     name=res['name']
-    flag=function.verify_name_only(name)
+    id=res['id']
+    flag=function.verify_name_only(name,id)
     return render_json(flag)
