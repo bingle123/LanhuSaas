@@ -590,25 +590,25 @@ def query_pos_scene(request):
     pos_id = request.POST.get('pos_id')
     start = request.POST.get('start')
     end = request.POST.get('end')
-    scenes = []
+  #  scenes = []
     # 获取岗位对应的场景
     position_scenes = position_scene.objects.filter(position_id=pos_id)
 
-    for pos_scene in position_scenes:
-        scenes.append(pos_scene.scene_id)
+    #for pos_scene in position_scenes:
+    #    scenes.append(pos_scene.scene_id)
 
     scene_id_list = []
-    for scene in scenes:
+    for scene in position_scenes:
         # 场景
-        temp_scene_dt = Scene.objects.filter(id=scene,scene_content__isnull=False)
+        temp_scene_dt = Scene.objects.filter(id=scene.scene_id,scene_content__isnull=False)
         if temp_scene_dt.count() == 0:
             continue
         temp_scene = temp_scene_dt.get()
         if start != None:
            if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
-              scene_id_list.append(scene)
+              scene_id_list.append(scene.scene_id)
         else:
-            scene_id_list.append(scene)
+            scene_id_list.append(scene.scene_id)
     return scene_id_list
 
 

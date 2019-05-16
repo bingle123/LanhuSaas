@@ -143,22 +143,18 @@
                              clearInterval(vm.show_stop);//设置停止
                              vm.show_stop = null;
                          }
+                          $("#div_sence").html("");
                          if(data.message!=""){
                              var djson = data.message ;//eval('('+data.message+')');
-                             $("#div_sence").html("");
-
 
                              for(var i=0;i<djson.length;i++){
-                                // var html=$("<div>");
-                                //   html.attr("id","div"+djson[i]);
-                                // $("#div_sence").append(html);
                                   var t="display:none;"
+                                 if(i ==0){
+                                      t="";
+                                 }
                                  var html="<iframe id='i"+djson[i]+"'  src='${SITE_URL}monitor_scene/page_query_xml_show?id=";
                                  html+=djson[i]+"' style='"+t+"width:1200px;height:850px;border:none;'></iframe>";
                                   $("#div_sence").append(html);
-                                 //$("#div"+djson[i]).load("${SITE_URL}monitor_scene/page_query_xml_show?id="+djson[i]);
-                                 //html.hide()
-
                              }
                              vm.show_stop= setInterval(function(){
                                   var iframe_dto = $("#div_sence iframe");
