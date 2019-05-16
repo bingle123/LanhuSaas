@@ -325,16 +325,16 @@ def edit_unit(request):
         username = request.user.username
         # 把前台来的监控项数据一次性转为字典
         add_dic = res['data']
-        if add_dic['monitor_type'] == 'first':
+        if res['monitor_type'] == 'first':
             monitor_type = 1
-        if add_dic['monitor_type'] == 'second':
+        if res['monitor_type'] == 'second':
             monitor_type = 2
-        if add_dic['monitor_type'] == 'third':
+        if res['monitor_type'] == 'third':
             monitor_type = 3
             # id和name要拆分
             add_dic['jion_id'] = res['data']['gather_rule'][0]['id']
             add_dic['gather_rule'] = res['data']['gather_rule'][0]['name']
-        if add_dic['monitor_type'] == 'fourth':
+        if res['monitor_type'] == 'fourth':
             monitor_type = 4
             # 前台来的id和name要拆分
             add_dic['jion_id'] = res['flow']['jion_id']
@@ -349,7 +349,7 @@ def edit_unit(request):
                 start_list.append(data['starttime'])
             add_dic['start_time'] = min(start_list)
             add_dic['end_time'] = max(start_list)
-        if add_dic['monitor_type'] == 'five':
+        if res['monitor_type'] == 'five':
             monitor_type = 5
         add_dic['monitor_name'] = res['monitor_name']
         # 当前用户为编辑人
@@ -642,9 +642,10 @@ def node_state_by_item_id(request):
 
 def verify_name_only(name,id):
     if(id!=0):
-        res=Monitor.objects.filter(monitor_name=name and ~Q(id=id))
+        res=Monitor.objects.filter(Q(monitor_name=name)& ~Q(id=id))
     else:
         res=Monitor.objects.filter(monitor_name=name)
+    print res
     if res.count()==0:
         return True
     else:
