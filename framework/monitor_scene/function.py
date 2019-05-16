@@ -953,40 +953,76 @@ def page_query_xml_show(id):
 
 def query_scene_item_data_handle(list_id):
     arr = []
+    item_ids = [] #所有id
     for dto_item_id in list_id:
-        if not dto_item_id.isdigit(): # 验证是否为数字
-            continue
-        item_id = int(dto_item_id)
-        item_dto = Monitor.objects.filter(id=item_id)
-        if item_dto.count()>0:
-            item_vo = item_dto.get()
-            gather_data = TDGatherData.objects.filter(item_id=item_id)
-            if gather_data.count()>0:
-                if gather_data.count() >1:
-                    gather_dto=gather_data.all()[0]
-                else:
-                    gather_dto = gather_data.get()
-                dt = {}
-                dt["id"] = dto_item_id
-                str = gather_dto.data_value
-                if str !=None and item_vo.target_name != None\
-                        and item_vo.measure_name != None:
-                    if str.find("[{") == 0:
-                        json_dto = json.loads(str)
-                        key = item_vo.target_name + "_" + item_vo.measure_name
-                        txt = json_dto[0].get(key)
-                    if  'txt' not in locals().keys() or txt == None :
-                        txt = "@" + item_vo.monitor_name
-                    dt["key_val"] = txt
-                else:
-                    dt["key_val"] = "@" + item_vo.monitor_name
-                if 'key' in locals().keys():
-                    dt["key"] = key
-                else:
-                    dt["key"] =""
-                dt["key_name"] = item_vo.display_rule#.decode("utf-8")
+        if  dto_item_id.isdigit():  # 验证是否为数字
+            item_ids.append(dto_item_id)
+    list_dto_item = Monitor.objects.filter(id__in=item_ids)
+    list_dto_gather = TDGatherData.objects.filter(item_id__in=item_ids)
+    arr_dto_dt ={}
+    for dto_temp in list_dto_gather:
+        arr_dto_dt[dto_temp.item_id] = dto_temp
+    for dto_item in list_dto_item:
+        dt = {}
+        dt["id"] = dto_item.id
+        gather_dto = arr_dto_dt.get(dto_item.id)
+        str = None
+        if gather_dto != None:
+            str = gather_dto.data_value
+        if str != None and dto_item.target_name != None \
+                                    and dto_item.measure_name != None:
+             if str.find("[{") == 0:
+                 json_dto = json.loads(str)
+                 key = dto_item.target_name + "_" + dto_item.measure_name
+                 txt = json_dto[0].get(key)
+             if  'txt' not in locals().keys() or txt == None :
+                 txt = "@" + dto_item.monitor_name
+             dt["key_val"] = txt
+        else:
+            dt["key_val"] = "@" + dto_item.monitor_name
+        if 'key' in locals().keys():
+            dt["key"] = key
+        else:
+            dt["key"] =""
+            dt["key_name"] = dto_item.display_rule#.decode("utf-8")
 
-                dt["item_type"] = item_vo.monitor_type
-                arr.append(dt)
+            dt["item_type"] = dto_item.monitor_type
+        arr.append(dt)
+
+    # for dto_item_id in list_id:
+    #     if not dto_item_id.isdigit(): # 验证是否为数字
+    #         continue
+    #     item_id = int(dto_item_id)
+    #     item_dto = Monitor.objects.filter(id=item_id)
+    #     if item_dto.count()>0:
+    #         item_vo = item_dto.get()
+    #         gather_data = TDGatherData.objects.filter(item_id=item_id)
+    #         if gather_data.count()>0:
+    #             if gather_data.count() >1:
+    #                 gather_dto=gather_data.all()[0]
+    #             else:
+    #                 gather_dto = gather_data.get()
+    #             dt = {}
+    #             dt["id"] = dto_item_id
+    #             str = gather_dto.data_value
+    #             if str !=None and item_vo.target_name != None\
+    #                     and item_vo.measure_name != None:
+    #                 if str.find("[{") == 0:
+    #                     json_dto = json.loads(str)
+    #                     key = item_vo.target_name + "_" + item_vo.measure_name
+    #                     txt = json_dto[0].get(key)
+    #                 if  'txt' not in locals().keys() or txt == None :
+    #                     txt = "@" + item_vo.monitor_name
+    #                 dt["key_val"] = txt
+    #             else:
+    #                 dt["key_val"] = "@" + item_vo.monitor_name
+    #             if 'key' in locals().keys():
+    #                 dt["key"] = key
+    #             else:
+    #                 dt["key"] =""
+    #             dt["key_name"] = item_vo.display_rule#.decode("utf-8")
+    #
+    #             dt["item_type"] = item_vo.monitor_type
+    #             arr.append(dt)
         #TDGatherData
     return  arr

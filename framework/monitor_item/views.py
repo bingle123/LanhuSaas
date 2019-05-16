@@ -24,6 +24,15 @@ def unit_show(request):
     res = function.unit_show(request)
     return render_json(res)
 
+def showAPI(request):
+    """
+    显示函数
+    :param request:
+    :return:
+    """
+    res = function.showAPI(request)
+    return render_json(res)
+
 def select_unit(request):
     """
     查询函数
