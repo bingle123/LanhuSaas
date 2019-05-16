@@ -269,8 +269,8 @@ def gather_data(**info):
         # 正确采集到数据
         if 0 != len(result):
             # 保存连接状态为正常
-            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='1',
-                         score=info['score']).save()
+            # TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='1',
+            #              score=info['score']).save()
             # 定义key-value
             # data_set = sql_kv_process(gather_params['gather_field'], result)
             # 将采集的数据保存到td_gather_data中
@@ -278,16 +278,22 @@ def gather_data(**info):
             #     TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'],
             #                  data_value=item['value_str'], score=info['score']).save()
             type=info['gather_type']
+            key=info['key']
+            for i in result:
+                if(i[key]=='y'):
+                    i[key]=1
+                else:
+                    i[key]=0
             if type=='0' :
                 for i in result:
-                    i['flow_is_done'] = Gather.percent_manage(i['flow_is_done'],info['gather_rule'])
+                    i[key] = Gather.percent_manage(i[key],info['display_rule'])
             elif type=='1':
                 for i in result:
-                    i['flow_is_done'] = Gather.color_manage(i['flow_is_done'],info['gather_rule'])
+                    i[key] = Gather.color_manage(i[key],info['display_rule'])
             elif type=='2':
                 for i in result:
-                    i['flow_is_done'] = Gather.other_manage(i['flow_is_done'],info['gather_rule'])
-
+                    i[key] = Gather.other_manage(i[key],info['display_rule'])
+            return result
         else:
             # 采集是空结果集的情况
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='0', score=0).save()

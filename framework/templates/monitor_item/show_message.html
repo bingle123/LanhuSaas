@@ -217,8 +217,10 @@
         <div>
             <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;" border header-align="center">
                 <el-table-column prop="id" label="序号" sortable></el-table-column>
-                <el-table-column prop="monitor_name" show-overflow-tooltip="true" label="监控名称" sortable></el-table-column>
-                <el-table-column prop="monitor_type" show-overflow-tooltip="true" label="监控类型" :formatter="format_monitor_type"
+                <el-table-column prop="monitor_name" show-overflow-tooltip="true" label="监控名称"
+                                 sortable></el-table-column>
+                <el-table-column prop="monitor_type" show-overflow-tooltip="true" label="监控类型"
+                                 :formatter="format_monitor_type"
                                  sortable></el-table-column>
                 <el-table-column prop="editor" label="编辑人" sortable></el-table-column>
                 <el-table-column prop="edit_time" label="修改时间" sortable></el-table-column>
@@ -1929,10 +1931,25 @@
                 })
             },
             sycontent() {
-                $("#text2").html("")
-                let show = vm.basic.contents.split(':')[1]
-                show = show.split("@")[0] + ":" + vm.basic_show_content
-                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + show + "</div>")
+                var content = vm.basic.contents
+                var content_str = content.substring(0, content.lastIndexOf('@')); //去@符号
+                var content_obj = '{' + content_str.replace(/@\n/g, ',') + '}';      //加{}
+                var content_json = JSON.parse(content_obj);
+                var html_obj = "#text1"
+                $(html_obj).find('.display').hide();       //隐藏预览区域的dom
+                for (x in content_json) {                             //遍历json
+                    $(html_obj).find('[type=' + x + ']').show();   //显示内容存在的key会在预览区域显示
+                    let len = $(html_obj + " p").length;
+                    for (let i = 0; i < len; i++) {
+                        let dom_type = $(html_obj + " p").eq(i).attr('type');//获取dom的type
+                        let value1 = $(html_obj + " p").eq(i).text().split(':')[0];//获取dom的text ：前面的内容
+                        if (x == dom_type) {//显示内容的key等于dom的type
+                            let text = $(html_obj + " p").eq(i).text();
+                            $(html_obj + " p").eq(i).html(text.replace(value1, content_json[x]));//将dom的text ：前面的内容替换成显示内容的value
+                            var content = $(html_obj + " p").eq(i).html();
+                        }
+                    }
+                }
             },
             basic_test() {
                 let params = '';
@@ -1957,20 +1974,33 @@
                     },
                 }).then(function (res) {
                     let gather_base_test_data = res.data.message
-                    let split_char=""
-                    if (vm_obj.base.show_rule_type == 0) {
-                        split_char="%"
+                    let split_char = ""
+                    var content = vm.basic.contents
+                    var content_str = content.substring(0, content.lastIndexOf('@')); //去@符号
+                    var content_obj = '{' + content_str.replace(/@\n/g, ',') + '}';      //加{}
+                    var content_json = JSON.parse(content_obj);
+                    var html_obj = "#text1"
+                    var content = '';
+                    if (null != gather_base_test_data) {
+                        for (var x in gather_base_test_data[0]) {           //遍历列表的第i个对象
+                            content += '"' + x + '":"' + x + '"@\n';
+                        }
+                    }
+                    vm.basic.contents = content
+                    $("#text2").html("")
+                    if (vm.basic.display_type == 0) {
+                        split_char = "%"
                     }
                     // 按颜色展示
-                    if (vm_obj.base.show_rule_type == 1) {
-                        split_char="#";
+                    if (vm.basic.display_type == 1) {
+                        split_char = "#";
                     }
                     //其它展示方式
-                    if (vm_obj.base.show_rule_type == 2) {
-                        split_char="@";
+                    if (vm.basic.display_type == 2) {
+                        split_char = "@";
                     }
                     if (null == gather_base_test_data) {
-                        vm_obj.$alert("采集测试数据为空！", "错误");
+                        this.$alert("采集测试数据为空！", "错误");
                         return;
                     }
                     for (let i = 0; i < gather_base_test_data.length; i++) {
@@ -1981,9 +2011,8 @@
                             data_key.push(k);
                             data_value.push(gather_base_test_data[i][k]);
                         }
-                        //border: 1px solid #000;
                         for (let j = 0; j < data_key.length; j++) {
-                            if (data_key[j] == vm_obj.base.measures + '_' + vm_obj.base.measures_name) {
+                            if (data_key[j] == vm.basic.measure_name) {
                                 var data_value_str = data_value[j].toString();
                                 if (data_value_str.indexOf(split_char) > -1) {
                                     var str = data_value_str.split(split_char);
@@ -2001,7 +2030,7 @@
                                         $(selector).append('<p class="display" type="' + data_key[j] + '">' + data_key[j] + ':' + str[0] + '</p>');
                                     }
                                 } else {
-                                    $(html_obj).html('');
+                                    $("#text1").html('');
                                     vm_obj.$message.error('展示规则参数配置出错！');
                                     return
                                 }
@@ -2010,7 +2039,7 @@
                             }
                         }
                         //当显示内容为空的情况下
-                        if ("@" == split_char && '' == vm_obj.base['contents'].replace(/^\s+|\s+$/g, "")) {
+                        if ("@" == split_char && '' == vm.basic.contents.replace(/^\s+|\s+$/g, "")) {
                             $('#other_fixed_show').show();
                         }
                     }

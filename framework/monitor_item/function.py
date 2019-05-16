@@ -390,28 +390,7 @@ def basic_test(request):
     if info['id'] == '':
         info['id'] = 0
     result = []
-    gather_data(**info)
-    gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
-    # 获得数据库对象
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute(gather_rule2)
-    results = cursor.fetchall()
-    dic = {}
-    for i in results:
-        dic1 = {
-            i[0]: i[1],
-            'gather_status': i[2]
-        }
-        dic = dict(dic, **dic1)
-    result.append(dic)
-    key=info['key']
-    for i in range(len(result)):
-        if result[i][key]=='y':
-            result[i][key]=1
-        elif result[i][key]=='n':
-            result[i][key]=0
-    db.close()
+    result=gather_data(**info)
     return result
 
 
@@ -660,3 +639,10 @@ def node_state_by_item_id(request):
         }
         data1.append(dic)
     return data1
+
+def verify_name_only(name):
+    res=Monitor.objects.filter(monitor_name=name)
+    if res.count()==0:
+        return True
+    else:
+        return False
