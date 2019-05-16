@@ -1944,11 +1944,15 @@
                 })
             },
             sycontent() {
+                //当显示内容为空的情况下
+                if ("@" == split_char && '' == vm.basic.contents.replace(/^\s+|\s+$/g, "")) {
+                    $('#text2').show();
+                }
                 var content = vm.basic.contents
                 var content_str = content.substring(0, content.lastIndexOf('@')); //去@符号
                 var content_obj = '{' + content_str.replace(/@\n/g, ',') + '}';      //加{}
                 var content_json = JSON.parse(content_obj);
-                var html_obj = "#text1"
+                var html_obj = "#text2"
                 $(html_obj).find('.display').hide();       //隐藏预览区域的dom
                 for (x in content_json) {                             //遍历json
                     $(html_obj).find('[type=' + x + ']').show();   //显示内容存在的key会在预览区域显示
@@ -1992,7 +1996,6 @@
                     var content_str = content.substring(0, content.lastIndexOf('@')); //去@符号
                     var content_obj = '{' + content_str.replace(/@\n/g, ',') + '}';      //加{}
                     var content_json = JSON.parse(content_obj);
-                    var html_obj = "#text1"
                     var content = '';
                     if (null != gather_base_test_data) {
                         for (var x in gather_base_test_data[0]) {           //遍历列表的第i个对象
@@ -2013,7 +2016,7 @@
                         split_char = "@";
                     }
                     if (null == gather_base_test_data) {
-                        this.$alert("采集测试数据为空！", "错误");
+                        vm.$alert("采集测试数据为空！", "错误");
                         return;
                     }
                     for (let i = 0; i < gather_base_test_data.length; i++) {
@@ -2044,16 +2047,12 @@
                                     }
                                 } else {
                                     $("#text1").html('');
-                                    vm_obj.$message.error('展示规则参数配置出错！');
+                                    vm.$message.error('展示规则参数配置出错！');
                                     return
                                 }
                             } else {
                                 $(selector).append('<p class="display" type="' + data_key[j] + '">' + data_key[j] + ':' + data_value[j] + '</p>');
                             }
-                        }
-                        //当显示内容为空的情况下
-                        if ("@" == split_char && '' == vm.basic.contents.replace(/^\s+|\s+$/g, "")) {
-                            $('#other_fixed_show').show();
                         }
                     }
                 });
@@ -2219,6 +2218,9 @@
                     vm.basic.contents = row.contents;
                     vm.basic.status = row.status;
                     vm.basic.score = row.score;
+                    vm.basic.measure_name = row.measure_name
+                    vm.basic.display_type = row.display_type
+                    vm.basic.display_rule = row.display_rule
                     vm.area = row.monitor_area;
                     if (vm.sql_file_interface == 'sql') {
                         vm.sql_file_interface = 3;
@@ -3264,12 +3266,12 @@
             //jlq-2019-05-16-add
             //监控项名称不重复
             monitorName(){
-                //alert('111');
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor_item/verify_name_only/',
                     data:{
-                        name:vm.monitor_name
+                        name:vm.monitor_name,
+                        id:vm.unit_id
                     }
                 }).then(function (res) {
                     //flag=res.message
