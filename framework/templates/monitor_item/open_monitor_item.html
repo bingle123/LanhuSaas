@@ -103,29 +103,25 @@
                 })
             },
             select() {
-                if(vm.page != 1 && vm.contents != ""){
-                    axios({
-                        method: 'post',
-                        url: '${SITE_URL}monitor_item/select/',
-                        data: {
-                            data: vm.contents,
-                            page: vm.page,
-                            limit: 5
-                        }
-                    }).then((res) => {
-                        if (res.data.results.length == 0) {
-                            vm.sites = [];
-                            vm.page_count = 1
-                        } else {
-                            vm.sites = res.data.results;
-                            vm.page_count = res.data.results[0].page_count;
-                        }
-                    }).catch(function (e) {
-                    vm.$message.error('获取数据失败！');
-                    });
-                }else{
-                    vm.show()
-                }
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}monitor_item/select/',
+                    data: {
+                        data: vm.contents,
+                        page: vm.page,
+                        limit: 5
+                    }
+                }).then((res) => {
+                    if (res.data.results.length == 0) {
+                        vm.sites = [];
+                        vm.page_count = 1
+                    } else {
+                        vm.sites = res.data.results;
+                        vm.page_count = res.data.results[0].page_count;
+                    }
+                }).catch(function (e) {
+                vm.$message.error('获取数据失败！');
+                });
             },
             current_change1(value) {
                 vm.page = value;
@@ -154,6 +150,6 @@
             }
         },
     });
-    vm.show();
+    vm.select();
 </script>
 </html>
