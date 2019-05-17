@@ -386,7 +386,7 @@ def get_user_muenu(request):
     role_id = 1
     if user_db.count() > 0:
         user_db_data = user_db.get()
-        role_id = user_db_data.user_pos_id
+        role_id = user_db_data.user_type_id
     role_menus = rm.objects.filter(roleid=role_id)
     temp_list = []
     for r_m in role_menus:
