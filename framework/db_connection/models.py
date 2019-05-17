@@ -39,7 +39,7 @@ class Role(models.Model):
     角色表
     """
     rname = models.CharField(u'角色', max_length=255)
-    rid = models.IntegerField(u'角色Id')
+    id = models.IntegerField(u'角色Id',primary_key=True,auto_created=True)
 
     class Meta:
         db_table = 'db_connection_role'
