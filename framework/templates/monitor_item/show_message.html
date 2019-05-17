@@ -310,8 +310,9 @@
                                         <el-radio-group v-model="sql_file_interface" @change="change1"
                                                         style="padding: 14px">
                                             <el-radio :label="3">数据库</el-radio>
+                                            <!--
                                             <el-radio :label="6">文件</el-radio>
-                                            <el-radio :label="9">接口</el-radio>
+                                            <el-radio :label="9">接口</el-radio> -->
                                          </el-radio-group>
                                     </el-form-item>
                                  </div>
@@ -1246,9 +1247,9 @@
             checked2: false,                           //流程启动选框
             disabled1: false,
             disabled2: false,                            //基本单元
-            disabled3: false,                            //图表单元
-            disabled4: false,                            //作业单元
-            disabled5: false,                            //流程单元
+            //disabled3: false,                            //图表单元
+            //disabled4: false,                            //作业单元
+            //disabled5: false,                            //流程单元
             disabled6: false,
             isShow:false,
             areas: [],
@@ -2190,9 +2191,9 @@
                 //vm.disabled2 = false;
                 vm.disabled2 = true;
                 //-----------------------------
-                vm.disabled3 = true;
-                vm.disabled4 = true;
-                vm.disabled5 = true;
+                //vm.disabled3 = true;
+                //vm.disabled4 = true;
+                //vm.disabled5 = true;
                 //默认编辑下显示基本监控项（修改）
                 vm.disabled6 = false;
                 //-----------------------------
@@ -2276,6 +2277,7 @@
                     }
                 }
                 //图表监控项
+                /*
                 if (row.monitor_type === 2) {
                     vm.disabled3 = false;
                     console.log(row)
@@ -2303,8 +2305,9 @@
                     }).catch(function (e) {
                         vm.$message.error('获取数据库失败！');
                     });
-                }
+                }*/
                 //作业监控项
+                /*
                 if (row.monitor_type === 3) {
                     vm.disabled4 = false;
                     vm.monitor_type = 'third';
@@ -2323,8 +2326,9 @@
                     vm.job.params = row.params;
                     vm.job.status = row.status;
                     vm.area = row.monitor_area;
-                }
+                }*/
                 //流程监控项
+                /*
                 if (row.monitor_type === 4) {
                     vm.disabled5 = false;
                     vm.monitor_type = 'fourth';
@@ -2349,7 +2353,7 @@
                         'id': id1
                     }]
                     vm.flow_change(id)
-                }
+                }*/
                 //基本监控项（一体化）
                 if (row.monitor_type === 5) {
                     vm.disabled6 = false;
@@ -2696,7 +2700,7 @@
                     });
                 }
             },
-            add_unit(row) {                         //新增单元
+            add_unit(row) {   //新增监控项
                 {
                     if (vm.add_pamas == 1) {
                         vm.Initialization()
@@ -2704,12 +2708,11 @@
                     vm.add_pamas = 0;
                     vm.monitor_name = '';
                     //取消默认添加时展示基本监控项
-
                     vm.disabled2 = false;
-                    vm.disabled3 = false;
-                    vm.disabled4 = false;
-                    vm.disabled5 = false;
-                    vm.monitor_type = 'first';
+                    //vm.disabled3 = false;
+                    //vm.disabled4 = false;
+                    //vm.disabled5 = false;
+                    //vm.monitor_type = 'first';
                     //默认添加时展示基本监控项（修改后）
                     //监控项类型设置
                     this.monitor_type = 'five';
@@ -3292,13 +3295,24 @@
         mounted() {
             this.get_header_data()
             this.get_all_area()
-        }, watch: {
-            'basic.gather_rule': function (oldval, newval) {
+        },
+        watch: {
+            'basic.gather_rule': function (oldval, newval) {//展示内容探测狗
                 fs = oldval.split('@')
                 vm.fields = []
                 for (var i = 1; i < fs.length; i += 2) {
                     vm.fields.push(fs[i].split("=")[0])
                 }
+            },
+            "monitor_type":function(value){//tab页切换探测狗
+               if(value == "first"){
+                   //vm.change1(3);
+                   vm.sql_file_interface = 3
+               }
+               if(value == "five"){
+                   //vm.change_data_sources(9);
+                   vm.sql_file_interface = 9
+               }
             }
         }
     });
