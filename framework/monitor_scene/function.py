@@ -880,12 +880,13 @@ def get_scene_find_xml(scene_id):
     list = parent._children
     for dto in list:
         if dto.tag == "object":
-          #  print dto.attrib.get("item_id")
-          dto_item_id = dto.attrib.get("item_id")
-          if dto_item_id != None:
-             int_item_id = int(dto_item_id)
-             temp_dto =Scene_monitor.objects.filter(scene_id=scene_id,item_id= int_item_id)
-             if temp_dto.count() == 0:
+            dto_item_id = str(dto.attrib.get("item_id"))
+            # 当关联监控项id为null或为空串就直接进入下一个循环
+            if dto_item_id is None or dto_item_id is "":
+                continue
+            int_item_id = int(dto_item_id)
+            temp_dto = Scene_monitor.objects.filter(scene_id=scene_id,item_id= int_item_id)
+            if temp_dto.count() == 0:
                 # 只有等于零时才新增
                 scene_dto = Scene_monitor()
                 scene_dto.item_id = int_item_id
@@ -897,7 +898,7 @@ def get_scene_find_xml(scene_id):
                 scene_dto.order = 0
                 scene_dto.save()
                 print "场景 "+str(scene_id)+" "+dto_item_id+"保存成功"
-             else:
+            else:
                 print "场景 " + str(scene_id) + " " + dto_item_id + "已存在，不处理"
 
 
