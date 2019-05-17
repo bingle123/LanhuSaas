@@ -492,17 +492,17 @@ def get_roleAmuenus(request):
     for role in roles:
         treeItem = {}
         # 获取所有菜单
-        muenu_ids = rm.objects.filter(roleid=role.rid)
+        muenu_ids = rm.objects.filter(roleid=role.id)
         # 菜单名称
         treeItem['label'] = role.rname
         # 每个菜单对应的id
-        treeItem['id'] = role.rid
+        treeItem['id'] = role.id
         # 二级目录都是菜单
         childrens = []
         for menu in menus:
             child = {}
             # 树对应的Id,以及label,经过处理的树id不重复
-            child['id'] = (role.rid + 1) * 1000 + menu.id
+            child['id'] = (role.id + 1) * 1000 + menu.id
             child['label'] = menu.mname
             childrens.append(child)
         # 返回树的数据
