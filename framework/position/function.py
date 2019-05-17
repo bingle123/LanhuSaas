@@ -358,9 +358,11 @@ def synchronize(request):
                 # user_info.objects.filter(user_name=user.user_name).delete()
         info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'user_info', sys._getframe().f_code.co_name,
                              request.user.username, '成功', '无')
+        mess = "同步成功"
     except Exception, e:
         r1 = tools.error_result(e)
         info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'user_info', sys._getframe().f_code.co_name,
                              request.user.username, '失败', repr(e))
+        mess = "同步失败"
     add_log(info)
-    return 0
+    return mess

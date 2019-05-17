@@ -298,7 +298,6 @@ $(function(){
             }
         }
     });
-    vm.synchronize();
     vm.show();
     vm.select_all_user();
     vm.get_tree();

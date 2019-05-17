@@ -103,7 +103,19 @@ $(function () {
             show() {
                 this.isAdd = 2
             },
-
+            synUser(){
+                axios({
+                    method: 'post',
+                    url: site_url + 'position/synchronize/',
+                }).then((res)=> {
+                        this.$message({
+                            message: '同步成功',
+                             type: 'success'
+                        });
+                    }).catch((res)=>{
+                        this.$message.error('同步失败');
+                    })
+            },
             //获取所有角色对应菜单
             get_roleAmuenus() {
                 axios.post(site_url + 'db_connection/get_roleAmuenus/').then((res) => {
