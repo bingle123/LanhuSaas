@@ -346,16 +346,16 @@ def synchronize(request):
                                          mobile_no=data['phone'], email=data['email'],
                                          user_pos_id=user_pos)
         # 后本地用户匹配蓝鲸用户,多了删除
-        for user in users:
-            flag2 = 0
-            for data in reslist:
+        #for user in users:
+            #flag2 = 0
+            #for data in reslist:
                 # 相同表示存在，就不管
-                if user.user_name == data['bk_username']:
-                    flag2 = 1
-                break
+            #   if user.user_name == data['bk_username']:
+            #        flag2 = 1
+            #   break
             # 表示此用户表中的用户，已经在蓝鲸上删除，在用户表中也删除
-            if flag2 == 0:
-                user_info.objects.filter(user_name=user.user_name).delete()
+            #if flag2 == 0:
+                # user_info.objects.filter(user_name=user.user_name).delete()
         info = make_log_info(u'同步蓝鲸用户', u'业务日志', u'user_info', sys._getframe().f_code.co_name,
                              request.user.username, '成功', '无')
     except Exception, e:
