@@ -10,7 +10,7 @@ class pos_info(models.Model):
     pos_name = models.CharField(verbose_name=u'岗位名称', max_length=50,unique=True)
     create_time = models.DateTimeField(verbose_name=u'创建时间', auto_now_add=True)
     creator = models.CharField(verbose_name=u'创建人', max_length=50,)
-    edit_time = models.DateTimeField(verbose_name=u'修改时间', auto_now_add=True)
+    edit_time = models.DateTimeField(verbose_name=u'修改时间', auto_now=True)
     editor = models.CharField(verbose_name=u'修改人', max_length=50,)
     class Meta:
         verbose_name = u'岗位信息表'

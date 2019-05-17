@@ -33,7 +33,7 @@ def show(request):
     # 获取无岗位id
     noposition_id = get_noposition_id()
     # 查出id大于等于1的岗位（岗位id=1是无岗位人员）
-    position_list = pos_info.objects.filter(~Q(id=noposition_id))
+    position_list = pos_info.objects.filter(~Q(id=noposition_id)).order_by('-create_time')
     user_list = user_info.objects.all()
     # 分页
     p = Paginator(position_list, limit)

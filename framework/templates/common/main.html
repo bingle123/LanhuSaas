@@ -281,7 +281,11 @@
                 });
             },
             testClick(res) {            //更新iframe显示页面
-                    vm.clickhtml = res
+                 if(res == 'network_panorama/' || res == 'content/' || res == 'trace_panorama/'|| res == 'ywzl_panorama/'|| res == 'kpi_panorama/'){
+                    window.open(res)
+                 }else{
+                     vm.clickhtml = res
+                 }
                 console.log(this.clickhtml)
              },
 

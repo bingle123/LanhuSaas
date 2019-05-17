@@ -18,7 +18,6 @@ from account.models import *
 from blueking.component.shortcuts import *
 from iqube_interface.gather import Gather
 
-
 # -------------------- 采集测试规则设定------------------------
 # 1. 针对于数据库的数据采集：
 # 采集规则的设置类似于SQL语法，但是在字段域有所不同：如@cp=china_point@表示保存在采集表中的字段名称为cp，
@@ -53,7 +52,8 @@ def gather_test_init():
     # sql测试用参数：'46'
     # 文件测试用参数：'192.168.1.52#./gather_data_test
     # 接口测试用参数：'http://t.weather.sojson.com/api/weather/city/101030100#{"url": "http://t.weather.sojson.com/api/weather/city/", "code": "101030100"}'
-    info['params'] = 'http://t.weather.sojson.com/api/weather/city/101030100#{"url": "http://t.weather.sojson.com/api/weather/city/", "code": "101030100"}'
+    info[
+        'params'] = 'http://t.weather.sojson.com/api/weather/city/101030100#{"url": "http://t.weather.sojson.com/api/weather/city/", "code": "101030100"}'
     # sql测试用采集规则：'SELECT @cp=china_point@,@jp=japan_point@ FROM test_gather_data WHERE id=2'
     # 文件测试用采集规则：'cat ${file_path}'
     # 接口测试用采集规则：'dXJsPSQxCmNvZGU9JDIKYHdnZXQgLXFPIGdhdGhlcl9kYXRhX3RlbXAgJHVybCRjb2RlYApjYXQgZ2F0aGVyX2RhdGFfdGVtcAo='
@@ -277,26 +277,29 @@ def gather_data(**info):
             # for item in data_set:
             #     TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'],
             #                  data_value=item['value_str'], score=info['score']).save()
-            type=info['gather_type']
-            key=info['key']
+            type = info['gather_type']
+            key = info['key']
             for i in result:
-                if(i[key]=='y'):
-                    i[key]=1
+                if (i[key] == 'y'):
+                    i[key] = 1
                 else:
-                    i[key]=0
-            if type=='0' :
+                    i[key] = 0
+            if type == '0':
                 for i in result:
-                    i[key] = Gather.percent_manage(i[key],info['display_rule'])
-            elif type=='1':
+                    i[key] = Gather.percent_manage(i[key], info['display_rule'])
+            elif type == '1':
                 for i in result:
-                    i[key] = Gather.color_manage(i[key],info['display_rule'])
-            elif type=='2':
+                    i[key] = Gather.color_manage(i[key], info['display_rule'])
+            elif type == '2':
                 for i in result:
-                    i[key] = Gather.other_manage(i[key],info['display_rule'])
+                    i[key] = Gather.other_manage(i[key], info['display_rule'])
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='measures',
+                         data_value=json.dumps(result), score=info['score']).save()
             return result
         else:
             # 采集是空结果集的情况
-            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='0', score=0).save()
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='0',
+                         score=0).save()
             return "empty"
     elif "interface" == gather_type:
         # 接口方式采集数据
@@ -532,9 +535,11 @@ def load_script_content(script_type):
 def gather_data_save(info):
     # 这里要将info['measures']json转为字符类型，监控项采集数据必须是字符个数，才能保证场景编排展示正常
     if 'add' == info['type']:
-        TDGatherData.objects.create(item_id=info['item_id'], data_key='measures', data_value=json.dumps(info['measures']))
+        TDGatherData.objects.create(item_id=info['item_id'], data_key='measures',
+                                    data_value=json.dumps(info['measures']))
     elif 'edit' == info['type']:
-        TDGatherData.objects.filter(item_id=info['item_id']).update(data_key='measures', data_value=json.dumps(info['measures']))
+        TDGatherData.objects.filter(item_id=info['item_id']).update(data_key='measures',
+                                                                    data_value=json.dumps(info['measures']))
     else:
         return "error"
     return 'ok'
