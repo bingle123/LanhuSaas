@@ -618,7 +618,7 @@ def get_all_mImgs():
     获取所有的图标
     :return:
     '''
-    muenus = Muenu.objects.all()
+    muenus = Muenu.objects.filter(~Q(mImg=""))
     mImgs=[]
     for i in range(len(muenus)):
         mImgs.append({'value':muenus[i].mImg})

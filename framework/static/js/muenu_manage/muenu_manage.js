@@ -31,7 +31,16 @@ $(function () {
                 {
                     label: "无",
                     value: 0
-                }, {
+                },{
+                    label: "首页概览",
+                    value: 4
+                },{
+                    label: "监控项管理",
+                    value: 5
+                },{
+                    label: "场景管理",
+                    value: 6
+                },{
                     label: "场景展示",
                     value: 1
                 },
@@ -42,9 +51,6 @@ $(function () {
                 {
                     label: "历史和报表",
                     value: 3
-                }, {
-                    label: "首页概览",
-                    value: 4
                 },
             ],
             mImgs: [],
@@ -163,6 +169,9 @@ $(function () {
             //去修改
             showe(row) {
                 this.isAdd = 3;
+                if(row.pcode>6){
+                    row.pcode=0
+                }
                 this.editMuenu = row;
             },
 
@@ -218,7 +227,6 @@ $(function () {
                 axios.post(
                     site_url + 'db_connection/get_all_mImgs/'
                 ).then((res) => {
-                    console.log(res);
                     ve.mImgs=res.data.message
                 })
             }
