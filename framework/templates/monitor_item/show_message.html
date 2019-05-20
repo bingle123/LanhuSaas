@@ -2105,29 +2105,41 @@
             },
             // 保存
             pefFrom() {
-                /*
-                var basic = $('#pane-first').attr('style');
-                var chart = $('#pane-second').attr('style');
-                var job = $('#pane-third').attr('style');
-                var flow = $('#pane-fourth').attr('style');
-                var base = $('#pane-five').attr('style');
-                if (basic == undefined || basic == "") {
+                //彭英杰 20190520 strat
+                //var basic = $('#pane-first').attr('style');
+                //var chart = $('#pane-second').attr('style');
+                //var job = $('#pane-third').attr('style');
+                //var flow = $('#pane-fourth').attr('style');
+                //var base = $('#pane-five').attr('style');
+                //if (basic == undefined || basic == "") {
+                //    vm.submitForm('basic')
+                //} else if (chart == undefined || chart == "") {
+                //    vm.submitForm('chart')
+                //} else if (job == undefined || job == "") {
+                //    vm.submitForm('job')
+                //} else if (flow == undefined || flow == "") {
+                //    vm.submitForm('flow')
+                //} else if (base == undefined || base == "") {
+                //    vm.submitForm('base')
+                //}
+                vm.loading_tool = true;
+                var basic = $("#tab-first[aria-selected='true']");
+                var chart = $("#tab-second[aria-selected='true']");
+                var job = $("#tab-third[aria-selected='true']");
+                var flow = $("#tab-fourth[aria-selected='true']");
+                var base = $("#tab-five[aria-selected='true']");
+                if (basic.length>0) {
                     vm.submitForm('basic')
-                } else if (chart == undefined || chart == "") {
+                } else if (chart.length>0) {
                     vm.submitForm('chart')
-                } else if (job == undefined || job == "") {
+                } else if (job.length>0) {
                     vm.submitForm('job')
-                } else if (flow == undefined || flow == "") {
+                } else if (flow.length>0) {
                     vm.submitForm('flow')
-                } else if (base == undefined || base == "") {
-                    vm.submitForm('base')
-                }*/
-                //目前只有两种监控项
-                if("first" == vm.monitor_type){
-                    vm.submitForm('basic')
-                }else if("five" == vm.monitor_type){
+                } else if (base.length>0) {
                     vm.submitForm('base')
                 }
+                //彭英杰 20190520 end
             },
             current_change1(value) {
                 vm.page = value;
@@ -2136,6 +2148,7 @@
             },
             //保存按钮
             submitForm(formName) {
+                vm
                 if(vm.isShow == false){
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
@@ -2541,7 +2554,8 @@
                 } else if (vm.monitor_type == 'five') {
                     //判断是否已经进行采集测试
                     if (null != this.gather_data_test_flag && false == this.gather_data_test_flag) {
-                        this.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
+                          vm.message ="采集测试未通过，请校正接口调用参数或稍后重试！\", \"错误\""
+                        // this.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
                         vm.gather_data_test_flag = null;
                     } else if (null == this.gather_data_test_flag) {
                         //获取采集测试数据，调用同步服务
@@ -2556,6 +2570,10 @@
                         //上传监控项数据至服务器保存
                         vm.monitor_data_save(vm.unit_id, flow);
                     }
+                }
+                 this.$alert(vm.message)
+                if(vm.message == "保存成功!"){
+                    vm.centerDialogVisible = false
                 }
             },
             flow_change(value) {
