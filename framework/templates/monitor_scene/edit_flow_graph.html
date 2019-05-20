@@ -229,8 +229,15 @@
             let xml = null;
             let fileName = null;
             if(window.opener.vm){
-                xml = window.opener.vm.scene_edit.scene_content;
-                fileName = window.opener.vm.scene_edit.scene_name;
+                //编辑场景
+                if(window.opener.vm.scene.scene_name == ""){
+                    xml = window.opener.vm.scene_edit.scene_content;
+                    fileName = window.opener.vm.scene_edit.scene_name;
+                }else{
+                    //新增场景
+                    fileName = window.opener.vm.scene.scene_name;
+                }
+                fileName = window.opener.vm.scene.scene_name || window.opener.vm.scene_edit.scene_name;
                 myEditor.setFilename(fileName);
             }
             if(xml){

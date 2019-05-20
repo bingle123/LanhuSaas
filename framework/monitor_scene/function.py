@@ -351,7 +351,7 @@ def paging(request):
              ",a.scene_content,c.pos_name FROM"\
              " tb_monitor_scene a LEFT JOIN "\
              " tl_position_scene b on a.id = b.scene_id"\
-            " LEFT JOIN tb_pos_info c ON b.position_id=c.id   "
+            " LEFT JOIN tb_pos_info c ON b.position_id=c.id  ORDER BY a.id DESC "
     page_start = (page-1)*limit
     sql_str=sql_str+" LIMIT "+str(page_start)+","+str(limit)
     db = get_db()
