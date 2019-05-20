@@ -216,7 +216,7 @@
     <!-- div1 start-->
     <div class="div_one" style="padding: 20px 40px 0px 40px;">
         <div>
-            <el-input placeholder="请输入内容" clearable v-model="contents" style="width:30%"></el-input>
+            <el-input placeholder="请输入监控名称或编辑人" clearable v-model="contents" style="width:30%" @keyup.enter.native="select1"></el-input>
             <el-button type="primary" icon="el-icon-search" v-on:click="select1">搜索</el-button>
             <el-popover placement="top-start" width="200" trigger="hover" content="新增一个监控项。" style="float:right;">
                 <el-button slot="reference" v-on:click="add_unit(0)">新增</el-button>
