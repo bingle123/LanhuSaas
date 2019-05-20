@@ -826,6 +826,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
  */
 function collection_content_change(vm_obj,html_obj){
     //转json
+     $("#"+html_obj).html("");
     var content_json = content_to_json(vm_obj.base.contents);
     $(html_obj).find('.display').hide();       //隐藏预览区域的dom
     for(x in content_json){                             //遍历json
@@ -841,6 +842,23 @@ function collection_content_change(vm_obj,html_obj){
             }
         }
     }
+    //彭英杰20190520 start
+    if(JSON.stringify(content_json)=="{}"){
+        content_json = vm.gather_test_data[0];
+        var div=$("<div>");
+        div.css("height","480px");
+        div.css("width","422px");
+        div.attr("class","div0");
+        for(k in content_json){
+            var p=$("<p>");
+            p.attr("class","display");
+            p.attr("type",k);
+            p.html(k+":"+content_json[k]);
+            div.append(p)
+        }
+        $("#"+html_obj).append(div);
+    }
+    //彭英杰20190520 end
 }
 
 /**
