@@ -965,8 +965,8 @@ def query_scene_item_data_handle(list_id):
         arr_dto_dt[dto_temp.item_id] = dto_temp
     for dto_item in list_dto_item:
         dt = {}
-        dt["id"] = dto_item.id
-        gather_dto = arr_dto_dt.get(dto_item.id)
+        dt["id"] = dto_item.id # 监控项表  id
+        gather_dto = arr_dto_dt.get(dto_item.id) #采集表
         str = None
         if gather_dto != None:
             str = gather_dto.data_value
@@ -976,11 +976,18 @@ def query_scene_item_data_handle(list_id):
                  json_dto = json.loads(str)
                  key = dto_item.target_name + "_" + dto_item.measure_name
                  txt = json_dto[0].get(key)
+             elif gather_dto.data_key.upper().find("_CONNECTION")>-1\
+                     and dto_item.contents != None and dto_item.contents !="":
+                 txt = "@" + dto_item.contents
              if  'txt' not in locals().keys() or txt == None :
                  txt = "@" + dto_item.monitor_name
              dt["key_val"] = txt
         else:
-            dt["key_val"] = "@" + dto_item.monitor_name
+            if gather_dto.data_key.upper().find("_CONNECTION")>-1 \
+                     and dto_item.contents != None and dto_item.contents !="":
+                dt["key_val"] = "@"+dto_item.contents
+            else:
+                dt["key_val"] = "@" + dto_item.monitor_name
         if 'key' in locals().keys():
             dt["key"] = key
         else:
