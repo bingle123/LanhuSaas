@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from common.mymako import render_json, render_mako_context
 import function
+import json
 
 
 def data_base(request):
@@ -183,4 +184,15 @@ def get_all_mImgs(request):
     :return:
     '''
     res=function.get_all_mImgs()
+    return render_json(res)
+
+def verify_name_only(request):
+    '''
+    验证名字的唯一性
+    :param request:
+    :return:
+    '''
+    body=json.loads(request.body)
+    name=body['name'];id=body['id']
+    res=function.verify_name_only(name,id)
     return render_json(res)
