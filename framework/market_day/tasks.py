@@ -206,6 +206,45 @@ def start_flow_task(**info):
     else:
         pass
 
+@task
+def gather_data_task_five(**i):
+    """
+    作业监控项的采集开始任务
+    :param i:
+    :return:
+    """
+    area_id = i['area_id']
+    period = {
+        'every': i['period'],
+        'period': 'seconds'
+    }
+    task_name = i['task_name']
+    info = {
+        'id': i['id'],
+        'gather_params': i['gather_params'],
+        'params': i['params'],
+        'gather_rule': i['job_id'],
+        'task_name': i['task_name'],
+        'endtime': i['endtime']
+    }
+    if check_jobday(area_id):
+        co.create_task_interval(name=task_name, task='market_day.tasks.base_monitor_task', interval_time=period,
+                                task_args=info, desc=task_name)
+    else:
+        pass
+
+@task
+def base_monitor_task(**i):
+    endtime = i['endtime']
+    task_name = i['task_name']
+    # 逾期删除本任务
+    strnow = datetime.strftime(datetime.now(), '%H:%M')
+    if strnow <= endtime:
+        # 调用一体化监控项数据采集的方法
+        print 'fa'
+    else:
+        print u'删除' + task_name
+        co.delete_task(task_name)
 
 @task
 def count_time(**i):

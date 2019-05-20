@@ -8,7 +8,7 @@ import json
 import time
 import sys
 from conf.default import MEASURES_API_ADDRESS
-from common.utils import *
+from db_connection.function import get_db
 
 # 解决ascii编码的问题
 import sys
@@ -48,8 +48,8 @@ class Gather():
             return success_result(temp_list)
         else:
             api_address = MEASURES_QUERY_API
-        # 获取当前系统时间前一天的时间戳
-        result = get_previous_day_ts()
+        # 获取当前系统时间前10秒的时间戳
+        result = get_previous_second_ts()
         curr_ts = str(list(result[0])[0])
         # 此处参数传递应给予改善, 时间需要改为当前时间的前一天
         query_form = api_address + '?' + 'start='+curr_ts+'&m=sum:sum:' + measures + '_' + measures_name + interface_param
@@ -256,3 +256,22 @@ class Gather():
             return str(original_value) + unit_list[3].__str__()
         else:
             return str(original_value) + unit_list[4].__str__()
+
+
+def get_previous_second_ts():
+    """
+        获取当前系统时间1000秒的时间戳
+        :return:
+        """
+    res = ""
+    try:
+        sql = "SELECT unix_timestamp(date_sub(now(), INTERVAL 1000 SECOND)) as timestamp;"
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(sql)
+        res = cursor.fetchall()
+        db.close()
+    except Exception as e:
+        return tools.error_result(e)
+    # scene_list = list(res1)
+    return res

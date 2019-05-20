@@ -29,6 +29,7 @@ class user_info(models.Model):
     open_id = models.CharField(verbose_name=u'微信openid', max_length=50,)
     notice_style = models.CharField(verbose_name=u'通知方式', max_length=10)
     alert_style = models.CharField(verbose_name=u'告警方式',  max_length=10)
+    user_type_id = models.IntegerField(verbose_name=u"角色类型id")
     class Meta:
         verbose_name = u'用户信息表'
         db_table = 'tb_user_info'

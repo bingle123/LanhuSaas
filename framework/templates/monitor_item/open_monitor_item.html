@@ -28,8 +28,8 @@
     <!-- div1 start-->
     <div class="div_one" style="padding: 20px 40px 0px 40px;">
 
-        <div>
-            <el-input placeholder="请输入内容" clearable v-model="contents" style="width:70%"></el-input>
+        <div @keyup.enter="select">
+            <el-input placeholder="请输入内容" clearable v-model="contents" style="width:70%" @keyup.enter="select"></el-input>
             <el-button type="primary" icon="el-icon-search" v-on:click="select" style="width:20%;margin-left:40px;">搜索</el-button>
         </div>
         <div style="height: 20px"></div>

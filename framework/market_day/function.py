@@ -208,6 +208,30 @@ def add_unit_task(add_dicx):
         # 创建一个开始流程的任务
         co.create_task_crontab(name=schename, task='market_day.tasks.start_flow_task', crontab_time=ctime,
                                task_args=info, desc=schename)
+    elif type ==5:
+        ctime = {
+            'hour': starthour,
+            'minute': startmin,
+        }
+        info = {
+            'id': id,
+            'gather_params': add_dicx['gather_params'],
+            'params': add_dicx['params'],
+            'gather_rule': add_dicx['gather_rule'],
+            'period': period,
+            'area_id': add_dicx['monitor_area'],
+            'task_name': str(schename) + 'task',
+            'endtime': endtime,
+            'score': add_dicx['score'],
+            'source_type': add_dicx['source_type'],
+            'target_name': add_dicx['target_name'],
+            'measure_name': add_dicx['measure_name'],
+            'dimension': add_dicx['dimension'],
+            'display_type': add_dicx['display_type'],
+            'display_rule': add_dicx['display_rule'],
+        }
+        co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_five', crontab_time=ctime,
+                               task_args=info, desc=schename)
 
 
 def get_header_data(request):

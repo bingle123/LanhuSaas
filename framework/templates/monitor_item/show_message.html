@@ -310,8 +310,9 @@
                                         <el-radio-group v-model="sql_file_interface" @change="change1"
                                                         style="padding: 14px">
                                             <el-radio :label="3">数据库</el-radio>
+                                            <!--
                                             <el-radio :label="6">文件</el-radio>
-                                            <el-radio :label="9">接口</el-radio>
+                                            <el-radio :label="9">接口</el-radio> -->
                                          </el-radio-group>
                                     </el-form-item>
                                  </div>
@@ -430,8 +431,8 @@
                 </el-tab-pane>
                 <!-- 基本单元 end-->
 
-                <!-- 图表单元 start-->
-                <el-tab-pane :disabled="disabled3" label="图表监控项" name="second">
+                <!-- 图表单元 start
+                <el-tab-pane :disabled="disabled3" label="图表监控项" name="second" style="display:none;">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="chart" :rules="rules2" ref="chart" label-width="100px">
@@ -530,10 +531,11 @@
                         </el-col>
                     </el-row>
                 </el-tab-pane>
+                -->
                 <!-- 图表单元 end-->
 
-                <!-- 作业单元 start-->
-                <el-tab-pane :disabled="disabled4" label="作业监控项" name="third">
+                <!-- 作业单元 start
+                <el-tab-pane :disabled="disabled4" label="作业监控项" name="third" style="display:none;">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="job" :rules="rules3" ref="job" label-width="100px">
@@ -623,10 +625,12 @@
                         </div></el-col>
                     </el-row>
                 </el-tab-pane>
+                -->
                 <!-- 作业单元 end-->
 
-                <!-- 流程单元 start-->
-                <el-tab-pane :disabled="disabled5" label="流程监控项" name="fourth">
+
+                <!-- 流程单元 start
+                <el-tab-pane :disabled="disabled5" label="流程监控项" name="fourth" style="display:none;">
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="flow" :rules="rules4" ref="flow" label-width="100px">
@@ -750,18 +754,13 @@
                                 <div id="flow1" class="clearfix workflow-box" style="width:1000px;position: relative;">
 
                                         <div class="workflow-canvas" style="margin-left: 0px;padding-left: 0px">
-                                            <!-- 画布模板 start -->
+
                                             <div class="jtk-content">
                                                 <div class="jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan"
                                                      id="canvas" style="height:500px">
-                                                    <!-- 流程 -->
                                                 </div>
                                             </div>
-                                            <!-- 画布模板 end -->
-
                                         </div>
-
-                                    <!-- template 模板-->
                                         <div class="jtk-delete jtk-none ">删除节点</div>
                                         <div id="template" class="jtk-none">
                                             <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
@@ -845,8 +844,8 @@
                         </div></el-col>
                     </el-row>
                 </el-tab-pane>
-                <!-- 基本单元 end-->
-
+                -->
+                <!-- 流程单元 end-->
 
                 <!-- 基本单元 start-->
                 <el-tab-pane :disabled="disabled6" label="基本监控项（一体化平台）" name="five" element-loading-text="拼命加载中"
@@ -1014,7 +1013,6 @@
                                 <el-form-item label="来源类型" prop="interface_type">
                                     <el-select v-model="base.interface_type" placeholder="请选择数据来源类型"
                                                @change="change_source_type" style="width: 310px;">
-                                        <el-option label="日志" value="log"></el-option>
                                         <el-option label="指标" value="measures"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -1249,9 +1247,9 @@
             checked2: false,                           //流程启动选框
             disabled1: false,
             disabled2: false,                            //基本单元
-            disabled3: false,                            //图表单元
-            disabled4: false,                            //作业单元
-            disabled5: false,                            //流程单元
+            //disabled3: false,                            //图表单元
+            //disabled4: false,                            //作业单元
+            //disabled5: false,                            //流程单元
             disabled6: false,
             isShow:false,
             areas: [],
@@ -2193,9 +2191,9 @@
                 //vm.disabled2 = false;
                 vm.disabled2 = true;
                 //-----------------------------
-                vm.disabled3 = true;
-                vm.disabled4 = true;
-                vm.disabled5 = true;
+                //vm.disabled3 = true;
+                //vm.disabled4 = true;
+                //vm.disabled5 = true;
                 //默认编辑下显示基本监控项（修改）
                 vm.disabled6 = false;
                 //-----------------------------
@@ -2279,6 +2277,7 @@
                     }
                 }
                 //图表监控项
+                /*
                 if (row.monitor_type === 2) {
                     vm.disabled3 = false;
                     console.log(row)
@@ -2306,8 +2305,9 @@
                     }).catch(function (e) {
                         vm.$message.error('获取数据库失败！');
                     });
-                }
+                }*/
                 //作业监控项
+                /*
                 if (row.monitor_type === 3) {
                     vm.disabled4 = false;
                     vm.monitor_type = 'third';
@@ -2326,8 +2326,9 @@
                     vm.job.params = row.params;
                     vm.job.status = row.status;
                     vm.area = row.monitor_area;
-                }
+                }*/
                 //流程监控项
+                /*
                 if (row.monitor_type === 4) {
                     vm.disabled5 = false;
                     vm.monitor_type = 'fourth';
@@ -2352,7 +2353,7 @@
                         'id': id1
                     }]
                     vm.flow_change(id)
-                }
+                }*/
                 //基本监控项（一体化）
                 if (row.monitor_type === 5) {
                     vm.disabled6 = false;
@@ -2699,7 +2700,7 @@
                     });
                 }
             },
-            add_unit(row) {                         //新增单元
+            add_unit(row) {   //新增监控项
                 {
                     if (vm.add_pamas == 1) {
                         vm.Initialization()
@@ -2707,12 +2708,11 @@
                     vm.add_pamas = 0;
                     vm.monitor_name = '';
                     //取消默认添加时展示基本监控项
-
                     vm.disabled2 = false;
-                    vm.disabled3 = false;
-                    vm.disabled4 = false;
-                    vm.disabled5 = false;
-                    vm.monitor_type = 'first';
+                    //vm.disabled3 = false;
+                    //vm.disabled4 = false;
+                    //vm.disabled5 = false;
+                    //vm.monitor_type = 'first';
                     //默认添加时展示基本监控项（修改后）
                     //监控项类型设置
                     this.monitor_type = 'five';
@@ -3236,6 +3236,7 @@
                 vm.get_gather_test();
                 //预览采集，调用预览组件
                 preview_monitor_item(vm, 'monitor_item', "#base_test_text");
+                base_monitor_show_reset();
             },
             change_data_sources(value) {
                 if (value == 9) {
@@ -3295,13 +3296,24 @@
         mounted() {
             this.get_header_data()
             this.get_all_area()
-        }, watch: {
-            'basic.gather_rule': function (oldval, newval) {
+        },
+        watch: {
+            'basic.gather_rule': function (oldval, newval) {//展示内容探测狗
                 fs = oldval.split('@')
                 vm.fields = []
                 for (var i = 1; i < fs.length; i += 2) {
                     vm.fields.push(fs[i].split("=")[0])
                 }
+            },
+            "monitor_type":function(value){//tab页切换探测狗
+               if(value == "first"){
+                   //vm.change1(3);
+                   vm.sql_file_interface = 3
+               }
+               if(value == "five"){
+                   //vm.change_data_sources(9);
+                   vm.sql_file_interface = 9
+               }
             }
         }
     });
