@@ -2105,6 +2105,7 @@
             },
             // 保存
             pefFrom() {
+                /*
                 var basic = $('#pane-first').attr('style');
                 var chart = $('#pane-second').attr('style');
                 var job = $('#pane-third').attr('style');
@@ -2119,6 +2120,12 @@
                 } else if (flow == undefined || flow == "") {
                     vm.submitForm('flow')
                 } else if (base == undefined || base == "") {
+                    vm.submitForm('base')
+                }*/
+                //目前只有两种监控项
+                if("first" == vm.monitor_type){
+                    vm.submitForm('basic')
+                }else if("five" == vm.monitor_type){
                     vm.submitForm('base')
                 }
             },
