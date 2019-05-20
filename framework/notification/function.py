@@ -6,6 +6,7 @@ from gather_data.models import *
 from system_config.function import *
 from position.models import *
 from shell_app.tools import *
+from monitor_item.models import Monitor
 
 
 def select_rules_pagination(page_info):
@@ -260,3 +261,14 @@ def wechat_alert(msgs):
             wechat_send_msg(access_token, open_id, alert_msg)
         msg.update({'persons': msg.pop("staff_user")})
         TdAlertLog.objects.create(**msg)
+
+def get_all_name():
+    data=[]
+    res=Monitor.objects.all().values('id','monitor_name')
+    for i in res:
+        temp={
+            'value':i['id'],
+            'label':i['monitor_name']
+        }
+        data.append(temp)
+    return data

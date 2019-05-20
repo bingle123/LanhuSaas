@@ -21,4 +21,5 @@ urlpatterns = patterns(
     (r'^checked_menu/$', 'checked_menu'),
     (r'^savemnus/$', 'save_menu'),
     (r'^get_all_mImgs/$', 'get_all_mImgs'),
+    (r'^verify_name_only','verify_name_only'),
 )

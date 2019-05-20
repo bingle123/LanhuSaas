@@ -29,120 +29,142 @@
     **/--->
 </head>
 
- <style type="text/css">
+<style type="text/css">
 
-.el-menu-item:hover{
-    outline: 0 !important;
-    background-color: #2860FD !important;
-}
+    .el-menu-item:hover {
+        outline: 0 !important;
+        background-color: #2860FD !important;
+    }
 
- .el-submenu__title:hover{
-      outline: 0 !important;
+    .el-submenu__title:hover {
+        outline: 0 !important;
         background-color: #2860FD !important;
 
- }
-     /*菜单关闭*/
-.el-submenu>.el-submenu__title .el-submenu__icon-arrow{
-	-webkit-transform: rotateZ(-90deg);
-	-ms-transform: rotate(-90deg);
-	transform: rotateZ(-90deg);
-    font-size: 15px;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-/*菜单展开*/
-.el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow{
-	-webkit-transform: rotateZ(0deg);
-	-ms-transform: rotate(0deg);
-	transform: rotateZ(0deg);
-    font-size: 15px;
-    font-weight: bold;
-    color: #FFFFFF;
-}
-     .left_submenu{
-         padding-left: 30px;
-     }
+    }
+
+    /*菜单关闭*/
+    .el-submenu > .el-submenu__title .el-submenu__icon-arrow {
+        -webkit-transform: rotateZ(-90deg);
+        -ms-transform: rotate(-90deg);
+        transform: rotateZ(-90deg);
+        font-size: 15px;
+        font-weight: bold;
+        color: #FFFFFF;
+    }
+
+    /*菜单展开*/
+    .el-submenu.is-opened > .el-submenu__title .el-submenu__icon-arrow {
+        -webkit-transform: rotateZ(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotateZ(0deg);
+        font-size: 15px;
+        font-weight: bold;
+        color: #FFFFFF;
+    }
+
+    .left_submenu {
+        padding-left: 30px;
+    }
+
     /*jlq-2019-05-17-add-首页高度样式*/
-     ::-webkit-scrollbar{
-        display:none;
-     }
-     .ifa {
+    ::-webkit-scrollbar {
+        display: none;
+    }
+
+    .ifa {
         width: 100%;
         min-height: 1400px;
         height: auto;
     }
-  </style>
+</style>
 
-<body style="overflow: visible"  >
+<body style="overflow: visible">
 <!--start html-->
 <div id="main">
     <!--start container -->
-    <el-container >
+    <el-container>
 
         <!--start left  -->
-        <el-row  :style="height">
-            <el-menu :style="height" class="el-menu-vertical-demo" @open="handleOpen"  unique-opened=true
-                     @close="handleClose" :collapse="isCollapse" text-color="#FFFFFF" active-text-color="#000000" >
+        <el-row :style="height">
+            <el-menu :style="height" class="el-menu-vertical-demo" @open="handleOpen" unique-opened=true
+                     @close="handleClose" :collapse="isCollapse" text-color="#FFFFFF" active-text-color="#000000">
                 <el-menu-item index="1000" class="title_item">
 
                     <li slot="title" style="font-size: 24px;">看板项目</li>
                 </el-menu-item>
 
-             <!--   <el-menu-item v-for="(i,index) in muenus" :index="index+''" style="line-height: 56px;font-size: 18px;"
+                <!--   <el-menu-item v-for="(i,index) in muenus" :index="index+''" style="line-height: 56px;font-size: 18px;"
                               v-on:click="testClick(i.url)">
                     <i class="iconfont icon-zhuye"></i>
                     <span slot="title">{{ i.mname }}{{ i.id }}</span>
                 </el-menu-item>
                 -->
-                <el-submenu  v-for="(i,index) in muenus"  :index="index+''"  style="font-color:#FFFFFF;line-height: 56px; "  v-if=" i.id == 1" >
-                     <template slot="title" >
-                         <i :class="i.mImg " :style= "left_submenu"></i>
-                      <span  v-if=" i.id == 1" > &nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                <el-submenu v-for="(i,index) in muenus" :index="index+''" style="font-color:#FFFFFF;line-height: 56px; "
+                            v-if=" i.id == 1">
+                    <template slot="title">
+                        <i :class="i.mImg " :style="left_submenu"></i>
+                        <span v-if=" i.id == 1"> &nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
                     </template>
                     <el-menu-item-group>
-                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 4"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
+                        <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1"
+                                      v-for="(i,index) in muenus" :index="index+''" v-on:click="testClick(i.url)"
+                                      v-if=" i.pcode == 4"><i :class="i.mImg "></i>&nbsp;<span
+                                slot="title">{{ i.mname }}</span></el-menu-item>
                     </el-menu-item-group>
 
-                  </el-submenu>
+                </el-submenu>
 
-                <el-menu-item id="submenu" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px;font-size: 18px;padding-left:50px;" v-if=" i.pcode == 0" v-on:click="testClick(i.url)" >
+                <el-menu-item id="submenu" v-for="(i,index) in muenus" :index="index+''"
+                              style="line-height: 56px;font-size: 18px;padding-left:50px;" v-if=" i.pcode == 0"
+                              v-on:click="testClick(i.url)">
                     <i :class="i.mImg "></i>
-                    <span slot="title" >{{ i.mname }}</span>
+                    <span slot="title">{{ i.mname }}</span>
                 </el-menu-item>
 
 
-
-                 <el-submenu  v-for="(i,index) in muenus"  :index="index+''"  style="font-color:#FFFFFF;line-height: 56px; "  v-if=" i.id == 25" >
-                     <template slot="title" >
-                         <i :class="i.mImg " :style= "left_submenu"></i>
-                      <span  v-if=" i.id == 25" > &nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                <el-submenu v-for="(i,index) in muenus" :index="index+''" style="font-color:#FFFFFF;line-height: 56px; "
+                            v-if=" i.id == 25">
+                    <template slot="title">
+                        <i :class="i.mImg " :style="left_submenu"></i>
+                        <span v-if=" i.id == 25"> &nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
                     </template>
                     <el-menu-item-group>
-                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 1"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
+                        <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1"
+                                      v-for="(i,index) in muenus" :index="index+''" v-on:click="testClick(i.url)"
+                                      v-if=" i.pcode == 1"><i :class="i.mImg "></i>&nbsp;<span
+                                slot="title">{{ i.mname }}</span></el-menu-item>
                     </el-menu-item-group>
 
-                  </el-submenu>
-                <el-submenu style="font-color:#FFFFFF;" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px; "  v-if=" i.id == 26">
-                     <template slot="title" >
-                            <i :class="i.mImg " :style= "left_submenu"></i>
-                      <span  v-if="  i.id == 26" > &nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                </el-submenu>
+                <el-submenu style="font-color:#FFFFFF;" v-for="(i,index) in muenus" :index="index+''"
+                            style="line-height: 56px; " v-if=" i.id == 26">
+                    <template slot="title">
+                        <i :class="i.mImg " :style="left_submenu"></i>
+                        <span v-if="  i.id == 26"> &nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
                     </template>
                     <el-menu-item-group>
-                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 2"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
+                        <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1"
+                                      v-for="(i,index) in muenus" :index="index+''" v-on:click="testClick(i.url)"
+                                      v-if=" i.pcode == 2"><i :class="i.mImg "></i>&nbsp;<span
+                                slot="title">{{ i.mname }}</span></el-menu-item>
                     </el-menu-item-group>
 
-                  </el-submenu>
+                </el-submenu>
 
-                <el-submenu style="font-color:#FFFFFF;" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" style="line-height: 56px; "  v-if=" i.id == 27">
-                     <template slot="title" >
-                         <i :class="i.mImg " :style= "left_submenu"></i>
-                      <span  v-if="  i.id == 27">&nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                <el-submenu style="font-color:#FFFFFF;" v-for="(i,index) in muenus" :index="index+''"
+                            v-on:click="testClick(i.url)" style="line-height: 56px; " v-if=" i.id == 27">
+                    <template slot="title">
+                        <i :class="i.mImg " :style="left_submenu"></i>
+                        <span v-if="  i.id == 27">&nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
                     </template>
                     <el-menu-item-group>
-                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 3"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
+                        <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1"
+                                      v-for="(i,index) in muenus" :index="index+''" v-on:click="testClick(i.url)"
+                                      v-if=" i.pcode == 3"><i :class="i.mImg "></i>&nbsp;<span
+                                slot="title">{{ i.mname }}</span></el-menu-item>
                     </el-menu-item-group>
 
-                  </el-submenu>
+                </el-submenu>
 
 
                 <div index="10000" style="line-height: 56px; margin-top: 1000px;margin-left: 20px;">
@@ -170,7 +192,7 @@
                         <div style="float: right">
                             <span style="color: #555759; etter-spacing: 0.23px;">当前用户：</span>
                             <span style="color: #555759; etter-spacing: 0.23px;">{{ user.name }}</span>
-                            <el-dropdown :hide-on-click="false"  @command="logout">
+                            <el-dropdown :hide-on-click="false" @command="logout">
                                 <span class="el-dropdown-link">
                                   &nbsp;&nbsp;|&nbsp;帮助中心<i class="el-icon-caret-bottom el-icon--right"></i>
                                 </span>
@@ -187,9 +209,9 @@
             <el-main>
                 <template>
                     <div id="app">
-                            <iframe  v-show="isarr" class="ifa" scrolling=auto
-                            :src="'${SITE_URL}'+clickhtml"
-                            frameborder="0"></iframe>
+                        <iframe v-show="isarr" class="ifa" scrolling=auto
+                                :src="'${SITE_URL}'+clickhtml"
+                                frameborder="0"></iframe>
                     </div>
                 </template>
             </el-main>
@@ -204,12 +226,12 @@
 
 <script type="text/javascript">
 
-    function test(){
+    function test() {
         alert("hhhhhh")
     }
 
 
-     axios.interceptors.request.use((config) => {
+    axios.interceptors.request.use((config) => {
         config.headers['X-Requested-With'] = 'XMLHttpRequest';
         let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookie中匹配 csrftoken值
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
@@ -219,9 +241,9 @@
         el: '#main',
         data: {
             muenus: [],
-            showFlag:false,
+            showFlag: false,
             isCollapse: false,  //是否折叠
-            left_submenu:'padding-left: 30px;',
+            left_submenu: 'padding-left: 30px;',
 
             height: {           //css
                 height: '',
@@ -239,8 +261,8 @@
                 name: "",
             },
 
-            clickhtml:'index',
-            isarr:true,
+            clickhtml: 'index',
+            isarr: true,
             /**activeName: 'first',//默认iframe选项
              ifArr: {            //所有iframe页面，保留一个为true，其余均为false
                 first: true,
@@ -254,7 +276,7 @@
             //this.get_height()
         },
         methods: {
-             handleOpen(key, keyPath) {  //手风琴打开
+            handleOpen(key, keyPath) {  //手风琴打开
                 console.log(key, keyPath);
             },
             handleClose(key, keyPath) { //手风琴关闭
@@ -262,11 +284,11 @@
             },
 
             //退出登录
-            logout(){
-                axios.get('${SITE_URL}position/get_logout_address').then((res)=>{
+            logout() {
+                axios.get('${SITE_URL}position/get_logout_address').then((res) => {
                     //从配置文件获取退出登录地址
                     var login_address = res.data.message;
-                    window.location.href=login_address;
+                    window.location.href = login_address;
                 });
             },
             changeCollapse() {          //更改伸缩状态
@@ -283,20 +305,20 @@
                 }
                 this.isCollapse = res ? false : true;
             },
-            get_user_name(){
-                axios.get('${SITE_URL}position/get_active_user').then((res)=>{
+            get_user_name() {
+                axios.get('${SITE_URL}position/get_active_user').then((res) => {
                     console.log(res)
-                    vm.user.name=res.data.message
+                    vm.user.name = res.data.message
                 });
             },
             testClick(res) {            //更新iframe显示页面
-                 if(res == 'network_panorama/' || res == 'content/' || res == 'trace_panorama/'|| res == 'ywzl_panorama/'|| res == 'kpi_panorama/'){
+                if (res == 'network_panorama/' || res == 'content/' || res == 'trace_panorama/' || res == 'ywzl_panorama/' || res == 'kpi_panorama/') {
                     window.open(res)
-                 }else{
-                     vm.clickhtml = res
-                 }
+                } else {
+                    vm.clickhtml = res
+                }
                 console.log(this.clickhtml)
-             },
+            },
 
             //获取角色对应的所有菜单名称
             get_Muenu() {
@@ -305,10 +327,12 @@
                         console.log(res)
                         vm.muenus = res.data.results;
                     })
-            },
-
+            }
         }
     });
+    function get_menu(){
+        vm.get_Muenu()
+    }
     vm.get_Muenu();
     vm.get_user_name();
 </script>

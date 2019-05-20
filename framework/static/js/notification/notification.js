@@ -81,6 +81,7 @@ $(function(){
             //当前有多少页
             alertRulesCount: 0,
             //告警规则表单校验
+            item_ids:[],
             rules: {
                 item_id: [
                     { required: true, message: '请输入监控项ID', trigger: 'blur' },
@@ -390,6 +391,16 @@ $(function(){
                     if (new RegExp("(" + k + ")").test(fmt))
                         fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
                 return fmt;
+            },
+            get_all_itemName(){
+                axios({
+                    method:'get',
+                    url:site_url + 'notification/get_all_name',
+                }).then(res=> {
+                    vue.item_ids=res.data.message
+                }).catch(res=>{
+                   vue.$alert('获取监控项名称出错！')
+                });
             }
         },
         mounted(){
@@ -398,6 +409,7 @@ $(function(){
             this.get_header_data();
             //获取当前用户信息
             this.customProcessCurrUser();
+            this.get_all_itemName()
         }
     });
 });
