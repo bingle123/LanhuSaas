@@ -447,7 +447,22 @@ def basic_test(request):
     if info['id'] == '':
         info['id'] = 0
     result = []
-    result=gather_data(**info)
+    gather_data(**info)
+    gather_rule2 = "select data_key,data_value,gather_error_log from td_gather_data where item_id = " + str(info['id'])
+    # 获得数据库对象
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(gather_rule2)
+    results = cursor.fetchall()
+    dic = {}
+    for i in results:
+        dic1 = {
+            i[0]: i[1],
+            'gather_status': i[2]
+        }
+        dic = dict(dic, **dic1)
+    result.append(dic)
+    db.close()
     return result
 
 

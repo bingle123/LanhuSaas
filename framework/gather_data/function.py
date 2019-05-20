@@ -237,7 +237,6 @@ def gather_data(**info):
     # 解析方法执行完毕后返回None说明解析过程中出现了问题，直接返回
     if None is gather_params:
         return "error"
-
     # 采集数据库中的数据
     if "sql" == gather_type:
         # 生成数据库采集使用的sql
@@ -254,7 +253,7 @@ def gather_data(**info):
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='-1',
                          gather_error_log=str(e), score=0).save()
             return "error"
-        cursor = conn.cursor(MySQLdb.cursors.DictCursor)
+        cursor = conn.cursor()
         cursor.execute('SET NAMES UTF8')
         # 采集规则是否异常判断
         # noinspection PyBroadException
@@ -269,33 +268,14 @@ def gather_data(**info):
         # 正确采集到数据
         if 0 != len(result):
             # 保存连接状态为正常
-            # TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='1',
-            #              score=info['score']).save()
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='1',
+                         score=info['score']).save()
             # 定义key-value
-            # data_set = sql_kv_process(gather_params['gather_field'], result)
+            data_set = sql_kv_process(gather_params['gather_field'], result)
             # 将采集的数据保存到td_gather_data中
-            # for item in data_set:
-            #     TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'],
-            #                  data_value=item['value_str'], score=info['score']).save()
-            type = info['gather_type']
-            key = info['key']
-            for i in result:
-                if (i[key] == 'y'):
-                    i[key] = 1
-                else:
-                    i[key] = 0
-            if type == '0':
-                for i in result:
-                    i[key] = Gather.percent_manage(i[key], info['display_rule'])
-            elif type == '1':
-                for i in result:
-                    i[key] = Gather.color_manage(i[key], info['display_rule'])
-            elif type == '2':
-                for i in result:
-                    i[key] = Gather.other_manage(i[key], info['display_rule'])
-            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='measures',
-                         data_value=json.dumps(result), score=info['score']).save()
-            return result
+            for item in data_set:
+                TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key=item['key'],
+                             data_value=item['value_str'], score=info['score']).save()
         else:
             # 采集是空结果集的情况
             TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='0',

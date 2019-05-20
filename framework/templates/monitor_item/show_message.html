@@ -324,27 +324,28 @@
                                         </el-select>
                                     </el-form-item>
                                     <el-form-item label="数据采集规则" style="width: 96%">
-                                    <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq"
+                                        <el-input v-model="basic.gather_rule" placeholder="select * from tb_hq"
                                               type="textarea"></el-input>
-                                </el-form-item>
+                                     </el-form-item>
+                                    <!--
                                     <el-form-item label="度量值">
-                                    <el-select v-model="basic.measure_name" filterable placeholder="请选择指标名称"
-                                               style="width: 310px;">
-                                        <el-option
-                                                v-for="item in fields"
-                                                :key="item"
-                                                :label="item"
-                                                :value="item">
-                                        </el-option>
-                                    </el-select>
-                                </el-form-item>
+                                        <el-select v-model="basic.measure_name" filterable placeholder="请选择指标名称"
+                                                   style="width: 310px;">
+                                            <el-option
+                                                    v-for="item in fields"
+                                                    :key="item"
+                                                    :label="item"
+                                                    :value="item">
+                                            </el-option>
+                                        </el-select>
+                                    </el-form-item>
                                     <el-form-item label="展示规则" prop="show_rule_type">
-                                    <el-select v-model="basic.display_type" placeholder="请选择展示规则"
-                                               @change="add_comments" style="width: 310px;">
-                                        <el-option label="百分比" value="0"></el-option>
-                                        <el-option label="颜色" value="1"></el-option>
-                                        <el-option label="其他" value="2"></el-option>
-                                    </el-select>
+                                        <el-select v-model="basic.display_type" placeholder="请选择展示规则"
+                                                   @change="add_comments" style="width: 310px;">
+                                            <el-option label="百分比" value="0"></el-option>
+                                            <el-option label="颜色" value="1"></el-option>
+                                            <el-option label="其他" value="2"></el-option>
+                                        </el-select>
                                     </el-form-item>
                                     <el-form-item label="采集规则" prop="gather_rule" style="width: 90%">
                                         <el-input v-model="basic.display_rule"
@@ -352,11 +353,12 @@
                                                   type="textarea" style="width: 310px;"></el-input>
                                     </el-form-item>
                                     <div v-if="basic.display_type==1">
-                                     <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到此范围分别展示为绿、红、黄、灰</p>
-                                 </div>
-                                 <div v-if="basic.display_type==2">
-                                     <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到对应范围分别展示其“@”后的后缀</p>
-                                 </div>
+                                        <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到此范围分别展示为绿、红、黄、灰</p>
+                                    </div>
+                                    <div v-if="basic.display_type==2">
+                                         <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到对应范围分别展示其“@”后的后缀</p>
+                                    </div>
+                                    -->
                                 </div>
                                 <div :style="{display:file1}">
                                     <el-form-item label="服务器">
@@ -1982,74 +1984,120 @@
                         params: params,
                         gather_rule: vm.basic.gather_rule,
                         gather_params: vm.basic.gather_params,
-                        score: vm.basic.score,
-                        key: vm.basic.measure_name,
-                        display_rule: vm.basic.display_rule,
-                        gather_type: vm.basic.display_type
+                        score:vm.basic.score
                     },
                 }).then(function (res) {
-                    let gather_base_test_data = res.data.message
-                    let split_char = ""
-                    var content = vm.basic.contents
-                    var content_str = content.substring(0, content.lastIndexOf('@')); //去@符号
-                    var content_obj = '{' + content_str.replace(/@\n/g, ',') + '}';      //加{}
-                    var content_json = JSON.parse(content_obj);
-                    var content = '';
-                    if (null != gather_base_test_data) {
-                        for (var x in gather_base_test_data[0]) {           //遍历列表的第i个对象
-                            content += '"' + x + '":"' + x + '"@\n';
-                        }
-                    }
-                    vm.basic.contents = content
+                    let tempcontents2 = vm.basic.contents
                     $("#text2").html("")
-                    if (vm.basic.display_type == 0) {
-                        split_char = "%"
-                    }
-                    // 按颜色展示
-                    if (vm.basic.display_type == 1) {
-                        split_char = "#";
-                    }
-                    //其它展示方式
-                    if (vm.basic.display_type == 2) {
-                        split_char = "@";
-                    }
-                    if (null == gather_base_test_data) {
-                        vm.$alert("采集测试数据为空！", "错误");
-                        return;
-                    }
-                    for (let i = 0; i < gather_base_test_data.length; i++) {
-                        let selector = '#text2';
-                        let data_key = [];
-                        let data_value = [];
-                        for (k in gather_base_test_data[i]) {
-                            data_key.push(k);
-                            data_value.push(gather_base_test_data[i][k]);
+                    $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + tempcontents2 + "</div>")
+                    if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1) {
+                        var temp1 = tempcontents2.split("#");
+                        var temp2 = [];
+                        var temp3 = [];
+                        var temp4 = [];
+                        for (var i = 1; i < temp1.length; i = i + 2) {
+                            temp2.push(temp1[i]);
                         }
-                        for (let j = 0; j < data_key.length; j++) {
-                            if (data_key[j] == vm.basic.measure_name) {
-                                var data_value_str = data_value[j].toString();
-                                if (data_value_str.indexOf(split_char) > -1) {
-                                    var str = data_value_str.split(split_char);
-                                    if ("#" == split_char) {
-                                        $(selector).css('background-color', split_char + str[1]);
-                                    }
-                                    if ("@" == split_char) {
-                                        str[0] = str[0] + str[1];
-                                        selected_measure = str[1];
-                                        $(selector).append('<p id="other_fixed_show" style="display: none">' + selected_measure + '</p>');
-                                    }
-                                    if ("%" == split_char) {
-                                        $(selector).append('<p class="display" type="' + data_key[j] + '">' + data_key[j] + ':' + data_value[j] + '</p>');
-                                    } else {
-                                        $(selector).append('<p class="display" type="' + data_key[j] + '">' + data_key[j] + ':' + str[0] + '</p>');
-                                    }
-                                } else {
-                                    $("#text1").html('');
-                                    vm.$message.error('展示规则参数配置出错！');
-                                    return
+                        for (var i = 0; i < temp2.length; i++) {
+                            temp3.push(temp2[i].split("="))
+                        }
+                        for (var i = 0; i < temp3.length; i++) {
+                            temp4.push(temp3[i][0])
+                        }
+                        $("#text2").html("")
+                        for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
+                            if (j < temp4.length) {
+                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                            } else {
+                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + "</div>");
+                            }
+                        }
+                    }
+                    if (vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1) {
+                        var icon1 = tempcontents2.split("@");
+                        var icon2 = [];
+                        var icon3 = [];
+                        var icon4 = '';
+                        if (res.data.message[0]['DB_CONNECTION']) {
+                            icon4 = res.data.message[0]['DB_CONNECTION'];
+                        }
+                        if (res.data.message[0]['URL_CONNECTION']) {
+                            icon4 = res.data.message[0]['URL_CONNECTION'];
+                        }
+                        if (res.data.message[0]['FILE_EXIST']) {
+                            icon4 = res.data.message[0]['FILE_EXIST'];
+                        }
+                        $("#text2").html("")
+                        $("#text2").append("<div class = \"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
+                        if (icon4 == 1) {
+                            $("#text2").append("<div class=\"circle1\"></div>");
+                        }
+                        if (icon4 == 2) {
+                            $("#text2").append("<div class=\"circle2\"></div>");
+                        }
+                        if (icon4 == 0) {
+                            $("#text2").append("<div class=\"circle3\"></div>");
+                        }
+                        if (icon4 == -1 || icon4 == -2) {
+                            $("#text2").append("<div class=\"circle4\"></div>");
+                        }
+                    }
+                    if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
+                        var temp1 = tempcontents2.split("#");
+                        var temp2 = [];
+                        var temp3 = [];
+                        var temp4 = [];
+                        for (var i = 1; i < temp1.length; i = i + 2) {
+                            temp2.push(temp1[i]);
+                        }
+                        for (var i = 0; i < temp2.length; i++) {
+                            temp3.push(temp2[i].split("="))
+                        }
+                        for (var i = 0; i < temp3.length; i++) {
+                            temp4.push(temp3[i][0])
+                        }
+                        var icon1 = [];
+                        var icon2 = [];
+                        var icon3 = [];
+                        var icon4 = '';
+                        var flag2 = 0;
+                        for (var i = 0; i < temp1.length; i = i + 2) {
+                            if (temp1[i].indexOf("@") > -1) {
+                                icon1 = temp1[i].split("@")
+                                flag2 = i
+                                for (var k = 0; k < icon1.length; k++) {
+                                    icon2.push(icon1[k])
+                                }
+                            }
+                        }
+                        icon3 = icon2[1].split("=")
+                        if (res.data.message[0]['DB_CONNECTION']) {
+                            icon4 = res.data.message[0]['DB_CONNECTION'];
+                        }
+                        if (res.data.message[0]['URL_CONNECTION']) {
+                            icon4 = res.data.message[0]['URL_CONNECTION'];
+                        }
+                        if (res.data.message[0]['FILE_EXIST']) {
+                            icon4 = res.data.message[0]['FILE_EXIST'];
+                        }
+                        $("#text2").html("")
+                        for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
+                            if (i == flag2) {
+                                $("#text2").append("<div class = \"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
+                                if (icon4 == 1) {
+                                    $("#text2").append("<div class=\"circle1\"></div>");
+                                }
+                                if (icon4 == 2) {
+                                    $("#text2").append("<div class=\"circle2\"></div>");
+                                }
+                                if (icon4 == 0) {
+                                    $("#text2").append("<div class=\"circle3\"></div>");
+                                }
+                                if (icon4 == -1 || icon4 == -1) {
+                                    $("#text2").append("<div class=\"circle4\"></div>");
                                 }
                             } else {
-                                $(selector).append('<p class="display" type="' + data_key[j] + '">' + data_key[j] + ':' + data_value[j] + '</p>');
+                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
                             }
                         }
                     }
