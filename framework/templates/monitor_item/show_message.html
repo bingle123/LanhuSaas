@@ -251,7 +251,7 @@
 
     <!-- 对话框 start-->
     <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%" @closed="monitor_cache_clean"
-               :close-on-click-modal="false" v-loading="loading_tool">
+               :close-on-click-modal="false">
         <HR align=center width=100% color=#979797 SIZE=0.5>
         <div style="height: 30px;"></div>
         <div style="margin-left: 20px;">
@@ -1219,7 +1219,6 @@
             file_show: false,
             interface_show: false,
             loading: false,
-            loading_tool:false,
             message: '',                                           //弹框提示信息
             constants: '',
             unit_id1: 0,
@@ -2106,41 +2105,22 @@
             },
             // 保存
             pefFrom() {
-                //彭英杰 20190520 strat
-                //var basic = $('#pane-first').attr('style');
-                //var chart = $('#pane-second').attr('style');
-                //var job = $('#pane-third').attr('style');
-                //var flow = $('#pane-fourth').attr('style');
-                //var base = $('#pane-five').attr('style');
-                //if (basic == undefined || basic == "") {
-                //    vm.submitForm('basic')
-                //} else if (chart == undefined || chart == "") {
-                //    vm.submitForm('chart')
-                //} else if (job == undefined || job == "") {
-                //    vm.submitForm('job')
-                //} else if (flow == undefined || flow == "") {
-                //    vm.submitForm('flow')
-                //} else if (base == undefined || base == "") {
-                //    vm.submitForm('base')
-                //}
-                vm.loading_tool = true;
-                var basic = $("#tab-first[aria-selected='true']");
-                var chart = $("#tab-second[aria-selected='true']");
-                var job = $("#tab-third[aria-selected='true']");
-                var flow = $("#tab-fourth[aria-selected='true']");
-                var base = $("#tab-five[aria-selected='true']");
-                if (basic.length>0) {
+                var basic = $('#pane-first').attr('style');
+                var chart = $('#pane-second').attr('style');
+                var job = $('#pane-third').attr('style');
+                var flow = $('#pane-fourth').attr('style');
+                var base = $('#pane-five').attr('style');
+                if (basic == undefined || basic == "") {
                     vm.submitForm('basic')
-                } else if (chart.length>0) {
+                } else if (chart == undefined || chart == "") {
                     vm.submitForm('chart')
-                } else if (job.length>0) {
+                } else if (job == undefined || job == "") {
                     vm.submitForm('job')
-                } else if (flow.length>0) {
+                } else if (flow == undefined || flow == "") {
                     vm.submitForm('flow')
-                } else if (base.length>0) {
+                } else if (base == undefined || base == "") {
                     vm.submitForm('base')
                 }
-                //彭英杰 20190520 end
             },
             current_change1(value) {
                 vm.page = value;
@@ -2554,8 +2534,7 @@
                 } else if (vm.monitor_type == 'five') {
                     //判断是否已经进行采集测试
                     if (null != this.gather_data_test_flag && false == this.gather_data_test_flag) {
-                       vm.message ="采集测试未通过，请校正接口调用参数或稍后重试！\", \"错误\""
-                        // this.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
+                        this.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
                         vm.gather_data_test_flag = null;
                     } else if (null == this.gather_data_test_flag) {
                         //获取采集测试数据，调用同步服务
@@ -2571,12 +2550,6 @@
                         vm.monitor_data_save(vm.unit_id, flow);
                     }
                 }
-                  vm.loading_tool = false
-                  this.$alert(vm.message)
-                if(vm.message == "保存成功!"){
-                    vm.centerDialogVisible = false
-                }
-
             },
             flow_change(value) {
                 vm.node_name(value)
