@@ -217,6 +217,8 @@ $(function () {
                                 });
                                 vm.isAdd = 1;
                                 vm.select_table();
+                                 //打开场景编辑器
+                                window.open(site_url+"monitor_scene/edit_flow_graph/");
                             }).catch(function (e) {
                                 loading.close();
                                 vm.$message.error('获取数据失败！');
