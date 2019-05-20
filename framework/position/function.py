@@ -334,7 +334,7 @@ def synchronize(request):
             flag1 = 0
             for user in users:
                 if data['bk_username'] == user.user_name:
-                    user_info.objects.filter(user_name=user.user_name).update(mobile_no=data['phone'], email=data['email'])
+                    user_info.objects.filter(user_name=user.user_name).update(mobile_no=data['phone'], email=data['email'],user_type_id=data['bk_role'])
                     flag1 = 1
                     break
             if flag1 == 0:
