@@ -27,6 +27,7 @@ $(function () {
                 pcode: 0,
                 mImg: '',
             },
+            name_flag:true,
             pcodes: [
                 {
                     label: "无",
@@ -56,7 +57,7 @@ $(function () {
             mImgs: [],
             rules: {
                 mname: [
-                    {required: true, message: '请输入连接名称', trigger: 'blur'},
+                    {required: true, message: '请输入菜单名称', trigger: 'blur'},
                     {min: 1, max: 20, message: '长度在 1 到 20 个字符', trigger: 'blur'},
 
                 ],
@@ -130,6 +131,7 @@ $(function () {
             hide() {
                 this.isAdd = 1;
                 ve.current_change(ve.currentPage)
+                ve.name_flag=true
             },
 
             rowClass({row, rowIndex}) {
@@ -156,14 +158,34 @@ $(function () {
                     }
                 })
             },
+            //验证菜单名字的唯一性
+            verify_name_only(){
+                let id=0
+                console.log(ve.isAdd)
+                if(ve.isAdd==3){
+                   id=ve.editMuenu.id
+                }else if(ve.isAdd==2){
+                    id=0
+                }
+                axios.post(site_url + 'db_connection/verify_name_only/', {name:ve.addmuenus.mname,id:id}).then((res) => {
+                    if (!res.data.message) {
+                        ve.name_flag=false
+                    }else{
+                        ve.name_flag=true
+                    }
+                })
+            },
 
 
             //保存菜单
             savemuenu(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
-                        alert('验证不通过');
+                        ve.$alert('验证不通过');
                         return false;
+                    }else if(!ve.name_flag){
+                        ve.$alert('名字不能重复');
+                        return false
                     } else {
                         axios.post(
                             site_url + 'db_connection/addmuenus/', this.addmuenus
@@ -171,6 +193,7 @@ $(function () {
                             if (ve.currentPage < res.data.results['page_count']) {
                                 ve.currentPage = res.data.results['page_count'];
                                 ve.hide();
+                                get_m()
                             }
                         });
                     }
@@ -191,14 +214,18 @@ $(function () {
             edit_muenu(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
-                        alert('验证不通过');
+                        ve.$alert('验证不通过');
                         return false;
-                    } else {
+                    }else if(!ve.name_flag){
+                        ve.$alert('名字不能重复');
+                        return false
+                    }else {
                         axios.post(
                             site_url + 'db_connection/edit_muenu/', this.editMuenu
                         ).then(function (res) {
                             if (res.data.code == 0) {
                                 ve.hide();
+                                get_m()
                             }
                         })
                     }
@@ -225,6 +252,7 @@ $(function () {
                                 this.$message('删除成功');
                                 data.splice(index, 1);
                                 ve.hide();
+                                get_m()
                             }
                         }),
                     );
@@ -244,6 +272,9 @@ $(function () {
             }
         }
     });
+    function get_m(){
+        window.parent.get_menu()
+    }
     ve.select_table();
     ve.append_mImgs();
     ve.get_header_data();

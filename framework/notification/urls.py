@@ -20,5 +20,6 @@ urlpatterns = patterns(
     (r'^del_rule$', 'del_rule'),                                         # 根据id删除指定的告警规则
     (r'^force_del_rule$', 'force_del_rule'),                             # 在有用户订阅该告警的情况下级联删除告警规则和订阅信息
     (r'^add_rule$', 'add_rule'),                                         # 添加告警规则
-    (r'^select_rules_pagination$', 'select_rules_pagination'),           # 分页获取指定页的告警规则
+    (r'^select_rules_pagination$', 'select_rules_pagination'),          # 分页获取指定页的告警规则
+    (r'^get_all_name$','get_all_name'),
 )

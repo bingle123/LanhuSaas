@@ -110,7 +110,7 @@
                         </el-col>
                         <el-col :span="6">
                             <el-form-item label="菜单名称：" prop="mname">
-                                <el-input v-model="addmuenus.mname"></el-input>
+                                <el-input v-model="addmuenus.mname" @blur="verify_name_only()"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
@@ -180,7 +180,7 @@
                         </el-col>
                         <el-col :span="6">
                             <el-form-item label="菜单名称：" prop="mname">
-                                <el-input v-model="editMuenu.mname"></el-input>
+                                <el-input v-model="editMuenu.mname" @blur="verify_name_only()"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">

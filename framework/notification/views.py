@@ -102,3 +102,7 @@ def select_rules_pagination(request):
     page_info = json.loads(request.body)
     selected_rules = function.select_rules_pagination(page_info)
     return render_json(selected_rules)
+
+def get_all_name(request):
+    res=function.get_all_name()
+    return render_json(res)

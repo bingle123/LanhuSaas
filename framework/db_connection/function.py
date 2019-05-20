@@ -613,13 +613,31 @@ def getAny_db(id):
         db = None
     return db
 
+
 def get_all_mImgs():
     '''
     获取所有的图标
     :return:
     '''
     muenus = Muenu.objects.filter(~Q(mImg=""))
-    mImgs=[]
+    mImgs = []
     for i in range(len(muenus)):
-        mImgs.append({'value':muenus[i].mImg})
+        mImgs.append({'value': muenus[i].mImg})
     return mImgs
+
+
+def verify_name_only(name, id):
+    '''
+    验证菜单名字的唯一性
+    :param name:
+    :param id:
+    :return:
+    '''
+    if (id != 0):
+        res = Muenu.objects.filter(Q(mname=name) & ~Q(id=id))
+    else:
+        res = Muenu.objects.filter(mname=name)
+    if res.count() == 0:
+        return True
+    else:
+        return False
