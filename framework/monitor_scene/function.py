@@ -119,7 +119,8 @@ def select_table(request):
     """
     res = request.body
     res_list = []
-    monitor = Scene.objects.filter(scene_name__contains=res).order_by("-id")
+    monitor = Scene.objects\
+        .filter(Q(scene_name__contains=res)|Q(scene_creator__contains=res)).order_by("-id")
     for i in monitor:
         dic = {
             'id': i.id,
