@@ -605,6 +605,9 @@ def query_pos_scene(request):
         if temp_scene_dt.count() == 0:
             continue
         temp_scene = temp_scene_dt.get()
+        if temp_scene.scene_content == None \
+            or temp_scene.scene_content.strip() == "":
+            continue
         if start != None:
            if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
               scene_id_list.append(scene.scene_id)
