@@ -3348,13 +3348,49 @@
                     vm.get_gather_info('get_measures_type/')
                 }
             },
+            //采集测试校验
+            collection_test_validate(){
+                if(vm.base.interface_type == ""){
+                    vm.$alert("请选择数据来源类型","提示");
+                    return false;
+                }else
+                if(vm.base.measures == ""){//来源名称
+                    vm.$alert("请选择数据来源名称","提示");
+                    return false;
+                }else
+                if(vm.base.measures_name == ""){//度量值
+                    vm.$alert("请选择数度量值","提示");
+                    return false;
+                }else
+                if(vm.base.show_rule_type == ""){//展示规则
+                    vm.$alert("请选择数展示规则","提示");
+                    return false;
+                }else if(vm.base.gather_rule == ""){//采集规则
+                    vm.$alert("请录入采集规则","提示");
+                    return false;
+                }else if(vm.base.show_rule_type == "0"){//选百分比校验
+                    if(vm.base.gather_rule != "" && vm.base.gather_rule !="100" && vm.base.gather_rule !="1000"){
+                        vm.$alert("百分比采集规则的值只能是'100'或'1000'","提示");
+                        return false;
+                    }
+                }else if(vm.base.show_rule_type == "1" || vm.base.show_rule_type == "2"){//选颜色和其它校验
+                    var filter=/^\r|\n\r|\n$/;
+                    if(filter.test(vm.base.gather_rule)){
+                        vm.$alert("采集规则中不能包含有空行","提示");
+                        return false;
+                    }
+                }
+                return true;
+            },
             //采集测试方法
             base_cell_test() {
-                //同步获取采集数据
-                vm.get_gather_test();
-                //预览采集，调用预览组件
-                preview_monitor_item(vm, 'monitor_item', "#base_test_text");
-                base_monitor_show_reset();
+                if(vm.collection_test_validate()){
+                    //同步获取采集数据
+                    vm.get_gather_test();
+                    //预览采集，调用预览组件
+                    preview_monitor_item(vm, 'monitor_item', "#base_test_text");
+                    base_monitor_show_reset();
+                }
             },
             change_data_sources(value) {
                 if (value == 9) {
