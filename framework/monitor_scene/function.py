@@ -352,12 +352,12 @@ def paging(request):
              ",a.scene_content,c.pos_name FROM"\
              " tb_monitor_scene a LEFT JOIN "\
              " tl_position_scene b on a.id = b.scene_id"\
-            " LEFT JOIN tb_pos_info c ON b.position_id=c.id  ORDER BY a.id DESC "
+            " LEFT JOIN tb_pos_info c ON b.position_id=c.id "
     page_start = (page-1)*limit
     if search!=None and search != "":
         sql_str = sql_str + " where ( a.scene_name like '%"+search+"%' "\
-                  +" or a.scene_creator like '%"+search+"%' "
-    sql_str=sql_str+" LIMIT "+str(page_start)+","+str(limit)
+                  +" or a.scene_creator like '%"+search+"%' )"
+    sql_str=sql_str+" ORDER BY a.id DESC  LIMIT "+str(page_start)+","+str(limit)
     db = get_db()
     cursor = db.cursor()
     cursor.execute(sql_str)
