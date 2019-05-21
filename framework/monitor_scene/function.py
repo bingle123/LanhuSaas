@@ -346,7 +346,7 @@ def paging(request):
     #     res_list.append(dic)
 
     #20190516 彭英杰 start
-    total = Scene.objects.all().count()
+    total = Scene.objects.filter(Q(scene_name__contains=search)|Q(scene_creator__contains=search)).count()
     sql_str ="SELECT a.id,a.scene_name,a.scene_startTime,a.scene_endTime,a.scene_creator,"\
              "a.scene_creator_time,a.scene_editor,a.scene_creator_time,a.scene_area "\
              ",a.scene_content,c.pos_name FROM"\

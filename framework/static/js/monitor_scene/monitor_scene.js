@@ -106,7 +106,7 @@ $(function () {
             monitor_data: [],        //接受监控项的具体数据
             scale: 1,            //比例
             multiple: 0,         //限制比例的参数
-
+            bl_search:true, //判断是否为搜索
         },
         methods: {
             //场景编排模糊检索
@@ -284,10 +284,15 @@ $(function () {
             },
             //初始加载数据
             current_change(value) {
+                vm.bl_search =false
                 vm.page = value;
                 vm.paging()
             },
             paging() {
+                if(vm.bl_search){
+                    vm.page = 1
+                }
+                vm.bl_search = true
                 axios({
                     method: 'post',
                     url: site_url + 'monitor_scene/paging/',
