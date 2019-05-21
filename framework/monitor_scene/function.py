@@ -311,6 +311,7 @@ def paging(request):
     res = json.loads(request.body)
     page = res['page']
     limit = res['limit']
+    search = res['search']
     start_page = limit * page - 9
     # 根据id倒排序
     # monitor = Scene.objects.all().order_by("-id")[start_page - 1:start_page + 9]
@@ -351,9 +352,12 @@ def paging(request):
              ",a.scene_content,c.pos_name FROM"\
              " tb_monitor_scene a LEFT JOIN "\
              " tl_position_scene b on a.id = b.scene_id"\
-            " LEFT JOIN tb_pos_info c ON b.position_id=c.id  ORDER BY a.id DESC "
+            " LEFT JOIN tb_pos_info c ON b.position_id=c.id "
     page_start = (page-1)*limit
-    sql_str=sql_str+" LIMIT "+str(page_start)+","+str(limit)
+    if search!=None and search != "":
+        sql_str = sql_str + " where ( a.scene_name like '%"+search+"%' "\
+                  +" or a.scene_creator like '%"+search+"%' )"
+    sql_str=sql_str+" ORDER BY a.id DESC  LIMIT "+str(page_start)+","+str(limit)
     db = get_db()
     cursor = db.cursor()
     cursor.execute(sql_str)

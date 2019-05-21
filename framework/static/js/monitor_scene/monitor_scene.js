@@ -293,6 +293,7 @@ $(function () {
                     url: site_url + 'monitor_scene/paging/',
                     data: {
                         page: vm.page,
+                        search:vm.search,
                         limit: 10
                     },
                 }).then(function (res) {
