@@ -605,6 +605,9 @@ def query_pos_scene(request):
         if temp_scene_dt.count() == 0:
             continue
         temp_scene = temp_scene_dt.get()
+        if temp_scene.scene_content == None \
+            or temp_scene.scene_content.strip() == "":
+            continue
         if start != None:
            if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
               scene_id_list.append(scene.scene_id)
@@ -984,7 +987,8 @@ def query_scene_item_data_handle(list_id):
                  txt = "@" + dto_item.monitor_name
              dt["key_val"] = txt
         else:
-            if gather_dto.data_key.upper().find("_CONNECTION")>-1 \
+            if gather_dto!=None \
+                 and gather_dto.data_key.upper().find("_CONNECTION")>-1 \
                      and dto_item.contents != None and dto_item.contents !="":
                 dt["key_val"] = "@"+dto_item.contents
             else:
