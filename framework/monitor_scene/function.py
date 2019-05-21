@@ -984,7 +984,8 @@ def query_scene_item_data_handle(list_id):
                  txt = "@" + dto_item.monitor_name
              dt["key_val"] = txt
         else:
-            if gather_dto.data_key.upper().find("_CONNECTION")>-1 \
+            if gather_dto!=None \
+                 and gather_dto.data_key.upper().find("_CONNECTION")>-1 \
                      and dto_item.contents != None and dto_item.contents !="":
                 dt["key_val"] = "@"+dto_item.contents
             else:
