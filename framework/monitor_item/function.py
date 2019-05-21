@@ -257,7 +257,7 @@ def select_unit(request):
         unit = Monitor.objects.all().order_by("-id")
     else:
         # 模糊查询,根据id倒排序
-        unit = Monitor.objects.filter(Q(monitor_name__icontains=res1)).order_by("-id")
+        unit = Monitor.objects.filter(Q(monitor_name__icontains=res1) | Q(editor__icontains=res1)).order_by("-id")
     page_data, base_page_count = tools.page_paging(unit, limit, page)
     res_list = tools.obt_dic(page_data, base_page_count)
     res_data = tools.success_result(res_list)

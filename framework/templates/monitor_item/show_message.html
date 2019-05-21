@@ -2143,8 +2143,8 @@
             },
             current_change1(value) {
                 vm.page = value;
-                vm.show()
 
+                vm.select2();
             },
             //保存按钮
             submitForm(formName) {
@@ -2222,13 +2222,16 @@
                         })
                         },1000);
             },
-            select1() {
+            select1(){
                 vm.centerDialogVisible = false;
                 vm.page = 1;
-                if (vm.contents == "") {
+                if (vm.contents === "") {
                     vm.show()
-
-                } else {
+                }else {
+                    vm.select2();
+                }
+            },
+            select2() {
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor_item/select/',
@@ -2248,7 +2251,6 @@
                     }).catch(function (e) {
                         vm.$message.error('获取数据失败！');
                     });
-                }
             },
             //编辑单元
             edit_unit(row) {
