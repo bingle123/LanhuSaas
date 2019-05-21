@@ -1575,6 +1575,15 @@
 
         },
         methods: {
+            //显示加载中..背景
+            popup_loading: function(){
+                return this.$loading({
+                    lock: true,
+                    text: '正在拼命加载中...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+            },
             //获取采集测试的结果，同步调用
             get_gather_test() {
                 $.ajax({
@@ -1830,12 +1839,6 @@
             },
             //监控项数据编辑后的保存方法
             monitor_data_save(unit_id, flow) {
-                if (vm.monitor_name == '') {
-                    vm.message = '监控项名称不能为空!';
-                    this.$alert(vm.message, "错误");
-                    vm.unit_id = -1;
-                    return false;
-                }
                 //unit_id大于0的情况为编辑后的数据上传
                 if (unit_id > 0) {
                     axios({
@@ -1856,17 +1859,20 @@
                         } else {
                             //保存采集测试的数据到服务器
                             vm.gather_data_test_save(vm.unit_id, 'edit');
-                            this.$alert(vm.message, "提示");
+                            //保存成功，清空预览区域
+                            $("#text2").html("");
+                            $("#base_test_text").html("");
+                            this.$alert("保存成功!", "提示");
                             vm.centerDialogVisible = false;
                         }
                         vm.show();
-
                     }).catch((error) => {
                         this.$alert("修改保存出错！", "错误")
                     });
                 }
                 //unit_id等于0的情况下为添加后的数据上传
                 else if (unit_id == 0) {
+                    const loading = this.popup_loading();
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor_item/add/',
@@ -1878,15 +1884,20 @@
                             monitor_area: vm.area
                         }
                     }).then((res) => {
+                        loading.close();
                         if (res['data']['code'] == 1) {
                             this.$alert("新增保存失败!", "错误");
                             vm.centerDialogVisible = true;
                         } else {
                             //保存采集测试的数据到服务器
                             vm.gather_data_test_save(res.data['item_id'], 'add');
+                            //保存成功，清空预览区域
+                            $("#text2").html("");
+                            $("#base_test_text").html("");
+                            this.$alert("保存成功!");
+                            vm.centerDialogVisible = false
                         }
                         vm.show()
-
                     }).catch((error) => {
                         this.$alert('新增保存失败!', "错误");
                     });
@@ -1970,12 +1981,33 @@
             },
             basic_test() {
                 let params = '';
+                //数据库监控项
                 if (vm.sql_file_interface == 3) {
+                    //第一步校验
+                    if(vm.server_url == ""){
+                        vm.message = '请选择数据库连接!';
+                        this.$alert(vm.message, "错误");
+                        vm.unit_id = -1;
+                        return false;
+                    }
+                    if(vm.basic.contents == ""){
+                        vm.message = '请录入显示类容!';
+                        this.$alert(vm.message, "错误");
+                        vm.unit_id = -1;
+                        return false;
+                    }
+                    if(vm.basic.gather_rule == ""){
+                        vm.message = '请录入数据采集规则!';
+                        this.$alert(vm.message, "错误");
+                        vm.unit_id = -1;
+                        return false;
+                    }
                     params = vm.server_url
                 }
                 if (vm.sql_file_interface == 6 || vm.sql_file_interface == 9) {
                     params = vm.server_url + '#' + vm.file_param
                 }
+                const loading = this.popup_loading();
                 axios({
                     method: 'post',
                     url: '${SITE_URL}monitor_item/basic_test/',
@@ -1987,6 +2019,7 @@
                         score:vm.basic.score
                     },
                 }).then(function (res) {
+                    loading.close();
                     let tempcontents2 = vm.basic.contents
                     $("#text2").html("")
                     $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + tempcontents2 + "</div>")
@@ -2082,22 +2115,26 @@
                         }
                         $("#text2").html("")
                         for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
+                            //flag2 标记sql语句是否正常
                             if (i == flag2) {
                                 $("#text2").append("<div class = \"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
                                 if (icon4 == 1) {
                                     $("#text2").append("<div class=\"circle1\"></div>");
-                                }
+                                }else
                                 if (icon4 == 2) {
                                     $("#text2").append("<div class=\"circle2\"></div>");
-                                }
+                                }else
                                 if (icon4 == 0) {
                                     $("#text2").append("<div class=\"circle3\"></div>");
-                                }
-                                if (icon4 == -1 || icon4 == -1) {
+                                }else {
                                     $("#text2").append("<div class=\"circle4\"></div>");
                                 }
                             } else {
-                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                                if(res.data.message[0][temp4[j]]){
+                                    $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                                }else{
+                                    $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + temp3[j][1] + "</div>");
+                                }
                             }
                         }
                     }
@@ -2143,12 +2180,11 @@
             },
             current_change1(value) {
                 vm.page = value;
-                vm.show()
 
+                vm.select2();
             },
             //保存按钮
             submitForm(formName) {
-                vm
                 if(vm.isShow == false){
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
@@ -2222,13 +2258,16 @@
                         })
                         },1000);
             },
-            select1() {
+            select1(){
                 vm.centerDialogVisible = false;
                 vm.page = 1;
-                if (vm.contents == "") {
+                if (vm.contents === "") {
                     vm.show()
-
-                } else {
+                }else {
+                    vm.select2();
+                }
+            },
+            select2() {
                     axios({
                         method: 'post',
                         url: '${SITE_URL}monitor_item/select/',
@@ -2248,7 +2287,6 @@
                     }).catch(function (e) {
                         vm.$message.error('获取数据失败！');
                     });
-                }
             },
             //编辑单元
             edit_unit(row) {
@@ -2435,9 +2473,15 @@
             },
             //保存数据处理
             edit1() {
-                vm.message = '保存成功!';
                 var node_time = {};
                 var flow = {};
+                if (vm.monitor_name == '') {
+                    vm.message = '监控项名称不能为空!';
+                    this.$alert(vm.message, "错误");
+                    vm.unit_id = -1;
+                    return false;
+                }
+                //基本监控项（数据库监控项）
                 if (vm.monitor_type == 'first') {
                     vm.result_data = vm.basic;
                     if (vm.file_param == undefined) {
@@ -2458,10 +2502,14 @@
                     if (vm.basic.start_time == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择开始时间!'
+                        this.$alert(vm.message, "错误");
+                        return false;
                     }
                     if (vm.basic.end_time == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择结束时间!'
+                        this.$alert(vm.message, "错误");
+                        return false;
                     }
                     //上传数据至服务器保存
                     vm.monitor_data_save(vm.unit_id, flow);
@@ -2570,10 +2618,6 @@
                         //上传监控项数据至服务器保存
                         vm.monitor_data_save(vm.unit_id, flow);
                     }
-                }
-                 this.$alert(vm.message)
-                if(vm.message == "保存成功!"){
-                    vm.centerDialogVisible = false
                 }
             },
             flow_change(value) {
