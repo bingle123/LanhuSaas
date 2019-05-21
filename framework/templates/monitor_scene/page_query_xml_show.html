@@ -132,7 +132,8 @@
                    }
 
 				   if(cell.attribute!=""
-                       &&cell.attribute!=undefined){
+                       &&cell.attribute!=undefined
+                       &&cell.parent.geometry != undefined){
                        var x = cell.parent.geometry.x;
                        var y = cell.parent.geometry.y;
                        var ifr= document.getElementById("ifr_t");
