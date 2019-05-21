@@ -2333,16 +2333,20 @@
                             url: '${SITE_URL}db_connection/get_conname/',
                             data: row.params,
                         }).then((res) => {
-                            //vm.server_url = res['data']['results']['connname'];
-                            vm.sql_id = res['data']['results']['id'];
-                            vm.server_url = vm.sql_id;
-                            vm.basic_size();
-                            vm.basic_height();
-                            vm.basic_width();
-                            vm.sycontent();
-                            vm.basic_test()
+                            if(res['data']['result']){
+                                vm.sql_id = res['data']['results']['id'];
+                                vm.server_url = vm.sql_id;
+                                vm.basic_size();
+                                vm.basic_height();
+                                vm.basic_width();
+                                vm.basic_test();
+                            }else{
+                                $("#text2").html("");
+                                vm.$alert('获取数据库连接配置失败！',"错误");
+                            }
                         }).catch(function (e) {
-                            vm.$message.error('获取数据库失败！');
+                            $("#text2").html("");
+                            vm.$alert('获取数据库连接配置失败！',"错误");
                         });
                         vm.sql1 = 'block';
                         vm.file1 = 'none';
@@ -2484,11 +2488,8 @@
                 //基本监控项（数据库监控项）
                 if (vm.monitor_type == 'first') {
                     vm.result_data = vm.basic;
-                    if (vm.file_param == undefined) {
-                        vm.basic.params = vm.server_url
-                    } else {
-                        vm.basic.params = vm.server_url + '#' + vm.file_param
-                    }
+                    //当前只有数据库连接，就直接赋值连接的编号
+                    vm.basic.params = vm.server_url
                     vm.basic.monitor_name = vm.monitor_name;
                     vm.basic.monitor_type = vm.monitor_type;
                     if (vm.server_url == '') {
