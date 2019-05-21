@@ -446,7 +446,7 @@ def basic_test(request):
     """
     info = json.loads(request.body)
     # 新增时测试
-    if info['id'] == '':
+    if info['id'] == '' or info['id'] == -1:
         info['id'] = 0
     result = []
     gather_data(**info)
