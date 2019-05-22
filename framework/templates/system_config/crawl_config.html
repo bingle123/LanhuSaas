@@ -91,6 +91,7 @@
             </el-table-column>
             <el-table-column
                     label="爬虫名称"
+                    show-overflow-tooltip="true"
                     prop="crawl_name" sortable>
             </el-table-column>
             <el-table-column
@@ -103,6 +104,7 @@
             </el-table-column>
             <el-table-column
                     label="创建时间"
+                    show-overflow-tooltip="true"
                     prop="create_time" sortable>
             </el-table-column>
             <el-table-column
@@ -111,6 +113,7 @@
             </el-table-column>
             <el-table-column
                     label="修改时间"
+                    show-overflow-tooltip="true"
                     prop="update_time" sortable>
             </el-table-column>
             <el-table-column label="操作" align="center">
@@ -313,7 +316,7 @@
         methods: {
             changeSize(value){
                 vm.limit = value;
-                vm.get_crawl_by_name();
+                vm.get_crawl_by_name_search();
             },
             changeDiaLog() {//跳转爬虫配置新增页面
                 this.showDiaLog == true ? this.showDiaLog = false : this.showDiaLog = true;
@@ -409,7 +412,11 @@
                 });
             },
             //根据爬虫名称和网站获取爬虫配置
-            get_crawl_by_name() {
+            get_crawl_by_name(){
+              vm.page = 1;
+              vm.get_crawl_by_name_search();
+            },
+            get_crawl_by_name_search() {
                 axios({
                     url: '${SITE_URL}system_config/get_crawl_by_name/',
                     method: 'post',
@@ -445,7 +452,7 @@
             //翻页
             changePage(value) {
                 vm.page = value;
-                vm.get_crawl_by_name()
+                vm.get_crawl_by_name_search()
             },
             //页面初始化
             initHtml() {
