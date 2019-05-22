@@ -66,6 +66,9 @@ $(function(){
             },
         },
         methods: {
+            rowclass({row, rowIndex}) {
+                return 'background:#F7F7F7'
+            },
             handleDialogClose(){
                 vm. ref()
             },
