@@ -1977,6 +1977,125 @@
                     }
                 }
             },
+            basic_review(res) {//基本监控项预览
+                let tempcontents2 = vm.basic.contents
+                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + tempcontents2 + "</div>")
+                if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1) {
+                    var temp1 = tempcontents2.split("#");
+                    var temp2 = [];
+                    var temp3 = [];
+                    var temp4 = [];
+                    for (var i = 1; i < temp1.length; i = i + 2) {
+                        temp2.push(temp1[i]);
+                    }
+                    for (var i = 0; i < temp2.length; i++) {
+                        temp3.push(temp2[i].split("="))
+                    }
+                    for (var i = 0; i < temp3.length; i++) {
+                        temp4.push(temp3[i][0])
+                    }
+                    vm.clear_review();
+                    for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
+                        if (j < temp4.length) {
+                            $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                        } else {
+                            $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + "</div>");
+                        }
+                    }
+                }
+                if (vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1) {
+                    var icon1 = tempcontents2.split("@");
+                    var icon2 = [];
+                    var icon3 = [];
+                    var icon4 = '';
+                    if (res.data.message[0]['DB_CONNECTION']) {
+                        icon4 = res.data.message[0]['DB_CONNECTION'];
+                    }
+                    if (res.data.message[0]['URL_CONNECTION']) {
+                        icon4 = res.data.message[0]['URL_CONNECTION'];
+                    }
+                    if (res.data.message[0]['FILE_EXIST']) {
+                        icon4 = res.data.message[0]['FILE_EXIST'];
+                    }
+                    vm.clear_review();
+                    $("#text2").append("<div class = \"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
+                    if (icon4 == 1) {
+                        $("#text2").append("<div class=\"circle1\"></div>");
+                    }
+                    if (icon4 == 2) {
+                        $("#text2").append("<div class=\"circle2\"></div>");
+                    }
+                    if (icon4 == 0) {
+                        $("#text2").append("<div class=\"circle3\"></div>");
+                    }
+                    if (icon4 == -1 || icon4 == -2) {
+                        $("#text2").append("<div class=\"circle4\"></div>");
+                    }
+                }
+                if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
+                    var temp1 = tempcontents2.split("#");
+                    var temp2 = [];
+                    var temp3 = [];
+                    var temp4 = [];
+                    for (var i = 1; i < temp1.length; i = i + 2) {
+                        temp2.push(temp1[i]);
+                    }
+                    for (var i = 0; i < temp2.length; i++) {
+                        temp3.push(temp2[i].split("="))
+                    }
+                    for (var i = 0; i < temp3.length; i++) {
+                        temp4.push(temp3[i][0])
+                    }
+                    var icon1 = [];
+                    var icon2 = [];
+                    var icon3 = [];
+                    var icon4 = '';
+                    var flag2 = 0;
+                    for (var i = 0; i < temp1.length; i = i + 2) {
+                        if (temp1[i].indexOf("@") > -1) {
+                            icon1 = temp1[i].split("@")
+                            flag2 = i
+                            for (var k = 0; k < icon1.length; k++) {
+                                icon2.push(icon1[k])
+                            }
+                        }
+                    }
+                    icon3 = icon2[1].split("=")
+                    if (res.data.message[0]['DB_CONNECTION']) {
+                        icon4 = res.data.message[0]['DB_CONNECTION'];
+                    }
+                    if (res.data.message[0]['URL_CONNECTION']) {
+                        icon4 = res.data.message[0]['URL_CONNECTION'];
+                    }
+                    if (res.data.message[0]['FILE_EXIST']) {
+                        icon4 = res.data.message[0]['FILE_EXIST'];
+                    }
+                    vm.clear_review();
+                    for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
+                        //flag2 标记sql语句是否正常
+                        if (i == flag2) {
+                            $("#text2").append("<div class = \"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
+                            if (icon4 == 1) {
+                                $("#text2").append("<div class=\"circle1\"></div>");
+                            }else
+                            if (icon4 == 2) {
+                                $("#text2").append("<div class=\"circle2\"></div>");
+                            }else
+                            if (icon4 == 0) {
+                                $("#text2").append("<div class=\"circle3\"></div>");
+                            }else {
+                                $("#text2").append("<div class=\"circle4\"></div>");
+                            }
+                        } else {
+                            if(res.data.message[0][temp4[j]]){
+                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                            }else{
+                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + temp3[j][1] + "</div>");
+                            }
+                        }
+                    }
+                }
+            },
             basic_test() {
                 let params = '';
                 //数据库监控项
@@ -2018,124 +2137,7 @@
                     },
                 }).then(function (res) {
                     loading.close();
-                    let tempcontents2 = vm.basic.contents
-                    vm.clear_review();
-                    $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + tempcontents2 + "</div>")
-                    if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1) {
-                        var temp1 = tempcontents2.split("#");
-                        var temp2 = [];
-                        var temp3 = [];
-                        var temp4 = [];
-                        for (var i = 1; i < temp1.length; i = i + 2) {
-                            temp2.push(temp1[i]);
-                        }
-                        for (var i = 0; i < temp2.length; i++) {
-                            temp3.push(temp2[i].split("="))
-                        }
-                        for (var i = 0; i < temp3.length; i++) {
-                            temp4.push(temp3[i][0])
-                        }
-                        vm.clear_review();
-                        for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
-                            if (j < temp4.length) {
-                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
-                            } else {
-                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + "</div>");
-                            }
-                        }
-                    }
-                    if (vm.basic.contents.indexOf('@') > -1 && vm.basic.contents.indexOf("#") == -1) {
-                        var icon1 = tempcontents2.split("@");
-                        var icon2 = [];
-                        var icon3 = [];
-                        var icon4 = '';
-                        if (res.data.message[0]['DB_CONNECTION']) {
-                            icon4 = res.data.message[0]['DB_CONNECTION'];
-                        }
-                        if (res.data.message[0]['URL_CONNECTION']) {
-                            icon4 = res.data.message[0]['URL_CONNECTION'];
-                        }
-                        if (res.data.message[0]['FILE_EXIST']) {
-                            icon4 = res.data.message[0]['FILE_EXIST'];
-                        }
-                        vm.clear_review();
-                        $("#text2").append("<div class = \"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
-                        if (icon4 == 1) {
-                            $("#text2").append("<div class=\"circle1\"></div>");
-                        }
-                        if (icon4 == 2) {
-                            $("#text2").append("<div class=\"circle2\"></div>");
-                        }
-                        if (icon4 == 0) {
-                            $("#text2").append("<div class=\"circle3\"></div>");
-                        }
-                        if (icon4 == -1 || icon4 == -2) {
-                            $("#text2").append("<div class=\"circle4\"></div>");
-                        }
-                    }
-                    if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') > -1) {
-                        var temp1 = tempcontents2.split("#");
-                        var temp2 = [];
-                        var temp3 = [];
-                        var temp4 = [];
-                        for (var i = 1; i < temp1.length; i = i + 2) {
-                            temp2.push(temp1[i]);
-                        }
-                        for (var i = 0; i < temp2.length; i++) {
-                            temp3.push(temp2[i].split("="))
-                        }
-                        for (var i = 0; i < temp3.length; i++) {
-                            temp4.push(temp3[i][0])
-                        }
-                        var icon1 = [];
-                        var icon2 = [];
-                        var icon3 = [];
-                        var icon4 = '';
-                        var flag2 = 0;
-                        for (var i = 0; i < temp1.length; i = i + 2) {
-                            if (temp1[i].indexOf("@") > -1) {
-                                icon1 = temp1[i].split("@")
-                                flag2 = i
-                                for (var k = 0; k < icon1.length; k++) {
-                                    icon2.push(icon1[k])
-                                }
-                            }
-                        }
-                        icon3 = icon2[1].split("=")
-                        if (res.data.message[0]['DB_CONNECTION']) {
-                            icon4 = res.data.message[0]['DB_CONNECTION'];
-                        }
-                        if (res.data.message[0]['URL_CONNECTION']) {
-                            icon4 = res.data.message[0]['URL_CONNECTION'];
-                        }
-                        if (res.data.message[0]['FILE_EXIST']) {
-                            icon4 = res.data.message[0]['FILE_EXIST'];
-                        }
-                        vm.clear_review();
-                        for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
-                            //flag2 标记sql语句是否正常
-                            if (i == flag2) {
-                                $("#text2").append("<div class = \"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
-                                if (icon4 == 1) {
-                                    $("#text2").append("<div class=\"circle1\"></div>");
-                                }else
-                                if (icon4 == 2) {
-                                    $("#text2").append("<div class=\"circle2\"></div>");
-                                }else
-                                if (icon4 == 0) {
-                                    $("#text2").append("<div class=\"circle3\"></div>");
-                                }else {
-                                    $("#text2").append("<div class=\"circle4\"></div>");
-                                }
-                            } else {
-                                if(res.data.message[0][temp4[j]]){
-                                    $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
-                                }else{
-                                    $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + temp3[j][1] + "</div>");
-                                }
-                            }
-                        }
-                    }
+                    vm.basic_review(res)
                 });
             },
             // 保存
@@ -2288,6 +2290,7 @@
             },
             //编辑单元
             edit_unit(row) {
+                debugger
                 this.get_db_connections();
                 vm.add_pamas = 1;
                 vm.centerDialogVisible = true;
@@ -2339,8 +2342,14 @@
                                 vm.basic_size();
                                 vm.basic_height();
                                 vm.basic_width();
+                                //当监控项的监控状态为0，表示不自动采集数据
+                                //预览前清空预览
+                                vm.clear_review();
                                 if(row.status === "1"){
                                     vm.basic_test();
+                                }else{
+                                    //这里暂不需要实现
+                                    //预览取历史数据
                                 }
                             }else{
                                 vm.clear_review();
