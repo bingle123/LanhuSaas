@@ -2307,6 +2307,8 @@
                 vm.monitor_name = row.monitor_name;
                 //原始基本监控项
                 if (row.monitor_type === 1) {
+                    vm.disabled2 = false;
+                    vm.disabled6 = true;
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
                     vm.basic.height = row.height;
