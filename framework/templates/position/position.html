@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>岗位管理</title>
     <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <script src="${STATIC_URL}js/csrftoken.js"></script>
     <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
     <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
     <!-- element UI引入样式 -->
@@ -66,7 +67,7 @@
 
     </el-dialog>
 
-    <el-dialog title="新增岗位" :visible.sync="dialogFormVisible3">
+    <el-dialog title="新增岗位" :visible.sync="dialogFormVisible3" @close="form.pos_name = ''">
         <el-form :model="form" ref="form" :rules="rules">
             <el-form-item label="岗位名称:" prop='pos_name'>
                 <el-input v-model="form.pos_name"></el-input>
@@ -93,31 +94,33 @@
                 <hr id="hr">
                 <el-row type="flex" justify="space-between" align="center" class="row">
                     <el-col :span="12">
-                        <el-col :span="9">
-                            <el-input v-model="search" placeholder="请输入内容"></el-input>
-                        </el-col>
-                        <el-col :span="3">
-                            <el-button type="primary" icon="el-icon-search" v-on:click="select_pos">搜索</el-button>
-                        </el-col>
+                        <div @keyup.enter="select_pos">
+                            <el-col :span="9" >
+                                <el-input v-model.trim="search" clearable placeholder="请输入岗位名称或岗位人员" ></el-input>
+                            </el-col>&nbsp;
+                            <el-col :span="3" style="margin-left: 5px;">
+                                <el-button type="primary" icon="el-icon-search" v-on:click="select_pos">搜索</el-button>
+                            </el-col>
+                        </div>
                     </el-col>
                     <el-col :span="3">
                         <el-button type="button" @click="dialogFormVisible3 = true">新增岗位</el-button>
                     </el-col>
                 </el-row>
-                <el-table :data="positiontable" style="width: 100%;margin-top: 20px">
-                    <el-table-column prop="pos_name" label="岗位名称" style="width: 10%" align="center">
+                <el-table :data="positiontable" style="width: 100%;margin-top: 20px" border >
+                    <el-table-column prop="pos_name" label="岗位名称" show-overflow-tooltip="true" style="width: 10%" align="center" sortable>
                     </el-table-column>
-                    <el-table-column prop="user_name" label="岗位人员" style="width: 40%;" align="center">
+                    <el-table-column prop="user_name" label="岗位人员" show-overflow-tooltip="true" style="width: 40%;" align="center" sortable>
                     </el-table-column>
-                    <el-table-column prop="creator" label="创建人" style="width: 10%;" align="center">
+                    <el-table-column prop="creator" label="创建人" style="width: 10%;" align="center" sortable>
                     </el-table-column>
-                    <el-table-column prop="create_time" label="创建时间" style="width: 10%;" align="center">
+                    <el-table-column prop="create_time" label="创建时间" style="width: 10%;" align="center" sortable>
                     </el-table-column>
-                    <el-table-column prop="editor" label="最后修改人" style="width: 10%;" align="center">
+                    <el-table-column prop="editor" label="最后修改人" style="width: 10%;" align="center" sortable>
                     </el-table-column>
-                    <el-table-column prop="edit_time" label="最后修改时间" style="width: 10%;" align="center">
+                    <el-table-column prop="edit_time" label="最后修改时间" style="width: 10%;" align="center" sortable>
                     </el-table-column>
-                    <el-table-column prop="operation" label="操作" style="width: 10%">
+                    <el-table-column prop="operation" label="操作" style="width: 10%" align="center">
                         <template slot-scope="scope">
                             <el-button type="text" @click="show_pos(scope.row)" size="small">加人</el-button>
                             <el-button type="text" @click="edit_posname(scope.row)" size="small">编辑</el-button>

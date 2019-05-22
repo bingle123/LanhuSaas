@@ -79,7 +79,7 @@ def select_pos(request):
     # 获取无岗位id
     noposition_id = get_noposition_id()
     # 获取
-    position_list = pos_info.objects.filter(~Q(id=noposition_id))
+    position_list = pos_info.objects.filter(~Q(id=noposition_id)).order_by('-create_time')
     # 按岗位查询
     positions = position_list.filter(Q(pos_name__contains=res1))
     # 按人名查询

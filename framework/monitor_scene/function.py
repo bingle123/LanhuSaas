@@ -61,10 +61,16 @@ def addSence(request):
     :return:
     """
     id = None
+    username = request.user.username
     try:
         res = request.body
         senceModel = json.loads(res)
-        print senceModel
+        # 首先查询场景名称是否存在，存在就提示该场景已经存在
+        scene_result = Scene.objects.filter(scene_name=senceModel['data']['scene_name'])
+        # 重复的场景,返回场景名称
+        if scene_result.__len__() > 0:
+            return {'scene_name': senceModel['data']['scene_name']}
+        # print senceModel
         starttime = senceModel['data']["scene_startTime"]
         endtime = senceModel['data']["scene_endTime"]
         temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
@@ -78,7 +84,7 @@ def addSence(request):
             "scene_name": senceModel['data']['scene_name'],
             "scene_startTime": starttime,
             "scene_endTime": endtime,
-            "scene_creator": "admin",
+            "scene_creator": username,
             "scene_area": senceModel['data']['area']
         }
         id = Scene.objects.create(**senceModel2)
@@ -177,6 +183,7 @@ def editSence(request):
     :param request:
     :return:
     """
+    username = request.user.username
     try:
         model = json.loads(request.body)
         starttime = model['data']["scene_startTime"]
@@ -192,7 +199,7 @@ def editSence(request):
             "scene_name": model['data']['scene_name'],
             "scene_startTime": starttime,
             "scene_endTime": endtime,
-            "scene_editor": "admin",
+            "scene_editor": username,
             "scene_area": model['data']['area']
         }
         Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
@@ -842,7 +849,7 @@ def save_scene_design(data):
     }
     # 首先查询场景名称是否存在，存在就是编辑，不存在就提示名称错误
     scene_result = Scene.objects.filter(scene_name = data['filename'])
-    print scene_result.__len__()
+    # print scene_result.__len__()
     if scene_result.__len__() == 0:
         # scene_obj = SceneDesign.objects.create(**scene_design)
         return {'id': "0"}

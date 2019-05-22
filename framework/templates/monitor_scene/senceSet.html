@@ -306,7 +306,7 @@
                             <el-button type="primary" v-on:click="submitForm('scene')" id="button">下一步</el-button>
                         </el-col>
                         <el-col :span="2">
-                            <el-button @click="hide" id="button">取消</el-button>
+                            <el-button @click="hide('add')" id="button">取消</el-button>
                         </el-col>
                     </el-row>
                 </el-form>
@@ -366,7 +366,7 @@
                             <el-button type="primary" v-on:click="submitForm('scene_edit')" id="button">保存</el-button>
                         </el-col>
                         <el-col :span="2">
-                            <el-button @click="hide" id="button">取消</el-button>
+                            <el-button @click="hide('edit')" id="button">取消</el-button>
                         </el-col>
                     </el-row>
                 </el-form>

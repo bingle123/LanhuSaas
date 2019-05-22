@@ -14,10 +14,10 @@
     <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
     <script src='${STATIC_URL}js/jquery.min.js'></script>
     <script src='${STATIC_URL}js/jquery-ui.js'></script>
+    <script src="${STATIC_URL}js/csrftoken.js"></script>
     <!--jQuery库使用时请使用标准jQuery语法-->
     <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
     <!--页面初始化css(Tencent)-->
-    <link href="${STATIC_URL}css/init.css" rel="stylesheet">
 
     <!--阿里巴巴矢量图标库--项目完成后请下载css并下载css引用的字体文件-->
     <link href="${STATIC_URL}css/net/font_997278_ptr5bdmor4j.css" rel="stylesheet">
@@ -42,16 +42,17 @@
             <el-row :gutter="20">
                 <el-col :span="20">
                     <el-form :inline="true" :model="crawl_search" class="demo-form-inline">
+                        <div @keyup.enter="get_crawl_by_name">
                         <el-form-item label="爬虫名称：">
-                            <el-input v-model="crawl_search.name" placeholder="请输入爬虫名称"></el-input>
+                            <el-input v-model="crawl_search.name" clearable placeholder="请输入爬虫名称" @keyup.enter="get_crawl_by_name"></el-input>
                         </el-form-item>
                         <el-form-item label="爬虫网址：">
-                            <el-input v-model="crawl_search.url" placeholder="请输入爬虫网址"></el-input>
+                            <el-input v-model="crawl_search.url" clearable placeholder="请输入爬虫网址" @keyup.enter="get_crawl_by_name"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="get_crawl_by_name">查询</el-button>
                         </el-form-item>
-
+                        </div>
                     </el-form>
                 </el-col>
                 <el-col :span="4" style="float: right">
@@ -61,25 +62,25 @@
                 </el-col>
             </el-row>
         </div>
-        <el-table :data="crawl_table" style="width: 100%">
+        <el-table :data="crawl_table" style="width: 100%" border header-align="center">
             <el-table-column type="expand"
                              label="ID"
                              prop="id">
                 <template slot-scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
-                        <el-form-item label="总xpath:">
+                        <el-form-item label="总xpath:" >
                             <span>{{ props.row.total_xpath }}</span>
                         </el-form-item>
-                        <el-form-item label="标题xpath:">
+                        <el-form-item label="标题xpath:" >
                             <span>{{ props.row.title_xpath }}</span>
                         </el-form-item>
-                        <el-form-item label="URL_xpath:">
+                        <el-form-item label="URL_xpath:" >
                             <span>{{ props.row.url_xpath }}</span>
                         </el-form-item>
-                        <el-form-item label="时间xpath:">
+                        <el-form-item label="时间xpath:" >
                             <span>{{ props.row.time_xpath }}</span>
                         </el-form-item>
-                        <el-form-item label="关键字:">
+                        <el-form-item label="关键字:" >
                             <span>{{ props.row.crawl_keyword }}</span>
                         </el-form-item>
                         <el-form-item label="非关键字:">
@@ -90,29 +91,32 @@
             </el-table-column>
             <el-table-column
                     label="爬虫名称"
-                    prop="crawl_name">
+                    show-overflow-tooltip="true"
+                    prop="crawl_name" sortable>
             </el-table-column>
             <el-table-column
                     label="爬虫周期"
-                    prop="period">
+                    prop="period" sortable>
             </el-table-column>
             <el-table-column
                     label="创建人"
-                    prop="create_user">
+                    prop="create_user" sortable>
             </el-table-column>
             <el-table-column
                     label="创建时间"
-                    prop="create_time">
+                    show-overflow-tooltip="true"
+                    prop="create_time" sortable>
             </el-table-column>
             <el-table-column
                     label="修改人"
-                    prop="update_user">
+                    prop="update_user" sortable>
             </el-table-column>
             <el-table-column
                     label="修改时间"
-                    prop="update_time">
+                    show-overflow-tooltip="true"
+                    prop="update_time" sortable>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
                     <el-button size="mini" type="text" v-on:click="editCrawl(scope.row.id)">编辑</el-button>
                     <el-button size="mini" type="text" v-on:click="deleteCrawl(scope.row.id)">删除</el-button>
@@ -312,7 +316,7 @@
         methods: {
             changeSize(value){
                 vm.limit = value;
-                vm.get_crawl_by_name();
+                vm.get_crawl_by_name_search();
             },
             changeDiaLog() {//跳转爬虫配置新增页面
                 this.showDiaLog == true ? this.showDiaLog = false : this.showDiaLog = true;
@@ -408,7 +412,11 @@
                 });
             },
             //根据爬虫名称和网站获取爬虫配置
-            get_crawl_by_name() {
+            get_crawl_by_name(){
+              vm.page = 1;
+              vm.get_crawl_by_name_search();
+            },
+            get_crawl_by_name_search() {
                 axios({
                     url: '${SITE_URL}system_config/get_crawl_by_name/',
                     method: 'post',
@@ -444,7 +452,7 @@
             //翻页
             changePage(value) {
                 vm.page = value;
-                vm.get_crawl_by_name()
+                vm.get_crawl_by_name_search()
             },
             //页面初始化
             initHtml() {
