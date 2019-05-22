@@ -2324,11 +2324,12 @@
                     vm.basic.contents = row.contents;
                     vm.basic.status = row.status;
                     vm.basic.score = row.score;
-                    vm.basic.measure_name = row.measure_name
-                    vm.basic.display_type = row.display_type
-                    vm.basic.display_rule = row.display_rule
+                    vm.basic.measure_name = row.measure_name;
+                    vm.basic.display_type = row.display_type;
+                    vm.basic.display_rule = row.display_rule;
                     vm.area = row.monitor_area;
-                    if (vm.sql_file_interface == 'sql') {
+                    if(row.status === "1"){
+                        if (vm.sql_file_interface === 'sql') {
                         vm.sql_file_interface = 3;
                         axios({
                             method: 'post',
@@ -2355,7 +2356,7 @@
                         vm.interface1 = 'none';
                         vm.basic.gather_params = 'sql'
                     }
-                    if (vm.sql_file_interface == 'file') {
+                        if (vm.sql_file_interface === 'file') {
                         vm.sql_file_interface = 6;
                         arr = row.params.split("#");
                         vm.server_url = arr[0];
@@ -2371,7 +2372,7 @@
                         vm.sycontent();
                         vm.basic_test()
                     }
-                    if (vm.sql_file_interface == 'interface') {
+                        if (vm.sql_file_interface === 'interface') {
                         vm.sql_file_interface = 9;
                         arr = row.params.split("#");
                         vm.server_url = arr[0];
@@ -2387,6 +2388,8 @@
                         vm.sycontent();
                         vm.basic_test()
                     }
+                    }
+
                 }
                 //图表监控项
                 /*
