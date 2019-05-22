@@ -102,10 +102,23 @@
                                     }else if(calc_key == "@"){
                                        var txt = calc_data[1]
                                        var cell_dto =graph.getModel().cells[param_map[temp_dto["id"]]];
+                                       if(txt.indexOf("[")>-1){
+                                           txt = txt.split("[")[0]
+                                       }
                                        cell_dto.value= txt;//取出数据
                                         if(temp_dto["key_val"].indexOf("@") == 0){
                                              graph.setCellStyles(mxConstants.STYLE_FILLCOLOR,
                                            '#cecece', [cell_dto]);
+                                        }else if(temp_dto["key_val"].indexOf("db@") == 0){
+                                             var color_str ="#cecece";
+                                             var txt_str = calc_data[1]
+                                                 .replace(txt,"").replace("[","")
+                                                 .replace("]","");
+                                             if(txt_str == "1"){
+                                                 color_str ="#7CFC00";
+                                             }
+                                           graph.setCellStyles(mxConstants.STYLE_FILLCOLOR,
+                                           color_str, [cell_dto]);
                                         }
                                     }else if(calc_key == "%"){
                                          graph.getModel().cells[param_map[temp_dto["id"]]].value

@@ -969,8 +969,18 @@ def query_scene_item_data_handle(list_id):
     list_dto_item = Monitor.objects.filter(id__in=item_ids)
     list_dto_gather = TDGatherData.objects.filter(item_id__in=item_ids)
     arr_dto_dt ={}
+    arr_db_map = {} #id加数据
     for dto_temp in list_dto_gather:
-        arr_dto_dt[dto_temp.item_id] = dto_temp
+        if arr_db_map.get(dto_temp.item_id)!=None:
+            db_arr = arr_db_map.get(dto_temp.item_id)
+            db_arr.append(dto_temp)
+            arr_db_map[dto_temp.item_id] = db_arr
+        if dto_temp.data_key =="DB_CONNECTION":
+            db_arr =[]
+            db_arr.append(dto_temp)
+            arr_db_map[dto_temp.item_id] = db_arr
+        if arr_dto_dt.get(dto_temp.item_id) == None:
+            arr_dto_dt[dto_temp.item_id] = dto_temp
     for dto_item in list_dto_item:
         dt = {}
         dt["id"] = dto_item.id # 监控项表  id
@@ -986,7 +996,7 @@ def query_scene_item_data_handle(list_id):
                  txt = json_dto[0].get(key)
              elif gather_dto.data_key.upper().find("_CONNECTION")>-1\
                      and dto_item.contents != None and dto_item.contents !="":
-                 txt = "@" + dto_item.contents
+                 txt =  dt["key_val"] = exec_rule(arr_db_map,dto_item,gather_dto)
              if  'txt' not in locals().keys() or txt == None :
                  txt = "@" + dto_item.monitor_name
              dt["key_val"] = txt
@@ -994,7 +1004,8 @@ def query_scene_item_data_handle(list_id):
             if gather_dto!=None \
                  and gather_dto.data_key.upper().find("_CONNECTION")>-1 \
                      and dto_item.contents != None and dto_item.contents !="":
-                dt["key_val"] = "@"+dto_item.contents
+
+               dt["key_val"] = exec_rule(arr_db_map,dto_item,gather_dto)
             else:
                 dt["key_val"] = "@" + dto_item.monitor_name
         if 'key' in locals().keys():
@@ -1043,3 +1054,34 @@ def query_scene_item_data_handle(list_id):
     #             arr.append(dt)
         #TDGatherData
     return  arr
+
+def exec_rule(arr_db_map,dto_item,gather_dto):
+    '''
+    规则转换
+    :param arr_db_map:
+    :param dto_item:
+    :return:
+    '''
+    if gather_dto.data_value != "1":
+        return "@" +  dto_item.contents
+    db_val_arr = arr_db_map.get(dto_item.id)
+    db_gather_map = {}
+    for db_v in db_val_arr:
+        db_gather_map[db_v.data_key] = db_v.data_value
+    str = ""
+    rules = dto_item.contents.split("\n")
+    for rule_val in rules:
+        if str != "":
+            str += "\n"
+        if rule_val.find("#") > 0:
+            arr_t = rule_val.split("#")
+            str += arr_t[0]
+            key_rule = arr_t[1].split("=")[0]
+            str += db_gather_map.get(key_rule)
+        elif rule_val.find("@") > 0:
+            arr_t = rule_val.split("@")
+            # str += arr_t[0]
+            key_rule = arr_t[1].split("=")[0]
+            str += "[" + db_gather_map.get(key_rule) + "]"
+
+    return "db@" + str  # dto_item.contents
