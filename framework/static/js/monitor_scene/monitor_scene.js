@@ -195,6 +195,12 @@ $(function () {
                                     monitor_data: vm.result_list
                                 }
                             }).then(function (res) {
+                                loading.close();
+                                if(res.data.scene_name){
+                                    vm.$alert("场景名称"+"'"+res.data.scene_name+"'"+"已经存在，请修改场景名称进入编排功能",'错误')
+                                    return false;
+                                }
+                                /*
                                 //上传当前场景字体颜色设置
                                 var color_info = {
                                     'scene_id' : res.data.scene_id,
@@ -214,7 +220,7 @@ $(function () {
                                     //上传场景颜色失败后，场景颜色恢复默认值
                                     vm.scene_font_color = '#AAAAAA';
                                     vm.$message.error('场景颜色上传失败！');
-                                });
+                                });*/
                                 vm.isAdd = 1;
                                 vm.select_table();
                                  //打开场景编辑器

@@ -1860,8 +1860,7 @@
                             //保存采集测试的数据到服务器
                             vm.gather_data_test_save(vm.unit_id, 'edit');
                             //保存成功，清空预览区域
-                            $("#text2").html("");
-                            $("#base_test_text").html("");
+                            vm.clear_review();
                             this.$alert("保存成功!", "提示");
                             vm.centerDialogVisible = false;
                         }
@@ -1892,8 +1891,7 @@
                             //保存采集测试的数据到服务器
                             vm.gather_data_test_save(res.data['item_id'], 'add');
                             //保存成功，清空预览区域
-                            $("#text2").html("");
-                            $("#base_test_text").html("");
+                            vm.clear_review();
                             this.$alert("保存成功!");
                             vm.centerDialogVisible = false
                         }
@@ -2021,7 +2019,7 @@
                 }).then(function (res) {
                     loading.close();
                     let tempcontents2 = vm.basic.contents
-                    $("#text2").html("")
+                    vm.clear_review();
                     $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + tempcontents2 + "</div>")
                     if (vm.basic.contents.indexOf("#") > -1 && vm.basic.contents.indexOf('@') == -1) {
                         var temp1 = tempcontents2.split("#");
@@ -2037,7 +2035,7 @@
                         for (var i = 0; i < temp3.length; i++) {
                             temp4.push(temp3[i][0])
                         }
-                        $("#text2").html("")
+                        vm.clear_review();
                         for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                             if (j < temp4.length) {
                                 $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
@@ -2060,7 +2058,7 @@
                         if (res.data.message[0]['FILE_EXIST']) {
                             icon4 = res.data.message[0]['FILE_EXIST'];
                         }
-                        $("#text2").html("")
+                        vm.clear_review();
                         $("#text2").append("<div class = \"asd\" style=\"font-size:" + vm.basic.font_size + "px;\">" + icon1[0] + "</div>");
                         if (icon4 == 1) {
                             $("#text2").append("<div class=\"circle1\"></div>");
@@ -2113,7 +2111,7 @@
                         if (res.data.message[0]['FILE_EXIST']) {
                             icon4 = res.data.message[0]['FILE_EXIST'];
                         }
-                        $("#text2").html("")
+                        vm.clear_review();
                         for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                             //flag2 标记sql语句是否正常
                             if (i == flag2) {
@@ -2343,11 +2341,11 @@
                                 vm.basic_width();
                                 vm.basic_test();
                             }else{
-                                $("#text2").html("");
+                                vm.clear_review();
                                 vm.$alert('获取数据库连接配置失败！',"错误");
                             }
                         }).catch(function (e) {
-                            $("#text2").html("");
+                            vm.clear_review();
                             vm.$alert('获取数据库连接配置失败！',"错误");
                         });
                         vm.sql1 = 'block';
@@ -2820,11 +2818,17 @@
                     });
                 }
             },
+            clear_review(){
+                $("#text2").html("");
+                $("#base_test_text").html("");
+            },
             add_unit(row) {   //新增监控项
-                {
+                {   debugger
                     if (vm.add_pamas == 1) {
                         vm.Initialization()
                     }
+                    // 初始化清空预览
+                    vm.clear_review();
                     vm.add_pamas = 0;
                     vm.monitor_name = '';
                     //取消默认添加时展示基本监控项
@@ -2832,6 +2836,7 @@
                     //vm.disabled3 = false;
                     //vm.disabled4 = false;
                     //vm.disabled5 = false;
+                    vm.disabled6 = false;
                     //vm.monitor_type = 'first';
                     //默认添加时展示基本监控项（修改后）
                     //监控项类型设置
