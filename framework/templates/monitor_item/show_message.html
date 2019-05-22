@@ -2474,7 +2474,9 @@
                     //处理监控项的数据用于修改时的数据回显
                     this.monitor_edit_data_process(row);
                     // 执行采集测试
-                    this.base_cell_test();
+                     if(row.status === "1"){
+                         this.base_cell_test();
+                     }
                 }
             },
             //保存数据处理
