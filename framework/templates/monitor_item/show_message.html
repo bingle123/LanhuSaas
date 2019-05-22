@@ -256,8 +256,8 @@
         <div style="height: 30px;"></div>
         <div style="margin-left: 20px;">
             <span>监控项名称</span>
-            <el-input placeholder="请输入监控项名称" v-model="monitor_name" style="width: 30%;margin-left: 12px;" @blur="monitorName()"></el-input>
-            <span style="margin-left: 80px;">监控项执行日历</span>
+            <el-input placeholder="请输入监控项名称" v-model="monitor_name" style="width: 88%;margin-left: 12px;" @blur="monitorName()"></el-input>
+            <!--<span style="margin-left: 80px;">监控项执行日历</span>
             <el-select v-model="area" placeholder="请选择日历的地区" style="width: 30%;margin-left: 12px;">
                 <el-option
                         v-for="item in areas"
@@ -265,7 +265,7 @@
                         :label="item.area"
                         :value="item.value">
                 </el-option>
-            </el-select>
+            </el-select>-->
             <div v-if="isShow" class="monitor-name">监控项名称不能重复</div>
         </div>
         <div style="height: 30px"></div>
