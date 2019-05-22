@@ -29,7 +29,7 @@ def scenes_alert(request):
         "bing_res":[],
     }
     res["bing_res"] = bing_res;
-    res["alert_data"] = function.query_alert_data();
+    res["alert_data"] = function.query_alert_data(request);
     res["sences_list"] = function.query_curr_sences(request);
     #彭英杰 2019-5-11 end
     return render_json(res)

@@ -209,13 +209,38 @@
 
         </el-row>
         <!--告警-->
+        <el-row class="row_shadow" style="margin-bottom: 10px;">
+            <el-col :span="24" style="border: none">
+                <div id="system_run_show" style="background: rgb(255,255,255);line-height: 72px;">
+                    <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">告警</span>
+                </div>
+            </el-col>
+        </el-row>
         <el-row id="alert_temp" class="row_margin row_shadow" style="margin-bottom: 10px;background: rgb(255,255,255);">
+            <el-col :span="20" :offset="4" class="title" style="border-bottom: 2px solid #f6f6f6">
+                <el-col :span="3"> <label for="" style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;">告警级别：</label></el-col>
+                <el-col :span="4"><el-select v-model="alertTypeVal" placeholder="全部">
+                            <el-option
+                              v-for="item in alertTypeOpt"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                        </el-select></el-col>
+                <el-col :span="6">
+                    <el-select v-model="alertTimeVal">
+                        <el-option
+                            v-for="item in alertTimeOpt"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"></el-option>
+                    </el-select>
+                </el-col>
+                <el-col :span="5">
+                  <el-button type="primary" @click="get_alert_data" style="float:right;margin:20px 20px 0 0;font-size: 16px;font-family: PingFangSC-Medium;color: rgb(255, 255, 255);;font-weight: bold;">查询</el-button>
+                </el-col>
+        </el-col>
             <el-col :span="24">
-                <el-collapse accordion>
-                    <el-collapse-item>
-                        <template slot="title" >
-                            <span style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;margin-left: 20px">告警</span>
-                        </template>
                         <el-col :span="22" :offset="1">
                             <el-table  max-height="200" :data="alert_table_data" style="width: 100%;margin-bottom: 50px;">
                                 <el-table-column prop="alert_txt" label="警告内容" width="350"></el-table-column>
@@ -227,9 +252,6 @@
 
                             </el-table>
                         </el-col>
-
-                    </el-collapse-item>
-                </el-collapse>
             </el-col>
         </el-row>
         <!--场景-->
@@ -413,6 +435,30 @@
                 {value: '3', label: '未执行'}
                 ],
             value2: '-1',
+            alertTypeOpt:[
+                {value:"-1",label:"全部"},
+                {value:"0",label:"告警"},
+                {value:"1",label:"通知"},
+                {value:"2",label:"恢复"},
+            ],
+            alertTypeVal:'-1', //警告类别
+            alertTimeOpt:[
+                {value:5,label:"5分钟"},
+                {value:15,label:"15分钟"},
+                {value:30,label:"30分钟"},
+                {value:60,label:"1小时"},
+                {value:60*3,label:"3小时"},
+                {value:60*6,label:"6小时"},
+                {value:60*12,label:"12小时"},
+                {value:60*24,label:"1天"},
+                {value:60*24*2,label:"2天"},
+                {value:60*24*3,label:"3天"},
+                {value:60*24*5,label:"5天"},
+                {value:60*24*7,label:"1周"},
+                {value:60*24*15,label:"15天"},
+                {value:60*24*30,label:"30天"},
+            ],
+            alertTimeVal:60*24, // 告警时间段
             scene_table_data: [
               ],
             ring_chart:'',
@@ -674,7 +720,16 @@
                 })
             },
             get_alert_data(){
-                axios.post('${SITE_URL}home_page/scenes_alert/').then((res)=>{
+                var opt={}
+                opt["alertLevel"]=ve.alertTypeVal;//级别
+                var time_opt = ve.alertTimeVal*1000*60 ;//转微秒
+                time_opt = (new Date()).getTime()-time_opt;
+                opt["alertTime"] = time_opt;
+                axios({
+                    method: 'post',
+                    url: '${SITE_URL}home_page/scenes_alert/',
+                    data:opt,
+                }).then((res)=>{
                     if (res.data.results == 'n'){
                         this.$message.error("此岗位没有场景!")
                     }else{
@@ -682,9 +737,9 @@
                         ve.alert_number=res.data['bing_res'].alert_count;
                         //彭英杰 start 20190511
                         ve.alert_table_data=res.data['alert_data'];
-                        if(ve.alert_table_data.length>0){
-                            $("#alert_temp").find("div[role='button']")[0].click();
-                        }
+                       // if(ve.alert_table_data.length>0){
+                       //     $("#alert_temp").find("div[role='button']")[0].click();
+                       // }
                         ve.options1=[]
                         if(res.data["sences_list"].length>0){
                             for(var i=0;i<res.data["sences_list"].length;i++){

@@ -139,12 +139,22 @@ def scenes_alert(request):
     return dic_data
 
 
-def query_alert_data():
+def query_alert_data(req):
     """
     告警数据
     :return:
     """
-    data = AlertInfo.objects.all()
+    res = json.loads(req.body)
+    alertTime = res.get("alertTime")
+    alertLevel = res.get("alertLevel")
+    time_str = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(alertTime/1000))
+    if alertLevel!=None and alertLevel!="-1":
+        data = AlertInfo.objects.\
+            filter(alert_level_code=int(alertLevel))\
+            .filter(alert_time__gte=time_str)
+    else:
+        data = AlertInfo.objects\
+            .filter(alert_time__gte=time_str)
     if data.count() > 0:
       #  res_data = data.values_list()
         if len(data) > 0:
