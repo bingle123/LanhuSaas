@@ -67,7 +67,7 @@
 
     </el-dialog>
 
-    <el-dialog title="新增岗位" :visible.sync="dialogFormVisible3">
+    <el-dialog title="新增岗位" :visible.sync="dialogFormVisible3" @close="form.pos_name = ''">
         <el-form :model="form" ref="form" :rules="rules">
             <el-form-item label="岗位名称:" prop='pos_name'>
                 <el-input v-model="form.pos_name"></el-input>
