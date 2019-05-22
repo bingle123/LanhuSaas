@@ -61,6 +61,7 @@ def addSence(request):
     :return:
     """
     id = None
+    username = request.user.username
     try:
         res = request.body
         senceModel = json.loads(res)
@@ -78,7 +79,7 @@ def addSence(request):
             "scene_name": senceModel['data']['scene_name'],
             "scene_startTime": starttime,
             "scene_endTime": endtime,
-            "scene_creator": "admin",
+            "scene_creator": username,
             "scene_area": senceModel['data']['area']
         }
         id = Scene.objects.create(**senceModel2)
@@ -177,6 +178,7 @@ def editSence(request):
     :param request:
     :return:
     """
+    username = request.user.username
     try:
         model = json.loads(request.body)
         starttime = model['data']["scene_startTime"]
@@ -192,7 +194,7 @@ def editSence(request):
             "scene_name": model['data']['scene_name'],
             "scene_startTime": starttime,
             "scene_endTime": endtime,
-            "scene_editor": "admin",
+            "scene_editor": username,
             "scene_area": model['data']['area']
         }
         Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
