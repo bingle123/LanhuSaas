@@ -70,15 +70,28 @@
         width: 100%;
        /* min-height: 1400px;
         height: auto;*/
+       height: 100%;
     }
-     .el-container{
+     /*.el-container{
          height:694px;
-     }
+     }*/
+
+     .el-menu {
+        background: #283593;
+        box-shadow: 2px 2px 8px 0 rgba(3, 21, 41, 0.10);
+        height: 100%;
+    }
+     .el-row {
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        position: relative;
+    }
+
   </style>
 
 <body style="overflow: visible"  >
 <!--start html-->
-<div id="main">
+<div id="main" style="height: 100%;">
     <!--start container -->
     <el-container >
 
@@ -148,7 +161,7 @@
                   </el-submenu>
 
 
-                <div index="10000" style="line-height: 56px; margin-top: 500px;margin-left: 20px;">
+                <div index="10000" style="line-height: 56px; margin-top: 500px;margin-left: 20px;position: absolute;bottom: 0;">
                     <i class="el-icon-question"></i>
                     <span slot="title"><a href="#">帮助</a></span>
                 </div>
@@ -189,7 +202,7 @@
             <!--start right body-->
             <el-main>
                 <template>
-                    <div id="app">
+                    <div id="app" style="height: 100%;">
                             <iframe  v-show="isarr" class="ifa" scrolling=auto
                             :src="'${SITE_URL}'+clickhtml"
                             frameborder="0"></iframe>
