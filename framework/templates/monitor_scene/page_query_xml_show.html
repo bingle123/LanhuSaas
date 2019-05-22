@@ -194,11 +194,12 @@
 		function lineFlow(model,graph,id) {
             var e2 =  model.getCell(id);//拿xml中对象id
             var state = graph.view.getState(e2);
-            state.shape.node.getElementsByTagName('path')[0].removeAttribute('visibility');
-            state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke-width', '6');
-            state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke', 'lightGray');
-            state.shape.node.getElementsByTagName('path')[1].setAttribute('class', 'flow');
-        }
+            if(state !=undefined){
+                state.shape.node.getElementsByTagName('path')[0].removeAttribute('visibility');
+                state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke-width', '6');
+                state.shape.node.getElementsByTagName('path')[0].setAttribute('stroke', 'lightGray');
+                state.shape.node.getElementsByTagName('path')[1].setAttribute('class', 'flow');            }
+            }
 
 		//警告图标闪烁特效
         function createOverlay(image, tooltip)

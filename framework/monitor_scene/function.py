@@ -61,6 +61,7 @@ def addSence(request):
     :return:
     """
     id = None
+    username = request.user.username
     try:
         res = request.body
         senceModel = json.loads(res)
@@ -78,7 +79,7 @@ def addSence(request):
             "scene_name": senceModel['data']['scene_name'],
             "scene_startTime": starttime,
             "scene_endTime": endtime,
-            "scene_creator": "admin",
+            "scene_creator": username,
             "scene_area": senceModel['data']['area']
         }
         id = Scene.objects.create(**senceModel2)
@@ -177,6 +178,7 @@ def editSence(request):
     :param request:
     :return:
     """
+    username = request.user.username
     try:
         model = json.loads(request.body)
         starttime = model['data']["scene_startTime"]
@@ -192,7 +194,7 @@ def editSence(request):
             "scene_name": model['data']['scene_name'],
             "scene_startTime": starttime,
             "scene_endTime": endtime,
-            "scene_editor": "admin",
+            "scene_editor": username,
             "scene_area": model['data']['area']
         }
         Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
@@ -311,6 +313,7 @@ def paging(request):
     res = json.loads(request.body)
     page = res['page']
     limit = res['limit']
+    search = res['search']
     start_page = limit * page - 9
     # 根据id倒排序
     # monitor = Scene.objects.all().order_by("-id")[start_page - 1:start_page + 9]
@@ -345,15 +348,18 @@ def paging(request):
     #     res_list.append(dic)
 
     #20190516 彭英杰 start
-    total = Scene.objects.all().count()
+    total = Scene.objects.filter(Q(scene_name__contains=search)|Q(scene_creator__contains=search)).count()
     sql_str ="SELECT a.id,a.scene_name,a.scene_startTime,a.scene_endTime,a.scene_creator,"\
              "a.scene_creator_time,a.scene_editor,a.scene_creator_time,a.scene_area "\
              ",a.scene_content,c.pos_name FROM"\
              " tb_monitor_scene a LEFT JOIN "\
              " tl_position_scene b on a.id = b.scene_id"\
-            " LEFT JOIN tb_pos_info c ON b.position_id=c.id  ORDER BY a.id DESC "
+            " LEFT JOIN tb_pos_info c ON b.position_id=c.id "
     page_start = (page-1)*limit
-    sql_str=sql_str+" LIMIT "+str(page_start)+","+str(limit)
+    if search!=None and search != "":
+        sql_str = sql_str + " where ( a.scene_name like '%"+search+"%' "\
+                  +" or a.scene_creator like '%"+search+"%' )"
+    sql_str=sql_str+" ORDER BY a.id DESC  LIMIT "+str(page_start)+","+str(limit)
     db = get_db()
     cursor = db.cursor()
     cursor.execute(sql_str)
@@ -605,6 +611,9 @@ def query_pos_scene(request):
         if temp_scene_dt.count() == 0:
             continue
         temp_scene = temp_scene_dt.get()
+        if temp_scene.scene_content == None \
+            or temp_scene.scene_content.strip() == "":
+            continue
         if start != None:
            if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
               scene_id_list.append(scene.scene_id)
@@ -984,7 +993,8 @@ def query_scene_item_data_handle(list_id):
                  txt = "@" + dto_item.monitor_name
              dt["key_val"] = txt
         else:
-            if gather_dto.data_key.upper().find("_CONNECTION")>-1 \
+            if gather_dto!=None \
+                 and gather_dto.data_key.upper().find("_CONNECTION")>-1 \
                      and dto_item.contents != None and dto_item.contents !="":
                 dt["key_val"] = "@"+dto_item.contents
             else:
