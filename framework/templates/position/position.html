@@ -93,12 +93,14 @@
                 <hr id="hr">
                 <el-row type="flex" justify="space-between" align="center" class="row">
                     <el-col :span="12">
-                        <el-col :span="9">
-                            <el-input v-model="search" placeholder="请输入内容"></el-input>
-                        </el-col>
-                        <el-col :span="3">
-                            <el-button type="primary" icon="el-icon-search" v-on:click="select_pos">搜索</el-button>
-                        </el-col>
+                        <div @keyup.enter="select_pos">
+                            <el-col :span="9" >
+                                <el-input v-model.trim="search" clearable placeholder="请输入岗位名称或岗位人员" ></el-input>
+                            </el-col>&nbsp;
+                            <el-col :span="3" style="margin-left: 5px;">
+                                <el-button type="primary" icon="el-icon-search" v-on:click="select_pos">搜索</el-button>
+                            </el-col>
+                        </div>
                     </el-col>
                     <el-col :span="3">
                         <el-button type="button" @click="dialogFormVisible3 = true">新增岗位</el-button>
