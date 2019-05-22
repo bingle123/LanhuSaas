@@ -383,7 +383,24 @@ $(function () {
                     }
                 })
             },
-            hide: function () {
+            hide: function (type) {
+                //取消新增，还原新增录入界面的信息
+                if(type == "add"){
+                    vm.scene.scene_name = "";
+                    vm.scene.area = 1;
+                    vm.scene.scene_startTime = '';
+                    vm.scene.scene_endTime = '';
+                    vm.scene.pos_name = '';
+                }
+                //取消编辑，还原编辑界面的信息
+                if(type == "edit"){
+                    vm.scene_edit.scene_name = "";
+                    vm.scene_edit.area = 1;
+                    vm.scene_edit.scene_startTime = '';
+                    vm.scene_edit.scene_endTime = '';
+                    vm.scene_edit.pos_name = '';
+                    vm.scene_edit.scene_content = '';
+                }
                 this.isAdd = 1;
                 vm.paging();
                 vm.canvas_flag = 0;
