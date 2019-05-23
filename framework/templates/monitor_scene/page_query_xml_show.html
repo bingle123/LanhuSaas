@@ -61,8 +61,11 @@
                         if(param!=""){
                             param+="&";
                         }
-                        param +="id="+ cell.value.getAttribute("item_id");
+                        if(param_map[cell.value.getAttribute("item_id")] != undefined){
+                            continue;
+                        }
                         param_map[cell.value.getAttribute("item_id")] = cell.id;
+                        param +="id="+ cell.value.getAttribute("item_id");
                         //cell.value = cell.value.getAttribute("item_id")+"_"+cell.id
                     }
                 }
@@ -135,8 +138,15 @@
                            }
                     }
                 })
-                graph.refresh(); //刷新容器
                 var model = graph.getModel();
+                 for(key_index in model.cells) {
+                     var cell = model.cells[key_index];
+                     if(typeof(cell.value) == "object"){
+                         cell.value ="";
+                     }
+                 }
+                graph.refresh(); //刷新容器
+               // var model = graph.getModel();
                 for(key_index in model.cells){
 				   var cell = model.cells[key_index];
 				   if(cell.style != undefined&&

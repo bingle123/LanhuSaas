@@ -1857,8 +1857,25 @@
                             this.$alert("保存失败!", "错误");
                             vm.centerDialogVisible = true;
                         } else {
-                            //保存采集测试的数据到服务器
-                            vm.gather_data_test_save(vm.unit_id, 'edit');
+                            //数据库监控项编辑，重新采集数据并入库采集表
+                            if(vm.monitor_type == "first") {
+                                axios({
+                                    method: 'post',
+                                    url: '${SITE_URL}monitor_item/basic_test/',
+                                    data: {
+                                        id: vm.unit_id,
+                                        params: vm.server_url,
+                                        gather_rule: vm.basic.gather_rule,
+                                        gather_params: vm.basic.gather_params,
+                                        score:vm.basic.score
+                                    },
+                                }).then(function (res) {});
+                            }
+                            //一体化的监控项，调用采集逻辑
+                            if(vm.monitor_type == "five") {
+                                //保存采集测试的数据到服务器
+                                vm.gather_data_test_save(vm.unit_id, 'edit');
+                            }
                             //保存成功，清空预览区域
                             vm.clear_review();
                             this.$alert("保存成功!", "提示");
@@ -1888,8 +1905,24 @@
                             this.$alert("新增保存失败!", "错误");
                             vm.centerDialogVisible = true;
                         } else {
-                            //保存采集测试的数据到服务器
-                            vm.gather_data_test_save(res.data['item_id'], 'add');
+                            if(vm.monitor_type == "first") {
+                                axios({
+                                    method: 'post',
+                                    url: '${SITE_URL}monitor_item/basic_test/',
+                                    data: {
+                                        id: res.data['item_id'],
+                                        params: vm.server_url,
+                                        gather_rule: vm.basic.gather_rule,
+                                        gather_params: vm.basic.gather_params,
+                                        score: vm.basic.score
+                                    },
+                                }).then(function (res) {
+                                });
+                            }
+                            if(vm.monitor_type == "five"){
+                                //保存采集测试的数据到服务器
+                                vm.gather_data_test_save(res.data['item_id'], 'add');
+                            }
                             //保存成功，清空预览区域
                             vm.clear_review();
                             this.$alert("保存成功!");
@@ -1997,7 +2030,11 @@
                     vm.clear_review();
                     for (var i = 0, j = 0; i < temp1.length; i = i + 2, j++) {
                         if (j < temp4.length) {
-                            $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                            if(res.data.message[0][temp4[j]]){
+                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + res.data.message[0][temp4[j]] + "</div>");
+                            }else{
+                                $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] +  temp3[j][1] + "</div>");
+                            }
                         } else {
                             $("#text2").append("<div class=\"newline\" style=\"font-size:" + vm.basic.font_size + "px;\">" + temp1[i] + "</div>");
                         }
