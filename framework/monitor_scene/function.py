@@ -848,7 +848,7 @@ def save_scene_design(data):
         'scene_content': data['xml']
     }
     # 首先查询场景名称是否存在，存在就是编辑，不存在就提示名称错误
-    scene_result = Scene.objects.filter(scene_name = data['filename'])
+    scene_result = Scene.objects.filter(scene_name=data['filename'])
     # print scene_result.__len__()
     if scene_result.__len__() == 0:
         # scene_obj = SceneDesign.objects.create(**scene_design)
@@ -861,25 +861,18 @@ def save_scene_design(data):
 
 def query_scene_design(request):
     """
-    分页查询所有已经设计保存的场景信息
+    根据编码查询配置定时任务的周期
     :param request:
     :return:
     """
     res = json.loads(request.body)
-    #  个数
-    limit = res['limit']
-    #  当前页面号
-    page = res['page']
-    # 按id倒排序
-    unit = SceneDesign.objects.all().order_by('-id')
-    # 进入分页函数进行分页，返回总页数和当前页数据
-    page_data, base_page_count = tools.page_paging(unit, limit, page)
-    #  把返回的数据对象转为list
-    res_list = tools.common_obt_dic(page_data, base_page_count)
-    res_dic = {
-        'scene_list': res_list,
-    }
-    return tools.success_result(res_dic)
+    #  当前定时任务编码
+    cur_task_code = res['code']
+
+    result = SceneDesign.objects.filter(task_code=cur_task_code)
+    if result.__len__() > 0:
+        return {'time_interval': result[0].time_interval}
+    return {'time_interval': ""}
 
 
 def get_scene_find_xml(scene_id):

@@ -304,6 +304,6 @@ def scenes_item_list(request):
 #   张美庆 2019-5-11
 #   在界面展示各系统运行情况
 def select_All(request):
-    user = user_info.objects.get(id=request.user.id)
+    user = user_info.objects.get(user_name=request.user)
     result = function.select_all(user);
     return result
