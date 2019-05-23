@@ -37,13 +37,13 @@
                 <el-col :span="20">
                     <el-form :inline="true" class="demo-form-inline">
                         <el-form-item label="爬虫名称：">
-                            <el-input placeholder="请输入爬虫名称" v-model="crawl_name"></el-input>
+                            <el-input placeholder="请输入爬虫名称" v-model="crawl_name" @keyup.enter.native="query"></el-input>
                         </el-form-item>
                         <el-form-item label="爬虫内容标题名称：">
-                            <el-input placeholder="请输入标题名称" v-model="title_content"></el-input>
+                            <el-input placeholder="请输入标题名称" v-model="title_content" @keyup.enter.native="query"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" @click="query" >查询</el-button>
+                            <el-button type="primary" @click="query">查询</el-button>
                         </el-form-item>
                     </el-form>
                 </el-col>
@@ -110,21 +110,18 @@
         methods: {
             changeSize(value){
                 vm.limit = value;
-                vm.query_crawl_content();
+                vm.query();
             },
-            query(){
-                vm.page = 1;
-                vm.query_crawl_content();
-            },
-            query_crawl_content() {
+            query() {
+                //vm.page= 1;
                 axios({
                     url: '${SITE_URL}system_config/get_crawl_content/',
                     method: 'post',
                     data: {title_content: vm.title_content, crawl_name: vm.crawl_name, page: vm.page, limit: vm.limit}
                 }).then((res) => {
                     console.log(res);
-                    if (res.code !== 0) {
-                        if (res.data.results.length === 0) {
+                    if (res.code != 0) {
+                        if (res.data.results.length == 0) {
                             vm.$message.info('没有数据')
                         } else {
                             vm.tableData = res.data.results;
@@ -140,7 +137,7 @@
             },
             changePage(value) {
                 vm.page = value;
-                vm.query_crawl_content();
+                vm.query();
             },
             open_url(value) {
                 window.location.href = value
