@@ -31,6 +31,7 @@ def crawl_manage(request):
     """
     request_body = json.loads(request.body)
     crawl_id = request_body['id']
+    add_edit_type = request_body['add_edit_type']
     crawl_name = request_body['crawl_name']
     crawl_url = request_body['crawl_url']
     period = request_body['period']
@@ -46,7 +47,7 @@ def crawl_manage(request):
     # 接收人为字符串，以@隔开
     receivers = request_body['receivers']
     # 新增
-    if crawl_id == '':
+    if add_edit_type == -1:
         create_user = active_user_dict['data']['bk_username']
         try:
             res = CrawlerConfig.objects.create(crawl_name=crawl_name, crawl_url=crawl_url, period=period,
