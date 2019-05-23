@@ -25,32 +25,34 @@
                 <hr id="hr">
                 <el-row type="flex" justify="space-between" align="center" class="row">
                     <el-col :span="12">
+                        <div @keyup.enter.native="select_log">
                         <el-col :span="9">
                             <el-input v-model="search" placeholder="请输入内容" @keyup.enter.native="select_log"></el-input>
                         </el-col>
-                        <el-col :span="3">
+                        <el-col :span="3" style="margin-left: 5px;">
                             <el-button type="primary" icon="el-icon-search" v-on:click="select_log">搜索</el-button>
                         </el-col>
+                        </div>
                     </el-col>
                 </el-row>
-                <el-table :data="Operatelog"  style="width: 150%">
-                    <el-table-column prop="id" label="id" width="100" align="center">
+                <el-table :data="Operatelog"  style="width: 100%;margin-top: 5px;" border>
+                    <el-table-column prop="id" label="id" width="100" align="left" sortable>
                     </el-table-column>
-                    <el-table-column prop="log_type" label="操作类型" width="220" align="center">
+                    <el-table-column prop="log_type" label="操作类型" show-overflow-tooltip="true" width="220" align="left" sortable>
                     </el-table-column>
-                    <el-table-column prop="log_name" label="日志名称" width="150" align="center">
+                    <el-table-column prop="log_name" label="日志名称" show-overflow-tooltip="true" width="150" align="left" sortable>
                     </el-table-column>
-                    <el-table-column prop="user_name" label="用户名称" width="150" align="center">
+                    <el-table-column prop="user_name" label="用户名称" show-overflow-tooltip="true" width="150" align="left" sortable>
                     </el-table-column>
-                    <el-table-column prop="class_name" label="类名称" width="150" align="center">
+                    <el-table-column prop="class_name" label="类名称" show-overflow-tooltip="true" width="150" align="left" sortable>
                     </el-table-column>
-                    <el-table-column prop="method" label="方法名称" width="150" align="center">
+                    <el-table-column prop="method" label="方法名称" show-overflow-tooltip="true" width="150" align="left" sortable>
                     </el-table-column>
-                    <el-table-column prop="create_time" label="创建时间" width="200" align="center">
+                    <el-table-column prop="create_time" label="创建时间" show-overflow-tooltip="true" width="200" align="left" sortable>
                     </el-table-column>
-                    <el-table-column prop="is_success" label="是否成功" width="150" align="center">
+                    <el-table-column prop="is_success" label="是否成功" show-overflow-tooltip="true" width="150" align="left" sortable>
                     </el-table-column>
-                    <el-table-column prop="message" label="备注" width="800" align="center">
+                    <el-table-column prop="message" label="备注" show-overflow-tooltip="true" width="500" align="left" sortable>
                     </el-table-column>
                 </el-table>
                 <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
