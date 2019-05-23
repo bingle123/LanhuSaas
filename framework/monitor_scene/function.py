@@ -1085,7 +1085,7 @@ def exec_rule(arr_db_map,dto_item,gather_dto):
             str_res += arr_t[0]
             key_rule = arr_t[1].split("=")[0]
             str_res += db_gather_map.get(key_rule)
-        elif rule_val.find("@") > 0:
+        elif rule_val.find("@") > -1:
             arr_t = rule_val.split("@")
             # str += arr_t[0]
             key_rule = arr_t[1].split("=")[0]

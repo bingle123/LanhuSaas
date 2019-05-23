@@ -139,10 +139,7 @@ def add_unit_task(add_dicx):
             'area_id': add_dicx['monitor_area'],
             'task_name': str(schename) + 'task',
             'endtime': endtime,
-            'score':add_dicx['score'],
-            'key':add_dicx['measure_name'],
-            'gather_type':add_dicx['display_type'],
-            'display_rule':add_dicx['display_rule']
+            'score': add_dicx['score']
         }
         # 创建一个基本监控项采集的开始任务
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,
@@ -208,7 +205,7 @@ def add_unit_task(add_dicx):
     #     # 创建一个开始流程的任务
     #     co.create_task_crontab(name=schename, task='market_day.tasks.start_flow_task', crontab_time=ctime,
     #                            task_args=info, desc=schename)
-    elif type ==5:
+    elif type == 5:
         ctime = {
             'hour': starthour,
             'minute': startmin,
