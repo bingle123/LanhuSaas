@@ -353,9 +353,9 @@ def selecthor2(request):
     limit = res['limit']
     if None is not search and '' != search:
         sciencenews = Muenu.objects.filter(Q(mname__contains=search) | Q(url__contains=search)).exclude(
-            url='db_connection/muenu_manage/')
+            url='db_connection/muenu_manage/').order_by('-id')
     else:
-        sciencenews = Muenu.objects.all().exclude(url='db_connection/muenu_manage/')
+        sciencenews = Muenu.objects.all().exclude(url='db_connection/muenu_manage/').order_by('-id')
     p = Paginator(sciencenews, limit)
 
     try:
