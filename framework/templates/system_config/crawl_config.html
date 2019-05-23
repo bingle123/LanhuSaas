@@ -208,20 +208,10 @@
                         </el-form-item>
                     </div>
                 </el-col>
-                <el-col :span="24">
-                    <div class="grid-content bg-purple">
-                        <el-form-item label="接收人：">
-                            <el-button @click="dialogVisible = true" type="primary">选择人员</el-button>
-                            <el-input v-model="crawl_form.receivers" type="textarea" :autosize="{ minRows: 2, maxRows: 4}"></el-input>
-                        </el-form-item>
-
-                    </div>
-                </el-col>
 
                 <el-col :span="12">
                     <div class="grid-content bg-purple">
                         <el-form-item>
-                            <el-button type="info" @click="testCrawl">测试爬虫</el-button>
                             <el-button type="success" @click="addCrawl">{{ message }}爬虫配置</el-button>
                             <el-button @click="changeDiaLog">返回</el-button>
                         </el-form-item>
@@ -479,55 +469,6 @@
                     })
                 })
             },
-            //爬虫测试
-            testCrawl() {
-                //elementUI loading动画
-                const loading = this.$loading({
-                    lock: true,
-                    text: 'Loading',
-                    spinner: 'el-icon-loading',
-                    background: 'rgba(0, 0, 0, 0.7)'
-                });
-                axios({
-                    url: '${SITE_URL}system_config/crawl_test/',
-                    method: 'post',
-                    data: this.crawl_form,
-                }).then((res) => {
-                    if (res.data.code == 0) {
-                        let info = '';
-                        for (let i = 0; i < res.data.results.length; i++) {
-                            let title = res.data.results[i].title;
-                            let time = res.data.results[i].time;
-                            let url = res.data.results[i].resource;
-                            info += '<h6>' + '第' + (i + 1) + '条数据' + '</h6> <span>标题：</span><span>' + title + '</span><br> <span>时间：</span>' +
-                                '<span>' + time + '</span><br> <span>链接：</span><span>' + url + '</span><br>'
-
-                        }
-                        vm.$message({
-                            type: 'success',
-                            dangerouslyUseHTMLString: true,
-                            showClose: true,
-                            duration: 1000,
-                            message: info,
-                        });
-                        loading.close();
-                    } else {
-                        vm.$message({
-                            type: 'info',
-                            message: res.data.results,
-                        });
-                        loading.close();
-                    }
-                }).catch((res) => {
-                    loading.close();
-                    vm.$message({
-                        type: 'info',
-                        message: '爬虫异常' + res,
-                    });
-                    console.error(res)
-                })
-            },
-
             handleDialogClose() {
                 vm.ref()
             },
