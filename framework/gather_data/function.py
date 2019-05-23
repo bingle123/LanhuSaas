@@ -278,7 +278,7 @@ def gather_data(**info):
                              data_value=item['value_str'], score=info['score']).save()
         else:
             # 采集是空结果集的情况
-            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='0',
+            TDGatherData(item_id=info['id'], gather_time=GATHER_TIME, data_key='DB_CONNECTION', data_value='1',
                          score=0).save()
             return "empty"
     elif "interface" == gather_type:
