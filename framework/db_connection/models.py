@@ -6,6 +6,7 @@ class Conn(models.Model):
     """
     数据库表单
     """
+    id = models.IntegerField(u'序号',primary_key=True,auto_created=True)
     connname = models.CharField(u'连接名称', max_length=30)
     type = models.CharField(u'连接类型', max_length=30)
     ip = models.CharField(u'ip地址', max_length=30)

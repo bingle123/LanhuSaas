@@ -67,9 +67,9 @@ def selecthor(request):
     if None is not search and '' != search:
         sciencenews = Conn.objects.filter(
             Q(connname__contains=search) | Q(type__contains=search) | Q(ip__contains=search) \
-            | Q(port__contains=search) | Q(username__contains=search) | Q(databasename__contains=search))
+            | Q(port__contains=search) | Q(username__contains=search) | Q(databasename__contains=search)).order_by('-id')
     else:
-        sciencenews = Conn.objects.all()
+        sciencenews = Conn.objects.all().order_by('-id')
     # 将数据分页
     p = Paginator(sciencenews, limit)
     try:
