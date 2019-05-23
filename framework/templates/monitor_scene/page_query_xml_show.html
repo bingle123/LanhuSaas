@@ -61,8 +61,11 @@
                         if(param!=""){
                             param+="&";
                         }
-                        param +="id="+ cell.value.getAttribute("item_id");
+                        if(param_map[cell.value.getAttribute("item_id")] != undefined){
+                            continue;
+                        }
                         param_map[cell.value.getAttribute("item_id")] = cell.id;
+                        param +="id="+ cell.value.getAttribute("item_id");
                         //cell.value = cell.value.getAttribute("item_id")+"_"+cell.id
                     }
                 }

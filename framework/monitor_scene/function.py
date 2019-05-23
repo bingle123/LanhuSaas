@@ -992,13 +992,13 @@ def query_scene_item_data_handle(list_id):
         dt = {}
         dt["id"] = dto_item.id # 监控项表  id
         gather_dto = arr_dto_dt.get(dto_item.id) #采集表
-        str = None
+        str_res = None
         if gather_dto != None:
-            str = gather_dto.data_value
-        if str != None and dto_item.target_name != None \
+            str_res = gather_dto.data_value
+        if str_res != None and dto_item.target_name != None \
                                     and dto_item.measure_name != None:
-             if str.find("[{") == 0:
-                 json_dto = json.loads(str)
+             if str_res.find("[{") == 0:
+                 json_dto = json.loads(str_res)
                  key = dto_item.target_name + "_" + dto_item.measure_name
                  txt = json_dto[0].get(key)
              elif gather_dto.data_key.upper().find("_CONNECTION")>-1\
@@ -1070,25 +1070,24 @@ def exec_rule(arr_db_map,dto_item,gather_dto):
     :return:
     '''
     if gather_dto.data_value != "1":
-        return "@" +  dto_item.contents
+        return "@" +  dto_item.monitor_name
     db_val_arr = arr_db_map.get(dto_item.id)
     db_gather_map = {}
     for db_v in db_val_arr:
         db_gather_map[db_v.data_key] = db_v.data_value
-    str = ""
+    str_res = ""
     rules = dto_item.contents.split("\n")
     for rule_val in rules:
-        if str != "":
-            str += "\n"
-        if rule_val.find("#") > 0:
+        if str_res != "":
+            str_res += "\n"
+        if rule_val.find("#") > -1:
             arr_t = rule_val.split("#")
-            str += arr_t[0]
+            str_res += arr_t[0]
             key_rule = arr_t[1].split("=")[0]
-            str += db_gather_map.get(key_rule)
+            str_res += db_gather_map.get(key_rule)
         elif rule_val.find("@") > 0:
             arr_t = rule_val.split("@")
             # str += arr_t[0]
             key_rule = arr_t[1].split("=")[0]
-            str += "[" + db_gather_map.get(key_rule) + "]"
-
-    return "db@" + str  # dto_item.contents
+            str_res += "[" + db_gather_map.get(key_rule) + "]"
+    return "db@" + str_res  # dto_item.contents
