@@ -26,7 +26,7 @@
                 <el-row type="flex" justify="space-between" align="center" class="row">
                     <el-col :span="12">
                         <el-col :span="9">
-                            <el-input v-model="search" placeholder="请输入内容"></el-input>
+                            <el-input v-model="search" placeholder="请输入内容" @keyup.enter.native="select_log"></el-input>
                         </el-col>
                         <el-col :span="3">
                             <el-button type="primary" icon="el-icon-search" v-on:click="select_log">搜索</el-button>

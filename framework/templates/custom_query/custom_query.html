@@ -49,7 +49,7 @@
             <el-row type="flex" justify="space-between" align="center" class="row">
                 <el-col :span="12">
                     <el-col :span="9">
-                        <el-input v-model="queryNameSearch" size="medium" placeholder="请输入查询名称"></el-input>
+                        <el-input v-model="queryNameSearch" size="medium" placeholder="请输入查询名称" @keyup.enter.native="customQuerySearch"></el-input>
                     </el-col>
                     <el-col :span="3">
                         <el-button type="primary" size="medium" icon="el-icon-search" v-on:click="customQuerySearch">

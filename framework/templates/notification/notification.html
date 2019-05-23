@@ -38,7 +38,7 @@
             <el-row type="flex" justify="space-between" align="center" class="row">
                 <el-col :span="12">
                     <el-col :span="9">
-                        <el-input v-model="ruleSearch" size="medium" placeholder="请输入规则名称"></el-input>
+                        <el-input v-model="ruleSearch" size="medium" placeholder="请输入规则名称" @keyup.enter.native="alertRuleSearch"></el-input>
                     </el-col>
                     <el-col :span="3">
                         <el-button type="primary" size="medium" icon="el-icon-search" v-on:click="alertRuleSearch">搜索</el-button>
