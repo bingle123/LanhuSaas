@@ -190,12 +190,11 @@ $(function () {
                         axios.post(
                             site_url + 'db_connection/addmuenus/', this.addmuenus
                         ).then(function (res) {
-                            if (ve.currentPage < res.data.results['page_count']) {
-                                ve.currentPage = res.data.results['page_count'];
+                                ve.currentPage = 1;
                                 ve.hide();
                                 get_m()
-                            }
                         });
+
                     }
                 });
             },

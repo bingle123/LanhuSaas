@@ -1062,14 +1062,23 @@ def exec_rule(arr_db_map,dto_item,gather_dto):
     :param dto_item:
     :return:
     '''
+    rules = dto_item.contents.split("\n")
     if gather_dto.data_value != "1":
-        return "@" +  dto_item.monitor_name
+        str_res=""
+        for rule_val in rules:
+            if str_res != "":
+                str_res += "\n"
+            if rule_val.find("#") > -1:
+                arr_t = rule_val.split("#")
+                str_res += arr_t[0]
+                key_rule = arr_t[1].split("=")[1].replace("#","")
+                str_res +=key_rule
+        return "db@" + str_res
     db_val_arr = arr_db_map.get(dto_item.id)
     db_gather_map = {}
     for db_v in db_val_arr:
         db_gather_map[db_v.data_key] = db_v.data_value
     str_res = ""
-    rules = dto_item.contents.split("\n")
     for rule_val in rules:
         if str_res != "":
             str_res += "\n"
@@ -1080,7 +1089,7 @@ def exec_rule(arr_db_map,dto_item,gather_dto):
             str_res += db_gather_map.get(key_rule)
         elif rule_val.find("@") > -1:
             arr_t = rule_val.split("@")
-            # str += arr_t[0]
+            #str_res += arr_t[0]
             key_rule = arr_t[1].split("=")[0]
             str_res += "[" + db_gather_map.get(key_rule) + "]"
     return "db@" + str_res  # dto_item.contents

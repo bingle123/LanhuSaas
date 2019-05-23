@@ -250,6 +250,7 @@
     let vm = new Vue({
         el: '#system_crawl_config',
         data: {
+            add_edit_flag : 0,
             loading: false,
             message: "新增",
             showDiaLog: true,
@@ -277,6 +278,7 @@
                 url: '',
             },
             crawl_form: {
+                add_edit_type:0,
                 id: '',
                 crawl_name: '',
                 crawl_url: 'http://www.szse.cn/aboutus/trends/news/index.html',
@@ -313,13 +315,16 @@
                 this.loading = true;
                 this.loading = false;
                 this.message = '新增';
+                vm.add_edit_flag = 0;
                 this.crawl_form.id = '';
                 vm.initHtml();
+
             },
             editCrawl(res) {//跳转爬虫配置编辑页面
                 this.changeDiaLog();
                 //此处应更新表单的值
                 this.message = '修改';
+                vm.add_edit_flag = 1;
                 this.crawl_form.id = res;
                 for (let i = 0; i < this.crawl_table.length; i++) {
                     if (this.crawl_table[i].id == res) {
@@ -339,13 +344,21 @@
             //新增爬虫配置
             addCrawl() {
                 //防止新增有ID回去更改
-                this.crawl_form.id = '';
+                //新增
+                if(vm.add_edit_flag === 0){
+                     this.crawl_form.add_edit_type = -1;
+                     this.crawl_form.id = '';
+                }
+                //修改
+                else{
+                     this.crawl_form.add_edit_type = -2;
+                }
                 axios({
                     url: '${SITE_URL}system_config/manage_crawl/',
                     method: 'post',
                     data: this.crawl_form,
                 }).then(function (res) {
-                    if (res.data.code == 0) {
+                    if (res.data.code === 0) {
                         vm.$message({
                             type: 'success',
                             message: res.data.results,
