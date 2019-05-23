@@ -138,8 +138,15 @@
                            }
                     }
                 })
-                graph.refresh(); //刷新容器
                 var model = graph.getModel();
+                 for(key_index in model.cells) {
+                     var cell = model.cells[key_index];
+                     if(typeof(cell.value) == "object"){
+                         cell.value ="";
+                     }
+                 }
+                graph.refresh(); //刷新容器
+               // var model = graph.getModel();
                 for(key_index in model.cells){
 				   var cell = model.cells[key_index];
 				   if(cell.style != undefined&&

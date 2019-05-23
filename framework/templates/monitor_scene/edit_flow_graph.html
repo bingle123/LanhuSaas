@@ -132,6 +132,12 @@
         }
         //lxchun将流程设计器中的属性与具体监控项建立关联
         function relation_monitor_item_id(item_id,monitor_name){
+            //监控项不允许重复关联
+            if(map.get(item_id)){
+                mxUtils.alert("监控项"+"'"+monitor_name+"'"+"重复关联");
+                return false;
+            }
+            map.set(item_id,monitor_name);
             myNameInput.value = "item_id";
             let name = myNameInput.value
             this.item_id = item_id;
@@ -140,7 +146,6 @@
             {
                 try
                 {
-                    debugger
                     var idx = mxUtils.indexOf(myNames, name);
                     if (idx >= 0 && myTexts[idx] != null)
                     {
@@ -203,9 +208,7 @@
 			// Adds required resources (disables loading of fallback properties, this can only
 			// be used if we know that all keys are defined in the language specific file)
 			mxResources.loadDefaultBundle = false;
-			debugger;
 			var bundle = '${STATIC_URL}js/mxgraph/examples/grapheditor/www/resources/grapheditor.txt';
-
 			// Fixes possible asynchronous requests
 			mxUtils.getAll([bundle, '${STATIC_URL}js/mxgraph/examples/grapheditor/www/styles/default.xml'], function(xhr)
 			{
@@ -224,8 +227,9 @@
 			});
 
 		})();
-
+        var map = new Map();
         window.onload = function(){
+
             let xml = null;
             let fileName = null;
             if(window.opener.vm){
