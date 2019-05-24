@@ -1273,24 +1273,26 @@ $(function(){
                 if (row.monitor_type === 2) {
                     vm.disabled3 = false;
                     vm.monitor_type = 'second';
-                    vm.chart.font_size = row.font_size;
-                    vm.chart.height = row.height;
-                    vm.chart.width = row.width;
-                    vm.chart.start_time = row.start_time;
-                    vm.chart.end_time = row.end_time;
-                    vm.chart.period = row.period;
-                    vm.chart.gather_params = row.gather_params;
-                    vm.chart.contents = row.contents;
-                    vm.chart.start_time = row.start_time;
-                    vm.chart.end_time = row.end_time;
-                    vm.chart.gather_rule = row.gather_rule;
-                    vm.chart.status = row.status;
-                    vm.area = row.monitor_area;
+                    // vm.chart.font_size = row.font_size;
+                    // vm.chart.height = row.height;
+                    // vm.chart.width = row.width;
+                    // vm.chart.start_time = row.start_time;
+                    // vm.chart.end_time = row.end_time;
+                    // vm.chart.period = row.period;
+                    // vm.chart.gather_params = row.gather_params;
+                    // vm.chart.contents = row.contents;
+                    // vm.chart.start_time = row.start_time;
+                    // vm.chart.end_time = row.end_time;
+                    // vm.chart.gather_rule = row.gather_rule;
+                    // vm.chart.status = row.status;
+                    // vm.area = row.monitor_area;
                     //彭英杰 20190524 start
-                    vm.display_rule=row.display_rule;
-                    $("#pane-second").show();
-                     var iframe_html="<iframe style='border:none;width:100%;height:310px;' src='"+row.display_rule+"' ></iframe>";
-                   $("#pane-second #maintenancePie").html(iframe_html);
+                    vm.chart.display_rule=row.display_rule;
+                    setTimeout(function(){
+                         $("#pane-second").show();
+                     var iframe_html="<iframe style='border:none;width:100%;height:310px;' src='"+vm.chart.display_rule+"' ></iframe>";
+                     $("#pane-second #maintenancePie").html(iframe_html);
+                   },500)
                   //  axios({
                   //      method: 'post',
                   //      url: site_url+'db_connection/get_conname/',
