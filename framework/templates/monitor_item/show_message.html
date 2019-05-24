@@ -2550,11 +2550,15 @@
                     vm.basic.monitor_type = vm.monitor_type;
                     if (vm.server_url == '') {
                         vm.unit_id = -1;
-                        vm.message = '请选择数据库或者填写服务器和url!'
+                        vm.message = '请选择数据库连接！'
+                        this.$alert(vm.message, "错误");
+                        return false;
                     }
                     if (vm.basic.gather_rule == '') {
                         vm.unit_id = -1;
                         vm.message = '请输入数据采集规则!'
+                        this.$alert(vm.message, "错误");
+                        return false;
                     }
                     if (vm.basic.start_time == '') {
                         vm.unit_id = -1;
