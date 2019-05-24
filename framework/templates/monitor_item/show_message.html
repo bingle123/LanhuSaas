@@ -440,7 +440,13 @@
                     <el-row>
                         <el-col :span="12"><div class="grid-content bg-purple">
                             <el-form :model="chart" :rules="rules2" ref="chart" label-width="100px">
-                                <el-form-item label="字号" prop="font_size">
+                                 <el-form-item label="采集地址">
+                                     <el-input v-model="chart.display_rule"
+                                                  placeholder="http://192.168.1.190:3000/d/JUAwDHiWk/mysql_system_info?orgId=1&from=1556074004729&to=1558666004729&panelId=2&fullscreen"
+                                                  type="textarea"  :autosize="{ minRows: 8, maxRows: 10}" style="width: 310px;"></el-input>
+                                 </el-form-item>
+
+                               <!-- <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="chart.font_size" placeholder="请选择字号" style="width: 310px;">
                                         <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
@@ -505,7 +511,7 @@
                                             <el-input type="number" min="0" v-model.number="numberValidateForm.age"
                                                       auto-complete="off" v-model="chart.period" style="width: 96%"
                                                       placeholder="请输入采集周期(秒)"></el-input>
-                                </el-form-item>
+                                </el-form-item>-->
                             </el-form>
                         </div></el-col>
                         <el-col :span="12">

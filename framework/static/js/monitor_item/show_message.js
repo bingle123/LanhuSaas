@@ -183,38 +183,42 @@ $(function(){
             chart: {                                //图表单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '20',                       //字号
-                height: '380',                          //高度
-                width: '580',                            //宽度
-                start_time: '',                      //开始时间
-                end_time: '',                        //结束时间
-                period: '10',                          //采集周期
-                status: '',                          //监控状态
-                contents: '',                        //显示内容
-                gather_rule: '',                     //采集规则
-                gather_params: '',                   //节点
-                params: '',                         //监控参数
-                monitor_area: ''                             //日历地区
+                display_rule:'', //采集地址 grafana地址
+                // font_size: '20',                       //字号
+                // height: '380',                          //高度
+                // width: '580',                            //宽度
+                // start_time: '',                      //开始时间
+                // end_time: '',                        //结束时间
+                // period: '10',                          //采集周期
+                // status: '',                          //监控状态
+                // contents: '',                        //显示内容
+                // gather_rule: '',                     //采集规则
+                // gather_params: '',                   //节点
+                // params: '',                         //监控参数
+                // monitor_area: ''                             //日历地区
             },             //图表单元
             rules2: {
-                font_size: [
-                    {required: true, message: '请选择字号', trigger: 'change'}
+                display_rule: [
+                    {required: true, message: '请输入采集地址', trigger: 'change'}
                 ],
-                height: [
-                    {required: true, message: '请输入高度', trigger: 'blur'}
-                ],
-                width: [
-                    {required: true, message: '请输入宽度', trigger: 'blur'}
-                ],
-                contents: [
-                    {required: true, message: '请输入内容', trigger: 'blur'}
-                ],
-                gather_params: [
-                    {required: true, message: '请选择图片类型', trigger: 'change'}
-                ],
-                period: [
-                    {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
-                ],
+                // font_size: [
+                //     {required: true, message: '请选择字号', trigger: 'change'}
+                // ],
+                // height: [
+                //     {required: true, message: '请输入高度', trigger: 'blur'}
+                // ],
+                // width: [
+                //     {required: true, message: '请输入宽度', trigger: 'blur'}
+                // ],
+                // contents: [
+                //     {required: true, message: '请输入内容', trigger: 'blur'}
+                // ],
+                // gather_params: [
+                //     {required: true, message: '请选择图片类型', trigger: 'change'}
+                // ],
+                // period: [
+                //     {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
+                // ],
             },                              //校验规则
             job: {                                   //作业单元
                 monitor_name: '',                    //单元名称
@@ -2092,8 +2096,9 @@ $(function(){
                             // maintenancePie 展示页面
                             //required
                             //vm.chart.gather_rule
-                            if (vm.chart.gather_rule != "") {
-                                $("#pane-second maintenancePie").load(vm.chart.gather_rule)
+                            if (vm.chart.display_rule != "") {
+                                var iframe_html="<iframe style='border:none;width:100%;height:310px;' src='"+vm.chart.display_rule+"' ></iframe>";
+                                $("#pane-second #maintenancePie").html(iframe_html);
                             }
                             return;
                         }
