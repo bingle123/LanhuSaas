@@ -11,6 +11,7 @@
     <!--axios.min.js--vue.js的ajax支持-->
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/base64/base64.js"></script>
     <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
     <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
 </head>
@@ -36,7 +37,7 @@
 
                     <el-col :span="12">
                         <el-col :span="9">
-                            <el-input v-model="search" placeholder="请输入内容"></el-input>
+                            <el-input v-model="search" placeholder="请输入内容" @keyup.enter.native="select_table"></el-input>
                         </el-col>
                         <el-col :span="3">
                             <el-button type="primary" icon="el-icon-search" v-on:click="select_table">搜索</el-button>
@@ -87,8 +88,8 @@
                             <el-form-item label="数据库类型:" prop="type">
                                     <el-select v-model="addconn.type" placeholder="请选择数据库类型" style="width: 250px;">
                                         <el-option label="MySQL" value="MySQL"></el-option>
-                                        <el-option label="Oracle" value="Oracle"></el-option>
-                                        <el-option label="SQL Server" value="SQL Server"></el-option>
+                                        <!--<el-option label="Oracle" value="Oracle"></el-option>
+                                        <el-option label="SQL Server" value="SQL Server"></el-option>-->
                                     </el-select>
                             </el-form-item>
                         </el-col>
@@ -163,8 +164,8 @@
                             <el-form-item label="数据库类型:" prop="type">
                                     <el-select v-model="editDataBase.type" placeholder="请选择数据库类型" style="width: 250px;">
                                         <el-option label="MySQL" value="MySQL"></el-option>
-                                        <el-option label="Oracle" value="Oracle"></el-option>
-                                        <el-option label="SQL Server" value="SQL Server"></el-option>
+                                        <!--<el-option label="Oracle" value="Oracle"></el-option>
+                                        <el-option label="SQL Server" value="SQL Server"></el-option>-->
                                     </el-select>
                             </el-form-item>
                         </el-col>
@@ -202,7 +203,7 @@
                         <el-col :span="9">
                             <div id="son">
                                 <el-form-item label="密码：" prop="password">
-                                    <el-input v-model="editDataBase.password" type="password"></el-input>
+                                    <el-input v-model="editDataBase.password" type="password" @change="changePass"></el-input>
                                 </el-form-item>
                             </div>
                         </el-col>
@@ -351,6 +352,9 @@
                         alert('验证不通过');
                         return false;
                     }else {
+                    //    this.addconn.password = $.md5(this.addconn.password);
+              // console.log('this.addconn.password====='+this.addconn.password)
+                        this.addconn.password = Base64.encode(this.addconn.password)
                         axios.post(
                             '${SITE_URL}db_connection/saveconn/',this.addconn
                         ).then(function (res) {
@@ -377,6 +381,7 @@
                         alert('验证不通过');
                         return false;
                     }else {
+                      //  this.addconn.password = $.md5(this.addconn.password);
                         axios.post('${SITE_URL}db_connection/editconn/',this.editDataBase)
                     .then((res)=>{
                         if(res.data.message != null){
@@ -427,6 +432,10 @@
                         alert('验证不通过');
                         return false;
                     }else {
+                        //Base64.decode(str)
+                        this.addconn.password = Base64.encode(this.addconn.password)
+                     //   console.log(this.addconn.password);
+                        //this.addconn.password = $.md5(this.addconn.password);
                         axios.post('${SITE_URL}db_connection/testConn/',this.addconn)
                             .then((res)=>{
                         if(res.data.code == 0){
@@ -434,6 +443,7 @@
                         }else{
                             alert("数据库连接失败")
                         }
+                        this.addconn.password = Base64.decode(this.addconn.password)
                     })
                     }
                 })
@@ -459,6 +469,11 @@
                 })
 
             },
+            //jlq-2019-05-23-add-编辑密码框的值发生改变时
+            changePass(){
+               // alert('jlq');
+                this.editDataBase.password = Base64.encode(this.editDataBase.password)
+            }
         }
     });
     ve.conn()

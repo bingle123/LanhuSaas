@@ -211,6 +211,7 @@ def testConn(request):
     username = res['username']
     password = res['password']
     databasename = res['databasename']
+    password = base64.b64decode(password)
     try:
         if res['type'] == 'MySQL':
             db = MySQLdb.connect(host=ip, user=username, passwd=password, db=databasename, port=int(port))

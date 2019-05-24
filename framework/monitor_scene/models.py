@@ -53,10 +53,11 @@ class SceneColor(models.Model):
 
 
 class SceneDesign(models.Model):
-    scene_name = models.CharField(verbose_name=u'场景名称', max_length=50)
-    scene_content = models.TextField(u'数据', max_length=10485760)
+    task_code = models.CharField(verbose_name=u'任务编码', max_length=32)
+    task_name = models.CharField(verbose_name=u'任务名称', max_length=50)
+    time_interval = models.PositiveIntegerField(verbose_name=u'时间间隔（秒）')
 
     class Meta:
-        verbose_name = u'场景编辑器配置表'
-        verbose_name_plural = u'场景编辑器配置表'
+        verbose_name = u'定时任务配置表'
+        verbose_name_plural = u'定时任务配置表'
         db_table = "td_scene_design"

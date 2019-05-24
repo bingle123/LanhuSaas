@@ -7,6 +7,7 @@ from gather_data.function import gather_data_migrate,gather_data_save
 from iqube_interface.views import gather_base_test
 
 
+
 # Create your views here.
 
 def index(request):
@@ -312,7 +313,7 @@ def query_scene_design(request):
     :param request:
     :return:
     """
-    # 分页查询所有设计好的场景
+    # 查询定时任务配置
     res = function.query_scene_design(request)
     return render_json(res)
 

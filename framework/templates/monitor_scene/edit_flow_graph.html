@@ -134,7 +134,7 @@
         function relation_monitor_item_id(item_id,monitor_name){
             //监控项不允许重复关联
             if(map.get(item_id)){
-                mxUtils.alert("监控项"+"'"+monitor_name+"'"+"重复关联");
+                mxUtils.alert("监控项"+"'"+monitor_name+"'"+"在当前场景中已被使用，请重新关联");
                 return false;
             }
             map.set(item_id,monitor_name);
