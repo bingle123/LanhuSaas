@@ -110,9 +110,13 @@
         methods: {
             changeSize(value){
                 vm.limit = value;
-                vm.query();
+                vm.search_crawl_content();
             },
-            query() {
+            query(){
+                vm.page = 1;
+                vm.search_crawl_content();
+            },
+            search_crawl_content() {
                 //vm.page= 1;
                 axios({
                     url: '${SITE_URL}system_config/get_crawl_content/',
@@ -137,7 +141,7 @@
             },
             changePage(value) {
                 vm.page = value;
-                vm.query();
+                vm.search_crawl_content();
             },
             open_url(value) {
                 window.location.href = value
