@@ -1286,16 +1286,22 @@ $(function(){
                     vm.chart.gather_rule = row.gather_rule;
                     vm.chart.status = row.status;
                     vm.area = row.monitor_area;
-                    axios({
-                        method: 'post',
-                        url: site_url+'db_connection/get_conname/',
-                        data: row.params,
-                    }).then((res) => {
-                        vm.chart.params = res['data']['results']['connname'];
-                        vm.show_content();
-                    }).catch(function (e) {
-                        vm.$message.error('获取数据库失败！');
-                    });
+                    //彭英杰 20190524 start
+                    vm.display_rule=row.display_rule;
+                    $("#pane-second").show();
+                     var iframe_html="<iframe style='border:none;width:100%;height:310px;' src='"+row.display_rule+"' ></iframe>";
+                   $("#pane-second #maintenancePie").html(iframe_html);
+                  //  axios({
+                  //      method: 'post',
+                  //      url: site_url+'db_connection/get_conname/',
+                  //      data: row.params,
+                  //  }).then((res) => {
+                  //      vm.chart.params = res['data']['results']['connname'];
+                  //      vm.show_content();
+                  //  }).catch(function (e) {
+                  //      vm.$message.error('获取数据库失败！');
+                  //  });
+                    //彭英杰20190524 end
                 }
                 //作业监控项
                 /*
