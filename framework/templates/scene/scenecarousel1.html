@@ -91,24 +91,39 @@
     </template>
 </div>
 <script>
-      vm = new Vue({
-          el: "#main",
-          data: {
-              imgList: [],
-              imgHeight: '' + document.documentElement.clientHeight + 'px',
-              start: '09:00',                                                                   //开始时间
-              end: '18:00',                                                                   //结束时间
-              region1: '1',                                                                 //岗位选择
-              position: '1',                                                                  //岗位
-              options: [],
-              show_stop:null,//暂停
-              show_index:0
-          },
-          methods: {
-              get_pos() {
+    vm = new Vue({
+        el: "#main",
+        data: {
+          imgList: [],
+          imgHeight: '' + document.documentElement.clientHeight + 'px',
+          start: '09:00',                                                                   //开始时间
+          end: '18:00',                                                                   //结束时间
+          region1: '1',                                                                 //岗位选择
+          position: '1',                                                                  //岗位
+          options: [],
+          show_stop:null,//暂停
+          show_index:0,
+          interval: 0,
+        },
+        methods: {
+            //取配置的轮播时间
+            get_time_interval(){
                 axios({
                     method: 'post',
-                    url:  '${SITE_URL}monitor_scene/get_all_pos/',
+                    data:{
+                    code:"wheel_cycle"
+                    },
+                    url:  '${SITE_URL}monitor_scene/open_scene_design/',
+                }).then((res) => {
+                    if(res.data.time_interval != ""){
+                        vm.interval = res.data.time_interval;
+                    }
+                })
+            },
+            get_pos() {
+                axios({
+                  method: 'post',
+                  url:  '${SITE_URL}monitor_scene/get_all_pos/',
                 }).then((res) => {
                     let json = [];
                     if (res.data.message.length > 0) {
@@ -127,54 +142,53 @@
                     vm.$message.error('获取用户错误')
                 })
             },
-              query_scene_info:function(){
-                 $.ajax({
-                     url:"${SITE_URL}monitor_scene/query_pos_scene"
-                     ,async:false
-                     ,data: {
+            query_scene_info:function(){
+                //取得配置的轮播时间间隔
+                vm.get_time_interval();
+                $.ajax({
+                    url:"${SITE_URL}monitor_scene/query_pos_scene"
+                    ,async:false
+                    ,data: {
                         'pos_id': vm.position,
                         'start': vm.start,
                         'end': vm.end
-                      }
-                      ,type:"post"
-                     ,dataType:"json"
-                     ,success:function(data){
-                         if(vm.show_stop!=null){
-                             clearInterval(vm.show_stop);//设置停止
-                             vm.show_stop = null;
-                         }
-                          $("#div_sence").html("");
-                         if(data.message!=""){
-                             var djson = data.message ;//eval('('+data.message+')');
-
-                             for(var i=0;i<djson.length;i++){
-                                  var t="display:none;"
-                                 if(i ==0){
-                                      t="";
-                                 }
-                                 var html="<iframe id='i"+djson[i]+"'  src='${SITE_URL}monitor_scene/page_query_xml_show?id=";
-                                 html+=djson[i]+"' style='"+t+"width:1200px;height:850px;border:none;'></iframe>";
-                                  $("#div_sence").append(html);
-                             }
-                             vm.show_stop= setInterval(function(){
-                                  var iframe_dto = $("#div_sence iframe");
-                                  if(iframe_dto.length>0){
-                                      if(vm.show_index==(iframe_dto.length-1)){
-                                          vm.show_index = -1;
-                                      }
-                                      vm.show_index=vm.show_index+1
-                                      iframe_dto.hide();
-                                      $(iframe_dto[vm.show_index]).show();
-                                  }
-
-                               },5000);
-                         }
-                     }
-                 })
-              }
-
-          }
-      })
+                    }
+                    ,type:"post"
+                    ,dataType:"json"
+                    ,success:function(data){
+                        if(vm.show_stop!=null){
+                            clearInterval(vm.show_stop);//设置停止
+                            vm.show_stop = null;
+                        }
+                        $("#div_sence").html("");
+                        if(data.message!=""){
+                            var djson = data.message ;//eval('('+data.message+')');
+                            for(var i=0;i<djson.length;i++){
+                                var t="display:none;"
+                                if(i ==0){
+                                    t="";
+                                }
+                                var html="<iframe id='i"+djson[i]+"'  src='${SITE_URL}monitor_scene/page_query_xml_show?id=";
+                                html+=djson[i]+"' style='"+t+"width:1200px;height:850px;border:none;'></iframe>";
+                                $("#div_sence").append(html);
+                            }
+                            vm.show_stop = setInterval(function(){
+                                var iframe_dto = $("#div_sence iframe");
+                                if(iframe_dto.length>0){
+                                    if(vm.show_index==(iframe_dto.length-1)){
+                                        vm.show_index = -1;
+                                    }
+                                    vm.show_index=vm.show_index+1
+                                    iframe_dto.hide();
+                                    $(iframe_dto[vm.show_index]).show();
+                                }
+                            },vm.interval*1000);
+                        }
+                    }
+                })
+            }
+        }
+    })
     vm.get_pos();
 </script>
 </body>
