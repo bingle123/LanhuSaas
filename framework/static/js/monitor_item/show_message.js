@@ -1391,6 +1391,12 @@ $(function(){
                         this.$alert(vm.message, "错误");
                         return false;
                     }
+                    if($("#text2").html() == ""){
+                        vm.unit_id = -1;
+                        vm.message = "请选点击’采集测试‘按钮，确认采集正常后保存!"
+                        this.$alert(vm.message, "提示");
+                        return false;
+                    }
                     //上传数据至服务器保存
                     vm.monitor_data_save(vm.unit_id, flow);
                 } else if (vm.monitor_type == 'second') {
@@ -1482,9 +1488,10 @@ $(function(){
                 } else if (vm.monitor_type == 'five') {
                     //判断是否已经进行采集测试
                     if (null != this.gather_data_test_flag && false == this.gather_data_test_flag) {
-                        vm.message ="采集测试未通过，请校正接口调用参数或稍后重试！\", \"错误\""
-                        // this.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
+                        //vm.message ="采集测试未通过，请校正接口调用参数或稍后重试！\", \"错误\""
+                        this.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "提示");
                         vm.gather_data_test_flag = null;
+                        return false;
                     } else if (null == this.gather_data_test_flag) {
                         //获取采集测试数据，调用同步服务
                         vm.get_gather_test();
