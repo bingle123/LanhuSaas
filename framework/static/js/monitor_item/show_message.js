@@ -1156,26 +1156,23 @@ $(function(){
             },
             //编辑单元
             edit_unit(row) {
-                debugger
                 this.get_db_connections();
                 vm.add_pamas = 1;
                 vm.centerDialogVisible = true;
                 //默认编辑下显示基本监控项取消
-                //vm.disabled2 = false;
+                //初始化不可用
                 vm.disabled2 = true;
+                vm.disabled3 = true;
+                vm.disabled6 = true;
                 //-----------------------------
-                //vm.disabled3 = true;
                 //vm.disabled4 = true;
                 //vm.disabled5 = true;
-                //默认编辑下显示基本监控项（修改）
-                vm.disabled6 = false;
                 //-----------------------------
                 vm.unit_id = row.id;
                 vm.monitor_name = row.monitor_name;
                 //原始基本监控项
                 if (row.monitor_type === 1) {
                     vm.disabled2 = false;
-                    vm.disabled6 = true;
                     vm.monitor_type = 'first';
                     vm.basic.font_size = row.font_size;
                     vm.basic.height = row.height;
@@ -1271,7 +1268,6 @@ $(function(){
                 //图表监控项
                 if (row.monitor_type === 2) {
                     vm.disabled3 = false;
-                    console.log(row)
                     vm.monitor_type = 'second';
                     vm.chart.font_size = row.font_size;
                     vm.chart.height = row.height;
@@ -1706,7 +1702,7 @@ $(function(){
                 $("#base_test_text").html("");
             },
             add_unit(row) {   //新增监控项
-                {   debugger
+                {
                     if (vm.add_pamas == 1) {
                         vm.Initialization()
                     }
@@ -1716,7 +1712,7 @@ $(function(){
                     vm.monitor_name = '';
                     //取消默认添加时展示基本监控项
                     vm.disabled2 = false;
-                    //vm.disabled3 = false;
+                    vm.disabled3 = false;
                     //vm.disabled4 = false;
                     //vm.disabled5 = false;
                     vm.disabled6 = false;
