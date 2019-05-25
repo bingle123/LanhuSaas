@@ -1159,6 +1159,10 @@ $(function(){
                      $("#pane-second #maintenancePie").html(iframe_html);
                    },500)
                     //彭英杰20190524 end
+                    vm.chart.score = row.score;
+                    vm.chart.period = row.period;
+                    vm.chart.start_time = row.start_time;
+                    vm.chart.end_time = row.end_time;
                 }
                 //基本监控项（一体化）
                 if (row.monitor_type === 5) {
