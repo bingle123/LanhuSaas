@@ -1157,7 +1157,7 @@ $(function(){
                          $("#pane-second").show();
                      var iframe_html="<iframe style='border:none;width:100%;height:310px;' src='"+vm.chart.display_rule+"' ></iframe>";
                      $("#pane-second #maintenancePie").html(iframe_html);
-                   },500)
+                    },500)
                     //彭英杰20190524 end
                     vm.chart.score = row.score;
                     vm.chart.period = row.period;
