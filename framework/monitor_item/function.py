@@ -313,6 +313,7 @@ def add_unit(request):
                 monitor_type = 1
             if res['monitor_type'] == 'second':
                 monitor_type = 2
+                add_dic['gather_rule'] = res['data']['display_rule']
             if res['monitor_type'] == 'third':
                 monitor_type = 3
                 #  作业监控项的把作业id和name分别存放

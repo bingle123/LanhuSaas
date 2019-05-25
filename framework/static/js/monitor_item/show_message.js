@@ -117,14 +117,14 @@ $(function(){
                 width: '200',                             //宽度
                 start_time: '',                        //开始时间
                 end_time: '',                          //结束时间
-                period: '10',                            //采集周期
+                period: '30',                            //采集周期
                 params: '',                            //监控参数
                 status: '',                            //监控状态
                 contents: '',                          //显示内容
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
-                monitor_area: '',                             //日历地区
-                score: '1',                                //分值
+                //monitor_area: '',                             //日历地区
+                score: '',                                //分值
             },
             base: {
                 //基本单元
@@ -140,13 +140,13 @@ $(function(){
                 width: '422',                             //宽度
                 start_time: '',                        //开始时间
                 end_time: '',                          //结束时间
-                period: '10',                            //采集周期
+                period: '30',                            //采集周期
                 params: '',                            //监控参数
                 status: '',                            //监控状态
                 contents: '',                          //显示内容
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
-                monitor_area: '',                             //日历地区
+                //monitor_area: '',                             //日历地区
                 score: ''                                //分值
             },             //基本单元
             rules1: {
@@ -173,28 +173,30 @@ $(function(){
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
                 display_rule:'', //采集地址 grafana地址
+                score:"",                              //分值
+                start_time: '',                        //开始时间
+                end_time: '',                          //结束时间
+                period: '30',                            //采集周期
+                font_size: '20',                         //字号
+                height: '480',                            //高度
+                width: '422',                             //宽度
+                params: '',                            //监控参数
+                status: '0',                            //监控状态
+                contents: '',                          //显示内容
+                gather_rule: '',                       //采集规则
+                gather_params: 'interface',                  //采集参数
             },             //图表单元
             rules2: {
                 display_rule: [
                     {required: true, message: '请输入采集地址', trigger: 'change'}
                 ],
+                score: [
+                    {required: true, message: '请输入分值', trigger: 'blur'}
+                ],
+                period: [
+                    {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
+                ],
             },                              //校验规则
-            job: {                                   //作业单元
-                monitor_name: '',                    //单元名称
-                monitor_type: '',                    //单元类型
-                font_size: '20',                       //字号
-                height: '120',                          //高度
-                width: '200',                            //宽度
-                start_time: '',                      //开始时间
-                end_time: '',                        //结束时间
-                period: '10',                          //采集周期
-                status: '',                          //监控状态
-                contents: '',                        //显示内容
-                gather_rule: '',                     //NODE_KEY
-                gather_params: '',                   //作业模板
-                params: '',                         //执行服务器
-                monitor_area: ''                             //日历地区
-            },                //作业单元
             rules3: {
                 font_size: [
                     {required: true, message: '请选择字号', trigger: 'change'}
@@ -215,23 +217,6 @@ $(function(){
                     {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
                 ],
             },                              //校验规则
-            flow: {                                     //流程单元
-                monitor_name: '',                    //单元名称
-                monitor_type: '',                    //单元类型
-                font_size: '20',                       //字号
-                height: '20',                          //高度
-                width: '0',                            //宽度
-                start_time: '',                      //开始时间
-                end_time: '',                        //结束时间
-                period: '10',                          //采集周期
-                params: '',                         //监控参数
-                status: '',                          //监控状态
-                contents: '',                        //显示内容
-                gather_rule: '',                     //采集规则
-                gather_params: '',                   //流程模板
-                node_name: '',
-                monitor_area: ''                             //日历地区
-            },              //流程单元
             rules4: {
                 font_size: [
                     {required: true, message: '请选择字号', trigger: 'change'}
@@ -306,61 +291,46 @@ $(function(){
                 width: '0',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
-                period: '10',                          //采集周期
+                period: '30',                          //采集周期
                 params: '',                         //监控参数
                 status: '',                          //监控状态
                 contents: '',                        //显示内容
                 gather_rule: '',                     //采集规则
                 gather_params: 'sql',                   //采集参数
-                monitor_area: ''                             //日历地区
+                //monitor_area: '',                            //日历地区
+                score: '1',                                //分值
+            },
+            base1: {
+                //基本单元
+                dimension_data: [],//维度名称
+                measures_name: '',//指标名称
+                measures: '',       //指标集
+                interface_type: '',//接口类型
+                show_rule_type: '',//展示规则
+                monitor_name: '',                      //单元名称
+                monitor_type: '',                      //单元类型
+                font_size: '20',                         //字号
+                height: '480',                            //高度
+                width: '422',                             //宽度
+                start_time: '',                        //开始时间
+                end_time: '',                          //结束时间
+                period: '30',                            //采集周期
+                params: '',                            //监控参数
+                status: '',                            //监控状态
+                contents: '',                          //显示内容
+                gather_rule: '',                       //采集规则
+                gather_params: 'sql',                  //采集参数
+                //monitor_area: '',                      //日历地区
+                score: ''                                //分值
             },
             chart1: {                                //图表单元
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
-                font_size: '20',                       //字号
-                height: '380',                          //高度
-                width: '580',                            //宽度
-                start_time: '',                      //开始时间
-                end_time: '',                        //结束时间
-                period: '10',                          //采集周期
-                status: '',                          //监控状态
-                contents: '',                        //显示内容
-                gather_rule: '',                     //采集规则
-                gather_params: '',                   //节点
-                params: '',                          //监控参数
-                monitor_area: ''                             //日历地区
-            },
-            job1: {                                   //作业单元
-                monitor_name: '',                    //单元名称
-                monitor_type: '',                    //单元类型
-                font_size: '20',                       //字号
-                height: '20',                          //高度
-                width: '0',                            //宽度
-                start_time: '',                      //开始时间
-                end_time: '',                        //结束时间
-                period: '10',                          //采集周期
-                status: '',                          //监控状态
-                contents: '',                        //显示内容
-                gather_rule: '',                     //NODE_KEY
-                gather_params: '',                   //作业模板
-                params: '',                         //执行服务器
-                monitor_area: ''                             //日历地区
-            },
-            flow7: {                                //流程单元
-                monitor_name: '',                    //单元名称
-                monitor_type: '',                    //单元类型
-                font_size: '20',                       //字号
-                height: '20',                          //高度
-                width: '0',                            //宽度
-                start_time: '',                      //开始时间
-                end_time: '',                        //结束时间
-                period: '',                          //采集周期
-                params: '10',                         //监控参数
-                status: '',                          //监控状态
-                contents: '',                        //显示内容
-                gather_rule: '',                     //采集规则
-                gather_params: '',                   //流程模板
-                monitor_area: ''                             //日历地区
+                display_rule:'', //采集地址 grafana地址
+                score:"",                              //分值
+                start_time: '',                        //开始时间
+                end_time: '',                          //结束时间
+                period: '30',                          //采集周期
             },
             myChart: null,
             chart_content: '',
@@ -982,14 +952,12 @@ $(function(){
             },
             //保存按钮
             submitForm(formName) {
-
                 //vm.isShow:true 没有重复，否则就是有重复
                 if(vm.isShow == false){
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
                             vm.edit1()
                         } else {
-                            console.log('error submit!!');
                             return false;
                         }
                     });
@@ -1211,7 +1179,7 @@ $(function(){
                 var flow = {};
                 if (vm.monitor_name == '') {
                     vm.message = '监控项名称不能为空!';
-                    this.$alert(vm.message, "错误");
+                    this.$alert(vm.message, "提示");
                     vm.unit_id = -1;
                     return false;
                 }
@@ -1225,25 +1193,25 @@ $(function(){
                     if (vm.server_url == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择数据库连接！'
-                        this.$alert(vm.message, "错误");
+                        this.$alert(vm.message, "提示");
                         return false;
                     }
                     if (vm.basic.gather_rule == '') {
                         vm.unit_id = -1;
                         vm.message = '请输入数据采集规则!'
-                        this.$alert(vm.message, "错误");
+                        this.$alert(vm.message, "提示");
                         return false;
                     }
                     if (vm.basic.start_time == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择开始时间!'
-                        this.$alert(vm.message, "错误");
+                        this.$alert(vm.message, "提示");
                         return false;
                     }
                     if (vm.basic.end_time == '') {
                         vm.unit_id = -1;
                         vm.message = '请选择结束时间!'
-                        this.$alert(vm.message, "错误");
+                        this.$alert(vm.message, "提示");
                         return false;
                     }
                     if($("#text2").html() == ""){
@@ -1256,23 +1224,29 @@ $(function(){
                     vm.monitor_data_save(flow);
                 } else if (vm.monitor_type == 'second') {
                     vm.result_data = vm.chart;
-                    vm.chart.monitor_name = vm.monitor_name;
-                    vm.chart.monitor_type = vm.monitor_type;
-                    if (vm.chart.params == '') {
+                    if (vm.chart.display_rule == '') {
                         vm.unit_id = -1;
-                        vm.message = '请选择数据库!'
+                        vm.message = "请录入采集地址!"
+                        this.$alert(vm.message, "提示");
+                        return false;
                     }
-                    if (vm.chart.gather_rule == '') {
+                    if (vm.chart.period == '') {
                         vm.unit_id = -1;
-                        vm.message = '请输入采集规则!'
+                        vm.message = "请录入采集周期!"
+                        this.$alert(vm.message, "提示");
+                        return false;
                     }
                     if (vm.chart.start_time == '') {
                         vm.unit_id = -1;
-                        vm.message = '请选择开始时间!'
+                        vm.message = "请选择开始时间!"
+                        this.$alert(vm.message, "提示");
+                        return false;
                     }
                     if (vm.chart.end_time == '') {
                         vm.unit_id = -1;
-                        vm.message = '请选择结束时间!'
+                        vm.message = "请选择结束时间!"
+                        this.$alert(vm.message, "提示");
+                        return false;
                     }
                     //上传数据至服务器保存
                     vm.monitor_data_save(flow);
@@ -1453,8 +1427,10 @@ $(function(){
             change4() {
                 if (vm.basic.score > 100) {
                     vm.basic.score = 100
-                } else if (vm.base.score > 100) {
+                }else if (vm.base.score > 100) {
                     vm.base.score = 100
+                }else if(vm.chart.score > 100){
+                    vm.chart.score = 100
                 }
             },
             rowclass({row, rowIndex}) {
@@ -1491,14 +1467,14 @@ $(function(){
             },
             //初始化
             Initialization() {
+                //初始基本监控项
                 Object.assign(vm.basic, {});
                 Object.assign(vm.basic, vm.basic1);
-                Object.assign(vm.job, {});
-                Object.assign(vm.job, vm.job1);
-                Object.assign(vm.flow, {});
-                Object.assign(vm.flow, vm.flow7);
+                //初始图表监控项
                 Object.assign(vm.chart, {});
                 Object.assign(vm.chart, vm.chart1);
+                Object.assign(vm.base,{});
+                Object.assign(vm.base,vm.base1);
                 vm.server_url = '';
                 vm.file_param = '';
                 vm.sql_file_interface = 3
