@@ -22,7 +22,6 @@ $(function(){
         }
         return callback();
     };
-
     const width_range_check = (rule, value, callback) => {
         var reg = /^[0-9]*$/;
         if (!reg.test(value)) {
@@ -34,7 +33,6 @@ $(function(){
         }
         return callback();
     };
-
     vm = new Vue({
         el: '#app',
         data: {
@@ -78,8 +76,6 @@ $(function(){
             },
             add_pamas: 0,                                        //新增编辑判断
             font_size_range: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40],   //字体大小
-            job2: [],                                   //作业模板
-            flow2: [],                                  //流程模板
             activities_node_name: [],                    //节点名称
             activities_node_time: {                      //节点时间
                 start_time: '',                      //开始时间
@@ -90,21 +86,16 @@ $(function(){
             sites: [],                                  //table内容
             sites1: [],
             contents: '',                               //搜索输入框内容
-            checked1: false,                           //作业启动选框
-            checked2: false,                           //流程启动选框
             disabled1: false,
             disabled2: false,                            //基本单元
-            //disabled3: false,                            //图表单元
-            //disabled4: false,                            //作业单元
-            //disabled5: false,                            //流程单元
+            disabled3: false,                            //图表单元
             disabled6: false,
             isShow:false,
             areas: [],
             area: 1,
-            caiji1: 'block',
-            caiji2: 'none',
             monitor_name: '',                             //单元名称
             unit_id: 0,                                   //单元id
+            item_id: 0,
             centerDialogVisible: false,                  //弹窗状态
             sql1: 'block',
             file1: 'none',
@@ -114,8 +105,6 @@ $(function(){
             file_param: '',
             param1: '',
             param2: '',
-            zuoye: 'none',
-            liucheng: 'none',
             basic_show_content: "",
             fields: [],                                  //字段选择数组
             result_data: {},                            //传递新增数据
@@ -124,8 +113,8 @@ $(function(){
                 monitor_name: '',                      //单元名称
                 monitor_type: '',                      //单元类型
                 font_size: '20',                         //字号
-                height: '20',                            //高度
-                width: '0',                             //宽度
+                height: '40',                            //高度
+                width: '200',                             //宽度
                 start_time: '',                        //开始时间
                 end_time: '',                          //结束时间
                 period: '10',                            //采集周期
@@ -184,41 +173,11 @@ $(function(){
                 monitor_name: '',                    //单元名称
                 monitor_type: '',                    //单元类型
                 display_rule:'', //采集地址 grafana地址
-                // font_size: '20',                       //字号
-                // height: '380',                          //高度
-                // width: '580',                            //宽度
-                // start_time: '',                      //开始时间
-                // end_time: '',                        //结束时间
-                // period: '10',                          //采集周期
-                // status: '',                          //监控状态
-                // contents: '',                        //显示内容
-                // gather_rule: '',                     //采集规则
-                // gather_params: '',                   //节点
-                // params: '',                         //监控参数
-                // monitor_area: ''                             //日历地区
             },             //图表单元
             rules2: {
                 display_rule: [
                     {required: true, message: '请输入采集地址', trigger: 'change'}
                 ],
-                // font_size: [
-                //     {required: true, message: '请选择字号', trigger: 'change'}
-                // ],
-                // height: [
-                //     {required: true, message: '请输入高度', trigger: 'blur'}
-                // ],
-                // width: [
-                //     {required: true, message: '请输入宽度', trigger: 'blur'}
-                // ],
-                // contents: [
-                //     {required: true, message: '请输入内容', trigger: 'blur'}
-                // ],
-                // gather_params: [
-                //     {required: true, message: '请选择图片类型', trigger: 'change'}
-                // ],
-                // period: [
-                //     {required: true, message: '请输入采集周期(以秒为单位)', trigger: 'blur'}
-                // ],
             },                              //校验规则
             job: {                                   //作业单元
                 monitor_name: '',                    //单元名称
@@ -416,12 +375,6 @@ $(function(){
             dimension_list: [],
             gather_list: [],
             gather_base_test_data: [],
-            /*dimension_data:[{
-                dimension_name:'ip',
-                dimension_value:'192.168.1.153'
-            }],*/
-
-
         },
         methods: {
             //显示加载中..背景
@@ -479,20 +432,6 @@ $(function(){
                 this.base_monitor_other_fixed_status();
                 //更替显示内容
                 this.content_change();
-            },
-            //基本监控项修改后颜色和其他选项提示信息添加方法
-            add_comments() {
-                if ('1' == this.base.show_rule_type) {
-                    this.color_rules_comments = true;
-                    this.other_rules_comments = false;
-                } else if ('2' == this.base.show_rule_type) {
-                    this.color_rules_comments = false;
-                    this.other_rules_comments = true;
-                } else {
-                    this.color_rules_comments = false;
-                    this.other_rules_comments = false;
-                }
-
             },
             //监控项数据处理，用于编辑状态下回显数据
             monitor_edit_data_process(row) {
@@ -663,12 +602,6 @@ $(function(){
                 this.base_monitor_upload_data['contents'] = this.base['contents'];
                 this.base_monitor_upload_data['score'] = this.base['score'];
                 this.result_data = this.base_monitor_upload_data;
-                //由于调用采集测试接口需要以下参数,因此在此统一删除数据库表不存在的字段,避免监控项添加时报错
-                /*delete this.base['dimension_data'];
-                delete this.base['interface_type'];
-                delete this.base['measures'];
-                delete this.base['measures_name'];
-                delete this.base['show_rule_type'];*/
             },
             //采集测试的数据保存方法
             gather_data_test_save(item_id, type) {
@@ -687,9 +620,11 @@ $(function(){
                 });
             },
             //监控项数据编辑后的保存方法
-            monitor_data_save(unit_id, flow) {
+            monitor_data_save(flow) {
+                //进入了这里就是所有校验都已经通过，只等着保存
+                vm.unit_id = vm.item_id;
                 //unit_id大于0的情况为编辑后的数据上传
-                if (unit_id > 0) {
+                if (vm.unit_id > 0) {
                     axios({
                         method: 'post',
                         url: site_url+'monitor_item/edit/',
@@ -736,7 +671,7 @@ $(function(){
                     });
                 }
                 //unit_id等于0的情况下为添加后的数据上传
-                else if (unit_id == 0) {
+                else if (vm.unit_id == 0) {
                     const loading = this.popup_loading();
                     axios({
                         method: 'post',
@@ -781,13 +716,6 @@ $(function(){
                     }).catch((error) => {
                         this.$alert('新增保存失败!', "错误");
                     });
-                } else {
-                    vm.centerDialogVisible = true;
-                    if (vm.add_pamas == 0) {
-                        vm.unit_id = 0
-                    } else {
-                        vm.unit_id = vm.unit_id1
-                    }
                 }
             },
             add_dimension() {
@@ -1050,11 +978,12 @@ $(function(){
             },
             current_change1(value) {
                 vm.page = value;
-
                 vm.select2();
             },
             //保存按钮
             submitForm(formName) {
+
+                //vm.isShow:true 没有重复，否则就是有重复
                 if(vm.isShow == false){
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
@@ -1088,7 +1017,6 @@ $(function(){
                         }).then((res) => {
                             vm.page = 1;
                             vm.show()
-
                         }),);
                 }).catch(() => {
                     this.$message({
@@ -1108,25 +1036,7 @@ $(function(){
                 }).then(function (res) {
                     vm.sites = res.data.results.res_list;
                     vm.page_count = res.data.results.res_list[0].page_count;
-                    //vm.job2 = res.data.results.job;
-                    //vm.flow2 = res.data.results.flow;
                 })
-                    vm.showAPI();
-            },
-            showAPI() {
-                 setTimeout(function(){
-                       axios({
-                            method: 'post',
-                            url: site_url+'monitor_item/showAPI/',
-                            data: {
-                                page: vm.page,
-                                limit: 10
-                            },
-                        }).then(function (res) {
-                            vm.job2 = res.data.results.job;
-                            vm.flow2 = res.data.results.flow;
-                        })
-                        },1000);
             },
             select1(){
                 vm.centerDialogVisible = false;
@@ -1138,25 +1048,25 @@ $(function(){
                 }
             },
             select2() {
-                    axios({
-                        method: 'post',
-                        url: site_url+'monitor_item/select/',
-                        data: {
-                            data: this.contents,
-                            page: vm.page,
-                            limit: 10
-                        }
-                    }).then((res) => {
-                        if (res.data.results.length == 0) {
-                            vm.sites = [];
-                            vm.page_count = 1
-                        } else {
-                            vm.sites = res.data.results;
-                            vm.page_count = res.data.results[0].page_count;
-                        }
-                    }).catch(function (e) {
-                        vm.$message.error('获取数据失败！');
-                    });
+                axios({
+                    method: 'post',
+                    url: site_url+'monitor_item/select/',
+                    data: {
+                        data: this.contents,
+                        page: vm.page,
+                        limit: 10
+                    }
+                }).then((res) => {
+                    if (res.data.results.length == 0) {
+                        vm.sites = [];
+                        vm.page_count = 1
+                    } else {
+                        vm.sites = res.data.results;
+                        vm.page_count = res.data.results[0].page_count;
+                    }
+                }).catch(function (e) {
+                    vm.$message.error('获取数据失败！');
+                });
             },
             //编辑单元
             edit_unit(row) {
@@ -1173,6 +1083,7 @@ $(function(){
                 //vm.disabled5 = true;
                 //-----------------------------
                 vm.unit_id = row.id;
+                vm.item_id = row.id; //缓存监控项id
                 vm.monitor_name = row.monitor_name;
                 //原始基本监控项
                 if (row.monitor_type === 1) {
@@ -1267,25 +1178,11 @@ $(function(){
                             vm.basic_test();
                         }
                     }
-
                 }
                 //图表监控项
                 if (row.monitor_type === 2) {
                     vm.disabled3 = false;
                     vm.monitor_type = 'second';
-                    // vm.chart.font_size = row.font_size;
-                    // vm.chart.height = row.height;
-                    // vm.chart.width = row.width;
-                    // vm.chart.start_time = row.start_time;
-                    // vm.chart.end_time = row.end_time;
-                    // vm.chart.period = row.period;
-                    // vm.chart.gather_params = row.gather_params;
-                    // vm.chart.contents = row.contents;
-                    // vm.chart.start_time = row.start_time;
-                    // vm.chart.end_time = row.end_time;
-                    // vm.chart.gather_rule = row.gather_rule;
-                    // vm.chart.status = row.status;
-                    // vm.area = row.monitor_area;
                     //彭英杰 20190524 start
                     vm.chart.display_rule=row.display_rule;
                     setTimeout(function(){
@@ -1293,66 +1190,8 @@ $(function(){
                      var iframe_html="<iframe style='border:none;width:100%;height:310px;' src='"+vm.chart.display_rule+"' ></iframe>";
                      $("#pane-second #maintenancePie").html(iframe_html);
                    },500)
-                  //  axios({
-                  //      method: 'post',
-                  //      url: site_url+'db_connection/get_conname/',
-                  //      data: row.params,
-                  //  }).then((res) => {
-                  //      vm.chart.params = res['data']['results']['connname'];
-                  //      vm.show_content();
-                  //  }).catch(function (e) {
-                  //      vm.$message.error('获取数据库失败！');
-                  //  });
                     //彭英杰20190524 end
                 }
-                //作业监控项
-                /*
-                if (row.monitor_type === 3) {
-                    vm.disabled4 = false;
-                    vm.monitor_type = 'third';
-                    vm.job.font_size = row.font_size;
-                    vm.job.height = row.height;
-                    vm.job.width = row.width;
-                    vm.change_job_fontSize();
-                    vm.change_job_height();
-                    vm.change_job_width();
-                    vm.job.start_time = row.start_time;
-                    vm.job.end_time = row.end_time;
-                    vm.job.period = row.period;
-                    vm.job.contents = row.contents;
-                    vm.job.gather_rule = row.gather_rule;
-                    vm.job.gather_params = row.gather_params;
-                    vm.job.params = row.params;
-                    vm.job.status = row.status;
-                    vm.area = row.monitor_area;
-                }*/
-                //流程监控项
-                /*
-                if (row.monitor_type === 4) {
-                    vm.disabled5 = false;
-                    vm.monitor_type = 'fourth';
-                    console.log(row)
-                    vm.flow.font_size = row.font_size;
-                    vm.flow.height = row.height;
-                    vm.flow.width = row.width;
-                    vm.flow.start_time = row.start_time;
-                    vm.flow.end_time = row.end_time;
-                    vm.flow.period = row.period;
-                    vm.flow.status = row.status;
-                    vm.flow.jion_id = row.jion_id;
-                    vm.flow.period = row.period;
-                    vm.flow.node_name = row.gather_params;
-                    vm.flow.gather_rule = {
-                        'name': row.gather_rule,
-                        'id': row.jion_id
-                    };
-                    vm.area = row.monitor_area;
-                    var id1 = row.jion_id
-                    var id = [{
-                        'id': id1
-                    }]
-                    vm.flow_change(id)
-                }*/
                 //基本监控项（一体化）
                 if (row.monitor_type === 5) {
                     vm.disabled6 = false;
@@ -1409,12 +1248,12 @@ $(function(){
                     }
                     if($("#text2").html() == ""){
                         vm.unit_id = -1;
-                        vm.message = "请选点击’采集测试‘按钮，确认采集正常后保存!"
+                        vm.message = "请选点击’采集测试‘按钮，确认采集正常后再保存!"
                         this.$alert(vm.message, "提示");
                         return false;
                     }
                     //上传数据至服务器保存
-                    vm.monitor_data_save(vm.unit_id, flow);
+                    vm.monitor_data_save(flow);
                 } else if (vm.monitor_type == 'second') {
                     vm.result_data = vm.chart;
                     vm.chart.monitor_name = vm.monitor_name;
@@ -1436,7 +1275,7 @@ $(function(){
                         vm.message = '请选择结束时间!'
                     }
                     //上传数据至服务器保存
-                    vm.monitor_data_save(vm.unit_id, flow);
+                    vm.monitor_data_save(flow);
                 } else if (vm.monitor_type == 'third') {
                     vm.result_data = vm.job;
                     vm.job.monitor_name = vm.monitor_name;
@@ -1464,7 +1303,7 @@ $(function(){
                         vm.message = '请选择结束时间!'
                     }
                     //上传数据至服务器保存
-                    vm.monitor_data_save(vm.unit_id, flow);
+                    vm.monitor_data_save(flow);
                 } else if (vm.monitor_type == 'fourth') {
                     vm.result_data = vm.flow;
                     vm.flow.monitor_name = vm.monitor_name;
@@ -1499,7 +1338,7 @@ $(function(){
                     flow.period = vm.flow.period;
                     flow.constants = vm.constants;
                     //上传数据至服务器保存
-                    vm.monitor_data_save(vm.unit_id, flow);
+                    vm.monitor_data_save(flow);
                     //修改后的基本监控项的数据上传处理
                 } else if (vm.monitor_type == 'five') {
                     //判断是否已经进行采集测试
@@ -1514,127 +1353,14 @@ $(function(){
                         //基本监控项的数据处理
                         vm.base_monitor_data_process();
                         //上传监控项数据至服务器保存
-                        vm.monitor_data_save(vm.unit_id, flow);
+                        vm.monitor_data_save(flow);
                     } else {
                         //基本监控项的数据处理
                         vm.base_monitor_data_process();
                         //上传监控项数据至服务器保存
-                        vm.monitor_data_save(vm.unit_id, flow);
+                        vm.monitor_data_save(flow);
                     }
                 }
-            },
-            flow_change(value) {
-                vm.node_name(value)
-                vm.location = ''
-                vm.line = ''
-                axios({
-                    method: 'post',
-                    url: site_url+'monitor_item/flow_change/',
-                    data: {
-                        template_id: value
-                    }
-                }).then(function (res) {
-                    {
-                        vm.template_list.id = res.data.template_id[0].id
-                        vm.template_list.name = res.data.template_id[0].name
-                        vm.constants = res.data.constants
-                        var aa = "  <div id=\"flow1\" class=\"clearfix workflow-box\" style=\"width:1000px;position: relative;\">\n" +
-                            "\n" +
-                            "                                        <div class=\"workflow-canvas\" style=\"margin-left: 0px;padding-left: 0px\">\n" +
-                            "                                            <!-- 画布模板 start -->\n" +
-                            "                                            <div class=\"jtk-content\">\n" +
-                            "                                                <div class=\"jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan\"\n" +
-                            "                                                     id=\"canvas\" style=\"height:500px\">\n" +
-                            "                                                    <!-- 流程 -->\n" +
-                            "                                                </div>\n" +
-                            "                                            </div>\n" +
-                            "                                            <!-- 画布模板 end -->\n" +
-                            "\n" +
-                            "                                        </div>\n" +
-                            "\n" +
-                            "                                    <!-- template 模板-->\n" +
-                            "                                        <div class=\"jtk-delete jtk-none \">删除节点</div>\n" +
-                            "                                        <div id=\"template\" class=\"jtk-none\">\n" +
-                            "                                            <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\" data-type=\"EmptyEndEvent\">\n" +
-                            "                                               <div class=\"node-wrapper\">\n" +
-                            "                                                    <img src=\"${STATIC_URL}img/canvas/endpoint.png\" style=\"top: 5px;left: 20px;position: absolute;\">\n" +
-                            "                                                </div>\n" +
-                            "                                            </div>\n" +
-                            "                                             <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\" data-type=\"EmptyStartEvent\">\n" +
-                            "                                                <div class=\"node-wrapper\">\n" +
-                            "                                                    <img src=\"${STATIC_URL}img/canvas/Start.png\" style=\"top: 5px;left: 20px;position: absolute;\">\n" +
-                            "                                                </div>\n" +
-                            "                                            </div>\n" +
-                            "                                            <div class=\"jtk-window jtk-node workfolw-node database-node\" id=\"{charts}\" data-type=\"ServiceActivity\">\n" +
-                            "                                                <div class=\"node-wrapper\">\n" +
-                            "                                                    <div class=\"node-content\" style=\"position: relative\">\n" +
-                            "                                                        <div class=\"start_time\"\n" +
-                            "                                                             style=\"position: absolute;width: 70px;height: 20px;top: -26px;left: 0px;\"></div>\n" +
-                            "                                                        <div class=\"end_time\"\n" +
-                            "                                                             style=\"position: absolute;width: 70px;height: 20px;top: -26px;right: 0px;\"></div>\n" +
-                            "                                                        <p class=\"node-title\" style=\" overflow: hidden;text-overflow:ellipsis;white-space: nowrap;\"></p>\n" +
-                            "                                                    </div>\n" +
-                            "                                                    <div class=\"node-icon\" style=\"top: 26px;width: 100%;height: 100%;\">\n" +
-                            "                                                        <span class=\"title\" style=\"top: -14px;height: 100%;position: relative;color: #F4FFF9;\"></span>\n" +
-                            "                                                    </div>\n" +
-                            "                                                </div>\n" +
-                            "                                            </div>\n" +
-                            "                                           <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\" data-type=\"ConvergeGateway\">\n" +
-                            "                                                 <div class=\"node-wrapper\">\n" +
-                            "                                                    <img src=\"${STATIC_URL}img/canvas/convergegateway.png\">\n" +
-                            "                                                </div>\n" +
-                            "                                            </div>\n" +
-                            "                                            <div class=\"jtk-window jtk-node workfolw-node start-node\" id=\"{charts}\" data-type=\"ParallelGateway\">\n" +
-                            "                                                <div class=\"node-wrapper\">\n" +
-                            "                                                    <img src=\"${STATIC_URL}img/canvas/ParallelGateway.png\">\n" +
-                            "                                                </div>\n" +
-                            "                                            </div>\n" +
-                            "                                            <div class=\"jtk-window jtk-node workfolw-node cog-node\" id=\"{charts}\"\n" +
-                            "                                                 data-type=\"dataCog\">\n" +
-                            "                                                <div class=\"node-wrapper\">\n" +
-                            "                                                    <div class=\"node-content\">\n" +
-                            "                                                        <p class=\"node-title\"></p>\n" +
-                            "                                                    </div>\n" +
-                            "                                                    <div class=\"node-icon\">\n" +
-                            "                                                        <i class=\"bk-icon icon-cog\"></i>\n" +
-                            "                                                    </div>\n" +
-                            "                                                </div>\n" +
-                            "                                            </div>\n" +
-                            "\n" +
-                            "                                            <div class=\"jtk-window jtk-node workfolw-node filter-node\" id=\"{charts}\"\n" +
-                            "                                                 data-type=\"dataFilter\">\n" +
-                            "                                                <div class=\"node-wrapper\">\n" +
-                            "                                                    <div class=\"node-content\">\n" +
-                            "                                                        <p class=\"node-title\"></p>\n" +
-                            "                                                    </div>\n" +
-                            "                                                    <div class=\"node-icon\">\n" +
-                            "                                                        <i class=\"bk-icon icon-circle\"></i>\n" +
-                            "                                                    </div>\n" +
-                            "                                                </div>\n" +
-                            "                                            </div>\n" +
-                            "                                        </div>\n" +
-                            "                                    </div>"
-                        $('#flow_canvas').html(aa)
-                        vm.location = res.data.activities
-                        vm.line = res.data.flows
-                        //显示流程单元中的预览图
-                        $('#flow1').dataflow({
-                            el: '.tool', //流程拖动源
-                            canvas: '#canvas', //画布
-                            arrowWidth: 8,
-                            arrowHeight: 10,
-                            template: '#template',
-                            data:
-                                {
-                                    "line": vm.line, "location": vm.location
-                                }
-                        });
-                        let old_html = $('#canvas').html()
-                        $('#canvas').html('<div style="transform: scale(0.65)">' + old_html + '</div>')
-                    }
-                }).catch(function (e) {
-                    vm.$message.error('获取数据失败！');
-                });
             },
             node_name(value) {
                 axios({
@@ -1649,112 +1375,39 @@ $(function(){
                     vm.$message.error('获取数据失败！');
                 });
             },
-            Rendering_start_time() {
-                $('p:contains(' + vm.flow.node_name + ')').parent().find('.start_time').text(vm.activities_node_time.start_time)
-            },
-            Rendering_end_time() {
-                $('p:contains(' + vm.flow.node_name + ')').parent().find('.end_time').text(vm.activities_node_time.end_time)
-            },
-            canvas_new() {
-                if (vm.liucheng == 'block') {
-                    var node_id = ''
-                    var start_time = ''
-                    var end_time = ''
-                    var node_times = []
-                    for (var i = 2; i <= vm.location.length - 1; i++) {
-                        var node_time = {}
-                        node_time.node_id = vm.location[i].id ,
-                            node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
-                            node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
-                        node_time.node_name = $('#' + vm.location[i].id + '').find('.node-title').text()
-                        node_times.push(node_time)
-                    }
-                    var period = $('#period').val()
-                    var template_list = vm.template_list
-                    axios({
-                        method: 'post',
-                        url: site_url+'monitor_item/start_flow_task/',
-                        data: {
-                            'period': period,
-                            'template_list': template_list,
-                            'node_times': node_times,
-                            'monitor_name': vm.monitor_name,
-                            'monitor_type': vm.monitor_type,
-                            'constants': vm.constants
-                        }
-                    }).then(function (res) {
-                        setInterval(function () {
-                            axios({
-                                method: 'post',
-                                url: site_url+'monitor_item/node_state/',
-                                data: {
-                                    'item_id': res.data
-                                }
-                            }).then(function (res) {
-                                len = res.data.message.length
-                                for (var i = 0; i <= len - 1; i++) {
-                                    data_key = res.data.message[i].data_value
-                                    if (data_key == '1' || data_key == '4') {
-                                        $('p:contains(' + res.data.message[i].data_key + ')').parent().siblings('.node-icon').css('background', '#67c23a')
-                                    } else if (data_key == '0' || data_key == '2' || data_key == '3') {
-                                        $('p:contains(' + res.data.message[i].data_key + ')').parent().siblings('.node-icon').css('background', '#f56c6c')
-                                    }
-                                }
-                            }).catch(function (e) {
-                                vm.$message.error('获取数据失败！');
-                            });
-                        }, 13000)
-                    }).catch(function (e) {
-                        vm.$message.error('获取数据失败！');
-                    });
-                } else if (vm.liucheng == 'none') {
-                    var period = $('#period').val()
-                    var template_list = vm.template_list
-                    axios({
-                        method: 'post',
-                        url: site_url+'monitor_item/flow_gather_test/',
-                        data: {}
-                    }).then(function () {
-                    }).catch(function (e) {
-                        vm.$message.error('获取数据失败！');
-                    });
-                }
-            },
             clear_review(){
                 $("#text2").html("");
                 $("#base_test_text").html("");
             },
             add_unit(row) {   //新增监控项
-                {
-                    if (vm.add_pamas == 1) {
-                        vm.Initialization()
-                    }
-                    // 初始化清空预览
-                    vm.clear_review();
-                    vm.add_pamas = 0;
-                    vm.monitor_name = '';
-                    //取消默认添加时展示基本监控项
-                    vm.disabled2 = false;
-                    vm.disabled3 = false;
-                    //vm.disabled4 = false;
-                    //vm.disabled5 = false;
-                    vm.disabled6 = false;
-                    //vm.monitor_type = 'first';
-                    //默认添加时展示基本监控项（修改后）
-                    //监控项类型设置
-                    this.monitor_type = 'five';
-                    //数据来源选项默认切换为接口
-                    this.sql_file_interface = 9;
-                    //采集参数gather_params默认置为interface
-                    this.base['gather_params'] = 'interface';
-                    //切换基本监控项的数据来源类型展示不同的内容，默认切换为接口
-                    this.base_gather_source_change('interface');
-                    //--------------------------
-                    vm.unit_id = row;
-                    vm.centerDialogVisible = true;
-                    //取消原有基本监控项时默认加载数据库连接信息
-                    this.get_db_connections();
+                if (vm.add_pamas == 1) {
+                    vm.Initialization()
                 }
+                // 初始化清空预览
+                vm.clear_review();
+                vm.add_pamas = 0;
+                vm.monitor_name = '';
+                //取消默认添加时展示基本监控项
+                vm.disabled2 = false;
+                vm.disabled3 = false;
+                //vm.disabled4 = false;
+                //vm.disabled5 = false;
+                vm.disabled6 = false;
+                //vm.monitor_type = 'first';
+                //默认添加时展示基本监控项（修改后）
+                //监控项类型设置
+                this.monitor_type = 'five';
+                //数据来源选项默认切换为接口
+                this.sql_file_interface = 9;
+                //采集参数gather_params默认置为interface
+                this.base['gather_params'] = 'interface';
+                //切换基本监控项的数据来源类型展示不同的内容，默认切换为接口
+                this.base_gather_source_change('interface');
+                //--------------------------
+                vm.unit_id = row;
+                vm.centerDialogVisible = true;
+                //取消原有基本监控项时默认加载数据库连接信息
+                this.get_db_connections();
             },
             del() {
                 vm.edit(0)
@@ -1797,101 +1450,12 @@ $(function(){
                     //----------------------------
                 }
             },
-            change2(value) {
-                if (value == 1) {
-                    vm.zuoye = 'block';
-                } else {
-                    vm.zuoye = 'none';
-                }
-            },
-            change3(value) {
-                if (value == 1) {
-                    vm.liucheng = 'block';
-                } else {
-                    vm.liucheng = 'none';
-                }
-            },
             change4() {
                 if (vm.basic.score > 100) {
                     vm.basic.score = 100
                 } else if (vm.base.score > 100) {
                     vm.base.score = 100
                 }
-            },
-            change_job_fontSize() {       //修改作业单元中预览字体
-                $('#job_text').find("*").css('font-size', this.job.font_size);
-            },
-            change_job_height() {       //修改作业单元中预览高度
-                $('#job_text').css('height', this.job.height);
-            },
-            change_job_width() {       //修改作业单元中预览宽度
-                $('#job_text').css('width', this.job.width);
-            },
-            change_job_contents() {       //作业单元显示内容
-                let contents = vm.job.contents;
-                let job_status = contents.split('@')[1].split('=')[1];
-                let item_id = 'item_id'
-                var job_params = {
-                    'id': item_id,
-                    'width': vm.job.width,
-                    'height': vm.job.height,
-                    'status': job_status,
-                };
-                $('#job_text').html('');
-                $('#job_text').append('<div type=\"job' + item_id + '\" style=\"margin:0 auto;\"></div>');
-                job_monitor_active(job_params);
-            },
-            job_test() {
-                vm.disabled1 = true;
-                setTimeout(function () {
-                    vm.disabled1 = false;
-                }, 3000);
-                var job_params1 = {
-                    'id': 'item_id',
-                    'width': vm.job.width,
-                    'height': vm.job.height,
-                    'status': 2,
-                };
-                $('#job_text').html('');
-                $('#job_text').append('<div type=\"jobitem_id\" style=\"margin:0 auto;\"></div>');
-                job_monitor_active(job_params1);
-                axios({
-                    url: site_url+'monitor_item/job_test/',
-                    method: 'post',
-                    data: {
-                        'gather_params': vm.job.gather_params,
-                        'job_id': vm.job.gather_rule,
-                        'params': vm.job.params,
-                    },
-                }).then((res) => {
-                    let status = res['data']['result'];
-                    let job_status = 0;
-                    switch (status) {
-                        case true:
-                            job_status = 1;
-                            console.log(1)
-                            break;
-                        case false:
-                            job_status = -1;
-                            console.log(-1)
-                            break;
-                        default:
-                            job_status = 2;
-                            console.log(2)
-                    }
-                    let item_id = 'item_id'
-                    var job_params = {
-                        'id': item_id,
-                        'width': vm.job.width,
-                        'height': vm.job.height,
-                        'status': job_status,
-                    };
-                    $('#job_text').html('');
-                    $('#job_text').append('<div type=\"job' + item_id + '\" style=\"margin:0 auto;\"></div>');
-                    job_monitor_active(job_params);
-                }).catch(function (e) {
-                    vm.$message.error('获取数据失败！');
-                });
             },
             rowclass({row, rowIndex}) {
                 return 'background:#F7F7F7'
@@ -2336,17 +1900,11 @@ $(function(){
                     url: site_url+'monitor_item/verify_name_only/',
                     data:{
                         name:vm.monitor_name,
-                        id:vm.unit_id
+                        id:vm.item_id
                     }
                 }).then(function (res) {
-                    //flag=res.message
-                    //alert(res);
-                    console.log(res);
                     if(res.data.message == false){
-                      //  alert('111');
-                       // new Error('监控项名称不能重复')
-                       //vm.message = '监控项名称不能重复';
-                      // this.$alert(vm.message, "错误");
+                        //监控项名称重复标记
                         vm.isShow = true;
                     }else{
                         vm.isShow = false;
@@ -2371,11 +1929,9 @@ $(function(){
             },
             "monitor_type":function(value){//tab页切换探测狗
                if(value == "first"){
-                   //vm.change1(3);
                    vm.sql_file_interface = 3
                }
                if(value == "five"){
-                   //vm.change_data_sources(9);
                    vm.sql_file_interface = 9
                }
             }
