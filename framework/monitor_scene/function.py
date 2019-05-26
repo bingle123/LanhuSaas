@@ -1012,9 +1012,8 @@ def query_scene_item_data_handle(list_id):
             dt["key"] = key
         else:
             dt["key"] =""
-            dt["key_name"] = dto_item.display_rule#.decode("utf-8")
-
-            dt["item_type"] = dto_item.monitor_type
+        dt["key_name"] = dto_item.display_rule#.decode("utf-8")
+        dt["item_type"] = dto_item.monitor_type
         arr.append(dt)
 
     # for dto_item_id in list_id:
