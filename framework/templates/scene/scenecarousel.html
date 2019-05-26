@@ -56,64 +56,62 @@
 <!--暂时的css样式-->
 
 <script>
-      vm = new Vue({
-          el: "#main",
-          data: {
-              imgList: [],
-              imgWidth:''+(document.documentElement.clientWidth-20)+'px',
-              imgHeight: '' + (document.documentElement.clientHeight-50) + 'px',
-              region1: '1',                                                                 //岗位选择
-              position: '1',                                                                  //岗位
-              options: [],
-              show_stop:null,//暂停
-              show_index:0
-          },
-          methods: {
-               query_scene_info:function(){
-                 $.ajax({
-                     url:"${SITE_URL}monitor_scene/query_curr_user_scene"
-                     ,async:false
-                      ,type:"post"
-                     ,dataType:"json"
-                     ,success:function(data){
-                         if(vm.show_stop!=null){
-                             clearInterval(vm.show_stop);//设置停止
-                             vm.show_stop = null;
-                         }
-                         $("#div_sence").html("");
-                         if(data.message!=""){
-                             var djson = data.message ;//eval('('+data.message+')');
-
-                             for(var i=0;i<djson.length;i++){
-                                 var t="display:none;"
-                                 if(i ==0){
-                                      t="";
-                                 }
-                                 var html="<iframe id='i"+djson[i]+"'  src='${SITE_URL}monitor_scene/page_query_xml_show?id=";
-                                 html+=djson[i]+"' style='"+t+"width:"+vm.imgWidth+";height:850px;border:none;'></iframe>";
-                                  $("#div_sence").append(html);
-                                 //$("#div"+djson[i]).load("${SITE_URL}monitor_scene/page_query_xml_show?id="+djson[i]);
-                                 //html.hide()
-                             }
-                             vm.show_stop= setInterval(function(){
-                                  var iframe_dto = $("#div_sence iframe");
-                                  if(iframe_dto.length>0){
-                                      if(vm.show_index==(iframe_dto.length-1)){
-                                          vm.show_index = -1;
-                                      }
-                                      vm.show_index=vm.show_index+1
-                                      iframe_dto.hide();
-                                      $(iframe_dto[vm.show_index]).show();
-                                  }
-
-                               },5000);
-                         }
-                     }
-                 })
-              }
-
-          }
-      })
+    vm = new Vue({
+        el: "#main",
+        data: {
+          imgList: [],
+          imgWidth:''+(document.documentElement.clientWidth-20)+'px',
+          imgHeight: '' + (document.documentElement.clientHeight-50) + 'px',
+          region1: '1',                                                                 //岗位选择
+          position: '1',                                                                  //岗位
+          options: [],
+          show_stop:null,//暂停
+          show_index:0,
+          interval: 10,   //默认10秒
+        },
+        methods: {
+            query_scene_info:function(){
+                $.ajax({
+                    url:"${SITE_URL}monitor_scene/query_curr_user_scene"
+                    ,async:false
+                    ,type:"post"
+                    ,dataType:"json"
+                    ,success:function(data){
+                        if(vm.show_stop!=null){
+                            clearInterval(vm.show_stop);//设置停止
+                            vm.show_stop = null;
+                        }
+                        $("#div_sence").html("");
+                        if(data.message!=""){
+                            var djson = data.message ;//eval('('+data.message+')');
+                            for(var i=0;i<djson.length;i++){
+                                var t="display:none;"
+                                if(i ==0){
+                                  t="";
+                                }
+                                var html="<iframe id='i"+djson[i]+"'  src='${SITE_URL}monitor_scene/page_query_xml_show?id=";
+                                html+=djson[i]+"' style='"+t+"width:"+vm.imgWidth+";height:850px;border:none;'></iframe>";
+                                $("#div_sence").append(html);
+                                //$("#div"+djson[i]).load("${SITE_URL}monitor_scene/page_query_xml_show?id="+djson[i]);
+                                //html.hide()
+                            }
+                            vm.show_stop= setInterval(function(){
+                                var iframe_dto = $("#div_sence iframe");
+                                if(iframe_dto.length>0){
+                                    if(vm.show_index==(iframe_dto.length-1)){
+                                        vm.show_index = -1;
+                                    }
+                                    vm.show_index=vm.show_index+1
+                                    iframe_dto.hide();
+                                    $(iframe_dto[vm.show_index]).show();
+                                }
+                            },vm.interval*1000);
+                        }
+                    }
+                })
+            }
+        }
+    })
     vm.query_scene_info();
 </script>
 </body>
