@@ -1356,6 +1356,7 @@ $(function(){
             clear_review(){
                 $("#text2").html("");
                 $("#base_test_text").html("");
+                $("#maintenancePie").html("");
             },
             add_unit(row) {   //新增监控项
                 if (vm.add_pamas == 1) {
