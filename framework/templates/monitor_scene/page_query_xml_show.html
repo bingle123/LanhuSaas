@@ -103,12 +103,13 @@
                                         graph.setCellStyles(mxConstants.STYLE_FILLCOLOR,
                                            '#'+color_val, [color_cell]);
                                     }else if(calc_key == "@"){
-                                       var txt = calc_data[1]
-                                       var cell_dto =graph.getModel().cells[param_map[temp_dto["id"]]];
-                                       if(txt.indexOf("[")>-1){
-                                           txt = txt.split("[")[0]
-                                       }
-                                       cell_dto.value= txt;//取出数据
+                                        var txt = calc_data[1]
+                                        var cell_dto =graph.getModel().cells[param_map[temp_dto["id"]]];
+                                        if(txt.indexOf("[")>-1){
+                                            txt = txt.split("[")[0]
+                                        }
+                                        //对于过长的内容，这里进行换行处理
+                                        cell_dto.value= getNewline(txt);//取出数据
                                         if(temp_dto["key_val"].indexOf("@") == 0){
                                              graph.setCellStyles(mxConstants.STYLE_FILLCOLOR,
                                            '#cecece', [cell_dto]);
@@ -169,7 +170,6 @@
                    }
                        //graph.updateAlternateBounds(cell)
                 }
-
             }else{
 			    document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
             }
@@ -234,6 +234,29 @@
 			});
 			return overlay;
 		};
+		function getNewline(val) {
+            var str = new String(val);
+            var bytesCount = 0;
+            var s="";
+            for (var i = 0 ,n = str.length; i < n; i++) {
+                var c = str.charCodeAt(i);
+                //统计字符串的字符长度
+                if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) {
+                    bytesCount += 1;
+                } else {
+                    bytesCount += 2;
+                }
+                //换行
+                s += str.charAt(i);
+                if(bytesCount>=20){
+                    s = s + '\n';
+                    //重置
+                    bytesCount=0;
+                }
+            }
+            return s;
+        }
+
 	</script>
 <!-- Page passes the container and control to the main function -->
 <body onload="main(document.getElementById('graphContainer'));">
