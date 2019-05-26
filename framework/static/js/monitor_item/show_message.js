@@ -1359,6 +1359,7 @@ $(function(){
                 $("#maintenancePie").html("");
             },
             add_unit(row) {   //新增监控项
+                vm.item_id = 0;
                 vm.Initialization()
                 // 初始化清空预览
                 vm.clear_review();
