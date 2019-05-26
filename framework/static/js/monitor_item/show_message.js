@@ -288,7 +288,7 @@ $(function(){
                 monitor_type: '',                    //单元类型
                 font_size: '20',                       //字号
                 height: '20',                          //高度
-                width: '0',                            //宽度
+                width: '200',                            //宽度
                 start_time: '',                      //开始时间
                 end_time: '',                        //结束时间
                 period: '30',                          //采集周期
@@ -1359,9 +1359,7 @@ $(function(){
                 $("#maintenancePie").html("");
             },
             add_unit(row) {   //新增监控项
-                if (vm.add_pamas == 1) {
-                    vm.Initialization()
-                }
+                vm.Initialization()
                 // 初始化清空预览
                 vm.clear_review();
                 vm.add_pamas = 0;
