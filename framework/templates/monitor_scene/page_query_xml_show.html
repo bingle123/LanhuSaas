@@ -74,12 +74,23 @@
                     ,async:false
                     ,dataType:"json"
                     ,success:function(data){
+                       var ifr_data = document.getElementsByTagName("iframe");
+                       if(ifr_data.length>0){
+                           for(var i=0;i<ifr_data.length;i++){
+                               ifr_data[i].remove();
+                             //  document.body.parentElement.remove(ifr_data[i]);
+                           }
+                       }
                            if(data.message!=""){
                                var data_json = eval('('+data.message+')');
                                //darr[0]["key_name"].split(/[\r\n]/)
                                for(var temp_num in data_json){
                                    var temp_dto= data_json[temp_num];//获取对象
-
+                                   if(temp_dto["item_type"] == 2){ //为图表监控
+                                       graph.getModel().cells[param_map[temp_dto["id"]]].attribute
+                                           = temp_dto["key_name"]
+                                       continue;
+                                   }
                                   // var str_val = temp_dto["key_name"].split(/[\r\n]/);
                                    var  calc_key = "";
                                    if(temp_dto["key_val"].indexOf("@")>-1){
@@ -127,13 +138,6 @@
                                          graph.getModel().cells[param_map[temp_dto["id"]]].value
                                                        = temp_dto["key_val"];//取出数据
                                     }
-
-                                   if(temp_dto["item_type"] == 2){ //为图表监控
-                                       graph.getModel().cells[param_map[temp_dto["id"]]].attribute
-                                           = temp_dto["key_name"]
-                                       continue;
-                                   }
-
                                }
                            }
                     }
@@ -159,13 +163,18 @@
                        &&cell.parent.geometry != undefined){
                        var x = cell.parent.geometry.x;
                        var y = cell.parent.geometry.y;
-                       var ifr= document.getElementById("ifr_t");
+                       var ifr = document.createElement("iframe");
+                      // var ifr= document.getElementById("ifr_t");
+                       ifr.id="ifr"+Math.floor(Math.random()*100000+1);
                        ifr.src = cell.attribute;
                        ifr.style.position="absolute";
                        ifr.style.left=x+"px";
                        ifr.style.top= y+"px";
+                       ifr.style.width="450px";
+                       ifr.style.height="320px";
                        ifr.style.display="block";
-                       break;
+                       document.body.appendChild(ifr);
+                       continue;
                    }
                        //graph.updateAlternateBounds(cell)
                 }
