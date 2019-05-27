@@ -8,8 +8,7 @@ from gather_data import function
 from monitor_item import tools
 from celery.schedules import crontab
 import market_day.celery_opt as co
-from account.models import BkUser
-from blueking.component.shortcuts import get_client_by_user
+from iqube_interface.gather import Gather
 from datetime import datetime
 from custom_process.function import clear_execute_status
 from market_day.function import check_jobday
@@ -41,7 +40,7 @@ def gather_data_task_one(**i):
         'gather_rule': i['gather_rule'],
         'task_name': i['task_name'],
         'endtime': i['endtime'],
-        'score':i['score']
+        'score': i['score']
     }
     if check_jobday(area_id):
         co.create_task_interval(name=task_name, task='market_day.tasks.basic_monitor_task', interval_time=period,
@@ -204,53 +203,59 @@ def basic_monitor_task(**i):
 #         pass
 
 @task
-def gather_data_task_five(**i):
+def gather_data_task_five(**add_dicx):
     """
     作业监控项的采集开始任务
     :param i:
     :return:
     """
-    area_id = i['area_id']
+    area_id = add_dicx['area_id']
     period = {
-        'every': i['period'],
+        'every': add_dicx['period'],
         'period': 'seconds'
     }
-    task_name = i['task_name']
-    info = {
-        'id': id,
-        'gather_params': add_dicx['gather_params'],
-        'params': add_dicx['params'],
-        'gather_rule': add_dicx['gather_rule'],
-        'period': period,
-        'area_id': add_dicx['monitor_area'],
-        'task_name': str(schename) + 'task',
-        'endtime': endtime,
-        'score': add_dicx['score'],
-        'source_type': add_dicx['source_type'],
-        'target_name': add_dicx['target_name'],
-        'measure_name': add_dicx['measure_name'],
-        'dimension': add_dicx['dimension'],
-        'display_type': add_dicx['display_type'],
-        'display_rule': add_dicx['display_rule'],
-    }
+    task_name = add_dicx['task_name']
+    info = add_dicx
     if check_jobday(area_id):
         co.create_task_interval(name=task_name, task='market_day.tasks.base_monitor_task', interval_time=period,
                                 task_args=info, desc=task_name)
     else:
         pass
 
-@task
-def base_monitor_task(**i):
-    endtime = i['endtime']
-    task_name = i['task_name']
+
+# @task
+def base_monitor_task(**add_dicx):
+    endtime = add_dicx['endtime']
+    task_name = add_dicx['task_name']
+    dimension_data = add_dicx['dimension']
+    # 指标的构造参数
+    dimension = '{hostname=*}'
+    if dimension_data != None:
+        for i in dimension_data:
+            key = i['dimension_name']
+            value = i['dimension_value']
+            dimension += '{' + key + '=' + value + '}'
+    interface_type = add_dicx['source_type']
+    if 0 == interface_type:
+        interface_type = 'log'
+    elif interface_type == 1:
+        interface_type = 'measures'
+    else:
+        interface_type = None
+    measures_name = add_dicx['measure_name']
+    measures = add_dicx['target_name']
+    show_rule_type = add_dicx['display_type']
+    gather_rule = add_dicx['display_rule']
     # 逾期删除本任务
     strnow = datetime.strftime(datetime.now(), '%H:%M')
     if strnow <= endtime:
         # 调用一体化监控项数据采集的方法
-        print 'fa'
+        Gather.gather_base_test(interface_type=interface_type, measures=measures, measures_name=measures_name,
+                                show_rule_type=show_rule_type, gather_rule=gather_rule, interface_param=dimension)
     else:
         print u'删除' + task_name
         co.delete_task(task_name)
+
 
 @task
 def count_time(**i):
