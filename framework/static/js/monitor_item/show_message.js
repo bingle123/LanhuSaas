@@ -1843,7 +1843,6 @@ $(function(){
                     vm.get_gather_test();
                     //预览采集，调用预览组件
                     preview_monitor_item(vm, 'monitor_item', "#base_test_text");
-                    base_monitor_show_reset();
                 }
             },
             change_data_sources(value) {

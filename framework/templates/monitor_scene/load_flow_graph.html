@@ -85,7 +85,8 @@
                         txtNet = '流量;2M/S';
                     }
 
-                    cell.value = txtCpu;
+                    cell[0].value = txtCpu;
+                    cell[1].value = txtCpu
                     cell1.value = txtNet;
                     graph.setCellStyles(mxConstants.STYLE_FILLCOLOR, 'white', [cell]);
                     graph.removeCellOverlays(cell);
