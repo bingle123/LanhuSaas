@@ -223,7 +223,7 @@ def gather_data_task_five(**add_dicx):
         pass
 
 
-# @task
+@task
 def base_monitor_task(**add_dicx):
     endtime = add_dicx['endtime']
     task_name = add_dicx['task_name']
