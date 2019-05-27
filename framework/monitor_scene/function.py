@@ -966,7 +966,9 @@ def query_scene_item_data_handle(list_id):
     for dto_item_id in list_id:
         if  dto_item_id.isdigit():  # 验证是否为数字
             item_ids.append(dto_item_id)
+    # 取得场景中的所有监控项
     list_dto_item = Monitor.objects.filter(id__in=item_ids)
+    # 取得所有监控项的采集数据
     list_dto_gather = TDGatherData.objects.filter(item_id__in=item_ids)
     arr_dto_dt ={}
     arr_db_map = {} #id加数据
