@@ -179,6 +179,9 @@ $(function(){
                 this.customProcessNotifyButtonType = 'info';
                 this.customProcessNotifyButtonDisabled = true;
                 var url = site_url + 'custom_process/send_notification';
+               // console.log('document.getElementById("spanid").innerHTML==='+document.getElementById("spanid").innerHTML)
+               this.customProcessNoticeContent = document.getElementById("spanid").innerHTML
+               //console.log('this.customProcessNoticeContent==='+this.customProcessNoticeContent)
                 var nofityData = {
                     'receivers': this.customProcessReceivers,
                     'content': this.customProcessNoticeContent,

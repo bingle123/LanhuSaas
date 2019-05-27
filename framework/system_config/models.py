@@ -66,3 +66,13 @@ class SceneType(models.Model):
         verbose_name = u'场景分组'
         verbose_name_plural = u'场景分组'
         db_table = "system_config_scenetype"
+
+class SysBoard(models.Model):
+    """
+    看板标题表
+    """
+    id =  models.IntegerField(u'ID', primary_key=True, auto_created=True)
+    boardTitle = models.CharField(verbose_name=u'看板项目名称', max_length=255)
+
+    class Meta:
+        db_table = 'sys_board'
