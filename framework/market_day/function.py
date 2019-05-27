@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 from models import Holiday, HeaderData, Area
 import os
-# from xlrd import open_workbook
 from monitor_item.models import Monitor
 from django.forms import model_to_dict
 from django.db.models import Q
@@ -12,6 +11,7 @@ from datetime import datetime
 import pytz
 from shell_app.function import get_user
 from settings import BK_PAAS_HOST
+from iqube_interface.gather import Gather
 
 
 def get_holiday(req, area):
@@ -109,7 +109,6 @@ def add_unit_task(add_dicx):
     :return:
     """
     type = add_dicx['monitor_type']
-    print type
     schename = add_dicx['monitor_name']
     id = Monitor.objects.filter(monitor_name=schename).last().id
     schename = str(id)
