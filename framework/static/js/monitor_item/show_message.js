@@ -404,6 +404,10 @@ $(function(){
                         //采集测试的数据缓存到gather_data_test_data变量中
                         console.log(data.results)
                         vm.gather_test_data = data.results;
+                        if(data.results.length = 0){
+                           vm.$alert("当前指标未采集到任何数据！", "错误");
+                           return false;
+                        }
                         return true;
                     },
                     error: function (error) {
@@ -1945,9 +1949,6 @@ $(function(){
                 }else
                 if(vm.base.show_rule_type == ""){//展示规则
                     vm.$alert("请选择数展示规则","提示");
-                    return false;
-                }else if(vm.base.gather_rule == ""){//采集规则
-                    vm.$alert("请录入采集规则","提示");
                     return false;
                 }else if(vm.base.show_rule_type == "0"){//选百分比校验
                     if(vm.base.gather_rule != "" && vm.base.gather_rule !="100" && vm.base.gather_rule !="1000"){
