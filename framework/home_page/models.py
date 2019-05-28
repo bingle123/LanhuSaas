@@ -21,6 +21,7 @@ class AlertInfo(models.Model):
     alert_status_code = models.CharField(max_length=10, verbose_name=u"状态代码",  blank=True, null=True)
     alert_status_name = models.CharField(max_length=50, verbose_name=u"状态名称",  blank=True, null=True)
     modify_time = models.DateTimeField(verbose_name=u"最后一次修改时间", blank=True, null=True)
+    scene_id = models.IntegerField(verbose_name=u"场景id", blank=True, null=True)
 
     class Meta:
         managed = False

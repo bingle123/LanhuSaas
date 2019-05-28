@@ -147,13 +147,21 @@ def query_alert_data(req):
     res = json.loads(req.body)
     alertTime = res.get("alertTime")
     alertLevel = res.get("alertLevel")
+    user_dto = user_info.objects.filter(user_name=req.user.username)
+    user_vo =user_dto.get()
+    pos_list = position_scene.objects.filter(position_id=user_vo.user_pos_id)
+    pos_ids = []
+    for pos_dto in pos_list:
+        pos_ids.append(pos_dto.scene_id)
     time_str = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(alertTime/1000))
     if alertLevel!=None and alertLevel!="-1":
-        data = AlertInfo.objects.\
-            filter(alert_status_code=alertLevel)\
+        data = AlertInfo.objects\
+            .filter(Q(scene_id__isnull=True) | Q(scene_id__in=pos_ids)) \
+            .filter(alert_status_code=alertLevel)\
             .filter(alert_time__gte=time_str)
     else:
         data = AlertInfo.objects\
+            .filter(Q(scene_id__isnull=True)|Q(scene_id__in=pos_ids))\
             .filter(alert_time__gte=time_str)
     if data.count() > 0:
       #  res_data = data.values_list()
