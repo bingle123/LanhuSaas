@@ -1400,7 +1400,7 @@ $(function(){
                     }
                     if(vm.basic.end_time <= vm.basic.start_time){
                         vm.unit_id = -1;
-                        vm.message = '结束时间!'
+                        vm.message = '结束时间必须大于开始时间!'
                         this.$alert(vm.message, "提示");
                         return false;
                     }
@@ -1447,6 +1447,12 @@ $(function(){
                     //上传数据至服务器保存
                     vm.monitor_data_save(flow);
                 }else if (vm.monitor_type == 'five') {
+                    if(vm.base.end_time <= vm.base.start_time){
+                        vm.unit_id = -1;
+                        vm.message = '结束时间必须大于开始时间!'
+                        this.$alert(vm.message, "提示");
+                        return false;
+                    }
                     //判断是否已经进行采集测试
                     if (null != this.gather_data_test_flag && false == this.gather_data_test_flag) {
                         //vm.message ="采集测试未通过，请校正接口调用参数或稍后重试！\", \"错误\""
