@@ -33,19 +33,3 @@ class user_info(models.Model):
     class Meta:
         verbose_name = u'用户信息表'
         db_table = 'tb_user_info'
-
-
-class td_pos_info(models.Model):
-    """
-        岗位信息表
-    """
-    id = models.IntegerField(u'序号', primary_key=True, auto_created=True)
-    pos_name = models.CharField(verbose_name=u'岗位名称', max_length=50,)
-    create_time = models.DateTimeField(verbose_name=u"创建时间", null=True, auto_now_add=True)
-    creator = models.CharField(verbose_name=u'岗位名称', max_length=50, )
-    edit_time = models.DateTimeField(verbose_name=u"编辑时间", null=True, auto_now_add=True)
-    editor = models.CharField(verbose_name=u'编辑人', max_length=50, )
-
-    class Meta:
-        verbose_name = u'岗位信息表'
-        db_table = 'tb_pos_info'

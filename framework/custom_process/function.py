@@ -3,7 +3,6 @@
 from models import TbCustProcess
 from models import TdCustProcessLog
 from position.models import user_info
-from position.models import td_pos_info
 from django.forms.models import model_to_dict
 import urllib
 import urllib2
@@ -123,26 +122,19 @@ def add_node(node):
 
 def select_all_bkusers():
     """
-    # 获取所有已设置通知方式的蓝鲸用户信息
-    获取所有岗位，发送给岗位下的所有人
+    获取所有已设置通知方式的蓝鲸用户信息
     :return:
     """
     users_list = list()
     # 获取用户通知方式不为空的记录
-    #bk_users = user_info.objects.all().filter(notice_style__isnull=False)
-    #for bk_user in bk_users:
+    bk_users = user_info.objects.all().filter(notice_style__isnull=False)
+    for bk_user in bk_users:
         # 通知方式必须为微信、短信、邮件的一种
-    #    if bk_user.notice_style not in ('wechat','sms','email'):
-    #        continue
-    #   user_dict = model_to_dict(bk_user)
-    #    users_list.append(user_dict)
-    #return users_list
-    bk_pos = td_pos_info.objects.all()
-    for bk_user in bk_pos:
+        if bk_user.notice_style not in ('wechat','sms','email'):
+            continue
         user_dict = model_to_dict(bk_user)
         users_list.append(user_dict)
     return users_list
-
 
 
 def update_node_status(node):

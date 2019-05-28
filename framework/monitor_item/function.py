@@ -313,7 +313,6 @@ def add_unit(request):
                 monitor_type = 1
             if res['monitor_type'] == 'second':
                 monitor_type = 2
-                add_dic['gather_rule'] = res['data']['display_rule']
             if res['monitor_type'] == 'third':
                 monitor_type = 3
                 #  作业监控项的把作业id和name分别存放
@@ -348,10 +347,12 @@ def add_unit(request):
             last_node = Monitor.objects.create(**add_dic)
             # 添加定时任务监控要求本地安装任务调度软件rabitmq
             # 正式环境服务器一般带有这个调度软件，如果没有就要安装
+            """
             if res['monitor_type'] == 'fourth':
                 function.add_unit_task(add_dicx=add_flow_dic)
             else:
                 function.add_unit_task(add_dicx=add_dic)
+            """
             result = tools.success_result(None)
             result['item_id'] = last_node.id
             # 修改获取用户的方式，直接从request中获取

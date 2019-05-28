@@ -132,8 +132,6 @@ $(function () {
                 this.isAdd = 1;
                 ve.current_change(ve.currentPage)
                 ve.name_flag=true
-               // ve.$refs[ve.addmuenus].resetFields();
-                this.addmuenus = {};
             },
 
             rowClass({row, rowIndex}) {
