@@ -404,7 +404,7 @@ $(function(){
                         //采集测试的数据缓存到gather_data_test_data变量中
                         console.log(data.results)
                         vm.gather_test_data = data.results;
-                        if(data.results.length = 0){
+                        if(data.results.length == 0){
                            vm.$alert("当前指标未采集到任何数据！", "错误");
                            return false;
                         }
