@@ -18,6 +18,7 @@ $(function(){
             isAdd: 1,
             tableData: [],
             editDataBase:[],
+            connection_test:false,
             addconn: {
                 connname:'',
                 type:'',
@@ -118,17 +119,20 @@ $(function(){
             },
             //保存
             saveconn(formName){
+                if(!ve.test_connection("add")){
+                    alert('测试连接没有通过，不能保存');
+                    return false;
+                }
                this.$refs[formName].validate((valid) => {
                     if (!valid) {
                         alert('验证不通过');
                         return false;
                     }else {
-                        this.addconn.password = Base64.encode(this.addconn.password)
                         axios.post(
                             site_url+'db_connection/saveconn/',this.addconn
                         ).then(function (res) {
-                            console.log(res);
                             if(res.data.code == 0){
+                                alert("新增连接测试成功");
                                 ve.hide()
                             }
                         });
@@ -140,9 +144,12 @@ $(function(){
                 this.isAdd = 3
                 this.editDataBase=row
             },
-
             //修改
             editConn(formName){
+                if(!ve.test_connection("edit")){
+                    alert('测试连接没有通过，不能保存');
+                    return false;
+                }
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
                         alert('验证不通过');
@@ -151,6 +158,7 @@ $(function(){
                         axios.post(site_url+'db_connection/editconn/',this.editDataBase)
                         .then((res)=>{
                             if(res.data.message != null){
+                                alert("修改连接配置成功");
                                 this.isAdd = 1
                                 ve.conn()
                             }
@@ -188,25 +196,49 @@ $(function(){
             },
             //数据库连接测试
             testConn(formName){
-                console.log(this.addconn)
+                //console.log(this.addconn)
                 this.$refs[formName].validate((valid) => {
                     if (!valid) {
                         alert('验证不通过');
                         return false;
                     }else {
-                        this.addconn.password = Base64.encode(this.addconn.password);
-                        axios.post(site_url+'db_connection/testConn/',this.addconn)
-                            .then((res)=>{
-                            if(res.data.code == 0){
-                                 alert("数据库连接成功")
-                            }else{
-                                alert("数据库连接失败")
-                            }
-                            this.addconn.password = Base64.decode(this.addconn.password)
-                        })
+                        if(ve.test_connection("add")){
+                            alert("连接测试通过");
+                        }else {
+                            alert("连接测试没有通过");
+                        }
                     }
                 })
-
+            },
+            test_connection(type){//连接测试
+                let result = false;
+                let data = {};
+                if(type == "add"){
+                    data = JSON.stringify(this.addconn);
+                }
+                if(type == "edit"){
+                    data = JSON.stringify(this.editDataBase);
+                }
+                //同步连接测试校验
+                $.ajax({
+                    type: "POST",
+                    data: data,
+                    dataType: "JSON",
+                    async: false,
+                    url: site_url+"db_connection/testConn/",
+                    success: function (res) {
+                        if(res.code == 0){
+                            result = true;
+                            return result;
+                        }else{
+                            return result;
+                        }
+                    },
+                    error: function (error) {
+                        return result;
+                    }
+                });
+                return result;
             },
             //测试2
             textconn2(formName){
@@ -215,24 +247,14 @@ $(function(){
                         alert('验证不通过');
                         return false;
                     }else {
-                        this.editDataBase.password = Base64.encode(this.editDataBase.password);
-                        axios.post(site_url+'db_connection/testConn/',this.editDataBase)
-                            .then((res)=>{
-                        if(res.data.code == 0){
-                             alert("数据库连接成功")
-                        }else{
-                            alert("数据库连接失败")
+                        if(ve.test_connection("edit")){
+                            alert("连接测试通过");
+                        }else {
+                            alert("连接测试没有通过");
                         }
-                    })
                     }
                 })
-
             },
-            //jlq-2019-05-23-add-编辑密码框的值发生改变时
-            changePass(){
-               // alert('jlq');
-                this.editDataBase.password = Base64.encode(this.editDataBase.password)
-            }
         }
     });
     ve.conn()
