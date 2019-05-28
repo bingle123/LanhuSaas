@@ -390,6 +390,7 @@ $(function(){
             },
             //获取采集测试的结果，同步调用
             get_gather_test() {
+                let result= false;
                 $.ajax({
                     type: "POST",
                     data: JSON.stringify(vm.base),
@@ -399,22 +400,23 @@ $(function(){
                     success: function (data) {
                         if (0 != data.code) {
                             vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
-                            return false;
+                            result =  false;
                         }
                         //采集测试的数据缓存到gather_data_test_data变量中
                         console.log(data.results)
                         vm.gather_test_data = data.results;
                         if(data.results.length == 0){
                            vm.$alert("当前指标未采集到任何数据！", "错误");
-                           return false;
+                           result = false;
                         }
-                        return true;
+                        result = true;
                     },
                     error: function (error) {
                         vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
-                        return false;
+                        result = false;
                     }
                 });
+                return result;
             },
             //基本监控项（修改后）显示内容变更时调用的预览变更方法
             content_modified_change() {
@@ -1968,8 +1970,9 @@ $(function(){
                     vm.$alert("请选择数展示规则","提示");
                     return false;
                 }else if(vm.base.show_rule_type == "0"){//选百分比校验
-                    if(vm.base.gather_rule != "" && vm.base.gather_rule !="100" && vm.base.gather_rule !="1000"){
-                        vm.$alert("百分比采集规则的值只能是'100'或'1000'","提示");
+                    var regu = /^\+?[1-9][0-9]*$ /;
+                    if(!regu.test(vm.base.show_rule_type)){
+                        vm.$alert("百分比采集规则的值只能是数据类型","提示");
                         return false;
                     }
                 }else if(vm.base.show_rule_type == "1" || vm.base.show_rule_type == "2"){//选颜色和其它校验
