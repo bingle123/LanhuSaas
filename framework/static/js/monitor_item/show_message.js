@@ -399,15 +399,20 @@ $(function(){
                     success: function (data) {
                         if (0 != data.code) {
                             vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
-                            return;
+                            return false;
                         }
                         //采集测试的数据缓存到gather_data_test_data变量中
                         console.log(data.results)
                         vm.gather_test_data = data.results;
+                        if(data.results.length == 0){
+                           vm.$alert("当前指标未采集到任何数据！", "错误");
+                           return false;
+                        }
+                        return true;
                     },
                     error: function (error) {
                         vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
-                        return;
+                        return false;
                     }
                 });
             },
@@ -1404,6 +1409,12 @@ $(function(){
                         this.$alert(vm.message, "提示");
                         return false;
                     }
+                    if(vm.basic.end_time <= vm.basic.start_time){
+                        vm.unit_id = -1;
+                        vm.message = "采集时间段'结束时间'必须大于'开始时间'!"
+                        this.$alert(vm.message, "提示");
+                        return false;
+                    }
                     if($("#text2").html() == ""){
                         vm.unit_id = -1;
                         vm.message = "请选点击’采集测试‘按钮，确认采集正常后再保存!"
@@ -1438,73 +1449,21 @@ $(function(){
                         this.$alert(vm.message, "提示");
                         return false;
                     }
-                    //上传数据至服务器保存
-                    vm.monitor_data_save(flow);
-                } else if (vm.monitor_type == 'third') {
-                    vm.result_data = vm.job;
-                    vm.job.monitor_name = vm.monitor_name;
-                    vm.job.monitor_type = vm.monitor_type;
-                    if (vm.job.gather_rule == '') {
+                    if(vm.chart.end_time <= vm.chart.start_time){
                         vm.unit_id = -1;
-                        vm.message = '请选择作业模板!'
-                    }
-                    var reg = /^(?:(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:1[0-9][0-9]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:2[0-4][0-9])|(?:25[0-5])|(?:1[0-9][0-9])|(?:[1-9][0-9])|(?:[0-9]))$/;
-                    var re = new RegExp(reg);
-                    if (vm.job.params == null || vm.job.params == '') {
-                        vm.unit_id = -1;
-                        vm.message = "IP不可为空!";
-                    }
-                    if (!re.test(vm.job.params)) {
-                        vm.unit_id = -1;
-                        vm.message = "请填写有效的IP地址!";
-                    }
-                    if (vm.job.start_time == '') {
-                        vm.unit_id = -1;
-                        vm.message = '请选择开始时间!'
-                    }
-                    if (vm.job.end_time == '') {
-                        vm.unit_id = -1;
-                        vm.message = '请选择结束时间!'
+                        vm.message = "采集时间段'结束时间'必须大于'开始时间'!"
+                        this.$alert(vm.message, "提示");
+                        return false;
                     }
                     //上传数据至服务器保存
                     vm.monitor_data_save(flow);
-                } else if (vm.monitor_type == 'fourth') {
-                    vm.result_data = vm.flow;
-                    vm.flow.monitor_name = vm.monitor_name;
-                    vm.flow.monitor_type = vm.monitor_type;
-                    if (vm.flow.gather_rule == '') {
+                }else if (vm.monitor_type == 'five') {
+                    if(vm.base.end_time <= vm.base.start_time){
                         vm.unit_id = -1;
-                        vm.message = '请选择流程模板!'
+                        vm.message = "采集时间段'结束时间'必须大于'开始时间'!"
+                        this.$alert(vm.message, "提示");
+                        return false;
                     }
-                    var node_times = [];
-                    for (var i = 4; i <= vm.location.length - 1; i++) {
-                        node_time.node_id = vm.location[i].id ,
-                            node_time.starttime = $('#' + vm.location[i].id + '').find('.start_time').text(),
-                            node_time.endtime = $('#' + vm.location[i].id + '').find('.end_time').text()
-                        node_time.node_name = $('#' + vm.location[i].id + '').find('.node-title').text()
-                        if (node_time.starttime == "") {
-                            vm.unit_id = -1;
-                            vm.message = '请配置每个节点的开始时间';
-                        } else if (node_time.endtime == "") {
-                            vm.unit_id = -1;
-                            vm.message = '请配置每个节点的结束时间';
-                        }
-                    }
-                    node_times.push(node_time);
-                    flow.node_times = node_times;
-                    flow.monitor_name = vm.monitor_name;
-                    flow.monitor_type = vm.monitor_type;
-                    console.log(vm.flow.gather_rule);
-                    flow.jion_id = vm.flow.gather_rule[0].id;
-                    flow.font_size = vm.flow.font_size;
-                    flow.height = vm.flow.height;
-                    flow.width = vm.flow.width;
-                    flow.period = vm.flow.period;
-                    flow.constants = vm.constants;
-                    //上传数据至服务器保存
-                    vm.monitor_data_save(flow);
-                    //修改后的基本监控项的数据上传处理
-                } else if (vm.monitor_type == 'five') {
                     //判断是否已经进行采集测试
                     if (null != this.gather_data_test_flag && false == this.gather_data_test_flag) {
                         //vm.message ="采集测试未通过，请校正接口调用参数或稍后重试！\", \"错误\""
@@ -1513,11 +1472,14 @@ $(function(){
                         return false;
                     } else if (null == this.gather_data_test_flag) {
                         //获取采集测试数据，调用同步服务
-                        vm.get_gather_test();
-                        //基本监控项的数据处理
-                        vm.base_monitor_data_process();
-                        //上传监控项数据至服务器保存
-                        vm.monitor_data_save(flow);
+                        if(vm.get_gather_test()){
+                            //基本监控项的数据处理
+                            vm.base_monitor_data_process();
+                            //上传监控项数据至服务器保存
+                            vm.monitor_data_save(flow);
+                        }else{
+                            return false;
+                        }
                     } else {
                         //基本监控项的数据处理
                         vm.base_monitor_data_process();
@@ -2005,9 +1967,6 @@ $(function(){
                 if(vm.base.show_rule_type == ""){//展示规则
                     vm.$alert("请选择数展示规则","提示");
                     return false;
-                }else if(vm.base.gather_rule == ""){//采集规则
-                    vm.$alert("请录入采集规则","提示");
-                    return false;
                 }else if(vm.base.show_rule_type == "0"){//选百分比校验
                     if(vm.base.gather_rule != "" && vm.base.gather_rule !="100" && vm.base.gather_rule !="1000"){
                         vm.$alert("百分比采集规则的值只能是'100'或'1000'","提示");
@@ -2026,9 +1985,12 @@ $(function(){
             base_cell_test() {
                 if(vm.collection_test_validate()){
                     //同步获取采集数据
-                    vm.get_gather_test();
-                    //预览采集，调用预览组件
-                    preview_monitor_item(vm, 'monitor_item', "#base_test_text");
+                    if(vm.get_gather_test()){
+                       //预览采集，调用预览组件
+                        preview_monitor_item(vm, 'monitor_item', "#base_test_text");
+                    }else{
+                        return false;
+                    }
                 }
             },
             change_data_sources(value) {

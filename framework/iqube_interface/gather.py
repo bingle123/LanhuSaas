@@ -176,7 +176,7 @@ class Gather():
             map['time'] = max_time
             appsystem = i['tags']['appsystem']
             ip = i['tags']['ip']
-            map['system_name'] = appsystem
+            map['appsystem'] = appsystem
             map['ip'] = ip
 
             map['metric_max'] = metric_max
