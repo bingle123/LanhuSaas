@@ -399,15 +399,16 @@ $(function(){
                     success: function (data) {
                         if (0 != data.code) {
                             vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
-                            return;
+                            return false;
                         }
                         //采集测试的数据缓存到gather_data_test_data变量中
                         console.log(data.results)
                         vm.gather_test_data = data.results;
+                        return true;
                     },
                     error: function (error) {
                         vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
-                        return;
+                        return false;
                     }
                 });
             },
@@ -1450,11 +1451,14 @@ $(function(){
                         return false;
                     } else if (null == this.gather_data_test_flag) {
                         //获取采集测试数据，调用同步服务
-                        vm.get_gather_test();
-                        //基本监控项的数据处理
-                        vm.base_monitor_data_process();
-                        //上传监控项数据至服务器保存
-                        vm.monitor_data_save(flow);
+                        if(vm.get_gather_test()){
+                            //基本监控项的数据处理
+                            vm.base_monitor_data_process();
+                            //上传监控项数据至服务器保存
+                            vm.monitor_data_save(flow);
+                        }else{
+                            return false;
+                        }
                     } else {
                         //基本监控项的数据处理
                         vm.base_monitor_data_process();
@@ -1963,9 +1967,12 @@ $(function(){
             base_cell_test() {
                 if(vm.collection_test_validate()){
                     //同步获取采集数据
-                    vm.get_gather_test();
-                    //预览采集，调用预览组件
-                    preview_monitor_item(vm, 'monitor_item', "#base_test_text");
+                    if(vm.get_gather_test()){
+                       //预览采集，调用预览组件
+                        preview_monitor_item(vm, 'monitor_item', "#base_test_text");
+                    }else{
+                        return false;
+                    }
                 }
             },
             change_data_sources(value) {
