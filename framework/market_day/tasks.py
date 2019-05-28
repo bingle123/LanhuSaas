@@ -204,35 +204,19 @@ def basic_monitor_task(**i):
 #         pass
 
 @task
-def gather_data_task_five(**i):
+def gather_data_task_five(**add_dicx):
     """
     作业监控项的采集开始任务
     :param i:
     :return:
     """
-    area_id = i['area_id']
+    area_id = add_dicx['area_id']
     period = {
-        'every': i['period'],
+        'every': add_dicx['period'],
         'period': 'seconds'
     }
-    task_name = i['task_name']
-    info = {
-        'id': id,
-        'gather_params': add_dicx['gather_params'],
-        'params': add_dicx['params'],
-        'gather_rule': add_dicx['gather_rule'],
-        'period': period,
-        'area_id': add_dicx['monitor_area'],
-        'task_name': str(schename) + 'task',
-        'endtime': endtime,
-        'score': add_dicx['score'],
-        'source_type': add_dicx['source_type'],
-        'target_name': add_dicx['target_name'],
-        'measure_name': add_dicx['measure_name'],
-        'dimension': add_dicx['dimension'],
-        'display_type': add_dicx['display_type'],
-        'display_rule': add_dicx['display_rule'],
-    }
+    task_name = add_dicx['task_name']
+    info = add_dicx
     if check_jobday(area_id):
         co.create_task_interval(name=task_name, task='market_day.tasks.base_monitor_task', interval_time=period,
                                 task_args=info, desc=task_name)
