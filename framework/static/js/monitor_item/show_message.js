@@ -466,9 +466,9 @@ $(function(){
                     &&vm.base["max_"+obj]!=""){
                    var min = parseFloat(vm.base["min_"+obj]);
                    var max = parseFloat(vm.base["max_"+obj]);
-                   if(min>=max){
+                   if(min>max){
                        vm.base["max_"+obj]="";
-                       this.$alert("最小值不能大于或等于最大值", "提示");
+                       this.$alert("最小值不能大于最大值", "提示");
                    }
                 }
             },
