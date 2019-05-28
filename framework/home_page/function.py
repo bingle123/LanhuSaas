@@ -225,19 +225,36 @@ def query_curr_sences(request):
 
 
 def scenes_item_list(request):
-   '''
-   场景类型查询监控
-   :param request:
-   :return:
-   '''
-   #监控项类型 0 正在执行 1 异常  2 提醒 3未执行
-   item_type = request.POST.get("item_type")
-   scene_type = request.POST.get("scene_type")
-   start_time =request.POST.get("startTime")
-   stop_time = request.POST.get("stopTime")
 
-   #查询场景
-   sql_str =" SELECT	a.id AS scene_id,a.scene_name AS scene_name,c.id,c.monitor_name AS scene_node," \
+    """
+    场景类型查询监控
+    :param request:
+    :return:
+    """
+    #监控项类型 0 正在执行 1 异常  2 提醒 3未执行
+    item_type = request.POST.get("item_type")
+    scene_type = request.POST.get("scene_type")
+
+    # 获取用户信息
+    user = user_info.objects.get(user_name=request.user.username)
+    # 取得用户的岗位
+    position_id = model_to_dict(user)['user_pos']
+    # 取得岗位下的所有场景
+    ps = position_scene.objects.filter(position_id=position_id)
+    result = "";
+    result+=("(")
+    if ps.exists():
+        for scene_obj in ps:
+            result+=("'")
+            result+=(str(model_to_dict(scene_obj)['scene']))
+            result+=("'")
+            result+=(",")
+        result = result[:-1]
+        result += (")")
+
+
+    #查询场景
+    sql_str =" SELECT	a.id AS scene_id,a.scene_name AS scene_name,c.id,c.monitor_name AS scene_node," \
             " c.start_time,c.end_time, " \
             " CASE WHEN TIMESTAMPDIFF(MINUTE,c.start_time,CURRENT_TIME ) > 0" \
             "            AND TIMESTAMPDIFF( MINUTE 	,c.end_time,CURRENT_TIME) < 0 " \
@@ -256,25 +273,27 @@ def scenes_item_list(request):
             "         END     " \
             "     ) " \
             "     ELSE '未执行'" \
-            " END" \
-            " FROM tb_monitor_scene a " \
-            " JOIN tl_scene_monitor b ON a.id = b.scene_id "
-   if scene_type != None:
-       sql_str=sql_str+" AND a.scene_type_id = '"+scene_type.decode('utf-8').encode('gb18030') +"' "
-   if start_time!=None:
-       sql_str=sql_str+"  AND a.scene_startTime >= '"+start_time.decode('utf-8').encode('gb18030') +"' "
-   if stop_time!=None:
-       sql_str=sql_str+" AND a.scene_endTime <= '"+stop_time.decode('utf-8').encode('gb18030') +"' "
+            " END FROM "
+    if scene_type == "":
+        sql_str = sql_str+ " ( SELECT * FROM tb_monitor_scene a WHERE a.id IN "+result+" ) a "\
+                           " JOIN tl_scene_monitor b ON a.id = b.scene_id "
+    if scene_type != "":
+        sql_str = sql_str + " ( SELECT a.* FROM tb_monitor_scene a,"\
+            " (SELECT start_time,stop_time FROM system_config_scenetype a "\
+            "	WHERE a.scene_type_id = '"+scene_type.decode('utf-8').encode('gb18030') +"' "\
+            ") b WHERE a.scene_startTime >= b.start_time "\
+            " AND a.scene_endTime <= b.stop_time) a " \
+            " JOIN tl_scene_monitor b ON a.id = b.scene_id AND a.id in"+result
 
-   sql_str = sql_str+" JOIN tb_monitor_item c ON b.item_id = c.id " \
-            "  JOIN td_gather_data d ON b.item_id = d.item_id"
-   db = get_db()
-   cursor = db.cursor()
-   cursor.execute(sql_str)
-   res = cursor.fetchall()
-   cursor.close()
-   res_data=[]
-   if len(res) > 0:
+    sql_str = sql_str+" JOIN tb_monitor_item c ON b.item_id = c.id " \
+            "  JOIN td_gather_data d ON b.item_id = d.item_id "
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(sql_str)
+    res = cursor.fetchall()
+    cursor.close()
+    res_data=[]
+    if len(res) > 0:
        map={} # 0 正在执行 1 异常  2 提醒 3未执行
        map["0"]="正在执行"
        map["1"] = "异常"
@@ -293,21 +312,8 @@ def scenes_item_list(request):
            dt["end_time"] = str(dto_db[5])
            dt["scene_status"] = dto_db[6]
            res_data.append(dt)
-   return res_data
+    return res_data
 
-    # scenes_id = request.POST.get("scenes_id")
-    # data_list = Monitor.objects.filter(scene_id=scenes_id)
-    # scene_dto = Scene.objects.filter(scene_id= scenes_id).get()
-    # if data_list.count()>0:
-    #     for dto in data_list:
-    #         dt = model_to_dict(dto)
-    #         res_dto = {}
-    #         res_dto["scene_id"] = scene_dto.scene_name
-    #         res_dto["scene_id"] = scene_dto.scene_id
-    #         res_dto["scene_node"] = dt.get("monitor_name")
-    #         res_dto["start_time"] = "";
-    #         res_dto["end_time"] = "";
-    #         res_dto["scene_status"]
 
 #   张美庆 2019-5-11
 #   在界面展示各系统运行情况

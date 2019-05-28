@@ -409,23 +409,7 @@
         data: {
             percentage:0,
             customQueryTableData: null,
-            options1: [
-                {
-              value: '选项1',
-              label: '黄金糕'
-            }, {
-              value: '选项2',
-              label: '双皮奶'
-            }, {
-              value: '选项3',
-              label: '蚵仔煎'
-            }, {
-              value: '选项4',
-              label: '龙须面'
-            }, {
-              value: '选项5',
-              label: '北京烤鸭'
-            }],
+            options1: [],
             value1:'',
             options2: [
                 {value:'-1',label:'全部'},
@@ -826,6 +810,7 @@
                 }
                 ,
             query_scene_data:function(){
+                debugger
                 var para_data={};
                 para_data["item_type"] = ve.value2;
                 para_data["scene_type"] = ve.value1;
