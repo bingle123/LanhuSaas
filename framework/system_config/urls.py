@@ -33,5 +33,7 @@ urlpatterns = patterns(
     (r'^crawl/$', 'crawl'),  # 爬虫测试用例
     (r'^test', 'test'),  # 测试专用
    # (r'^ywzl_panorama', 'ywzlPanorama_html'),  # 测试专用
+    (r'^update_board/(.+)/$', 'update_board'),  # 看板标题修改
+    (r'^selectBoard/$', 'selectBoard'),  # 查询看板标题
 
 )
