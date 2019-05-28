@@ -461,6 +461,17 @@ $(function(){
                 }
                 //彭英杰20190527 end
             },
+            base_blur_com_size:function(obj){
+                if(vm.base["min_"+obj]!=""
+                    &&vm.base["max_"+obj]!=""){
+                   var min = parseFloat(vm.base["min_"+obj]);
+                   var max = parseFloat(vm.base["max_"+obj]);
+                   if(min>=max){
+                       vm.base["max_"+obj]="";
+                       this.$alert("最小值不能大于或等于最大值", "提示");
+                   }
+                }
+            },
             //监控项展示规则 百分比
             base_fun_per:function(){
               vm.base.gather_rule=$("#iptPerVal").val();
