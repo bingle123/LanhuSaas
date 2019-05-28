@@ -1076,13 +1076,14 @@
                                   <el-form-item label="值域范围"  style="width: 90%">
                                     <el-row>
                                         <el-col :span="6">
-                                            <el-input v-model="base.min_1" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.min_1" @blur="base_blur_com_size(1)" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
-                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="1" align="center">-</el-col>
                                         <el-col :span="6">
-                                            <el-input  v-model="base.max_1" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input  v-model="base.max_1" @blur="base_blur_com_size(1)" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
-                                        <el-col :span="5" :push="4">
+                                        <el-col :span="8" >
+                                            是否启用
                                              <el-checkbox v-model="base.chk_1"  @change="base_fun_color"></el-checkbox>
                                             绿色
                                         </el-col>
@@ -1091,13 +1092,14 @@
                                   <el-form-item label="值域范围"  style="width: 90%">
                                     <el-row>
                                         <el-col :span="6">
-                                            <el-input v-model="base.min_2" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.min_2" @blur="base_blur_com_size(2)" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
-                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="1" align="center">-</el-col>
                                         <el-col :span="6">
-                                            <el-input v-model="base.max_2" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.max_2" @blur="base_blur_com_size(2)" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
-                                        <el-col :span="5" :push="4">
+                                        <el-col :span="8" >
+                                            是否启用
                                              <el-checkbox v-model="base.chk_2"  @change="base_fun_color"></el-checkbox>
                                             红色
                                         </el-col>
@@ -1106,13 +1108,14 @@
                                     <el-form-item label="值域范围"  style="width: 90%">
                                     <el-row>
                                         <el-col :span="6">
-                                            <el-input v-model="base.min_3" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.min_3" @blur="base_blur_com_size(3)" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
-                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="1" align="center">-</el-col>
                                         <el-col :span="6">
-                                            <el-input v-model="base.max_3" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.max_3" @blur="base_blur_com_size(3)" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
-                                        <el-col :span="5" :push="4">
+                                        <el-col :span="8" >
+                                            是否启用
                                              <el-checkbox v-model="base.chk_3"  @change="base_fun_color"></el-checkbox>
                                             黄色
                                         </el-col>
@@ -1121,13 +1124,14 @@
                                     <el-form-item label="值域范围"  style="width: 90%">
                                     <el-row>
                                         <el-col :span="6">
-                                            <el-input v-model="base.min_4" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.min_4" @blur="base_blur_com_size(4)" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
-                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="1" align="center">-</el-col>
                                         <el-col :span="6">
-                                            <el-input v-model="base.max_4" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.max_4"  @blur="base_blur_com_size(4)"oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
-                                        <el-col :span="5" :push="4">
+                                        <el-col :span="8" >
+                                            是否启用
                                              <el-checkbox v-model="base.chk_4"  @change="base_fun_color"></el-checkbox>
                                             灰色
                                         </el-col>
@@ -1140,11 +1144,11 @@
                                   <el-form-item label="值域范围"  style="width: 90%">
                                     <el-row>
                                         <el-col :span="6">
-                                            <el-input v-model="base.min_1" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.min_1" @blur="base_blur_com_size(1)" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
-                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="1" align="center">-</el-col>
                                         <el-col :span="6">
-                                            <el-input v-model="base.max_1" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.max_1" @blur="base_blur_com_size(1)" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
                                         <el-col :span="3" :push="1">显示：</el-col>
                                         <el-col :span="5":push="1" >
@@ -1155,11 +1159,11 @@
                                   <el-form-item label="值域范围"  style="width: 90%">
                                     <el-row>
                                         <el-col :span="6">
-                                            <el-input v-model="base.min_2" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.min_2" @blur="base_blur_com_size(2)" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
-                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="1" align="center">-</el-col>
                                         <el-col :span="6">
-                                            <el-input v-model="base.max_2" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.max_2" @blur="base_blur_com_size(2)"oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
                                         <el-col :span="3" :push="1">显示：</el-col>
                                         <el-col :span="5":push="1" >
@@ -1170,11 +1174,11 @@
                                     <el-form-item label="值域范围"  style="width: 90%">
                                     <el-row>
                                         <el-col :span="6">
-                                            <el-input v-model="base.min_3" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.min_3" @blur="base_blur_com_size(3)"oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
-                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="1" align="center">-</el-col>
                                         <el-col :span="6">
-                                            <el-input v-model="base.max_3" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.max_3" @blur="base_blur_com_size(3)"oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
                                          <el-col :span="3" :push="1">显示：</el-col>
                                         <el-col :span="5":push="1" >
@@ -1185,11 +1189,11 @@
                                     <el-form-item label="值域范围"  style="width: 90%">
                                     <el-row>
                                         <el-col :span="6">
-                                            <el-input v-model="base.min_4" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.min_4" @blur="base_blur_com_size(4)"oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
-                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="1" align="center">-</el-col>
                                         <el-col :span="6">
-                                            <el-input v-model="base.max_4"oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                            <el-input v-model="base.max_4" @blur="base_blur_com_size(4)"oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
                                         </el-col>
                                         <el-col :span="3" :push="1">显示：</el-col>
                                         <el-col :span="5":push="1" >

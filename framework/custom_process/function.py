@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from position.models import pos_info
 from models import TbCustProcess
 from models import TdCustProcessLog
 from position.models import user_info
@@ -127,11 +128,16 @@ def select_all_bkusers():
     """
     users_list = list()
     # 获取用户通知方式不为空的记录
-    bk_users = user_info.objects.all().filter(notice_style__isnull=False)
-    for bk_user in bk_users:
-        # 通知方式必须为微信、短信、邮件的一种
-        if bk_user.notice_style not in ('wechat','sms','email'):
-            continue
+    # bk_users = user_info.objects.all().filter(notice_style__isnull=False)
+    # for bk_user in bk_users:
+    # 通知方式必须为微信、短信、邮件的一种
+    #    if bk_user.notice_style not in ('wechat','sms','email'):
+    #        continue
+    #   user_dict = model_to_dict(bk_user)
+    #    users_list.append(user_dict)
+    # return users_list
+    bk_pos = pos_info.objects.all()
+    for bk_user in bk_pos:
         user_dict = model_to_dict(bk_user)
         users_list.append(user_dict)
     return users_list
