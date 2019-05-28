@@ -7,6 +7,7 @@ from shell_app.tools import interface_param
 from models import CrawlerConfig
 from models import CrawlContent
 from models import SceneType
+from models import SysBoard
 from django.db.models import Q
 import json
 import datetime
@@ -645,4 +646,26 @@ def get_email_address_list(user, user_list):
         for i in res['data']:
             result_list.append(res['data'][i]['email'])
     return result_list
+
+#jlq-2019-05-27-add-看板项目标题修改
+def update_board(request,name):
+    """
+    看板项目标题修改
+    :param request:
+    :return:result
+    """
+    #  根据前台传的来的名称进行修改
+    SysBoard.objects.filter(id=1).update(boardTitle=name)
+    return ''
+
+#查询看板标题
+def selectBoard(request):
+    """
+    查询看板标题
+    :param request:
+    :return:
+    """
+    sysBoard = SysBoard.objects.get(id=1)
+    board = sysBoard.boardTitle
+    return board
 
