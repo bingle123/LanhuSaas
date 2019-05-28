@@ -100,8 +100,7 @@
             <el-menu :style="height" class="el-menu-vertical-demo" @open="handleOpen"  unique-opened=true
                      @close="handleClose" :collapse="isCollapse" text-color="#FFFFFF" active-text-color="#000000" >
                 <el-menu-item index="1000" class="title_item">
-
-                    <li slot="title" style="font-size: 24px;">看板项目</li>
+                     <li slot="title" style="font-size: 24px;" id="li" contenteditable="true" onblur="vm.boardEvent()">{{ board }}</li>
                 </el-menu-item>
 
              <!--   <el-menu-item v-for="(i,index) in muenus" :index="index+''" style="line-height: 56px;font-size: 18px;"
@@ -110,18 +109,18 @@
                     <span slot="title">{{ i.mname }}{{ i.id }}</span>
                 </el-menu-item>
                 -->
-                <el-submenu  v-for="(i,index) in muenus"  :index="index+''"  style="font-color:#FFFFFF;line-height: 56px; "  v-if=" i.id == 1" >
+                 <el-submenu  v-for="(i,index) in muenus"  :index="index+''"  style="font-color:#FFFFFF;line-height: 56px; "  v-if=" i.id == 1" >
                      <template slot="title" >
                          <i :class="i.mImg " :style= "left_submenu"></i>
-                      <span  v-if=" i.id == 1" > &nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                      <span  v-if=" i.id == 1" > &nbsp;<font color="#FFFFFF" style="font-size: 16px;">{{ i.mname }}</font></span>
                     </template>
                     <el-menu-item-group>
-                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 4"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
+                      <el-menu-item style="line-height: 40px;font-size: 15px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 4"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
                     </el-menu-item-group>
 
                   </el-submenu>
 
-                <el-menu-item id="submenu" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px;font-size: 18px;padding-left:50px;" v-if=" i.pcode == 0" v-on:click="testClick(i.url)" >
+                <el-menu-item id="submenu" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px;font-size: 16px;padding-left:50px;" v-if=" i.pcode == 0" v-on:click="testClick(i.url)" >
                     <i :class="i.mImg "></i>
                     <span slot="title" >{{ i.mname }}</span>
                 </el-menu-item>
@@ -131,20 +130,20 @@
                  <el-submenu  v-for="(i,index) in muenus"  :index="index+''"  style="font-color:#FFFFFF;line-height: 56px; "  v-if=" i.id == 25" >
                      <template slot="title" >
                          <i :class="i.mImg " :style= "left_submenu"></i>
-                      <span  v-if=" i.id == 25" > &nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                      <span  v-if=" i.id == 25" > &nbsp;<font color="#FFFFFF" style="font-size: 16px;">{{ i.mname }}</font></span>
                     </template>
                     <el-menu-item-group>
-                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 1"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
+                      <el-menu-item style="line-height: 40px;font-size: 15px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 1"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
                     </el-menu-item-group>
 
                   </el-submenu>
                 <el-submenu style="font-color:#FFFFFF;" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px; "  v-if=" i.id == 26">
                      <template slot="title" >
                             <i :class="i.mImg " :style= "left_submenu"></i>
-                      <span  v-if="  i.id == 26" > &nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                      <span  v-if="  i.id == 26" > &nbsp;<font color="#FFFFFF" style="font-size: 16px;">{{ i.mname }}</font></span>
                     </template>
                     <el-menu-item-group>
-                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 2"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
+                      <el-menu-item style="line-height: 40px;font-size: 15px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 2"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
                     </el-menu-item-group>
 
                   </el-submenu>
@@ -152,10 +151,10 @@
                 <el-submenu style="font-color:#FFFFFF;" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" style="line-height: 56px; "  v-if=" i.id == 27">
                      <template slot="title" >
                          <i :class="i.mImg " :style= "left_submenu"></i>
-                      <span  v-if="  i.id == 27">&nbsp;<font color="#FFFFFF" size="4">{{ i.mname }}</font></span>
+                      <span  v-if="  i.id == 27">&nbsp;<font color="#FFFFFF" style="font-size: 16px;">{{ i.mname }}</font></span>
                     </template>
                     <el-menu-item-group>
-                      <el-menu-item style="line-height: 40px;font-size: 16px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 3"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
+                      <el-menu-item style="line-height: 40px;font-size: 15px;padding-left:70px;" index="1-1" v-for="(i,index) in muenus"  :index="index+''" v-on:click="testClick(i.url)" v-if=" i.pcode == 3"> <i :class="i.mImg "></i>&nbsp;<span slot="title" >{{ i.mname }}</span></el-menu-item>
                     </el-menu-item-group>
 
                   </el-submenu>
@@ -257,6 +256,7 @@
 
             clickhtml:'index',
             isarr:true,
+            board:'',
             /**activeName: 'first',//默认iframe选项
              ifArr: {            //所有iframe页面，保留一个为true，其余均为false
                 first: true,
@@ -306,7 +306,7 @@
                 });
             },
             testClick(res) {            //更新iframe显示页面
-                 if(res == 'network_panorama/' || res == 'content/' || res == 'trace_panorama/'|| res == 'ywzl_panorama/'|| res == 'kpi_panorama/'){
+                 if(res == 'network_panorama/' || res == 'content/' || res == 'trace_panorama/'|| res == 'ywzl_panorama/'|| res == 'kpi_panorama/'|| res == 'scene_carousel/'){
                     window.open(res)
                  }else{
                      vm.clickhtml = res
@@ -322,6 +322,28 @@
                         vm.muenus = res.data.results;
                     })
             },
+            boardEvent(){
+               //  alert(123456);
+                 vm.board = document.getElementById("li").innerHTML
+                 axios.post(
+                   '${SITE_URL}system_config/update_board/'+vm.board+'/'
+                 /*axios({
+                  url:  '${SITE_URL}system_config/update_board/',
+                  method: 'post',
+                  data: {board:vm.board},*/
+                 ).then((res) => {
+                   if(res.data.message==''){
+                      // this.$message('修改成功')
+                   }
+                });
+            },
+            get_board() {
+                axios.post('${SITE_URL}system_config/selectBoard/')
+                    .then((res) => {
+                        console.log(res)
+                        vm.board = res.data.message;
+                    })
+            },
 
         }
     });
@@ -330,6 +352,7 @@
     }
     vm.get_Muenu();
     vm.get_user_name();
+    vm.get_board();
 </script>
 </body>
 </html>

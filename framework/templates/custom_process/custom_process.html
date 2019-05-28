@@ -147,7 +147,7 @@
                 <div slot="header" class="clearfix">
                     通知人：<span>{{ customProcessReceivers }}</span>
                 </div>
-                通知内容：<span>{{ customProcessNoticeContent }}</span>
+                通知内容：<span id="spanid" contenteditable="true">{{ customProcessNoticeContent }}</span>
             </el-card>
             <span slot="footer" class="dialog-footer">
                 <el-button :type="customProcessNotifyButtonType" :disabled="customProcessNotifyButtonDisabled" @click="customProcessSendNotification">{{ customProcessNotifyButtonText }}</el-button>

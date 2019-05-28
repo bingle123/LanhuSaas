@@ -404,6 +404,10 @@ $(function(){
                         //采集测试的数据缓存到gather_data_test_data变量中
                         console.log(data.results)
                         vm.gather_test_data = data.results;
+                        if(data.results.length == 0){
+                           vm.$alert("当前指标未采集到任何数据！", "错误");
+                           return false;
+                        }
                         return true;
                     },
                     error: function (error) {
@@ -1396,7 +1400,7 @@ $(function(){
                     }
                     if(vm.basic.end_time <= vm.basic.start_time){
                         vm.unit_id = -1;
-                        vm.message = '结束时间!'
+                        vm.message = "采集时间段'结束时间'必须大于'开始时间'!"
                         this.$alert(vm.message, "提示");
                         return false;
                     }
@@ -1436,13 +1440,19 @@ $(function(){
                     }
                     if(vm.chart.end_time <= vm.chart.start_time){
                         vm.unit_id = -1;
-                        vm.message = '结束时间必须大于开始时间!'
+                        vm.message = "采集时间段'结束时间'必须大于'开始时间'!"
                         this.$alert(vm.message, "提示");
                         return false;
                     }
                     //上传数据至服务器保存
                     vm.monitor_data_save(flow);
                 }else if (vm.monitor_type == 'five') {
+                    if(vm.base.end_time <= vm.base.start_time){
+                        vm.unit_id = -1;
+                        vm.message = "采集时间段'结束时间'必须大于'开始时间'!"
+                        this.$alert(vm.message, "提示");
+                        return false;
+                    }
                     //判断是否已经进行采集测试
                     if (null != this.gather_data_test_flag && false == this.gather_data_test_flag) {
                         //vm.message ="采集测试未通过，请校正接口调用参数或稍后重试！\", \"错误\""
@@ -1945,9 +1955,6 @@ $(function(){
                 }else
                 if(vm.base.show_rule_type == ""){//展示规则
                     vm.$alert("请选择数展示规则","提示");
-                    return false;
-                }else if(vm.base.gather_rule == ""){//采集规则
-                    vm.$alert("请录入采集规则","提示");
                     return false;
                 }else if(vm.base.show_rule_type == "0"){//选百分比校验
                     if(vm.base.gather_rule != "" && vm.base.gather_rule !="100" && vm.base.gather_rule !="1000"){

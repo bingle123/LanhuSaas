@@ -281,3 +281,22 @@ def test(request):
     """
     res = function.test(request)
     return render_json(res)
+
+#jlq-2019-05-27-add-看板标题修改
+def update_board(request,name):
+    """
+    根据ID删除爬虫配置信息
+    :param request:
+    :return:
+    """
+    res = function.update_board(request,name)
+    return render_json(res)
+
+def selectBoard(request):
+    """
+    获取看板标题
+    :param request:
+    :return: json结果集
+    """
+    res = function.selectBoard(request)
+    return render_json(res)
