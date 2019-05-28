@@ -38,6 +38,9 @@ $(function(){
     vm = new Vue({
         el: '#app',
         data: {
+			 base_other_rule:false,//规则 其它
+             base_color_rule:false,//规则 颜色
+			 base_par_rule:true,//规则 百分比
             //预览加载变量
             preview_loading: false,
             //基本监控项（修改后）显示内容缓存，显示所有指标
@@ -94,7 +97,7 @@ $(function(){
             checked2: false,                           //流程启动选框
             disabled1: false,
             disabled2: false,                            //基本单元
-            //disabled3: false,                            //图表单元
+            disabled3: false,                            //图表单元
             //disabled4: false,                            //作业单元
             //disabled5: false,                            //流程单元
             disabled6: false,
@@ -158,7 +161,25 @@ $(function(){
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
                 monitor_area: '',                             //日历地区
-                score: ''                                //分值
+                score: '',                                //分值
+				iptPerVal:'',
+                txt_1:'',
+                txt_2:'',
+                txt_3:'',
+                txt_4:'',
+                min_1:'',
+                min_2:'',
+                min_3:'',
+                min_4:'',
+                max_1:'',
+                max_2:'',
+                max_3:'',
+                max_4:'',
+                chk_1:false,
+                chk_2:false,
+                chk_3:false,
+                chk_4:false,
+        
             },             //基本单元
             rules1: {
                 font_size: [
@@ -481,18 +502,95 @@ $(function(){
                 this.content_change();
             },
             //基本监控项修改后颜色和其他选项提示信息添加方法
-            add_comments() {
+            add_comments(obj) {
+                //彭英杰20190527 start
+                // if ('1' == this.base.show_rule_type) {
+                //     this.color_rules_comments = true;
+                //     this.other_rules_comments = false;
+                // } else if ('2' == this.base.show_rule_type) {
+                //     this.color_rules_comments = false;
+                //     this.other_rules_comments = true;
+                // } else {
+                //     this.color_rules_comments = false;
+                //     this.other_rules_comments = false;
+                // }
+               $("div[id^='base_i']").hide();
+                  if(obj==undefined){
+                      vm.base.gather_rule="";
+                  }
                 if ('1' == this.base.show_rule_type) {
-                    this.color_rules_comments = true;
-                    this.other_rules_comments = false;
+                      $("#base_i_color").show();
                 } else if ('2' == this.base.show_rule_type) {
-                    this.color_rules_comments = false;
-                    this.other_rules_comments = true;
-                } else {
-                    this.color_rules_comments = false;
-                    this.other_rules_comments = false;
+                      $("#base_i_other").show();
+                } else if ('0' == this.base.show_rule_type) {
+                      $("#base_i_par").show();
                 }
-
+                //彭英杰20190527 end
+            },
+            //监控项展示规则 百分比
+            base_fun_per:function(){
+              vm.base.gather_rule=$("#iptPerVal").val();
+            },
+            //监控项展示规则 颜色
+            base_fun_color:function(){
+                var arr_color = $("#base_i_color").children();
+                var val="";
+                var color_m={};
+                color_m[0]="#00FF00"; //绿色
+                color_m[1]="#FF0000";//红色
+                color_m[2]="#FFFF00";//黄色
+                color_m[3]="#808080";//灰色
+                for(var i=0;i<arr_color.length;i++){
+                     var v ="";
+                    if(val!=""){
+                        v+="\n";
+                    }
+                    var dto =$(arr_color[i]);
+                    var txt =dto.find(":text");
+                    var bl=false;
+                    if(txt.length==2){
+                         chk=dto.find(":checkbox");
+                         if(txt[0].value==""
+                             ||txt[1].value==""
+                             ||!chk[0].checked){
+                             continue;
+                         }
+                         v+=txt[0].value+"-"+txt[1].value+"#"+color_m[i];
+                    }
+                    val+=v;
+                }
+                if(val!=""){
+                    vm.base.gather_rule=val;
+                }
+            },
+            //监控项展示规则 其它
+            base_fun_other:function(){
+                var arr_color = $("#base_i_other").children();
+                var val="";
+                for(var i=0;i<arr_color.length;i++){
+                     var v ="";
+                    if(val!=""){
+                        v+="\n";
+                    }
+                    var dto =$(arr_color[i]);
+                    var txt =dto.find(":text");
+                    var bl=false;
+                    if(txt.length==3){
+                         chk=dto.find(":checkbox");
+                         if(txt[0].value==""
+                             ||txt[1].value==""
+                             ||txt[2].value==""){
+                             continue;
+                         }
+                         v+=txt[0].value+"-"+txt[1].value+"@"+txt[2].value;
+                    }else{
+                        continue;
+                    }
+                    val+=v;
+                }
+                if(val!=""){
+                    vm.base.gather_rule=val;
+                }
             },
             //监控项数据处理，用于编辑状态下回显数据
             monitor_edit_data_process(row) {
@@ -523,13 +621,13 @@ $(function(){
                         //下拉框不识别number类型的数据，需要转化为字符串供下拉框回显
                         vm.base['show_rule_type'] = row.display_type.toString();
                         //展示类型为颜色时显示提示信息
-                        if ('1' == vm.base['show_rule_type']) {
-                            this.color_rules_comments = true;
-                            this.other_rules_comments = false;
-                        } else if ('2' == vm.base['show_rule_type']) {
-                            this.other_rules_comments = true;
-                            this.color_rules_comments = false;
-                        }
+                        // if ('1' == vm.base['show_rule_type']) {
+                        //     this.color_rules_comments = true;
+                        //     this.other_rules_comments = false;
+                        // } else if ('2' == vm.base['show_rule_type']) {
+                        //     this.other_rules_comments = true;
+                        //     this.color_rules_comments = false;
+                        // }
                         vm.base['monitor_name'] = vm.monitor_name;
                         vm.base['monitor_type'] = vm.monitor_type;
                         vm.base['font_size'] = row.font_size;
@@ -545,6 +643,48 @@ $(function(){
                         vm.base['gather_params'] = row.gather_params;
                         vm.base['monitor_area'] = vm.area;
                         vm.base['score'] = row.score;
+
+                        //修改展示信息 彭英杰start20190529
+                              $("div[id^='base_i']").hide();
+                              vm.base_color_rule=false;
+                              vm.base_other_rule=false;
+                              vm.base_par_rule=false;
+                         if(vm.base['show_rule_type'] ==0){ //为百分比
+                               vm.base_par_rule=true;
+                            vm.base.iptPerVal=vm.base['gather_rule'];
+                         }else if(vm.base['show_rule_type'] == 1){//为颜色
+                               vm.base_color_rule=true;
+                             var db_color = vm.base['gather_rule'].split("\n");
+                             for(var i=0;i<db_color.length;i++){
+                                 var num=db_color[i].split("#");
+                                 var num_dto = num[0].split("-");
+                                 vm.base["min_"+(i+1)]=num_dto[0];
+                                 vm.base["max_"+(i+1)]=num_dto[1];
+                                 vm.base["chk_"+(i+1)]=true;
+                             }
+                         }else if(vm.base['show_rule_type'] == 2){//为其它
+                                 vm.base_other_rule=false;
+                             var db_other = vm.base['gather_rule'].split("\n");
+                             for(var i=0;i<db_other.length;i++){
+                                 var num=db_other[i].split("@");
+                                 var num_dto = num[0].split("-");
+                                  vm.base["min_"+(i+1)]=num_dto[0];
+                                 vm.base["max_"+(i+1)]=num_dto[1];
+                                 vm.base["txt_"+(i+1)]=num[1];
+                             }
+                         }
+                         setTimeout(function(){
+                           //修改展示信息 彭英杰start20190529
+                              $("div[id^='base_i']").hide();
+                            if(vm.base['show_rule_type'] ==0){ //为百分比
+                             $("#base_i_par").show();
+                            }else if(vm.base['show_rule_type'] == 1){//为颜色
+                             $("#base_i_color").show();
+                             }else if(vm.base['show_rule_type'] == 2){//为其它
+                                $("#base_i_other").show();
+                             }
+                         },500)
+                        //修改展示信息 彭英杰end20190529
                     } else {
                         alert('暂未实现！');
                     }
@@ -1044,6 +1184,15 @@ $(function(){
                 } else if (flow.length>0) {
                     vm.submitForm('flow')
                 } else if (base.length>0) {
+                    //彭英杰 start20190527
+                    if ('1' == vm.base.show_rule_type) {
+                      vm. base_fun_color();
+                    } else if ('2' == vm.base.show_rule_type) {
+                      vm. base_fun_other();
+                   } else if ('0' == vm.base.show_rule_type) {
+                      vm. base_fun_per();
+                   }
+                 //彭英杰 start20190527
                     vm.submitForm('base')
                 }
                 //彭英杰 20190520 end

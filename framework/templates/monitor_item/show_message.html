@@ -1055,17 +1055,153 @@
                                         <el-option label="其他" value="2"></el-option>
                                     </el-select>
                                 </el-form-item>
-                                <el-form-item label="采集规则" prop="gather_rule" style="width: 90%">
-                                    <el-input v-model="base.gather_rule"
-                                              placeholder="百分比：如：100|颜色：如：0-1|其他：如：100@ms"
-                                              type="textarea" style="width: 310px;"></el-input>
+                                  <el-input v-model="base.gather_rule"
+                                           placeholder="百分比：如：100|颜色：如：0-1|其他：如：100@ms"
+                                                style="display:none"></el-input>
+                                 <!--百分比 start-->
+                                <div id="base_i_par"  >
+                                     <el-form-item label="百分比转化数"  style="width: 90%">
+                                         <el-input id="iptPerVal" v-model="base.iptPerVal" oninput ="value=value.replace(/[^0-9.]/g,'')"   @blur="base_fun_per()"></el-input>
+                                     </el-form-item>
+                                </div>
+                                 <!--百分比 end-->
+                                 <!--颜色 start-->
+                                <div id="base_i_color"     style="display:none">
+                                  <el-form-item label="值域范围"  style="width: 90%">
+                                    <el-row>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.min_1" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="6">
+                                            <el-input  v-model="base.max_1" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="5" :push="4">
+                                             <el-checkbox v-model="base.chk_1"  @change="base_fun_color"></el-checkbox>
+                                            绿色
+                                        </el-col>
+                                    </el-row>
                                 </el-form-item>
+                                  <el-form-item label="值域范围"  style="width: 90%">
+                                    <el-row>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.min_2" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.max_2" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="5" :push="4">
+                                             <el-checkbox v-model="base.chk_2"  @change="base_fun_color"></el-checkbox>
+                                            红色
+                                        </el-col>
+                                    </el-row>
+                                </el-form-item>
+                                    <el-form-item label="值域范围"  style="width: 90%">
+                                    <el-row>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.min_3" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.max_3" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="5" :push="4">
+                                             <el-checkbox v-model="base.chk_3"  @change="base_fun_color"></el-checkbox>
+                                            黄色
+                                        </el-col>
+                                    </el-row>
+                                </el-form-item>
+                                    <el-form-item label="值域范围"  style="width: 90%">
+                                    <el-row>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.min_4" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.max_4" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="5" :push="4">
+                                             <el-checkbox v-model="base.chk_4"  @change="base_fun_color"></el-checkbox>
+                                            灰色
+                                        </el-col>
+                                    </el-row>
+                                </el-form-item>
+                                </div>
+                                 <!--颜色 end-->
+                                 <!--其他 start-->
+                                 <div id="base_i_other"    style="display:none">
+                                  <el-form-item label="值域范围"  style="width: 90%">
+                                    <el-row>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.min_1" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.max_1" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="3" :push="1">显示：</el-col>
+                                        <el-col :span="5":push="1" >
+                                              <el-input v-model="base.txt_1" @blur="base_fun_other"  ></el-input>
+                                        </el-col>
+                                    </el-row>
+                                </el-form-item>
+                                  <el-form-item label="值域范围"  style="width: 90%">
+                                    <el-row>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.min_2" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.max_2" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="3" :push="1">显示：</el-col>
+                                        <el-col :span="5":push="1" >
+                                            <el-input v-model="base.txt_2" @blur="base_fun_other"  ></el-input>
+                                        </el-col>
+                                    </el-row>
+                                </el-form-item>
+                                    <el-form-item label="值域范围"  style="width: 90%">
+                                    <el-row>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.min_3" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.max_3" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                         <el-col :span="3" :push="1">显示：</el-col>
+                                        <el-col :span="5":push="1" >
+                                             <el-input v-model="base.txt_3" @blur="base_fun_other"   ></el-input>
+                                        </el-col>
+                                    </el-row>
+                                </el-form-item>
+                                    <el-form-item label="值域范围"  style="width: 90%">
+                                    <el-row>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.min_4" oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="1">-</el-col>
+                                        <el-col :span="6">
+                                            <el-input v-model="base.max_4"oninput ="value=value.replace(/[^0-9.]/g,'')"  ></el-input>
+                                        </el-col>
+                                        <el-col :span="3" :push="1">显示：</el-col>
+                                        <el-col :span="5":push="1" >
+                                             <el-input v-model="base.txt_4" @blur="base_fun_other" ></el-input>
+                                        </el-col>
+                                    </el-row>
+                                </el-form-item>
+                                 </div>
+                                 <!--其他 end-->
+
+
+                                <!--
                                  <div v-if="color_rules_comments">
                                      <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到此范围分别展示为绿、红、黄、灰</p>
                                  </div>
                                  <div v-if="other_rules_comments">
                                      <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到对应范围分别展示其“@”后的后缀</p>
-                                 </div>
+                                 </div>-->
                                 <el-form-item label="采集时间段:" style="width: 96%">
                                     <el-col :span="11">
                                         <el-form-item prop="start_time">
