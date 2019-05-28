@@ -1400,7 +1400,7 @@ $(function(){
                     }
                     if(vm.basic.end_time <= vm.basic.start_time){
                         vm.unit_id = -1;
-                        vm.message = '结束时间必须大于开始时间!'
+                        vm.message = "采集时间段'结束时间'必须大于'开始时间'!"
                         this.$alert(vm.message, "提示");
                         return false;
                     }
@@ -1440,7 +1440,7 @@ $(function(){
                     }
                     if(vm.chart.end_time <= vm.chart.start_time){
                         vm.unit_id = -1;
-                        vm.message = '结束时间必须大于开始时间!'
+                        vm.message = "采集时间段'结束时间'必须大于'开始时间'!"
                         this.$alert(vm.message, "提示");
                         return false;
                     }
@@ -1449,7 +1449,7 @@ $(function(){
                 }else if (vm.monitor_type == 'five') {
                     if(vm.base.end_time <= vm.base.start_time){
                         vm.unit_id = -1;
-                        vm.message = '结束时间必须大于开始时间!'
+                        vm.message = "采集时间段'结束时间'必须大于'开始时间'!"
                         this.$alert(vm.message, "提示");
                         return false;
                     }
