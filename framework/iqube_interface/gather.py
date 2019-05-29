@@ -265,7 +265,7 @@ def get_previous_second_ts():
         """
     res = ""
     try:
-        sql = "SELECT unix_timestamp(date_sub(now(), INTERVAL 1000 SECOND)) as timestamp;"
+        sql = "SELECT unix_timestamp(date_sub(now(), INTERVAL ifnull((SELECT time_interval FROM td_scene_design WHERE task_code = 'index_advance_duration'),1000) SECOND)) as timestamp;"
         db = get_db()
         cursor = db.cursor()
         cursor.execute(sql)
