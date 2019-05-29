@@ -377,6 +377,7 @@ $(function(){
             dimension_list: [],
             gather_list: [],
             gather_base_test_data: [],
+            flag:0
         },
         methods: {
             //显示加载中..背景
@@ -390,7 +391,6 @@ $(function(){
             },
             //获取采集测试的结果，同步调用
             get_gather_test() {
-                const loading = this.popup_loading();
                 let result= false;
                 $.ajax({
                     type: "POST",
@@ -417,7 +417,6 @@ $(function(){
                         result = false;
                     }
                 });
-                loading.close();
                 return result;
             },
             //基本监控项（修改后）显示内容变更时调用的预览变更方法
@@ -1972,11 +1971,12 @@ $(function(){
                     vm.$alert("请选择数展示规则","提示");
                     return false;
                 }else if(vm.base.show_rule_type == "0"){//选百分比校验
-                    let num_reg = /^\+?[1-9][0-9]*$/;
-                    if(!num_reg.test(vm.base.iptPerVal)){
-                        vm.$alert("百分比采集规则的值必须是非零正整数类型","提示");
+                    var regu = /^\+?[1-9][0-9]*$ /;
+                    /*
+                    if(regu.test(vm.base.show_rule_type)){
+                        vm.$alert("百分比采集规则的值只能是数据类型","提示");
                         return false;
-                    }
+                    }*/
                 }else if(vm.base.show_rule_type == "1" || vm.base.show_rule_type == "2"){//选颜色和其它校验
                     var filter=/^\r|\n\r|\n$/;
                     if(filter.test(vm.base.gather_rule)){
@@ -1986,18 +1986,93 @@ $(function(){
                 }
                 return true;
             },
-            //采集测试方法
-            base_cell_test() {
-                if(vm.collection_test_validate()){
-                    //同步获取采集数据
-                    if(vm.get_gather_test()){
-                       //预览采集，调用预览组件
-                        preview_monitor_item(vm, 'monitor_item', "#base_test_text");
-                    }else{
+
+             //jlq-2019-05-29-add-判断
+            time_validate() {
+                let currentDate = new Date();
+                let h = currentDate.getHours();
+                let m = currentDate.getMinutes();
+                var nowTime = h+':'+m;
+            //    console.log('vm.base.start_time===='+vm.base.start_time)
+           //     console.log('vm.base.end_time===='+vm.base.end_time)
+           //     console.log('newTime===='+newTime)
+                //jlq-2019-05-29-add
+            //判断当前时间是否在区间范围内
+              var beginTime = vm.base.start_time;
+              var endTime = vm.base.end_time;
+              var strBeginTime = beginTime.split(":");
+                if (strBeginTime.length != 3) {
+                    return false;
+                }
+                var strEndTime = endTime.split(":");
+                if (strEndTime.length != 3) {
+                    return false;
+                }
+                var strNowTime = nowTime.split(":");
+                if (strNowTime.length != 2) {
+                    return false;
+                }
+                var varBeginTime = new Date();
+                var varEndTime = new Date();
+                var varNowTime = new Date();
+                varBeginTime.setHours(strBeginTime[0]);
+                varBeginTime.setMinutes(strBeginTime[1]);
+                varEndTime.setHours(strEndTime[0]);
+                varEndTime.setMinutes(strEndTime[1]);
+                varNowTime.setHours(strNowTime[0]);
+                varNowTime.setMinutes(strNowTime[1]);
+                if(varEndTime.getTime() - varBeginTime.getTime() > 0){
+                    if (varNowTime.getTime() - varBeginTime.getTime() > 0 && varNowTime.getTime() - varEndTime.getTime() < 0) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }else{
+                    if (varNowTime.getTime() - varBeginTime.getTime() > 0 || varNowTime.getTime() - varEndTime.getTime() < 0) {
+                        return true;
+                    } else {
                         return false;
                     }
                 }
+
             },
+
+            //采集测试方法
+            base_cell_test() {
+                if(vm.collection_test_validate()){
+                    //jlq-2019-05-29-add
+                    //判断当前时间是否采集测试
+                    if(vm.time_validate()){
+                        //同步获取采集数据
+                        if(vm.get_gather_test()){
+                           //预览采集，调用预览组件
+                            preview_monitor_item(vm, 'monitor_item', "#base_test_text");
+                        }else{
+                            return false;
+                        }
+                    }else{
+                          this.$confirm('采集不在范围内, 是否继续采集?', '提示', {
+                          confirmButtonText: '确定',
+                          cancelButtonText: '取消',
+                          type: 'warning'
+                        }).then(() => {
+                           if(vm.get_gather_test()){
+                               //预览采集，调用预览组件
+                                preview_monitor_item(vm, 'monitor_item', "#base_test_text");
+                            }else{
+                                return false;
+                            }
+                        }).catch(() => {
+                          vm.$message({
+                            type: 'info'
+                          //  message: '已取消删除'
+                          });
+                        });
+                    }
+
+                }
+            },
+
             change_data_sources(value) {
                 if (value == 9) {
                     //接口类型
