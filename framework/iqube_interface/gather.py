@@ -260,7 +260,7 @@ class Gather():
 
 def get_previous_second_ts():
     """
-        获取当前系统时间1000秒的时间戳
+        获取当前系统时间前1000秒的时间戳（具体时长在td_scene_design表配置，默认为1000）
         :return:
         """
     res = ""
