@@ -15,7 +15,9 @@ $(function(){
             page: 1,                                   //分页页码数
             dialogFormVisible: false,                   //新增岗位人员模态框是否显示
             dialogFormVisible2: false,                  //编辑岗位模态框是否显示
-            dialogFormVisible3: false,                  //新增岗位模态框是否显示
+            dialogFormVisible3: false,
+            dialogFormVisible4: false,
+            //新增岗位模态框是否显示
             form: {
                 pos_name: '',
             }, rules: {
@@ -51,10 +53,23 @@ $(function(){
             tempid: '',
             form1: '',
             jobname: '',
+            //人员类别
+            user_group: '',
+            //人员类别管理的data和value，用户穿梭
+            data4: '',
+            value4: '',
+            //穿梭表的参数信息
+            group_data:[],
+            all_user_group:'',
+            //拿到all_user下标
+            all_user_index:'',
+
             username: '',
             search: '',
             value1: '',
             value12: '',
+            value13: "夜间值班",
+            options:[],
             positiontable: [],
             data2: '',
             value2: '',
@@ -241,6 +256,119 @@ $(function(){
                     }
                 });
             },
+            change_user_group_item(){
+              for(var i = 0;i<vm.group_data.length;i++){
+                    if(vm.value13 === vm.group_data[i].group_list_name){
+                        vm.all_user_group = vm.group_data[i].user_name;
+                        vm.all_user_index = vm.group_data[i].group_list_user;
+
+                    }
+
+                }
+                 vm.user_group = vm.value13;
+                const generateData2 = _ => {
+                const data = [];
+                //选择一项 组别，然后拿到组别中的所有数据
+                const cities = (vm.all_user_group.toString().replace(", __ob__: Observer","")).split(",");
+                const search_user_group = (vm.all_user_group.toString().replace(", __ob__: Observer","")).split(",");
+                cities.forEach((city, index) => {
+                data.push({
+                    label: city,
+                    key: index,
+                    search_user_group: search_user_group[index]
+                    });
+                });
+                    return data;
+                };
+                const dataStrArr = (vm.all_user_index.toString().replace(", __ob__: Observer","").replace('"','')).split(",");
+                vm.data4 = generateData2();
+                let dataIntArr=[];//保存转换后的整型字符串
+                dataStrArr.forEach(item => {
+                     dataIntArr.push(+item);
+                });
+                console.log(dataIntArr);
+                vm.value4 = dataIntArr;
+            },
+            //保存方法
+            change_user_group(){
+                 axios({
+                    method: 'post',
+                    url: site_url + 'position/add_group/',
+                    data: {
+                        //右边的人名，在当前组别下的人名
+                        value4: vm.value4,
+
+                        //组别名称
+                        user_group: vm.user_group,
+                    },
+                }).then((res) => {//返回和初始相同类型的数据
+                    vm.group_data = res.data.message;
+                    var applicationNames=[];
+                         for (var i=0;i<vm.group_data.length;i++){
+                             applicationNames.push({value: '选项'+(i+1), label: vm.group_data[i].group_list_name})
+                         }
+                     vm.options=applicationNames
+                     vm.dialogFormVisible4 = false;
+                })
+
+            },
+            //取消按钮
+            ref_group(){
+                vm.dialogFormVisible4 = false;
+            },
+            //进入页面时获取人员类别管理的列表参数信息
+            get_user_group(){
+                axios({
+                    method: 'post',
+                    url: site_url + 'position/get_user_group/',
+                }).then(function (res) {
+                    vm.group_data = res.data.message;
+                    var applicationNames=[];
+                         for (var i=0;i<vm.group_data.length;i++){
+                             applicationNames.push({value: '选项'+(i+1), label: vm.group_data[i].group_list_name})
+                         }
+                     vm.options=applicationNames
+                })
+            },
+            open_user_group(){
+                vm.dialogFormVisible4 = true;
+
+                 for(var i = 0;i<vm.group_data.length;i++){
+                    if(vm.value13 === vm.group_data[i].group_list_name){
+                        vm.all_user_group = vm.group_data[i].user_name;
+                        vm.all_user_index = vm.group_data[i].group_list_user;
+
+                    }
+
+                }
+                 vm.user_group = vm.value13;
+                const generateData2 = _ => {
+                const data = [];
+                //选择一项 组别，然后拿到组别中的所有数据
+                const cities = (vm.all_user_group.toString().replace(", __ob__: Observer","")).split(",");
+                const search_user_group = (vm.all_user_group.toString().replace(", __ob__: Observer","")).split(",");
+                cities.forEach((city, index) => {
+                data.push({
+                    label: city,
+                    key: index,
+                    search_user_group: search_user_group[index]
+                    });
+                });
+                    return data;
+                };
+                const dataStrArr = (vm.all_user_index.toString().replace(", __ob__: Observer","").replace('"','')).split(",");
+                vm.data4 = generateData2();
+                let dataIntArr=[];//保存转换后的整型字符串
+                dataStrArr.forEach(item => {
+                     dataIntArr.push(+item);
+                });
+                console.log(dataIntArr);
+                vm.value4 = dataIntArr;
+            },
+            //人员类别管理，搜索按钮
+            filterMethod_group(query,item){
+                return item.search_user_group.indexOf(query) > -1;
+            },
             show_pos(row) {                                      //显示弹框和穿梭框，传值到add_person
                 vm.dialogFormVisible = true;
                 vm.jobname = row.pos_name;
@@ -301,6 +429,7 @@ $(function(){
             }
         }
     });
+    vm.get_user_group();
     vm.show();
     vm.select_all_user();
     vm.get_tree();

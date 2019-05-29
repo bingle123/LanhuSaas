@@ -30,6 +30,40 @@
 
 <body>
 <div class="content">
+     <el-dialog title="人员类别管理" :visible.sync="dialogFormVisible4" width="70%" >
+         <template>
+                          <el-select @change="change_user_group_item" v-model="value13" filterable  style="margin-left: 300px;margin-bottom: 30px">
+                            <el-option
+                              v-for="item in options"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.label">
+                            </el-option>
+                          </el-select>
+         </template>
+        <el-form :model="form">
+            <el-form-item label="">
+                <template>
+                    <template>
+                        <el-transfer
+                                filterable
+                                :filter-method="filterMethod_group"
+                                filter-placeholder="请输入搜索内容"
+                                v-model="value4"
+                                :titles="['选择人员', user_group]"
+                                :data="data4"
+                                @change="">
+                        </el-transfer>
+                    </template>
+                </template>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="change_user_group()" type="primary">保存</el-button>
+            <el-button @click="ref_group()">取消</el-button>
+        </div>
+    </el-dialog>
+
     <el-dialog title="新增岗位人员" :visible.sync="dialogFormVisible" width="70%" :before-close="handleDialogClose">
         <el-form :model="form">
             <el-form-item label="">
@@ -102,6 +136,9 @@
                                 <el-button type="primary" icon="el-icon-search" v-on:click="select_pos">搜索</el-button>
                             </el-col>
                         </div>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-button type="button" @click="open_user_group()">人员类别管理</el-button>
                     </el-col>
                     <el-col :span="3">
                         <el-button type="button" @click="dialogFormVisible3 = true">新增岗位</el-button>

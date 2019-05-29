@@ -2,7 +2,7 @@
 from __future__ import division
 import json
 import sys
-from models import pos_info, user_info
+from models import pos_info, user_info, user_group
 from shell_app import tools
 from django.db.models import Q
 from django.core.paginator import Paginator
@@ -17,6 +17,68 @@ def get_noposition_id():
     """
     noposition_id = pos_info.objects.get(pos_name=u'管理员').id
     return noposition_id
+
+
+# 保存两张表修改的信息
+def add_group(request):
+    res = json.loads(request.body)
+    # 不在当前组别下的用户名称
+    in_users = res['value4']
+    user_list = user_info.objects.all()
+    in_users_id = ""
+    for user_item in in_users:
+        flag = 0
+        for user in user_list:
+            if int(user_item) == flag:
+                in_users_id = in_users_id + str(user.id) + ","
+            flag = flag+1
+    # 得到在当前组别下的所有用户id
+    # 组别名称
+    user_group_name =  res['user_group']
+    # 当前组别对象
+    user_group_list = user_group.objects.get(name=user_group_name)
+    user_group_list.user_id_group = in_users_id[:-1]
+
+    user_group_list.save()
+
+
+    return get_user_group(request)
+
+
+# 获取用户名称和人员组别
+def get_user_group(request):
+    user_list = user_info.objects.all()
+    user_group_list = user_group.objects.all()
+    # 需要获取所有的用户名称 ，还有人员类别表中每个类别上所有用户的id
+    users = []
+    for user in user_list:
+        users.append(user.user_name)
+
+    for group in user_group_list:
+        # 切分每组组别中的用户id
+        group_id = group.user_id_group.split(",")
+        user_ids_item = []
+        for group_id_item in group_id:
+            flag = 0
+            for user in user_list:
+                if int(group_id_item) == user.id:
+                    user_ids_item.append(str(flag))
+                    break
+                flag = flag + 1
+
+        group.user_id_group = user_ids_item
+    res_list = []
+    for pro in user_group_list:
+        dic = {
+            # 目前所有用户
+            'user_name': users,
+            # 目前所有组别信息（组别id,组别名称，组别下的人员在用户名称中所在序号）
+            'group_list_id': pro.id,
+            'group_list_name': pro.name,
+            'group_list_user': pro.user_id_group,
+        }
+        res_list.append(dic)
+    return res_list
 
 
 def show(request):
