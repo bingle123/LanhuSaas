@@ -390,6 +390,7 @@ $(function(){
             },
             //获取采集测试的结果，同步调用
             get_gather_test() {
+                const loading = this.popup_loading();
                 let result= false;
                 $.ajax({
                     type: "POST",
@@ -416,6 +417,7 @@ $(function(){
                         result = false;
                     }
                 });
+                loading.close();
                 return result;
             },
             //基本监控项（修改后）显示内容变更时调用的预览变更方法
@@ -1970,12 +1972,11 @@ $(function(){
                     vm.$alert("请选择数展示规则","提示");
                     return false;
                 }else if(vm.base.show_rule_type == "0"){//选百分比校验
-                    var regu = /^\+?[1-9][0-9]*$ /;
-                    /*
-                    if(regu.test(vm.base.show_rule_type)){
-                        vm.$alert("百分比采集规则的值只能是数据类型","提示");
+                    let num_reg = /^\+?[1-9][0-9]*$/;
+                    if(!num_reg.test(vm.base.iptPerVal)){
+                        vm.$alert("百分比采集规则的值必须是非零正整数类型","提示");
                         return false;
-                    }*/
+                    }
                 }else if(vm.base.show_rule_type == "1" || vm.base.show_rule_type == "2"){//选颜色和其它校验
                     var filter=/^\r|\n\r|\n$/;
                     if(filter.test(vm.base.gather_rule)){
