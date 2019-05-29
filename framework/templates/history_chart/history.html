@@ -338,7 +338,12 @@ var vm = new Vue({
             years:'',
         },
         methods: {
-            show() {
+            //查询后，进入第一页
+            show(){
+                vm.page = 1;
+                vm.search_history();
+            },
+            search_history() {
                //显示
                 axios({
                     method: 'post',
@@ -354,29 +359,10 @@ var vm = new Vue({
                 });
 
             },
-
+            // 分页
             current_change(value){
                vm.page = value;
-                axios({
-                    method: 'post',
-                    url: '${SITE_URL}history_chart/select_log/',
-                    data: {
-                        search: this.search,
-                        page: vm.page,
-                        keyword:vm.keyword,
-                        date_Choice:vm.date_Choice,
-                        limit: 10
-                    },
-                }).then((res) => {
-                    if(res.data.message){
-                        vm.page_count1 = 1
-                    }
-                    else{
-                        vm.Operatelog = res.data.message;
-                        vm.page_count1 = res.data.message[0].page_count;
-                    }
-                })
-
+                vm.search_history();
             },
             about_change(value){
                 vm.page = value;
