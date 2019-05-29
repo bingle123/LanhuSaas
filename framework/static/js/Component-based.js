@@ -826,7 +826,7 @@ function preview_monitor_item(vm_obj, preview_type,html_obj){
  */
 function collection_content_change(vm_obj,html_obj){
     //转json
-     $("#"+html_obj).html("");
+    //$("#"+html_obj).html("");
     var content_json = content_to_json(vm_obj.base.contents);
     $(html_obj).find('.display').hide();       //隐藏预览区域的dom
     for(x in content_json){                             //遍历json
