@@ -16,6 +16,8 @@ urlpatterns = patterns(
     (r'^position/$', 'index'),  # 首页--服务器选择页面
     (r'^get_tree/$', 'get_tree'),
     (r'^show/$', 'show'),  # 显示数据
+    (r'^get_user_group/$', 'get_user_group'),  # 显示数据
+    (r'^add_group/$', 'add_group'),  # 显示数据
     (r'^select_pos/$', 'select_pos'),  # 查询
     (r'^delete/$', 'delete_pos'),  # 删除
     (r'^add_pos/$', 'add_pos'),  # 增加岗位

@@ -186,6 +186,13 @@ def editSence(request):
     username = request.user.username
     try:
         model = json.loads(request.body)
+        # jlq-2019-05-29-add-修改场景名称不重复
+        # 首先查询场景名称是否存在，存在就提示该场景已经存在
+        # Q(monitor_name=name)& ~Q(id=id)
+        scene_result = Scene.objects.filter(Q(scene_name=model['data']['scene_name']) & ~Q(id=model['data']['id']))
+        # 重复的场景,返回场景名称
+        if scene_result.__len__() > 0:
+            return {'scene_name': model['data']['scene_name']}
         starttime = model['data']["scene_startTime"]
         endtime = model['data']["scene_endTime"]
         temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)

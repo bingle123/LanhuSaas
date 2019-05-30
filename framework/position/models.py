@@ -23,6 +23,7 @@ class user_info(models.Model):
     """
         本地用户表
     """
+    id = models.IntegerField(u'序号', primary_key=True, auto_created=True)
     user_name = models.CharField(verbose_name=u'用户名称', max_length=50,)
     user_pos = models.ForeignKey('pos_info',on_delete=models.PROTECT)
     mobile_no = models.CharField(verbose_name=u'用户手机', max_length=20,)
@@ -34,3 +35,15 @@ class user_info(models.Model):
     class Meta:
         verbose_name = u'用户信息表'
         db_table = 'tb_user_info'
+
+
+class user_group(models.Model):
+    """
+        本地用户表
+    """
+    id = models.IntegerField(u'序号', primary_key=True, auto_created=True)
+    name = models.CharField(verbose_name=u'组别名称', max_length=100,)
+    user_id_group = models.CharField(verbose_name=u'组别所拥有用户', max_length=255)
+    class Meta:
+        verbose_name = u'用户组别表'
+        db_table = 'tb_user_group'

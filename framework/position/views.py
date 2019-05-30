@@ -87,6 +87,20 @@ def filter_user(request):
     return render_json(r)
 
 
+def get_user_group(request):
+
+    res = function.get_user_group(request)
+    return render_json(res)
+
+
+def add_group(request):
+
+    res = function.add_group(request)
+    return render_json(res)
+
+
+
+
 def get_tree(request):
     r = function.get_tree(request)
     return render_json(r)

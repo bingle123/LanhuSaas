@@ -244,6 +244,12 @@ $(function () {
                                     monitor_data: vm.result_list
                                 }
                             }).then(function (res) {
+                                //jlq-2019-05-29-add-修改场景名称不重复
+                                loading.close();
+                                if(res.data.scene_name){
+                                    vm.$alert("场景名称"+"'"+res.data.scene_name+"'"+"已经存在，请修改场景名称进入编排功能",'错误')
+                                    return false;
+                                }
                                 axios({
                                     method: 'post',
                                     url: site_url + 'monitor_scene/scene_color_save/',

@@ -3,7 +3,7 @@
 from position.models import pos_info
 from models import TbCustProcess
 from models import TdCustProcessLog
-from position.models import user_info
+from position.models import user_info,user_group
 from django.forms.models import model_to_dict
 import urllib
 import urllib2
@@ -136,7 +136,7 @@ def select_all_bkusers():
     #   user_dict = model_to_dict(bk_user)
     #    users_list.append(user_dict)
     # return users_list
-    bk_pos = pos_info.objects.all()
+    bk_pos = user_group.objects.all()
     for bk_user in bk_pos:
         user_dict = model_to_dict(bk_user)
         users_list.append(user_dict)

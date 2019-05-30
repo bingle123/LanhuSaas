@@ -88,7 +88,7 @@
                         <el-col :span="11" :offset="1">
                             <el-form-item label="通知接收人:" prop="receivers">
                                 <el-select v-model="customProcessNode.receivers" multiple collapse-tags filterable placeholder="请选择" style="width: 100%">
-	                                <el-option v-for="bkUser in bkUsers" :key="bkUser.id" :label="bkUser.pos_name" :value="bkUser.pos_name"></el-option>
+	                                <el-option v-for="bkUser in bkUsers" :key="bkUser.id" :label="bkUser.name" :value="bkUser.name"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -129,7 +129,7 @@
                         <el-col :span="11" :offset="1">
                             <el-form-item label="通知接收人:" prop="receivers">
                                 <el-select v-model="customProcessNode.receivers" :value-key="customProcessNode.receivers" multiple collapse-tags filterable placeholder="请选择" style="width: 100%">
-	                                <el-option v-for="bkUser in bkUsers" :key="bkUser.id" :label="bkUser.pos_name" :value="bkUser.pos_name" ></el-option>
+	                                <el-option v-for="bkUser in bkUsers" :key="bkUser.id" :label="bkUser.name" :value="bkUser.name" ></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
