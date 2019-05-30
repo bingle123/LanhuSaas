@@ -21,6 +21,9 @@ from django.db.models import Q
 from xml.etree import ElementTree  #引入ElementTree的包
 from monitor_item.models import *
 from db_connection.function import get_db
+from hashmap import HashMap
+
+
 def monitor_show(request):
     """
     渲染整个页面的数据
@@ -862,8 +865,11 @@ def save_scene_design(data):
         return {'id': "0"}
     else:
         Scene.objects.filter(id=str(scene_result[0].id)).update(**scene_design)
-        get_scene_find_xml(int(scene_result[0].id))
-        return {'id': "1"}
+        msg = get_scene_find_xml(int(scene_result[0].id))
+        if msg is "true":
+            return {'id': "1"}
+        else:
+            return {'id': msg}
 
 
 def query_scene_design(request):
@@ -893,6 +899,10 @@ def get_scene_find_xml(scene_id):
     roota=ElementTree.XML(dto.scene_content)
     parent = roota.find("root", "mxGraphModel")
     list = parent._children
+    # 判断绑定的监控项是否有重复
+    items_map = HashMap()
+    # 批量入库数组
+    add_scene_item_list = []
     for dto in list:
         if dto.tag == "object":
             dto_item_id = str(dto.attrib.get("item_id"))
@@ -900,6 +910,11 @@ def get_scene_find_xml(scene_id):
             if dto_item_id is None or dto_item_id is "":
                 continue
             int_item_id = int(dto_item_id)
+            item_name = str(dto.attrib.get("label"))
+            # 添加了重复的监控项,直接返回提示
+            if items_map.get(int_item_id) is not None:
+                return item_name
+            items_map.add(int_item_id, item_name);
             temp_dto = Scene_monitor.objects.filter(scene_id=scene_id,item_id= int_item_id)
             if temp_dto.count() == 0:
                 # 只有等于零时才新增
@@ -911,10 +926,15 @@ def get_scene_find_xml(scene_id):
                 scene_dto.scale = 0.0
                 scene_dto.score = 0
                 scene_dto.order = 0
-                scene_dto.save()
+                add_scene_item_list.append(scene_dto)
+                # scene_dto.save()
                 print "场景 "+str(scene_id)+" "+dto_item_id+"保存成功"
             else:
                 print "场景 " + str(scene_id) + " " + dto_item_id + "已存在，不处理"
+    # 如果数组不为空，执行批量入库
+    if add_scene_item_list.__len__() > 0:
+        Scene_monitor.objects.bulk_create(add_scene_item_list);
+    return "true"
 
 
 def page_query_scene(request):

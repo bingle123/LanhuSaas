@@ -97,6 +97,8 @@
                         // 保存成功给父页面的缓存重新赋值
                         window.opener.vm.scene_edit.scene_content =this.myXml;
                         mxUtils.alert("场景保存成功！");
+                    }else if(res.data.id != "0"){
+                        mxUtils.alert("场景名称"+"'"+res.data.id+"'"+"重复，请重新编辑后再保存");
                     }else{
                         mxUtils.alert("场景名称不匹配，场景没有保存！");
                     }
@@ -130,14 +132,16 @@
             myForm = form;
             myAddRemoveButton = addRemoveButton;
         }
+
         //lxchun将流程设计器中的属性与具体监控项建立关联
         function relation_monitor_item_id(item_id,monitor_name){
             //监控项不允许重复关联
+            /*
             if(map.get(item_id)){
                 mxUtils.alert("监控项"+"'"+monitor_name+"'"+"在当前场景中已被使用，请重新关联");
                 return false;
             }
-            map.set(item_id,monitor_name);
+            map.set(item_id,monitor_name);*/
             myNameInput.value = "item_id";
             let name = myNameInput.value
             this.item_id = item_id;
