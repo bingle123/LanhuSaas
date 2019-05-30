@@ -166,12 +166,12 @@
                        var ifr = document.createElement("iframe");
                       // var ifr= document.getElementById("ifr_t");
                        ifr.id="ifr"+Math.floor(Math.random()*100000+1);
-                       ifr.src = cell.attribute;
-                       ifr.style.position="absolute";
                        ifr.style.left=x+"px";
                        ifr.style.top= y+"px";
-                       ifr.style.width="450px";
-                       ifr.style.height="320px";
+                       ifr.style.width = (cell.parent.geometry.width+8)+"px";
+                       ifr.style.height= (cell.parent.geometry.height+8)+"px";
+                       ifr.style.position="absolute";
+                       ifr.src = cell.attribute;
                        ifr.style.display="block";
                        document.body.appendChild(ifr);
                        continue;
