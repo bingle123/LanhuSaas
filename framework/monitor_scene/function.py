@@ -907,8 +907,8 @@ def get_scene_find_xml(xml, scene_id):
     for dto in list:
         if dto.tag == "object":
             dto_item_id = str(dto.attrib.get("item_id"))
-            # 当关联监控项id为null或为空串就直接进入下一个循环
-            if dto_item_id is None or dto_item_id is "":
+            # 关联的监控项id非数字直接进入下一个循环
+            if dto_item_id.isdigit() is False:
                 continue
             int_item_id = int(dto_item_id)
             item_name = str(dto.attrib.get("label"))
