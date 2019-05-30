@@ -354,10 +354,11 @@ $(function () {
                 vm.scene_edit.area = row.scene_area
                 vm.scene_edit.scene_content = row.scene_content
                 this.isAdd = 3
-                /*
+
                 vm.sen_position()
                 vm.monitore_edit_start(row.id)
 
+                /*
                 axios({
                     method: 'post',
                     url: site_url + 'monitor_scene/scene_color_get/',
