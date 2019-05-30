@@ -66,36 +66,52 @@
               position: '1',                                                                  //岗位
               options: [],
               show_stop:null,//暂停
-              show_index:0
+              show_index:0,
+              interval: 10,   //默认10秒
           },
           methods: {
-               query_scene_info:function(){
-                 $.ajax({
-                     url:"${SITE_URL}monitor_scene/query_curr_user_scene"
-                     ,async:false
+              //取配置的轮播时间
+              get_time_interval(){
+                  axios({
+                      method: 'post',
+                      data:{
+                          code:"wheel_cycle"
+                      },
+                      url:  '${SITE_URL}monitor_scene/open_scene_design/',
+                  }).then((res) => {
+                      if(res.data.time_interval != ""){
+                          vm.interval = res.data.time_interval;
+                      }
+                  })
+              },
+              query_scene_info:function(){
+                  //取得配置的轮播时间间隔
+                  vm.get_time_interval();
+                  $.ajax({
+                      url:"${SITE_URL}monitor_scene/query_curr_user_scene"
+                      ,async:false
                       ,type:"post"
-                     ,dataType:"json"
-                     ,success:function(data){
-                         if(vm.show_stop!=null){
-                             clearInterval(vm.show_stop);//设置停止
-                             vm.show_stop = null;
-                         }
-                         $("#div_sence").html("");
-                         if(data.message!=""){
-                             var djson = data.message ;//eval('('+data.message+')');
-
-                             for(var i=0;i<djson.length;i++){
+                      ,dataType:"json"
+                      ,success:function(data){
+                          if(vm.show_stop!=null){
+                              clearInterval(vm.show_stop);//设置停止
+                              vm.show_stop = null;
+                          }
+                          $("#div_sence").html("");
+                          if(data.message!=""){
+                              var djson = data.message ;//eval('('+data.message+')');
+                              for(var i=0;i<djson.length;i++){
                                  var t="display:none;"
                                  if(i ==0){
-                                      t="";
+                                     t="";
                                  }
                                  var html="<iframe id='i"+djson[i]+"'  src='${SITE_URL}monitor_scene/page_query_xml_show?id=";
                                  html+=djson[i]+"' style='"+t+"width:"+vm.imgWidth+";height:850px;border:none;'></iframe>";
-                                  $("#div_sence").append(html);
+                                 $("#div_sence").append(html);
                                  //$("#div"+djson[i]).load("${SITE_URL}monitor_scene/page_query_xml_show?id="+djson[i]);
                                  //html.hide()
-                             }
-                             vm.show_stop= setInterval(function(){
+                              }
+                              vm.show_stop= setInterval(function(){
                                   var iframe_dto = $("#div_sence iframe");
                                   if(iframe_dto.length>0){
                                       if(vm.show_index==(iframe_dto.length-1)){
@@ -105,16 +121,14 @@
                                       iframe_dto.hide();
                                       $(iframe_dto[vm.show_index]).show();
                                   }
-
-                               },5000);
-                         }
-                     }
-                 })
+                              },vm.interval*1000);
+                          }
+                      }
+                  })
               }
-
           }
       })
-    vm.query_scene_info();
+      vm.query_scene_info();
 </script>
 </body>
 </html>
