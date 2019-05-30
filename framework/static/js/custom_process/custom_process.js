@@ -277,7 +277,12 @@ $(function(){
                 var temp = $(curr).parent().find('.execute_status');
                 temp.html(customProcessExecPerson + customProcessExecTime + customProcessExecStatus);
                 $(curr).remove();
-                this.customProcessSendMessage(index);
+                this.customProcessSendMessage(index)
+                var customMainProcesses = $('.customMainProcess').children();
+                var selectedProcess =  customMainProcesses.eq(index);
+                var click = ' onclick="vue.customProcessConfirmNode('+ index + ',' + id + ',this)"';
+                var nextButton = '<button type="button" class="el-button el-button--success el-button--small" '+ click +'><span>再次发送</span></button>';
+                selectedProcess.find('.el-step__main').append(nextButton);
             },
             //弹出发送通知模态框，准备好数据
             customProcessSendMessage: function(nodeOrder) {
@@ -563,12 +568,17 @@ $(function(){
                             var selectedProcess =  customMainProcesses.eq(total_index);
                             selectedProcess.find('.el-step__description')
                                 .html(customProcessExecPerson + customProcessExecTime + customProcessExecStatus);
+                            var click = ' onclick="vue.customProcessConfirmNode('+ total_index + ',' + items.id + ', this)"';
+                            var nextButton = '<button type="button" class="el-button el-button--success el-button--small" '+ click +'><span>再次发送</span></button>';
+                            selectedProcess.find('.el-step__description')
+                                .html(customProcessExecStatus);
+                            selectedProcess.find('.el-step__main').append(nextButton);
                         }else{
                         //还未执行的步骤
                             var customProcessExecStatus = '<div class="execute_status">执行状态：未开始执行<i class="el-icon-close"></i></div>';
                             var selectedProcess =  customMainProcesses.eq(total_index);
                             var click = ' onclick="vue.customProcessConfirmNode('+ total_index + ',' + items.id + ', this)"';
-                            var nextButton = '<button type="button" class="el-button el-button--success el-button--small" '+ click +'><span>确认</span></button>';
+                            var nextButton = '<button type="button" class="el-button success el-button--small" '+ click +'><span>确　　认</span></button>';
                             selectedProcess.find('.el-step__description')
                                 .html(customProcessExecStatus);
                             selectedProcess.find('.el-step__main').append(nextButton);
