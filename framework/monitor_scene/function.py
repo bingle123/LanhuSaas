@@ -22,6 +22,7 @@ from xml.etree import ElementTree  #引入ElementTree的包
 from monitor_item.models import *
 from db_connection.function import get_db
 from hashmap import HashMap
+from django.db import transaction
 
 
 def monitor_show(request):
@@ -188,62 +189,66 @@ def editSence(request):
     """
     username = request.user.username
     try:
-        model = json.loads(request.body)
-        # jlq-2019-05-29-add-修改场景名称不重复
-        # 首先查询场景名称是否存在，存在就提示该场景已经存在
-        # Q(monitor_name=name)& ~Q(id=id)
-        scene_result = Scene.objects.filter(Q(scene_name=model['data']['scene_name']) & ~Q(id=model['data']['id']))
-        # 重复的场景,返回场景名称
-        if scene_result.__len__() > 0:
-            return {'scene_name': model['data']['scene_name']}
-        starttime = model['data']["scene_startTime"]
-        endtime = model['data']["scene_endTime"]
-        temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
-        timezone = Area.objects.get(id=model['data']['area']).timezone
-        starthour, startmin = tran_time_china(temp_date, timezone=timezone)
-        starttime = starthour + ":" + startmin
-        temp_date = datetime(2019, 1, 1, int(endtime.split(':')[0]), int(endtime.split(':')[-1]), 0)
-        endhour, endmin = tran_time_china(temp_date, timezone=timezone)
-        endtime = endhour + ":" + endmin
-        senceModel2 = {
-            "scene_name": model['data']['scene_name'],
-            "scene_startTime": starttime,
-            "scene_endTime": endtime,
-            "scene_editor": username,
-            "scene_area": model['data']['area']
-        }
-        Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
-        info = make_log_info(u'编辑场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
-                             request.user.username, '成功', '无')
-        add_log(info)
-        Scene_monitor.objects.filter(scene_id=model['data']['id']).delete()
-        for i in model['monitor_data']:
-            monitor_data = {
-                'scene_id': model['data']['id'],
-                'item_id': int(i['item_id']),
-                'x': int(i['x']),
-                'y': int(i['y']),
-                'scale': i['scale'],
-                'score': int(i['score']),
-                'order': int(i['order']),
-                'next_item': int(i['next_item'])
+        with transaction.atomic():
+            model = json.loads(request.body)
+            # jlq-2019-05-29-add-修改场景名称不重复
+            # 首先查询场景名称是否存在，存在就提示该场景已经存在
+            # Q(monitor_name=name)& ~Q(id=id)
+            scene_result = Scene.objects.filter(Q(scene_name=model['data']['scene_name']) & ~Q(id=model['data']['id']))
+            # 重复的场景,返回场景名称
+            if scene_result.__len__() > 0:
+                return {'scene_name': model['data']['scene_name']}
+            starttime = model['data']["scene_startTime"]
+            endtime = model['data']["scene_endTime"]
+            temp_date = datetime(2019, 1, 1, int(starttime.split(':')[0]), int(starttime.split(':')[-1]), 0)
+            timezone = Area.objects.get(id=model['data']['area']).timezone
+            starthour, startmin = tran_time_china(temp_date, timezone=timezone)
+            starttime = starthour + ":" + startmin
+            temp_date = datetime(2019, 1, 1, int(endtime.split(':')[0]), int(endtime.split(':')[-1]), 0)
+            endhour, endmin = tran_time_china(temp_date, timezone=timezone)
+            endtime = endhour + ":" + endmin
+            senceModel2 = {
+                "scene_name": model['data']['scene_name'],
+                "scene_startTime": starttime,
+                "scene_endTime": endtime,
+                "scene_editor": username,
+                "scene_area": model['data']['area']
             }
-            Scene_monitor.objects.create(**monitor_data)
-            info = make_log_info(u'场景编排', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
+            Scene.objects.filter(id=model['data']['id']).update(**senceModel2)
+            info = make_log_info(u'编辑场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
                                  request.user.username, '成功', '无')
             add_log(info)
-            scene = Scene.objects.get(id=model['data']['id'])
-            scene.save()
-            job = pos_info.objects.filter(pos_name=model['data']["pos_name"])
-        for j in job:
-            senceModel3 = {
-                "scene_id": model['data']['id'],
-                "position_id": j.id
-            }
-        position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
-        info2 = make_log_info(u'编辑场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
-                              request.user.username, '成功', '无')
-        add_log(info2)
+
+            # 先删除场景与监控项的对应关系，这里需要事物控制
+            Scene_monitor.objects.filter(scene_id=model['data']['id']).delete()
+            for i in model['monitor_data']:
+                monitor_data = {
+                    'scene_id': model['data']['id'],
+                    'item_id': int(i['item_id']),
+                    'x': int(i['x']),
+                    'y': int(i['y']),
+                    'scale': i['scale'],
+                    'score': int(i['score']),
+                    'order': int(i['order']),
+                    'next_item': 0
+                }
+                Scene_monitor.objects.create(**monitor_data)
+                info = make_log_info(u'场景编排', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
+                                     request.user.username, '成功', '无')
+                add_log(info)
+                scene = Scene.objects.get(id=model['data']['id'])
+                scene.save()
+                job = pos_info.objects.filter(pos_name=model['data']["pos_name"])
+            for j in job:
+                senceModel3 = {
+                    "scene_id": model['data']['id'],
+                    "position_id": j.id
+                }
+            position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
+            info2 = make_log_info(u'编辑场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
+                                  request.user.username, '成功', '无')
+            add_log(info2)
+            return {"result": "success"}
     except Exception as e:
         info = make_log_info(u'编辑场景', u'业务日志', u'Scene', sys._getframe().f_code.co_name,
                              request.user.username, '失败', repr(e))
@@ -251,7 +256,8 @@ def editSence(request):
         info2 = make_log_info(u'场景编排', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
                               request.user.username, '失败', repr(e))
         add_log(info2)
-    return None
+        return {"result": "fail"}
+    return {"result": None}
 
 
 def scene_data(id):

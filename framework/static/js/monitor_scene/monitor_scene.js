@@ -250,6 +250,9 @@ $(function () {
                                     vm.$alert("场景名称"+"'"+res.data.scene_name+"'"+"已经存在，请修改场景名称进入编排功能",'错误')
                                     return false;
                                 }
+                                if(res.data.result == "success"){
+                                    vm.$alert("场景修改成功！","提示")
+                                }
                                 axios({
                                     method: 'post',
                                     url: site_url + 'monitor_scene/scene_color_save/',
