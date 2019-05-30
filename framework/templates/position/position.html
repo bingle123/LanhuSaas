@@ -25,6 +25,27 @@
         .el-table--border th {
             padding: 5px
         }
+        .el-button-self {
+            display: inline-block;
+            line-height: 1;
+            white-space: nowrap;
+            cursor: pointer;
+            background: #409eff;
+            border: 1px solid #dcdfe6;
+            color: #f5f7fa;
+            -webkit-appearance: none;
+            text-align: center;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            outline: 0;
+            margin: 0;
+            -webkit-transition: .1s;
+            transition: .1s;
+            font-weight: 500;
+            padding: 12px 20px;
+            font-size: 14px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 
@@ -137,12 +158,13 @@
                             </el-col>
                         </div>
                     </el-col>
-                    <el-col :span="3">
-                        <el-button type="button" @click="open_user_group()">人员类别管理</el-button>
+                    <el-col :span="6" style="padding-left: 230px;">
+                        <el-button type="button" @click="dialogFormVisible3 = true" class="el-button-self">新增岗位</el-button>
                     </el-col>
-                    <el-col :span="3">
-                        <el-button type="button" @click="dialogFormVisible3 = true">新增岗位</el-button>
+                    <el-col :span="6" style="padding-left: 100px">
+                        <el-button type="button" @click="open_user_group()" class="el-button-self">人员类别管理</el-button>
                     </el-col>
+
                 </el-row>
                 <el-table :data="positiontable" style="width: 100%;margin-top: 20px" border >
                     <el-table-column prop="pos_name" label="岗位名称" show-overflow-tooltip="true" style="width: 10%" align="center" sortable>
