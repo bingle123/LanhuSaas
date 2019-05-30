@@ -1006,6 +1006,10 @@ def query_scene_item_data_handle(list_id):
                      and dto_item.contents != None and dto_item.contents !="":
 
                dt["key_val"] = exec_rule(arr_db_map,dto_item,gather_dto)
+            elif dto_item.monitor_type == 2:
+                dt["key"] = ""
+                dt["key_name"] = dto_item.display_rule  # .decode("utf-8")
+                dt["item_type"] = dto_item.monitor_type
             else:
                 dt["key_val"] = "@" + dto_item.monitor_name
         if 'key' in locals().keys():
