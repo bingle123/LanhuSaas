@@ -864,9 +864,11 @@ def save_scene_design(data):
         # scene_obj = SceneDesign.objects.create(**scene_design)
         return {'id': "0"}
     else:
-        Scene.objects.filter(id=str(scene_result[0].id)).update(**scene_design)
-        msg = get_scene_find_xml(int(scene_result[0].id))
+        # 先校验XML，确定场景关联的监控项是否有重复
+        msg = get_scene_find_xml(data['xml'], scene_result[0].id)
         if msg is "true":
+            # 更新数据库
+            Scene.objects.filter(id=str(scene_result[0].id)).update(**scene_design)
             return {'id': "1"}
         else:
             return {'id': msg}
@@ -888,16 +890,15 @@ def query_scene_design(request):
     return {'time_interval': ""}
 
 
-def get_scene_find_xml(scene_id):
-    '''
-    根据场景id解析xml,
-    新增到
+def get_scene_find_xml(xml, scene_id):
+    """
+    解析XML，判断是否有重复的监控项，如果正常保存场景与监控项的关联关系
+    :param xml:
     :param scene_id:
     :return:
-    '''
-    dto = Scene.objects.filter(id=scene_id).get()
-    roota=ElementTree.XML(dto.scene_content)
-    parent = roota.find("root", "mxGraphModel")
+    """
+    root_a = ElementTree.XML(xml)
+    parent = root_a.find("root", "mxGraphModel")
     list = parent._children
     # 判断绑定的监控项是否有重复
     items_map = HashMap()
@@ -980,12 +981,14 @@ def page_query_scene(request):
     }
     return tools.success_result(res_dic)
 
+
 def page_query_xml_show(id):
     dto = Scene.objects.filter(id=id)
     if dto.count() > 0:
         return dto.get().scene_content
     else:
         return None
+
 
 def query_scene_item_data_handle(list_id):
     arr = []
@@ -1085,6 +1088,7 @@ def query_scene_item_data_handle(list_id):
     #             arr.append(dt)
         #TDGatherData
     return  arr
+
 
 def exec_rule(arr_db_map,dto_item,gather_dto):
     '''
