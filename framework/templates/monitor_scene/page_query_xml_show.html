@@ -240,6 +240,10 @@
 		};
 		function getNewline(val) {
             var str = new String(val);
+            //存在换行符就直接返回
+            if(str.indexOf("\n") != -1){
+                return val;
+            }
             var bytesCount = 0;
             var s="";
             for (var i = 0 ,n = str.length; i < n; i++) {
