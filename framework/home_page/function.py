@@ -70,13 +70,15 @@ def scenes_alert(request):
     if result.__len__() == 0:
         return dic_data
     health_degree_total = 0.00;
+    num = 0
     for scene_obj in result:
-        health_degree_total += float(scene_obj[7]);
         cur_time = str(scene_obj[2]);
         start_time = str(scene_obj[3]);
         end_time = str(scene_obj[4]);
         # 正在执行的场景
         if cur_time >= start_time and cur_time <= end_time:
+            health_degree_total += float(scene_obj[7]);
+            num+=1
             # 第7个值为场景的得分值
             if float(scene_obj[7]) >= 90 and float(scene_obj[7]) < 100:
                 will_scene += 1
@@ -93,7 +95,7 @@ def scenes_alert(request):
         if cur_time > end_time:
             safe_scene += 1
     # 计算健康度：所有场景加权平均
-    s_score = health_degree_total/result.__len__()
+    s_score = health_degree_total/num
     dic_data["alert_count"] = alert_count;
     dic_data["last_score"] = s_score;
     dic_data["safe_scene"] = safe_scene;
@@ -282,9 +284,38 @@ def scenes_item_list(request):
 #   张美庆 2019-5-11
 #   在界面展示各系统运行情况
 def select_All(request):
+    result_list = [];  # 存储最后结果，name:场景名,color:颜色
     user = user_info.objects.get(user_name=request.user)
-    result = function.select_all(user);
-    return result
+    result = get_every_scene_health_degree(user.id)
+    if result.__len__() == 0:
+        return tools.success_result(result_list)
+    for scene_obj in result:
+        my_dict = {}
+        cur_time = str(scene_obj[2]);
+        start_time = str(scene_obj[3]);
+        end_time = str(scene_obj[4]);
+        # 正在执行的场景
+        if cur_time >= start_time and cur_time <= end_time:
+            my_dict["name"] = str(scene_obj[1]) + "(" + str(scene_obj[7]) + ")"
+            # 第7个值为场景的得分值
+            if float(scene_obj[7]) >= 90 and float(scene_obj[7]) < 100:
+                my_dict["color"] = "yellow"
+            if float(scene_obj[7]) < 90:
+                my_dict["color"] = "red"
+            if float(scene_obj[7]) == 100:
+                my_dict["color"] = "green"
+        # 未开始的场景
+        if cur_time < start_time:
+            my_dict["name"] = str(scene_obj[1]) + "(未执行)"
+            my_dict["color"] = "gray"
+        # 当前时间大于场景结束时间，也算未执行的场景
+        if cur_time > end_time:
+            my_dict["name"] = str(scene_obj[1]) + "(未执行)"
+            my_dict["color"] = "gray"
+        result_list.append(my_dict)
+    result_scene = tools.success_result(result_list)
+    # result = function.select_all(user);
+    return result_scene
 
 
 def get_every_scene_health_degree(user_id):
