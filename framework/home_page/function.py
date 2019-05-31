@@ -50,92 +50,40 @@ def scenes_alert(request):
     # 获取当前用户拿name
     user = user_info.objects.get(user_name=request.user.username)
     position_id = model_to_dict(user)['user_pos']
-    # 一个职位下得所有场景
-    ps = position_scene.objects.filter(position_id=position_id)
-    if 0 == len(ps) or None is ps:
-        null_data = 'n'
-        return tools.success_result(null_data)
-    alert_log = []
-    # 告警数
-    alert_count = 0
-    alert_data = []
-    all_avg = 0
     # 分别是安全。预警。危险
     safe_scene = 0
     will_scene = 0
     danger_scene = 0
-    # 场景的总分值
-    all_score = 0
-    # 场景的错误分值
-    error_score = 0
-    # 多场景时的分数
+    # 健康度
     s_score = 0
-    flag = 1
-    for i in ps:
-        # 场景id
-        sid = model_to_dict(i)['scene']
-        # 场景和监控项关联表
-        sm = Scene_monitor.objects.filter(scene_id=sid)
-        for x in sm:
-            x = model_to_dict(x)
-            # 循环item_id，监控项id
-            x_item_id = x["item_id"]
-            # 得分累加，出循环时得到总分
-            scene_score = x["score"]
-            print scene_score
-            all_score = all_score + scene_score
-            try:
-                # 如果总分为0,直接为0
-                gather_data = TDGatherData.objects.filter(item_id=x_item_id)
-                for hi in gather_data:
-                    his = model_to_dict(hi)
-                    his['gather_time'] = hi.gather_time
-                    if str(his['gather_time']).split(' ')[0] == time.strftime("%Y-%m-%d", time.localtime(time.time())):
-                        # 如果当天时间此监控项出错，
-                        if his['gather_error_log'] != None and his['gather_error_log'] != '':
-                            error_score = error_score + scene_score
-                        # 没有异常，正常
-                        else:
-                            pass
-
-            except Exception as e:
-                return tools.error_result(e)
-            alert_log = TdAlertLog.objects.filter(item_id=x_item_id)
-            for y in alert_log:
-                alertd = model_to_dict(y)
-                alertd['alert_time'] = y.alert_time
-                if str(alertd['alert_time']).split(' ')[0] == time.strftime("%Y-%m-%d", time.localtime(time.time())):
-                    alert_count = alert_count + 1
-                    alertd['alert_time'] = str(alertd['alert_time'])
-                    alert_data.append(alertd)
-        # 出场景循环
-        # 所有场景下得监控项得到的权值分总和/场景数 = 权值平均分 就是从健康度
-        # 这是一个场景的健康度
-
-        if all_score != 0:
-            last_score = int((all_score - error_score) * 100 / all_score)
-        else:
-            last_score = 0
-        if flag > 1:
-            s_score =int((s_score + last_score)/2)
-        else:
-            s_score = last_score
-        flag = flag + 1
-        # 按场景判断
-        if s_score == 100:
-            safe_scene = safe_scene + 1
-        elif s_score < 100 and all_score > 90:
-            will_scene = will_scene + 1
-        else:
-            danger_scene = danger_scene + 1
-
+    # 告警数
+    alert_count = 0
+    # 直接从数据库取得健康度，通过统计数据获取
+    res = get_health_degree(user.id)
+    # 获取当前用户下每一个场景的监控度
+    result = get_every_scene_health_degree(user.id)
     dic_data = {
         'alert_count': alert_count,  # 告警数
-        'last_score': s_score,  # 健康度
+        'last_score': float(res[0][0]),  # 健康度
         'safe_scene': safe_scene,
         'will_scene': will_scene,
         'danger_scene': danger_scene,
     }
+    if result.__len__() == 0:
+        return dic_data
+    for scene_obj in result:
+        if float(scene_obj[5]) >= 90 and float(scene_obj[5]) < 100:
+            will_scene += 1
+            alert_count += 1
+        if float(scene_obj[5]) < 90:
+            danger_scene += 1
+            alert_count += 1
+        if float(scene_obj[5]) == 100:
+            safe_scene += 1
+    dic_data["alert_count"] = alert_count;
+    dic_data["safe_scene"] = safe_scene;
+    dic_data["will_scene"] = will_scene;
+    dic_data["danger_scene"] = danger_scene;
     return dic_data
 
 
@@ -251,7 +199,8 @@ def scenes_item_list(request):
             result+=(",")
         result = result[:-1]
         result += (")")
-
+    else:
+        result = "('')"
 
     #查询场景
     sql_str =" SELECT	a.id AS scene_id,a.scene_name AS scene_name,c.id,c.monitor_name AS scene_node," \
@@ -321,3 +270,56 @@ def select_All(request):
     user = user_info.objects.get(user_name=request.user)
     result = function.select_all(user);
     return result
+
+
+def get_health_degree(user_id):
+    """
+    取得当前用户下所有场景的健康度
+    :param user_id:
+    :return:
+    """
+    health_degree_sql = "select ROUND(IFNULL((b.score/a.score)*100,0),2) health_degree from " \
+                        +"(select sum(b.score) score from" \
+                         "(select a.id,a.score from tb_monitor_item a where a.id in" \
+                         "(select item_id from tl_scene_monitor where scene_id in " \
+                         "(SELECT scene_id FROM tl_position_scene WHERE position_id = " \
+                         "( SELECT user_pos_id FROM tb_user_info WHERE id = "+str(user_id)+")))) b)a," \
+                         "(select sum(b.score) score from(select DISTINCT a.item_id,IFNULL(a.score,0) score " \
+                         "from td_gather_data a,tb_monitor_item b where a.item_id= b.id and a.item_id in " \
+                         "(select item_id from tl_scene_monitor where scene_id in " \
+                         "(SELECT scene_id FROM tl_position_scene WHERE position_id = " \
+                         "( SELECT user_pos_id FROM tb_user_info WHERE id = "+str(user_id)+")))) b)b"
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(health_degree_sql)
+    res = cursor.fetchall()
+    cursor.close()
+    return res
+
+
+def get_every_scene_health_degree(user_id):
+    """
+    获取当前用户下每一个场景的健康度
+    :param user_id:
+    :return:
+    """
+    health_degree_every_scene_sql= "select e.scene_id,d.scene_startTime,d.scene_endTime,e.source_score,e.end_score,e.health_degree " \
+                                   +"from tb_monitor_scene d,(select a.scene_id,a.source_score,b.end_score,round((b.end_score/a.source_score)*100,2) health_degree from "\
+                "(select c.scene_id,sum(c.score) source_score from ("\
+                " select a.scene_id,b.id,b.score from tb_monitor_item b LEFT JOIN tl_scene_monitor a  on  b.id = a.item_id and a.scene_id in "\
+                " (SELECT scene_id FROM tl_position_scene WHERE position_id = ( SELECT user_pos_id FROM tb_user_info WHERE id = "+str(user_id)+")) "\
+                " ) c where c.scene_id is not null group by c.scene_id) a, "\
+                " (select c.scene_id,sum(c.score) end_score from ( "\
+                " select a.scene_id,b.item_id,b.score from "\
+                " (select DISTINCT a.item_id,IFNULL(a.score,0) score from td_gather_data a,tb_monitor_item b where a.item_id= b.id) b "\
+                " LEFT JOIN tl_scene_monitor a  on  b.item_id = a.item_id and a.scene_id in "\
+                " (SELECT scene_id FROM tl_position_scene WHERE position_id = ( SELECT user_pos_id FROM tb_user_info WHERE id = "+str(user_id)+")) "\
+                " ) c where c.scene_id is not null group by c.scene_id) b "\
+                " where a.scene_id = b.scene_id)e where d.id = e.scene_id"
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute(health_degree_every_scene_sql)
+    res = cursor.fetchall()
+    cursor.close()
+    return res
+
