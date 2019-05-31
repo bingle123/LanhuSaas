@@ -194,7 +194,7 @@ Actions.prototype.init = function()
 		// Cancels interactive operations
 		graph.escape();
 		var cells = graph.getDeletableCells(graph.getSelectionCells());
-		
+
 		if (cells != null && cells.length > 0)
 		{
 			var parents = graph.model.getParents(cells);

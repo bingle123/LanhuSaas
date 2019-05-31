@@ -314,7 +314,6 @@ def select_All(request):
             my_dict["color"] = "gray"
         result_list.append(my_dict)
     result_scene = tools.success_result(result_list)
-    # result = function.select_all(user);
     return result_scene
 
 

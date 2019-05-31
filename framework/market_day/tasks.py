@@ -231,6 +231,7 @@ def base_monitor_task(**i):
     strnow = datetime.strftime(datetime.now(), '%H:%M')
     if strnow <= endtime:
         # 调用一体化监控项数据采集的方法
+        print i
         print 'fa'
     else:
         print u'删除' + task_name
