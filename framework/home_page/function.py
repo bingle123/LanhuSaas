@@ -296,7 +296,7 @@ def select_All(request):
         end_time = str(scene_obj[4]);
         # 正在执行的场景
         if cur_time >= start_time and cur_time <= end_time:
-            my_dict["name"] = str(scene_obj[1]) + "(" + str(scene_obj[7]) + ")"
+            my_dict["name"] = str(scene_obj[1]) + "(分值：" + str(scene_obj[7]) + ")"
             # 第7个值为场景的得分值
             if float(scene_obj[7]) >= 90 and float(scene_obj[7]) < 100:
                 my_dict["color"] = "yellow"

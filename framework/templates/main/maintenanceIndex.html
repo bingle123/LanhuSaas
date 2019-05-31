@@ -721,11 +721,11 @@
                         if(ve.percentage){
                             //给健康度描色
                             if(ve.percentage >= 90 && ve.percentage< 100){
-                                $(".el-progress-circle__path").attr("stroke","yellow");
+                                $("#health_degree").find(".el-progress-circle__path").attr("stroke","yellow");
                             }else if(ve.percentage < 90){
-                                $(".el-progress-circle__path").attr("stroke","red");
+                                $("#health_degree").find(".el-progress-circle__path").attr("stroke","red");
                             }else{
-                                $(".el-progress-circle__path").attr("stroke","blue");
+                                $("#health_degree").find(".el-progress-circle__path").attr("stroke","#409EFF");
                             }
                         }
                         ve.alert_number=res.data['bing_res'].alert_count;
