@@ -238,12 +238,14 @@ def editSence(request):
                 add_log(info)
                 scene = Scene.objects.get(id=model['data']['id'])
                 scene.save()
-                job = pos_info.objects.filter(pos_name=model['data']["pos_name"])
+            # 根据岗位名称获取岗位信息
+            job = pos_info.objects.filter(pos_name=model['data']["pos_name"])
             for j in job:
                 senceModel3 = {
                     "scene_id": model['data']['id'],
                     "position_id": j.id
                 }
+            # 更新岗位信息
             position_scene.objects.filter(scene=senceModel3['scene_id']).update(**senceModel3)
             info2 = make_log_info(u'编辑场景', u'业务日志', u'position_scene', sys._getframe().f_code.co_name,
                                   request.user.username, '成功', '无')
