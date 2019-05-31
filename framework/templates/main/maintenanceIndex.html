@@ -164,7 +164,7 @@
                 <div class="row_shadow" style="width: 100%;height: 200px;background: rgb(255,255,255);">
                     <p class="p_class">健康度</p>
                     <div style="text-align: center;padding-top: 44px">
-                        <el-progress type="circle" :percentage="percentage" status="text">{{ percentage }}%</el-progress>
+                        <el-progress id="health_degree" type="circle" :percentage="percentage" status="text" >{{ percentage }}%</el-progress>
                     </div>
                 </div>
             </el-col>
@@ -718,6 +718,16 @@
                         this.$message.error("此岗位没有场景!")
                     }else{
                         ve.percentage=res.data['bing_res'].last_score;
+                        if(ve.percentage){
+                            //给健康度描色
+                            if(ve.percentage >= 90 && ve.percentage< 100){
+                                $(".el-progress-circle__path").attr("stroke","yellow");
+                            }else if(ve.percentage < 90){
+                                $(".el-progress-circle__path").attr("stroke","red");
+                            }else{
+                                $(".el-progress-circle__path").attr("stroke","blue");
+                            }
+                        }
                         ve.alert_number=res.data['bing_res'].alert_count;
                         //彭英杰 start 20190511
                         ve.alert_table_data=res.data['alert_data'];

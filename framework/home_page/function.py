@@ -58,29 +58,44 @@ def scenes_alert(request):
     s_score = 0
     # 告警数
     alert_count = 0
-    # 直接从数据库取得健康度，通过统计数据获取
-    res = get_health_degree(user.id)
     # 获取当前用户下每一个场景的监控度
     result = get_every_scene_health_degree(user.id)
     dic_data = {
         'alert_count': alert_count,  # 告警数
-        'last_score': float(res[0][0]),  # 健康度
+        'last_score': s_score,  # 健康度
         'safe_scene': safe_scene,
         'will_scene': will_scene,
         'danger_scene': danger_scene,
     }
     if result.__len__() == 0:
         return dic_data
+    health_degree_total = 0.00;
     for scene_obj in result:
-        if float(scene_obj[5]) >= 90 and float(scene_obj[5]) < 100:
-            will_scene += 1
-            alert_count += 1
-        if float(scene_obj[5]) < 90:
-            danger_scene += 1
-            alert_count += 1
-        if float(scene_obj[5]) == 100:
+        health_degree_total += float(scene_obj[7]);
+        cur_time = str(scene_obj[2]);
+        start_time = str(scene_obj[3]);
+        end_time = str(scene_obj[4]);
+        # 正在执行的场景
+        if cur_time >= start_time and cur_time <= end_time:
+            # 第7个值为场景的得分值
+            if float(scene_obj[7]) >= 90 and float(scene_obj[7]) < 100:
+                will_scene += 1
+                alert_count += 1
+            if float(scene_obj[7]) < 90:
+                danger_scene += 1
+                alert_count += 1
+            if float(scene_obj[7]) == 100:
+                safe_scene += 1
+        # 未开始的场景
+        if cur_time < start_time:
             safe_scene += 1
+        # 当前时间大于场景结束时间，也算未执行的场景
+        if cur_time > end_time:
+            safe_scene += 1
+    # 计算健康度：所有场景加权平均
+    s_score = health_degree_total/result.__len__()
     dic_data["alert_count"] = alert_count;
+    dic_data["last_score"] = s_score;
     dic_data["safe_scene"] = safe_scene;
     dic_data["will_scene"] = will_scene;
     dic_data["danger_scene"] = danger_scene;
@@ -272,38 +287,13 @@ def select_All(request):
     return result
 
 
-def get_health_degree(user_id):
-    """
-    取得当前用户下所有场景的健康度
-    :param user_id:
-    :return:
-    """
-    health_degree_sql = "select ROUND(IFNULL((b.score/a.score)*100,0),2) health_degree from " \
-                        +"(select sum(b.score) score from" \
-                         "(select a.id,a.score from tb_monitor_item a where a.id in" \
-                         "(select item_id from tl_scene_monitor where scene_id in " \
-                         "(SELECT scene_id FROM tl_position_scene WHERE position_id = " \
-                         "( SELECT user_pos_id FROM tb_user_info WHERE id = "+str(user_id)+")))) b)a," \
-                         "(select sum(b.score) score from(select DISTINCT a.item_id,IFNULL(a.score,0) score " \
-                         "from td_gather_data a,tb_monitor_item b where a.item_id= b.id and a.item_id in " \
-                         "(select item_id from tl_scene_monitor where scene_id in " \
-                         "(SELECT scene_id FROM tl_position_scene WHERE position_id = " \
-                         "( SELECT user_pos_id FROM tb_user_info WHERE id = "+str(user_id)+")))) b)b"
-    db = get_db()
-    cursor = db.cursor()
-    cursor.execute(health_degree_sql)
-    res = cursor.fetchall()
-    cursor.close()
-    return res
-
-
 def get_every_scene_health_degree(user_id):
     """
     获取当前用户下每一个场景的健康度
     :param user_id:
     :return:
     """
-    health_degree_every_scene_sql= "select e.scene_id,d.scene_startTime,d.scene_endTime,e.source_score,e.end_score,e.health_degree " \
+    health_degree_every_scene_sql= "select e.scene_id,d.scene_name,CURRENT_TIME cur_time,d.scene_startTime,d.scene_endTime,e.source_score,e.end_score,e.health_degree " \
                                    +"from tb_monitor_scene d,(select a.scene_id,a.source_score,b.end_score,round((b.end_score/a.source_score)*100,2) health_degree from "\
                 "(select c.scene_id,sum(c.score) source_score from ("\
                 " select a.scene_id,b.id,b.score from tb_monitor_item b LEFT JOIN tl_scene_monitor a  on  b.id = a.item_id and a.scene_id in "\
