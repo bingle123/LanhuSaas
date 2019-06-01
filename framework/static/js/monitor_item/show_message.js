@@ -1971,12 +1971,11 @@ $(function(){
                     vm.$alert("请选择数展示规则","提示");
                     return false;
                 }else if(vm.base.show_rule_type == "0"){//选百分比校验
-                    var regu = /^\+?[1-9][0-9]*$ /;
-                    /*
-                    if(regu.test(vm.base.show_rule_type)){
-                        vm.$alert("百分比采集规则的值只能是数据类型","提示");
+                    var regu = /^\+?[1-9][0-9]*$/;
+                    if(!regu.test(vm.base.show_rule_type)){
+                        vm.$alert("百分比采集规则的值只能是非0正整数类型","提示");
                         return false;
-                    }*/
+                    }
                 }else if(vm.base.show_rule_type == "1" || vm.base.show_rule_type == "2"){//选颜色和其它校验
                     var filter=/^\r|\n\r|\n$/;
                     if(filter.test(vm.base.gather_rule)){
