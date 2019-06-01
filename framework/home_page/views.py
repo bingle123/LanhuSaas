@@ -33,6 +33,8 @@ def scenes_alert(request):
     res["sences_list"] = function.query_curr_sences(request);
     #彭英杰 2019-5-11 end
     return render_json(res)
+
+
 def select_all(request):
     """
 
