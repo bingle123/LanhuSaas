@@ -96,7 +96,7 @@ def scenes_alert(request):
     if num == 0:
         s_score = 100.00
     else:
-        s_score = health_degree_total/num
+        s_score = round(health_degree_total/num,2)
     dic_data["alert_count"] = alert_count;
     dic_data["last_score"] = s_score;
     dic_data["safe_scene"] = safe_scene;
