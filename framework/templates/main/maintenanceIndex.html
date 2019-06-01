@@ -714,7 +714,7 @@
             },
             get_monitor_scene_item(){
                 axios.post('${SITE_URL}home_page/select_all/').then((res)=>{
-                    result = ve.sort_scene(res.data.results)
+                    let result = ve.sort_scene(res.data.results)
                     this.system_run_data = result;
                 })
             },
