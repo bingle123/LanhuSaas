@@ -810,7 +810,7 @@ $(function(){
                                 }).then(function (res) {});
                             }
                             //一体化的监控项，调用采集逻辑
-                            if(vm.monitor_type == "five") {
+                            if(vm.monitor_type == "five" || vm.monitor_type == "second") {
                                 //保存采集测试的数据到服务器
                                 vm.gather_data_test_save(vm.unit_id, 'edit');
                             }
@@ -857,7 +857,7 @@ $(function(){
                                 }).then(function (res) {
                                 });
                             }
-                            if(vm.monitor_type == "five"){
+                            if(vm.monitor_type == "five" || vm.monitor_type == "second"){
                                 //保存采集测试的数据到服务器
                                 vm.gather_data_test_save(res.data['item_id'], 'add');
                             }
