@@ -698,7 +698,6 @@
                         }
                     ]
                 };
-
                 this.line_chart1.setOption(option1);
                 this.line_chart2.setOption(option2);
                 this.line_chart3.setOption(option3);
@@ -715,12 +714,25 @@
             },
             get_monitor_scene_item(){
                 axios.post('${SITE_URL}home_page/select_all/').then((res)=>{
-                    //console.log(res)
-                    this.system_run_data = res.data.results;
-                     //console.log("111111111111111111")
-                    //console.log(this.system_run_data[0].name)
-
+                    result = ve.sort_scene(res.data.results)
+                    this.system_run_data = result;
                 })
+            },
+            sort_scene(scene_list){//执行场景排序
+                if(scene_list <= 1){
+                    return scene_list;
+                }
+                //冒泡排序
+                for(var i=0;i<scene_list.length;i++){
+                    for(var j=0;j<scene_list.length-1-i;j++){
+                        if(scene_list[j].sort > scene_list[j+1].sort){
+                            let temp = scene_list[j];
+                            scene_list[j]=scene_list[j+1];
+                            scene_list[j+1]=temp
+                        }
+                    }
+                }
+                return scene_list;
             },
             get_alert_data(){
                 var opt={}

@@ -301,18 +301,23 @@ def select_All(request):
             # 第7个值为场景的得分值
             if float(scene_obj[7]) >= 90 and float(scene_obj[7]) < 100:
                 my_dict["color"] = "yellow"
+                my_dict["sort"] = "2"
             if float(scene_obj[7]) < 90:
                 my_dict["color"] = "red"
+                my_dict["sort"] = "1"
             if float(scene_obj[7]) == 100:
                 my_dict["color"] = "green"
+                my_dict["sort"] = "3"
         # 未开始的场景
         if cur_time < start_time:
             my_dict["name"] = str(scene_obj[1]) + "(未执行)"
             my_dict["color"] = "gray"
+            my_dict["sort"] = "4"
         # 当前时间大于场景结束时间，也算未执行的场景
         if cur_time > end_time:
             my_dict["name"] = str(scene_obj[1]) + "(未执行)"
             my_dict["color"] = "gray"
+            my_dict["sort"] = "4"
         result_list.append(my_dict)
     result_scene = tools.success_result(result_list)
     return result_scene

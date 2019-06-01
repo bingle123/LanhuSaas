@@ -42,7 +42,7 @@ def select_all(request):
     :return:
     """
     res = function.select_All(request)
-    print type(res)
+    # print type(res)
     return render_json(res)
 
 
