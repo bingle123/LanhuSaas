@@ -293,9 +293,9 @@
             </el-col>
             <el-col :span="22" :offset="1">
                 <el-table max-height="200" :data="scene_table_data" style="heigth:300px;width: 100%;margin-bottom: 50px;">
-                  <el-table-column prop="scene_id" label="场景id"  ></el-table-column>
-                  <el-table-column prop="scene_name" :show-overflow-tooltip="true" label="场景名称" width="100" ></el-table-column>
-                  <el-table-column prop="scene_node" :show-overflow-tooltip="true" label="节点" width="100"></el-table-column>
+                  <el-table-column prop="scene_id" label="场景id" width="80px" ></el-table-column>
+                  <el-table-column prop="scene_name" :show-overflow-tooltip="true" label="场景名称" width="200px" ></el-table-column>
+                  <el-table-column prop="scene_node" :show-overflow-tooltip="true" label="节点名称" width="300px"></el-table-column>
                   <el-table-column prop="start_time" label="开始时间"  ></el-table-column>
                   <el-table-column prop="end_time" label="截至时间"  ></el-table-column>
                   <el-table-column prop="scene_status" label="状态">
@@ -454,9 +454,37 @@
             now_date_time:'',
             now_date_name:'',
             scene_chart_data:[],
+            interval:10,  //首页刷新频率，默认10秒，数据库中另有配置
+            time_rub:null,
         },
         methods: {
-
+            //取配置的轮播时间
+            get_time_interval(){
+                axios({
+                    method: 'post',
+                    data:{
+                    code:"home_page_cycle"
+                    },
+                    url:  '${SITE_URL}monitor_scene/open_scene_design/',
+                }).then((res) => {
+                    if(res && res.data && res.data.time_interval){
+                        if(res.data.time_interval != ve.interval){
+                            ve.interval = res.data.time_interval;
+                            //清空定时任务
+                            clearInterval(ve.time_rub)
+                            //重新启动定时任务
+                            ve.time_task()
+                        }
+                    }
+                })
+            },
+            time_task(){//启动定时任务
+                ve.time_rub = setInterval(function () {
+                    ve.get_date();
+                    ve.get_monitor_scene_item();
+                    ve.get_alert_data();
+                },ve.interval * 1000);
+            },
             show_ring_chart(){
                 if (this.ring_chart != null && this.ring_chart != "" && this.ring_chart != undefined) {
                     this.ring_chart.dispose();
@@ -686,6 +714,8 @@
                 this.line_chart4.setOption(option4);
             },
             get_date(){
+                //获取轮播的频率
+                ve.get_time_interval();
                 axios.post('${SITE_URL}home_page/get_time/').then((res)=>{
                     ve.now_date_time = res.data['time_date']
                     ve.now_date_name = res.data['today_name']+":"
@@ -848,14 +878,10 @@
     });
     ve.get_date();
     ve.get_monitor_scene_item();
-    setInterval(function () {
-        ve.get_date();
-        ve.get_monitor_scene_item();
-        ve.get_alert_data();
-    },10000)
-    //ve.customQueryPageChange(1);
-    ve.query_scene_data();
     ve.get_alert_data();
+    ve.query_scene_data();
+    ve.time_task()//初始启动定时任务
+    //ve.customQueryPageChange(1);
     //ve.show_line_chart();
 </script>
 
