@@ -27,12 +27,10 @@ def get_time(request):
     """
     today =  datetime.datetime.now().strftime("%Y年%m月%d日 %H:%M")
     flag = check_jobday(1,  datetime.datetime.now())
-    if flag == True:
+    if flag is True:
         today_name = '交易日'
-    elif flag == False:
-        today_name = '非交易日'
     else:
-        today_name = None
+        today_name = '非交易日'
     dic_data = {
         'time_date': today,
         'today_name': today_name,

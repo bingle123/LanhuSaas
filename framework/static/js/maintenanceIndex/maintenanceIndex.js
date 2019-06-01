@@ -163,9 +163,9 @@ maintenanceObj.verticalBar = function(){
 
 $(function(){
     //echars饼状图初始化
-    maintenanceObj.pie();
+    //maintenanceObj.pie();
     //echars条形图初始化
-    maintenanceObj.bar();
+    //maintenanceObj.bar();
     //已执行场景与待执行场景的步骤条描述设置
-    maintenanceObj.verticalBar();
+    //maintenanceObj.verticalBar();
 });

@@ -389,19 +389,6 @@
         config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)[1];
         return config
     });
-    window.onresize = function() {
-        $('#maintenancePie1').width('100%');
-        ve.ring_chart.resize();
-        $('#business_peak1').width('100%');
-        ve.line_chart1.resize();
-        ('#business_peak2').width('100%');
-        ve.line_chart2.resize();
-        ('#business_peak3').width('100%');
-        ve.line_chart3.resize();
-        ('#business_peak4').width('100%');
-        ve.line_chart4.resize();
-
-    };
     var ve = new Vue({
         el: '#maintenanceIndex',
         data: {
@@ -467,13 +454,17 @@
                     },
                     url:  '${SITE_URL}monitor_scene/open_scene_design/',
                 }).then((res) => {
-                    if(res && res.data && res.data.time_interval){
-                        if(res.data.time_interval != ve.interval){
-                            ve.interval = res.data.time_interval;
-                            //清空定时任务
-                            clearInterval(ve.time_rub)
-                            //重新启动定时任务
-                            ve.time_task()
+                    if(res && res.data && res.data.time_interval && res.data.time_interval != ""){
+                        var regu = /^\+?[1-9][0-9]*$/;
+                        //刷新频率只能是非0正整数
+                        if(regu.test(res.data.time_interval)){
+                            if(res.data.time_interval != ve.interval){
+                                ve.interval = res.data.time_interval;
+                                //清空定时任务
+                                clearInterval(ve.time_rub)
+                                //重新启动定时任务
+                                ve.time_task()
+                            }
                         }
                     }
                 })
@@ -848,7 +839,6 @@
                 }
                 ,
             query_scene_data:function(){
-                debugger
                 var para_data={};
                 para_data["item_type"] = ve.value2;
                 para_data["scene_type"] = ve.value1;
