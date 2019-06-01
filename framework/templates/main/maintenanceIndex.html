@@ -306,7 +306,7 @@
                 </el-table>
             </el-col>
         </el-row>
-        <!--自定义查询-->
+        <!--自定义查询
         <el-row class="row_margin row_shadow">
             <el-col :span="24">
                 <el-collapse accordion>
@@ -322,11 +322,10 @@
                                 <el-table-column prop="query_sql" label="查询SQL" width="950"></el-table-column>
                             </el-table>
                         </el-col>
-
                     </el-collapse-item>
                 </el-collapse>
             </el-col>
-        </el-row>
+        </el-row>-->
         <!--自定义添加-->
         <!--<el-row class="row_margin row_shadow">
             <el-col :span="24">
@@ -336,9 +335,9 @@
                 </div>
             </el-col>
         </el-row>-->
-    </el-row>
+    <!--</el-row>-->
     <!--场景详情-->
-    <el-row>
+    <!--<el-row>-->
         <!--系统状态-->
        <!-- <el-row class="row_margin row_shadow">
             <el-col :span="24">
@@ -381,7 +380,6 @@
             </el-col>
         </el-row>-->
     </el-row>
-
 </div>
 </body>
 <script type="text/javascript">
@@ -853,12 +851,12 @@
     setInterval(function () {
         ve.get_date();
         ve.get_monitor_scene_item();
+        ve.query_scene_data();
     },10000)
-    ve.customQueryPageChange(1);
+    //ve.customQueryPageChange(1);
     ve.query_scene_data();
     ve.get_alert_data();
     ve.show_line_chart();
-
 </script>
 
 </html>

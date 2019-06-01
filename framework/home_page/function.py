@@ -55,7 +55,7 @@ def scenes_alert(request):
     will_scene = 0
     danger_scene = 0
     # 健康度
-    s_score = 0
+    s_score = 0.00
     # 告警数
     alert_count = 0
     # 获取当前用户下每一个场景的监控度
@@ -95,7 +95,10 @@ def scenes_alert(request):
         if cur_time > end_time:
             safe_scene += 1
     # 计算健康度：所有场景加权平均
-    s_score = health_degree_total/num
+    if num == 0:
+        s_score = 100.00
+    else:
+        s_score = health_degree_total/num
     dic_data["alert_count"] = alert_count;
     dic_data["last_score"] = s_score;
     dic_data["safe_scene"] = safe_scene;
