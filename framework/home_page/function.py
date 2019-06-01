@@ -325,7 +325,7 @@ def get_every_scene_health_degree(user_id):
     :return:
     """
     health_degree_every_scene_sql= "select e.scene_id,d.scene_name,CURRENT_TIME cur_time,d.scene_startTime,d.scene_endTime,e.source_score,e.end_score,e.health_degree " \
-                                   +"from tb_monitor_scene d,(select a.scene_id,a.source_score,b.end_score,round((b.end_score/a.source_score)*100,2) health_degree from "\
+                                   +"from (select a.scene_id,a.source_score,b.end_score,round((b.end_score/a.source_score)*100,2) health_degree from "\
                 "(select c.scene_id,sum(c.score) source_score from ("\
                 " select a.scene_id,b.id,b.score from tb_monitor_item b LEFT JOIN tl_scene_monitor a  on  b.id = a.item_id and a.scene_id in "\
                 " (SELECT scene_id FROM tl_position_scene WHERE position_id = ( SELECT user_pos_id FROM tb_user_info WHERE id = "+str(user_id)+")) "\
@@ -336,7 +336,7 @@ def get_every_scene_health_degree(user_id):
                 " LEFT JOIN tl_scene_monitor a  on  b.item_id = a.item_id and a.scene_id in "\
                 " (SELECT scene_id FROM tl_position_scene WHERE position_id = ( SELECT user_pos_id FROM tb_user_info WHERE id = "+str(user_id)+")) "\
                 " ) c where c.scene_id is not null group by c.scene_id) b "\
-                " where a.scene_id = b.scene_id)e where d.id = e.scene_id"
+                " where a.scene_id = b.scene_id)e LEFT JOIN tb_monitor_scene d ON e.scene_id = d.id "
     db = get_db()
     cursor = db.cursor()
     cursor.execute(health_degree_every_scene_sql)
