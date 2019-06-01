@@ -79,10 +79,36 @@
                       },
                       url:  '${SITE_URL}monitor_scene/open_scene_design/',
                   }).then((res) => {
-                      if(res.data.time_interval != ""){
-                          vm.interval = res.data.time_interval;
+                      if(res && res.data && res.data.time_interval && res.data.time_interval != ""){
+                          let reg = /^\+?[1-9][0-9]*$/;
+                          if(reg.test(res.data.time_interval)){
+                              if(res.data.time_interval != vm.interval){
+                                  vm.interval = res.data.time_interval;
+                                  //清空定时任务
+                                  clearInterval(vm.show_stop);
+                                  //重新启动定时任务
+                                  vm.time_task();
+                              }
+                          }
                       }
                   })
+              },
+              time_task(){
+                  if(vm.show_stop){
+                     clearInterval(vm.show_stop);
+                  }
+                  vm.show_stop = setInterval(function(){
+                      vm.get_time_interval()
+                      var iframe_dto = $("#div_sence iframe");
+                      if(iframe_dto.length>0){
+                          if(vm.show_index==(iframe_dto.length-1)){
+                              vm.show_index = -1;
+                          }
+                          vm.show_index=vm.show_index+1
+                          iframe_dto.hide();
+                          $(iframe_dto[vm.show_index]).show();
+                      }
+                  },vm.interval*1000);
               },
               query_scene_info:function(){
                   //取得配置的轮播时间间隔
@@ -111,17 +137,7 @@
                                  //$("#div"+djson[i]).load("${SITE_URL}monitor_scene/page_query_xml_show?id="+djson[i]);
                                  //html.hide()
                               }
-                              vm.show_stop= setInterval(function(){
-                                  var iframe_dto = $("#div_sence iframe");
-                                  if(iframe_dto.length>0){
-                                      if(vm.show_index==(iframe_dto.length-1)){
-                                          vm.show_index = -1;
-                                      }
-                                      vm.show_index=vm.show_index+1
-                                      iframe_dto.hide();
-                                      $(iframe_dto[vm.show_index]).show();
-                                  }
-                              },vm.interval*1000);
+                              vm.time_task();
                           }
                       }
                   })

@@ -32,6 +32,9 @@
 </head>
 	<script type="text/javascript">
 		// Extends EditorUi to update I/O action states based on availability of backend
+        //默认取轮播数据的时间间隔为10秒
+        let interval = 10;
+        let get_data_stop = null;
 		var graph =null;
 		var data_xml= '${data}'
         function main(container){
@@ -40,7 +43,29 @@
 			graph.setEnabled(false);
 			load_Data();
 		}
-		setInterval(load_Data,5000)
+		function get_time_interval(){
+            axios({
+                method: 'post',
+                data:{
+                    code:"wheel_data_cycle"
+                },
+              url:  '${SITE_URL}monitor_scene/open_scene_design/',
+            }).then((res) => {
+                if(res && res.data && res.data.time_interval && res.data.time_interval != ""){
+                    let reg = /^\+?[1-9][0-9]*$/;
+                    if(reg.test(res.data.time_interval)){
+                        if(res.data.time_interval != interval){
+                            interval = res.data.time_interval;
+                            //清空定时任务
+                            clearInterval(get_data_stop);
+                            //重新启动定时任务
+                            get_data_stop = setInterval(load_Data,interval*1000);
+                        }
+                    }
+                }
+            })
+            }
+		get_data_stop = setInterval(load_Data,interval*1000)
 		//便于采集数据
         function load_Data(){
 		    if(data_xml!=""&&data_xml!="None"){
@@ -85,13 +110,13 @@
                             var data_json = eval('('+data.message+')');
                             //darr[0]["key_name"].split(/[\r\n]/)
                             for(var temp_num in data_json){
-                               var temp_dto= data_json[temp_num];//获取对象
-                               if(temp_dto["item_type"] == 2){ //为图表监控
-                                   graph.getModel().cells[param_map[temp_dto["id"]]].attribute
+                                var temp_dto= data_json[temp_num];//获取对象
+                                if(temp_dto["item_type"] == 2){ //为图表监控
+                                    graph.getModel().cells[param_map[temp_dto["id"]]].attribute
                                        = temp_dto["key_name"]
-                                   continue;
-                               }
-                              // var str_val = temp_dto["key_name"].split(/[\r\n]/);
+                                    continue;
+                                }
+                                // var str_val = temp_dto["key_name"].split(/[\r\n]/);
                                 var  calc_key = "";
                                 if(temp_dto["key_val"].indexOf("@")>-1){
                                     calc_key = "@";
@@ -105,11 +130,11 @@
                                 }
                                 var  calc_data = temp_dto["key_val"].split(calc_key);
                                 if(calc_key=="#"){//文本框内容设置颜色
-                                   var color_val = calc_data[1];
-                                   if(calc_data.length>2){
-                                       color_val = temp_dto["key_val"].split(calc_key)[1];
-                                   }
-                                   var color_cell =graph.getModel().cells[param_map[temp_dto["id"]]]
+                                    var color_val = calc_data[1];
+                                    if(calc_data.length>2){
+                                        color_val = temp_dto["key_val"].split(calc_key)[1];
+                                    }
+                                    var color_cell =graph.getModel().cells[param_map[temp_dto["id"]]]
                                     color_cell.value = "";
                                     graph.setCellStyles(mxConstants.STYLE_FILLCOLOR,
                                        '#'+color_val, [color_cell]);
