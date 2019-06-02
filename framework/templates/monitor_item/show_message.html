@@ -252,13 +252,13 @@
     <!-- div1 end-->
 
     <!-- 对话框 start-->
-    <el-dialog title="基本信息" :visible.sync="centerDialogVisible" width="80%" @closed="monitor_cache_clean"
+    <el-dialog fullscreen title="基本信息" :visible.sync="centerDialogVisible" width="80%" @closed="monitor_cache_clean"
                :close-on-click-modal="false">
         <HR align=center width=100% color=#979797 SIZE=0.5>
         <div style="height: 30px;"></div>
         <div style="margin-left: 20px;">
             <span>监控项名称</span>
-            <el-input placeholder="请输入监控项名称" v-model="monitor_name" style="width: 88%;margin-left: 12px;" @blur="monitorName()"></el-input>
+            <el-input placeholder="请输入监控项名称" v-model="monitor_name" style="width: 40%;margin-left: 12px;" @blur="monitorName()"></el-input>
             <!--<span style="margin-left: 80px;">监控项执行日历</span>
             <el-select v-model="area" placeholder="请选择日历的地区" style="width: 30%;margin-left: 12px;">
                 <el-option
@@ -272,9 +272,9 @@
         </div>
         <div style="height: 30px"></div>
         <span>
-            <el-tabs type="card" v-model="monitor_type">
+            <el-tabs type="border-card" v-model="monitor_type">
                 <!--基本单元 start-->
-                <el-tab-pane :disabled="disabled2" label="基本监控项" name="first">
+                <el-tab-pane :disabled="disabled2" label="基本监控项" name="first" >
                     <el-row>
                         <el-col :span="12" style="margin-top: 30px"><div class="grid-content bg-purple">
                             <el-form :model="basic" ref="basic" :rules="rules1" label-width="100px">
@@ -548,320 +548,6 @@
                     </el-row>
                 </el-tab-pane>
                 <!-- 图表单元 end-->
-
-                <!-- 作业单元 start
-                <el-tab-pane :disabled="disabled4" label="作业监控项" name="third" style="display:none;">
-                    <el-row>
-                        <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="job" :rules="rules3" ref="job" label-width="100px">
-                                <el-form-item label="字号" prop="font_size">
-                                    <el-select v-model="job.font_size" @change="change_job_fontSize"
-                                               placeholder="请选择字号" style="width: 310px;">
-                                        <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="高Ⅹ宽" required style="width: 96%">
-                                    <el-col :span="11">
-                                        <el-form-item prop="height">
-                                            <el-input type="number" min="120" v-model.number="numberValidateForm.age"
-                                                      auto-complete="off" v-model="job.height"
-                                                      placeholder="请输入高度" @change="change_job_height"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col class="line" :span="2">Ⅹ</el-col>
-                                    <el-col :span="11">
-                                        <el-form-item prop="width">
-                                              <el-input type="number" min="200" v-model.number="numberValidateForm.age"
-                                                        auto-complete="off" v-model="job.width"
-                                                        placeholder="请输入宽度" @change="change_job_width"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-form-item>
-                                <el-form-item label="显示内容" style="width: 96%" prop="contents">
-                                    <el-input type="textarea" v-model="job.contents"
-                                              placeholder="上证指数:3000  深证指数:3000"
-                                              @change="change_job_contents"></el-input>
-                                </el-form-item>
-                                <el-form-item label="作业模板" prop="gather_rule">
-                                    <el-select v-model="job.gather_rule" placeholder="请选择作业模板" style="width: 310px;">
-                                        <el-option v-for="i in job2" :label="i.name" :value="i.id"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="脚本参数" style="width: 96%">
-                                    <el-input v-model="job.gather_params" placeholder="多个参数空格分开"></el-input>
-                                </el-form-item>
-                                <el-form-item label="执行服务器IP" style="width: 96%">
-                                    <el-input v-model="job.params" placeholder="请输入服务器地址"></el-input>
-                                </el-form-item>
-                                <el-form-item label="采集时间段:" style="width: 96%">
-                                    <el-col :span="11">
-                                        <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="job.start_time"
-                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
-                                            </el-time-picker>
-                                        </el-form-item>
-                                        </el-col>
-                                    <el-col class="line" :span="2">—</el-col>
-                                    <el-col :span="11">
-                                        <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="job.end_time"
-                                                            placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
-                                            </el-time-picker>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-form-item>
-                                 <el-form-item label="采集周期" prop="period">
-                                            <el-input type="number" min="0" v-model.number="numberValidateForm.age"
-                                                      auto-complete="off" v-model="job.period" style="width: 96%"
-                                                      placeholder="请输入采集周期(秒)"></el-input>
-                                </el-form-item>
-                            </el-form>
-                        </div></el-col>
-                        <el-col :span="12"><div class="grid-content bg-purple-light">
-                            <div style="padding: 0px 45% 0px 45%">
-                                <h2>预览</h2>
-                            </div>
-                            <div style="text-align:center;width: 100%;height: 23%;background-color: whitesmoke;">
-                                <div style="height: 60px"></div>
-                                <div id="job_text" style="max-width: 100%;margin: auto;padding-top: 20px;">
-
-                                </div>
-
-                            </div>
-                            <div style="padding: 0px 10%">
-                                <div style="height: 20px"></div>
-                                <el-button type="primary" :disabled="disabled1" v-on:click="job_test">采集测试</el-button>
-                                <el-checkbox v-model="checked1" @change="change2">启动脚本</el-checkbox>
-                                <div :style="{ display: zuoye }">
-                                    <el-alert title="启动作业可能会对系统造成不可逆的变更，请谨慎勾选此项！" type="warning" show-icon show-icon
-                                              true-label="1" false-label="0"></el-alert>
-                                </div>
-                            </div>
-                        </div></el-col>
-                    </el-row>
-                </el-tab-pane>
-                -->
-                <!-- 作业单元 end-->
-
-
-                <!-- 流程单元 start
-                <el-tab-pane :disabled="disabled5" label="流程监控项" name="fourth" style="display:none;">
-                    <el-row>
-                        <el-col :span="12"><div class="grid-content bg-purple">
-                            <el-form :model="flow" :rules="rules4" ref="flow" label-width="100px">
-
-                                <el-form-item label="流程模板" prop="gather_rule">
-                                    <el-select v-model="flow.gather_rule" placeholder="请选择模板" @change="flow_change"
-                                               style="width: 310px;">
-                                        <el-option v-for="i in flow2" :label="i.flow_name" :value="i.id"></el-option>
-                                    </el-select>
-                                </el-form-item>
-
-                                <el-form-item label="节点">
-                                        <el-select v-model="flow.node_name" placeholder="请选择节点" style="width: 310px;">
-                                          <el-option v-for="i in activities_node_name" :label="i.name"
-                                                     :value="i.name"></el-option>
-                                        </el-select>
-                                 </el-form-item>
-
-
-                                  <el-form-item label="采集时间段:" style="width: 96%">
-                                    <el-col :span="11">
-                                        <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="activities_node_time.start_time"
-                                                            placeholder="开始时间点" @change="Rendering_start_time"
-                                                            format="HH:mm" value-format="HH:mm">
-                                            </el-time-picker>
-                                        </el-form-item>
-                                        </el-col>
-                                    <el-col class="line" :span="2">—</el-col>
-                                    <el-col :span="11">
-                                        <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="activities_node_time.end_time"
-                                                            placeholder="结束时间点" @change="Rendering_end_time"
-                                                            format="HH:mm" value-format="HH:mm">
-                                            </el-time-picker>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-form-item>
-
-                                <el-form-item v-for="i in constants" :label="i.name" style="width: 96%">
-                                    <el-input v-model="i.value" placeholder="请输入参数"></el-input>
-                                </el-form-item>
-
-
-                                <el-form-item label="字号" prop="font_size">
-                                    <el-select v-model="flow.font_size" placeholder="请选择字号" @change="font_size"
-                                               style="width: 310px;">
-                                        <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item label="高Ⅹ宽" required style="width: 96%">
-                                    <el-col :span="11">
-                                        <el-form-item prop="height">
-                                            <el-input disabled="disabled" type="number" min="0"
-                                                      v-model.number="numberValidateForm.age" auto-complete="off"
-                                                      v-model="flow.height" placeholder="请输入高度"
-                                                      @change="flow_height"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                    <el-col class="line" :span="2">Ⅹ</el-col>
-                                    <el-col :span="11">
-                                        <el-form-item prop="width">
-                                              <el-input type="number" min="0" v-model.number="numberValidateForm.age"
-                                                        auto-complete="off" v-model="flow.width" placeholder="请输入宽度"
-                                                        @change="flow_width" disabled="disabled"></el-input>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-form-item>
-
-                                <div v-if="flow.gather_params.id === '1'">
-                                <el-form-item label="节点周期:" style="width: 96%">
-                                    <el-col :span="11">
-                                        <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="flow.start_time"
-                                                            placeholder="开始时间点" format="HH:mm" value-format="HH:mm">
-                                            </el-time-picker>
-                                        </el-form-item>
-                                        </el-col>
-                                    <el-col class="line" :span="2">—</el-col>
-                                    <el-col :span="11">
-                                        <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="flow.end_time"
-                                                            placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
-                                            </el-time-picker>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-form-item>
-                                </div>
-                                <div v-if="flow.gather_rule === '1'">
-                                <el-form-item label="节点周期:" style="width: 96%">
-                                    <el-col :span="11">
-                                        <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="flow.start_time"
-                                                            placeholder="开始时间点1" format="HH:mm" value-format="HH:mm">
-                                            </el-time-picker>
-                                        </el-form-item>
-                                        </el-col>
-                                    <el-col class="line" :span="2">—</el-col>
-                                    <el-col :span="11">
-                                        <el-form-item>
-                                            <el-time-picker style="width: 96%" v-model="flow.end_time"
-                                                            placeholder="结束时间点" format="HH:mm" value-format="HH:mm">
-                                            </el-time-picker>
-                                        </el-form-item>
-                                    </el-col>
-                                </el-form-item>
-                                </div>
-                                 <el-form-item label="采集周期" prop="period">
-                                            <el-input type="number" min="0" id="period"
-                                                      v-model.number="numberValidateForm.age"
-                                                      auto-complete="off" v-model="flow.period" style="width: 96%"
-                                                      placeholder="请输入采集周期(秒)"></el-input>
-                                </el-form-item>
-                            </el-form>
-                        </div></el-col>
-                        <el-col :span="12"><div class="grid-content bg-purple-light">
-                            <div style="padding: 0px 45% 0px 45%">
-                                <h2>预览</h2>
-                            </div>
-                            <div id="flow_canvas" style="text-align:center;width: 100%;height: 26%;overflow: scroll;">
-                                <div id="flow1" class="clearfix workflow-box" style="width:1000px;position: relative;">
-
-                                        <div class="workflow-canvas" style="margin-left: 0px;padding-left: 0px">
-
-                                            <div class="jtk-content">
-                                                <div class="jtk-demo-canvas canvas-wide jtk-surface jtk-surface-nopan"
-                                                     id="canvas" style="height:500px">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="jtk-delete jtk-none ">删除节点</div>
-                                        <div id="template" class="jtk-none">
-                                            <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
-                                                 data-type="EmptyEndEvent">
-                                               <div class="node-wrapper">
-                                                    <img src="${STATIC_URL}img/canvas/endpoint.png"
-                                                         style="top: 5px;left: 20px;position: absolute;">
-                                                </div>
-                                            </div>
-                                             <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
-                                                  data-type="EmptyStartEvent">
-                                                <div class="node-wrapper">
-                                                    <img src="${STATIC_URL}img/canvas/Start.png"
-                                                         style="top: 5px;left: 20px;position: absolute;">
-                                                </div>
-                                            </div>
-                                            <div class="jtk-window jtk-node workfolw-node database-node" id="{charts}"
-                                                 data-type="ServiceActivity">
-                                                <div class="node-wrapper">
-                                                    <div class="node-content" style="position: relative">
-                                                        <div class="start_time"
-                                                             style="position: absolute;width: 70px;height: 20px;top: -26px;left: 0px;"></div>
-                                                        <div class="end_time"
-                                                             style="position: absolute;width: 70px;height: 20px;top: -26px;right: 0px;"></div>
-                                                        <p class="node-title"
-                                                           style=" overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"></p>
-                                                    </div>
-                                                    <div class="node-icon" style="top: 26px;width: 100%;height: 100%;">
-                                                        <span class="title"
-                                                              style="top: -14px;height: 100%;position: relative;color: #F4FFF9; overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"></span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                           <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
-                                                data-type="ConvergeGateway">
-                                                 <div class="node-wrapper">
-                                                    <img src="${STATIC_URL}img/canvas/convergegateway.png">
-                                                </div>
-                                            </div>
-                                            <div class="jtk-window jtk-node workfolw-node start-node" id="{charts}"
-                                                 data-type="ParallelGateway">
-                                                <div class="node-wrapper">
-                                                    <img src="${STATIC_URL}img/canvas/ParallelGateway.png">
-                                                </div>
-                                            </div>
-                                            <div class="jtk-window jtk-node workfolw-node cog-node" id="{charts}"
-                                                 data-type="dataCog">
-                                                <div class="node-wrapper">
-                                                    <div class="node-content">
-                                                        <p class="node-title"></p>
-                                                    </div>
-                                                    <div class="node-icon">
-                                                        <i class="bk-icon icon-cog"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="jtk-window jtk-node workfolw-node filter-node" id="{charts}"
-                                                 data-type="dataFilter">
-                                                <div class="node-wrapper">
-                                                    <div class="node-content">
-                                                        <p class="node-title"></p>
-                                                    </div>
-                                                    <div class="node-icon">
-                                                        <i class="bk-icon icon-circle"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                            </div>
-                            <div style="padding: 0px 10%">
-                                <div style="height: 20px"></div>
-                                <el-button type="primary" v-on:click="canvas_new" :disabled="disabled1">采集测试</el-button>
-                                <el-checkbox v-model="checked2" @change="change3">启动流程</el-checkbox>
-                                <div :style="{ display: liucheng }">
-                                    <el-alert title="启动流程可能会对系统造成不可逆的变更，请谨慎勾选此项！" type="warning" show-icon
-                                              true-label="1" false-label="0"></el-alert>
-                                </div>
-                            </div>
-                        </div></el-col>
-                    </el-row>
-                </el-tab-pane>
-                -->
-                <!-- 流程单元 end-->
-
                 <!-- 基本单元 start-->
                 <el-tab-pane :disabled="disabled6" label="基本监控项（一体化平台）" name="five" element-loading-text="拼命加载中"
                              element-loading-spinner="el-icon-loading"
@@ -872,7 +558,7 @@
                                 <el-form :model="base" ref="base" :rules="basicMonitorRules" label-width="100px">
                                 <el-form-item label="字号" prop="font_size">
                                     <el-select v-model="base.font_size" placeholder="请选择字号" @change="base_size"
-                                               style="width: 310px;">
+                                               style="width: 95%">
                                         <el-option v-for="i in font_size_range" :label=i :value=i></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -894,11 +580,11 @@
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
-                                <el-form-item label="显示内容" prop="contents" style="width: 96%">
+                                <el-form-item label="显示内容" prop="contents" style="width: 100%">
                                         <el-col :span="20">
                                         <el-input v-model="base.contents" placeholder="上证指数:3000  深证指数:3000"
                                                   @change="content_modified_change"
-                                                  type="textarea" style="width: 230px;"></el-input>
+                                                  type="textarea" rows="5"  style="width: 95%;"></el-input>
                                         </el-col>
                                     <el-col :span="4">
                                     <el-button type="primary" size="mini"
@@ -1027,13 +713,13 @@
                              <div v-if="interface_show">
                                 <el-form-item label="来源类型" prop="interface_type">
                                     <el-select v-model="base.interface_type" placeholder="请选择数据来源类型"
-                                               @change="change_source_type" style="width: 310px;">
+                                               @change="change_source_type" style="width: 95%;">
                                         <el-option label="指标" value="measures"></el-option>
                                     </el-select>
                                 </el-form-item>
                                 <el-form-item label="来源名称" prop="measures">
                                     <el-select v-model="base.measures" filterable placeholder="请选择指标集"
-                                               @change="change_measures" style="width: 310px;">
+                                               @change="change_measures" style="width: 95%;">
                                         <el-option
                                                 v-for="item in iqube_name"
                                                 :key="item.value"
@@ -1044,7 +730,7 @@
                                 </el-form-item>
                                 <el-form-item label="度量值" prop="measures_name">
                                     <el-select v-model="base.measures_name" filterable placeholder="请选择指标名称"
-                                               style="width: 310px;">
+                                               style="width: 95%;">
                                         <el-option
                                                 v-for="item in metric_list"
                                                 :key="item"
@@ -1055,19 +741,18 @@
                                 </el-form-item>
                                 <el-form-item label="展示规则" prop="show_rule_type">
                                     <el-select v-model="base.show_rule_type" placeholder="请选择展示规则"
-                                               @change="add_comments" style="width: 310px;">
+                                               @change="add_comments" style="width: 95%;">
                                         <el-option label="百分比" value="0"></el-option>
                                         <el-option label="颜色" value="1"></el-option>
                                         <el-option label="其他" value="2"></el-option>
                                     </el-select>
-                                </el-form-item>
-                                  <el-input v-model="base.gather_rule"
+                                </el-form-item><el-input v-model="base.gather_rule"
                                            placeholder="百分比：如：100|颜色：如：0-1|其他：如：100@ms"
-                                                style="display:none"></el-input>
+                                                style="display:none;width:95%;"></el-input>
                                  <!--百分比 start-->
                                 <div id="base_i_par"  >
-                                     <el-form-item label="百分比转化数"  style="width: 90%">
-                                         <el-input id="iptPerVal" v-model="base.iptPerVal" oninput ="value=value.replace(/[^0-9.]/g,'')"   @blur="base_fun_per()"></el-input>
+                                     <el-form-item label="百分比转化数"  style="width: 95%">
+                                         <el-input id="iptPerVal" v-model="base.iptPerVal" oninput ="value=value.replace(/[^0-9.]/g,'')"   @blur="base_fun_per()" ></el-input>
                                      </el-form-item>
                                 </div>
                                  <!--百分比 end-->
@@ -1204,7 +889,6 @@
                                  </div>
                                  <!--其他 end-->
 
-
                                 <!--
                                  <div v-if="color_rules_comments">
                                      <p style="color: #FF0000; font-size: 12px; margin-bottom: 20px">* 提示：范围区间用“-”间隔，每个范围区间占一行，数值达到此范围分别展示为绿、红、黄、灰</p>
@@ -1231,29 +915,29 @@
                                 </el-form-item>
                                 <el-form-item label="采集周期" prop="period">
                                     <el-input type="number" min="0" v-model.number="numberValidateForm.age"
-                                              auto-complete="off" v-model="base.period" style="width: 96%"
+                                              auto-complete="off" v-model="base.period" style="width: 95%"
                                               placeholder="请输入采集周期(秒)"></el-input>
                                 </el-form-item>
                                   <el-form-item label="分值" prop="score">
                                             <el-input type="number" min="0" v-model.number="numberValidateForm.age"
-                                                      auto-complete="off" v-model="base.score" style="width: 96%"
+                                                      auto-complete="off" v-model="base.score" style="width: 95%"
                                                       @change="change4"
                                                       placeholder="请输入分值" max="100"></el-input>
                                 </el-form-item>
                                 <el-col :span="24">
                                     <el-form-item v-for="(i,index) in base.dimension_data" class="dimension_div">
-                                    <el-col :span="11">
+                                    <el-col :span="10">
                                         <el-form-item label="维度名称" :prop="'dimension_data.'+ index +'.dimension_name'"
-                                                      :rules="basicMonitorRules.dimension_data.dimension_name">
+                                                      :rules="basicMonitorRules.dimension_data.dimension_name" style="width: 98%">
                                             <el-select v-model="i.dimension_name">
                                                 <el-option :label="i" :value="i"
                                                            v-for="(i,index) in dimension_list"></el-option>
                                             </el-select>
                                         </el-form-item>
                                     </el-col>
-                                    <el-col :span="11">
+                                    <el-col :span="10">
                                         <el-form-item label="维度值" :prop="'dimension_data.'+ index +'.dimension_value'"
-                                                      :rules="basicMonitorRules.dimension_data.dimension_value">
+                                                      :rules="basicMonitorRules.dimension_data.dimension_value" style="width: 98%">
                                             <el-input v-model="i.dimension_value">
                                             </el-input>
                                         </el-form-item>
