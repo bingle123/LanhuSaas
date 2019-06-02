@@ -43,10 +43,6 @@
 			graph.setTooltips(true);
 			graph.setEnabled(false);
 			load_Data();
-			let win_height = $(document).height();
-            let parent_frame_id = "#i"+id;
-            //这是最后一行，就是失败也不会影响整个页面的展示
-            parent.refresh_heigth(parent_frame_id,win_height)
 		}
 		function getUrlParam(name) {
             //构造一个含有目标参数的正则表达式对象
