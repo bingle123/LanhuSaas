@@ -215,28 +215,28 @@ class Gather():
             temp_color_list.append("#"+color_obj.split("##")[1])
             # 只传了一个值过来
         if len(temp_color_list) == 1:
-            unit_list[0] = temp_rule_list[0]
+            unit_list[0] = temp_color_list[0]
             unit_list[1] = "#FFFFFF"
             unit_list[2] = "#FFFFFF"
             unit_list[3] = "#FFFFFF"
             unit_list[4] = "#FFFFFF"
         if len(temp_color_list) == 2:
-            unit_list[0] = temp_rule_list[0]
-            unit_list[1] = temp_rule_list[1]
+            unit_list[0] = temp_color_list[0]
+            unit_list[1] = temp_color_list[1]
             unit_list[2] = "#FFFFFF"
             unit_list[3] = "#FFFFFF"
             unit_list[4] = "#FFFFFF"
         if len(temp_color_list) == 3:
-            unit_list[0] = temp_rule_list[0]
-            unit_list[1] = temp_rule_list[1]
-            unit_list[2] = temp_rule_list[2]
+            unit_list[0] = temp_color_list[0]
+            unit_list[1] = temp_color_list[1]
+            unit_list[2] = temp_color_list[2]
             unit_list[3] = "#FFFFFF"
             unit_list[4] = "#FFFFFF"
         if len(temp_color_list) == 4:
-            unit_list[0] = temp_rule_list[0]
-            unit_list[1] = temp_rule_list[1]
-            unit_list[2] = temp_rule_list[2]
-            unit_list[3] = temp_rule_list[3]
+            unit_list[0] = temp_color_list[0]
+            unit_list[1] = temp_color_list[1]
+            unit_list[2] = temp_color_list[2]
+            unit_list[3] = temp_color_list[3]
             unit_list[4] = "#FFFFFF"
         processed_val = Gather.value_range_process(temp_rule_list, original_value, unit_list)
         return processed_val
