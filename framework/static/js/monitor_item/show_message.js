@@ -489,10 +489,10 @@ $(function(){
                 var arr_color = $("#base_i_color").children();
                 var val="";
                 var color_m={};
-                color_m[0]="#00FF00"; //绿色
-                color_m[1]="#FF0000";//红色
-                color_m[2]="#FFFF00";//黄色
-                color_m[3]="#808080";//灰色
+                color_m[0]="#40C7A1"; //绿色
+                color_m[1]="#FF6161";//红色
+                color_m[2]="#FCB02D";//黄色
+                color_m[3]="#B6B6B6";//灰色
                 for(var i=0;i<arr_color.length;i++){
                      var v ="";
                     if(val!=""){
@@ -2038,6 +2038,14 @@ $(function(){
 
             //采集测试方法
             base_cell_test() {
+                //采集测试前先判断是那种规则，然后再重新取规则值，在编辑的情况下很可能规则已经被改了
+                if(vm.base.show_rule_type == "0"){//百分比
+                    vm.base_fun_per();
+                }else if(vm.base.show_rule_type == "1"){//颜色
+                    vm.base_fun_color()
+                }else{//其他
+                    vm.base_fun_other()
+                }
                 if(vm.collection_test_validate()){
                     //jlq-2019-05-29-add
                     //判断当前时间是否采集测试

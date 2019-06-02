@@ -203,9 +203,41 @@ class Gather():
 
         :return:
         """
+        # 前后台色标是不是一致不重要了
+        # 根据前台取色设置的变化，后台规则做的修改
         unit_list = ['#40C7A1', '#FF6161', '#FCB02D', '#B6B6B6', '#FFFFFF']
+        temp_color_list = []
+        temp_rule_list = []
         processed_rule_list = rule_list.strip().split('\n')
-        processed_val = Gather.value_range_process(processed_rule_list, original_value, unit_list)
+        for color_obj in processed_rule_list:
+            temp_rule_list.append(color_obj.split("##")[0])
+            temp_color_list.append("#"+color_obj.split("##")[1])
+            # 只传了一个值过来
+        if len(temp_color_list) == 1:
+            unit_list[0] = temp_rule_list[0]
+            unit_list[1] = "#FFFFFF"
+            unit_list[2] = "#FFFFFF"
+            unit_list[3] = "#FFFFFF"
+            unit_list[4] = "#FFFFFF"
+        if len(temp_color_list) == 2:
+            unit_list[0] = temp_rule_list[0]
+            unit_list[1] = temp_rule_list[1]
+            unit_list[2] = "#FFFFFF"
+            unit_list[3] = "#FFFFFF"
+            unit_list[4] = "#FFFFFF"
+        if len(temp_color_list) == 3:
+            unit_list[0] = temp_rule_list[0]
+            unit_list[1] = temp_rule_list[1]
+            unit_list[2] = temp_rule_list[2]
+            unit_list[3] = "#FFFFFF"
+            unit_list[4] = "#FFFFFF"
+        if len(temp_color_list) == 4:
+            unit_list[0] = temp_rule_list[0]
+            unit_list[1] = temp_rule_list[1]
+            unit_list[2] = temp_rule_list[2]
+            unit_list[3] = temp_rule_list[3]
+            unit_list[4] = "#FFFFFF"
+        processed_val = Gather.value_range_process(temp_rule_list, original_value, temp_color_list)
         return processed_val
 
     @classmethod
