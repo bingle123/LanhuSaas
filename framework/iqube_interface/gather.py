@@ -238,7 +238,7 @@ class Gather():
             unit_list[2] = temp_rule_list[2]
             unit_list[3] = temp_rule_list[3]
             unit_list[4] = "#FFFFFF"
-        processed_val = Gather.value_range_process(temp_rule_list, original_value, temp_color_list)
+        processed_val = Gather.value_range_process(temp_rule_list, original_value, unit_list)
         return processed_val
 
     @classmethod
