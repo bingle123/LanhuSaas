@@ -1972,7 +1972,7 @@ $(function(){
                     return false;
                 }else if(vm.base.show_rule_type == "0"){//选百分比校验
                     var regu = /^\+?[1-9][0-9]*$/;
-                    if(!regu.test(vm.base.show_rule_type)){
+                    if(!regu.test(vm.base.iptPerVal)){
                         vm.$alert("百分比采集规则的值只能是非0正整数类型","提示");
                         return false;
                     }
