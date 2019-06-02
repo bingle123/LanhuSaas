@@ -208,6 +208,7 @@ class Gather():
         unit_list = ['#40C7A1', '#FF6161', '#FCB02D', '#B6B6B6', '#FFFFFF']
         temp_color_list = []
         temp_rule_list = []
+        # 根据前台传过来的色标共五个，不够用白色填充（前台最多传4个过来）
         processed_rule_list = rule_list.strip().split('\n')
         for color_obj in processed_rule_list:
             temp_rule_list.append(color_obj.split("##")[0])
