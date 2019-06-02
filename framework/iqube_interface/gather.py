@@ -313,11 +313,7 @@ class Gather():
                 rule_list[3].strip().split('-')[1]):
             return str(original_value) + unit_list[3].__str__()
         else:
-            if unit_list.__len__() < 5:
-                return str(original_value)
-            else:
-                return str(original_value) + unit_list[4].__str__()
-
+            return str(original_value) + unit_list[4].__str__()
 
 
 def get_previous_second_ts():
