@@ -78,7 +78,7 @@
         </el-form>
     </el-menu>
     <template>
-        <div class="block">
+        <div class="block" style="overflow: hidden;">
             <!-- 选择员工信息 strat -->
             <div style="width: 100%;">
 
@@ -195,8 +195,8 @@
                                 if(i ==0){
                                     t="";
                                 }
-                                var html="<iframe id='i"+djson[i]+"'  src='${SITE_URL}monitor_scene/page_query_xml_show?id=";
-                                html+=djson[i]+"' style='"+t+"width:1200px;height:850px;border:none;'></iframe>";
+                                var html="<iframe id='i"+djson[i]+"' scrolling=\"no\"  src='${SITE_URL}monitor_scene/page_query_xml_show?id=";
+                                html+=djson[i]+"' style='"+t+"width:1200px;height:"+vm.imgHeight+";border:none;'></iframe>";
                                 $("#div_sence").append(html);
                             }
                             vm.time_task()

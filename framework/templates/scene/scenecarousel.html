@@ -131,8 +131,8 @@
                                  if(i ==0){
                                      t="";
                                  }
-                                 var html="<iframe id='i"+djson[i]+"'  src='${SITE_URL}monitor_scene/page_query_xml_show?id=";
-                                 html+=djson[i]+"' style='"+t+"width:"+vm.imgWidth+";height:850px;border:none;'></iframe>";
+                                 var html="<iframe id='i"+djson[i]+"' scrolling=\"auto\" src='${SITE_URL}monitor_scene/page_query_xml_show?id=";
+                                 html+=djson[i]+"' style='"+t+"width:"+vm.imgWidth+";height:1200px;border:none;'></iframe>";
                                  $("#div_sence").append(html);
                                  //$("#div"+djson[i]).load("${SITE_URL}monitor_scene/page_query_xml_show?id="+djson[i]);
                                  //html.hide()
@@ -144,6 +144,9 @@
               }
           }
       })
+      function refresh_heigth(id,win_heigth){
+          window.frames.innerHeight = win_heigth
+      }
       vm.query_scene_info();
 </script>
 </body>
