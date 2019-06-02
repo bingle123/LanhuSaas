@@ -353,7 +353,23 @@ $(function(){
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
                 //monitor_area: '',                      //日历地区
-                score: ''                                //分值
+                score: '',                              //分值
+                txt_1:'',
+                txt_2:'',
+                txt_3:'',
+                txt_4:'',
+                min_1:'',
+                min_2:'',
+                min_3:'',
+                min_4:'',
+                max_1:'',
+                max_2:'',
+                max_3:'',
+                max_4:'',
+                chk_1:false,
+                chk_2:false,
+                chk_3:false,
+                chk_4:false,
             },
             chart1: {                                //图表单元
                 monitor_name: '',                    //单元名称
@@ -2058,7 +2074,7 @@ $(function(){
                             return false;
                         }
                     }else{
-                          this.$confirm('采集不在范围内, 是否继续采集?', '提示', {
+                          this.$confirm('当前不在采集时间范围内, 是否继续采集?', '提示', {
                           confirmButtonText: '确定',
                           cancelButtonText: '取消',
                           type: 'warning'

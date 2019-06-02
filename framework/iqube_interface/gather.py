@@ -249,13 +249,38 @@ class Gather():
         :param gather_rule:                     规则
         :return:
         """
+        unit_list = []
         rule_list = gather_rule.split('\n')
         processed_rule_list = list()
-        unit_list = list()
         for r_list in rule_list:
             temp_list = r_list.strip().split('@')
             processed_rule_list.append(temp_list[0])
             unit_list.append('@' + temp_list[1])
+        # 不足长度为5的用@符号填充
+        if len(rule_list) == 1:
+            unit_list[0] = unit_list[0]
+            unit_list.append("@")
+            unit_list.append("@")
+            unit_list.append("@")
+            unit_list.append("@")
+        if len(rule_list) == 2:
+            unit_list[0] = unit_list[0]
+            unit_list[1] = unit_list[1]
+            unit_list.append("@")
+            unit_list.append("@")
+            unit_list.append("@")
+        if len(rule_list) == 3:
+            unit_list[0] = unit_list[0]
+            unit_list[1] = unit_list[1]
+            unit_list[2] = unit_list[2]
+            unit_list.append("@")
+            unit_list.append("@")
+        if len(rule_list) == 4:
+            unit_list[0] = unit_list[0]
+            unit_list[1] = unit_list[1]
+            unit_list[2] = unit_list[2]
+            unit_list[3] = unit_list[3]
+            unit_list.append("@")
         processed_val = Gather.value_range_process(processed_rule_list, original_value, unit_list)
         return processed_val
         # for item in rule_list:
@@ -288,7 +313,11 @@ class Gather():
                 rule_list[3].strip().split('-')[1]):
             return str(original_value) + unit_list[3].__str__()
         else:
-            return str(original_value) + unit_list[4].__str__()
+            if unit_list.__len__() < 5:
+                return str(original_value)
+            else:
+                return str(original_value) + unit_list[4].__str__()
+
 
 
 def get_previous_second_ts():
