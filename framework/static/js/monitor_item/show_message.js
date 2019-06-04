@@ -1500,7 +1500,7 @@ $(function(){
                         return false;
                     } else if (null == this.gather_data_test_flag) {
                         //获取采集测试数据，调用同步服务
-                        if(true){
+                        if(vm.get_gather_test()){
                             //基本监控项的数据处理
                             vm.base_monitor_data_process();
                             //上传监控项数据至服务器保存
