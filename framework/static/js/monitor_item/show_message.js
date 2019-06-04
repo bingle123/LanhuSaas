@@ -429,7 +429,7 @@ $(function(){
                         result = true;
                     },
                     error: function (error) {
-                        if(error.responseText.indexOf("ReadTimeout")){
+                        if(error.responseText.indexOf("ReadTimeout") != -1){
                             vm.$alert("调用一体化平台服务超时！", "错误");
                         }else{
                             vm.$alert("采集测试未通过，调用一体化平台服务异常！", "错误");
