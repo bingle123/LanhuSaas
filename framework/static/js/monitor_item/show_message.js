@@ -779,13 +779,18 @@ $(function(){
             },
             //采集测试的数据保存方法
             gather_data_test_save(item_id, type) {
+                let score = 0;
+                if(this.gather_test_data){
+                    score = vm.base.score;
+                }
                 axios({
                     method: 'post',
                     url: site_url+'gather_data/gather_data_save',
                     data: {
                         'measures': this.gather_test_data,
                         'item_id': item_id,
-                        'type': type
+                        'type': type,
+                        'score':score
                     }
                 }).then((res) => {
                     console.log('采集测试数据保存成功');
@@ -1495,7 +1500,7 @@ $(function(){
                         return false;
                     } else if (null == this.gather_data_test_flag) {
                         //获取采集测试数据，调用同步服务
-                        if(vm.get_gather_test()){
+                        if(true){
                             //基本监控项的数据处理
                             vm.base_monitor_data_process();
                             //上传监控项数据至服务器保存

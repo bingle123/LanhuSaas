@@ -18,6 +18,8 @@ from account.models import *
 from blueking.component.shortcuts import *
 from iqube_interface.gather import Gather
 
+from common.log import logger
+
 # -------------------- 采集测试规则设定------------------------
 # 1. 针对于数据库的数据采集：
 # 采集规则的设置类似于SQL语法，但是在字段域有所不同：如@cp=china_point@表示保存在采集表中的字段名称为cp，
@@ -228,6 +230,7 @@ def gather_data(**info):
     # info = gather_test_init()
     # 开始数据采集，确定当前采集时间
     GATHER_TIME = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    # print GATHER_TIME
     # 获取数据采集的类型
     gather_type = info['gather_params']
     # 历史采集数据迁移
@@ -246,7 +249,7 @@ def gather_data(**info):
         conn_params = gather_params['extra_param']['connection_param']
         # 连接指定数据库
         try:
-            print 'DB_ID: %s' % conn_params.id
+            # print 'DB_ID: %s' % conn_params.id
             conn = getAny_db(conn_params.id)
             # conn = MySQ Ldb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
         except Exception as e:
@@ -513,13 +516,14 @@ def load_script_content(script_type):
 
 # 采集数据的保存方法
 def gather_data_save(info):
+
     # 这里要将info['measures']json转为字符类型，监控项采集数据必须是字符个数，才能保证场景编排展示正常
     if 'add' == info['type']:
         TDGatherData.objects.create(item_id=info['item_id'], data_key='measures',
-                                    data_value=json.dumps(info['measures']))
+                                    data_value=json.dumps(info['measures']),score=info['score'])
     elif 'edit' == info['type']:
         TDGatherData.objects.filter(item_id=info['item_id']).update(data_key='measures',
-                                                                    data_value=json.dumps(info['measures']))
+                                                                    data_value=json.dumps(info['measures']),score=info['score'])
     else:
         return "error"
     return 'ok'

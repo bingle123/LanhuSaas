@@ -144,67 +144,7 @@ def add_unit_task(add_dicx):
         # 创建一个基本监控项采集的开始任务
         co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,
                                task_args=info, desc=schename)
-    # elif type == 2:
-    #     ctime = {
-    #         'hour': starthour,
-    #         'minute': startmin,
-    #     }
-    #     info = {
-    #         'id': id,
-    #         'gather_params': 'sql',
-    #         'params': add_dicx['params'],
-    #         'gather_rule': add_dicx['gather_rule'],
-    #         'period': period,
-    #         'area_id': add_dicx['monitor_area'],
-    #         'task_name': str(schename) + 'task',
-    #         'endtime': endtime
-    #     }
-    #     # 创建一个图标采集开始任务
-    #     co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_one', crontab_time=ctime,
-    #                            task_args=info, desc=schename)
-    #
-    # elif type == 3:
-    #     ctime = {
-    #         'hour': starthour,
-    #         'minute': startmin,
-    #     }
-    #     info = {
-    #         'id': id,
-    #         'params': add_dicx['params'],  # ip
-    #         'gather_params': add_dicx['gather_params'],
-    #         'job_id': [{
-    #             'name': add_dicx['gather_rule'],
-    #             'id': add_dicx['jion_id']
-    #         }],
-    #         'period': period,
-    #         'area_id': add_dicx['monitor_area'],
-    #         'task_name': str(schename) + 'task',
-    #         'endtime': endtime
-    #     }
-    #     # 创建一个作业采集的开始任务
-    #     co.create_task_crontab(name=schename, task='market_day.tasks.gather_data_task_two', crontab_time=ctime,
-    #                            task_args=info, desc=schename)
-    # elif type == 'fourth':
-    #     template_list = add_dicx['jion_id']
-    #     node_times = add_dicx['node_times']
-    #     constants = add_dicx['constants']
-    #     ctime = {
-    #         'hour': starthour,
-    #         'minute': startmin,
-    #     }
-    #     info = {
-    #         'id': id,
-    #         'template_id': template_list,  # 创建任务的模板id
-    #         'node_times': node_times,
-    #         'period': period,
-    #         'constants': constants,
-    #         'area_id': add_dicx['monitor_area'],
-    #         'task_name': str(schename) + 'task',
-    #         'endtime': endtime
-    #     }
-    #     # 创建一个开始流程的任务
-    #     co.create_task_crontab(name=schename, task='market_day.tasks.start_flow_task', crontab_time=ctime,
-    #                            task_args=info, desc=schename)
+
     elif type == 5:
         ctime = {
             'hour': starthour,
