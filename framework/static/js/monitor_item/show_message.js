@@ -429,7 +429,11 @@ $(function(){
                         result = true;
                     },
                     error: function (error) {
-                        vm.$alert("采集测试未通过，请校正接口调用参数或稍后重试！", "错误");
+                        if(error.responseText.indexOf("ReadTimeout")){
+                            vm.$alert("调用一体化平台服务超时！", "错误");
+                        }else{
+                            vm.$alert("采集测试未通过，调用一体化平台服务异常！", "错误");
+                        }
                         result = false;
                     }
                 });
