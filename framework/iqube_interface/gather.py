@@ -53,7 +53,10 @@ class Gather():
         curr_ts = str(list(result[0])[0])
         # 此处参数传递应给予改善, 时间需要改为当前时间的前一天
         query_form = api_address + '?' + 'start='+curr_ts+'&m=sum:sum:' + measures + '_' + measures_name + interface_param
-        request_result = requests.get(url=query_form)
+        timeout_result = get_icube_timeout()
+        icube_timeout = int(list(timeout_result[0])[0])
+        # 设置调用服务的超时时长在数据库中配置，超过配置的时长就抛异常
+        request_result = requests.get(url=query_form,timeout=icube_timeout)
         request_code = request_result.status_code
         print request_result
         if request_code == 200:
@@ -332,4 +335,22 @@ def get_previous_second_ts():
     except Exception as e:
         return tools.error_result(e)
     # scene_list = list(res1)
+    return res
+
+
+def get_icube_timeout():
+    """
+    调用icube服务超时时长设置
+    :return:
+    """
+    res = ""
+    try:
+        sql = "select IFNULL(time_interval,5) time_interval from td_scene_design where task_code = 'icube_timeout'"
+        db = get_db()
+        cursor = db.cursor()
+        cursor.execute(sql)
+        res = cursor.fetchall()
+        db.close()
+    except Exception as e:
+        return tools.error_result(e)
     return res
