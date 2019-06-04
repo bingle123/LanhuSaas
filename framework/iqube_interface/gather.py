@@ -48,10 +48,9 @@ class Gather():
             return success_result(temp_list)
         else:
             api_address = MEASURES_QUERY_API
-        # 获取当前系统时间前10秒的时间戳
+        # 获取当前系统时间前10秒（具体时长数据库配置，默认为1000秒）的时间戳
         result = get_previous_second_ts()
         curr_ts = str(list(result[0])[0])
-        # 此处参数传递应给予改善, 时间需要改为当前时间的前一天
         query_form = api_address + '?' + 'start='+curr_ts+'&m=sum:sum:' + measures + '_' + measures_name + interface_param
         timeout_result = get_icube_timeout()
         icube_timeout = int(list(timeout_result[0])[0])
@@ -340,7 +339,7 @@ def get_previous_second_ts():
 
 def get_icube_timeout():
     """
-    调用icube服务超时时长设置
+    调用icube服务超时时长设置，默认5秒
     :return:
     """
     res = ""
