@@ -138,6 +138,7 @@ def add_unit_task(add_dicx):
             'period': period,
             'area_id': add_dicx['monitor_area'],
             'task_name': str(schename) + 'task',
+            'starttime': add_dicx['start_time'],
             'endtime': endtime,
             'score': add_dicx['score']
         }
@@ -158,6 +159,7 @@ def add_unit_task(add_dicx):
             'period': period,
             'area_id': add_dicx['monitor_area'],
             'task_name': str(schename) + 'task',
+            'starttime': add_dicx['start_time'],
             'endtime': endtime,
             'score': add_dicx['score'],
             'source_type': add_dicx['source_type'],

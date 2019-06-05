@@ -46,6 +46,7 @@ def gather_data_task_one(**i):
         'params': i['params'],
         'gather_rule': i['gather_rule'],
         'task_name': i['task_name'],
+        'starttime': i['starttime'],
         'endtime': i['endtime'],
         'score':i['score']
     }
@@ -62,11 +63,13 @@ def gather_data_task_one(**i):
 @task(ignore_result=True)
 def basic_monitor_task(**i):
     # 调用基本监控项和图标监控项数据采集的方法
+    starttime = i['starttime']
     endtime = i['endtime']
     task_name = i['task_name']
     # 逾期删除本任务
     strnow = datetime.strftime(datetime.now(), '%H:%M')
-    if strnow <= endtime:
+    # 只有在时间段内才执行采集任务，否则清除采集任务
+    if strnow <= endtime and strnow >= starttime:
         logger.error(u"celery 调用数据库采集任务：{}".format(datetime.now()))
         function.gather_data(**i)
     else:
@@ -96,11 +99,14 @@ def gather_data_task_five(**add_dicx):
 
 @task(ignore_result=True)
 def base_monitor_task(**i):
+    # print str(i)
+    starttime = i['starttime']
     endtime = i['endtime']
     task_name = i['task_name']
     # 逾期删除本任务
     strnow = datetime.strftime(datetime.now(), '%H:%M')
-    if strnow <= endtime:
+    # 只有在时间段内才执行采集任务，否则清除采集任务
+    if strnow <= endtime and strnow >= starttime:
         # 调用一体化监控项数据采集的方法
         logger.error(u"celery 调用一体化平台采集任务：{}".format(datetime.now()))
         interface_type = "measures"
