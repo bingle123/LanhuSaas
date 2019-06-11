@@ -159,11 +159,6 @@
 
                   </el-submenu>
 
-                <el-menu-item id="submenu" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px;font-size: 16px;padding-left:50px;" v-if=" i.id == 38" v-on:click="testClick(i.url)" >
-                    <i :class="i.mImg "></i>
-                    <span slot="title" >{{ i.mname }}</span>
-                </el-menu-item>
-
                 <div index="10000" style="line-height: 56px;margin-left: 20px;position: absolute;bottom: 0;">
                     <i class="el-icon-question"></i>
                     <span slot="title"><a href="#">帮助</a></span>
