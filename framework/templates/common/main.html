@@ -159,6 +159,10 @@
 
                   </el-submenu>
 
+                <el-menu-item id="submenu" v-for="(i,index) in muenus"  :index="index+''"  style="line-height: 56px;font-size: 16px;padding-left:50px;" v-if=" i.id == 38" v-on:click="testClick(i.url)" >
+                    <i :class="i.mImg "></i>
+                    <span slot="title" >{{ i.mname }}</span>
+                </el-menu-item>
 
                 <div index="10000" style="line-height: 56px;margin-left: 20px;position: absolute;bottom: 0;">
                     <i class="el-icon-question"></i>
@@ -308,7 +312,11 @@
             testClick(res) {            //更新iframe显示页面
                  if(res == 'network_panorama/' || res == 'content/' || res == 'trace_panorama/'|| res == 'ywzl_panorama/'|| res == 'kpi_panorama/'|| res == 'scene_carousel/'){
                     window.open(res)
-                 }else{
+                 }
+                 else if(res == 'grafanamonitor/'){
+                     window.open('dev.gtjatest.com:3000');
+                 }
+                 else{
                      vm.clickhtml = res
                  }
                 console.log(this.clickhtml)
