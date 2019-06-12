@@ -253,7 +253,7 @@
                 name: "",
             },
 
-            clickhtml:'index',
+            clickhtml:'',
             isarr:true,
             board:'',
             /**activeName: 'first',//默认iframe选项
@@ -301,14 +301,6 @@
             get_user_name(){
                 axios.post('${SITE_URL}position/get_active_user').then((res)=>{
                     vm.user.name=res.data.bk_username;
-                    let user_type_id=res.data.bk_user_type;
-                    switch (user_type_id) {
-                        case 0:vm.clickhtml="index";break;
-                        case 1:vm.clickhtml="network_panorama/";break;
-                        case 2:vm.clickhtml="trace_panorama/";break;
-                        case 3:vm.clickhtml="ywzl_panorama/";break;
-                        case 4:vm.clickhtml="kpi_panorama/";break;
-                    }
                 });
             },
             testClick(res) {            //更新iframe显示页面
@@ -328,8 +320,14 @@
             get_Muenu() {
                 axios.post('${SITE_URL}db_connection/get_user_muenu/')
                     .then((res) => {
-                        console.log(res)
+                        console.log(res);
                         vm.muenus = res.data.results;
+                        for(let i=0;i<vm.muenus.length;i++){
+                            if(vm.muenus[i].pcode == 4 && vm.muenus[i].mname.indexOf('首页')>-1){
+                                vm.clickhtml = vm.muenus[i].url;
+                            }
+                        }
+
                     })
             },
             boardEvent(){
