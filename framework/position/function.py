@@ -428,3 +428,15 @@ def synchronize(request):
         mess = "同步失败"
     add_log(info)
     return mess
+
+
+def get_user_type(user_name):
+    """
+    获取用户角色字段
+    :param request:
+    :return:
+    """
+    user_type = user_info.objects.filter(user_name=user_name)
+    for i in user_type:
+        user_type = i.user_type_id
+    return user_type

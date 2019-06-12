@@ -113,7 +113,10 @@ def synchronize(request):
 
 def get_active_user(req):
     bk_username = req.user.username
-    return render_json(bk_username)
+    bk_user_type = function.get_user_type(bk_username)
+    print bk_username
+    print bk_user_type
+    return render_json({"bk_username": bk_username, "bk_user_type": bk_user_type})
 
 
 # 获取退出登录地址
