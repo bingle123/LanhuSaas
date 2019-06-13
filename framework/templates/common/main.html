@@ -202,7 +202,7 @@
                 <template>
                     <div id="app" style="height: 100%;">
                             <iframe  v-show="isarr" class="ifa" scrolling=auto
-                            :src="'${SITE_URL}'+clickhtml"
+                            :src="clickhtml"
                             frameborder="0"></iframe>
                     </div>
                 </template>
@@ -324,7 +324,7 @@
                         vm.muenus = res.data.results;
                         for(let i=0;i<vm.muenus.length;i++){
                             if(vm.muenus[i].pcode == 4 && vm.muenus[i].mname.indexOf('首页')>-1){
-                                vm.clickhtml = vm.muenus[i].url;
+                                vm.clickhtml = '${SITE_URL}'+vm.muenus[i].url;
                             }
                         }
 
