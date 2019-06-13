@@ -140,7 +140,7 @@ $(function(){
                     method: 'post',
                     url: site_url + 'position/get_active_user',
                 }).then((res) => {
-                    this.currentUser=res.data.message
+                    this.currentUser=res.data.bk_username
                 }).catch((res) => {
                     var msg = '当前用户信息获取失败！';
                     this.alertRulePopupErrorMessage(msg + res);
