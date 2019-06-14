@@ -16,6 +16,7 @@ import sys
 from logmanagement.function import add_log, make_log_info
 from conf import settings_development, default, settings_production, settings_testing
 from position.models import *
+from django.db import transaction
 
 Key = "YjCFCmtd"
 Iv = "yJXYwjYD"
@@ -395,7 +396,10 @@ def get_user_muenu(request):
         # 菜单id，菜单表和菜单角色表都要对应起来
         menu_id = model_to_dict(r_m)['muenuid']
         # 菜单名称
-        menu_name = Muenu.objects.get(id=menu_id)
+        try:
+            menu_name = Muenu.objects.get(id=menu_id)
+        except Exception as e:
+            continue
         temp = {}
         temp = model_to_dict(menu_name)
         temp_list.append(temp)
@@ -551,23 +555,24 @@ def savemnus(request):
     else:
         # 保存角色菜单前先删除中间表，中间表不为空则删除
         if rm_all is not None:
-            de = rm.objects.all().delete()
             try:
-                for id in ids:
-                    if ('children' not in id) and ('label' in id):
-                        # 逐个树id还原成菜单id(之前经过处理 树id = (角色id+1)*100+菜单Id)
-                        x = id['id'] // 1000
-                        z = id['id'] % 1000
-                        x = int(x)
-                        res1 = rm.objects.create(roleid=x - 1, muenuid=z)
-                    else:
-                        pass
-                info = make_log_info(u'逐条增加菜单与角色中间表', u'业务日志', u'rm', sys._getframe().f_code.co_name,
-                                     request.user.username, '成功', '无')
-                add_log(info)
+                with transaction.atomic():
+                    de = rm.objects.all().delete()
+                    for id in ids:
+                        if ('children' not in id) and ('label' in id):
+                            # 逐个树id还原成菜单id(之前经过处理 树id = (角色id+1)*100+菜单Id)
+                            x = id['id'] // 1000
+                            z = id['id'] % 1000
+                            x = int(x)
+                            res1 = rm.objects.create(roleid=x - 1, muenuid=z)
+                        else:
+                            pass
+                    info = make_log_info(u'逐条增加菜单与角色中间表', u'业务日志', u'rm', sys._getframe().f_code.co_name,
+                                         request.user.username, '成功', '无')
+                    add_log(info)
             except Exception as e:
-                for i in r_all:
-                    rm.objects.create(roleid=model_to_dict(i)['roleid'], muenuid=model_to_dict(i)['muenuid'])
+                # for i in r_all:
+                    # rm.objects.create(roleid=model_to_dict(i)['roleid'], muenuid=model_to_dict(i)['muenuid'])
                 info = make_log_info(u'逐条增加菜单与角色中间表', u'业务日志', u'rm', sys._getframe().f_code.co_name,
                                      request.user.username, '失败', repr(e))
                 add_log(info)
