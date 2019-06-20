@@ -358,6 +358,8 @@ def add_unit(request):
                 function.add_unit_task(add_dicx=add_flow_dic)
             else:
                 function.add_unit_task(add_dicx=add_dic)
+            # 初始创建的监控项celery任务默认为挂起
+            co.disable_task(str(last_node.id))
             result = tools.success_result(None)
             result['item_id'] = last_node.id
             # 修改获取用户的方式，直接从request中获取
@@ -436,6 +438,9 @@ def edit_unit(request):
         co.delete_task(str(id)+"task")
         # 然后再创建新的celery任务
         function.add_unit_task(add_dicx=add_dic)
+        # 如果状态为0,则celery定时任务先挂起
+        if add_dic['status'] == '0':
+            co.disable_task(str(id))
         result = tools.success_result(None)
         # 修改获取用户的方式，直接从request中获取
         info = make_log_info(u'编辑监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
