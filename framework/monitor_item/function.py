@@ -280,6 +280,8 @@ def delete_unit(request):
         """
         # 删除监控项需要删除该监控项的celery调度任务和子任务
         # 否则子任务会一直执行到监控项的结束时间，占用系统资源
+        # 而且会出现监控项都已经删除了监控项的数据采集却还在继续
+        # 的灵异事件
         """
         co.delete_task(str(unit_id))
         co.delete_task(str(unit_id) + "task")
@@ -503,12 +505,21 @@ def change_unit_status(req):
         mon = Monitor.objects.get(id=unit_id)
         mon.status = flag
         mon.save()
+        # 重新生效celery任务
         if flag == 1:
-            # 设置任务为可用同时子任务也继续
+            """
+            注意：
+            # 设置任务为可用同时（将挂起的任务重新生效）同时也要将子任务也设置为生效
+            # 否则主任务重新生效了，子任务却还在挂起状态
+            """
             co.enable_task(schename)
             co.enable_task(schename + "task")
-        else:
-            # 设置celery任务为不可用，同时停止子任务
+        else: # 挂起celery任务
+            """
+            注意：
+            # 设置任务为不可用同时（将celery任务暂时挂起）同时也要将子任务也设置为挂起
+            # 否则子任务还会一直执行
+            """
             co.disable_task(schename)
             co.disable_task(schename+"task")
         res = tools.success_result(None)
