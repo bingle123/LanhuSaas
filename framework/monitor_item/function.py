@@ -504,9 +504,13 @@ def change_unit_status(req):
         mon.status = flag
         mon.save()
         if flag == 1:
+            # 设置任务为可用同时子任务也继续
             co.enable_task(schename)
+            co.enable_task(schename + "task")
         else:
+            # 设置celery任务为不可用，同时停止子任务
             co.disable_task(schename)
+            co.disable_task(schename+"task")
         res = tools.success_result(None)
     except Exception as e:
         res = tools.error_result(e)
