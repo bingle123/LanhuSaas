@@ -2,6 +2,7 @@
 from __future__ import division
 import json
 import math
+from common.utils import get_current_time
 from django.forms import model_to_dict
 from models import Scene
 from models import SceneDesign
@@ -641,7 +642,12 @@ def query_pos_scene(request):
            if str(temp_scene.scene_startTime) <= end and str(temp_scene.scene_endTime) >= start:
               scene_id_list.append(scene.scene_id)
         else:
-            scene_id_list.append(scene.scene_id)
+            nowtime = get_current_time()
+            # 当前时间
+            current_time = list(nowtime[0])[0]
+            if str(temp_scene.scene_startTime) <= current_time and str(temp_scene.scene_endTime) >= current_time:
+               scene_id_list.append(scene.scene_id)
+            #scene_id_list.append(scene.scene_id)
     return scene_id_list
 
 
