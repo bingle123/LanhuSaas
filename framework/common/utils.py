@@ -78,7 +78,7 @@ def get_current_time():
     """
     res = ""
     try:
-        sql = "SELECT DATE_FORMAT(now(), '%H:%d:%S') AS cur_time;"
+        sql = "SELECT DATE_FORMAT(now(), '%H:%i:%S') AS cur_time;"
         db = get_db()
         cursor = db.cursor()
         cursor.execute(sql)
