@@ -277,7 +277,12 @@ def delete_unit(request):
         unit_id = res['unit_id']
         monitor_name = res['monitor_name']
         Monitor.objects.filter(id=unit_id).delete()
-        co.delete_task(unit_id)
+        """
+        # 删除监控项需要删除该监控项的celery调度任务和子任务
+        # 否则子任务会一直执行到监控项的结束时间，占用系统资源
+        """
+        co.delete_task(str(unit_id))
+        co.delete_task(str(unit_id) + "task")
         result = tools.success_result(None)
         # 修改获取用户的方式，直接从request中获取
         info = make_log_info(u'删除监控项', u'业务日志', u'Monitor', sys._getframe().f_code.co_name,
