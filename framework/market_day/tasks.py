@@ -68,12 +68,13 @@ def basic_monitor_task(**i):
     task_name = i['task_name']
     # 逾期删除本任务
     strnow = datetime.strftime(datetime.now(), '%H:%M')
-    # 只有在时间段内才执行采集任务，否则清除采集任务
+    # 只有在时间段内才执行采集任务，否则挂起采集任务
     if strnow <= endtime and strnow >= starttime:
-        logger.error(u"celery 调用数据库采集任务：{}".format(datetime.now()))
+        logger.error(u"celery 调用数据库采集子任务：{}".format(datetime.now()))
         function.gather_data(**i)
     else:
-        co.delete_task(task_name)
+        # 挂起子任务
+        co.disable_task(task_name)
 
 
 @shared_task
@@ -105,10 +106,10 @@ def base_monitor_task(**i):
     task_name = i['task_name']
     # 逾期删除本任务
     strnow = datetime.strftime(datetime.now(), '%H:%M')
-    # 只有在时间段内才执行采集任务，否则清除采集任务
+    # 只有在时间段内才执行采集任务，否则挂起采集子任务
     if strnow <= endtime and strnow >= starttime:
         # 调用一体化监控项数据采集的方法
-        logger.error(u"celery 调用一体化平台采集任务：{}".format(datetime.now()))
+        logger.error(u"celery 调用一体化平台采集子任务：{}".format(datetime.now()))
         interface_type = "measures"
         measures = i['target_name']
         measures_name = i['measure_name']
@@ -143,8 +144,8 @@ def base_monitor_task(**i):
             result_info['score'] = 0
             gather_data_save(result_info)
     else:
-        print u'删除' + task_name
-        co.delete_task(task_name)
+        print u'挂起' + task_name
+        co.disable_task(task_name)
 
 @task
 def count_time(**i):

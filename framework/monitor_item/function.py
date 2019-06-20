@@ -511,9 +511,18 @@ def change_unit_status(req):
             注意：
             # 设置任务为可用同时（将挂起的任务重新生效）同时也要将子任务也设置为生效
             # 否则主任务重新生效了，子任务却还在挂起状态
+            # 重启任务时还需要判断当前监控项的开始和结束时间，如果不在时间范围内就要挂起子任务
+            （就是子任务还是继续挂起）
             """
+            strnow = datetime.strftime(datetime.now(), '%H:%M')
+            start_time = str(mon.start_time)
+            end_time = str(mon.end_time)
+            starttime = start_time.split(':')[0]+":"+start_time.split(':')[1]
+            endtime = end_time.split(':')[0]+":"+end_time.split(':')[1]
             co.enable_task(schename)
-            co.enable_task(schename + "task")
+            # 在时间范围内才将挂起子任务重启，否则不处理
+            if strnow <= endtime and strnow >= starttime:
+                co.enable_task(schename + "task")
         else: # 挂起celery任务
             """
             注意：
