@@ -418,8 +418,16 @@ def edit_unit(request):
             add_dic['node_times'] = node_times
             add_dic['constants'] = constants
         add_dic['monitor_type'] = monitor_type
+        """ 
         # 添加定时任务监控要求本地安装任务调度软件rabitmq
-        # 正式环境服务器一般带有这个调度软件，如果没有就要安装
+        # 正式环境与测试环境服务器一般带有这个调度软件（如果没有就要安装）
+        # 先清除celery任务与子任务
+        # 这里需要注意，只有先清除任务再创建一个新的任务celery调度才能生效
+        # 直接修改原有任务，celery调度不能生效，多次验证得出的结论
+        """
+        co.delete_task(str(id))
+        co.delete_task(str(id)+"task")
+        # 然后再创建新的celery任务
         function.add_unit_task(add_dicx=add_dic)
         result = tools.success_result(None)
         # 修改获取用户的方式，直接从request中获取

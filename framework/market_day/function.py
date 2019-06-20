@@ -124,6 +124,7 @@ def add_unit_task(add_dicx):
     temp_date = datetime(2019, 2, 12, int(endtime.split(':')[0]), int(endtime.split(':')[1]), 0)
     endhour, endmin = tran_time_china(temp_date, timezone=timezone)
     endtime = endhour + ":" + endmin
+    starttime = starthour+ ":" + startmin
     period = int(add_dicx['period'])
     if type == 1:
         ctime = {
@@ -138,7 +139,7 @@ def add_unit_task(add_dicx):
             'period': period,
             'area_id': add_dicx['monitor_area'],
             'task_name': str(schename) + 'task',
-            'starttime': add_dicx['start_time'],
+            'starttime': starttime,
             'endtime': endtime,
             'score': add_dicx['score']
         }
