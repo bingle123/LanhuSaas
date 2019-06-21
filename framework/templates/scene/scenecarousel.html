@@ -66,8 +66,10 @@
               position: '1',                                                                  //岗位
               options: [],
               show_stop:null,//暂停
+              scene_stop:null,
               show_index:0,
               interval: 10,   //默认10秒
+              scene_interval : 300,
           },
           methods: {
               //取配置的轮播时间
@@ -93,6 +95,29 @@
                       }
                   })
               },
+              //取配置更新场景的时间间隔
+              get_scene_interval(){
+                  axios({
+                      method: 'post',
+                      data:{
+                          code:"scene_update"
+                      },
+                      url:  '${SITE_URL}monitor_scene/open_scene_design/',
+                  }).then((res) => {
+                      if(res && res.data && res.data.time_interval && res.data.time_interval != ""){
+                          let reg = /^\+?[1-9][0-9]*$/;
+                          if(reg.test(res.data.time_interval)){
+                              if(res.data.time_interval != vm.scene_interval){
+                                  vm.scene_interval = res.data.time_interval;
+                                  //清空定时任务
+                                  clearInterval(vm.scene_stop);
+                                  //重新启动定时任务
+                                  vm.scene_task();
+                              }
+                          }
+                      }
+                  })
+              },
               time_task(){
                   if(vm.show_stop){
                      clearInterval(vm.show_stop);
@@ -110,9 +135,16 @@
                       }
                   },vm.interval*1000);
               },
+              scene_task(){
+                  if(vm.scene_stop){
+                     clearInterval(vm.scene_stop);
+                  }
+                  vm.scene_stop = setInterval(function(){
+                      vm.get_scene_interval()
+                      vm.query_scene_info();
+                  },vm.scene_interval*1000);
+              },
               query_scene_info:function(){
-                  //取得配置的轮播时间间隔
-                  vm.get_time_interval();
                   $.ajax({
                       url:"${SITE_URL}monitor_scene/query_curr_user_scene"
                       ,async:false
@@ -145,6 +177,10 @@
           }
       })
       vm.query_scene_info();
+      //取得配置的轮播时间间隔
+      vm.get_time_interval();
+      //取得配置的更新场景时间间隔
+      vm.get_scene_interval();
 </script>
 </body>
 </html>
