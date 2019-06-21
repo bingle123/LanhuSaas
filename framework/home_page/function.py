@@ -303,7 +303,7 @@ def select_All(request):
             content = '';
             j = 0
             for i in result_li:
-                content += "告警名称：" + i.get("name") + "  告警状态：" + i.get("status_name")+"<br/>"
+                content += "告警内容：" + i.get("name") + "  告警状态：" + i.get("status_name")+"<br/>"
             my_dict["content"] = content
             print content
             # 第7个值为场景的得分值
@@ -326,7 +326,7 @@ def select_All(request):
             content = '';
             j = 0
             for i in result_li:
-                content += "告警名称：" + i.get("name") + "  告警状态：" + i.get("status_name")+"<br/>"
+                content += "告警内容：" + i.get("name") + "  告警状态：" + i.get("status_name")+"<br/>"
             my_dict["content"] = content
             print content
         # 当前时间大于场景结束时间，也算未执行的场景
