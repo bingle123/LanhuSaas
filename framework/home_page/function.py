@@ -16,6 +16,7 @@ from models import *
 from system_config.models import  *
 from db_connection.function import *
 from gather_data.models import TDGatherData
+from monitor_scene.hashmap import HashMap
 
 from monitor_item import function
 
@@ -376,21 +377,29 @@ def get_every_scene_health_degree(user_id):
 
 def select_alert(id):
     """
-    获取当前用户下每一个场景的健康度
+    获取每个场景当天告警信息的内容，同时去重
     :param user_id:
     :return:
     """
-    select_alert_sql= "SELECT alert_txt,alert_time,alert_status_name from td_alert_info where scene_id = "+id +" order by alert_time desc"
+    select_alert_sql= "SELECT alert_txt,alert_time,alert_status_name,alert_status_code from td_alert_info where scene_id = "+id
     db = get_db()
     cursor = db.cursor()
     cursor.execute(select_alert_sql)
     res = cursor.fetchall()
     cursor.close();
     result_list = [];
+    alert_map = HashMap()
     for alert in res:
         dict = {};
         dict["name"] = alert[0];
         dict["status_name"] = alert[2];
-        if(datetime.datetime.now().year == alert[1].year and datetime.datetime.now().month == alert[1].month and datetime.datetime.now().day == alert[1].day):
-            result_list.append(dict)
+        print alert[3]
+        # 这里只获取告警和当天的数据
+        if alert[3] == 'NOBROKER':
+            if(datetime.datetime.now().year == alert[1].year and datetime.datetime.now().month == alert[1].month and datetime.datetime.now().day == alert[1].day):
+                # 这里使用hashMap去重
+                if (alert_map.get(alert[0])) is not None:
+                    continue
+                alert_map.add(alert[0], alert[0])
+                result_list.append(dict)
     return result_list;
