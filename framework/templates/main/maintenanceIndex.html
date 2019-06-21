@@ -203,10 +203,13 @@
         </el-row>
         <!--情况展示-->
         <el-row :gutter="10" style="margin: 0 0 20px 0;background: rgb(255,255,255);">
-            <el-col v-for="(i,index) in system_run_data" :key="index" :span="3" style="margin: 20px auto">
-                <span class="span_style" :class="i.color">{{ i.name }}</span>
-            </el-col>
+            <el-col v-for="(i,index) in system_run_data" :key="index" :span="3" style="margin: 20px auto" >
+                <el-tooltip placement="top">
+                        <div slot="content" v-html="i.content"></div>
+                        <span class="span_style" :class="i.color"  id="alert_detail">{{ i.name }}</span>
 
+                </el-tooltip>
+            </el-col>
         </el-row>
         <!--告警-->
         <el-row class="row_shadow" style="margin-bottom: 10px;">
@@ -217,17 +220,19 @@
             </el-col>
         </el-row>
         <el-row id="alert_temp" class="row_margin row_shadow" style="margin-bottom: 10px;background: rgb(255,255,255);">
-            <el-col :span="20" :offset="4" class="title" style="border-bottom: 2px solid #f6f6f6">
-                <el-col :span="3"> <label for="" style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;">告警级别：</label></el-col>
-                <el-col :span="4"><el-select v-model="alertTypeVal" placeholder="全部">
+            <el-col :span="22" :offset="1" class="title" style="border-bottom: 2px solid #f6f6f6">
+                <el-col :span="5"> <label for="" style="font-size: 16px;font-family: PingFangSC-Medium;color: #303133;font-weight: bold;">告警级别：</label></el-col>
+                <el-col :span="5">
+                    <el-select v-model="alertTypeVal" placeholder="全部">
                             <el-option
                               v-for="item in alertTypeOpt"
                               :key="item.value"
                               :label="item.label"
                               :value="item.value">
                             </el-option>
-                        </el-select></el-col>
-                <el-col :span="6">
+                        </el-select>
+                </el-col>
+                <el-col :span="5">
                     <el-select v-model="alertTimeVal">
                         <el-option
                             v-for="item in alertTimeOpt"
@@ -239,19 +244,14 @@
                 <el-col :span="5">
                   <el-button type="primary" @click="get_alert_data" style="float:right;margin:20px 20px 0 0;font-size: 16px;font-family: PingFangSC-Medium;color: rgb(255, 255, 255);;font-weight: bold;">查询</el-button>
                 </el-col>
-        </el-col>
-            <el-col :span="24">
-                        <el-col :span="22" :offset="1">
-                            <el-table  max-height="200" :data="alert_table_data" style="width: 100%;margin-bottom: 50px;">
-                                <el-table-column prop="alert_txt" label="警告内容" width="350"></el-table-column>
-                                <el-table-column prop="alert_time" label="时间" width="350"></el-table-column>
-                                <el-table-column prop="alert_level_name" label="级别" width="350">
-
-                                </el-table-column>
-                                <el-table-column prop="alert_status_name" label="状态" width="350"></el-table-column>
-
-                            </el-table>
-                        </el-col>
+            </el-col>
+            <el-col :span="22" :offset="1">
+                <el-table  max-height="200" :data="alert_table_data" style="width: 100%;margin-bottom: 50px;">
+                    <el-table-column prop="alert_txt" label="警告内容" width="450px"></el-table-column>
+                    <el-table-column prop="alert_time" label="时间" width="300px"></el-table-column>
+                    <el-table-column prop="alert_level_name" label="级别" width="150px"></el-table-column>
+                    <el-table-column prop="alert_status_name" label="状态" width="150px"></el-table-column>
+                </el-table>
             </el-col>
         </el-row>
         <!--场景-->
@@ -406,9 +406,11 @@
             value2: '-1',
             alertTypeOpt:[
                 {value:"-1",label:"全部"},
-                {value:"NOBROKER",label:"告警"},
-                {value:"PROBLEM",label:"通知"},
-                {value:"OK",label:"恢复"},
+                {value:"0",label:"未分类"},
+                {value:"1",label:"极高"},
+                {value:"2",label:"高"},
+                {value:"3",label:"中"},
+                {value:"4",label:"低"},
             ],
             alertTypeVal:'-1', //警告类别
             alertTimeOpt:[
