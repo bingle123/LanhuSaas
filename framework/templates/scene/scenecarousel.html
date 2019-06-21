@@ -69,7 +69,7 @@
               scene_stop:null,
               show_index:0,
               interval: 10,   //默认10秒
-              scene_interval : 300,
+              scene_interval : 60,
           },
           methods: {
               //取配置的轮播时间
@@ -145,6 +145,7 @@
                   },vm.scene_interval*1000);
               },
               query_scene_info:function(){
+                  vm.scene_task();
                   $.ajax({
                       url:"${SITE_URL}monitor_scene/query_curr_user_scene"
                       ,async:false
