@@ -17,7 +17,7 @@ from gather_data.function import gather_data, get_db
 from gather_data.models import TDGatherData
 import sys
 from logmanagement.function import add_log, make_log_info, get_active_user
-import datetime
+from datetime import datetime
 from market_day.models import HeaderData as hd
 from settings import BK_PAAS_HOST
 from django.db import transaction
