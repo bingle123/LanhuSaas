@@ -68,9 +68,10 @@ def basic_monitor_task(**i):
     task_name = i['task_name']
     # 逾期删除本任务
     strnow = datetime.strftime(datetime.now(), '%H:%M')
+    logger.info(u"celery 调用数据库采集子任务开始：{}".format(strnow))
     # 只有在时间段内才执行采集任务，否则挂起采集任务
     if strnow <= endtime and strnow >= starttime:
-        logger.error(u"celery 调用数据库采集子任务：{}".format(datetime.now()))
+        logger.info(u"celery 调用数据库采集子任务：{}".format(datetime.now()))
         function.gather_data(**i)
     else:
         # 挂起子任务
