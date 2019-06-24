@@ -13,13 +13,22 @@
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
     <!--jQuery库使用时请使用标准jQuery语法-->
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
+    <style>
+        table{
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 <div class="content">
-        <div class="body">
-        <el-card shadow="always">
+    <el-breadcrumb class="route" separator-class="el-icon-arrow-right">
+    <el-breadcrumb-item>历史和报表</el-breadcrumb-item>
+    <el-breadcrumb-item>操作日志查询</el-breadcrumb-item>
+    </el-breadcrumb>
+    <div class="body">
+        <el-card shadow="always" style="margin-top: 10px">
             <div>
-                <div id="pagetitle">
+                <div id="pagetitle" style="margin-bottom: 10px;font-size: 14px;font-weight:bold;">
                     操作日志查询
                 </div>
                 <hr id="hr">
@@ -35,7 +44,7 @@
                         </div>
                     </el-col>
                 </el-row>
-                <el-table :data="Operatelog"  style="width: 100%;margin-top: 5px;" border>
+                <el-table :data="Operatelog" :header-cell-style="{background:'#f7f7f7'}" style="width: 100%;margin-top: 5px;" border>
                     <el-table-column prop="id" label="id" width="100" align="left" sortable>
                     </el-table-column>
                     <el-table-column prop="log_type" label="操作类型" show-overflow-tooltip="true" width="220" align="left" sortable>
