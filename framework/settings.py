@@ -19,7 +19,6 @@ You can load different configurations depending on yourcurrent environment.
       testing
       production
 """
-
 ENVIRONMENT = os.environ.get("BK_ENV", "development")
 # Inherit from environment specifics
 conf_module = "conf.settings_%s" % ENVIRONMENT

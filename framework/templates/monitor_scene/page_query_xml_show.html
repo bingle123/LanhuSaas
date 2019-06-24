@@ -157,7 +157,7 @@
                                     if(temp_dto["key_val"].indexOf("@") == 0){
                                          graph.setCellStyles(mxConstants.STYLE_FILLCOLOR,
                                        '#cecece', [cell_dto]);
-                                    }else if(temp_dto["key_val"].indexOf("db@") == 0){
+                                    }else if(temp_dto["key_val"].indexOf("db@") == 0){//数据库监控项值为0
                                          var color_str ="#cecece";
                                          var txt_str = calc_data[1]
                                              .replace(txt,"").replace("[","")

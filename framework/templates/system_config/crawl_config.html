@@ -2,6 +2,16 @@
 <head>
     <meta charset="UTF-8">
     <title>爬虫配置</title>
+    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jsPlumbToolkit-defaults.css"/>
+    <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jquery.range.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/bk.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
+    <!-- element UI引入样式 -->
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/home.css" rel="stylesheet">
+    <link href="${STATIC_URL}css/net/font_997278_ptr5bdmor4j.css" rel="stylesheet">
 
     <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
     <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
@@ -9,50 +19,42 @@
     <!-- vue的ajax依赖-->
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
     <!-- element UI引入样式 -->
-    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
     <!-- element UI引入组件库 -->
     <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
     <script src='${STATIC_URL}js/jquery.min.js'></script>
     <script src='${STATIC_URL}js/jquery-ui.js'></script>
     <script src="${STATIC_URL}js/csrftoken.js"></script>
-    <!--jQuery库使用时请使用标准jQuery语法-->
-    <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
-    <!--页面初始化css(Tencent)-->
-
-    <!--阿里巴巴矢量图标库--项目完成后请下载css并下载css引用的字体文件-->
-    <link href="${STATIC_URL}css/net/font_997278_ptr5bdmor4j.css" rel="stylesheet">
+    <style>
+        table{
+             font-size: 14px;
+        }
+    </style>
 </head>
-<body>
-
-<div id="system_crawl_config" v-loading="loading">
-
+<body style="overflow-y: hidden;">
+<div id="system_crawl_config">
     <!--start 面包屑-->
-    <el-breadcrumb separator-class="el-icon-arrow-right" separator="/" style="margin: 20px;">
-        <el-breadcrumb-item><a href="/">系统配置</a></el-breadcrumb-item>
+    <el-breadcrumb class='route' separator-class='el-icon-arrow-right'>
+        <el-breadcrumb-item>看板系统配置</el-breadcrumb-item>
         <el-breadcrumb-item>网页抓取配置</el-breadcrumb-item>
-        <el-breadcrumb-item v-if="showDiaLog == false">{{ message }}抓取配置</el-breadcrumb-item>
     </el-breadcrumb>
     <!--end 面包屑-->
-
     <!--start 卡片 列表页-->
     <el-card class="box-card" style="margin: 20px;" v-if="showDiaLog == true">
         <div slot="header" class="clearfix">
-            <div class="grid-content bg-purple"><h2>网页抓取配置</h2></div>
-            <br>
-            <el-row :gutter="20">
+            <div id='pagetitle' style="font-size: 14px;">网页抓取配置</div>
+            <hr id='hr'>
+            <el-row type='flex' justify='space-between' align='center' class='row' style="margin-top: 10px">
                 <el-col :span="20">
                     <el-form :inline="true" :model="crawl_search" class="demo-form-inline">
-                        <div @keyup.enter="get_crawl_by_name">
                         <el-form-item label="爬虫名称：">
-                            <el-input v-model="crawl_search.name" clearable placeholder="请输入爬虫名称" @keyup.enter="get_crawl_by_name"></el-input>
+                            <el-input v-model="crawl_search.name" clearable placeholder="请输入爬虫名称" @keyup.enter.native="get_crawl_by_name"></el-input>
                         </el-form-item>
                         <el-form-item label="爬虫网址：">
-                            <el-input v-model="crawl_search.url" clearable placeholder="请输入爬虫网址" @keyup.enter="get_crawl_by_name"></el-input>
+                            <el-input v-model="crawl_search.url" clearable placeholder="请输入爬虫网址" @keyup.enter.native="get_crawl_by_name"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" @click="get_crawl_by_name">查询</el-button>
                         </el-form-item>
-                        </div>
                     </el-form>
                 </el-col>
                 <el-col :span="4" style="float: right">
@@ -62,10 +64,8 @@
                 </el-col>
             </el-row>
         </div>
-        <el-table :data="crawl_table" style="width: 100%" border header-align="center">
-            <el-table-column type="expand"
-                             label="ID"
-                             prop="id">
+        <el-table :data="crawl_table" :header-cell-style='rowclass' style="width: 100%" border header-align="center">
+            <el-table-column type="expand" label="ID" prop="id">
                 <template slot-scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
                         <el-form-item label="总xpath:" >
@@ -131,9 +131,10 @@
 
     <!--start 卡片 新增爬虫配置页-->
     <el-card class="box-card" style="margin: 20px;" v-if="showDiaLog == false">
-        <div slot="header" class="clearfix">
-            <h2>{{ message }}爬虫配置</h2>
+        <div slot="header" class="clearfix" id='pagetitle' style="font-size: 14px;">
+            {{ message }}爬虫配置
         </div>
+        <hr id='hr'>
         <el-form ref="form" :model="crawl_form" label-width="150px">
             <el-row :gutter="20">
                 <el-col :span="12">
@@ -218,7 +219,6 @@
                     </div>
                 </el-col>
             </el-row>
-
         </el-form>
     </el-card>
     <!--end 卡片 新增爬虫配置页-->
@@ -234,10 +234,7 @@
         <el-button type="primary" @click="select_people">确 定</el-button>
         </span>
     </el-dialog>
-
 </div>
-
-
 <script>
     //csrf验证
     axios.interceptors.request.use((config) => {

@@ -191,6 +191,8 @@ INSTALLED_APPS = (
 # Django 项目配置
 # ==============================================================================
 TIME_ZONE = 'Asia/Shanghai'
+CELERY_TIMEZONE = 'Asia/Shanghai'
+CELERY_ENABLE_UTC = True
 LANGUAGE_CODE = 'zh-CN'
 SITE_ID = 1
 USE_I18N = True
@@ -278,6 +280,7 @@ if IS_USE_CELERY:
             DEBUG = False
         # celery 的消息队列（RabbitMQ）信息
         BROKER_URL = os.environ.get('BK_BROKER_URL', BROKER_URL_DEV)
+        # 定时任务调度器
         CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
         CELERY_RESULT_BACKEND = 'amqp://'
         CELERY_TASK_SERIALIZER = 'json'
