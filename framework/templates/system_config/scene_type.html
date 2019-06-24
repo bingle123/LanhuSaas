@@ -3,14 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>场景分组</title>
+    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jsPlumbToolkit-defaults.css"/>
+    <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jquery.range.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/bk.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/init.css" >
+    <!-- element UI引入样式 -->
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
 
     <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
     <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
     <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
     <!-- vue的ajax依赖-->
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
-    <!-- element UI引入样式 -->
-    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
     <!-- element UI引入组件库 -->
     <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
     <script src='${STATIC_URL}js/jquery.min.js'></script>
@@ -18,95 +25,83 @@
     <!--jQuery库使用时请使用标准jQuery语法-->
     <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
     <!--页面初始化css(Tencent)-->
-    <link href="${STATIC_URL}css/init.css" rel="stylesheet">
-
 </head>
-<body style="height: 100%">
-<div id="app" style="height: 100%;">
+<body style="overflow-y: hidden;">
+<div id="app" >
     <!--start 面包屑-->
-    <el-breadcrumb separator-class="el-icon-arrow-right" separator="/" style="padding: 20px;">
-        <el-breadcrumb-item><a href="/">系统配置</a></el-breadcrumb-item>
+    <el-breadcrumb class="route" separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item>看板系统配置</el-breadcrumb-item>
         <el-breadcrumb-item>场景分组配置</el-breadcrumb-item>
     </el-breadcrumb>
     <!--end 面包屑-->
-
     <!--start 卡片 列表页-->
-    <el-card class="box-card" style="margin: 20px;" style="height: 100%">
-        <div slot="header" class="clearfix">
-            <div class="grid-content bg-purple"><h2>场景分组配置</h2></div>
-            <br>
-            <el-row :gutter="20">
-                <el-col :span="20">
-                    <el-form :inline="true" class="demo-form-inline" @submit.native.prevent >
-                        <el-form-item label="场景分组名称：">
-                            <el-input placeholder="请输入场景分组名称" v-model="query_name" @keyup.enter.native="query_scene_type"></el-input>
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" @click="query_scene_type">查询</el-button>
-                        </el-form-item>
-
-                    </el-form>
-                </el-col>
-                <el-col :span="4" style="float: right">
-                    <div class="grid-content bg-purple">
-                        <el-button type="primary" @click="add_scene_type_diaLog">新增场景分组信息</el-button>
-                    </div>
-                </el-col>
-            </el-row>
+    <el-card shadow='always' style="margin-top: 10px">
+        <div id="pagetitle" style="margin-bottom: 10px;font-size: 14px;font-weight:bold;">
+            场景分组配置
         </div>
-        <template>
-            <el-table
-                    :data="tableData"
-                    stripe
-                    style="width: 100%">
-                <el-table-column
-                        prop="id"
-                        label="ID"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="scene_type_name"
-                        label="场景类型名称"
-                        width="180">
-                </el-table-column>
-                <el-table-column
-                        prop="create_user"
-                        label="创建人">
-                </el-table-column>
-                <el-table-column
-                        prop="create_time"
-                        :show-overflow-tooltip="true"
-                        label="创建时间">
-                </el-table-column>
-                <el-table-column
-                        prop="update_user"
-                        label="最后修改人">
-                </el-table-column>
-                <el-table-column
-                        prop="update_time"
-                        :show-overflow-tooltip="true"
-                        label="最后修改时间">
-                </el-table-column>
-                <el-table-column label="操作">
-                    <template slot-scope="scope">
-                        <el-button size="mini" type="text"
-                                   v-on:click="edit_scene_type_by_uuid(scope.row.scene_type_id,scope.row.scene_type_name
-                                   ,scope.row.start_time,scope.row.stop_time)">
-                            编辑
-                        </el-button>
-                        <el-button size="mini" type="text" v-on:click="delete_scene_by_uuid(scope.row.scene_type_id)">
-                            删除
-                        </el-button>
-                        </el-tooltip>
-                    </template>
-                </el-table-column>
-            </el-table>
-
-            <el-pagination :page-count="page_count" background layout="sizes, prev, pager, next" style="float:right"
-                           @current-change="changePage"  @size-change="changeSize" :page-sizes="[5, 10, 20, 50]" :page-size="5"></el-pagination>
-
-        </template>
-
+        <hr id="hr">
+        <el-row :gutter="20" style="margin-top: 10px">
+            <el-col :span="20">
+                <el-form :inline="true" class="demo-form-inline" @submit.native.prevent >
+                    <el-form-item label="场景分组名称：">
+                        <el-input placeholder="请输入场景分组名称" v-model="query_name" @keyup.enter.native="query_scene_type"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="query_scene_type">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-col>
+            <el-col :span="4" style="float: right">
+                <div class="grid-content bg-purple">
+                    <el-button type="primary" @click="add_scene_type_diaLog">新增场景分组信息</el-button>
+                </div>
+            </el-col>
+        </el-row>
+        <el-table :data="tableData" :header-cell-style='rowclass' style="width: 100%;margin-top: 10px;" border>
+            <el-table-column
+                    prop="id"
+                    label="ID"
+                    width="180"　sortable>
+            </el-table-column>
+            <el-table-column
+                    prop="scene_type_name"
+                    label="场景类型名称"
+                    width="180" sortable>
+            </el-table-column>
+            <el-table-column
+                    prop="create_user"
+                    label="创建人" sortable>
+            </el-table-column>
+            <el-table-column
+                    prop="create_time"
+                    :show-overflow-tooltip="true"
+                    label="创建时间" sortable>
+            </el-table-column>
+            <el-table-column
+                    prop="update_user"
+                    label="最后修改人" sortable>
+            </el-table-column>
+            <el-table-column
+                    prop="update_time"
+                    :show-overflow-tooltip="true"
+                    label="最后修改时间" sortable>
+            </el-table-column>
+            <el-table-column label="操作">
+                <template slot-scope="scope">
+                    <el-button size="mini" type="text"
+                               v-on:click="edit_scene_type_by_uuid(scope.row.scene_type_id,scope.row.scene_type_name
+                               ,scope.row.start_time,scope.row.stop_time)">
+                        编辑
+                    </el-button>
+                    <el-button size="mini" type="text" v-on:click="delete_scene_by_uuid(scope.row.scene_type_id)">
+                        删除
+                    </el-button>
+                    </el-tooltip>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination :page-count="page_count" background layout="sizes, prev, pager, next" style="float:right"
+                   @current-change="changePage"  @size-change="changeSize" :page-sizes="[5, 10, 20, 50]" :page-size="5"></el-pagination>
     </el-card>
     <!--end 卡片 列表页-->
     <el-dialog title="新增场景分组" :visible.sync="dialogFormVisible">
