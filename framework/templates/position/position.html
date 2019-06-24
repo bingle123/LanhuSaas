@@ -3,18 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <title>岗位管理</title>
-    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
-    <script src="${STATIC_URL}js/csrftoken.js"></script>
+    <!-- element UI引入样式 -->
+    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jsPlumbToolkit-defaults.css"/>
+    <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jquery.range.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/bk.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
+    <!-- element UI引入样式 -->
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/home.css" rel="stylesheet">
+
+    <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/csrftoken.js"></script>
     <!-- 生产环境版本，优化了尺寸和速度 功能完善后请将vue.development.js该为vue.js-->
     <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue.js"></script>-->
-    <!-- element UI引入样式 -->
-    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
     <!-- element UI引入组件库 -->
-    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
     <!-- vue的ajax依赖-->
-    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
     <!--jQuery库使用时请使用标准jQuery语法-->
-    <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
     <!--<script src="${STATIC_URL}assets/vue-2.5.21/vue-router.js"></script>-->
     <style>
         input {
@@ -46,21 +55,78 @@
             font-size: 14px;
             border-radius: 4px;
         }
+        table{
+            font-size: 14px;
+        }
     </style>
 </head>
-
-<body>
+<body style="overflow-y: hidden">
 <div class="content">
-     <el-dialog title="人员类别管理" :visible.sync="dialogFormVisible4" width="70%" >
+    <el-breadcrumb class="route" separator-class='el-icon-arrow-right'>
+        <el-breadcrumb-item>看板系统配置</el-breadcrumb-item>
+        <el-breadcrumb-item>岗位管理</el-breadcrumb-item>
+    </el-breadcrumb>
+    <el-card class='card' shadow='always' style="margin-top: 10px">
+        <div id="pagetitle" style="margin-bottom: 10px;font-size: 14px;">
+            岗位管理
+        </div>
+        <hr id="hr">
+        <el-row type='flex' justify='space-between' align='center' class='row' style="margin-top: 10px">
+            <el-col :span="12">
+                <el-col :span="9" >
+                    <el-input v-model.trim="search" @keyup.enter.native="select_pos" clearable placeholder="请输入岗位名称或岗位人员" ></el-input>
+                </el-col>&nbsp;
+                <el-col :span="3" style="margin-left: 5px;">
+                    <el-button type="primary" icon="el-icon-search" v-on:click="select_pos">搜索</el-button>
+                </el-col>
+            </el-col>
+            <el-col :span="6" style="padding-left: 230px;">
+                <el-button type="button" @click="dialogFormVisible3 = true" class="el-button-self">新增岗位</el-button>
+            </el-col>
+            <el-col :span="6" style="padding-left: 100px">
+                <el-button type="button" @click="open_user_group()" class="el-button-self">人员类别管理</el-button>
+            </el-col>
+        </el-row>
+        <el-table :data="positiontable" :header-cell-style='rowclass' style="width: 100%;margin-top: 10px" border
+                      header-align="center" >
+            <el-table-column prop="pos_name" label="岗位名称" show-overflow-tooltip="true" style="width: 10%" align="center" sortable>
+            </el-table-column>
+            <el-table-column prop="user_name" label="岗位人员" show-overflow-tooltip="true" style="width: 40%;" align="center" sortable>
+            </el-table-column>
+            <el-table-column prop="creator" label="创建人" style="width: 10%;" align="center" sortable>
+            </el-table-column>
+            <el-table-column prop="create_time" label="创建时间" style="width: 10%;" align="center" sortable>
+            </el-table-column>
+            <el-table-column prop="editor" label="最后修改人" style="width: 10%;" align="center" sortable>
+            </el-table-column>
+            <el-table-column prop="edit_time" label="最后修改时间" style="width: 10%;" align="center" sortable>
+            </el-table-column>
+            <el-table-column prop="operation" label="操作" style="width: 10%" align="center">
+                <template slot-scope="scope">
+                    <el-button type="text" @click="show_pos(scope.row)" size="small">加人</el-button>
+                    <el-button type="text" @click="edit_posname(scope.row)" size="small">编辑</el-button>
+                    <el-button type="text" @click="deletePosition(scope.row.id)" size="small">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div class='block' style='text-align:right'>
+        <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
+                       @current-change="current_change1" :current-page="page"></el-pagination>
+        </div>
+    </el-card>
+    <!-- <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
+    <el-tree class="filter-tree" :data="data3" :props="defaultProps" default-expand-all show-checkbox
+             :filter-node-method="filterNode" ref="tree2"></el-tree> -->
+    <el-dialog title="人员类别管理" :visible.sync="dialogFormVisible4" width="70%" >
          <template>
-                          <el-select @change="change_user_group_item" v-model="value13" filterable  style="margin-left: 300px;margin-bottom: 30px">
-                            <el-option
-                              v-for="item in options"
-                              :key="item.value"
-                              :label="item.label"
-                              :value="item.label">
-                            </el-option>
-                          </el-select>
+              <el-select @change="change_user_group_item" v-model="value13" filterable  style="margin-left: 300px;margin-bottom: 30px">
+                <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.label">
+                </el-option>
+              </el-select>
          </template>
         <el-form :model="form">
             <el-form-item label="">
@@ -133,73 +199,8 @@
             <el-button @click="dialogFormVisible3 = false">取消</el-button>
         </div>
     </el-dialog>
-
-    <div class="header">
-        <el-breadcrumb class="route" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item>看板系统配置</el-breadcrumb-item>
-            <el-breadcrumb-item>岗位管理</el-breadcrumb-item>
-        </el-breadcrumb>
-    </div>
-    <div class="body">
-        <el-card shadow="always">
-            <div>
-                <div id="pagetitle">
-                    岗位管理
-                </div>
-                <hr id="hr">
-                <el-row type="flex" justify="space-between" align="center" class="row">
-                    <el-col :span="12">
-                        <div @keyup.enter="select_pos">
-                            <el-col :span="9" >
-                                <el-input v-model.trim="search" clearable placeholder="请输入岗位名称或岗位人员" ></el-input>
-                            </el-col>&nbsp;
-                            <el-col :span="3" style="margin-left: 5px;">
-                                <el-button type="primary" icon="el-icon-search" v-on:click="select_pos">搜索</el-button>
-                            </el-col>
-                        </div>
-                    </el-col>
-                    <el-col :span="6" style="padding-left: 230px;">
-                        <el-button type="button" @click="dialogFormVisible3 = true" class="el-button-self">新增岗位</el-button>
-                    </el-col>
-                    <el-col :span="6" style="padding-left: 100px">
-                        <el-button type="button" @click="open_user_group()" class="el-button-self">人员类别管理</el-button>
-                    </el-col>
-
-                </el-row>
-                <el-table :data="positiontable" style="width: 100%;margin-top: 20px" border >
-                    <el-table-column prop="pos_name" label="岗位名称" show-overflow-tooltip="true" style="width: 10%" align="center" sortable>
-                    </el-table-column>
-                    <el-table-column prop="user_name" label="岗位人员" show-overflow-tooltip="true" style="width: 40%;" align="center" sortable>
-                    </el-table-column>
-                    <el-table-column prop="creator" label="创建人" style="width: 10%;" align="center" sortable>
-                    </el-table-column>
-                    <el-table-column prop="create_time" label="创建时间" style="width: 10%;" align="center" sortable>
-                    </el-table-column>
-                    <el-table-column prop="editor" label="最后修改人" style="width: 10%;" align="center" sortable>
-                    </el-table-column>
-                    <el-table-column prop="edit_time" label="最后修改时间" style="width: 10%;" align="center" sortable>
-                    </el-table-column>
-                    <el-table-column prop="operation" label="操作" style="width: 10%" align="center">
-                        <template slot-scope="scope">
-                            <el-button type="text" @click="show_pos(scope.row)" size="small">加人</el-button>
-                            <el-button type="text" @click="edit_posname(scope.row)" size="small">编辑</el-button>
-                            <el-button type="text" @click="deletePosition(scope.row.id)" size="small">删除</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
-                <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
-                               @current-change="current_change1" :current-page="page"></el-pagination>
-            </div>
-
-        </el-card>
-
-    </div>
-    <!-- <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
-    <el-tree class="filter-tree" :data="data3" :props="defaultProps" default-expand-all show-checkbox
-             :filter-node-method="filterNode" ref="tree2"></el-tree> -->
 </div>
 <script src="${STATIC_URL}js/position/position.js"></script>
 <input id="siteUrl" type="hidden" value="${SITE_URL}">
 </body>
-
 </html>
