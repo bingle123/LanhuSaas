@@ -15,13 +15,22 @@
 
     <link href="${STATIC_URL}css/net/jquery.range.css" rel="stylesheet">
     <script src="${STATIC_URL}js/net/jquery-1.10.2.min.js"></script>
+    <style>
+        table{
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 <div class="content">
+    <el-breadcrumb class="route" separator-class="el-icon-arrow-right">
+    <el-breadcrumb-item>历史和报表</el-breadcrumb-item>
+    <el-breadcrumb-item>报表统计查询</el-breadcrumb-item>
+    </el-breadcrumb>
         <div class="body">
-        <el-card shadow="always">
+        <el-card shadow="always" style="margin-top: 10px">
             <div>
-                <div id="pagetitle">
+                <div id="pagetitle" style="margin-bottom: 10px;font-size: 14px;font-weight:bold;">
                     报表统计查询
                 </div>
                 <hr id="hr">
