@@ -24,7 +24,7 @@
 <div class="content" id="main">
     <div class="header">
         <el-breadcrumb class="route" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item>首页</el-breadcrumb-item>
+            <el-breadcrumb-item>看板系统配置</el-breadcrumb-item>
             <el-breadcrumb-item>菜单管理</el-breadcrumb-item>
         </el-breadcrumb>
     </div>
@@ -33,7 +33,7 @@
         <el-card shadow="always">
             <!--表单展示-->
             <div v-if="isAdd == '1'">
-                <div id="pagetitle">
+                <div id="pagetitle" style="font-size: 14px;">
                     菜单管理
                 </div>
                 <hr id="hr">
@@ -80,7 +80,7 @@
 
             <!--新增-->
             <div v-else-if="isAdd == '2'">
-                <div id="pagetitle">
+                <div id="pagetitle" style="font-size: 14px;">
                     新增菜单
                 </div>
                 <hr id="hr">
@@ -136,7 +136,7 @@
 
             <!--权限分配-->
             <div v-else-if="isAdd == '4'">
-                <div id="pagetitle">
+                <div id="pagetitle" style="font-size: 14px;">
                     权限分配
                 </div>
                 <hr id="hr">
@@ -203,14 +203,9 @@
                 </el-row>
             </div>
             <!--||||||||||||||||-->
-
-
         </el-card>
     </div>
-
 </div>
-
-
 </body>
 </html>
 

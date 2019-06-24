@@ -5,12 +5,12 @@
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
     <link rel="stylesheet" href="${STATIC_URL}css/net/jsPlumbToolkit-defaults.css"/>
     <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
-    <link rel="stylesheet" href="${STATIC_URL}css/net/jquery.range.css" rel="stylesheet">
-    <link rel="stylesheet" href="${STATIC_URL}css/net/bk.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jquery.range.css" >
+    <link rel="stylesheet" href="${STATIC_URL}css/net/bk.css" >
     <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
     <!-- element UI引入样式 -->
-    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
-    <link rel="stylesheet" href="${STATIC_URL}css/home.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css" >
+    <link rel="stylesheet" href="${STATIC_URL}css/home.css" >
     <link href="${STATIC_URL}css/net/font_997278_ptr5bdmor4j.css" rel="stylesheet">
 
     <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
@@ -26,7 +26,7 @@
     <script src="${STATIC_URL}js/csrftoken.js"></script>
     <style>
         table{
-             font-size: 14px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -64,7 +64,7 @@
                 </el-col>
             </el-row>
         </div>
-        <el-table :data="crawl_table" :header-cell-style='rowclass' style="width: 100%" border header-align="center">
+        <el-table :data="crawl_table" :header-cell-style="rowClass" style="width: 100%; " border header-align="center">
             <el-table-column type="expand" label="ID" prop="id">
                 <template slot-scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
