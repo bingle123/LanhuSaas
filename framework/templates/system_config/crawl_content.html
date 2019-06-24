@@ -18,21 +18,27 @@
     <!--<script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>-->
     <!--页面初始化css(Tencent)-->
     <link href="${STATIC_URL}css/init.css" rel="stylesheet">
+
+    <style>
+        table{
+            font-size: 14px;
+            font-family: "Microsoft YaHei";
+        }
+    </style>
 </head>
 <body>
 <div id="main">
     <!--start 面包屑-->
-    <el-breadcrumb separator-class="el-icon-arrow-right" separator="/" style="padding: 20px;">
-        <el-breadcrumb-item><a href="/">系统配置</a></el-breadcrumb-item>
+    <el-breadcrumb separator-class="el-icon-arrow-right" separator="/" style="padding: 10px;">
+        <el-breadcrumb-item>历史和报表</el-breadcrumb-item>
         <el-breadcrumb-item>爬虫内容查看</el-breadcrumb-item>
     </el-breadcrumb>
     <!--end 面包屑-->
-
     <!--start 卡片 列表页-->
-    <el-card class="box-card" style="margin: 20px;" style="height: 100%">
+    <el-card class="box-card" style="margin: 10px;" >
         <div slot="header" class="clearfix">
-            <div class="grid-content bg-purple"><h2>爬虫内容查看</h2></div>
-            <br>
+            <div class="grid-content bg-purple" style="margin-bottom: 10px;font-size: 14px;font-weight:bold;">爬虫内容查看</div>
+            <hr>
             <el-row :gutter="20">
                 <el-col :span="20">
                     <el-form :inline="true" class="demo-form-inline">
@@ -52,14 +58,14 @@
         <template>
             <el-table
                     :data="tableData"
-                    stripe
-                    style="width: 100%">
+                    stripe border
+                    style="width: 100%" :header-cell-style="{background:'#f7f7f7'}">
                 <el-table-column
                         prop="crawl_name"
                         label="爬虫名称"
-                        width="200">
+                        width="200" sortable>
                 </el-table-column>
-                <el-table-column label="爬虫内容查看" width="600">
+                <el-table-column label="爬虫内容查看" width="600" sortable>
                     <template slot-scope="scope">
                         <el-button size="mini" type="text"
                                    v-on:click="open_url(scope.row.url_content)">{{ scope.row.title_content }}</el-button>
@@ -68,17 +74,17 @@
                 <el-table-column
                         prop="url_content"
                         label="地址"
-                        width="400">
+                        width="400" sortable>
                 </el-table-column>
                 <el-table-column
                         prop="time_content"
                         label="时间"
-                        width="180">
+                        width="180" sortable>
                 </el-table-column>
                 <el-table-column
                         prop="save_time"
                         label="保存时间"
-                        width="180">
+                        width="180" sortable>
                 </el-table-column>
             </el-table>
             <el-pagination :page-count="page_count" background layout="sizes, prev, pager, next" style="float:right"
