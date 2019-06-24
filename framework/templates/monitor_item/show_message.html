@@ -1,181 +1,32 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <title>监控项</title>
+    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jsPlumbToolkit-defaults.css"/>
+    <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jquery.range.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/bk.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
+    <!-- element UI引入样式 -->
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/home.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/style.css" rel="stylesheet">
+
     <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
     <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 -->
-    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
-    <!-- element UI引入样式 -->
-    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css">
+    <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
     <!-- element UI引入组件库 -->
-    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
     <!--axios.min.js--vue.js的ajax支持-->
-    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
-    <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
-    <script src="${STATIC_URL}js/csrftoken.js"></script>
-
-    <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
-    <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
-
-    <script type="text/javascript"
-            src="${STATIC_URL}js/net/jsplumb.min.js"></script>
-    <link rel="stylesheet"
-          href="${STATIC_URL}css/net/jsPlumbToolkit-defaults.css"/>
-    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
-    <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
+    <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/csrftoken.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/net/jsplumb.min.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/echarts/echarts.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/echarts/macarons.js"></script>
-    <link rel="stylesheet" href="${STATIC_URL}css/maintenanceIndex/maintenanceIndex.css">
     <script type="text/javascript" src="${STATIC_URL}js/monitor_item/show_message.js"></script>
     <style>
-        input {
-            width: 250px;
-            height: 30px;
-        }
-
-        .el-table--border th {
-            padding: 5px
-        }
-
-        .newline {
-            word-wrap: break-word;
-            word-break: break-all;
-            overflow: hidden;
-        }
-
-        .circle1 {
-            display: inline-block;
-            margin-left: 5px;
-            width: 20px;
-            height: 20px;
-            background-color: lawngreen;
-            border-radius: 50%;
-            -moz-border-radius: 50%;
-            -webkit-border-radius: 50%;
-        }
-
-        .circle2 {
-            display: inline-block;
-            margin-left: 5px;
-            width: 20px;
-            height: 20px;
-            background-color: darkgreen;
-            border-radius: 50%;
-            -moz-border-radius: 50%;
-            -webkit-border-radius: 50%;
-        }
-
-        .circle3 {
-            display: inline-block;
-            margin-left: 5px;
-            width: 20px;
-            height: 20px;
-            background-color: grey;
-            border-radius: 50%;
-            -moz-border-radius: 50%;
-            -webkit-border-radius: 50%;
-        }
-
-        .circle4 {
-            display: inline-block;
-            margin-left: 5px;
-            width: 20px;
-            height: 20px;
-            background-color: red;
-            border-radius: 50%;
-            -moz-border-radius: 50%;
-            -webkit-border-radius: 50%;
-        }
-
-        .asd {
-            display: inline-block;
-        }
-
-        .score_input {
-            font-size: 16px;
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            top: -36px;
-            left: 0;
-            width: 50px;
-            height: 36px;
-            display: none;
-        }
-
-        .right_click {
-            position: absolute;
-            width: 100px;
-            display: none;
-        }
-
-        .right_click span {
-            width: 100px;
-            display: inline-block;
-            font-size: 16px;
-            line-height: 36px;
-        }
-
-        .circle-bar {
-            margin: 20px auto;
-            font-size: 100px;
-            width: 1em;
-            height: 1em;
-            position: relative;
-            background-color: #333;
-        }
-
-        .circle-bar-left, .circle-bar-right {
-            width: 1em;
-            height: 1em;
-            background-color: #eee;
-        }
-
-        /*
-            这里采用clip剪切了圆，实现左右两个半圆，右半圆在后面，因此在更上一层，
-            clip的用法参考：http://www.w3school.com.cn/cssref/pr_pos_clip.asp
-         */
-        .circle-bar-right {
-            clip: rect(0, auto, auto, .5em);
-        }
-
-        .circle-bar-left {
-            clip: rect(0, .5em, auto, 0);
-        }
-
-        .mask {
-            width: 0.8em;
-            height: 0.8em;
-            background-color: #fff;
-            text-align: center;
-            line-height: 0.2em;
-            color: rgba(0, 0, 0, 0.5);
-        }
-
-        .mask :first-child {
-            font-size: 0.3em;
-            height: 0.8em;
-            line-height: 0.8em;
-            display: block;
-        }
-
-        /*所有的后代都水平垂直居中，这样就是同心圆了*/
-        .circle-bar * {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            margin: auto;
-        }
-
-        /*自身以及子元素都是圆*/
-        .circle-bar, .circle-bar > * {
-            border-radius: 50%;
-        }
-
-        .dimension_div .el-form-item__content:first-child {
-            margin-left: 0 !important;
-        }
-
         /*jlq-2019-05-08-add*/
         .el-dialog__body {
             padding: 10px 20px;
@@ -204,52 +55,76 @@
 
         .monitor-name {
             color: #f56c6c;
-            font-size: 12px;
             line-height: 1;
             padding-top: 4px;
             top: 100%;
             left: 0;
         }
+        .el-row {
+            border: 1px solid #ffffff;
+        }
+        .el-col {
+            border: 1px solid #ffffff;
+        }
+        #控制字体的一个关键样式
+        table {
+            font-size: 14px;
+        }
     </style>
 </head>
-<body>
+<body style="overflow-y: hidden;">
 <input id="siteUrl" type="hidden" value="${SITE_URL}">
-<div id="app">
-    <!-- div1 start-->
-    <div class="div_one" style="padding: 20px 40px 0px 40px;">
-        <div>
-            <el-input placeholder="请输入监控名称或编辑人" clearable v-model="contents" style="width:30%" @keyup.enter.native="select1"></el-input>
-            <el-button type="primary" icon="el-icon-search" v-on:click="select1">搜索</el-button>
-            <el-popover placement="top-start" width="200" trigger="hover" content="新增一个监控项。" style="float:right;">
-                <el-button slot="reference" v-on:click="add_unit(0)">新增</el-button>
-            </el-popover>
+<div id="app" >
+    <el-breadcrumb class='route' separator-class='el-icon-arrow-right'>
+        <el-breadcrumb-item>整体运维</el-breadcrumb-item>
+        <el-breadcrumb-item>监控项管理</el-breadcrumb-item>
+    </el-breadcrumb>
+    <el-card class='card' shadow='always' style="margin-top: 10px">
+        <div id='pagetitle' style="margin-bottom: 10px">
+            监控项管理
         </div>
-        <div style="height: 20px"></div>
-        <div>
-            <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;" border header-align="center">
-                <el-table-column prop="id" label="序号" sortable></el-table-column>
-                <el-table-column prop="monitor_name" show-overflow-tooltip="true" label="监控名称" sortable></el-table-column>
-                <el-table-column prop="monitor_type" show-overflow-tooltip="true" label="监控类型" :formatter="format_monitor_type"
-                                 sortable></el-table-column>
-                <el-table-column prop="editor" label="编辑人" sortable></el-table-column>
-                <el-table-column prop="edit_time" label="修改时间" sortable></el-table-column>
-                <el-table-column label="操作">
-                    <template slot-scope="scope">
-                        <el-button size="mini" type="text" v-on:click="edit_unit(scope.row)">编辑</el-button>
-                        <el-button size="mini" type="text" v-on:click="delete_unit(scope.row)">删除</el-button>
-                        <el-tooltip :content="scope.row.status" placement="top">
-                            <el-switch v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949"
-                                       @change="switch_change(scope.row)"
-                                       active-value="1" inactive-value="0"></el-switch>
-                        </el-tooltip>
-                    </template>
-                </el-table-column>
-            </el-table>
+        <hr id='hr'>
+        <el-row type='flex' justify='space-between' align='center' class='row' style="margin-top: 10px">
+            <el-col :span="12">
+                <el-col :span="9">
+                    <el-input @keyup.enter.native="select1" clearable v-model="contents" placeholder="请输入监控名称或编辑人"></el-input>
+                </el-col>
+                <el-col :span="3">
+                    <el-button type="primary" icon="el-icon-search" v-on:click="select1" style="margin-left: 5px;">搜索</el-button>
+                </el-col>
+            </el-col>
+            <el-col :span='3'>
+                <el-button type='primary' v-on:click="add_unit(0)">新增监控项</el-button>
+            </el-col>
+        </el-row>
+        <el-table :data='sites' :header-cell-style='rowclass' style="width: 100%;margin-top: 10px;" border header-align="center">
+            <el-table-column prop="id" label="序号" sortable >
+            </el-table-column>
+            <el-table-column prop="monitor_name" show-overflow-tooltip="true" label="监控名称" sortable >
+            </el-table-column>
+            <el-table-column prop="monitor_type" show-overflow-tooltip="true" label="监控类型" :formatter="format_monitor_type" sortable>
+            </el-table-column>
+            <el-table-column prop="editor" label="编辑人" sortable>
+            </el-table-column>
+            <el-table-column prop="edit_time" label="修改时间" sortable>
+            </el-table-column>
+            <el-table-column label="操作" style="width: 30%;">
+                <template slot-scope="scope">
+                    <el-button size="mini" type="text" v-on:click="edit_unit(scope.row)">编辑</el-button>
+                    <el-button size="mini" type="text" v-on:click="delete_unit(scope.row)">删除</el-button>
+                    <el-tooltip :content="scope.row.status" placement="top">
+                        <el-switch v-model="scope.row.status" active-color="#13ce66" inactive-color="#ff4949"
+                                   @change="switch_change(scope.row)"
+                                   active-value="1" inactive-value="0"></el-switch>
+                    </el-tooltip>
+                </template>
+            </el-table-column>
+        </el-table>
+        <div class='block' style='text-align:right'>
             <el-pagination :page-count="page_count" background layout="prev, pager, next" style="float:right"
                            @current-change="current_change1" :current-page="page"></el-pagination>
         </div>
-    </div>
-    <!-- div1 end-->
+    </el-card>
 
     <!-- 对话框 start-->
     <el-dialog fullscreen title="基本信息" :visible.sync="centerDialogVisible" width="80%" @closed="monitor_cache_clean"

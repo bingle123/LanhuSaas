@@ -3,29 +3,29 @@
 <head>
 
     <meta charset="utf-8">
-    <title>title</title>
-    <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
-    <script src="${STATIC_URL}js/net/echarts.min.js"></script>
-
-    <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
-    <link href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
-    <script src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
-    <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
-    <link type="text/css" href="${STATIC_URL}css/monitorScene/style.css" rel="stylesheet">
-    <script src="${STATIC_URL}js/net/index.min.js"></script>
-    <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
-    <link href="${STATIC_URL}css/net/bk.css" rel="stylesheet">
-    <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
-    <script src="${STATIC_URL}js/csrftoken.js"></script>
-    <link href="${STATIC_URL}css/net/jquery.range.css" rel="stylesheet">
-    <script src="${STATIC_URL}js/jquery.range-min.js"></script>
-    <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
-    <script type="text/javascript"
-            src="${STATIC_URL}js/net/jsplumb.min.js"></script>
-    <link rel="stylesheet"
-          href="${STATIC_URL}css/net/jsPlumbToolkit-defaults.css"/>
-    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
+    <title>场景</title>
     <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jsPlumbToolkit-defaults.css"/>
+    <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jquery.range.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/bk.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
+    <!-- element UI引入样式 -->
+    <link rel="stylesheet" href="${STATIC_URL}assets/element-2.4.11/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/home.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/style.css" rel="stylesheet">
+
+    <script type="text/javascript" src="${STATIC_URL}js/Component-based.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/net/echarts.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/element-2.4.11/index.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/net/index.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/csrftoken.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/jquery.range-min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/net/jsplumb.min.js"></script>
+    <script type="text/javascript" src="${STATIC_URL}js/dataflow/dataflow2.0.js"></script>
     <script type="text/javascript" src="${STATIC_URL}js/monitor_scene/monitor_scene.js"></script>
 
     <style>
@@ -197,7 +197,7 @@
 <input id="siteUrl" type="hidden" value="${SITE_URL}">
 <div class="content">
     <el-breadcrumb class='route' separator-class='el-icon-arrow-right'>
-        <el-breadcrumb-item>首页</el-breadcrumb-item>
+        <el-breadcrumb-item>整体运维</el-breadcrumb-item>
         <el-breadcrumb-item>场景管理</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card class='card' shadow='always' style="margin-top: 10px">
@@ -209,7 +209,7 @@
             <el-row type='flex' justify='space-between' align='center' class='row' style="margin-top: 10px">
                 <el-col :span="12">
                     <el-col :span="9">
-                        <el-input @keyup.enter.native="paging"  v-model="search" placeholder="请输入场景名称或创建人"></el-input>
+                        <el-input @keyup.enter.native="paging" clearable v-model="search" placeholder="请输入场景名称或创建人"></el-input>
                     </el-col>
                     <el-col :span="3">
                         <el-button type="primary" icon="el-icon-search" v-on:click="paging">搜索</el-button>
