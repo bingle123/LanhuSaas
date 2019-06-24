@@ -33,17 +33,19 @@
     <el-row style="margin-bottom: 5px;">
         <el-col :span="24">
             <el-breadcrumb separator-class="el-icon-arrow-right">
-                <el-breadcrumb-item>首页</el-breadcrumb-item>
+                <el-breadcrumb-item>历史和报表</el-breadcrumb-item>
                 <el-breadcrumb-item>自定义查询</el-breadcrumb-item>
             </el-breadcrumb>
         </el-col>
     </el-row>
-    <el-card>
+    <el-card style="margin-top: 10px">
         <!--表单展示-->
         <div v-if="customQueryTableStatus == 'list'">
             <el-row>
                 <el-col :span="24">
-                    <div style="font-weight: bold;">自定义查询列表</div>
+                    <div style="margin-bottom: 10px;font-size: 14px;font-weight:bold;">
+                        自定义查询列表
+                    </div>
                     <hr>
                 </el-col>
             </el-row>
@@ -62,7 +64,7 @@
                     <el-button type='primary' size="medium" @click='customQueryAdd'>新增自定义查询</el-button>
                 </el-col>
             </el-row>
-            <el-table :data="customQueryTableData" border style="width:100%;margin-top: 5px;">
+            <el-table :data="customQueryTableData" :header-cell-style="{background:'#f7f7f7'}" border style="width:100%;margin-top: 5px;">
                 <el-table-column prop="id" label="序号" width="80px;">
                 </el-table-column>
                 <el-table-column prop="query_name" label="查询名称" width="220px;" align="center" sortable>
