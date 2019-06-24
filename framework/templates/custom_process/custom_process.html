@@ -16,7 +16,7 @@
         }
     </style>
 </head>
-<body>
+<body style="overflow-y: auto;">
     <input id="siteUrl" type="hidden" value="${SITE_URL}">
     <div id="customProcess">
         <el-dialog title="定制过程通知" :visible.sync="addDialogVisible" width="80%" :close-on-click-modal="false" center @closed="customProcessListNode">
@@ -159,19 +159,19 @@
         </el-dialog>
         <el-row>
             <el-col :span="24">
-                <el-breadcrumb separator-class="el-icon-arrow-right">
-                    <el-breadcrumb-item>首页</el-breadcrumb-item>
+                <el-breadcrumb class="route" separator-class="el-icon-arrow-right">
+                    <el-breadcrumb-item>看板系统配置</el-breadcrumb-item>
                     <el-breadcrumb-item>执行定制过程通知设置</el-breadcrumb-item>
                 </el-breadcrumb>
             </el-col>
         </el-row>
         <el-row>
             <el-col :span="24">
-                <el-card shadow="always" class="box-card">
+                <el-card shadow="always" class="box-card" style="margin: 20px;">
                     <el-row>
                         <el-col :span="24">
-                            <div id="customProcessTitle">执行定制过程通知设置</div>
-                            <hr>
+                            <div id="customProcessTitle" style="font-size: 14px;">执行定制过程通知设置</div>
+                            <hr id='hr'>
                         </el-col>
                     </el-row>
                     <el-row>
