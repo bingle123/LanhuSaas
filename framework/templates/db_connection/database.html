@@ -2,6 +2,12 @@
 <html>
 <head>
  <meta charset="UTF-8">
+    <link rel="stylesheet" href="${STATIC_URL}css/monitorScene/dataflow-index.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jsPlumbToolkit-defaults.css"/>
+    <link rel="stylesheet" href="${STATIC_URL}css/net/iconfont.css">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/jquery.range.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/bk.css" rel="stylesheet">
+    <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
     <!-- 开发环境版本，包含了有帮助的命令行警告--2.5.51 -->
     <script src="${STATIC_URL}assets/vue-2.5.21/vue.development.js"></script>
     <!-- element UI引入样式 -->
@@ -12,55 +18,51 @@
     <script src="${STATIC_URL}assets/vue-2.5.21/axios.min.js"></script>
     <script src="${STATIC_URL}assets/jquery/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="${STATIC_URL}assets/base64/base64.js"></script>
-    <link type="text/css" href="${STATIC_URL}css/home.css" rel="stylesheet">
-    <link rel="stylesheet" href="${STATIC_URL}css/net/style.min.css">
     <script type="text/javascript" src="${STATIC_URL}js/db_connection/db_connection.js"></script>
 </head>
 
-<body>
+<body style="overflow-y: hidden;">
 <div class="content" id="main">
     <div class="header">
         <el-breadcrumb class="route" separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item>首页</el-breadcrumb-item>
-            <el-breadcrumb-item>SQL数据库连接管理</el-breadcrumb-item>
+            <el-breadcrumb-item>看板系统配置</el-breadcrumb-item>
+            <el-breadcrumb-item>数据库连接配置</el-breadcrumb-item>
         </el-breadcrumb>
     </div>
 
     <div class="body">
-        <el-card shadow="always">
+        <el-card shadow="always" style="margin-top: 10px">
             <!--表单展示-->
             <div v-if="isAdd == '1'">
-                <div id="pagetitle">
-                    SQL数据库连接管理
+                <div id="pagetitle" style="margin-bottom: 10px;font-size: 14px;">
+                    数据库连接配置
                 </div>
                 <hr id="hr">
-                <el-row type="flex" justify="space-between" align="center" class="row">
-
+                <el-row type="flex" justify="space-between" align="center" class="row" style="margin-top: 10px">
                     <el-col :span="12">
                         <el-col :span="9">
                             <el-input v-model="search" placeholder="请输入内容" @keyup.enter.native="select_table"></el-input>
                         </el-col>
                         <el-col :span="3">
-                            <el-button type="primary" icon="el-icon-search" v-on:click="select_table">搜索</el-button>
+                            <el-button type="primary" icon="el-icon-search" v-on:click="select_table" style="margin-left: 5px;">搜索</el-button>
                         </el-col>
                     </el-col>
                 <el-col :span='3'>
                     <el-button type='primary'  @click='show'>新增数据库连接</el-button>
                 </el-col>
                 </el-row>
-
-                <el-table :data="tableData" :header-cell-style="rowClass" style="width: 100%">
+                <el-table :data="tableData" :header-cell-style="rowClass" style="width: 100%;margin-top: 10px;" border style="width: 100%">
                     <el-table-column prop="id" label="序号" width="80px">
                     </el-table-column>
-                    <el-table-column prop="connname" label="连接名称" style="width: 25%">
+                    <el-table-column prop="connname" label="连接名称" style="width: 25%" sortable>
                     </el-table-column>
-                    <el-table-column prop="type" label="连接类型" style="width: 25%">
+                    <el-table-column prop="type" label="连接类型" style="width: 25%" sortable>
                     </el-table-column>
-                    <el-table-column prop="ip" label="IP地址" style="width: 25%">
+                    <el-table-column prop="ip" label="IP地址" style="width: 25%" sortable>
                     </el-table-column>
-                    <el-table-column prop="port" label="端口" style="width: 25%">
+                    <el-table-column prop="port" label="端口" style="width: 25%" sortable>
                     </el-table-column>
-                    <el-table-column prop="username" label="用户名" style="width: 25%">
+                    <el-table-column prop="username" label="用户名" style="width: 25%" sortable>
                     </el-table-column>
                     <el-table-column prop="operation" label="操作">
                         <template slot-scope="scope">
@@ -74,11 +76,11 @@
 
             <!--新增-->
             <div v-else-if="isAdd == '2'">
-                <div id="pagetitle">
+                <div id="pagetitle" style="margin-bottom: 10px;font-size: 14px;">
                     新增数据库连接
                 </div>
                 <hr id="hr">
-                <el-form label-width="140px" :model="addconn" ref="addconn" :rules="rules" class="demo-ruleForm">
+                <el-form label-width="140px" :model="addconn" ref="addconn" :rules="rules" style="width: 100%;margin-top: 10px;" class="demo-ruleForm">
                     <el-row type="flex" class="row-bg" justify="space-around">
                         <el-col :span="9">
                             <el-form-item label="连接名称：" prop="connname">
@@ -150,11 +152,11 @@
 
             <!--编辑-->
             <div v-else="isAdd == '3'">
-                <div id="pagetitle">
+                <div id="pagetitle" style="margin-bottom: 10px;font-size: 14px;">
                     编辑数据库连接
                 </div>
                 <hr id="hr">
-                <el-form label-width="140px" :model="editDataBase" ref="editDataBase" :rules="rules" class="demo-ruleForm">
+                <el-form label-width="140px" :model="editDataBase" ref="editDataBase" style="width: 100%;margin-top: 10px;" :rules="rules" class="demo-ruleForm">
                     <el-row type="flex" class="row-bg" justify="space-around">
                         <el-col :span="9">
                             <el-form-item label="连接名称：" prop="connname">
@@ -198,7 +200,6 @@
                                 </el-form-item>
                             </div>
                         </el-col>
-
                     </el-row>
                     <el-row type="flex" class="row-bg" justify="space-around">
                         <el-col :span="9">
@@ -208,7 +209,6 @@
                                 </el-form-item>
                             </div>
                         </el-col>
-
                     </el-row>
                 </el-form>
                 <el-row type="flex" class="row-bg" justify="center">
