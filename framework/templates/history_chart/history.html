@@ -133,65 +133,64 @@
                 </div>
 
                 <div id="table1" style="display: block">
-                    <el-table :data="Operatelog" style="width: 150%">
-                        <el-table-column prop="id" label="id" width="100" align="center">
+                    <el-table :data="Operatelog" :header-cell-style="{background:'#f7f7f7'}" border style="width: 150%">
+                        <el-table-column prop="id" label="id" width="100" align="center" >
                         </el-table-column>
-                        <el-table-column prop="log_type" label="操作类型(场景名称)" width="220" align="center">
+                        <el-table-column prop="log_type" label="操作类型(场景名称)" width="220" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="log_name" label="日志名称" width="150" align="center">
+                        <el-table-column prop="log_name" label="日志名称" width="150" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="user_name" label="用户名称" width="150" align="center">
+                        <el-table-column prop="user_name" label="用户名称" width="150" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="create_time" label="创建时间" width="200" align="center">
+                        <el-table-column prop="create_time" label="创建时间" width="200" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="is_success" label="是否成功" width="150" align="center">
+                        <el-table-column prop="is_success" label="是否成功" width="150" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="message" label="备注" width="800" align="center">
+                        <el-table-column prop="message" label="备注" width="800" align="center" sortable>
                         </el-table-column>
                     </el-table>
                     <el-pagination :page-count="page_count1" background layout="prev, pager, next" style="float:right"
                                    @current-change="current_change" :current-page="page"></el-pagination>
                 </div>
 
-                <div id="table2" style="display:none">
-                    <el-table :data="alertRuleTableData">
+                <div id="table2"  style="display:none">
+                    <el-table :data="alertRuleTableData" :header-cell-style="{background:'#f7f7f7'}" border>
                         <el-table-column prop="scene_id" label="场景ID" width="100">
                         </el-table-column>
-                        <el-table-column prop="scene_name" label=场景名字 width="100" align="center">
+                        <el-table-column prop="scene_name" label=场景名字 width="100" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="id" label="监控项ID" width="200" align="center">
+                        <el-table-column prop="id" label="监控项ID" width="200" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="monitor_name" label="监控项名字" width="200" align="center">
+                        <el-table-column prop="monitor_name" label="监控项名字" width="200" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="alert_title" label="告警标题" width="200" align="center">
+                        <el-table-column prop="alert_title" label="告警标题" width="200" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="alert_content" label="告警内容" width="500" align="center">
+                        <el-table-column prop="alert_content" label="告警内容" width="500" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="alert_time" label="告警时间" width="200" align="center">
+                        <el-table-column prop="alert_time" label="告警时间" width="200" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="persons" label="告警人" width="200" align="center">
+                        <el-table-column prop="persons" label="告警人" width="200" align="center" sortable>
                         </el-table-column>
-
                     </el-table>
                     <el-pagination :page-count="alertRulesCount" background layout="prev, pager, next"
                                    style="float:right"
                                    @current-change="alertRulePageChange" :current-page="page"></el-pagination>
                 </div>
                 <div id="table3" style="display:none">
-                    <el-table :data="aboutTableDate">
+                    <el-table :data="aboutTableDate" :header-cell-style="{background:'#f7f7f7'}" border>
                         <el-table-column prop="scene_id" label="场景ID" width="150">
                         </el-table-column>
-                        <el-table-column prop="scene_name" label=场景名字 width="200" align="center">
+                        <el-table-column prop="scene_name" label=场景名字 width="200" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="item_id" label="监控项ID" width="150" align="center">
+                        <el-table-column prop="item_id" label="监控项ID" width="150" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="monitor_name" label="监控项名字" width="500" align="center">
+                        <el-table-column prop="monitor_name" label="监控项名字" width="500" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="start_time" label="开始时间" width="200" align="center">
+                        <el-table-column prop="start_time" label="开始时间" width="200" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="end_time" label="结束时间" width="200" align="center">
+                        <el-table-column prop="end_time" label="结束时间" width="200" align="center" sortable>
                         </el-table-column>
-                        <el-table-column prop="minture" label="间距分钟" width="150" align="center">
+                        <el-table-column prop="minture" label="间距分钟" width="150" align="center" sortable>
                         </el-table-column>
                     </el-table>
                     <el-pagination :page-count="aboutRulesCount" background layout="prev, pager, next"
@@ -206,24 +205,24 @@
                     <!--画图结束勿动-->
                     <!--场景比对table-->
                     <div id="get_days" style="display: none">
-                     <el-table :data="dayData" style="width: 100%;margin-top: 20px">
-                         <el-table-column prop="timedata" label="比对时间" style="width: 15%" align="center">
+                     <el-table :data="dayData" style="width: 100%;margin-top: 20px" :header-cell-style="{background:'#f7f7f7'}" border>
+                         <el-table-column prop="timedata" label="比对时间" style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="itemNums" label="场景数" style="width: 15%" align="center">
+                         <el-table-column prop="itemNums" label="场景数" style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="begin_time" label="开始时间" style="width: 15%" show-overflow-tooltip>
+                         <el-table-column prop="begin_time" label="开始时间" style="width: 15%" show-overflow-tooltip sortable>
                          </el-table-column>
-                         <el-table-column prop="end_time" label="结束时间" style="width: 15%" show-overflow-tooltip>
+                         <el-table-column prop="end_time" label="结束时间" style="width: 15%" show-overflow-tooltip sortable>
                          </el-table-column>
-                         <el-table-column prop="time_consum" label="总耗时" style="width: 15%" align="center">
+                         <el-table-column prop="time_consum" label="总耗时" style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="success_items" label=运行成功数 style="width: 15%" align="center">
+                         <el-table-column prop="success_items" label=运行成功数 style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="failed_items" label="执行失败数" style="width: 15%" align="center">
+                         <el-table-column prop="failed_items" label="执行失败数" style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="succeess_persent" label="成功率" style="width: 15%" align="center">
+                         <el-table-column prop="succeess_persent" label="成功率" style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="alertNums" label="告警数量" style="width: 15%" align="center">
+                         <el-table-column prop="alertNums" label="告警数量" style="width: 15%" align="center" sortable>
                          </el-table-column>
                      </el-table>
 
@@ -245,18 +244,18 @@
                                     <el-button icon="el-icon-search" circle  v-on:click="get_week"></el-button>
                                 </div>
                             </el-col>
-                     <el-table :data="sceneOperationRuleTableData" style="width: 100%;margin-top: 20px">
-                         <el-table-column prop="date" label="时间" style="width: 15%" align="center">
+                     <el-table :data="sceneOperationRuleTableData" style="width: 100%;margin-top: 20px" :header-cell-style="{background:'#f7f7f7'}" border>
+                         <el-table-column prop="date" label="时间" style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="scene_num" label="场景数" style="width: 15%" align="center">
+                         <el-table-column prop="scene_num" label="场景数" style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="success_num" label=运行成功数 style="width: 15%" align="center">
+                         <el-table-column prop="success_num" label=运行成功数 style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="success_rate" label="运行成功率" style="width: 15%" align="center">
+                         <el-table-column prop="success_rate" label="运行成功率" style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="failed_num" label="执行失败数" style="width: 15%" align="center">
+                         <el-table-column prop="failed_num" label="执行失败数" style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center">
+                         <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center" sortable>
                          </el-table-column>
                      </el-table>
                      <el-pagination :page-count="sceneOperationCount" background layout="prev, pager, next" style="float:right"
@@ -283,18 +282,18 @@
                      </div>
                      <div id="get_days" style="display: none">
                      </div>
-                     <el-table :data="monthly_operationTableData" style="width: 100%;margin-top: 20px">
-                         <el-table-column prop="date" label="统计日期" style="width: 15%" align="center">
+                     <el-table :data="monthly_operationTableData" style="width: 100%;margin-top: 20px" :header-cell-style="{background:'#f7f7f7'}" border>
+                         <el-table-column prop="date" label="统计日期" style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="total" label="场景数" style="width: 15%" align="center">
+                         <el-table-column prop="total" label="场景数" style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="Success_num" label=运行成功数 style="width: 15%" align="center">
+                         <el-table-column prop="Success_num" label=运行成功数 style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="success_rate" label="运行成功率" style="width: 15%" align="center">
+                         <el-table-column prop="success_rate" label="运行成功率" style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="failure_num" label="执行失败数" style="width: 15%" align="center">
+                         <el-table-column prop="failure_num" label="执行失败数" style="width: 15%" align="center" sortable>
                          </el-table-column>
-                         <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center">
+                         <el-table-column prop="alert_num" label="告警数量" style="width: 15%" align="center" sortable>
                          </el-table-column>
                      </el-table>
 
