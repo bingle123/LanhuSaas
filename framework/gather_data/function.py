@@ -217,7 +217,37 @@ def fi_kv_process(json_dict):
         data_set.append(temp)
     return data_set
 
+def  get_tablename_list(id):
+    try:
+        # print 'DB_ID: %s' % conn_params.id
+        conn = getAny_db(id)
+        db=conn.db
+        cursor = conn.cursor()
+        cursor.execute('SET NAMES UTF8')
+        # conn = MySQ Ldb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
+        tablenamesql = "select TABLE_NAME from information_schema.tables where TABLE_SCHEMA='%s'"%db
+        cursor.execute(tablenamesql)
+        result = cursor.fetchall()
+    except Exception as e:
 
+        return "error"
+
+    return result
+def  get_columnname_list(id,tableValue):
+    try:
+        # print 'DB_ID: %s' % conn_params.id
+        conn = getAny_db(id)
+        db=conn.db
+        cursor = conn.cursor()
+        cursor.execute('SET NAMES UTF8')
+        # conn = MySQ Ldb.connect(host=conn_params.ip, user=conn_params.username, passwd=conn_params.password, db=conn_params.databasename, port=int(conn_params.port))
+        tablecolumnmesql = "select COLUMN_NAME from information_schema.COLUMNS where TABLE_SCHEMA='%s'"%db+ "and table_name ='%s'"%tableValue
+        cursor.execute(tablecolumnmesql)
+        result = cursor.fetchall()
+    except Exception as e:
+        return "error"
+
+    return result
 def gather_data(**info):
     """
     采集方法，返回参数gather_status为ok采集正常，返回empty采集结果为空，返回error采集规则错误

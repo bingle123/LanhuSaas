@@ -82,7 +82,22 @@ def basic_test(request):
     res = function.basic_test(request)
     return render_json(res)
 
+def tablename_list(request):
+    """
 
+    :param request:
+    :return:
+    """
+    res = function.tablename_list(request)
+    return render_json(res)
+def columnname_list(request):
+    """
+
+    :param request:
+    :return:
+    """
+    res = function.columnname_list(request)
+    return render_json(res)
 def job_test(request):
     """
     作业采集测试函数

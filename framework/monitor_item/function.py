@@ -13,7 +13,7 @@ import pymysql as MySQLdb
 from market_day import function
 from market_day import celery_opt as co
 from db_connection.function import decrypt_str
-from gather_data.function import gather_data, get_db
+from gather_data.function import gather_data, get_db,get_columnname_list,get_tablename_list
 from gather_data.models import TDGatherData
 import sys
 from logmanagement.function import add_log, make_log_info, get_active_user
@@ -454,6 +454,19 @@ def edit_unit(request):
     #     add_log(info)
     return result
 
+def tablename_list(request):
+
+    id= json.loads(request.body)['id']
+    results =get_tablename_list(id)
+    results_list=list(results)
+    return results_list
+def columnname_list(request):
+    requestbody=json.loads(request.body)
+    id= requestbody['id']
+    tableValue= requestbody['tableValue']
+    results =get_columnname_list(id,tableValue)
+    results_list=list(results)
+    return results_list
 
 # 基本监控项采集测试
 def basic_test(request):

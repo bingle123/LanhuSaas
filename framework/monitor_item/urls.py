@@ -21,6 +21,8 @@ urlpatterns = patterns(
     (r'^delete/$', 'delete_unit'),
     (r'^add/$', 'add_unit'),
     (r'^basic_test/$', 'basic_test'),
+    (r'^tablename_list/$', 'tablename_list'),
+    (r'^columnname_list/$', 'columnname_list'),
     (r'^job_test/$', 'job_test'),
     (r'^chart_get_test/$', 'chart_get_test'),
     (r'^change_status/$', 'change_status'),  # 改变监控项的启用状态

@@ -114,12 +114,16 @@ $(function(){
             interface1: 'none',
             sql_file_interface: 3,
             server_url: '',
+            table_value:'',
+            column_value:[],
             file_param: '',
             param1: '',
             param2: '',
             zuoye: 'none',
             liucheng: 'none',
             basic_show_content: "",
+            tablenames:[],                                //表名选择数组
+            columnnames:[],                                //表名对应的列名数组
             fields: [],                                  //字段选择数组
             result_data: {},                            //传递新增数据
             monitor_type: 'first',                     //单元类型
@@ -135,6 +139,7 @@ $(function(){
                 params: '',                            //监控参数
                 status: '',                            //监控状态
                 contents: '',                          //显示内容
+                show_rule_type: '',//展示规则
                 gather_rule: '',                       //采集规则
                 gather_params: 'sql',                  //采集参数
                 monitor_area: '',                             //日历地区
@@ -405,6 +410,115 @@ $(function(){
                     background: 'rgba(0, 0, 0, 0.7)'
                 });
             },
+            select_table:function()
+            {
+                let result= false;
+                vm.tablenames=[];
+                $.ajax({
+                    type: "POST",
+                    data:JSON.stringify( {'id':vm.server_url}),
+                    dataType: "JSON",
+                    async: false,
+                    url: site_url+"monitor_item/tablename_list/",
+                    success: function (data) {
+                        if(data.message.length == 0){
+                            vm.$alert("当前数据库连接中没有表！", "错误");
+                            result = false;
+                        }
+
+                        let json = [];
+                        if (data.message.length > 0) {
+                            for (let i = 0; i < data.message.length; i++) {
+                                let j = {};
+                                j.value =  data.message[i][0];
+                                j.label = data.message[i][0];
+                                json.push(j);
+                            }
+                            ;
+                            vm.tablenames = json;
+                        }
+                        vm.table_value='';
+                        result = true;
+                    },
+                    error: function (error) {
+
+                        result = false;
+                    }
+                });
+                return result;
+            },
+            select_column:function()
+            {
+                let result= false;
+                vm.columnnames=[]
+                $.ajax({
+                    type: "POST",
+                    data:JSON.stringify( {'id':vm.server_url,'tableValue':vm.table_value}),
+                    dataType: "JSON",
+                    async: false,
+                    url: site_url+"monitor_item/columnname_list/",
+                    success: function (data) {
+                        if(data.message.length == 0){
+                            vm.$alert("当前数据库连接表中没有列！", "错误");
+                            result = false;
+                        }
+
+                        let json = [];
+                        if (data.message.length > 0) {
+                            for (let i = 0; i < data.message.length; i++) {
+                                let j = {};
+                                j.value =  data.message[i][0];
+                                j.label = data.message[i][0];
+                                json.push(j);
+                            }
+                            ;
+                            vm.columnnames = json;
+                        }
+                        vm.column_value=[];
+                        var gather_rule = vm.basic['gather_rule'];
+                        var start_index=gather_rule.indexOf("from");
+                        var end_index=gather_rule.indexOf("where");
+                        if(-1==end_index)
+                        {
+                            gather_rule =gather_rule +" where 1=1 limit 1 "
+                        }
+                        end_index=gather_rule.indexOf("where");
+                        var end_str=gather_rule.substring(end_index);
+                        if(-1==start_index)
+                        {
+                            gather_rule=" select * from "+vm.table_value+ " "+end_str;
+                        }
+                        start_index = gather_rule.indexOf("from");
+                        gather_rule=gather_rule.substring(0,start_index)+" from "+vm.table_value+ " "+end_str;
+                        vm.basic['gather_rule']=gather_rule;
+                        result = true;
+                    },
+                    error: function (error) {
+
+                        result = false;
+                    }
+                });
+                return result;
+            },
+            change_gather_rule(){
+                var column_value=vm.column_value;
+                var gather_rule = vm.basic['gather_rule'];
+                var start_index=gather_rule.indexOf("from");
+                var end_str=gather_rule.substring(start_index);
+                var defaultv ="CN";
+                var columnstr="";
+                var len =column_value.length;
+                for(var i =0;i<len;i++)
+                {
+                    columnstr=columnstr+"@"+defaultv+i+"="+column_value[i]+"@"
+                    if(i<len-1)
+                    {
+                        columnstr+=",";
+                    }
+                }
+                vm.basic['gather_rule']="select "+ columnstr+ " "+end_str;
+            },
+
             //获取采集测试的结果，同步调用
             get_gather_test() {
                 let result= false;
@@ -476,16 +590,35 @@ $(function(){
                 //     this.color_rules_comments = false;
                 //     this.other_rules_comments = false;
                 // }
+                var basic = $("#tab-first[aria-selected='true']");
+
+                var base = $("#tab-five[aria-selected='true']");
                $("div[id^='base_i']").hide();
+               $("div[id^='basic_i']").hide();
                   if(obj==undefined){
                       vm.base.gather_rule="";
                   }
-                if ('1' == this.base.show_rule_type) {
-                      $("#base_i_color").show();
-                } else if ('2' == this.base.show_rule_type) {
-                      $("#base_i_other").show();
-                } else if ('0' == this.base.show_rule_type) {
-                      $("#base_i_par").show();
+                if(basic.length>0)
+                {
+                    if ('1' == this.basic.show_rule_type) {
+                        $("#basic_i_color").show();
+                    }
+                    else if ('3' == this.basic.show_rule_type) {
+                        $("#basic_i_warning").show();
+                    }
+                }
+                else if(base.length>0)
+                {
+                    if ('1' == this.base.show_rule_type) {
+                        $("#base_i_color").show();
+                    } else if ('2' == this.base.show_rule_type) {
+                        $("#base_i_other").show();
+                    } else if ('0' == this.base.show_rule_type) {
+                        $("#base_i_par").show();
+                    }
+                    else if ('3' == this.base.show_rule_type) {
+                        $("#base_i_warning").show();
+                    }
                 }
                 //彭英杰20190527 end
             },
@@ -537,7 +670,7 @@ $(function(){
                 }
             },
             //监控项展示规则 其它
-            base_fun_other:function(){
+            base_fun_other(){
                 var arr_color = $("#base_i_other").children();
                 var val="";
                 for(var i=0;i<arr_color.length;i++){
@@ -565,6 +698,36 @@ $(function(){
                     vm.base.gather_rule=val;
                 }
             },
+            //监控项展示规则 其它
+            base_fun_warning(){
+                var arr_color = $("#base_i_warning").children();
+                var val="";
+                for(var i=0;i<arr_color.length;i++){
+                    var v ="";
+                    if(val!=""){
+                        v+="\n";
+                    }
+                    var dto =$(arr_color[i]);
+                    var txt =dto.find(":text");
+                    var bl=false;
+                    if(txt.length==3){
+                        chk=dto.find(":checkbox");
+                        if(txt[0].value==""
+                            ||txt[1].value==""
+                            ||txt[2].value==""){
+                            continue;
+                        }
+                        v+=txt[0].value+"-"+txt[1].value+"@1";
+                    }else{
+                        continue;
+                    }
+                    val+=v;
+                }
+                if(val!=""){
+                    vm.base.gather_rule=val;
+                }
+            },
+
             //监控项数据处理，用于编辑状态下回显数据
             monitor_edit_data_process(row) {
                 //如果监控项类型为基本基本监控单元（修改后）
@@ -645,6 +808,16 @@ $(function(){
                                  vm.base["max_"+(i+1)]=num_dto[1];
                                  vm.base["txt_"+(i+1)]=num[1];
                              }
+                         }else if(vm.base['show_rule_type'] == 3){//为告警推送消息
+                             vm.base_color_rule=true;
+                             var db_color = vm.base['gather_rule'].split("\n");
+                             for(var i=0;i<db_color.length;i++){
+                                 var num=db_color[i].split("@");
+                                 var num_dto = num[0].split("-");
+                                 vm.base["min_"+(i+1)]=num_dto[0];
+                                 vm.base["max_"+(i+1)]=num_dto[1];
+                                 vm.base["chk_"+(i+1)]=true;
+                             }
                          }
                          setTimeout(function(){
                            //修改展示信息 彭英杰start20190529
@@ -656,6 +829,9 @@ $(function(){
                              }else if(vm.base['show_rule_type'] == 2){//为其它
                                 $("#base_i_other").show();
                              }
+                            else if(vm.base['show_rule_type'] == 3){//为告警推送消息
+                                $("#base_i_warning").show();
+                            }
                          },500)
                         //修改展示信息 彭英杰end20190529
                     } else {
@@ -1159,6 +1335,9 @@ $(function(){
                    } else if ('0' == vm.base.show_rule_type) {
                       vm. base_fun_per();
                    }
+                    else if ('3' == vm.base.show_rule_type) {
+                        vm.base_fun_warning();
+                    }
                  //彭英杰 start20190527
                     vm.submitForm('base')
                 }
@@ -1655,6 +1834,11 @@ $(function(){
                 Object.assign(vm.chart, vm.chart1);
                 Object.assign(vm.base,{});
                 Object.assign(vm.base,vm.base1);
+
+                vm.tablenames=[];
+                vm.columnnames=[];
+                vm.table_value='';
+                vm.column_value='';
                 vm.server_url = '';
                 vm.file_param = '';
                 vm.sql_file_interface = 3
