@@ -34,7 +34,7 @@ Mako==1.0.4
 MarkupSafe==0.23
 meld3==1.0.2
 mutagen==1.42.0
-Pillow==5.4.1
+Pillow==8.1.1
 pyasn1==0.4.5
 pyasn1-modules==0.2.3
 pycparser==2.16
