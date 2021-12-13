@@ -15,7 +15,7 @@ supervisor==3.3.3
 #uWSGI==2.0.13.1
 requests==2.9.1
 xlrd==1.2.0
-lxml==4.3.0
+lxml==4.6.5
 selenium==3.141.0
 cx_Oracle==7.0.0
 pyDes==2.0.1
