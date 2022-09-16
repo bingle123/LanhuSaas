@@ -30,7 +30,7 @@ idna==2.8
 incremental==16.10.1
 ipaddress==1.0.22
 kombu==3.0.37
-Mako==1.0.4
+Mako==1.2.2
 MarkupSafe==0.23
 meld3==1.0.2
 mutagen==1.42.0
